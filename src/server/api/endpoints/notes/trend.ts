@@ -38,12 +38,9 @@ module.exports = (params, user) => new Promise(async (res, rej) => {
 	if (pollErr) return rej('invalid poll param');
 
 	const query = {
-		createdAt: {
-			$gte: new Date(Date.now() - ms('1days'))
-		},
-		renoteCount: {
-			$gt: 0
-		}
+		_id: { $gte: new Date(Date.now() - ms('1days')) },
+		renoteCount: { $gt: 0 },
+		'_user.host': null
 	} as any;
 
 	if (reply != undefined) {
