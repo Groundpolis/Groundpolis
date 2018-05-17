@@ -11,10 +11,11 @@ const loadLang = lang => yaml.safeLoad(
 const native = loadLang('ja');
 
 const langs = {
+	'de': loadLang('de'),
 	'en': loadLang('en'),
 	'fr': loadLang('fr'),
 	'ja': native,
- 'pl': loadLang('pl')
+	'pl': loadLang('pl')
 };
 
 Object.entries(langs).map(([, locale]) => {
