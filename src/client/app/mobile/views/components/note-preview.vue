@@ -4,7 +4,7 @@
 	<div class="main">
 		<header>
 			<router-link class="name" :to="note.user | userPage">{{ note.user | userName }}</router-link>
-			<span class="username">@{{ note.user | acct }}</span>
+			<span class="username"><mk-acct :user="note.user"/></span>
 			<router-link class="time" :to="note | notePage">
 				<mk-time :time="note.createdAt"/>
 			</router-link>
@@ -69,8 +69,9 @@ root(isDark)
 					text-decoration underline
 
 			> .username
-				text-align left
 				margin 0 .5em 0 0
+				overflow hidden
+				text-overflow ellipsis
 				color isDark ? #606984 : #d1d8da
 
 			> .time

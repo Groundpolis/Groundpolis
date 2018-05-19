@@ -15,7 +15,7 @@
 				</div>
 				<div class="title">
 					<h1>{{ user | userName }}</h1>
-					<span class="username">@{{ user | acct }}</span>
+					<span class="username"><mk-acct :user="user"/></span>
 					<span class="followed" v-if="user.isFollowed">%i18n:@follows-you%</span>
 				</div>
 				<div class="description">{{ user.description }}</div>
@@ -84,7 +84,7 @@ export default Vue.extend({
 		style(): any {
 			if (this.user.bannerUrl == null) return {};
 			return {
-				backgroundColor: this.user.bannerColor ? `rgb(${ this.user.bannerColor.join(',') })` : null,
+				backgroundColor: this.user.bannerColor && this.user.bannerColor.length == 3 ? `rgb(${ this.user.bannerColor.join(',') })` : null,
 				backgroundImage: `url(${ this.user.bannerUrl })`
 			};
 		}

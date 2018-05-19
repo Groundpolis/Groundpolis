@@ -17,7 +17,7 @@
 			<header>
 				<router-link class="name" :to="p.user | userPage">{{ p.user | userName }}</router-link>
 				<span class="is-bot" v-if="p.user.host === null && p.user.isBot">bot</span>
-				<span class="username">@{{ p.user | acct }}</span>
+				<span class="username"><mk-acct :user="p.user"/></span>
 				<div class="info">
 					<span class="mobile" v-if="p.viaMobile">%fa:mobile-alt%</span>
 					<router-link class="created-at" :to="p | notePage">
@@ -268,6 +268,7 @@ root(isDark)
 		align-items center
 		padding 8px 16px
 		line-height 28px
+		white-space pre
 		color #9dbb00
 		background isDark ? linear-gradient(to bottom, #314027 0%, #282c37 100%) : linear-gradient(to bottom, #edfde2 0%, #fff 100%)
 
