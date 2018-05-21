@@ -1,7 +1,7 @@
 ---
 meta:
   lang: "English"
-  divider: " "
+  divider: ""
 common:
   misskey: "Share everything with others using Misskey."
   time:
@@ -22,7 +22,7 @@ common:
     wednesday: "W"
     thursday: "T"
     friday: "F"
-    saturday: "土"
+    saturday: "S"
   reactions:
     like: "Like"
     love: "Love"
@@ -165,6 +165,20 @@ common/views/widgets/photo-stream.vue:
 common/views/widgets/server.vue:
   title: "Server info"
   toggle: "Toggle views"
+common/views/widgets/visibility-chooser.vue:
+  public: "Public"
+  home: "Home"
+  home-desc: "ホームタイムラインにのみ公開"
+  followers: "Followers"
+  followers-desc: "自分のフォロワーにのみ公開"
+  specified: "Direct"
+  specified-desc: "指定したユーザーにのみ公開"
+  private: "Private"
+desktop/views/components/activity.chart.vue:
+  total: "Black ... Total"
+  notes: "Blue ... Notes"
+  replies: "Red ... Replies"
+  renotes: "Green ... Renotes"
 desktop/views/components/activity.vue:
   title: "Activity"
   toggle: "Toggle views"
@@ -173,6 +187,20 @@ desktop/views/components/calendar.vue:
   prev: "Previous month"
   next: "Next month"
   go: "Click to naviguate"
+desktop/views/components/choose-file-from-drive-window.vue:
+  choose-file: "ファイル選択中"
+  upload: "Upload files from your PC"
+  cancel: "Cancel"
+  ok: "OK"
+  choose-prompt: "Choose a file"
+desktop/views/components/choose-folder-from-drive-window.vue:
+  cancel: "Cancel"
+  ok: "OK"
+  choose-prompt: "Choose a Folder"
+desktop/views/components/crop-window.vue:
+  skip: "Skip cropping"
+  cancel: "Cancel"
+  ok: "OK"
 desktop/views/components/drive-window.vue:
   used: "used"
   drive: "Drive"
@@ -224,6 +252,25 @@ desktop/views/components/drive.vue:
     create-folder: "Create a folder"
     upload: "Upload a file"
     url-upload: "Upload from a URL"
+desktop/views/components/follow-button.vue:
+  unfollow: "Unfollow"
+  follow: "Follow"
+desktop/views/components/followers-window.vue:
+  followers: "Followers of {}"
+desktop/views/components/followers.vue:
+  empty: "Seems that you don’t have any followers."
+desktop/views/components/following-window.vue:
+  following: "Following {}"
+desktop/views/components/following.vue:
+  empty: "You don’t follow anyone."
+desktop/views/components/friends-maker.vue:
+  title: "気になるユーザーをフォロー:"
+  empty: "Similar users weren’t found."
+  fetching: "Loading…"
+  refresh: "More"
+  close: "Close"
+desktop/views/components/game-window.vue:
+  game: "Othello"
 desktop/views/components/home.vue:
   done: "Submit"
   add-widget: "Add widget:"
@@ -240,23 +287,38 @@ desktop/views/components/home.vue:
   notifications: "Notifications"
   users: "Recommended users"
   polls: "Polls"
-  post-form: "投稿フォーム"
+  post-form: "Post form"
   messaging: "Messaging"
-  channel: "Channel"
-  access-log: "Access log"
   server: "Server info"
   donation: "Donation"
   nav: "Navigation"
   tips: "Tips"
   add: "Add"
+desktop/views/input-dialog.vue:
+  cancel: "Cancel"
+  ok: "OK"
+desktop/views/components/messaging-room-window.vue:
+  title: "Messages:"
 desktop/views/components/messaging-window.vue:
   title: "Messaging"
+desktop/views/components/note-detail.vue:
+  more: "Load more conversations"
+  private: "(this post is private)"
+  is-renote: "がRenote"
+  location: "Location"
+  renote: "Renote"
+  add-reaction: "リアクション"
+desktop/views/components/note-detail.sub.vue:
+  private: "(this post is private)"
 desktop/views/components/notes.note.vue:
   reposted-by: "Reposted by {}"
   reply: "Reply"
   renote: "Renote"
   add-reaction: "Add a reaction"
   detail: "Show detail"
+desktop/views/components/notes.vue:
+  error: "Loading failed."
+  retry: "Retry"
 desktop/views/components/notifications.vue:
   more: "More"
   empty: "No notifications"
@@ -285,6 +347,8 @@ desktop/views/components/post-form-window.vue:
   reply: "Reply"
   attaches: "{} media attached"
   uploading-media: "Uploading {} media"
+desktop/views/components/progress-dialog.vue:
+  waiting: "Waiting"
 desktop/views/components/renote-form.vue:
   quote: "Quote..."
   cancel: "Cancel"
@@ -306,6 +370,67 @@ desktop/views/components/settings.vue:
   2fa: "Two-factor authentication"
   other: "Other"
   license: "License"
+  behaviour: "Behavior"
+  fetch-on-scroll: "Fetch on scroll"
+  fetch-on-scroll-desc: "When you scroll down the page automatically fetches additional content."
+  auto-popout: "Auto pop-out window"
+  auto-popout-desc: "Pop-out an opened window if possible. This setting is stored in the browser."
+  advanced: "Advanced settings"
+  api-via-stream: "API request via stream"
+  api-via-stream-desc: "API request is performed via the WebSocket connection instead of native fetch API (for better performance). This setting is stored in the browser."
+  display: "Design and display"
+  customize: "Customize Home"
+  dark-mode: "Dark Mode"
+  circle-icons: "Use circle icons"
+  gradient-window-header: "Use gradients on window headers"
+  post-form-on-timeline: "Display post form at the top of the timeline"
+  show-reply-target: "Display reply target"
+  show-my-renotes: "Show my renote in the timeline"
+  show-renoted-my-notes: "Show renoted my post in the timeline"
+  show-maps: "Show the map"
+  show-maps-desc: "Show the map of the location attached to the post."
+  sound: "Sound"
+  enable-sounds: "Enable sound"
+  enable-sounds-desc: "Play a sound when you received a post/message. This setting is stored in the browser."
+  volume: "Volume"
+  test: "Test"
+  mobile: "Mobile"
+  disable-via-mobile: "Not mark the post as 'from mobile'"
+  language: "Language"
+  pick-language: "Select a language"
+  recommended: "Recommended"
+  auto: "Auto"
+  specify-language: "Specify the language"
+  language-desc: "You need to reload the page for the changes to take effect."
+  cache: "Cache"
+  clean-cache: "Cleanup"
+  cache-warn: "The cache of account info/posts/replies/messages/settings stored in the browser will be deleted. You need to reload the page after cleaning up."
+  cache-cleared: "Cache cleared"
+  cache-cleared-desc: "Please reload the page."
+  auto-watch: "Auto watch"
+  auto-watch-desc: "Receive notifications about the post/reply/reaction automatically."
+  about: "About Misskey"
+  operator: "The admin of this instance"
+  update: "Misskey Update"
+  version: "Version:"
+  latest-version: "Latest version:"
+  update-checking: "Checking for updates"
+  do-update: "Check for update"
+  update-settings: "Advanced settings"
+  prevent-update: "アップデートを延期する(非推奨)"
+  prevent-update-desc: "この設定をオンにしてもアップデートが反映される場合があります。この設定はこのデバイスのみ有効です。"
+  no-updates: "No updates available"
+  no-updates-desc: "Your Misskey is up to date."
+  update-available: "New version is available!"
+  update-available-desc: "To reload the page and updates are applied."
+  advanced-settings: "Advanced"
+  debug-mode: "Enable the debug mode"
+  debug-mode-desc: "This setting is stored in the browser."
+  experimental: "Enable experimental features"
+  experimental-desc: "It would make Misskey client unstable. This setting is stored in the browser."
+  tools: "Tools"
+  task-manager: "Task Manager"
+  third-parties: "Third-party"
 desktop/views/components/settings.2fa.vue:
   intro: "If you set up 2-step verification, you will need not only a password at sign-in but also a pre-registered physical device (such as your smartphone), which will improve security. "
   detail: "See details..."
@@ -325,7 +450,7 @@ desktop/views/components/settings.2fa.vue:
   failed: "Failed to setup. please ensure that the token is correct."
   info: "From now on, enter the token that is displayed on your device in addition to your password when signing-in to Misskey."
 desktop/views/components/settings.api.vue:
-  intro: "APIを利用するには、上記のトークンを「i」というキーでパラメータに付加してリクエストします。"
+  intro: "To access the API, set this token as the key 'i' of request parameters."
   caution: "Please do not show this token to third parties (do not enter it somewhere else other than here) otherwise your account could get compromised."
   regeneration-of-token: "In the unlikely event that this token leaks out you can regenerate it."
   regenerate-token: "Regenerate the token"
@@ -350,6 +475,14 @@ desktop/views/components/settings.profile.vue:
   description: "Description"
   birthday: "Birthday"
   save: "Update profile"
+  is-bot: "This account is a Bot"
+  is-cat: "This account is a Cat"
+desktop/views/components/sub-note-content.vue:
+  hidden: "(this post is private)"
+  media: " media"
+  poll: "Polls"
+desktop/views/components/taskmanager.vue:
+  title: "Task Manager"
 desktop/views/components/timeline.vue:
   home: "Home"
   local: "Local"
@@ -385,6 +518,23 @@ desktop/views/components/users-list.vue:
   iknow: "You know"
   load-more: "More"
   fetching: "Loading…"
+desktop/views/components/users-list-item.vue:
+  followed: "Follows you"
+desktop/views/components/window.vue:
+  popout: "Popout"
+  close: "Close"
+desktop/views/pages/welcome.vue:
+  signin: "Log In"
+  signup: "Sign up"
+  signin-button: "Log in"
+  signup-button: "Sign up"
+  timeline: "Timeline"
+desktop/views/pages/drive.vue:
+  title: "Misskey Drive"
+desktop/views/pages/favorites.vue:
+  more: "Load More"
+desktop/views/pages/home-customize.vue:
+  title: "Customize home"
 desktop/views/pages/note.vue:
   prev: "Previous note"
   next: "Next note"
@@ -393,6 +543,10 @@ desktop/views/pages/selectdrive.vue:
   ok: "OK"
   cancel: "Cancel"
   upload: "Upload files from you PC"
+desktop/views/pages/user-list.users.vue:
+  users: "User"
+  add-user: "Add a user"
+  username: "Username"
 desktop/views/pages/user/user.followers-you-know.vue:
   title: "Followers you know"
   loading: "Loading"
@@ -419,6 +573,11 @@ desktop/views/pages/user/user.profile.vue:
   mute: "Mute"
   muted: "Muting"
   unmute: "Unmute"
+desktop/views/pages/user/user.timeline.vue:
+  default: "Posts"
+  with-replies: "Posts and replies"
+  with-media: "Media"
+  empty: "This user has never posted yet."
 desktop/views/widgets/messaging.vue:
   title: "Messaging"
 desktop/views/widgets/notifications.vue:
@@ -432,6 +591,9 @@ desktop/views/widgets/post-form.vue:
   title: "Post"
   note: "Post"
   placeholder: "What's happening?"
+desktop/views/widgets/profile.vue:
+  update-banner: "Click to edit your banner"
+  update-avatar: "Click to edit your avatar"
 desktop/views/widgets/trends.vue:
   title: "Trend"
   refresh: "Show others"
@@ -440,10 +602,6 @@ desktop/views/widgets/users.vue:
   title: "Recommended users"
   refresh: "Show others"
   no-one: "No one"
-desktop/views/widgets/channel.vue:
-  title: "Channel"
-  settings: "Widget settings"
-  get-started: "Please click the cog in the upper right corner to specify a channel"
 mobile/views/components/drive.vue:
   drive: "Drive"
   used: "used"
@@ -476,9 +634,9 @@ mobile/views/components/notifications.vue:
   empty: "No notifications"
 mobile/views/components/post-form.vue:
   submit: "Post"
-  reply: "返信"
+  reply: "Reply"
   renote: "Renote"
-  renote-placeholder: "この投稿を引用... (オプション)"
+  renote-placeholder: "Quote this post. (optional)"
   reply-placeholder: "Reply to this note..."
   note-placeholder: "What's happening?"
 mobile/views/components/sub-note-content.vue:
@@ -522,21 +680,20 @@ mobile/views/pages/note.vue:
 mobile/views/pages/notifications.vue:
   notifications: "Notifications"
   read-all: "Are you sure you want to mark all unread notifications as read?"
-mobile/views/pages/profile-setting.vue:
-  title: "Profile settings"
-  will-be-published: "These profile settings will be updated."
+mobile/views/pages/settings/settings.profile.vue:
+  title: "Profile"
   name: "Name"
+  account: "Account"
   location: "Location"
   description: "Description"
   birthday: "Birthday"
   avatar: "Avatar"
   banner: "Banner"
-  avatar-saved: "Avatar updated successfully"
-  banner-saved: "Banner updated successfully"
-  set-avatar: "Choose an avatar"
-  set-banner: "Choose a banner"
-  save: "Save"
+  is-cat: "This account is a Cat"
+  save: "Update profile"
   saved: "Profile updated successfully"
+  uploading: "Uploading"
+  upload-failed: "Upload failed"
 mobile/views/pages/search.vue:
   search: "Search"
   empty: "No posts were found for '{}'"
@@ -544,9 +701,38 @@ mobile/views/pages/selectdrive.vue:
   select-file: "Choose a file"
 mobile/views/pages/settings.vue:
   signed-in-as: "Signed in as {}"
-  profile: "Profile"
+  lang: "Language"
+  lang-tip: "You will need to reload the page for the changes to take effect."
+  recommended: "Recommended"
+  auto: "Auto"
+  specify-language: "Specify the language"
+  design: "Design and display"
+  dark-mode: "Dark Mode"
+  i-am-under-limited-internet: "I'm under limited internet"
+  circle-icons: "Use circle icons"
+  timeline: "Timeline"
+  show-reply-target: "Show reply target"
+  show-my-renotes: "Show my renotes"
+  show-renoted-my-notes: "Show renoted my notes"
+  post-style: "Post design"
+  post-style-standard: "Standard"
+  post-style-smart: "Smart"
+  behavior: "Behavior"
+  fetch-on-scroll: "Fetch on scroll"
+  disable-via-mobile: "Without the \"mobile posts\" flag"
   twitter: "Twitter integration"
-  signin-history: "Sign in history"
+  twitter-connect: "Connect to your Twitter account"
+  twitter-reconnect: "Reconnect"
+  twitter-disconnect: "Disconnect"
+  update: "Misskey Update"
+  version: "Current version:"
+  latest-version: "Latest version:"
+  update-checking: "Checking for updates"
+  check-for-updates: "Check for update"
+  no-updates: "No updates available"
+  no-updates-desc: "Your Misskey is up to date."
+  update-available: "New version is available!"
+  update-available-desc: "To reload the page and updates are applied."
   settings: "Settings"
   signout: "Sign out"
 mobile/views/pages/user.vue:

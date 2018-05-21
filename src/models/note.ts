@@ -4,7 +4,6 @@ import rap from '@prezzemolo/rap';
 import db from '../db/mongodb';
 import { IUser, pack as packUser } from './user';
 import { pack as packApp } from './app';
-import { pack as packChannel } from './channel';
 import PollVote, { deletePollVote } from './poll-vote';
 import Reaction, { deleteNoteReaction } from './note-reaction';
 import { pack as packFile } from './drive-file';
@@ -29,7 +28,6 @@ export function isValidCw(text: string): boolean {
 
 export type INote = {
 	_id: mongo.ObjectID;
-	channelId: mongo.ObjectID;
 	createdAt: Date;
 	deletedAt: Date;
 	mediaIds: mongo.ObjectID[];
@@ -258,11 +256,6 @@ export const pack = async (
 		_note.app = packApp(_note.appId);
 	}
 
-	// Populate channel
-	if (_note.channelId) {
-		_note.channel = packChannel(_note.channelId);
-	}
-
 	// Populate media
 	_note.media = hide ? [] : Promise.all(_note.mediaIds.map(fileId =>
 		packFile(fileId)
@@ -330,6 +323,10 @@ export const pack = async (
 
 	// resolve promises in _note object
 	_note = await rap(_note);
+
+	if (_note.user.isCat && _note.text) {
+		_note.text = _note.text.replace(/な/g, 'にゃ').replace(/ナ/g, 'ニャ');
+	}
 
 	if (hide) {
 		_note.mediaIds = [];

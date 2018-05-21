@@ -1,7 +1,7 @@
 ---
 meta:
-  lang: "日本語"
-  divider: ""
+  lang: "język polski"
+  divider: " "
 common:
   misskey: "Dziel się zawartością z innymi korzystając z Misskey."
   time:
@@ -165,6 +165,20 @@ common/views/widgets/photo-stream.vue:
 common/views/widgets/server.vue:
   title: "Informacje o serwerze"
   toggle: "Przełącz widok"
+common/views/widgets/visibility-chooser.vue:
+  public: "公開"
+  home: "ホーム"
+  home-desc: "ホームタイムラインにのみ公開"
+  followers: "フォロワー"
+  followers-desc: "自分のフォロワーにのみ公開"
+  specified: "ダイレクト"
+  specified-desc: "指定したユーザーにのみ公開"
+  private: "非公開"
+desktop/views/components/activity.chart.vue:
+  total: "Czarny … Łącznie"
+  notes: "Niebieski … Wpisy"
+  replies: "Czerwony … Odpowiedzi"
+  renotes: "Czerwony … Udostępnienia"
 desktop/views/components/activity.vue:
   title: "Aktywność"
   toggle: "Przełącz widok"
@@ -173,6 +187,20 @@ desktop/views/components/calendar.vue:
   prev: "Poprzedni miesiąc"
   next: "Następny miesiąc"
   go: "Naciśnij, aby przejść"
+desktop/views/components/choose-file-from-drive-window.vue:
+  choose-file: "Wybierz plik"
+  upload: "Wyślij pliki z Twojego komputera"
+  cancel: "Anuluj"
+  ok: "OK"
+  choose-prompt: "Wybierz plik"
+desktop/views/components/choose-folder-from-drive-window.vue:
+  cancel: "Anuluj"
+  ok: "OK"
+  choose-prompt: "Wybierz katalog"
+desktop/views/components/crop-window.vue:
+  skip: "Pomiń przycinanie"
+  cancel: "Anuluj"
+  ok: "OK"
 desktop/views/components/drive-window.vue:
   used: "wykorzystane"
   drive: "Dysk"
@@ -224,6 +252,25 @@ desktop/views/components/drive.vue:
     create-folder: "Utwórz katalog"
     upload: "Wyślij plik"
     url-upload: "Wyślij z adresu URL"
+desktop/views/components/follow-button.vue:
+  unfollow: "Przestań śledzić"
+  follow: "Śledź"
+desktop/views/components/followers-window.vue:
+  followers: "Śledzący"
+desktop/views/components/followers.vue:
+  empty: "Wygląda na to, że nikt Cię nie śledzi…"
+desktop/views/components/following-window.vue:
+  following: "Śledzeni przez {}"
+desktop/views/components/following.vue:
+  empty: "Nikt Cię nie śledzi."
+desktop/views/components/friends-maker.vue:
+  title: "Zacznij śledzić ludzi takich jak Ty:"
+  empty: "Nie znaleziono podobnych użytkowników."
+  fetching: "Ładowanie…"
+  refresh: "Więcej"
+  close: "Zamknij"
+desktop/views/components/game-window.vue:
+  game: "Othello"
 desktop/views/components/home.vue:
   done: "Wyślij"
   add-widget: "Dodaj widżet:"
@@ -236,27 +283,42 @@ desktop/views/components/home.vue:
   photostream: "Photostream"
   slideshow: "Pokaz slajdów"
   version: "Wersja"
-  broadcast: "ブロードキャスト"
+  broadcast: "Transmisja"
   notifications: "Powiadomienia"
   users: "Polecani użytkownicy"
   polls: "Ankiety"
-  post-form: "投稿フォーム"
+  post-form: "Formularz tworzenia"
   messaging: "Wiadomości"
-  channel: "Kanał"
-  access-log: "アクセスログ"
   server: "Informacje o serwerze"
   donation: "Dotacje"
   nav: "Nawigacja"
   tips: "Wskazówki"
   add: "Dodaj"
+desktop/views/input-dialog.vue:
+  cancel: "Anuluj"
+  ok: "OK"
+desktop/views/components/messaging-room-window.vue:
+  title: "Wiadomości:"
 desktop/views/components/messaging-window.vue:
   title: "Wiadomości"
+desktop/views/components/note-detail.vue:
+  more: "Załaduj więcej konwersacji"
+  private: "(ten wpis jest prywatny)"
+  is-renote: "がRenote"
+  location: "Informacje o lokalizacji"
+  renote: "Przeredaguj"
+  add-reaction: "Dodaj reakcję"
+desktop/views/components/note-detail.sub.vue:
+  private: "(ten wpis jest prywatny)"
 desktop/views/components/notes.note.vue:
   reposted-by: "Udostępniono przez {}"
   reply: "Odpowiedz"
   renote: "Przeredaguj"
   add-reaction: "Dodaj reakcję"
   detail: "Pokaż szczegóły"
+desktop/views/components/notes.vue:
+  error: "Ładowanie nie powiodło się."
+  retry: "Spróbuj ponownie"
 desktop/views/components/notifications.vue:
   more: "Więcej"
   empty: "Brak powiadomień"
@@ -285,6 +347,8 @@ desktop/views/components/post-form-window.vue:
   reply: "Odpowiedz"
   attaches: "{} załączników multimedialnych"
   uploading-media: "Wysyłanie {} treści multimedialnych"
+desktop/views/components/progress-dialog.vue:
+  waiting: "Oczekiwanie"
 desktop/views/components/renote-form.vue:
   quote: "Cytuj…"
   cancel: "Anuluj"
@@ -306,6 +370,67 @@ desktop/views/components/settings.vue:
   2fa: "Uwierzytelnianie dwuetapowe"
   other: "Inne"
   license: "Licencja"
+  behaviour: "Zachowanie"
+  fetch-on-scroll: "Automatycznie ładuj po przeciągnięciu w dół"
+  fetch-on-scroll-desc: "Po przewinięciu na dół strony automatycznie zostaną załadowane nowe treści."
+  auto-popout: "Automatycznie pojawiające się okna"
+  auto-popout-desc: "ウィンドウが開かれるとき、ポップアウト(ブラウザ外に切り離す)可能なら自動でポップアウトします。この設定はブラウザに記憶されます。"
+  advanced: "Ustawienia zaawansowane"
+  api-via-stream: "ストリームを経由したAPIリクエスト"
+  api-via-stream-desc: "この設定をオンにすると、websocket接続を経由してAPIリクエストが行われます(パフォーマンス向上が期待できます)。オフにすると、ネイティブの fetch APIが利用されます。この設定はこのデバイスのみ有効です。"
+  display: "Wygląd i wyświetlanie"
+  customize: "Dostosuj stronę główną"
+  dark-mode: "Tryb ciemny"
+  circle-icons: "Używaj okrągłych ikon"
+  gradient-window-header: "Używaj gradientów na pasku tytułu okna"
+  post-form-on-timeline: "Wyświetlaj formularz tworzenia wpisu w górnej części osi czasu"
+  show-reply-target: "Pokazuj cel odpowiedzi"
+  show-my-renotes: "自分の行ったRenoteをタイムラインに表示する"
+  show-renoted-my-notes: "Renoteされた自分の投稿をタイムラインに表示する"
+  show-maps: "Automatycznie pokazuj mapę"
+  show-maps-desc: "Mapa będzie automatycznie rozwijana dla wpisów zawierających informacje o lokalizacji."
+  sound: "Dźwięk"
+  enable-sounds: "Włącz dźwięk"
+  enable-sounds-desc: "Odtwarzaj dźwięk przy wstawianiu wpisów, wysyłaniu lub otrzymywaniu wiadomości. Opcja ta jest zapamiętywana przez przeglądarkę."
+  volume: "Głośność"
+  test: "Test"
+  mobile: "Wersja mobilna"
+  disable-via-mobile: "Nie oznaczaj wpisów jako „wysłane z telefonu”"
+  language: "Język"
+  pick-language: "Wybierz język"
+  recommended: "Zalecane"
+  auto: "Automatycznie"
+  specify-language: "Wybierz język"
+  language-desc: "Aby zmiany zostały uwzględnione, odśwież stronę."
+  cache: "Pamięć podręczna"
+  clean-cache: "Wyczyść"
+  cache-warn: "クリーンアップを行うと、ブラウザに記憶されたアカウント情報のキャッシュ、書きかけの投稿・返信・メッセージ、およびその他のデータ(設定情報含む)が削除されます。クリーンアップを行った後はページを再度読み込みする必要があります。"
+  cache-cleared: "Wyczyszczono pamięć podręczną"
+  cache-cleared-desc: "Proszę odświeżyć stronę."
+  auto-watch: "投稿の自動ウォッチ"
+  auto-watch-desc: "リアクションしたり返信したりした投稿に関する通知を自動的に受け取るようにします。"
+  about: "O Misskey"
+  operator: "Administrator instancji"
+  update: "Aktualizacja Misskey"
+  version: "Wersja:"
+  latest-version: "Najnowsza wersja:"
+  update-checking: "Sprawdzanie dostępności aktualizacji"
+  do-update: "Sprawdź dostępność aktualizacji"
+  update-settings: "Ustawienia zaawansowane"
+  prevent-update: "Unikaj aktualizacji (niezalecane)"
+  prevent-update-desc: "Nawet jeżeli opcja jest zaznaczona, aktualizacje mogą zostać wykonane. Opcja dotyczy tylko tego urządzenia."
+  no-updates: "Brak dostępnych aktualizacji"
+  no-updates-desc: "Twój Misskey jest aktualny."
+  update-available: "Dostępna jest nowa wersja"
+  update-available-desc: "Odśwież stronę, aby zastosować aktualizację."
+  advanced-settings: "Ustawienia zaawansowane"
+  debug-mode: "Włącz tryb debugowania"
+  debug-mode-desc: "To ustawienie jest przechowywane w przeglądarce."
+  experimental: "Włącz eksperymentalne funkcje"
+  experimental-desc: "Aktywowanie eksperymentalnych funkcji może spowodować niestabilność Misskey. Opcja ta jest przechowywana w przeglądarce."
+  tools: "Narzędzia"
+  task-manager: "Menedżer zadań"
+  third-parties: "サードパーティ"
 desktop/views/components/settings.2fa.vue:
   intro: "Jeżeli skonfigurujesz uwierzytelnianie dwuetapowe, aby zablokować się będziesz potrzebować (oprócz hasła) kodu ze skonfigurowanego urządzenia (np. smartfonu), co zwiększy bezpieczeństwo."
   detail: "Zobacz szczegóły…"
@@ -350,6 +475,14 @@ desktop/views/components/settings.profile.vue:
   description: "Opis"
   birthday: "Data urodzenia"
   save: "Aktualizuj profil"
+  is-bot: "このアカウントはBotです"
+  is-cat: "このアカウントはCatです"
+desktop/views/components/sub-note-content.vue:
+  hidden: "(この投稿は非公開です)"
+  media: "つのメディア"
+  poll: "投票"
+desktop/views/components/taskmanager.vue:
+  title: "Menedżer zadań"
 desktop/views/components/timeline.vue:
   home: "Strona główna"
   local: "Lokalne"
@@ -385,6 +518,23 @@ desktop/views/components/users-list.vue:
   iknow: "Znasz"
   load-more: "Więcej"
   fetching: "Ładowanie…"
+desktop/views/components/users-list-item.vue:
+  followed: "フォローされています"
+desktop/views/components/window.vue:
+  popout: "ポップアウト"
+  close: "閉じる"
+desktop/views/pages/welcome.vue:
+  signin: "ログイン"
+  signup: "新規登録"
+  signin-button: "やってる"
+  signup-button: "やる"
+  timeline: "タイムライン"
+desktop/views/pages/drive.vue:
+  title: "Dysk Misskey"
+desktop/views/pages/favorites.vue:
+  more: "Załaduj więcej"
+desktop/views/pages/home-customize.vue:
+  title: "Dostosuj stronę główną"
 desktop/views/pages/note.vue:
   prev: "Poprzedni wpis"
   next: "Następny wpis"
@@ -393,6 +543,10 @@ desktop/views/pages/selectdrive.vue:
   ok: "OK"
   cancel: "Anuluj"
   upload: "Wyślij pliki z Twojego komputera"
+desktop/views/pages/user-list.users.vue:
+  users: "Użytkownicy"
+  add-user: "Dodaj użytkownika"
+  username: "Nazwa użytkownika"
 desktop/views/pages/user/user.followers-you-know.vue:
   title: "Śledzący których znasz"
   loading: "Ładowanie"
@@ -419,6 +573,11 @@ desktop/views/pages/user/user.profile.vue:
   mute: "Wycisz"
   muted: "Wyciszyłeś"
   unmute: "Cofnij wyciszenie"
+desktop/views/pages/user/user.timeline.vue:
+  default: "Wpisy"
+  with-replies: "Wpisy i odpowiedzi"
+  with-media: "Zawartość multimedialna"
+  empty: "Ten użytkownik nie umieścił jeszcze niczego."
 desktop/views/widgets/messaging.vue:
   title: "Wiadomości"
 desktop/views/widgets/notifications.vue:
@@ -432,6 +591,9 @@ desktop/views/widgets/post-form.vue:
   title: "Wpis"
   note: "Wpis"
   placeholder: "Co się dzieje?"
+desktop/views/widgets/profile.vue:
+  update-banner: "Naciśnij, aby zmienić baner"
+  update-avatar: "Naciśnij, aby zmienić awatar"
 desktop/views/widgets/trends.vue:
   title: "Na czasie"
   refresh: "Pokaż inne"
@@ -440,10 +602,6 @@ desktop/views/widgets/users.vue:
   title: "Polecani użytkownicy"
   refresh: "Pokaż innych"
   no-one: "Pusto"
-desktop/views/widgets/channel.vue:
-  title: "Kanał"
-  settings: "Ustawienia widżetu"
-  get-started: "右上の歯車をクリックして受信するチャンネルを指定してください"
 mobile/views/components/drive.vue:
   drive: "Dysk"
   used: "użyto"
@@ -476,9 +634,9 @@ mobile/views/components/notifications.vue:
   empty: "Brak powiadomień"
 mobile/views/components/post-form.vue:
   submit: "Wyślij"
-  reply: "返信"
-  renote: "Renote"
-  renote-placeholder: "この投稿を引用... (オプション)"
+  reply: "Odpowiedz"
+  renote: "Przeredaguj"
+  renote-placeholder: "Zacytuj wpis… (nieobowiązkowe)"
   reply-placeholder: "Odpowiedź na ten wpis…"
   note-placeholder: "Co się dzieje?"
 mobile/views/components/sub-note-content.vue:
@@ -516,27 +674,26 @@ mobile/views/pages/messaging.vue:
 mobile/views/pages/messaging-room.vue:
   messaging: "Wiadomości"
 mobile/views/pages/note.vue:
-  title: "Wyślij"
+  title: "Wpis"
   prev: "Poprzedni wpis"
   next: "Następny wpis"
 mobile/views/pages/notifications.vue:
   notifications: "Powiadomienia"
   read-all: "Czy na pewno chcesz oznaczyć wszystkie powiadomienia jako przeczytane?"
-mobile/views/pages/profile-setting.vue:
-  title: "Ustawienia profilu"
-  will-be-published: "Te ustawienia profilu zostaną zaktualizowane."
+mobile/views/pages/settings/settings.profile.vue:
+  title: "Profil"
   name: "Nazwa"
+  account: "Konto"
   location: "Lokalizacja"
   description: "Opis"
   birthday: "Data urodzenia"
   avatar: "Awatar"
   banner: "Baner"
-  avatar-saved: "Pomyślnie zaktualizowano awatar"
-  banner-saved: "Pomyślnie zaktualizowano baner"
-  set-avatar: "Wybierz awatar"
-  set-banner: "Wybierz baner"
-  save: "Zapisz"
+  is-cat: "このアカウントはCatです"
+  save: "Aktualizuj profil"
   saved: "Pomyślnie zaktualizowano profil"
+  uploading: "Wysyłanie"
+  upload-failed: "Wysyłanie nie powiodło się"
 mobile/views/pages/search.vue:
   search: "Szukaj"
   empty: "Nie znaleziono wpisów zawierających '{}'"
@@ -544,9 +701,38 @@ mobile/views/pages/selectdrive.vue:
   select-file: "Wybierz plik"
 mobile/views/pages/settings.vue:
   signed-in-as: "Zalogowany jako {}"
-  profile: "Profil"
+  lang: "Język"
+  lang-tip: "Aby zmiany zostały uwzględnione, odśwież stronę."
+  recommended: "Zalecany"
+  auto: "Automatycznie"
+  specify-language: "Wybierz język"
+  design: "Wygląd i wyświetlanie"
+  dark-mode: "Tryb ciemny"
+  i-am-under-limited-internet: "Ograniczaj zużycie transferu"
+  circle-icons: "Używaj okrągłych ikon"
+  timeline: "Oś czasu"
+  show-reply-target: "Pokazuj cel odpowiedzi"
+  show-my-renotes: "自分の行ったRenoteを表示する"
+  show-renoted-my-notes: "Renoteされた自分の投稿を表示する"
+  post-style: "Styl wpisów"
+  post-style-standard: "Standardowy"
+  post-style-smart: "スマート"
+  behavior: "Zachowanie"
+  fetch-on-scroll: "Automatycznie ładuj po przeciągnięciu w dół"
+  disable-via-mobile: "Nie oznaczaj wpisów jako „wysłane z telefonu”"
   twitter: "Połączenie z Twitterem"
-  signin-history: "Historia logowań"
+  twitter-connect: "Połącz z Twitterem"
+  twitter-reconnect: "Połącz ponownie"
+  twitter-disconnect: "Rozłącz"
+  update: "Aktualizacja Misskey"
+  version: "Wersja:"
+  latest-version: "Najnowsza wersja:"
+  update-checking: "Sprawdzanie dostępności aktualizacji"
+  check-for-updates: "Sprawdź dostępność aktualizacji"
+  no-updates: "Brak dostępnych aktualizacji"
+  no-updates-desc: "Twój Misskey jest aktualny."
+  update-available: "Dostępna jest nowa wersja"
+  update-available-desc: "Odśwież stronę, aby zastosować aktualizację."
   settings: "Ustawienia"
   signout: "Wyloguj"
 mobile/views/pages/user.vue:

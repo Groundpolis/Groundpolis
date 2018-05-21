@@ -5,8 +5,8 @@
 	<slot name="empty" v-if="notes.length == 0 && !fetching && requestInitPromise == null"></slot>
 
 	<div v-if="!fetching && requestInitPromise != null">
-		<p>読み込みに失敗しました。</p>
-		<button @click="resolveInitPromise">リトライ</button>
+		<p>%i18n:@error%</p>
+		<button @click="resolveInitPromise">%i18n:@retry%</button>
 	</div>
 
 	<transition-group name="mk-notes" class="transition">
@@ -145,9 +145,9 @@ export default Vue.extend({
 				this.notes.unshift(note);
 
 				// サウンドを再生する
-				if ((this as any).os.isEnableSounds && !silent) {
+				if (this.$store.state.device.enableSounds && !silent) {
 					const sound = new Audio(`${url}/assets/post.mp3`);
-					sound.volume = localStorage.getItem('soundVolume') ? parseInt(localStorage.getItem('soundVolume'), 10) / 100 : 0.5;
+					sound.volume = this.$store.state.device.soundVolume;
 					sound.play();
 				}
 

@@ -8,7 +8,7 @@
 		<p class="empty" v-if="!init && messages.length == 0">%fa:info-circle%%i18n:@empty%</p>
 		<p class="no-history" v-if="!init && messages.length > 0 && !existMoreMessages">%fa:flag%%i18n:@no-history%</p>
 		<button class="more" :class="{ fetching: fetchingMoreMessages }" v-if="existMoreMessages" @click="fetchMoreMessages" :disabled="fetchingMoreMessages">
-			<template v-if="fetchingMoreMessages">%fa:spinner .pulse .fw%</template>{{ fetchingMoreMessages ? '%i18n:!common.loading%' : '%i18n:!@more%' }}
+			<template v-if="fetchingMoreMessages">%fa:spinner .pulse .fw%</template>{{ fetchingMoreMessages ? '%i18n:common.loading%' : '%i18n:@more%' }}
 		</button>
 		<template v-for="(message, i) in _messages">
 			<x-message :message="message" :key="message.id"/>
@@ -149,9 +149,9 @@ export default Vue.extend({
 
 		onMessage(message) {
 			// サウンドを再生する
-			if ((this as any).os.isEnableSounds) {
+			if (this.$store.state.device.enableSounds) {
 				const sound = new Audio(`${url}/assets/message.mp3`);
-				sound.volume = localStorage.getItem('soundVolume') ? parseInt(localStorage.getItem('soundVolume'), 10) / 100 : 0.5;
+				sound.volume = this.$store.state.device.soundVolume;
 				sound.play();
 			}
 
@@ -172,7 +172,7 @@ export default Vue.extend({
 				});
 			} else if (message.userId != (this as any).os.i.id) {
 				// Notify
-				this.notify('%i18n:!@new-message%');
+				this.notify('%i18n:@new-message%');
 			}
 		},
 
