@@ -1,7 +1,11 @@
 <template>
 <div class="mk-welcome">
+	<button @click="dark">
+		<template v-if="$store.state.device.darkmode">%fa:moon%</template>
+		<template v-else>%fa:R moon%</template>
+	</button>
 	<main>
-		<img src="assets/title.svg" alt="Misskey">
+		<img :src="$store.state.device.darkmode ? 'assets/title-dark.svg' : 'assets/title.svg'" alt="Misskey">
 		<p><button class="signup" @click="signup">%i18n:@signup-button%</button><button class="signin" @click="signin">%i18n:@signin-button%</button></p>
 
 		<div class="tl">
@@ -44,6 +48,12 @@ export default Vue.extend({
 		},
 		signin() {
 			this.$modal.show('signin');
+		},
+		dark() {
+			this.$store.commit('device/set', {
+				key: 'darkmode',
+				value: !this.$store.state.device.darkmode
+			});
 		}
 	}
 });
@@ -59,18 +69,25 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 @import '~const.styl'
 
-@import url('https://fonts.googleapis.com/css?family=Sarpanch:700')
-
-.mk-welcome
+root(isDark)
 	display flex
 	flex-direction column
 	flex 1
+
+	> button
+		position absolute
+		z-index 1
+		top 0
+		left 0
+		padding 16px
+		font-size 18px
+		color isDark ? #fff : #555
 
 	> main
 		flex 1
 		padding 64px 0 0 0
 		text-align center
-		color #555
+		color isDark ? #9aa4b3 : #555
 
 		> img
 			width 350px
@@ -102,13 +119,13 @@ export default Vue.extend({
 
 			.signin
 				&:hover
-					color #000
+					color isDark ? #fff : #000
 
 		> .tl
 			margin 32px auto 0 auto
 			width 410px
 			text-align left
-			background #fff
+			background isDark ? #313543 : #fff
 			border-radius 8px
 			box-shadow 0 8px 32px rgba(#000, 0.15)
 			overflow hidden
@@ -116,7 +133,7 @@ export default Vue.extend({
 			> header
 				z-index 1
 				padding 12px 16px
-				color #888d94
+				color isDark ? #e3e5e8 : #888d94
 				box-shadow 0 1px 0px rgba(#000, 0.1)
 
 				> div
@@ -130,7 +147,6 @@ export default Vue.extend({
 						height 11px
 						width 11px
 						margin-left 6px
-						background #ccc
 						border-radius 100%
 						vertical-align middle
 
@@ -149,7 +165,7 @@ export default Vue.extend({
 
 	> footer
 		font-size 12px
-		color #949ea5
+		color isDark ? #949ea5 : #737c82
 
 		> div
 			margin 0 auto
@@ -160,6 +176,12 @@ export default Vue.extend({
 				margin 16px 0 0 0
 				font-size 10px
 				opacity 0.7
+
+.mk-welcome[data-darkmode]
+	root(true)
+
+.mk-welcome:not([data-darkmode])
+	root(false)
 
 </style>
 

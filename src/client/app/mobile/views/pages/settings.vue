@@ -60,6 +60,14 @@
 					</div>
 
 					<div>
+						<md-switch v-model="loadRawImages">%i18n:@load-raw-images%</md-switch>
+					</div>
+
+					<div>
+						<md-switch v-model="clientSettings.loadRemoteMedia" @change="onChangeLoadRemoteMedia">%i18n:@load-remote-media%</md-switch>
+					</div>
+
+					<div>
 						<md-switch v-model="lightmode">%i18n:@i-am-under-limited-internet%</md-switch>
 					</div>
 				</md-card-content>
@@ -141,7 +149,6 @@ export default Vue.extend({
 			version,
 			codename,
 			langs,
-			darkmode: localStorage.getItem('darkmode') == 'true',
 			latestVersion: undefined,
 			checkingForUpdate: false
 		};
@@ -150,6 +157,11 @@ export default Vue.extend({
 	computed: {
 		name(): string {
 			return Vue.filter('userName')((this as any).os.i);
+		},
+
+		darkmode: {
+			get() { return this.$store.state.device.darkmode; },
+			set(value) { this.$store.commit('device/set', { key: 'darkmode', value }); }
 		},
 
 		postStyle: {
@@ -162,16 +174,15 @@ export default Vue.extend({
 			set(value) { this.$store.commit('device/set', { key: 'lightmode', value }); }
 		},
 
+		loadRawImages: {
+			get() { return this.$store.state.device.loadRawImages; },
+			set(value) { this.$store.commit('device/set', { key: 'loadRawImages', value }); }
+		},
+
 		lang: {
 			get() { return this.$store.state.device.lang; },
 			set(value) { this.$store.commit('device/set', { key: 'lang', value }); }
 		},
-	},
-
-	watch: {
-		darkmode() {
-			(this as any)._updateDarkmode_(this.darkmode);
-		}
 	},
 
 	mounted() {
@@ -193,6 +204,13 @@ export default Vue.extend({
 		onChangeDisableViaMobile(v) {
 			this.$store.dispatch('settings/set', {
 				key: 'disableViaMobile',
+				value: v
+			});
+		},
+
+		onChangeLoadRemoteMedia(v) {
+			this.$store.dispatch('settings/set', {
+				key: 'loadRemoteMedia',
 				value: v
 			});
 		},

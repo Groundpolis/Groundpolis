@@ -13,18 +13,22 @@ const defaultSettings = {
 	gradientWindowHeader: false,
 	showReplyTarget: true,
 	showMyRenotes: true,
-	showRenotedMyNotes: true
+	showRenotedMyNotes: true,
+	loadRemoteMedia: true,
+	disableViaMobile: false
 };
 
 const defaultDeviceSettings = {
 	apiViaStream: true,
 	autoPopout: false,
+	darkmode: false,
 	enableSounds: true,
 	soundVolume: 0.5,
 	lang: null,
 	preventUpdate: false,
 	debug: false,
 	lightmode: false,
+	loadRawImages: false,
 	postStyle: 'standard'
 };
 

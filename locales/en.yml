@@ -56,9 +56,9 @@ common/views/components/connect-failed.troubleshooter.vue:
   no-network-desc: "Please make sure you are connected to the Network."
   no-internet: "There is no Internet connection"
   no-internet-desc: "Please make sure you are connected to the Internet."
-  no-server: "Unable to connect to the server"
-  no-server-desc: "The network connection of your PC is normal, but you could not connect to Misskey's server. There is a possibility that the server is either down or under maintenance, please try again later."
-  success: "Successfully connected to Misskey's server"
+  no-server: "Unable to connect to the Misskey server"
+  no-server-desc: "The network connection of your PC is normal, but you could not connect to the Misskey server. There is a possibility that the server is either down or under maintenance, please try again later."
+  success: "Successfully connected to the Misskey server"
   success-desc: "It seems to be able to connect. Please reload the page."
   flush: "Clean cache"
   set-version: "Specify version"
@@ -121,7 +121,7 @@ common/views/components/signup.vue:
   unavailable: "Unavailable"
   error: "Network error"
   invalid-format: "Only use letters, numbers and -."
-  too-short: "Please enter at least 1 character！"
+  too-short: "Please enter at least 1 character!"
   too-long: "Please enter up to 20 characters."
   password: "Password"
   password-placeholder: "We recommend more than 8 characters."
@@ -168,11 +168,11 @@ common/views/widgets/server.vue:
 common/views/widgets/visibility-chooser.vue:
   public: "Public"
   home: "Home"
-  home-desc: "ホームタイムラインにのみ公開"
+  home-desc: "Post to the home timeline only"
   followers: "Followers"
-  followers-desc: "自分のフォロワーにのみ公開"
+  followers-desc: "Post to followers only"
   specified: "Direct"
-  specified-desc: "指定したユーザーにのみ公開"
+  specified-desc: "Post to specified users only"
   private: "Private"
 desktop/views/components/activity.chart.vue:
   total: "Black ... Total"
@@ -188,7 +188,7 @@ desktop/views/components/calendar.vue:
   next: "Next month"
   go: "Click to naviguate"
 desktop/views/components/choose-file-from-drive-window.vue:
-  choose-file: "ファイル選択中"
+  choose-file: "Choosing files"
   upload: "Upload files from your PC"
   cancel: "Cancel"
   ok: "OK"
@@ -264,7 +264,7 @@ desktop/views/components/following-window.vue:
 desktop/views/components/following.vue:
   empty: "You don’t follow anyone."
 desktop/views/components/friends-maker.vue:
-  title: "気になるユーザーをフォロー:"
+  title: "Recommended users:"
   empty: "Similar users weren’t found."
   fetching: "Loading…"
   refresh: "More"
@@ -304,10 +304,10 @@ desktop/views/components/messaging-window.vue:
 desktop/views/components/note-detail.vue:
   more: "Load more conversations"
   private: "(this post is private)"
-  is-renote: "がRenote"
+  reposted-by: "Renoted by {}"
   location: "Location"
   renote: "Renote"
-  add-reaction: "リアクション"
+  add-reaction: "Add a reaction"
 desktop/views/components/note-detail.sub.vue:
   private: "(this post is private)"
 desktop/views/components/notes.note.vue:
@@ -417,8 +417,8 @@ desktop/views/components/settings.vue:
   update-checking: "Checking for updates"
   do-update: "Check for update"
   update-settings: "Advanced settings"
-  prevent-update: "アップデートを延期する(非推奨)"
-  prevent-update-desc: "この設定をオンにしてもアップデートが反映される場合があります。この設定はこのデバイスのみ有効です。"
+  prevent-update: "Postpone updates (not recommended)"
+  prevent-update-desc: "You may reflect updates even if you select this setting. This setting is valid only this device."
   no-updates: "No updates available"
   no-updates-desc: "Your Misskey is up to date."
   update-available: "New version is available!"
@@ -668,7 +668,9 @@ mobile/views/pages/followers.vue:
 mobile/views/pages/following.vue:
   following-of: "Following of {}"
 mobile/views/pages/home.vue:
-  timeline: "Timeline"
+  home: "Home"
+  local: "Local"
+  global: "Global"
 mobile/views/pages/messaging.vue:
   messaging: "Messaging"
 mobile/views/pages/messaging-room.vue:
@@ -720,6 +722,8 @@ mobile/views/pages/settings.vue:
   behavior: "Behavior"
   fetch-on-scroll: "Fetch on scroll"
   disable-via-mobile: "Without the \"mobile posts\" flag"
+  load-raw-images: "Show attached pictures in high-quality"
+  load-remote-media: "Show media on a remote server"
   twitter: "Twitter integration"
   twitter-connect: "Connect to your Twitter account"
   twitter-reconnect: "Reconnect"
