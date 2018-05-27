@@ -72,7 +72,7 @@ export default Vue.extend({
 	},
 
 	mounted() {
-		this.connection = new MessagingStream((this as any).os, (this as any).os.i, this.user.id);
+		this.connection = new MessagingStream((this as any).os, this.$store.state.i, this.user.id);
 
 		this.connection.on('message', this.onMessage);
 		this.connection.on('read', this.onRead);
@@ -164,7 +164,7 @@ export default Vue.extend({
 			const isBottom = this.isBottom();
 
 			this.messages.push(message);
-			if (message.userId != (this as any).os.i.id && !document.hidden) {
+			if (message.userId != this.$store.state.i.id && !document.hidden) {
 				this.connection.send({
 					type: 'read',
 					id: message.id
@@ -176,7 +176,7 @@ export default Vue.extend({
 				this.$nextTick(() => {
 					this.scrollToBottom();
 				});
-			} else if (message.userId != (this as any).os.i.id) {
+			} else if (message.userId != this.$store.state.i.id) {
 				// Notify
 				this.notifyNewMessage();
 			}
@@ -229,7 +229,7 @@ export default Vue.extend({
 		onVisibilitychange() {
 			if (document.hidden) return;
 			this.messages.forEach(message => {
-				if (message.userId !== (this as any).os.i.id && !message.isRead) {
+				if (message.userId !== this.$store.state.i.id && !message.isRead) {
 					this.connection.send({
 						type: 'read',
 						id: message.id
@@ -263,7 +263,7 @@ root(isDark)
 			padding 16px 8px 8px 8px
 			text-align center
 			font-size 0.8em
-			color rgba(#000, 0.4)
+			color rgba(isDark ? #fff : #000, 0.4)
 
 			[data-fa]
 				margin-right 4px

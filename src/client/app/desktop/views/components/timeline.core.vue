@@ -34,14 +34,13 @@ export default Vue.extend({
 			existMore: false,
 			connection: null,
 			connectionId: null,
-			unreadCount: 0,
 			date: null
 		};
 	},
 
 	computed: {
 		alone(): boolean {
-			return (this as any).os.i.followingCount == 0;
+			return this.$store.state.i.followingCount == 0;
 		},
 
 		stream(): any {
@@ -76,7 +75,6 @@ export default Vue.extend({
 		}
 
 		document.addEventListener('keydown', this.onKeydown);
-		document.addEventListener('visibilitychange', this.onVisibilitychange, false);
 
 		this.fetch();
 	},
@@ -90,7 +88,6 @@ export default Vue.extend({
 		this.stream.dispose(this.connectionId);
 
 		document.removeEventListener('keydown', this.onKeydown);
-		document.removeEventListener('visibilitychange', this.onVisibilitychange);
 	},
 
 	methods: {
@@ -101,8 +98,8 @@ export default Vue.extend({
 				(this as any).api(this.endpoint, {
 					limit: fetchLimit + 1,
 					untilDate: this.date ? this.date.getTime() : undefined,
-					includeMyRenotes: (this as any).clientSettings.showMyRenotes,
-					includeRenotedMyNotes: (this as any).clientSettings.showRenotedMyNotes
+					includeMyRenotes: this.$store.state.settings.showMyRenotes,
+					includeRenotedMyNotes: this.$store.state.settings.showRenotedMyNotes
 				}).then(notes => {
 					if (notes.length == fetchLimit + 1) {
 						notes.pop();
@@ -120,12 +117,14 @@ export default Vue.extend({
 
 			this.moreFetching = true;
 
-			(this as any).api(this.endpoint, {
+			const promise = (this as any).api(this.endpoint, {
 				limit: fetchLimit + 1,
 				untilId: (this.$refs.timeline as any).tail().id,
-				includeMyRenotes: (this as any).clientSettings.showMyRenotes,
-				includeRenotedMyNotes: (this as any).clientSettings.showRenotedMyNotes
-			}).then(notes => {
+				includeMyRenotes: this.$store.state.settings.showMyRenotes,
+				includeRenotedMyNotes: this.$store.state.settings.showRenotedMyNotes
+			});
+
+			promise.then(notes => {
 				if (notes.length == fetchLimit + 1) {
 					notes.pop();
 				} else {
@@ -134,14 +133,11 @@ export default Vue.extend({
 				notes.forEach(n => (this.$refs.timeline as any).append(n));
 				this.moreFetching = false;
 			});
+
+			return promise;
 		},
 
 		onNote(note) {
-			if (document.hidden && note.userId !== (this as any).os.i.id) {
-				this.unreadCount++;
-				document.title = `(${this.unreadCount}) ${getNoteSummary(note)}`;
-			}
-
 			// Prepend a note
 			(this.$refs.timeline as any).prepend(note);
 		},
@@ -157,13 +153,6 @@ export default Vue.extend({
 		warp(date) {
 			this.date = date;
 			this.fetch();
-		},
-
-		onVisibilitychange() {
-			if (!document.hidden) {
-				this.unreadCount = 0;
-				document.title = 'Misskey';
-			}
 		},
 
 		onKeydown(e) {
