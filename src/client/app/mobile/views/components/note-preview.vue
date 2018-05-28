@@ -54,9 +54,17 @@ root(isDark)
 		height 48px
 		border-radius 8px
 
+		@media (max-width 500px)
+			margin 0 10px 0 0
+			width 44px
+			height 44px
+
 	> .main
 		float left
 		width calc(100% - 60px)
+
+		@media (max-width 500px)
+			width calc(100% - 54px)
 
 		> header
 			display flex
@@ -86,6 +94,7 @@ root(isDark)
 			> .is-admin
 			> .is-bot
 			> .is-cat
+				align-self center
 				margin 0 0.5em 0 0
 				padding 1px 6px
 				font-size 10px
@@ -113,7 +122,6 @@ root(isDark)
 				cursor default
 				margin 0
 				padding 0
-				font-size 1.1em
 				color isDark ? #959ba7 : #717171
 
 .mk-note-preview[data-darkmode]

@@ -62,21 +62,21 @@ root(isDark)
 		display block
 		float left
 		margin 0 10px 0 0
-		width 44px
-		height 44px
+		width 42px
+		height 42px
 		border-radius 8px
 
 		@media (min-width 500px)
-			margin-right 16px
-			width 52px
-			height 52px
+			margin-right 14px
+			width 50px
+			height 50px
 
 	> .main
 		float left
-		width calc(100% - 54px)
+		width calc(100% - 52px)
 
 		@media (min-width 500px)
-			width calc(100% - 68px)
+			width calc(100% - 64px)
 
 		> header
 			display flex
@@ -109,6 +109,7 @@ root(isDark)
 			> .is-admin
 			> .is-bot
 			> .is-cat
+				align-self center
 				margin 0 0.5em 0 0
 				padding 1px 5px
 				font-size 10px
@@ -146,7 +147,6 @@ root(isDark)
 				cursor default
 				margin 0
 				padding 0
-				font-size 1.1em
 				color isDark ? #959ba7 : #717171
 
 				pre

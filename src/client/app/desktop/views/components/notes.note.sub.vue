@@ -57,14 +57,14 @@ root(isDark)
 	> .avatar
 		display block
 		float left
-		margin 0 14px 0 0
-		width 52px
-		height 52px
+		margin 0 12px 0 0
+		width 48px
+		height 48px
 		border-radius 8px
 
 	> .main
 		float left
-		width calc(100% - 66px)
+		width calc(100% - 60px)
 
 		> header
 			display flex
@@ -89,6 +89,7 @@ root(isDark)
 			> .is-admin
 			> .is-bot
 			> .is-cat
+				align-self center
 				margin 0 0.5em 0 0
 				padding 1px 5px
 				font-size 10px
@@ -125,7 +126,6 @@ root(isDark)
 				cursor default
 				margin 0
 				padding 0
-				font-size 1.1em
 				color isDark ? #959ba7 : #717171
 
 				pre

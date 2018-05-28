@@ -41,7 +41,8 @@
 				</p>
 				<div class="content" v-show="p.cw == null || showContent">
 					<div class="text">
-						<span v-if="p.isHidden" style="opacity: 0.5">(%i18n:@hidden%)</span>
+						<span v-if="p.isHidden" style="opacity: 0.5">(%i18n:@private%)</span>
+						<span v-if="p.deletedAt" style="opacity: 0.5">(%i18n:@deleted%)</span>
 						<a class="reply" v-if="p.reply">%fa:reply%</a>
 						<mk-note-html v-if="p.text && !canHideText(p)" :text="p.text" :i="$store.state.i" :class="$style.text"/>
 						<a class="rp" v-if="p.renote != null">RP:</a>
@@ -389,6 +390,7 @@ root(isDark)
 				> .is-admin
 				> .is-bot
 				> .is-cat
+					align-self center
 					margin 0 0.5em 0 0
 					padding 1px 6px
 					font-size 12px
@@ -427,7 +429,6 @@ root(isDark)
 					margin 0
 					padding 0
 					overflow-wrap break-word
-					font-size 1.1em
 					color isDark ? #fff : #717171
 
 					> .text
@@ -453,7 +454,6 @@ root(isDark)
 						margin 0
 						padding 0
 						overflow-wrap break-word
-						font-size 1.1em
 						color isDark ? #fff : #717171
 
 						>>> .title
