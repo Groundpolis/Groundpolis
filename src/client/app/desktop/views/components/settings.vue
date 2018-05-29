@@ -147,7 +147,8 @@
 
 		<section class="other" v-show="page == 'other'">
 			<h1>%i18n:@about%</h1>
-			<p v-if="meta">%i18n:@operator%: <i><a :href="meta.maintainer.url" target="_blank">{{ meta.maintainer.name }}</a></i></p>
+			<p v-if="meta">%i18n:@operator%: <i><a :href="meta.maintainer.url" target="_blank">{{ meta.maintainer.name }}</a></i>
+				 <i> (<a href="https://github.com/mei23/misskey/tree/mei-m544" target="_blank">Repository</a>)</i></p>
 		</section>
 
 		<section class="other" v-show="page == 'other'">
