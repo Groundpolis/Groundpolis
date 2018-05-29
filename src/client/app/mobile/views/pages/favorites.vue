@@ -1,6 +1,8 @@
 <template>
 <mk-ui>
-	<main v-if="!fetching">
+	<span slot="header">%fa:star%%i18n:@title%</span>
+
+	<main>
 		<template v-for="favorite in favorites">
 			<mk-note-detail class="post" :note="favorite.note" :key="favorite.note.id"/>
 		</template>
@@ -24,6 +26,9 @@ export default Vue.extend({
 	},
 	created() {
 		this.fetch();
+	},
+	mounted() {
+		document.title = 'Misskey | %i18n:@notifications%';
 	},
 	methods: {
 		fetch() {
@@ -66,11 +71,24 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
+@import '~const.styl'
+
 main
+	width 100%
+	max-width 680px
 	margin 0 auto
-	padding 16px
-	max-width 700px
+	padding 8px
 
 	> .post
-		margin-bottom 16px
+		margin-bottom 8px
+
+	@media (min-width 500px)
+		padding 16px
+
+		> .post
+			margin-bottom 16px
+
+	@media (min-width 600px)
+		padding 32px
+
 </style>

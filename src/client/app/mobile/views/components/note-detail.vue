@@ -87,7 +87,7 @@ import parse from '../../../../../text/parse';
 
 import MkNoteMenu from '../../../common/views/components/note-menu.vue';
 import MkReactionPicker from '../../../common/views/components/reaction-picker.vue';
-import XSub from './note-detail.sub.vue';
+import XSub from './note.sub.vue';
 
 export default Vue.extend({
 	components: {
@@ -172,7 +172,7 @@ export default Vue.extend({
 	},
 
 	methods: {
-		fetchContext() {
+		fetchConversation() {
 			this.conversationFetching = true;
 
 			// Fetch conversation
@@ -216,8 +216,6 @@ export default Vue.extend({
 
 root(isDark)
 	overflow hidden
-	margin 0 auto
-	padding 0
 	width 100%
 	text-align left
 	background isDark ? #282C37 : #fff
