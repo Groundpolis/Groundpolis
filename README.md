@@ -20,9 +20,10 @@ ultimately sophisticated new type of mini-blog based SNS.
 ----------------------------------------------------------------
 * Reactions
 * User lists
+* Cusromizable column view (known as MisskeyDeck)
 * Private messages
 * Mute
-* Real time contents
+* Streaming
 * ActivityPub compatible
 
 and more! You can see it with your own eyes at [misskey.xyz](https://misskey.xyz).

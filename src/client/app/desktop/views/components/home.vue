@@ -76,6 +76,50 @@ import Vue from 'vue';
 import * as XDraggable from 'vuedraggable';
 import * as uuid from 'uuid';
 
+const defaultDesktopHomeWidgets = {
+	left: [
+		'profile',
+		'calendar',
+		'activity',
+		'rss',
+		'trends',
+		'photo-stream',
+		'version'
+	],
+	right: [
+		'broadcast',
+		'notifications',
+		'users',
+		'polls',
+		'server',
+		'donation',
+		'nav',
+		'tips'
+	]
+};
+
+//#region Construct home data
+const _defaultDesktopHomeWidgets = [];
+
+defaultDesktopHomeWidgets.left.forEach(widget => {
+	_defaultDesktopHomeWidgets.push({
+		name: widget,
+		id: uuid(),
+		place: 'left',
+		data: {}
+	});
+});
+
+defaultDesktopHomeWidgets.right.forEach(widget => {
+	_defaultDesktopHomeWidgets.push({
+		name: widget,
+		id: uuid(),
+		place: 'right',
+		data: {}
+	});
+});
+//#endregion
+
 export default Vue.extend({
 	components: {
 		XDraggable
@@ -103,7 +147,7 @@ export default Vue.extend({
 
 	computed: {
 		home(): any[] {
-			return this.$store.state.settings.home;
+			return this.$store.state.settings.home || [];
 		},
 		left(): any[] {
 			return this.home.filter(w => w.place == 'left');
@@ -116,6 +160,16 @@ export default Vue.extend({
 				left: this.left,
 				right: this.right
 			};
+		}
+	},
+
+	created() {
+		if (this.$store.state.settings.home == null) {
+			this.api('i/update_home', {
+				home: _defaultDesktopHomeWidgets
+			}).then(() => {
+				this.$store.commit('settings/setHome', _defaultDesktopHomeWidgets);
+			});
 		}
 	},
 
