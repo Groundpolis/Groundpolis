@@ -1,22 +1,20 @@
 <template>
-<div>
-	<x-column :id="column.id" :menu="menu" :name="name">
-		<span slot="header">
-			<template v-if="column.type == 'home'">%fa:home%</template>
-			<template v-if="column.type == 'local'">%fa:R comments%</template>
-			<template v-if="column.type == 'global'">%fa:globe%</template>
-			<template v-if="column.type == 'list'">%fa:list%</template>
-			<span>{{ name }}</span>
-		</span>
+<x-column :menu="menu" :name="name" :column="column" :is-stacked="isStacked" :is-active="isActive">
+	<span slot="header">
+		<template v-if="column.type == 'home'">%fa:home%</template>
+		<template v-if="column.type == 'local'">%fa:R comments%</template>
+		<template v-if="column.type == 'global'">%fa:globe%</template>
+		<template v-if="column.type == 'list'">%fa:list%</template>
+		<span>{{ name }}</span>
+	</span>
 
-		<div class="editor" v-if="edit">
-			<mk-switch v-model="column.isMediaOnly" @change="onChangeSettings" text="%i18n:@is-media-only%"/>
-			<mk-switch v-model="column.isMediaView" @change="onChangeSettings" text="%i18n:@is-media-view%"/>
-		</div>
-		<x-list-tl v-if="column.type == 'list'" :list="column.list" :media-only="column.isMediaOnly"/>
-		<x-tl v-else :src="column.type" :media-only="column.isMediaOnly"/>
-	</x-column>
-</div>
+	<div class="editor" v-if="edit">
+		<mk-switch v-model="column.isMediaOnly" @change="onChangeSettings" text="%i18n:@is-media-only%"/>
+		<mk-switch v-model="column.isMediaView" @change="onChangeSettings" text="%i18n:@is-media-view%"/>
+	</div>
+	<x-list-tl v-if="column.type == 'list'" :list="column.list" :media-only="column.isMediaOnly"/>
+	<x-tl v-else :src="column.type" :media-only="column.isMediaOnly"/>
+</x-column>
 </template>
 
 <script lang="ts">
@@ -35,6 +33,14 @@ export default Vue.extend({
 	props: {
 		column: {
 			type: Object,
+			required: true
+		},
+		isStacked: {
+			type: Boolean,
+			required: true
+		},
+		isActive: {
+			type: Boolean,
 			required: true
 		}
 	},
