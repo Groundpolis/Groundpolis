@@ -1,5 +1,5 @@
 <template>
-<x-column :menu="menu" :naked="true" :narrow="true" :name="name" :column="column" :is-stacked="isStacked" :is-active="isActive" class="wtdtxvecapixsepjtcupubtsmometobz">
+<x-column :menu="menu" :naked="true" :narrow="true" :name="name" :column="column" :is-stacked="isStacked" class="wtdtxvecapixsepjtcupubtsmometobz">
 	<span slot="header">%fa:calculator%{{ name }}</span>
 
 	<div class="gqpwvtwtprsbmnssnbicggtwqhmylhnq">
@@ -23,6 +23,7 @@
 					<option value="post-form">%i18n:common.widgets.post-form%</option>
 					<option value="messaging">%i18n:common.widgets.messaging%</option>
 					<option value="memo">%i18n:common.widgets.memo%</option>
+					<option value="posts-monitor">%i18n:common.widgets.posts-monitor%</option>
 					<option value="server">%i18n:common.widgets.server%</option>
 					<option value="donation">%i18n:common.widgets.donation%</option>
 					<option value="nav">%i18n:common.widgets.nav%</option>
@@ -72,10 +73,6 @@ export default Vue.extend({
 		isStacked: {
 			type: Boolean,
 			required: true
-		},
-		isActive: {
-			type: Boolean,
-			required: true
 		}
 	},
 
@@ -96,8 +93,9 @@ export default Vue.extend({
 
 	created() {
 		this.menu = [{
-			content: '%fa:cog% %i18n:@edit%',
-			onClick: () => {
+			icon: '%fa:cog%',
+			text: '%i18n:@edit%',
+			action: () => {
 				this.edit = !this.edit;
 			}
 		}];

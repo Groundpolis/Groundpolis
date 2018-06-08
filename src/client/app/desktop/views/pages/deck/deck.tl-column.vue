@@ -1,5 +1,5 @@
 <template>
-<x-column :menu="menu" :name="name" :column="column" :is-stacked="isStacked" :is-active="isActive">
+<x-column :menu="menu" :name="name" :column="column" :is-stacked="isStacked">
 	<span slot="header">
 		<template v-if="column.type == 'home'">%fa:home%</template>
 		<template v-if="column.type == 'local'">%fa:R comments%</template>
@@ -38,10 +38,6 @@ export default Vue.extend({
 		isStacked: {
 			type: Boolean,
 			required: true
-		},
-		isActive: {
-			type: Boolean,
-			required: true
 		}
 	},
 
@@ -49,8 +45,9 @@ export default Vue.extend({
 		return {
 			edit: false,
 			menu: [{
-				content: '%fa:cog% %i18n:@edit%',
-				onClick: () => {
+				icon: '%fa:cog%',
+				text: '%i18n:@edit%',
+				action: () => {
 					this.edit = !this.edit;
 				}
 			}]

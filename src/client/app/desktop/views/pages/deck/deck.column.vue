@@ -1,6 +1,17 @@
 <template>
-<div class="dnpfarvgbnfmyzbdquhhzyxcmstpdqzs" :class="{ naked, narrow, active, isStacked }">
-	<header :class="{ indicate: count > 0 }" @click="toggleActive">
+<div class="dnpfarvgbnfmyzbdquhhzyxcmstpdqzs" :class="{ naked, narrow, active, isStacked, draghover, dragging, dropready }"
+		@dragover.prevent.stop="onDragover"
+		@dragenter.prevent="onDragenter"
+		@dragleave="onDragleave"
+		@drop.prevent.stop="onDrop"
+>
+	<header :class="{ indicate: count > 0 }"
+			draggable="true"
+			@click="toggleActive"
+			@dragstart="onDragstart"
+			@dragend="onDragend"
+			@contextmenu.prevent.stop="onContextmenu"
+		>
 		<slot name="header"></slot>
 		<span class="count" v-if="count > 0">({{ count }})</span>
 		<button ref="menu" @click.stop="showMenu">%fa:caret-down%</button>
@@ -14,6 +25,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Menu from '../../../../common/views/components/menu.vue';
+import contextmenu from '../../../api/contextmenu';
 
 export default Vue.extend({
 	props: {
@@ -22,10 +34,6 @@ export default Vue.extend({
 			required: true
 		},
 		isStacked: {
-			type: Boolean,
-			required: true
-		},
-		isActive: {
 			type: Boolean,
 			required: true
 		},
@@ -57,7 +65,10 @@ export default Vue.extend({
 	data() {
 		return {
 			count: 0,
-			active: this.isActive
+			active: true,
+			dragging: false,
+			draghover: false,
+			dropready: false
 		};
 	},
 
@@ -66,6 +77,9 @@ export default Vue.extend({
 			if (v && this.isScrollTop()) {
 				this.$emit('top');
 			}
+		},
+		dragging(v) {
+			this.$root.$emit(v ? 'deck.column.dragStart' : 'deck.column.dragEnd');
 		}
 	},
 
@@ -79,12 +93,25 @@ export default Vue.extend({
 
 	mounted() {
 		this.$refs.body.addEventListener('scroll', this.onScroll, { passive: true });
+		this.$root.$on('deck.column.dragStart', this.onOtherDragStart);
+		this.$root.$on('deck.column.dragEnd', this.onOtherDragEnd);
 	},
+
 	beforeDestroy() {
 		this.$refs.body.removeEventListener('scroll', this.onScroll);
+		this.$root.$off('deck.column.dragStart', this.onOtherDragStart);
+		this.$root.$off('deck.column.dragEnd', this.onOtherDragEnd);
 	},
 
 	methods: {
+		onOtherDragStart() {
+			this.dropready = true;
+		},
+
+		onOtherDragEnd() {
+			this.dropready = false;
+		},
+
 		toggleActive() {
 			if (!this.isStacked) return;
 			const vms = this.$store.state.settings.deck.layout.find(ids => ids.indexOf(this.column.id) != -1).map(id => this.getColumnVm(id));
@@ -107,10 +134,11 @@ export default Vue.extend({
 			}
 		},
 
-		showMenu() {
+		getMenu() {
 			const items = [{
-				content: '%fa:pencil-alt% %i18n:common.deck.rename%',
-				onClick: () => {
+				icon: '%fa:pencil-alt%',
+				text: '%i18n:common.deck.rename%',
+				action: () => {
 					(this as any).apis.input({
 						title: '%i18n:common.deck.rename%',
 						default: this.name,
@@ -120,38 +148,45 @@ export default Vue.extend({
 					});
 				}
 			}, null, {
-				content: '%fa:arrow-left% %i18n:common.deck.swap-left%',
-				onClick: () => {
+				icon: '%fa:arrow-left%',
+				text: '%i18n:common.deck.swap-left%',
+				action: () => {
 					this.$store.dispatch('settings/swapLeftDeckColumn', this.column.id);
 				}
 			}, {
-				content: '%fa:arrow-right% %i18n:common.deck.swap-right%',
-				onClick: () => {
+				icon: '%fa:arrow-right%',
+				text: '%i18n:common.deck.swap-right%',
+				action: () => {
 					this.$store.dispatch('settings/swapRightDeckColumn', this.column.id);
 				}
 			}, this.isStacked ? {
-				content: '%fa:arrow-up% %i18n:common.deck.swap-up%',
-				onClick: () => {
+				icon: '%fa:arrow-up%',
+				text: '%i18n:common.deck.swap-up%',
+				action: () => {
 					this.$store.dispatch('settings/swapUpDeckColumn', this.column.id);
 				}
 			} : undefined, this.isStacked ? {
-				content: '%fa:arrow-down% %i18n:common.deck.swap-down%',
-				onClick: () => {
+				icon: '%fa:arrow-down%',
+				text: '%i18n:common.deck.swap-down%',
+				action: () => {
 					this.$store.dispatch('settings/swapDownDeckColumn', this.column.id);
 				}
 			} : undefined, null, {
-				content: '%fa:window-restore R% %i18n:common.deck.stack-left%',
-				onClick: () => {
+				icon: '%fa:window-restore R%',
+				text: '%i18n:common.deck.stack-left%',
+				action: () => {
 					this.$store.dispatch('settings/stackLeftDeckColumn', this.column.id);
 				}
 			}, this.isStacked ? {
-				content: '%fa:window-maximize R% %i18n:common.deck.pop-right%',
-				onClick: () => {
+				icon: '%fa:window-maximize R%',
+				text: '%i18n:common.deck.pop-right%',
+				action: () => {
 					this.$store.dispatch('settings/popRightDeckColumn', this.column.id);
 				}
 			} : undefined, null, {
-				content: '%fa:trash-alt R% %i18n:common.deck.remove%',
-				onClick: () => {
+				icon: '%fa:trash-alt R%',
+				text: '%i18n:common.deck.remove%',
+				action: () => {
 					this.$store.dispatch('settings/removeDeckColumn', this.column.id);
 				}
 			}];
@@ -161,11 +196,63 @@ export default Vue.extend({
 				this.menu.reverse().forEach(i => items.unshift(i));
 			}
 
+			return items;
+		},
+
+		onContextmenu(e) {
+			contextmenu((this as any).os)(e, this.getMenu());
+		},
+
+		showMenu() {
 			this.os.new(Menu, {
 				source: this.$refs.menu,
 				compact: false,
-				items
+				items: this.getMenu()
 			});
+		},
+
+		onDragstart(e) {
+			e.dataTransfer.effectAllowed = 'move';
+			e.dataTransfer.setData('mk-deck-column', this.column.id);
+			this.dragging = true;
+		},
+
+		onDragend(e) {
+			this.dragging = false;
+		},
+
+		onDragover(e) {
+			// 自分自身がドラッグされている場合
+			if (this.dragging) {
+				// 自分自身にはドロップさせない
+				e.dataTransfer.dropEffect = 'none';
+				return;
+			}
+
+			const isDeckColumn = e.dataTransfer.types[0] == 'mk-deck-column';
+
+			e.dataTransfer.dropEffect = isDeckColumn ? 'move' : 'none';
+		},
+
+		onDragenter() {
+			if (!this.dragging) this.draghover = true;
+		},
+
+		onDragleave() {
+			this.draghover = false;
+		},
+
+		onDrop(e) {
+			this.draghover = false;
+			this.$root.$emit('deck.column.dragEnd');
+
+			const id = e.dataTransfer.getData('mk-deck-column');
+			if (id != null && id != '') {
+				this.$store.dispatch('settings/swapDeckColumn', {
+					a: this.column.id,
+					b: id
+				});
+			}
 		}
 	}
 });
@@ -184,6 +271,16 @@ root(isDark)
 	border-radius 6px
 	box-shadow 0 2px 16px rgba(#000, 0.1)
 	overflow hidden
+
+	&.draghover
+		box-shadow 0 0 0 2px rgba($theme-color, 0.8)
+
+	&.dragging
+		box-shadow 0 0 0 2px rgba($theme-color, 0.4)
+
+	&.dropready
+		*
+			pointer-events none
 
 	&:not(.active)
 		flex-basis $header-height
@@ -212,9 +309,13 @@ root(isDark)
 		color isDark ? #e3e5e8 : #888
 		background isDark ? #313543 : #fff
 		box-shadow 0 1px rgba(#000, 0.15)
+		cursor pointer
 
 		&, *
 			user-select none
+
+		*:not(button)
+			pointer-events none
 
 		&.indicate
 			box-shadow 0 3px 0 0 $theme-color
@@ -233,6 +334,7 @@ root(isDark)
 			right 0
 			width $header-height
 			line-height $header-height
+			font-size 16px
 			color isDark ? #9baec8 : #ccc
 
 			&:hover

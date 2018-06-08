@@ -17,7 +17,8 @@ import ProgressBar from './utils/cli/progressbar';
 import EnvironmentInfo from './utils/environmentInfo';
 import MachineInfo from './utils/machineInfo';
 import DependencyInfo from './utils/dependencyInfo';
-import stats from './utils/stats';
+import serverStats from './server-stats';
+import notesStats from './notes-stats';
 
 import loadConfig from './config/load';
 import { Config } from './config/types';
@@ -49,7 +50,8 @@ function main() {
 		masterMain(opt);
 
 		ev.mount();
-		stats();
+		serverStats();
+		notesStats();
 	} else {
 		workerMain(opt);
 	}

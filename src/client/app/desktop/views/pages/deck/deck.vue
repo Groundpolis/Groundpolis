@@ -4,7 +4,7 @@
 		<template v-for="ids in layout">
 			<div v-if="ids.length > 1" class="folder">
 				<template v-for="id, i in ids">
-					<x-column-core :ref="id" :key="id" :column="columns.find(c => c.id == id)" :is-stacked="true" :is-active="i == 0"/>
+					<x-column-core :ref="id" :key="id" :column="columns.find(c => c.id == id)" :is-stacked="true"/>
 				</template>
 			</div>
 			<x-column-core v-else :ref="ids[0]" :key="ids[0]" :column="columns.find(c => c.id == ids[0])"/>
@@ -102,32 +102,36 @@ export default Vue.extend({
 				source: this.$refs.add,
 				compact: true,
 				items: [{
-					content: '%i18n:common.deck.home%',
-					onClick: () => {
+					icon: '%fa:home%',
+					text: '%i18n:common.deck.home%',
+					action: () => {
 						this.$store.dispatch('settings/addDeckColumn', {
 							id: uuid(),
 							type: 'home'
 						});
 					}
 				}, {
-					content: '%i18n:common.deck.local%',
-					onClick: () => {
+					icon: '%fa:comments R%',
+					text: '%i18n:common.deck.local%',
+					action: () => {
 						this.$store.dispatch('settings/addDeckColumn', {
 							id: uuid(),
 							type: 'local'
 						});
 					}
 				}, {
-					content: '%i18n:common.deck.global%',
-					onClick: () => {
+					icon: '%fa:globe%',
+					text: '%i18n:common.deck.global%',
+					action: () => {
 						this.$store.dispatch('settings/addDeckColumn', {
 							id: uuid(),
 							type: 'global'
 						});
 					}
 				}, {
-					content: '%i18n:common.deck.list%',
-					onClick: () => {
+					icon: '%fa:list%',
+					text: '%i18n:common.deck.list%',
+					action: () => {
 						const w = (this as any).os.new(MkUserListsWindow);
 						w.$once('choosen', list => {
 							this.$store.dispatch('settings/addDeckColumn', {
@@ -139,16 +143,18 @@ export default Vue.extend({
 						});
 					}
 				}, {
-					content: '%i18n:common.deck.notifications%',
-					onClick: () => {
+					icon: '%fa:bell R%',
+					text: '%i18n:common.deck.notifications%',
+					action: () => {
 						this.$store.dispatch('settings/addDeckColumn', {
 							id: uuid(),
 							type: 'notifications'
 						});
 					}
 				}, {
-					content: '%i18n:common.deck.widgets%',
-					onClick: () => {
+					icon: '%fa:calculator%',
+					text: '%i18n:common.deck.widgets%',
+					action: () => {
 						this.$store.dispatch('settings/addDeckColumn', {
 							id: uuid(),
 							type: 'widgets',

@@ -1,8 +1,8 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "2.30.1",
-	"clientVersion": "1.0.6259",
+	"version": "2.34.0",
+	"clientVersion": "1.0.6302",
 	"codename": "nighthike",
 	"main": "./built/index.js",
 	"private": true,
@@ -152,7 +152,7 @@
 		"mkdirp": "0.5.1",
 		"mocha": "5.2.0",
 		"moji": "0.5.1",
-		"mongodb": "3.0.8",
+		"mongodb": "3.0.10",
 		"monk": "6.0.6",
 		"ms": "2.1.1",
 		"nan": "2.10.0",
@@ -218,6 +218,6 @@
 		"webpack-cli": "2.1.4",
 		"websocket": "1.0.26",
 		"ws": "5.2.0",
-		"xev": "2.0.0"
+		"xev": "2.0.1"
 	}
 }
