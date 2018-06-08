@@ -7,31 +7,15 @@
 		<div class="qpdmibaztplkylerhdbllwcokyrfxeyj" :class="{ dual: props.view == 0 }" :data-darkmode="$store.state.device.darkmode">
 			<svg :viewBox="`0 0 ${ viewBoxX } ${ viewBoxY }`" preserveAspectRatio="none" v-show="props.view != 2">
 				<defs>
-					<linearGradient :id="fediGradientId" x1="0" x2="0" y1="1" y2="0">
-						<stop offset="0%" stop-color="hsl(200, 80%, 70%)"></stop>
-						<stop offset="100%" stop-color="hsl(90, 80%, 70%)"></stop>
-					</linearGradient>
-					<mask :id="fediMaskId" x="0" y="0" :width="viewBoxX" :height="viewBoxY">
-						<polyline
-							:points="fediPolylinePoints"
-							fill="none"
-							stroke="#fff"
-							stroke-width="1"/>
-					</mask>
-				</defs>
-				<rect
-					x="-1" y="-1"
-					:width="viewBoxX + 2" :height="viewBoxY + 2"
-					:style="`stroke: none; fill: url(#${ fediGradientId }); mask: url(#${ fediMaskId })`"/>
-				<text x="1" y="5">Fedi</text>
-			</svg>
-			<svg :viewBox="`0 0 ${ viewBoxX } ${ viewBoxY }`" preserveAspectRatio="none" v-show="props.view != 1">
-				<defs>
 					<linearGradient :id="localGradientId" x1="0" x2="0" y1="1" y2="0">
 						<stop offset="0%" stop-color="hsl(200, 80%, 70%)"></stop>
 						<stop offset="100%" stop-color="hsl(90, 80%, 70%)"></stop>
 					</linearGradient>
 					<mask :id="localMaskId" x="0" y="0" :width="viewBoxX" :height="viewBoxY">
+						<polygon
+							:points="localPolygonPoints"
+							fill="#fff"
+							fill-opacity="0.5"/>
 						<polyline
 							:points="localPolylinePoints"
 							fill="none"
@@ -44,6 +28,30 @@
 					:width="viewBoxX + 2" :height="viewBoxY + 2"
 					:style="`stroke: none; fill: url(#${ localGradientId }); mask: url(#${ localMaskId })`"/>
 				<text x="1" y="5">Local</text>
+			</svg>
+			<svg :viewBox="`0 0 ${ viewBoxX } ${ viewBoxY }`" preserveAspectRatio="none" v-show="props.view != 1">
+				<defs>
+					<linearGradient :id="fediGradientId" x1="0" x2="0" y1="1" y2="0">
+						<stop offset="0%" stop-color="hsl(200, 80%, 70%)"></stop>
+						<stop offset="100%" stop-color="hsl(90, 80%, 70%)"></stop>
+					</linearGradient>
+					<mask :id="fediMaskId" x="0" y="0" :width="viewBoxX" :height="viewBoxY">
+						<polygon
+							:points="fediPolygonPoints"
+							fill="#fff"
+							fill-opacity="0.5"/>
+						<polyline
+							:points="fediPolylinePoints"
+							fill="none"
+							stroke="#fff"
+							stroke-width="1"/>
+					</mask>
+				</defs>
+				<rect
+					x="-1" y="-1"
+					:width="viewBoxX + 2" :height="viewBoxY + 2"
+					:style="`stroke: none; fill: url(#${ fediGradientId }); mask: url(#${ fediMaskId })`"/>
+				<text x="1" y="5">Fedi</text>
 			</svg>
 		</div>
 	</mk-widget-container>
@@ -121,15 +129,15 @@ export default define({
 			this.save();
 		},
 		draw() {
-			const stats = this.props.view == 0 ? this.stats.slice(0, 50) : this.stats;
-			const fediPeak = Math.max.apply(null, this.stats.map(x => x.all)) || 1;
-			const localPeak = Math.max.apply(null, this.stats.map(x => x.local)) || 1;
+			const stats = this.props.view == 0 ? this.stats.slice(-50) : this.stats;
+			const fediPeak = Math.max.apply(null, stats.map(x => x.all)) || 1;
+			const localPeak = Math.max.apply(null, stats.map(x => x.local)) || 1;
 
-			this.fediPolylinePoints = this.stats.map((s, i) => `${this.viewBoxX - ((this.stats.length - 1) - i)},${(1 - (s.all / fediPeak)) * this.viewBoxY}`).join(' ');
-			this.localPolylinePoints = this.stats.map((s, i) => `${this.viewBoxX - ((this.stats.length - 1) - i)},${(1 - (s.local / localPeak)) * this.viewBoxY}`).join(' ');
+			this.fediPolylinePoints = stats.map((s, i) => `${this.viewBoxX - ((stats.length - 1) - i)},${(1 - (s.all / fediPeak)) * this.viewBoxY}`).join(' ');
+			this.localPolylinePoints = stats.map((s, i) => `${this.viewBoxX - ((stats.length - 1) - i)},${(1 - (s.local / localPeak)) * this.viewBoxY}`).join(' ');
 
-			this.fediPolygonPoints = `${this.viewBoxX - (this.stats.length - 1)},${ this.viewBoxY } ${ this.fediPolylinePoints } ${ this.viewBoxX },${ this.viewBoxY }`;
-			this.localPolygonPoints = `${this.viewBoxX - (this.stats.length - 1)},${ this.viewBoxY } ${ this.localPolylinePoints } ${ this.viewBoxX },${ this.viewBoxY }`;
+			this.fediPolygonPoints = `${this.viewBoxX - (stats.length - 1)},${ this.viewBoxY } ${ this.fediPolylinePoints } ${ this.viewBoxX },${ this.viewBoxY }`;
+			this.localPolygonPoints = `${this.viewBoxX - (stats.length - 1)},${ this.viewBoxY } ${ this.localPolylinePoints } ${ this.viewBoxX },${ this.viewBoxY }`;
 		},
 		onStats(stats) {
 			this.stats.push(stats);
