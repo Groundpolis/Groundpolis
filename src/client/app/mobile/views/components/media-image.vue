@@ -26,7 +26,7 @@ export default Vue.extend({
 			}
 
 			return {
-				'background-color': this.image.properties.avgColor && this.image.properties.avgColor.length == 3 ? `rgb(${this.image.properties.avgColor.join(',')})` : 'transparent',
+				'background-color': this.image.properties.avgColor && this.image.properties.avgColor.length == 3 ? `rgb(${this.image.properties.avgColor.join(',')}, 0.3)` : 'transparent',
 				'background-image': url
 			};
 		}
@@ -41,7 +41,8 @@ export default Vue.extend({
 	width 100%
 	height 100%
 	background-position center
-	background-size cover
+	background-size contain
+	background-repeat no-repeat
 	border-radius 4px
 
 </style>
