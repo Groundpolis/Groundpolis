@@ -25,8 +25,10 @@ const handlers = {
 
 	hashtag({ document }, { hashtag }) {
 		const a = document.createElement('a');
-		a.href = '/search?q=#' + hashtag;
-		a.textContent = hashtag;
+		a.href = config.url + '/search?q=#' + hashtag;
+		a.textContent = '#' + hashtag;
+		a.setAttribute('rel', 'tag');
+		document.body.appendChild(a);
 	},
 
 	'inline-code'({ document }, { code }) {
