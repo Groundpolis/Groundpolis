@@ -15,7 +15,7 @@ export default async function(file: IDriveFile): Promise<stream.Readable> {
 	const g = gm(readable);
 
 	const stream = g
-		.resize(256, 256)
+		.resize(512, 256)
 		.compress('jpeg')
 		.quality(70)
 		.interlace('line')
