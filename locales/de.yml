@@ -70,6 +70,7 @@ common:
     donation: "Spenden"
     nav: "Navigation"
     tips: "Tipps"
+    hashtags: "ハッシュタグ"
   deck:
     widgets: "Widget hinzufügen:"
     home: "Startseite"
@@ -224,6 +225,9 @@ common/views/widgets/photo-stream.vue:
 common/views/widgets/posts-monitor.vue:
   title: "投稿チャート"
   toggle: "表示を切り替え"
+common/views/widgets/hashtags.vue:
+  title: "ハッシュタグ"
+  count: "{}人が投稿"
 common/views/widgets/server.vue:
   title: "Serverinformationen"
   toggle: "Sicht umschalten"

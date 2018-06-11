@@ -70,6 +70,7 @@ common:
     donation: "Donation"
     nav: "Navigation"
     tips: "Tips"
+    hashtags: "Hashtags"
   deck:
     widgets: "Widgets"
     home: "Home"
@@ -224,6 +225,9 @@ common/views/widgets/photo-stream.vue:
 common/views/widgets/posts-monitor.vue:
   title: "Chart of posts"
   toggle: "Toggle views"
+common/views/widgets/hashtags.vue:
+  title: "Hashtags"
+  count: "{} users mentioned"
 common/views/widgets/server.vue:
   title: "Server info"
   toggle: "Toggle views"

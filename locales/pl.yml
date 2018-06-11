@@ -70,6 +70,7 @@ common:
     donation: "Dotacje"
     nav: "Nawigacja"
     tips: "Wskazówki"
+    hashtags: "Hashtagi"
   deck:
     widgets: "Widżety"
     home: "Strona główna"
@@ -224,6 +225,9 @@ common/views/widgets/photo-stream.vue:
 common/views/widgets/posts-monitor.vue:
   title: "Wykres wpisów"
   toggle: "Przełącz widok"
+common/views/widgets/hashtags.vue:
+  title: "Hashtagi"
+  count: "Wspomniany przez {} użytkowników"
 common/views/widgets/server.vue:
   title: "Informacje o serwerze"
   toggle: "Przełącz widok"
@@ -577,9 +581,9 @@ desktop/views/pages/deck/deck.tl-column.vue:
   is-media-only: "Tylko wpisy z zawartością multimedialną"
   is-media-view: "Widok multimediów"
 desktop/views/pages/deck/deck.note.vue:
-  reposted-by: "{}がRenote"
-  private: "この投稿は非公開です"
-  deleted: "この投稿は削除されました"
+  reposted-by: "Udostępniono przez {}"
+  private: "ten wpis jest prywatny"
+  deleted: "ten wpis został usunięty"
 desktop/views/pages/welcome.vue:
   about: "O Misskey"
   gotit: "Rozumiem!"
