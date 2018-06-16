@@ -1,8 +1,8 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "2.40.1",
-	"clientVersion": "1.0.6504",
+	"version": "3.0.1",
+	"clientVersion": "1.0.6517",
 	"codename": "nighthike",
 	"main": "./built/index.js",
 	"private": true,
@@ -86,9 +86,8 @@
 		"webfinger.js": "2.6.6",
 		"websocket": "1.0.26",
 		"ws": "5.2.0",
-		"xev": "2.0.1"
-	},
-	"devDependencies": {
+		"xev": "2.0.1",
+
 		"@prezzemolo/zip": "0.0.3",
 		"@types/bcryptjs": "2.4.1",
 		"@types/debug": "0.0.30",

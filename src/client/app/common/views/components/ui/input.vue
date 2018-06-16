@@ -1,7 +1,7 @@
 <template>
 <div class="ui-input" :class="[{ focused, filled }, styl]">
 	<div class="icon" ref="icon"><slot name="icon"></slot></div>
-	<div class="input" @click="focus" @mousedown="focus">
+	<div class="input">
 		<div class="password-meter" v-if="withPasswordMeter" v-show="passwordStrength != ''" :data-strength="passwordStrength">
 			<div class="value" ref="passwordMetar"></div>
 		</div>
@@ -10,12 +10,12 @@
 		<template v-if="type != 'file'">
 			<input ref="input"
 					:type="type"
-					:value="v"
+					v-model="v"
 					:required="required"
 					:readonly="readonly"
 					:pattern="pattern"
 					:autocomplete="autocomplete"
-					@input="$emit('input', $event.target.value)"
+					:spellcheck="spellcheck"
 					@focus="focused = true"
 					@blur="focused = false">
 		</template>
@@ -30,7 +30,7 @@
 					:value="value"
 					@change="onChangeFile">
 		</template>
-		<div class="suffix"><slot name="suffix"></slot></div>
+		<div class="suffix" ref="suffix"><slot name="suffix"></slot></div>
 	</div>
 	<div class="text"><slot name="text"></slot></div>
 </div>
@@ -62,6 +62,9 @@ export default Vue.extend({
 			required: false
 		},
 		autocomplete: {
+			required: false
+		},
+		spellcheck: {
 			required: false
 		},
 		withPasswordMeter: {
@@ -100,6 +103,8 @@ export default Vue.extend({
 			this.v = v;
 		},
 		v(v) {
+			this.$emit('input', v);
+
 			if (this.withPasswordMeter) {
 				if (v == '') {
 					this.passwordStrength = '';
@@ -123,6 +128,14 @@ export default Vue.extend({
 	mounted() {
 		if (this.$refs.prefix) {
 			this.$refs.label.style.left = (this.$refs.prefix.offsetLeft + this.$refs.prefix.offsetWidth) + 'px';
+			if (this.$refs.prefix.offsetWidth) {
+				this.$refs.input.style.paddingLeft = this.$refs.prefix.offsetWidth + 'px';
+			}
+		}
+		if (this.$refs.suffix) {
+			if (this.$refs.suffix.offsetWidth) {
+				this.$refs.input.style.paddingRight = this.$refs.suffix.offsetWidth + 'px';
+			}
 		}
 	},
 	methods: {
@@ -160,14 +173,8 @@ root(isDark, fill)
 			margin-left 28px
 
 	> .input
-		display flex
-		cursor text
 
-		if fill
-			padding 6px 12px
-			background rgba(#000, 0.035)
-			border-radius 6px
-		else
+		if !fill
 			&:before
 				content ''
 				display block
@@ -227,6 +234,7 @@ root(isDark, fill)
 
 		> .label
 			position absolute
+			z-index 1
 			top fill ? 6px : 0
 			left 0
 			pointer-events none
@@ -242,7 +250,6 @@ root(isDark, fill)
 
 		> input
 			display block
-			flex 1
 			width 100%
 			margin 0
 			padding 0
@@ -257,28 +264,45 @@ root(isDark, fill)
 			outline none
 			box-shadow none
 
+			if fill
+				padding 6px 12px
+				background rgba(#000, 0.035)
+				border-radius 6px
+
 			&[type='file']
 				display none
 
 		> .prefix
 		> .suffix
 			display block
-			align-self center
-			justify-self center
+			position absolute
+			z-index 1
+			top 0
 			font-size 16px
-			line-height 32px
+			line-height fill ? 44px : 32px
 			color isDark ? rgba(#fff, 0.7) : rgba(#000, 0.54)
 			pointer-events none
+
+			&:empty
+				display none
 
 			> *
 				display block
 				min-width 16px
 
 		> .prefix
+			left 0
 			padding-right 4px
 
+			if fill
+				padding-left 12px
+
 		> .suffix
+			right 0
 			padding-left 4px
+
+			if fill
+				padding-right 12px
 
 	> .text
 		margin 6px 0
