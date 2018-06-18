@@ -49,9 +49,7 @@ const router = new Router();
 //#region static assets
 
 router.get('/assets/*', async ctx => {
-	// 互換性のため
-	const path = ctx.path.replace('.raw.js', '.js').replace('.min.js', '.js');
-	await send(ctx, path, {
+	await send(ctx, ctx.path, {
 		root: client,
 		maxage: ms('7 days'),
 		immutable: true
@@ -66,9 +64,11 @@ router.get('/apple-touch-icon.png', async ctx => {
 });
 
 // ServiceWroker
-//router.get(/^\/sw\.(.+?)\.js$/, async ctx => {
-//	await send(ctx, `${client}/assets/sw.${ctx.params[0]}.js`);
-//});
+router.get(/^\/sw\.(.+?)\.js$/, async ctx => {
+	await send(ctx, `/assets/sw.${ctx.params[0]}.js`, {
+		root: client
+	});
+});
 
 // Manifest
 router.get('/manifest.json', async ctx => {

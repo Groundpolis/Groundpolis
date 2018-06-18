@@ -1,5 +1,5 @@
 import * as mongo from 'mongodb';
-import * as deepcopy from 'deepcopy';
+const deepcopy = require('deepcopy');
 import rap from '@prezzemolo/rap';
 import db from '../db/mongodb';
 import { IUser, pack as packUser } from './user';
@@ -37,7 +37,11 @@ export type INote = {
 	mediaIds: mongo.ObjectID[];
 	replyId: mongo.ObjectID;
 	renoteId: mongo.ObjectID;
-	poll: any; // todo
+	poll: {
+		choices: Array<{
+			id: number;
+		}>
+	};
 	text: string;
 	tags: string[];
 	tagsLower: string[];
@@ -216,7 +220,7 @@ export const pack = async (
 			hide = false;
 		} else {
 			// 指定されているかどうか
-			const specified = _note.visibleUserIds.some(id => id.equals(meId));
+			const specified = _note.visibleUserIds.some((id: mongo.ObjectID) => id.equals(meId));
 
 			if (specified) {
 				hide = false;
@@ -268,7 +272,7 @@ export const pack = async (
 	}
 
 	// Populate media
-	_note.media = hide ? [] : Promise.all(_note.mediaIds.map(fileId =>
+	_note.media = hide ? [] : Promise.all(_note.mediaIds.map((fileId: mongo.ObjectID) =>
 		packFile(fileId)
 	));
 
@@ -304,7 +308,7 @@ export const pack = async (
 
 				if (vote != null) {
 					const myChoice = poll.choices
-						.filter(c => c.id == vote.choice)[0];
+						.filter((c: any) => c.id == vote.choice)[0];
 
 					myChoice.isVoted = true;
 				}
@@ -343,6 +347,10 @@ export const pack = async (
 		_note.mediaIds = [];
 		_note.text = null;
 		_note.poll = null;
+		_note.cw = null;
+		_note.tags = [];
+		_note.tagsLower = [];
+		_note.geo = null;
 		_note.isHidden = true;
 	}
 

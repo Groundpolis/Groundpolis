@@ -1,8 +1,8 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "4.1.0",
-	"clientVersion": "1.0.6535",
+	"version": "4.3.0",
+	"clientVersion": "1.0.6630",
 	"codename": "nighthike",
 	"main": "./built/index.js",
 	"private": true,
@@ -23,10 +23,10 @@
 		"format": "gulp format"
 	},
 	"dependencies": {
-		"@fortawesome/fontawesome": "1.0.1",
-		"@fortawesome/fontawesome-free-brands": "5.0.2",
-		"@fortawesome/fontawesome-free-regular": "5.0.2",
-		"@fortawesome/fontawesome-free-solid": "5.0.2",
+		"@fortawesome/fontawesome": "1.1.8",
+		"@fortawesome/fontawesome-free-brands": "5.0.13",
+		"@fortawesome/fontawesome-free-regular": "5.0.13",
+		"@fortawesome/fontawesome-free-solid": "5.0.13",
 		"@koa/cors": "2.2.1",
 		"@prezzemolo/rap": "0.1.2",
 		"@prezzemolo/zip": "0.0.3",
@@ -215,6 +215,8 @@
 		"webpack-cli": "2.1.4",
 		"websocket": "1.0.26",
 		"ws": "5.2.0",
-		"xev": "2.0.1"
+		"xev": "2.0.1",
+		"@types/file-type": "5.2.1",
+		"@types/jsdom": "11.0.5"
 	}
 }
