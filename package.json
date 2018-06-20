@@ -1,8 +1,8 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "4.3.1",
-	"clientVersion": "1.0.6630",
+	"version": "4.4.0",
+	"clientVersion": "1.0.6655",
 	"codename": "nighthike",
 	"main": "./built/index.js",
 	"private": true,
@@ -218,5 +218,11 @@
 		"xev": "2.0.1",
 		"@types/file-type": "5.2.1",
 		"@types/jsdom": "11.0.5"
+	},
+	"greenkeeper": {
+		"ignore": [
+			"deepcopy",
+			"cafy"
+		]
 	}
 }
