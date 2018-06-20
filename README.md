@@ -7,7 +7,7 @@
 [![][dependencies-badge]][dependencies-link]
 [![][himawari-badge]][himasaku]
 [![][sakurako-badge]][himasaku]
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![Greenkeeper badge](https://badges.greenkeeper.io/syuilo/misskey.svg)](https://greenkeeper.io/)
 
 > Lead Maintainer: [syuilo][syuilo-link]
 
@@ -26,7 +26,7 @@ ultimately sophisticated professional microblogging software.
   * and widgets!
 * Private messages
 * Mute
-* Streaming
+* Real-time timelines
 * ActivityPub compatible
 
 and more! You can see it with your own eyes at [misskey.xyz](https://misskey.xyz).
