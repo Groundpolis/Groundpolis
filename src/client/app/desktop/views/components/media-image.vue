@@ -32,18 +32,10 @@ export default Vue.extend({
 		}
 	},
 	methods: {
-		onMousemove(e) {
-			const rect = this.$el.getBoundingClientRect();
-			const mouseX = e.clientX - rect.left;
-			const mouseY = e.clientY - rect.top;
-			const xp = mouseX / this.$el.offsetWidth * 100;
-			const yp = mouseY / this.$el.offsetHeight * 100;
-			this.$el.style.backgroundPosition = xp + '% ' + yp + '%';
-			this.$el.style.backgroundImage = `url("${this.image.url}")`;
+		onMousemove() {
 		},
 
 		onMouseleave() {
-			this.$el.style.backgroundPosition = '';
 		},
 
 		onClick() {
@@ -63,10 +55,8 @@ export default Vue.extend({
 	width 100%
 	height 100%
 	background-position center
+	background-size contain
+	background-repeat no-repeat
 	border-radius 4px
-
-	&:not(:hover)
-		background-size contain
-		background-repeat no-repeat
 
 </style>
