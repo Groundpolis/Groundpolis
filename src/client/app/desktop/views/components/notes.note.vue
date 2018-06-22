@@ -25,7 +25,7 @@
 						<span v-if="p.isHidden" style="opacity: 0.5">%i18n:@private%</span>
 						<span v-if="p.deletedAt" style="opacity: 0.5">%i18n:@deleted%</span>
 						<a class="reply" v-if="p.reply">%fa:reply%</a>
-						<misskey-flavored-markdown v-if="p.text && !canHideText(p)" :text="p.text" :i="$store.state.i" :class="$style.text"/>
+						<misskey-flavored-markdown v-if="p.text" :text="p.text" :i="$store.state.i" :class="$style.text"/>
 						<a class="rp" v-if="p.renote">RP:</a>
 					</div>
 					<div class="media" v-if="p.media.length > 0">
@@ -75,7 +75,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import dateStringify from '../../../common/scripts/date-stringify';
-import canHideText from '../../../common/scripts/can-hide-text';
 import parse from '../../../../../mfm/parse';
 
 import MkPostFormWindow from './post-form-window.vue';
@@ -190,8 +189,6 @@ export default Vue.extend({
 	},
 
 	methods: {
-		canHideText,
-
 		capture(withHandler = false) {
 			if (this.$store.getters.isSignedIn) {
 				this.connection.send({
@@ -473,10 +470,10 @@ root(isDark)
 
 						> *
 							display inline-block
-							margin 0 8px 0 0
+							margin 0 0 4px 6px
 							padding 2px 8px 2px 16px
 							font-size 90%
-							color #8d969e
+							color $theme-color
 							background isDark ? #313543 : #edf0f3
 							border-radius 4px
 

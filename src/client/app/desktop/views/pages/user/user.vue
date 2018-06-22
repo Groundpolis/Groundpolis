@@ -92,7 +92,7 @@ root(isDark)
 		&.is-suspended
 			color isDark ? #ffb4b4 : #570808
 			background isDark ? #611d1d : #ffdbdb
-			border solid 1px isDarl ? #d64a4a : #e09696
+			border solid 1px isDark ? #d64a4a : #e09696
 
 		&.is-remote
 			color isDark ? #ffbd3e : #573c08
@@ -113,6 +113,7 @@ root(isDark)
 
 		> .main
 			flex 1
+			min-width 0 // SEE: http://kudakurage.hatenadiary.com/entry/2016/04/01/232722
 			margin-right 16px
 
 			> .timeline
@@ -121,6 +122,7 @@ root(isDark)
 
 		> .side
 			width 275px
+			flex-shrink 0
 
 			> p
 				display block
