@@ -3,19 +3,19 @@
 	<header><b>{{ blackUser.name }}</b>(黒) vs <b>{{ whiteUser.name }}</b>(白)</header>
 
 	<div style="overflow: hidden">
-		<p class="turn" v-if="!iAmPlayer && !game.isEnded">{{ turnUser.name }}のターンです<mk-ellipsis/></p>
-		<p class="turn" v-if="logPos != logs.length">{{ turnUser.name }}のターン</p>
-		<p class="turn1" v-if="iAmPlayer && !game.isEnded && !isMyTurn">相手のターンです<mk-ellipsis/></p>
-		<p class="turn2" v-if="iAmPlayer && !game.isEnded && isMyTurn" v-animate-css="{ classes: 'tada', iteration: 'infinite' }">あなたのターンです</p>
+		<p class="turn" v-if="!iAmPlayer && !game.isEnded">{{ '%i18n:common.reversi.turn-of%'.replace('{}', turnUser.name) }}<mk-ellipsis/></p>
+		<p class="turn" v-if="logPos != logs.length">{{ '%i18n:common.reversi.past-turn-of%'.replace('{}', turnUser.name) }}</p>
+		<p class="turn1" v-if="iAmPlayer && !game.isEnded && !isMyTurn">%i18n:common.reversi.opponent-turn%<mk-ellipsis/></p>
+		<p class="turn2" v-if="iAmPlayer && !game.isEnded && isMyTurn" v-animate-css="{ classes: 'tada', iteration: 'infinite' }">%i18n:common.reversi.my-turn%</p>
 		<p class="result" v-if="game.isEnded && logPos == logs.length">
 			<template v-if="game.winner"><b>{{ game.winner.name }}</b>の勝ち{{ game.settings.isLlotheo ? ' (ロセオ)' : '' }}</template>
-			<template v-else>引き分け</template>
+			<template v-else>%i18n:common.reversi.drawn%</template>
 		</p>
 	</div>
 
 	<div class="board">
 		<div class="labels-x" v-if="this.$store.state.settings.reversiBoardLabels">
-			<span v-for="i in game.settings.map[0].length">{{ String.fromCharCode(96 + i) }}</span>
+			<span v-for="i in game.settings.map[0].length">{{ String.fromCharCode(64 + i) }}</span>
 		</div>
 		<div class="flex">
 			<div class="labels-y" v-if="this.$store.state.settings.reversiBoardLabels">
@@ -25,7 +25,7 @@
 				<div v-for="(stone, i) in o.board"
 						:class="{ empty: stone == null, none: o.map[i] == 'null', isEnded: game.isEnded, myTurn: !game.isEnded && isMyTurn, can: turnUser ? o.canPut(turnUser.id == blackUser.id, i) : null, prev: o.prevPos == i }"
 						@click="set(i)"
-						:title="`${String.fromCharCode(97 + o.transformPosToXy(i)[0])}${o.transformPosToXy(i)[1] + 1}`">
+						:title="`${String.fromCharCode(65 + o.transformPosToXy(i)[0])}${o.transformPosToXy(i)[1] + 1}`">
 					<img v-if="stone === true" :src="`${blackUser.avatarUrl}?thumbnail&size=128`" alt="">
 					<img v-if="stone === false" :src="`${whiteUser.avatarUrl}?thumbnail&size=128`" alt="">
 				</div>

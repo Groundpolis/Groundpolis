@@ -47,6 +47,7 @@ common:
     e: "ここに書いてください"
     f: "あなたが書くのを待っています..."
 
+  search: "検索"
   delete: "削除"
   loading: "読み込み中"
   ok: "わかった"
@@ -55,6 +56,13 @@ common:
   my-token-regenerated: "あなたのトークンが更新されたのでサインアウトします。"
   i-like-sushi: "私は(プリンよりむしろ)寿司が好き"
   show-reversi-board-labels: "リバーシのボードの行と列のラベルを表示"
+
+  reversi:
+    drawn: "引き分け"
+    my-turn: "あなたのターンです"
+    opponent-turn: "相手のターンです"
+    turn-of: "{}のターンです"
+    past-turn-of: "{}のターン"
 
   widgets:
     analog-clock: "アナログ時計"
@@ -750,6 +758,12 @@ desktop/views/pages/user/user.profile.vue:
   mute: "ミュートする"
   muted: "ミュートしています"
   unmute: "ミュート解除"
+
+desktop/views/pages/user/user.header.vue:
+  posts: "投稿"
+  following: "フォロー"
+  followers: "フォロワー"
+  is-bot: "このアカウントはBotです"
 
 desktop/views/pages/user/user.timeline.vue:
   default: "投稿"
