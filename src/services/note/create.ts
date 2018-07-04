@@ -1,3 +1,4 @@
+import es from '../../db/elasticsearch';
 import Note, { pack, INote } from '../../models/note';
 import User, { isLocalUser, IUser, isRemoteUser, IRemoteUser, ILocalUser } from '../../models/user';
 import stream, { publishLocalTimelineStream, publishGlobalTimelineStream, publishUserListStream } from '../../publishers/stream';
@@ -18,6 +19,7 @@ import { IApp } from '../../models/app';
 import UserList from '../../models/user-list';
 import resolveUser from '../../remote/resolve-user';
 import Meta from '../../models/meta';
+import config from '../../config';
 
 type Type = 'reply' | 'renote' | 'quote' | 'mention';
 
@@ -366,7 +368,7 @@ export default async (user: IUser, data: {
 			watch(user._id, data.reply);
 		}
 
-		// (自分自身へのリプライでない限りは)通知を作成
+		// 通知
 		nm.push(data.reply.userId, 'reply');
 	}
 
@@ -426,5 +428,17 @@ export default async (user: IUser, data: {
 				}
 			});
 		}
+	}
+
+	// Register to search database
+	if (note.text && config.elasticsearch) {
+		es.index({
+			index: 'misskey',
+			type: 'note',
+			id: note._id.toString(),
+			body: {
+				text: note.text
+			}
+		});
 	}
 });
