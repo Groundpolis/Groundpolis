@@ -18,6 +18,8 @@ module.exports = (params: any, me: ILocalUser) => new Promise(async (res, rej) =
 	const [limit = 10, limitErr] = $.num.optional().range(1, 30).get(params.limit);
 	if (limitErr) return rej('invalid limit param');
 
+	if (!es) return res([]);
+
 	es.search({
 		index: 'misskey',
 		type: 'note',
