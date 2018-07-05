@@ -433,7 +433,7 @@ export default async (user: IUser, data: {
 	// Register to search database
 	if (note.text && config.elasticsearch) {
 		es.index({
-			index: 'misskey',
+			index: 'misskey_nj',
 			type: 'note',
 			id: note._id.toString(),
 			body: {

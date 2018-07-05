@@ -31,6 +31,40 @@ const index = {
 	}
 };
 
+const index_nj = {
+	settings: {
+		analysis: {
+			analyzer: {
+				ngram_ja : {
+					type: 'custom',
+					tokenizer: 'ngram_ja_tokenizer',
+					char_filter : ['html_strip'],
+					filter: ['cjk_width', 'lowercase']
+				}
+			},
+			tokenizer: {
+				ngram_ja_tokenizer: {
+					type: 'nGram',
+					min_gram: 2,
+					max_gram: 3,
+					token_chars: ['letter', 'digit']
+				}
+			}
+		}
+	},
+	mappings: {
+		note: {
+			properties: {
+				text: {
+					type: 'text',
+					index: true,
+					analyzer: 'ngram_ja'
+				}
+			}
+		}
+	}
+};
+
 // Init ElasticSearch connection
 const client = config.elasticsearch ? new elasticsearch.Client({
 	host: `${config.elasticsearch.host}:${config.elasticsearch.port}`
@@ -56,7 +90,7 @@ if (client) {
 
 		client.indices.create({
 			index: 'misskey',
-			body: index
+			body: index_ngram_ja
 		});
 	});
 }

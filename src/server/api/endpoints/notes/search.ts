@@ -21,7 +21,7 @@ module.exports = (params: any, me: ILocalUser) => new Promise(async (res, rej) =
 	if (!es) return res([]);
 
 	es.search({
-		index: 'misskey',
+		index: 'misskey_nj',
 		type: 'note',
 		body: {
 			size: limit,
