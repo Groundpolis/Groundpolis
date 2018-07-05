@@ -84,13 +84,13 @@ if (client) {
 	});
 
 	client.indices.exists({
-		index: 'misskey'
+		index: 'misskey_nj'
 	}).then(exist => {
 		if (exist) return;
 
 		client.indices.create({
-			index: 'misskey',
-			body: index_ngram_ja
+			index: 'misskey_nj',
+			body: index_nj
 		});
 	});
 }
