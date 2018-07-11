@@ -5,13 +5,14 @@ import config from '../../config';
 
 import homeStream from './stream/home';
 import localTimelineStream from './stream/local-timeline';
+import hybridTimelineStream from './stream/hybrid-timeline';
 import globalTimelineStream from './stream/global-timeline';
 import userListStream from './stream/user-list';
 import driveStream from './stream/drive';
 import messagingStream from './stream/messaging';
 import messagingIndexStream from './stream/messaging-index';
-import reversiGameStream from './stream/reversi-game';
-import reversiStream from './stream/reversi';
+import reversiGameStream from './stream/games/reversi-game';
+import reversiStream from './stream/games/reversi';
 import serverStatsStream from './stream/server-stats';
 import notesStatsStream from './stream/notes-stats';
 import { ParsedUrlQuery } from 'querystring';
@@ -50,7 +51,7 @@ module.exports = (server: http.Server) => {
 		const q = request.resourceURL.query as ParsedUrlQuery;
 		const [user, app] = await authenticate(q.i as string);
 
-		if (request.resourceURL.pathname === '/reversi-game') {
+		if (request.resourceURL.pathname === '/games/reversi-game') {
 			reversiGameStream(request, connection, subscriber, user);
 			return;
 		}
@@ -64,12 +65,13 @@ module.exports = (server: http.Server) => {
 		const channel: any =
 			request.resourceURL.pathname === '/' ? homeStream :
 			request.resourceURL.pathname === '/local-timeline' ? localTimelineStream :
+			request.resourceURL.pathname === '/hybrid-timeline' ? hybridTimelineStream :
 			request.resourceURL.pathname === '/global-timeline' ? globalTimelineStream :
 			request.resourceURL.pathname === '/user-list' ? userListStream :
 			request.resourceURL.pathname === '/drive' ? driveStream :
 			request.resourceURL.pathname === '/messaging' ? messagingStream :
 			request.resourceURL.pathname === '/messaging-index' ? messagingIndexStream :
-			request.resourceURL.pathname === '/reversi' ? reversiStream :
+			request.resourceURL.pathname === '/games/reversi' ? reversiStream :
 			null;
 
 		if (channel !== null) {

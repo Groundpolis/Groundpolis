@@ -8,6 +8,10 @@ export default (endpoint: string | Endpoint, user: IUser, app: IApp, data: any, 
 
 	const ep = typeof endpoint == 'string' ? endpoints.find(e => e.name == endpoint) : endpoint;
 
+	if (ep.name.includes('.')) {
+		return rej('INVALID_ENDPOINT');
+	}
+
 	if (ep.secure && !isSecure) {
 		return rej('ACCESS_DENIED');
 	}
@@ -31,7 +35,7 @@ export default (endpoint: string | Endpoint, user: IUser, app: IApp, data: any, 
 		}
 	}
 
-	let exec = require(`${__dirname}/endpoints/${ep.name}`);
+	let exec = require(`${__dirname}/endpoints/${ep.name}`).default;
 
 	if (ep.withFile && file) {
 		exec = exec.bind(null, file);
