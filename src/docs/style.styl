@@ -7,10 +7,10 @@ body
 	word-break break-word
 
 main
-	margin 0 0 0 256px
+	margin 0 0 0 330px
 	padding 64px
-	width 100%
-	max-width 800px
+	width 850px
+	max-width calc(100% - 330px)
 
 	section
 		margin 32px 0
@@ -44,6 +44,7 @@ main
 		border-top solid 2px #eee
 
 		> small
+			display block
 			margin 16px 0 0 0
 			color #aaa
 
@@ -53,12 +54,16 @@ nav
 	z-index 10000
 	top 0
 	left 0
-	width 256px
+	width 330px
 	height 100%
 	overflow auto
 	padding 32px
 	background #fff
 	border-right solid 2px #eee
+
+	ul
+		padding 0
+		margin 0
 
 @media (max-width 1025px)
 	main
@@ -81,7 +86,6 @@ nav
 		padding 16px
 
 table
-	display block
 	width 100%
 	max-width 100%
 	overflow auto
@@ -106,10 +110,9 @@ table
 		min-width 128px
 
 code
-	display inline-block
-	padding 8px 10px
+	padding 4px 8px
 	font-family Consolas, 'Courier New', Courier, Monaco, monospace
-	color #295c92
+	//color #295c92
 	background #f2f2f2
 	border-radius 4px
 
@@ -118,3 +121,4 @@ pre
 
 	> code
 		display block
+		padding 16px

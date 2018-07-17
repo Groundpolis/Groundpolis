@@ -1,9 +1,21 @@
 import User, { pack, ILocalUser } from '../../../models/user';
 import { IApp } from '../../../models/app';
 
-/**
- * Show myself
- */
+export const meta = {
+	desc: {
+		ja: '自分のアカウント情報を取得します。'
+	},
+
+	requireCredential: true,
+
+	params: {},
+
+	res: {
+		type: 'entity',
+		entity: 'User'
+	}
+};
+
 export default (params: any, user: ILocalUser, app: IApp) => new Promise(async (res, rej) => {
 	const isSecure = user != null && app == null;
 

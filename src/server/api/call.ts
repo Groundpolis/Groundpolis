@@ -1,33 +1,32 @@
-import endpoints, { Endpoint } from './endpoints';
 import limitter from './limitter';
 import { IUser } from '../../models/user';
 import { IApp } from '../../models/app';
+import endpoints from './endpoints';
 
-export default (endpoint: string | Endpoint, user: IUser, app: IApp, data: any, file?: any) => new Promise<any>(async (ok, rej) => {
+export default (endpoint: string, user: IUser, app: IApp, data: any, file?: any) => new Promise<any>(async (ok, rej) => {
 	const isSecure = user != null && app == null;
 
-	const epName = typeof endpoint === 'string' ? endpoint : endpoint.name;
-	const ep = endpoints.find(e => e.name === epName);
+	const ep = endpoints.find(e => e.name === endpoint);
 
-	if (ep.secure && !isSecure) {
+	if (ep.meta.secure && !isSecure) {
 		return rej('ACCESS_DENIED');
 	}
 
-	if (ep.withCredential && user == null) {
+	if (ep.meta.requireCredential && user == null) {
 		return rej('SIGNIN_REQUIRED');
 	}
 
-	if (ep.withCredential && user.isSuspended) {
+	if (ep.meta.requireCredential && user.isSuspended) {
 		return rej('YOUR_ACCOUNT_HAS_BEEN_SUSPENDED');
 	}
 
-	if (app && ep.kind) {
-		if (!app.permission.some(p => p === ep.kind)) {
+	if (app && ep.meta.kind) {
+		if (!app.permission.some(p => p === ep.meta.kind)) {
 			return rej('PERMISSION_DENIED');
 		}
 	}
 
-	if (ep.withCredential && ep.limit) {
+	if (ep.meta.requireCredential && ep.meta.limit) {
 		try {
 			await limitter(ep, user); // Rate limit
 		} catch (e) {
@@ -36,9 +35,9 @@ export default (endpoint: string | Endpoint, user: IUser, app: IApp, data: any, 
 		}
 	}
 
-	let exec = require(`${__dirname}/endpoints/${ep.name}`).default;
+	let exec = ep.exec;
 
-	if (ep.withFile && file) {
+	if (ep.meta.withFile && file) {
 		exec = exec.bind(null, file);
 	}
 

@@ -5,6 +5,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as showdown from 'showdown';
+import 'showdown-highlightjs-extension';
 import ms = require('ms');
 import * as Router from 'koa-router';
 import * as send from 'koa-send';
@@ -15,32 +16,34 @@ import config from '../../config';
 import I18n from '../../misc/i18n';
 import { licenseHtml } from '../../misc/license';
 const constants = require('../../const.json');
+import endpoints from '../../server/api/endpoints';
 
 async function genVars(lang: string): Promise<{ [key: string]: any }> {
 	const vars = {} as { [key: string]: any };
 
 	vars['lang'] = lang;
 
-	const endpoints = glob.sync('./built/server/api/endpoints/**/*.js');
-	vars['endpoints'] = endpoints.map(ep => require('../../../' + ep)).filter(x => x.meta).map(x => x.meta.name);
+	const cwd = path.resolve(__dirname + '/../../../') + '/';
 
-	const entities = glob.sync('./src/docs/api/entities/**/*.yaml');
+	vars['endpoints'] = endpoints;
+
+	const entities = glob.sync('src/docs/api/entities/**/*.yaml', { cwd });
 	vars['entities'] = entities.map(x => {
-		const _x = yaml.safeLoad(fs.readFileSync(x, 'utf-8')) as any;
+		const _x = yaml.safeLoad(fs.readFileSync(cwd + x, 'utf-8')) as any;
 		return _x.name;
 	});
 
-	const docs = glob.sync('./src/docs/**/*.md');
+	const docs = glob.sync(`src/docs/**/*.${lang}.md`, { cwd });
 	vars['docs'] = {};
 	docs.forEach(x => {
-		const [, name, lang] = x.match(/docs\/(.+?)\.(.+?)\.md$/);
+		const [, name] = x.match(/docs\/(.+?)\.(.+?)\.md$/);
 		if (vars['docs'][name] == null) {
 			vars['docs'][name] = {
 				name,
 				title: {}
 			};
 		}
-		vars['docs'][name]['title'][lang] = fs.readFileSync(x, 'utf-8').match(/^# (.+?)\r?\n/)[1];
+		vars['docs'][name]['title'][lang] = fs.readFileSync(cwd + x, 'utf-8').match(/^# (.+?)\r?\n/)[1];
 	});
 
 	vars['kebab'] = (string: string) => string.replace(/([a-z])([A-Z])/g, '$1-$2').replace(/\s+/g, '-').toLowerCase();
@@ -166,21 +169,23 @@ router.get('/assets/*', async ctx => {
 
 router.get('/*/api/endpoints/*', async ctx => {
 	const lang = ctx.params[0];
-	const ep = require('../../../built/server/api/endpoints/' + ctx.params[1]).meta;
+	const name = ctx.params[1];
+	const ep = endpoints.find(e => e.name === name);
 
 	const vars = {
-		title: ep.name,
-		endpoint: ep.name,
+		title: name,
+		endpoint: ep.meta,
 		url: {
 			host: config.api_url,
-			path: ep.name
+			path: name
 		},
-		desc: ep.desc,
 		// @ts-ignore
-		params: sortParams(Object.entries(ep.params).map(([k, v]) => parseParamDefinition(k, v))),
-		paramDefs: extractParamDefRef(Object.entries(ep.params).map(([k, v]) => v)),
-		res: ep.res && ep.res.props ? sortParams(Object.entries(ep.res.props).map(([k, v]) => parsePropDefinition(k, v))) : null,
-		resDefs: null//extractPropDefRef(Object.entries(ep.res.props).map(([k, v]) => parsePropDefinition(k, v)))
+		params: ep.meta.params ? sortParams(Object.entries(ep.meta.params).map(([k, v]) => parseParamDefinition(k, v))) : null,
+		paramDefs: ep.meta.params ? extractParamDefRef(Object.entries(ep.meta.params).map(([k, v]) => v)) : null,
+		res: ep.meta.res,
+		resProps: ep.meta.res && ep.meta.res.props ? sortParams(Object.entries(ep.meta.res.props).map(([k, v]) => parsePropDefinition(k, v))) : null,
+		resDefs: null,//extractPropDefRef(Object.entries(ep.res.props).map(([k, v]) => parsePropDefinition(k, v)))
+		src: `https://github.com/syuilo/misskey/tree/master/src/server/api/endpoints/${name}.ts`
 	};
 
 	await ctx.render('../../../../src/docs/api/endpoints/view', Object.assign(await genVars(lang), vars));
@@ -190,7 +195,7 @@ router.get('/*/api/entities/*', async ctx => {
 	const lang = ctx.params[0];
 	const entity = ctx.params[1];
 
-	const x = yaml.safeLoad(fs.readFileSync(path.resolve('./src/docs/api/entities/' + entity + '.yaml'), 'utf-8')) as any;
+	const x = yaml.safeLoad(fs.readFileSync(path.resolve(__dirname + '/../../../src/docs/api/entities/' + entity + '.yaml'), 'utf-8')) as any;
 
 	await ctx.render('../../../../src/docs/api/entities/view', Object.assign(await genVars(lang), {
 		name: x.name,
@@ -218,12 +223,14 @@ router.get('/*/*', async ctx => {
 
 	const conv = new showdown.Converter({
 		tables: true,
-		extensions: ['urlExtension', 'apiUrlExtension']
+		extensions: ['urlExtension', 'apiUrlExtension', 'highlightjs']
 	});
 	const md = fs.readFileSync(`${__dirname}/../../../src/docs/${doc}.${lang}.md`, 'utf8');
 
 	await ctx.render('../../../../src/docs/article', Object.assign({
-		html: conv.makeHtml(md)
+		html: conv.makeHtml(md),
+		title: md.match(/^# (.+?)\r?\n/)[1],
+		src: `https://github.com/syuilo/misskey/tree/master/src/docs/${doc}.${lang}.md`
 	}, await genVars(lang)));
 });
 
