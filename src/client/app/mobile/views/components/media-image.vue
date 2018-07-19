@@ -1,5 +1,11 @@
 <template>
-<a class="mk-media-image" :href="image.url" target="_blank" :style="style" :title="image.name"></a>
+<div class="qjewsnkgzzxlxtzncydssfbgjibiehcy" v-if="image.isSensitive && hide" @click="hide = false">
+	<div>
+		<b>%fa:exclamation-triangle% %i18n:@sensitive%</b>
+		<span>%i18n:@click-to-show%</span>
+	</div>
+</div>
+<a class="gqnyydlzavusgskkfvwvjiattxdzsqlf" v-else :href="image.url" target="_blank" :style="style" :title="image.name"></a>
 </template>
 
 <script lang="ts">
@@ -13,6 +19,10 @@ export default Vue.extend({
 		},
 		raw: {
 			default: false
+		},
+		hide: {
+			type: Boolean,
+			default: true
 		}
 	},
 	computed: {
@@ -35,7 +45,7 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-.mk-media-image
+.gqnyydlzavusgskkfvwvjiattxdzsqlf
 	display block
 	overflow hidden
 	width 100%
@@ -44,5 +54,20 @@ export default Vue.extend({
 	background-size contain
 	background-repeat no-repeat
 	border-radius 4px
+
+.qjewsnkgzzxlxtzncydssfbgjibiehcy
+	display flex
+	justify-content center
+	align-items center
+	background #111
+	color #fff
+
+	> div
+		display table-cell
+		text-align center
+		font-size 12px
+
+		> b
+			display block
 
 </style>
