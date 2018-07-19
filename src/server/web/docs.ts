@@ -16,7 +16,7 @@ import config from '../../config';
 import I18n from '../../misc/i18n';
 import { licenseHtml } from '../../misc/license';
 const constants = require('../../const.json');
-import endpoints from '../../server/api/endpoints';
+import endpoints from '../api/endpoints';
 
 async function genVars(lang: string): Promise<{ [key: string]: any }> {
 	const vars = {} as { [key: string]: any };
@@ -113,7 +113,7 @@ const parsePropDefinition = (key: string, prop: any) => {
 	return prop;
 };
 
-const sortParams = (params: Array<{name: string}>) => {
+const sortParams = (params: Array<{ name: string }>) => {
 	return params;
 };
 
@@ -184,7 +184,7 @@ router.get('/*/api/endpoints/*', async ctx => {
 		paramDefs: ep.meta.params ? extractParamDefRef(Object.entries(ep.meta.params).map(([k, v]) => v)) : null,
 		res: ep.meta.res,
 		resProps: ep.meta.res && ep.meta.res.props ? sortParams(Object.entries(ep.meta.res.props).map(([k, v]) => parsePropDefinition(k, v))) : null,
-		resDefs: null,//extractPropDefRef(Object.entries(ep.res.props).map(([k, v]) => parsePropDefinition(k, v)))
+		resDefs: null, //extractPropDefRef(Object.entries(ep.res.props).map(([k, v]) => parsePropDefinition(k, v)))
 		src: `https://github.com/syuilo/misskey/tree/master/src/server/api/endpoints/${name}.ts`
 	};
 
