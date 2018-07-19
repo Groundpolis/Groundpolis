@@ -18,11 +18,7 @@ export default (params: any, me: ILocalUser) => new Promise(async (res, rej) => 
 	const [limit = 10, limitErr] = $.num.optional.range(1, 30).get(params.limit);
 	if (limitErr) return rej('invalid limit param');
 
-<<<<<<< HEAD
-	if (!es) return res([]);
-=======
 	if (es == null) return rej('searching not available');
->>>>>>> master
 
 	es.search({
 		index: 'misskey_nj',
