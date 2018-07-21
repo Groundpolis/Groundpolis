@@ -40,7 +40,7 @@
 		</div>
 	</div>
 	<div class="hashtags" v-if="recentHashtags.length > 0">
-		<a v-for="tag in recentHashtags" @click="addTag(tag)">#{{ tag }}</a>
+		<a v-for="tag in recentHashtags.slice(0, 5)" @click="addTag(tag)">#{{ tag }}</a>
 	</div>
 </div>
 </template>
@@ -295,9 +295,8 @@ export default Vue.extend({
 
 			if (this.text && this.text != '') {
 				const hashtags = parse(this.text).filter(x => x.type == 'hashtag').map(x => x.hashtag);
-				let history = JSON.parse(localStorage.getItem('hashtags') || '[]') as string[];
-				history = history.filter(x => !hashtags.includes(x));
-				localStorage.setItem('hashtags', JSON.stringify(hashtags.concat(history)));
+				const history = JSON.parse(localStorage.getItem('hashtags') || '[]') as string[];
+				localStorage.setItem('hashtags', JSON.stringify(hashtags.concat(history).reduce((a, c) => a.includes(c) ? a : [...a, c], [])));
 			}
 		},
 

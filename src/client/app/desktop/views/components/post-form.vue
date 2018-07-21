@@ -11,7 +11,8 @@
 			<a @click="addVisibleUser">+ユーザーを追加</a>
 		</div>
 		<div class="hashtags" v-if="recentHashtags.length > 0">
-			<a v-for="tag in recentHashtags" @click="addTag(tag)">#{{ tag }}</a>
+			<b>%i18n:@recent-tags%:</b>
+			<a v-for="tag in recentHashtags.slice(0, 5)" @click="addTag(tag)" title="%@click-to-tagging%">#{{ tag }}</a>
 		</div>
 		<input v-show="useCw" v-model="cw" placeholder="内容への注釈 (オプション)">
 		<textarea :class="{ with: (files.length != 0 || poll) }"
@@ -244,7 +245,7 @@ export default Vue.extend({
 		},
 
 		onKeydown(e) {
-			if ((e.which == 10 || e.which == 13) && (e.ctrlKey || e.metaKey)) this.post();
+			if ((e.which == 10 || e.which == 13) && (e.ctrlKey || e.metaKey) && this.canPost) this.post();
 		},
 
 		onPaste(e) {
@@ -382,9 +383,8 @@ export default Vue.extend({
 
 			if (this.text && this.text != '') {
 				const hashtags = parse(this.text).filter(x => x.type == 'hashtag').map(x => x.hashtag);
-				let history = JSON.parse(localStorage.getItem('hashtags') || '[]') as string[];
-				history = history.filter(x => !hashtags.includes(x));
-				localStorage.setItem('hashtags', JSON.stringify(hashtags.concat(history)));
+				const history = JSON.parse(localStorage.getItem('hashtags') || '[]') as string[];
+				localStorage.setItem('hashtags', JSON.stringify(hashtags.concat(history).reduce((a, c) => a.includes(c) ? a : [...a, c], [])));
 			}
 		},
 
@@ -468,7 +468,7 @@ root(isDark)
 			margin 0
 			max-width 100%
 			min-width 100%
-			min-height 64px
+			min-height 84px
 
 			&:hover
 				& + *
@@ -495,8 +495,17 @@ root(isDark)
 				color isDark ? #fff : #666
 
 		> .hashtags
+			margin 0 0 8px 0
+			overflow hidden
+			white-space nowrap
+			font-size 14px
+
+			> b
+				color isDark ? #9baec8 : darken($theme-color, 20%)
+
 			> *
 				margin-right 8px
+				white-space nowrap
 
 		> .medias
 			margin 0
