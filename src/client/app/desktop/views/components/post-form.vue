@@ -23,7 +23,7 @@
 		<div class="medias" :class="{ with: poll }" v-show="files.length != 0">
 			<x-draggable :list="files" :options="{ animation: 150 }">
 				<div v-for="file in files" :key="file.id">
-					<div class="img" :style="{ backgroundImage: `url(${file.url}?thumbnail&size=64)` }" :title="file.name"></div>
+					<div class="img" :style="{ backgroundImage: `url(${file.url})` }" :title="file.name"></div>
 					<img class="remove" @click="detachMedia(file.id)" src="/assets/desktop/remove.png" title="%i18n:@attach-cancel%" alt=""/>
 				</div>
 			</x-draggable>
@@ -137,7 +137,9 @@ export default Vue.extend({
 		},
 
 		canPost(): boolean {
-			return !this.posting && (this.text.length != 0 || this.files.length != 0 || this.poll || this.renote);
+			return !this.posting &&
+				(1 <= this.text.length || 1 <= this.files.length || this.poll || this.renote) &&
+				(this.text.trim().length <= 1000);
 		}
 	},
 
@@ -307,8 +309,8 @@ export default Vue.extend({
 			}, err => {
 				alert('エラー: ' + err.message);
 			}, {
-				enableHighAccuracy: true
-			});
+					enableHighAccuracy: true
+				});
 		},
 
 		removeGeo() {

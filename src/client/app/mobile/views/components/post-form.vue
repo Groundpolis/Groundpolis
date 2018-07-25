@@ -21,7 +21,7 @@
 			<div class="attaches" v-show="files.length != 0">
 				<x-draggable class="files" :list="files" :options="{ animation: 150 }">
 					<div class="file" v-for="file in files" :key="file.id">
-						<div class="img" :style="`background-image: url(${file.url}?thumbnail&size=128)`" @click="detachMedia(file)"></div>
+						<div class="img" :style="`background-image: url(${file.url})`" @click="detachMedia(file)"></div>
 					</div>
 				</x-draggable>
 			</div>
@@ -132,7 +132,9 @@ export default Vue.extend({
 		},
 
 		canPost(): boolean {
-			return !this.posting && (this.text.length != 0 || this.files.length != 0 || this.poll || this.renote);
+			return !this.posting &&
+				(1 <= this.text.length || 1 <= this.files.length || this.poll || this.renote) &&
+				(this.text.trim().length <= 1000);
 		}
 	},
 
@@ -221,8 +223,8 @@ export default Vue.extend({
 			}, err => {
 				alert('%i18n:@error%: ' + err.message);
 			}, {
-				enableHighAccuracy: true
-			});
+					enableHighAccuracy: true
+				});
 		},
 
 		removeGeo() {

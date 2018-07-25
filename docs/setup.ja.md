@@ -22,15 +22,14 @@ adduser --disabled-password --disabled-login misskey
 これらのソフトウェアをインストール・設定してください:
 
 #### 依存関係 :package:
-* *Node.js* と *npm*
+* **[Node.js](https://nodejs.org/en/)**
 * **[MongoDB](https://www.mongodb.com/)** (3.6以上)
 * **[Redis](https://redis.io/)**
-* **[ImageMagick](http://www.imagemagick.org/script/index.php)**
 
 ##### オプション
 * [Elasticsearch](https://www.elastic.co/) - 検索機能を向上させるために用います。
 
-*3.* Mongodbの設定
+*3.* MongoDBの設定
 ----------------------------------------------------------------
 ルートで:
 1. `mongo` mongoシェルを起動
@@ -122,13 +121,6 @@ WantedBy=multi-user.target
 3. `npm install`
 4. `npm run build`
 
-## メモリが足りなくてビルドできない場合
-Misskeyの(クライアントの)ビルドには、目安として8GBくらいのメモリを必要とします。
-VPSなどでビルドする時は、もしかしたらメモリが足りなくなる可能性があります。
-そうなった場合、もしVPSではなくあなたのPCが十分なメモリを搭載しているなら、あなたのPC上でビルドし、生成されたファイルをVPSにFTPでアップロードする方法を採ることができます。
+----------------------------------------------------------------
 
-1. あなたのPC上にMisskeyをインストールする
-2. 設定ファイルを用意する。設定ファイルは、サーバーに合わせた設定にします。
-3. npm run webpack
-4. built/client をサーバーにアップロードする
-5. サーバー上で、npm run gulp
+なにかお困りのことがありましたらお気軽にご連絡ください。

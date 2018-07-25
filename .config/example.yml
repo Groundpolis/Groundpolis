@@ -53,6 +53,21 @@ remoteDriveCapacityMb: 8
 #  Users cannot see remote images when they turn off "Show media from a remote server" setting.
 preventCache: false
 
+drive:
+  storage: 'db'
+
+  # OR
+
+  # storage: 'minio'
+  # bucket:
+  # prefix:
+  # config:
+  #   endPoint:
+  #   port:
+  #   secure:
+  #   accessKey:
+  #   secretKey:
+
 #
 # Below settings are optional
 #
@@ -88,3 +103,8 @@ preventCache: false
 # twitter:
 #   consumer_key: example-twitter-consumer-key
 #   consumer_secret: example-twitter-consumer-secret-key
+
+# Ghost
+# Ghost account is an account used for the purpose of delegating
+# followers when putting users in the list.
+# ghost: user-id-of-your-ghost-account

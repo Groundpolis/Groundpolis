@@ -22,16 +22,15 @@ adduser --disabled-password --disabled-login misskey
 Please install and setup these softwares:
 
 #### Dependencies :package:
-* *Node.js* and *npm*
+* **[Node.js](https://nodejs.org/en/)**
 * **[MongoDB](https://www.mongodb.com/)** >= 3.6
 * **[Redis](https://redis.io/)**
-* **[ImageMagick](http://www.imagemagick.org/script/index.php)** >= 7.0
 
 ##### Optional
 * [Elasticsearch](https://www.elastic.co/) - used to provide searching feature instead of MongoDB
 
 
-*3.* Setup Mongodb Database
+*3.* Setup MongoDB
 ----------------------------------------------------------------
 In root :
 1. `mongo` Go to the mongo shell
@@ -125,3 +124,7 @@ You can check if the service is running with `systemctl status misskey`.
 2. `git checkout $(git tag -l | grep -v 'rc[0-9]*$' | sort -V | tail -n 1)`
 3. `npm install`
 4. `npm run build`
+
+----------------------------------------------------------------
+
+If you have any questions or troubles, feel free to contact us!
