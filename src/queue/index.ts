@@ -12,13 +12,16 @@ const queue = new Queue('misskey', {
 	},
 
 	removeOnSuccess: true,
-	removeOnFailure: true
+	removeOnFailure: true,
+	getEvents: false,
+	sendEvents: false,
+	storeJobs: false
 });
 
 export function createHttpJob(data: any) {
 	return queue.createJob(data)
-		.retries(4)
-		.backoff('exponential', 16384) // 16s
+		//.retries(4)
+		//.backoff('exponential', 16384) // 16s
 		.save();
 }
 
@@ -32,5 +35,5 @@ export function deliver(user: ILocalUser, content: any, to: any) {
 }
 
 export default function() {
-	queue.process(8, http);
+	queue.process(128, http);
 }
