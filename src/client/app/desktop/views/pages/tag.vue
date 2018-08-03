@@ -6,7 +6,7 @@
 	<div :class="$style.loading" v-if="fetching">
 		<mk-ellipsis-icon/>
 	</div>
-	<p :class="$style.empty" v-if="!fetching && empty">%fa:search%「{{ q }}」に関する投稿は見つかりませんでした。</p>
+	<p :class="$style.empty" v-if="!fetching && empty">%fa:search% {{ '%i18n:no-posts-found%'.split('{}')[0] }}{{ q }}{{ '%i18n:no-posts-found%'.split('{}')[1] }}</p>
 	<mk-notes ref="timeline" :class="$style.notes" :more="existMore ? more : null"/>
 </mk-ui>
 </template>
