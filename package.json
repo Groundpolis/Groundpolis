@@ -1,8 +1,8 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "5.15.0",
-	"clientVersion": "1.0.8007",
+	"version": "5.16.0",
+	"clientVersion": "1.0.8018",
 	"codename": "nighthike",
 	"main": "./built/index.js",
 	"private": true,
@@ -183,6 +183,7 @@
 		"showdown-highlightjs-extension": "0.1.2",
 		"single-line-log": "1.1.2",
 		"speakeasy": "2.0.0",
+		"stringz": "1.0.0",
 		"style-loader": "0.21.0",
 		"stylus": "0.54.5",
 		"stylus-loader": "3.0.2",
