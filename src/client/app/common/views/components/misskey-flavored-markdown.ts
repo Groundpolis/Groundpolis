@@ -63,11 +63,22 @@ export default Vue.component('misskey-flavored-markdown', {
 						attrs: {
 							style: 'display: inline-block; font-size: 200%;'
 						},
-						directives: [{
+						directives: [this.$store.state.settings.disableAnimatedMfm ? {} : {
 							name: 'animate-css',
 							value: { classes: 'tada', iteration: 'infinite' }
 						}]
 					}, token.big);
+
+				case 'motion':
+					return (createElement as any)('span', {
+						attrs: {
+							style: 'display: inline-block;'
+						},
+						directives: [this.$store.state.settings.disableAnimatedMfm ? {} : {
+							name: 'animate-css',
+							value: { classes: 'rubberBand', iteration: 'infinite' }
+						}]
+					}, token.motion);
 
 				case 'url':
 					return createElement(MkUrl, {
