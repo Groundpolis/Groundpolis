@@ -11,7 +11,8 @@ common:
     warning: "<strong>Misskey no tiene anuncios publicitarios.</strong> Sin embargo, algunas características podrían no estar disponibles si el bloqueador de publicidad está habilitado."
   application-authorization: "Autorizaciones de la aplicación."
   close: "Cerrar"
-  got-it: "わかった"
+  do-not-copy-paste: "ここにコードを入力したり張り付けたりしないでください。アカウントが不正利用される可能性があります。"
+  got-it: "¡Listo!"
   customization-tips:
     title: "Consejos de personalización"
     paragraph1: "Customización de inicio le permite agregar, borrar, o reorganizar los accesorios."
@@ -27,7 +28,6 @@ common:
     notified-by: "Notificado por {}:"
     reply-from: "Respuesta de {}:"
     quoted-by: "Citado por {}:"
-  name: "Misskey"
   time:
     unknown: "Desconocido"
     future: "Futuro"
@@ -39,6 +39,7 @@ common:
     weeks_ago: "Hace {} semana(s)"
     months_ago: "Hace {} mes(es)"
     years_ago: "Hace {} año(s)"
+  month-and-day: "{month}月 {day}日"
   trash: "Papelera"
   weekday-short:
     sunday: "domingo"
@@ -83,7 +84,7 @@ common:
   i-like-sushi: "Prefiero sushi a pudín"
   show-reversi-board-labels: "Mostrar etiquetas de filas y columnas en Reversi"
   verified-user: "Usuario verificado"
-  disable-animated-mfm: "投稿内の動きのあるテキストを無効にする"
+  disable-animated-mfm: "Desactivar texto animado en una publicación"
   reversi:
     drawn: "Empatado"
     my-turn: "Mi turno"
@@ -165,23 +166,23 @@ common/views/components/games/reversi/reversi.vue:
     waiting-for: "Esperando por {}"
     cancel: "Cancelar"
 common/views/components/games/reversi/reversi.game.vue:
-  surrender: "投了"
-  surrendered: "投了により"
+  surrender: "Rendirse"
+  surrendered: "Por rendirse"
 common/views/components/games/reversi/reversi.index.vue:
   title: "Misskey Reversi"
-  sub-title: "他のMisskeyユーザーとリバーシで対戦しよう"
-  invite: "招待"
-  rule: "遊び方"
+  sub-title: "¡Juega Reversi con tus amigos!"
+  invite: "Invitar"
+  rule: "Cómo jugar"
   rule-desc: "リバーシは、相手と交互に石をボードに置いて、相手の石を挟んで自分の色に変えてゆき、最終的に残った石が多い方が勝ちというボードゲームです。"
-  mode-invite: "招待"
-  mode-invite-desc: "指定したユーザーと対戦するモードです。"
-  invitations: "対局の招待があります！"
-  my-games: "自分の対局"
-  all-games: "みんなの対局"
-  enter-username: "ユーザー名を入力してください"
+  mode-invite: "Invitar"
+  mode-invite-desc: "Invitar un usuario al juego."
+  invitations: "¡Has recibido una invitación!"
+  my-games: "Mis juegos"
+  all-games: "Todos los juegos"
+  enter-username: "Ingresar nombre de usuario"
   game-state:
-    ended: "終了"
-    playing: "進行中"
+    ended: "Finalizado"
+    playing: "En progreso"
 common/views/components/games/reversi/reversi.room.vue:
   settings-of-the-game: "Configuración de juego"
   choose-map: "Elije un mapa"
@@ -193,7 +194,7 @@ common/views/components/games/reversi/reversi.room.vue:
   looped-map: "Mapa en bucle"
   can-put-everywhere: "Puedes colocar donde quieras"
   settings-of-the-bot: "Configuración de bot"
-  this-game-is-started-soon: "ゲームは数秒後に開始されます"
+  this-game-is-started-soon: "El juego comenzará pronto"
   waiting-for-other: "Esperando a que se prepare el adversario"
   waiting-for-me: "Esperando por la preparación"
   waiting-for-both: "Esperando por ti"
@@ -234,11 +235,13 @@ common/views/components/messaging-room.vue:
   no-history: "El historial se ha acabado"
   resize-form: "Arrastra para redimensionar"
   new-message: "Nuevo mensaje"
+  only-one-file-attached: "メッセージに添付できるのはひとつのファイルのみです"
 common/views/components/messaging-room.form.vue:
   input-message-here: "Escribe el mensaje aquí"
   send: "Enviar"
   attach-from-local: "Adjunta ficheros desde tu PC"
   attach-from-drive: "Adjunta ficheros desde tu disco"
+  only-one-file-attached: "メッセージに添付できるのはひとつのファイルのみです"
 common/views/components/messaging-room.message.vue:
   is-read: "Leer"
   deleted: "El mensaje se ha borrado"
@@ -278,8 +281,8 @@ common/views/components/signin.vue:
   token: "Identificador"
   signing-in: "Entrando..."
   signin: "Entra"
-  or: "または"
-  signin-with-twitter: "Twitterでログイン"
+  or: "O"
+  signin-with-twitter: "Ingresar con Twitter"
 common/views/components/signup.vue:
   username: "Usuario"
   checking: "Comprobando..."
@@ -374,7 +377,7 @@ common/views/widgets/tips.vue:
   tips-line9: "Misskey está hecho bajo licencia AGPLv3"
   tips-line10: "Usando el accesorio de Máquina del Tiempo puedes encontrar publicaciones antiguas"
   tips-line11: "Puedes resaltar publicaciones en la página de usuario haciendo click en \"...\""
-  tips-line13: "投稿に添付したファイルは全てドライブに保存されます"
+  tips-line13: "Todos los archivos añadidos a la publicación se han guardado en tu unidad."
   tips-line14: "ホームのカスタマイズ中、ウィジェットを右クリックしてデザインを変更できます"
   tips-line17: "「**」でテキストを囲むと**強調表示**されます"
   tips-line19: "いくつかのウィンドウはブラウザの外に切り離すことができます"
@@ -534,6 +537,8 @@ desktop/views/components/notes.note.vue:
   detail: "Mostrar detalles"
   private: "Esta publicación es privada"
   deleted: "Esta publicación ha sido borrada"
+  hide: "隠す"
+  see-more: "もっと見る"
 desktop/views/components/notes.vue:
   error: "Error al cargar."
   retry: "Reintentar"
@@ -569,6 +574,7 @@ desktop/views/components/post-form.vue:
   geolocation-alert: "Tu dispositivo no tiene soporte de geolocalización."
   error: "Error"
   enter-username: "Por favor escribe un nombre de usuario..."
+  annotations: "内容への注釈 (オプション)"
 desktop/views/components/post-form-window.vue:
   note: "Nota nueva"
   reply: "Responder"
@@ -730,6 +736,7 @@ desktop/views/components/timeline.vue:
   list: "リスト"
 desktop/views/components/ui.header.vue:
   welcome-back: "おかえりなさい、"
+  adjective: "さん"
 desktop/views/components/ui.header.account.vue:
   profile: "プロフィール"
   drive: "ドライブ"
@@ -970,6 +977,7 @@ mobile/views/components/timeline.vue:
   load-more: "もっと"
 mobile/views/components/ui.header.vue:
   welcome-back: "おかえりなさい、"
+  adjective: "さん"
 mobile/views/components/ui.nav.vue:
   timeline: "タイムライン"
   notifications: "通知"
@@ -1018,6 +1026,8 @@ mobile/views/pages/welcome.vue:
 mobile/views/pages/widgets.vue:
   dashboard: "ダッシュボード"
   widgets-hints: "ウィジェットを追加/削除したり並べ替えたりできます。ウィジェットを移動するには「三」をドラッグします。ウィジェットを削除するには「x」をタップします。いくつかのウィジェットはタップすることで表示を変更できます。"
+  add-widget: "追加"
+  customization-tips: "カスタマイズのヒント"
 mobile/views/pages/widgets/activity.vue:
   activity: "アクティビティ"
 mobile/views/pages/share.vue:
@@ -1056,6 +1066,7 @@ mobile/views/pages/settings/settings.profile.vue:
 mobile/views/pages/search.vue:
   search: "検索"
   empty: "「{}」に関する投稿は見つかりませんでした。"
+  not-found: "「{}」に関する投稿は見つかりませんでした。"
 mobile/views/pages/selectdrive.vue:
   select-file: "ファイルを選択"
 mobile/views/pages/settings.vue:
@@ -1150,3 +1161,5 @@ docs:
       name: "名前"
       type: "型"
       description: "説明"
+dev/views/index.vue:
+  manage-apps: "アプリの管理"
