@@ -5,36 +5,6 @@ const index = {
 	settings: {
 		analysis: {
 			analyzer: {
-				bigram: {
-					tokenizer: 'bigram_tokenizer'
-				}
-			},
-			tokenizer: {
-				bigram_tokenizer: {
-					type: 'nGram',
-					min_gram: 2,
-					max_gram: 2
-				}
-			}
-		}
-	},
-	mappings: {
-		note: {
-			properties: {
-				text: {
-					type: 'text',
-					index: true,
-					analyzer: 'bigram'
-				}
-			}
-		}
-	}
-};
-
-const index_nj = {
-	settings: {
-		analysis: {
-			analyzer: {
 				ngram_ja : {
 					type: 'custom',
 					tokenizer: 'ngram_ja_tokenizer',
@@ -84,13 +54,13 @@ if (client) {
 	});
 
 	client.indices.exists({
-		index: 'misskey_nj'
+		index: 'misskey'
 	}).then(exist => {
 		if (exist) return;
 
 		client.indices.create({
-			index: 'misskey_nj',
-			body: index_nj
+			index: 'misskey',
+			body: index
 		});
 	});
 }

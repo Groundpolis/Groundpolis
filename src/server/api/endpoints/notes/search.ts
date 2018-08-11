@@ -21,7 +21,7 @@ export default (params: any, me: ILocalUser) => new Promise(async (res, rej) => 
 	if (es == null) return rej('searching not available');
 
 	es.search({
-		index: 'misskey_nj',
+		index: 'misskey',
 		type: 'note',
 		body: {
 			size: limit,
