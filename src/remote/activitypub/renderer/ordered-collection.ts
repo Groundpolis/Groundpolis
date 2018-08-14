@@ -13,7 +13,7 @@ export default function(id: string, totalItems: any, first: string, last: string
 	};
 
 	if (first) page.first = first;
-	if (last) page.first = last;
+	if (last) page.last = last;
 
 	return page;
 }

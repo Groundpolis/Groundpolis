@@ -53,6 +53,7 @@ export default async (ctx: Koa.Context) => {
 		} as any;
 
 		if (sinceId) {
+			sort._id = 1;
 			query._id = {
 				$gt: sinceId
 			};
@@ -70,6 +71,8 @@ export default async (ctx: Koa.Context) => {
 				sort: sort
 			});
 
+		if (sinceId) notes.reverse();
+
 		const renderedNotes = await Promise.all(notes.map(note => renderNote(note)));
 		const rendered = renderOrderedCollectionPage(`${partOf}?page=${page}`, user.notesCount, renderedNotes, partOf,
 			notes.length > 0 ? `${partOf}?page=true&since_id=${notes[0]._id}` : null,
@@ -79,7 +82,10 @@ export default async (ctx: Koa.Context) => {
 		ctx.body = pack(rendered);
 	} else {
 		// index page
-		const rendered = renderOrderedCollection(partOf, user.notesCount, `${partOf}?page=true`, null);
+		const rendered = renderOrderedCollection(partOf, user.notesCount,
+			`${partOf}?page=true`,
+			`${partOf}?page=true&since_id=000000000000000000000000`
+		);
 		ctx.body = pack(rendered);
 	}
 };
