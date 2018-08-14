@@ -1,6 +1,7 @@
 import * as mongo from 'mongodb';
 import * as Koa from 'koa';
 import config from '../../config';
+import $ from 'cafy'; import ID from '../../misc/cafy-id';
 import User from '../../models/user';
 import Following from '../../models/following';
 import pack from '../../remote/activitypub/renderer';
@@ -11,10 +12,15 @@ import renderFollowing from '../../remote/activitypub/renderer/following';
 export default async (ctx: Koa.Context) => {
 	const userId = new mongo.ObjectID(ctx.params.user);
 
-	// Get querystring
-	const page = ctx.request.query.page == null ? 0 : Number(ctx.request.query.page) > 0 ? Number(ctx.request.query.page) : -2;
+	// Get 'cursor' parameter
+	const [cursor = null, cursorErr] = $.type(ID).optional.get(ctx.request.query.cursor);
 
-	if (page < 0) {
+	// Get 'page' parameter
+	const pageErr = !$.str.optional.or(['true', 'false']).ok(ctx.request.query.page);
+	const page: boolean = ctx.request.query.page === 'true';
+
+	// Validate parameters
+	if (cursorErr || pageErr) {
 		ctx.status = 400;
 		return;
 	}
@@ -30,21 +36,27 @@ export default async (ctx: Koa.Context) => {
 		return;
 	}
 
-	// Construct query
-	const query = {
-		followeeId: user._id
-	} as any;
-
 	const limit = 10;
 	const partOf = `${config.url}/users/${userId}/followers`;
 
-	if (page > 0) {
+	if (page) {
+		// Construct query
+		const query = {
+			followeeId: user._id
+		} as any;
+
+		// カーソルが指定されている場合
+		if (cursor) {
+			query._id = {
+				$lt: cursor
+			};
+		}
+
 		// Get followers
 		const followings = await Following
 			.find(query, {
 				limit: limit + 1,
-				sort: { _id: -1 },
-				skip: (page - 1) * limit
+				sort: { _id: -1 }
 			});
 
 		// 「次のページ」があるかどうか
@@ -52,15 +64,17 @@ export default async (ctx: Koa.Context) => {
 		if (inStock) followings.pop();
 
 		const renderedFollowers = await Promise.all(followings.map(following => renderFollowing(following.followerId)));
-		const rendered = renderOrderedCollectionPage(`${partOf}?page=${page}`, user.followersCount, renderedFollowers, partOf,
-			page > 1 ? `${partOf}?page=${page - 1}` : null,
-			inStock  ? `${partOf}?page=${page + 1}` : null
+		const rendered = renderOrderedCollectionPage(
+			`${partOf}?page=true${cursor ? `&cursor=${cursor}` : ''}`,
+			user.followersCount, renderedFollowers, partOf,
+			null,
+			inStock ? `${partOf}?page=true&cursor=${followings[followings.length - 1]._id}` : null
 		);
 
 		ctx.body = pack(rendered);
 	} else {
 		// index page
-		const rendered = renderOrderedCollection(partOf, user.followersCount, `${partOf}?page=1`, null);
+		const rendered = renderOrderedCollection(partOf, user.followersCount, `${partOf}?page=true`, null);
 		ctx.body = pack(rendered);
 	}
 };

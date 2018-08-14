@@ -19,13 +19,15 @@ export default async (ctx: Koa.Context) => {
 	// Get 'untilId' parameter
 	const [untilId, untilIdErr] = $.type(ID).optional.get(ctx.request.query.until_id);
 
-	// Validate parameter
-	if (sinceIdErr || untilIdErr || [sinceId, untilId].filter(x => x != null).length > 1) {
+	// Get 'page' parameter
+	const pageErr = !$.str.optional.or(['true', 'false']).ok(ctx.request.query.page);
+	const page: boolean = ctx.request.query.page === 'true';
+
+	// Validate parameters
+	if (sinceIdErr || untilIdErr || pageErr || [sinceId, untilId].filter(x => x != null).length > 1) {
 		ctx.status = 400;
 		return;
 	}
-
-	const page = ctx.request.query.page && ctx.request.query.page !== 'false';
 
 	// Verify user
 	const user = await User.findOne({
@@ -49,7 +51,8 @@ export default async (ctx: Koa.Context) => {
 
 		const query = {
 			userId: user._id,
-			$or: [ { visibility: 'public' }, { visibility: 'home' } ]
+			$or: [ { visibility: 'public' }, { visibility: 'home' } ],
+			text: { $ne: null }	// exclude renote, but include quote
 		} as any;
 
 		if (sinceId) {
@@ -74,7 +77,9 @@ export default async (ctx: Koa.Context) => {
 		if (sinceId) notes.reverse();
 
 		const renderedNotes = await Promise.all(notes.map(note => renderNote(note)));
-		const rendered = renderOrderedCollectionPage(`${partOf}?page=${page}`, user.notesCount, renderedNotes, partOf,
+		const rendered = renderOrderedCollectionPage(
+			`${partOf}?page=true${sinceId ? `&since_id=${sinceId}` : ''}${untilId ? `&until_id=${untilId}` : ''}`,
+			user.notesCount, renderedNotes, partOf,
 			notes.length > 0 ? `${partOf}?page=true&since_id=${notes[0]._id}` : null,
 			notes.length > 0 ? `${partOf}?page=true&until_id=${notes[notes.length - 1]._id}` : null
 		);
