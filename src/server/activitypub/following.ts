@@ -7,7 +7,7 @@ import Following from '../../models/following';
 import pack from '../../remote/activitypub/renderer';
 import renderOrderedCollection from '../../remote/activitypub/renderer/ordered-collection';
 import renderOrderedCollectionPage from '../../remote/activitypub/renderer/ordered-collection-page';
-import renderFollowing from '../../remote/activitypub/renderer/following';
+import renderFollowUser from '../../remote/activitypub/renderer/follow-user';
 
 export default async (ctx: Koa.Context) => {
 	const userId = new mongo.ObjectID(ctx.params.user);
@@ -63,7 +63,7 @@ export default async (ctx: Koa.Context) => {
 		const inStock = followings.length === limit + 1;
 		if (inStock) followings.pop();
 
-		const renderedFollowees = await Promise.all(followings.map(following => renderFollowing(following.followeeId)));
+		const renderedFollowees = await Promise.all(followings.map(following => renderFollowUser(following.followeeId)));
 		const rendered = renderOrderedCollectionPage(
 			`${partOf}?page=true${cursor ? `&cursor=${cursor}` : ''}`,
 			user.followingCount, renderedFollowees, partOf,
