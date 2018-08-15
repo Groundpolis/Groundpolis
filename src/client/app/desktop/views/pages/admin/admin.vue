@@ -3,7 +3,7 @@
 	<nav>
 		<ul>
 			<li @click="nav('dashboard')" :class="{ active: page == 'dashboard' }">%fa:chalkboard .fw%%i18n:@dashboard%</li>
-			<!-- <li @click="nav('users')" :class="{ active: page == 'users' }">%fa:users .fw%%i18n:@users%</li> -->
+			<li @click="nav('users')" :class="{ active: page == 'users' }">%fa:users .fw%%i18n:@users%</li>
 			<!-- <li @click="nav('drive')" :class="{ active: page == 'drive' }">%fa:cloud .fw%%i18n:@drive%</li> -->
 			<!-- <li @click="nav('update')" :class="{ active: page == 'update' }">%i18n:@update%</li> -->
 		</ul>
@@ -14,6 +14,7 @@
 		</div>
 		<div v-if="page == 'users'">
 			<x-suspend-user/>
+			<x-unsuspend-user/>
 		</div>
 		<div v-if="page == 'drive'"></div>
 		<div v-if="page == 'update'"></div>
@@ -25,11 +26,13 @@
 import Vue from "vue";
 import XDashboard from "./admin.dashboard.vue";
 import XSuspendUser from "./admin.suspend-user.vue";
+import XUnsuspendUser from "./admin.unsuspend-user.vue";
 
 export default Vue.extend({
 	components: {
 		XDashboard,
-		XSuspendUser
+		XSuspendUser,
+		XUnsuspendUser
 	},
 	data() {
 		return {
@@ -86,5 +89,14 @@ export default Vue.extend({
 	> main
 		width 100%
 		padding 16px 32px
+
+header
+	margin 10px 0
+
+
+button
+	margin 16px 0
+	position absolute
+	right 0
 
 </style>

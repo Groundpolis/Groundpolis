@@ -1,8 +1,8 @@
 <template>
 <div>
-	<header>%i18n:@suspend-user%</header>
+	<header>%i18n:@unsuspend-user%</header>
 	<input v-model="username" type="text" class="ui"/>
-	<button class="ui" @click="suspendUser" :disabled="suspending">%i18n:@suspend%</button>
+	<button class="ui" @click="unsuspendUser" :disabled="unsuspending">%i18n:@unsuspend%</button>
 </div>
 </template>
 
@@ -14,25 +14,25 @@ export default Vue.extend({
 	data() {
 		return {
 			username: null,
-			suspending: false
+			unsuspending: false
 		};
 	},
 	methods: {
-		async suspendUser() {
-			this.suspending = true;
+		async unsuspendUser() {
+			this.unsuspending = true;
 
 			const user = await (this as any).os.api(
 				"users/show",
 				parseAcct(this.username)
 			);
 
-			await (this as any).os.api("admin/suspend-user", {
+			await (this as any).os.api("admin/unsuspend-user", {
 				userId: user.id
 			});
 
-			this.suspending = false;
+			this.unsuspending = false;
 
-			(this as any).os.apis.dialog({ text: "%i18n:@suspended%" });
+			(this as any).os.apis.dialog({ text: "%i18n:@unsuspended%" });
 		}
 	}
 });
