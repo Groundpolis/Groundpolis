@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="card">
 	<header>%i18n:@suspend-user%</header>
 	<input v-model="username" type="text" class="ui"/>
 	<button class="ui" @click="suspendUser" :disabled="suspending">%i18n:@suspend%</button>
@@ -37,3 +37,15 @@ export default Vue.extend({
 	}
 });
 </script>
+
+<style lang="stylus" scoped>
+@import '~const.styl'
+
+header
+	margin 10px 0
+
+
+button
+	margin 16px 0
+
+</style>
