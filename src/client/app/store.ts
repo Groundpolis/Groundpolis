@@ -11,6 +11,7 @@ const defaultSettings = {
 	fetchOnScroll: true,
 	showMaps: true,
 	showPostFormOnTopOfTl: false,
+	suggestRecentHashtags: true,
 	circleIcons: true,
 	gradientWindowHeader: false,
 	showReplyTarget: true,
@@ -109,6 +110,10 @@ export default (os: MiOS) => new Vuex.Store({
 						src: x.src,
 						arg: x.arg
 					};
+				},
+
+				setVisibility(state, visibility) {
+					state.visibility = visibility;
 				}
 			}
 		},

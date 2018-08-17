@@ -28,7 +28,7 @@ import { Config } from './config/types';
 const clusterLog = debug('misskey:cluster');
 const ev = new Xev();
 
-if (process.env.NODE_ENV != 'production') {
+if (process.env.NODE_ENV != 'production' && process.env.DEBUG == null) {
 	debug.enable('misskey');
 }
 
@@ -112,7 +112,7 @@ async function workerMain() {
 async function init(): Promise<Config> {
 	Logger.info('Welcome to Misskey!');
 
-	(new Logger('Deps')).info(`Node.js ${process.version}`);
+	new Logger('Deps').info(`Node.js ${process.version}`);
 	MachineInfo.show();
 	EnvironmentInfo.show();
 	new DependencyInfo().showAll();
