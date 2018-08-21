@@ -1,6 +1,6 @@
 import { performance } from 'perf_hooks';
 import limitter from './limitter';
-import { IUser, isLocalUser } from '../../models/user';
+import { IUser } from '../../models/user';
 import { IApp } from '../../models/app';
 import endpoints from './endpoints';
 
@@ -21,7 +21,7 @@ export default (endpoint: string, user: IUser, app: IApp, data: any, file?: any)
 		return rej('YOUR_ACCOUNT_HAS_BEEN_SUSPENDED');
 	}
 
-	if (ep.meta.requireAdmin && !(isLocalUser(user) && user.isAdmin)) {
+	if (ep.meta.requireAdmin && !user.isAdmin) {
 		return rej('YOU_ARE_NOT_ADMIN');
 	}
 

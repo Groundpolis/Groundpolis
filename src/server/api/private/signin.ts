@@ -12,8 +12,8 @@ export default async (ctx: Koa.Context) => {
 	ctx.set('Access-Control-Allow-Credentials', 'true');
 
 	const body = ctx.request.body as any;
-	const username = body['username'] || body['x'];
-	const password = body['password'] || body['y'];
+	const username = body['username'];
+	const password = body['password'];
 	const token = body['token'];
 
 	if (typeof username != 'string') {
@@ -63,7 +63,7 @@ export default async (ctx: Koa.Context) => {
 			if (verified) {
 				signin(ctx, user);
 			} else {
-				ctx.throw(400, {
+				ctx.throw(403, {
 					error: 'invalid token'
 				});
 			}
@@ -71,7 +71,7 @@ export default async (ctx: Koa.Context) => {
 			signin(ctx, user);
 		}
 	} else {
-		ctx.throw(400, {
+		ctx.throw(403, {
 			error: 'incorrect password'
 		});
 	}
