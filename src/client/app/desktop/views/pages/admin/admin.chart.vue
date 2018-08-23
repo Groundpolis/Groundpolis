@@ -30,7 +30,9 @@
 			<a @click="span = 'day'">%i18n:@per-day%</a> | <a @click="span = 'hour'">%i18n:@per-hour%</a>
 		</div>
 	</header>
-	<x-chart v-if="chart" :data="data[0]" :opts="data[1]" :width="720" :height="300"/>
+	<div>
+		<x-chart v-if="chart" :data="data[0]" :opts="data[1]"/>
+	</div>
 </div>
 </template>
 
@@ -42,13 +44,9 @@ export default Vue.extend({
 	components: {
 		XChart
 	},
-	props: {
-		chart: {
-			required: true
-		}
-	},
 	data() {
 		return {
+			chart: null,
 			chartType: 'local-notes',
 			span: 'hour'
 		};
@@ -82,6 +80,11 @@ export default Vue.extend({
 				null
 			);
 		}
+	},
+	created() {
+		(this as any).api('chart').then(chart => {
+			this.chart = chart;
+		});
 	},
 	methods: {
 		notesChart(local: boolean): any {
@@ -139,7 +142,7 @@ export default Vue.extend({
 			return [{
 				datasets: [{
 					label: local ? 'Local Notes' : 'Remote Notes',
-					fill: false,
+					fill: true,
 					borderColor: '#f6584f',
 					borderWidth: 2,
 					pointBackgroundColor: '#fff',
@@ -160,7 +163,7 @@ export default Vue.extend({
 			return [{
 				datasets: [{
 					label: local ? 'Local Users' : 'Remote Users',
-					fill: false,
+					fill: true,
 					borderColor: '#f6584f',
 					borderWidth: 2,
 					pointBackgroundColor: '#fff',
@@ -181,7 +184,7 @@ export default Vue.extend({
 			return [{
 				datasets: [{
 					label: local ? 'Local Drive Usage' : 'Remote Drive Usage',
-					fill: false,
+					fill: true,
 					borderColor: '#f6584f',
 					borderWidth: 2,
 					pointBackgroundColor: '#fff',
@@ -237,5 +240,10 @@ export default Vue.extend({
 
 		> *:last-child
 			margin-left auto
+
+	> div
+		> *
+			display block
+			height 300px
 
 </style>
