@@ -1,5 +1,5 @@
 <template>
-<div class="card gkgckalzgidaygcxnugepioremxvxvpt">
+<div class="gkgckalzgidaygcxnugepioremxvxvpt">
 	<header>
 		<b>%i18n:@title%:</b>
 		<select v-model="chartType">
@@ -32,12 +32,27 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import XChart from './admin.chart.chart.ts';
+import XChart from './charts.chart.ts';
+
+const colors = {
+	local: 'rgb(246, 88, 79)',
+	remote: 'rgb(65, 221, 222)',
+
+	localPlus: 'rgb(52, 178, 118)',
+	remotePlus: 'rgb(158, 255, 209)',
+	localMinus: 'rgb(255, 97, 74)',
+	remoteMinus: 'rgb(255, 149, 134)'
+};
+
+const rgba = (color: string): string => {
+	return color.replace('rgb', 'rgba').replace(')', ', 0.1)');
+};
 
 export default Vue.extend({
 	components: {
 		XChart
 	},
+
 	data() {
 		return {
 			chart: null,
@@ -45,6 +60,7 @@ export default Vue.extend({
 			span: 'hour'
 		};
 	},
+
 	computed: {
 		data(): any {
 			if (this.chart == null) return null;
@@ -61,6 +77,7 @@ export default Vue.extend({
 				case 'drive-files-total': return this.driveFilesTotalChart();
 			}
 		},
+
 		stats(): any[] {
 			return (
 				this.span == 'day' ? this.chart.perDay :
@@ -69,11 +86,13 @@ export default Vue.extend({
 			);
 		}
 	},
+
 	created() {
 		(this as any).api('chart').then(chart => {
 			this.chart = chart;
 		});
 	},
+
 	methods: {
 		notesChart(type: string): any {
 			const data = this.stats.slice().reverse().map(x => ({
@@ -161,23 +180,23 @@ export default Vue.extend({
 					lineTension: 0,
 					data: data.map(x => ({ t: x.date, y: x.remoteCount + x.localCount }))
 				}, {
-					label: 'Remote',
-					fill: true,
-					backgroundColor: 'rgba(65, 221, 222, 0.1)',
-					borderColor: '#41ddde',
-					borderWidth: 2,
-					pointBackgroundColor: '#fff',
-					lineTension: 0,
-					data: data.map(x => ({ t: x.date, y: x.remoteCount }))
-				}, {
 					label: 'Local',
 					fill: true,
-					backgroundColor: 'rgba(246, 88, 79, 0.1)',
-					borderColor: '#f6584f',
+					backgroundColor: rgba(colors.local),
+					borderColor: colors.local,
 					borderWidth: 2,
 					pointBackgroundColor: '#fff',
 					lineTension: 0,
 					data: data.map(x => ({ t: x.date, y: x.localCount }))
+				}, {
+					label: 'Remote',
+					fill: true,
+					backgroundColor: rgba(colors.remote),
+					borderColor: colors.remote,
+					borderWidth: 2,
+					pointBackgroundColor: '#fff',
+					lineTension: 0,
+					data: data.map(x => ({ t: x.date, y: x.remoteCount }))
 				}]
 			}, {
 				scales: {
@@ -218,23 +237,23 @@ export default Vue.extend({
 					lineTension: 0,
 					data: data.map(x => ({ t: x.date, y: x.remoteCount + x.localCount }))
 				}, {
-					label: 'Remote',
-					fill: true,
-					backgroundColor: 'rgba(65, 221, 222, 0.1)',
-					borderColor: '#41ddde',
-					borderWidth: 2,
-					pointBackgroundColor: '#fff',
-					lineTension: 0,
-					data: data.map(x => ({ t: x.date, y: x.remoteCount }))
-				}, {
 					label: 'Local',
 					fill: true,
-					backgroundColor: 'rgba(246, 88, 79, 0.1)',
-					borderColor: '#f6584f',
+					backgroundColor: rgba(colors.local),
+					borderColor: colors.local,
 					borderWidth: 2,
 					pointBackgroundColor: '#fff',
 					lineTension: 0,
 					data: data.map(x => ({ t: x.date, y: x.localCount }))
+				}, {
+					label: 'Remote',
+					fill: true,
+					backgroundColor: rgba(colors.remote),
+					borderColor: colors.remote,
+					borderWidth: 2,
+					pointBackgroundColor: '#fff',
+					lineTension: 0,
+					data: data.map(x => ({ t: x.date, y: x.remoteCount }))
 				}]
 			}, {
 				scales: {
@@ -277,28 +296,10 @@ export default Vue.extend({
 					lineTension: 0,
 					data: data.map(x => ({ t: x.date, y: x.localInc + x.localDec + x.remoteInc + x.remoteDec }))
 				}, {
-					label: 'Remote +',
-					fill: true,
-					backgroundColor: 'rgba(65, 221, 222, 0.1)',
-					borderColor: '#41ddde',
-					borderWidth: 2,
-					pointBackgroundColor: '#fff',
-					lineTension: 0,
-					data: data.map(x => ({ t: x.date, y: x.remoteInc }))
-				}, {
-					label: 'Remote -',
-					fill: true,
-					backgroundColor: 'rgba(65, 221, 222, 0.1)',
-					borderColor: '#41ddde',
-					borderWidth: 2,
-					pointBackgroundColor: '#fff',
-					lineTension: 0,
-					data: data.map(x => ({ t: x.date, y: x.remoteDec }))
-				}, {
 					label: 'Local +',
 					fill: true,
-					backgroundColor: 'rgba(246, 88, 79, 0.1)',
-					borderColor: '#f6584f',
+					backgroundColor: rgba(colors.localPlus),
+					borderColor: colors.localPlus,
 					borderWidth: 2,
 					pointBackgroundColor: '#fff',
 					lineTension: 0,
@@ -306,19 +307,37 @@ export default Vue.extend({
 				}, {
 					label: 'Local -',
 					fill: true,
-					backgroundColor: 'rgba(246, 88, 79, 0.1)',
-					borderColor: '#f6584f',
+					backgroundColor: rgba(colors.localMinus),
+					borderColor: colors.localMinus,
 					borderWidth: 2,
 					pointBackgroundColor: '#fff',
 					lineTension: 0,
 					data: data.map(x => ({ t: x.date, y: x.localDec }))
+				}, {
+					label: 'Remote +',
+					fill: true,
+					backgroundColor: rgba(colors.remotePlus),
+					borderColor: colors.remotePlus,
+					borderWidth: 2,
+					pointBackgroundColor: '#fff',
+					lineTension: 0,
+					data: data.map(x => ({ t: x.date, y: x.remoteInc }))
+				}, {
+					label: 'Remote -',
+					fill: true,
+					backgroundColor: rgba(colors.remoteMinus),
+					borderColor: colors.remoteMinus,
+					borderWidth: 2,
+					pointBackgroundColor: '#fff',
+					lineTension: 0,
+					data: data.map(x => ({ t: x.date, y: x.remoteDec }))
 				}]
 			}, {
 				scales: {
 					yAxes: [{
 						ticks: {
 							callback: value => {
-								return Vue.filter('bytes')(value);
+								return Vue.filter('bytes')(value, 1);
 							}
 						}
 					}]
@@ -327,7 +346,7 @@ export default Vue.extend({
 					callbacks: {
 						label: (tooltipItem, data) => {
 							const label = data.datasets[tooltipItem.datasetIndex].label || '';
-							return `${label}: ${Vue.filter('bytes')(tooltipItem.yLabel)}`;
+							return `${label}: ${Vue.filter('bytes')(tooltipItem.yLabel, 1)}`;
 						}
 					}
 				}
@@ -352,23 +371,23 @@ export default Vue.extend({
 					lineTension: 0,
 					data: data.map(x => ({ t: x.date, y: x.remoteSize + x.localSize }))
 				}, {
-					label: 'Remote',
-					fill: true,
-					backgroundColor: 'rgba(65, 221, 222, 0.1)',
-					borderColor: '#41ddde',
-					borderWidth: 2,
-					pointBackgroundColor: '#fff',
-					lineTension: 0,
-					data: data.map(x => ({ t: x.date, y: x.remoteSize }))
-				}, {
 					label: 'Local',
 					fill: true,
-					backgroundColor: 'rgba(246, 88, 79, 0.1)',
-					borderColor: '#f6584f',
+					backgroundColor: rgba(colors.local),
+					borderColor: colors.local,
 					borderWidth: 2,
 					pointBackgroundColor: '#fff',
 					lineTension: 0,
 					data: data.map(x => ({ t: x.date, y: x.localSize }))
+				}, {
+					label: 'Remote',
+					fill: true,
+					backgroundColor: rgba(colors.remote),
+					borderColor: colors.remote,
+					borderWidth: 2,
+					pointBackgroundColor: '#fff',
+					lineTension: 0,
+					data: data.map(x => ({ t: x.date, y: x.remoteSize }))
 				}]
 			}, {
 				scales: {
@@ -411,28 +430,10 @@ export default Vue.extend({
 					lineTension: 0,
 					data: data.map(x => ({ t: x.date, y: x.localInc + x.localDec + x.remoteInc + x.remoteDec }))
 				}, {
-					label: 'Remote +',
-					fill: true,
-					backgroundColor: 'rgba(65, 221, 222, 0.1)',
-					borderColor: '#41ddde',
-					borderWidth: 2,
-					pointBackgroundColor: '#fff',
-					lineTension: 0,
-					data: data.map(x => ({ t: x.date, y: x.remoteInc }))
-				}, {
-					label: 'Remote -',
-					fill: true,
-					backgroundColor: 'rgba(65, 221, 222, 0.1)',
-					borderColor: '#41ddde',
-					borderWidth: 2,
-					pointBackgroundColor: '#fff',
-					lineTension: 0,
-					data: data.map(x => ({ t: x.date, y: x.remoteDec }))
-				}, {
 					label: 'Local +',
 					fill: true,
-					backgroundColor: 'rgba(246, 88, 79, 0.1)',
-					borderColor: '#f6584f',
+					backgroundColor: rgba(colors.localPlus),
+					borderColor: colors.localPlus,
 					borderWidth: 2,
 					pointBackgroundColor: '#fff',
 					lineTension: 0,
@@ -440,12 +441,30 @@ export default Vue.extend({
 				}, {
 					label: 'Local -',
 					fill: true,
-					backgroundColor: 'rgba(246, 88, 79, 0.1)',
-					borderColor: '#f6584f',
+					backgroundColor: rgba(colors.localMinus),
+					borderColor: colors.localMinus,
 					borderWidth: 2,
 					pointBackgroundColor: '#fff',
 					lineTension: 0,
 					data: data.map(x => ({ t: x.date, y: x.localDec }))
+				}, {
+					label: 'Remote +',
+					fill: true,
+					backgroundColor: rgba(colors.remotePlus),
+					borderColor: colors.remotePlus,
+					borderWidth: 2,
+					pointBackgroundColor: '#fff',
+					lineTension: 0,
+					data: data.map(x => ({ t: x.date, y: x.remoteInc }))
+				}, {
+					label: 'Remote -',
+					fill: true,
+					backgroundColor: rgba(colors.remoteMinus),
+					borderColor: colors.remoteMinus,
+					borderWidth: 2,
+					pointBackgroundColor: '#fff',
+					lineTension: 0,
+					data: data.map(x => ({ t: x.date, y: x.remoteDec }))
 				}]
 			}, {
 				scales: {
@@ -486,23 +505,23 @@ export default Vue.extend({
 					lineTension: 0,
 					data: data.map(x => ({ t: x.date, y: x.localCount + x.remoteCount }))
 				}, {
-					label: 'Remote',
-					fill: true,
-					backgroundColor: 'rgba(65, 221, 222, 0.1)',
-					borderColor: '#41ddde',
-					borderWidth: 2,
-					pointBackgroundColor: '#fff',
-					lineTension: 0,
-					data: data.map(x => ({ t: x.date, y: x.remoteCount }))
-				}, {
 					label: 'Local',
 					fill: true,
-					backgroundColor: 'rgba(246, 88, 79, 0.1)',
-					borderColor: '#f6584f',
+					backgroundColor: rgba(colors.local),
+					borderColor: colors.local,
 					borderWidth: 2,
 					pointBackgroundColor: '#fff',
 					lineTension: 0,
 					data: data.map(x => ({ t: x.date, y: x.localCount }))
+				}, {
+					label: 'Remote',
+					fill: true,
+					backgroundColor: rgba(colors.remote),
+					borderColor: colors.remote,
+					borderWidth: 2,
+					pointBackgroundColor: '#fff',
+					lineTension: 0,
+					data: data.map(x => ({ t: x.date, y: x.remoteCount }))
 				}]
 			}, {
 				scales: {
@@ -532,11 +551,20 @@ export default Vue.extend({
 @import '~const.styl'
 
 .gkgckalzgidaygcxnugepioremxvxvpt
+	padding 32px
+	background #fff
+	box-shadow 0 2px 8px rgba(#000, 0.1)
+
 	*
 		user-select none
 
 	> header
 		display flex
+		margin 0 0 1em 0
+		padding 0 0 8px 0
+		font-size 1em
+		color #555
+		border-bottom solid 1px #eee
 
 		> b
 			margin-right 8px
