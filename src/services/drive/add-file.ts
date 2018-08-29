@@ -30,7 +30,7 @@ async function save(path: string, name: string, type: string, hash: string, size
 			.max()
 			.withoutEnlargement()
 			.jpeg({
-				quality: 85,
+				quality: 80,
 				progressive: true
 			})
 			.toBuffer();
