@@ -27,8 +27,10 @@ async function save(path: string, name: string, type: string, hash: string, size
 	if (['image/jpeg', 'image/png', 'image/webp'].includes(type)) {
 		thumbnail = await sharp(path)
 			.resize(498, 280)
+			.max()
+			.withoutEnlargement()
 			.jpeg({
-				quality: 80,
+				quality: 85,
 				progressive: true
 			})
 			.toBuffer();
