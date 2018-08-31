@@ -102,7 +102,7 @@ function ValidateActivity(activity: any, host: string) {
 		const uriHost = toUnicode(new URL(activity.id).hostname.toLowerCase());
 		if (host !== uriHost) {
 			const diag = activity.signature ? '. Has LD-Signature. Forwarded?' : '';
-			throw new Error(`activity.id(${activity.id}) has different host(${uriHost})${diag}`);
+			throw new Error(`activity.id(${activity.id}) has different host(${host})${diag}`);
 		}
 	}
 
