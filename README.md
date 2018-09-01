@@ -24,7 +24,7 @@ Why don't you take a short break from the hustle and bustle of the city, and div
 * Reactions
 * User lists
 * Customizable column view (called MisskeyDeck)
-  * and widgets!
+* Customizable widgets
 * Private messages
 * ActivityPub support
 
@@ -32,22 +32,11 @@ and more! You can see it with your own eyes at [misskey.xyz](https://misskey.xyz
 
 :package: Create your own instance
 ----------------------------------------------------------------
-If you want to run your own instance of Misskey,
-please see [Setup and installation guide](./docs/setup.en.md).
+Please see [Setup and installation guide](./docs/setup.en.md).
 
-:wrench: Contribute
+:wrench: Contribution
 ----------------------------------------------------------------
-**[PR](https://github.com/syuilo/misskey/pulls)s welcome!**
-
-### i18n
-
-Please see [Translation guide](./docs/translate.en.md).
-
-### l10n
-
-Misskey is using Crowdin for l10n.
-
-[![Crowdin](https://d322cqt584bo4o.cloudfront.net/misskey/localized.svg)](https://crowdin.com/project/misskey)
+Please see [Contribution guide](./CONTRIBUTING.md).
 
 :heart: Backers & Sponsors
 ----------------------------------------------------------------
