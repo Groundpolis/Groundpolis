@@ -4,6 +4,12 @@ import config from '../config';
 const index = {
 	settings: {
 		analysis: {
+			normalizer: {
+				lowercase_normalizer: {
+					type: 'custom',
+					filter: ['lowercase']
+				}
+			},
 			analyzer: {
 				ngram_ja : {
 					type: 'custom',
