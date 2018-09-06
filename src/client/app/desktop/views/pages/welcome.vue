@@ -28,12 +28,14 @@
 					<span class="divider">|</span>
 					<span class="signin" @click="signin">%i18n:@signin%</span>
 				</p>
+
+				<img src="/assets/pointer.png" alt="" class="char">
 			</div>
 		</div>
 
 		<div class="announcements block">
 			<header>%fa:broadcast-tower% %i18n:@announcements%</header>
-			<div>
+			<div v-if="announcements && announcements.length > 0">
 				<div v-for="announcement in announcements">
 					<h1 v-html="announcement.title"></h1>
 					<div v-html="announcement.text"></div>
@@ -85,6 +87,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { host, copyright } from '../../../config';
+import { concat } from '../../../../../prelude/array';
 
 export default Vue.extend({
 	data() {
@@ -119,8 +122,8 @@ export default Vue.extend({
 		(this as any).api('notes/local-timeline', {
 			fileType: image,
 			limit: 6
-		}).then(notes => {
-			const files = [].concat(...notes.map(n => n.files));
+		}).then((notes: any[]) => {
+			const files = concat(notes.map((n: any): any[] => n.files));
 			this.photos = files.filter(f => image.includes(f.type)).slice(0, 6);
 		});
 	},
@@ -213,7 +216,7 @@ root(isDark)
 		width 100%
 		max-width 1200px
 		height 100vh
-		min-height 1000px
+		min-height 950px
 		margin 0 auto
 		padding 64px
 
@@ -246,6 +249,7 @@ root(isDark)
 
 			> div
 				padding 32px
+				min-height 100%
 
 				> h1
 					margin 0
@@ -279,6 +283,17 @@ root(isDark)
 
 						&:hover
 							color $theme-color
+
+				> .char
+					display block
+					position absolute
+					right 0
+					bottom 0
+					width 180px
+					opacity 0.3
+
+				> *:not(.char)
+					z-index 1
 
 		> .announcements
 			grid-row 2
