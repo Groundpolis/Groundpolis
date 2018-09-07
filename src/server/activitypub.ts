@@ -11,6 +11,7 @@ import renderNote from '../remote/activitypub/renderer/note';
 import renderKey from '../remote/activitypub/renderer/key';
 import renderPerson from '../remote/activitypub/renderer/person';
 import Outbox, { packActivity } from './activitypub/outbox';
+import SharedOutbox from './activitypub/shared-outbox';
 import Followers from './activitypub/followers';
 import Following from './activitypub/following';
 
@@ -95,6 +96,9 @@ router.get('/notes/:note/activity', async ctx => {
 
 // outbox
 router.get('/users/:user/outbox', Outbox);
+
+// shared-outbox
+router.get('/outbox', SharedOutbox);
 
 // followers
 router.get('/users/:user/followers', Followers);
