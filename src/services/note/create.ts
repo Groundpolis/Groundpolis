@@ -107,20 +107,22 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 		data.visibleUsers = erase(null, data.visibleUsers);
 	}
 
+	// リプライ対象が削除された投稿だったらreject
 	if (data.reply && data.reply.deletedAt != null) {
 		return rej();
 	}
 
+	// Renote対象が削除された投稿だったらreject
 	if (data.renote && data.renote.deletedAt != null) {
 		return rej();
 	}
 
-	// リプライ先が自分以外の非公開の投稿なら禁止
+	// リプライ対象が自分以外の非公開の投稿なら禁止
 	if (data.reply && data.reply.visibility == 'private' && !data.reply.userId.equals(user._id)) {
 		return rej();
 	}
 
-	// Renote先が自分以外の非公開の投稿なら禁止
+	// Renote対象が自分以外の非公開の投稿なら禁止
 	if (data.renote && data.renote.visibility == 'private' && !data.renote.userId.equals(user._id)) {
 		return rej();
 	}
@@ -182,7 +184,7 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 
 	const noteActivity = await renderActivity(data, note);
 
-	if (isLocalUser(user)) {
+	if (isLocalUser(user) && note.visibility != 'private') {
 		deliverNoteToMentionedRemoteUsers(mentionedUsers, user, noteActivity);
 	}
 
@@ -267,13 +269,16 @@ async function publish(user: IUser, note: INote, noteObj: any, reply: INote, ren
 		}
 
 		if (['private', 'followers', 'specified'].includes(note.visibility)) {
-			// Publish event to myself's stream
-			publishUserStream(note.userId, 'note', await pack(note, user, {
+			const detailPackedNote = await pack(note, user, {
 				detail: true
-			}));
+			});
+			// Publish event to myself's stream
+			publishUserStream(note.userId, 'note', detailPackedNote);
+			publishHybridTimelineStream(note.userId, detailPackedNote);
 		} else {
 			// Publish event to myself's stream
 			publishUserStream(note.userId, 'note', noteObj);
+			publishHybridTimelineStream(note.userId, noteObj);
 
 			// Publish note to local and hybrid timeline stream
 			if (note.visibility != 'home') {
@@ -442,6 +447,11 @@ async function publishToUserLists(note: INote, noteObj: any) {
 }
 
 async function publishToFollowers(note: INote, noteObj: any, user: IUser, noteActivity: any) {
+	const detailPackedNote = await pack(note, null, {
+		detail: true,
+		skipHide: true
+	});
+
 	const followers = await Following.find({
 		followeeId: note.userId
 	});
@@ -460,10 +470,10 @@ async function publishToFollowers(note: INote, noteObj: any, user: IUser, noteAc
 			}
 
 			// Publish event to followers stream
-			publishUserStream(following.followerId, 'note', noteObj);
+			publishUserStream(following.followerId, 'note', detailPackedNote);
 
 			if (isRemoteUser(user) || note.visibility != 'public') {
-				publishHybridTimelineStream(following.followerId, noteObj);
+				publishHybridTimelineStream(following.followerId, detailPackedNote);
 			}
 		} else {
 			// フォロワーがリモートユーザーかつ投稿者がローカルユーザーなら投稿を配信
