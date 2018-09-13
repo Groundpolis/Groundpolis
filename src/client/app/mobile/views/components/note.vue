@@ -18,7 +18,7 @@
 			<div class="body">
 				<p v-if="p.cw != null" class="cw">
 					<span class="text" v-if="p.cw != ''">{{ p.cw }}</span>
-					<span class="toggle" @click="showContent = !showContent">{{ showContent ? '%i18n:@less%' : '%i18n:@more%' }}</span>
+					<mk-cw-button v-model="showContent"/>
 				</p>
 				<div class="content" v-show="p.cw == null || showContent">
 					<div class="text">
@@ -35,9 +35,7 @@
 					<mk-url-preview v-for="url in urls" :url="url" :key="url"/>
 					<a class="location" v-if="p.geo" :href="`https://maps.google.com/maps?q=${p.geo.coordinates[1]},${p.geo.coordinates[0]}`" target="_blank">%fa:map-marker-alt% %i18n:@location%</a>
 					<div class="map" v-if="p.geo" ref="map"></div>
-					<div class="renote" v-if="p.renote">
-						<mk-note-preview :note="p.renote"/>
-					</div>
+					<div class="renote" v-if="p.renote"><mk-note-preview :note="p.renote"/></div>
 				</div>
 				<span class="app" v-if="p.app">via <b>{{ p.app.name }}</b></span>
 			</div>
@@ -352,19 +350,6 @@ root(isDark)
 					> .text
 						margin-right 8px
 
-					> .toggle
-						display inline-block
-						padding 4px 8px
-						font-size 0.7em
-						color isDark ? #393f4f : #fff
-						background isDark ? #687390 : #b1b9c1
-						border-radius 2px
-						cursor pointer
-						user-select none
-
-						&:hover
-							background isDark ? #707b97 : #bbc4ce
-
 				> .content
 
 					> .text
@@ -436,7 +421,7 @@ root(isDark)
 					> .renote
 						margin 8px 0
 
-						> .mk-note-preview
+						> *
 							padding 16px
 							border dashed 1px isDark ? #4e945e : #c0dac6
 							border-radius 8px

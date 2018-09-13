@@ -18,7 +18,7 @@
 			<div class="body">
 				<p v-if="p.cw != null" class="cw">
 					<span class="text" v-if="p.cw != ''">{{ p.cw }}</span>
-					<span class="toggle" @click="showContent = !showContent">{{ showContent ? '%i18n:@less%' : '%i18n:@more%' }}</span>
+					<mk-cw-button v-model="showContent"/>
 				</p>
 				<div class="content" v-show="p.cw == null || showContent">
 					<div class="text">
@@ -394,7 +394,7 @@ root(isDark)
 					> .renote
 						margin 8px 0
 
-						> .mk-note-preview
+						> *
 							padding 16px
 							border dashed 1px isDark ? #4e945e : #c0dac6
 							border-radius 8px
