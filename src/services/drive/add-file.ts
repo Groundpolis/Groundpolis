@@ -155,7 +155,7 @@ export default async function(
 	isLink: boolean = false,
 	url: string = null,
 	uri: string = null,
-	sensitive = false
+	sensitive: boolean = null
 ): Promise<IDriveFile> {
 	// Calc md5 hash
 	const calcHash = new Promise<string>((res, rej) => {
@@ -331,7 +331,13 @@ export default async function(
 		properties: properties,
 		withoutChunks: isLink,
 		isRemote: isLink,
-		isSensitive: sensitive
+		isSensitive: (sensitive !== null && sensitive !== undefined)
+			? sensitive
+			: isLocalUser(user)
+				? user.settings.alwaysMarkNsfw
+					? true
+					: false
+				: false
 	} as IMetadata;
 
 	if (url !== null) {
