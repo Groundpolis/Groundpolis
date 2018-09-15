@@ -36,11 +36,12 @@ export default Vue.extend({
 		},
 		inlinePlayable: {
 			default: false
-		},
-		hide: {
-			type: Boolean,
-			default: true
 		}
+	},
+	data() {
+		return {
+			hide: true
+		};
 	},
 	computed: {
 		imageStyle(): any {
@@ -79,7 +80,6 @@ export default Vue.extend({
 		justify-content center
 		align-items center
 		font-size 3.5em
-
 		cursor zoom-in
 		overflow hidden
 		background-position center
@@ -101,5 +101,4 @@ export default Vue.extend({
 
 		> b
 			display block
-
 </style>
