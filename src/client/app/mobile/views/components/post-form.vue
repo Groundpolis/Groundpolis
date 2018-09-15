@@ -42,7 +42,7 @@
 					<span v-if="visibility === 'private'">%fa:lock%</span>
 				</button>
 			</footer>
-			<input ref="file" class="file" type="file" accept="image/*" multiple="multiple" @change="onChangeFile"/>
+			<input ref="file" class="file" type="file" multiple="multiple" @change="onChangeFile"/>
 		</div>
 	</div>
 	<div class="hashtags" v-if="recentHashtags.length > 0 && $store.state.settings.suggestRecentHashtags">
@@ -59,7 +59,7 @@ import MkVisibilityChooser from '../../../common/views/components/visibility-cho
 import getFace from '../../../common/scripts/get-face';
 import parse from '../../../../../mfm/parse';
 import { host } from '../../../config';
-import { erase } from '../../../../../prelude/array';
+import { erase, unique } from '../../../../../prelude/array';
 import { length } from 'stringz';
 import parseAcct from '../../../../../misc/acct/parse';
 
