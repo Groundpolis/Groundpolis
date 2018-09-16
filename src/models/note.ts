@@ -17,12 +17,29 @@ import Following from './following';
 const Note = db.get<INote>('notes');
 Note.createIndex('uri', { sparse: true, unique: true });
 Note.createIndex('userId');
+Note.createIndex('mentions');
+Note.createIndex('visibleUserIds');
 Note.createIndex('tagsLower');
 Note.createIndex('_files.contentType');
 Note.createIndex({
 	createdAt: -1
 });
 export default Note;
+
+// 後方互換性のため
+Note.findOne({
+	fileIds: { $exists: true }
+}).then(n => {
+	if (n == null) {
+		Note.update({}, {
+			$rename: {
+				mediaIds: 'fileIds'
+			}
+		}, {
+			multi: true
+		});
+	}
+});
 
 export function isValidText(text: string): boolean {
 	return length(text.trim()) <= 1000 && text.trim() != '';
