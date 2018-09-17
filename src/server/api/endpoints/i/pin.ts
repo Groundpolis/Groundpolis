@@ -50,7 +50,7 @@ export default async (params: any, user: ILocalUser) => new Promise(async (res, 
 	});
 
 	// Send Add/Remove to followers
-	deliverPinnedChange(user._id, addedId, removedId);
+	deliverPinnedChange(user._id, removedId, addedId);
 
 	// Send response
 	res(iObj);
