@@ -22,12 +22,25 @@ export default async (params: any, user: ILocalUser) => new Promise(async (res, 
 		return rej('note not found');
 	}
 
-	const oldId = user.pinnedNoteId;
-	const newId = note._id;
+	let addedId;
+	let removedId;
+
+	const pinnedNoteIds = user.pinnedNoteIds || [];
+
+	if (pinnedNoteIds.some(id => id.equals(note._id))) {
+		return rej('already exists');
+	}
+
+	pinnedNoteIds.unshift(note._id);
+	addedId = note._id;
+
+	if (pinnedNoteIds.length > 5) {
+		removedId = pinnedNoteIds.pop();
+	}
 
 	await User.update(user._id, {
 		$set: {
-			pinnedNoteId: note._id
+			pinnedNoteIds: pinnedNoteIds
 		}
 	});
 
@@ -37,7 +50,7 @@ export default async (params: any, user: ILocalUser) => new Promise(async (res, 
 	});
 
 	// Send Add/Remove to followers
-	deliverPinnedChange(user._id, oldId, newId);
+	deliverPinnedChange(user._id, addedId, removedId);
 
 	// Send response
 	res(iObj);

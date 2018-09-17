@@ -6,7 +6,7 @@
 		<main>
 			<div class="main">
 				<x-header :user="user"/>
-				<mk-note-detail v-if="user.pinnedNote" :note="user.pinnedNote" :compact="true"/>
+				<mk-note-detail v-for="n in user.pinnedNotes" :key="n.id" :note="n" :compact="true"/>
 				<x-timeline class="timeline" ref="tl" :user="user"/>
 			</div>
 			<div class="side">
@@ -28,7 +28,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import parseAcct from '../../../../../../misc/acct/parse';
-import getUserName from '../../../../../../misc/get-user-name';
 import Progress from '../../../../common/scripts/loading';
 import XHeader from './user.header.vue';
 import XTimeline from './user.timeline.vue';
