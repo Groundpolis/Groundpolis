@@ -14,6 +14,7 @@ import reversiGameStream from './stream/games/reversi-game';
 import reversiStream from './stream/games/reversi';
 import serverStatsStream from './stream/server-stats';
 import notesStatsStream from './stream/notes-stats';
+import hashtagStream from './stream/hashtag';
 import { ParsedUrlQuery } from 'querystring';
 import authenticate from './authenticate';
 
@@ -44,6 +45,12 @@ module.exports = (server: http.Server) => {
 			ev.removeAllListeners();
 		});
 
+		connection.on('message', async (data) => {
+			if (data.utf8Data == 'ping') {
+				connection.send('pong');
+			}
+		});
+
 		const q = request.resourceURL.query as ParsedUrlQuery;
 		const [user, app] = await authenticate(q.i as string);
 
@@ -54,6 +61,11 @@ module.exports = (server: http.Server) => {
 
 		if (request.resourceURL.pathname === '/local-timeline') {
 			localTimelineStream(request, connection, ev, user);
+			return;
+		}
+
+		if (request.resourceURL.pathname === '/hashtag') {
+			hashtagStream(request, connection, ev, user);
 			return;
 		}
 
