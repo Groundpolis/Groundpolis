@@ -82,20 +82,38 @@ export default async function renderNote(note: INote, dive = true): Promise<any>
 
 	const files = await promisedFiles;
 
-	const text = note.text ? parseMfm(note.text).map(x => {
-		if (x.type == 'mention' && x.host == null) {
-			return `${x.content}@${config.host}`;
-		} else {
-			return x.content;
-		}
-	}).join('') : null;
+	let text = note.text;
+
+	if (note.poll != null) {
+		if (text == null) text = '';
+		const url = `${config.url}/notes/${note._id}`;
+		// TODO: i18n
+		text += `\n\n[投票を見る](${url})`;
+	}
+
+	if (note.renoteId != null) {
+		if (text == null) text = '';
+		const url = `${config.url}/notes/${note.renoteId}`;
+		text += `\n\nRE: ${url}`;
+	}
+
+	// 省略されたメンションのホストを復元する
+	if (text != null) {
+		text = parseMfm(text).map(x => {
+			if (x.type == 'mention' && x.host == null) {
+				return `${x.content}@${config.host}`;
+			} else {
+				return x.content;
+			}
+		}).join('');
+	}
 
 	return {
 		id: `${config.url}/notes/${note._id}`,
 		type: 'Note',
 		attributedTo,
 		summary: note.cw,
-		content: toHtml(note),
+		content: toHtml(Object.assign({}, note, { text })),
 		_misskey_content: text,
 		published: note.createdAt.toISOString(),
 		to,
