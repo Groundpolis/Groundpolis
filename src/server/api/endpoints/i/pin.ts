@@ -2,6 +2,7 @@ import $ from 'cafy'; import ID from '../../../../misc/cafy-id';
 import User, { ILocalUser } from '../../../../models/user';
 import Note from '../../../../models/note';
 import { pack } from '../../../../models/user';
+import { deliverPinnedChange } from '../../../../services/i/pin';
 
 /**
  * Pin note
@@ -21,6 +22,9 @@ export default async (params: any, user: ILocalUser) => new Promise(async (res, 
 		return rej('note not found');
 	}
 
+	const oldId = user.pinnedNoteId;
+	const newId = note._id;
+
 	await User.update(user._id, {
 		$set: {
 			pinnedNoteId: note._id
@@ -31,6 +35,9 @@ export default async (params: any, user: ILocalUser) => new Promise(async (res, 
 	const iObj = await pack(user, user, {
 		detail: true
 	});
+
+	// Send Add/Remove to followers
+	deliverPinnedChange(user._id, oldId, newId);
 
 	// Send response
 	res(iObj);
