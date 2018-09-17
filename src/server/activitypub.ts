@@ -14,6 +14,7 @@ import Outbox, { packActivity } from './activitypub/outbox';
 import SharedOutbox from './activitypub/shared-outbox';
 import Followers from './activitypub/followers';
 import Following from './activitypub/following';
+import Featured from './activitypub/featured';
 
 // Init router
 const router = new Router();
@@ -105,6 +106,9 @@ router.get('/users/:user/followers', Followers);
 
 // following
 router.get('/users/:user/following', Following);
+
+// featured
+router.get('/users/:user/collections/featured', Featured);
 
 // publickey
 router.get('/users/:user/publickey', async ctx => {
