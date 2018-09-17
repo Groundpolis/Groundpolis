@@ -22,7 +22,7 @@ export default async (ctx: Router.IRouterContext) => {
 		return;
 	}
 
-	const pinnedNoteIds = user.pinnedNoteId ? [ user.pinnedNoteId ] : [];
+	const pinnedNoteIds = user.pinnedNoteIds || [];
 
 	const pinnedNotes = await Promise.all(pinnedNoteIds.map(id => Note.findOne({ _id: id })));
 
