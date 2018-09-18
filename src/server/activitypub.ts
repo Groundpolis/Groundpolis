@@ -126,6 +126,7 @@ router.get('/users/:user/publickey', async ctx => {
 
 	if (isLocalUser(user)) {
 		ctx.body = pack(renderKey(user));
+		ctx.set('Cache-control', 'max-age=60, public');
 		setResponseType(ctx);
 	} else {
 		ctx.status = 400;
@@ -140,6 +141,7 @@ async function userInfo(ctx: Router.IRouterContext, user: IUser) {
 	}
 
 	ctx.body = pack(await renderPerson(user as ILocalUser));
+	ctx.set('Cache-control', 'max-age=60, public');
 	setResponseType(ctx);
 }
 
