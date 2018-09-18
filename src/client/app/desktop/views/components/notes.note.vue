@@ -119,7 +119,9 @@ export default Vue.extend({
 				'ctrl+q|ctrl+right': this.renoteDirectly,
 				'up|k|shift+tab': this.focusBefore,
 				'down|j|tab': this.focusAfter,
+				'esc': this.blur,
 				'm|o': () => this.menu(true),
+				's': this.toggleShowContent,
 				'1': () => this.reactDirectly('like'),
 				'2': () => this.reactDirectly('love'),
 				'3': () => this.reactDirectly('laugh'),
@@ -285,6 +287,10 @@ export default Vue.extend({
 				note: this.p,
 				animation: !viaKeyboard
 			}).$once('closed', this.focus);
+		},
+
+		toggleShowContent() {
+			this.showContent = !this.showContent;
 		},
 
 		focus() {
