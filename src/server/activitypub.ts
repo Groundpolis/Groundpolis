@@ -77,6 +77,7 @@ router.get('/notes/:note', async (ctx, next) => {
 
 	ctx.set('Cache-Control', 'public, max-age=180');
 	ctx.body = pack(await renderNote(note, false));
+	ctx.set('Cache-Control', 'public, max-age=180');
 	setResponseType(ctx);
 });
 
@@ -93,6 +94,7 @@ router.get('/notes/:note/activity', async ctx => {
 	}
 
 	ctx.body = pack(await packActivity(note));
+	ctx.set('Cache-Control', 'public, max-age=180');
 	setResponseType(ctx);
 });
 
