@@ -77,10 +77,10 @@ export default Vue.extend({
 			return {
 				'esc': this.close,
 				'enter|space|plus': this.choose,
-				'up': this.focusUp,
-				'right': this.focusRight,
-				'down': this.focusDown,
-				'left': this.focusLeft,
+				'up|k': this.focusUp,
+				'left|h|shift+tab': this.focusLeft,
+				'right|l|tab': this.focusRight,
+				'down|j': this.focusDown,
 				'1': () => this.react('like'),
 				'2': () => this.react('love'),
 				'3': () => this.react('laugh'),
@@ -97,10 +97,10 @@ export default Vue.extend({
 
 	watch: {
 		focus(i) {
-			this.$refs.buttons.childNodes[i].focus();
+			this.$refs.buttons.children[i].focus();
 
 			if (this.showFocus) {
-				this.title = this.$refs.buttons.childNodes[i].title;
+				this.title = this.$refs.buttons.children[i].title;
 			}
 		}
 	},
