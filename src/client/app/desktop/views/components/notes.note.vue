@@ -48,7 +48,7 @@
 				<button class="renoteButton" @click="renote" title="%i18n:@renote%">
 					%fa:retweet%<p class="count" v-if="p.renoteCount > 0">{{ p.renoteCount }}</p>
 				</button>
-				<button class="reactionButton" :class="{ reacted: p.myReaction != null }" @click="react" ref="reactButton" title="%i18n:@add-reaction%">
+				<button class="reactionButton" :class="{ reacted: p.myReaction != null }" @click="react()" ref="reactButton" title="%i18n:@add-reaction%">
 					%fa:plus%<p class="count" v-if="p.reactions_count > 0">{{ p.reactions_count }}</p>
 				</button>
 				<button @click="menu" ref="menuButton">
@@ -113,13 +113,11 @@ export default Vue.extend({
 	computed: {
 		keymap(): any {
 			return {
-				'r': this.reply,
-				'a': this.react,
-				'n': this.renote,
-				'up': this.focusBefore,
-				'shift+tab': this.focusBefore,
-				'down': this.focusAfter,
-				'tab': this.focusAfter,
+				'r|left': this.reply,
+				'a|plus': () => this.react(true),
+				'n|right': this.renote,
+				'up|shift+tab': this.focusBefore,
+				'down|tab': this.focusAfter,
 			};
 		},
 
@@ -244,10 +242,13 @@ export default Vue.extend({
 			}).$once('closed', this.focus);
 		},
 
-		react() {
+		react(viaKeyboard = false) {
+			this.blur();
 			(this as any).os.new(MkReactionPicker, {
 				source: this.$refs.reactButton,
-				note: this.p
+				note: this.p,
+				showFocus: viaKeyboard,
+				animation: !viaKeyboard
 			}).$once('closed', this.focus);
 		},
 
@@ -260,6 +261,10 @@ export default Vue.extend({
 
 		focus() {
 			this.$el.focus();
+		},
+
+		blur() {
+			this.$el.blur();
 		},
 
 		focusBefore() {
