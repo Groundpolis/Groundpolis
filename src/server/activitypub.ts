@@ -75,6 +75,7 @@ router.get('/notes/:note', async (ctx, next) => {
 		return;
 	}
 
+	ctx.set('Cache-Control', 'public, max-age=180');
 	ctx.body = pack(await renderNote(note, false));
 	setResponseType(ctx);
 });
@@ -126,7 +127,7 @@ router.get('/users/:user/publickey', async ctx => {
 
 	if (isLocalUser(user)) {
 		ctx.body = pack(renderKey(user));
-		ctx.set('Cache-control', 'max-age=60, public');
+		ctx.set('Cache-Control', 'public, max-age=180');
 		setResponseType(ctx);
 	} else {
 		ctx.status = 400;
@@ -141,7 +142,7 @@ async function userInfo(ctx: Router.IRouterContext, user: IUser) {
 	}
 
 	ctx.body = pack(await renderPerson(user as ILocalUser));
-	ctx.set('Cache-control', 'max-age=60, public');
+	ctx.set('Cache-Control', 'public, max-age=180');
 	setResponseType(ctx);
 }
 
