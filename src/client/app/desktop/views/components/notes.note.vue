@@ -40,18 +40,18 @@
 			</div>
 			<footer>
 				<mk-reactions-viewer :note="p" ref="reactionsViewer"/>
-				<button class="replyButton" @click="reply" title="%i18n:@reply%">
+				<button class="replyButton" @click="reply()" title="%i18n:@reply%">
 					<template v-if="p.reply">%fa:reply-all%</template>
 					<template v-else>%fa:reply%</template>
 					<p class="count" v-if="p.repliesCount > 0">{{ p.repliesCount }}</p>
 				</button>
-				<button class="renoteButton" @click="renote" title="%i18n:@renote%">
+				<button class="renoteButton" @click="renote()" title="%i18n:@renote%">
 					%fa:retweet%<p class="count" v-if="p.renoteCount > 0">{{ p.renoteCount }}</p>
 				</button>
 				<button class="reactionButton" :class="{ reacted: p.myReaction != null }" @click="react()" ref="reactButton" title="%i18n:@add-reaction%">
 					%fa:plus%<p class="count" v-if="p.reactions_count > 0">{{ p.reactions_count }}</p>
 				</button>
-				<button @click="menu" ref="menuButton">
+				<button @click="menu()" ref="menuButton">
 					%fa:ellipsis-h%
 				</button>
 				<!-- <button title="%i18n:@detail">
@@ -113,11 +113,23 @@ export default Vue.extend({
 	computed: {
 		keymap(): any {
 			return {
-				'r|left': this.reply,
-				'a|plus': () => this.react(true),
-				'n|right': this.renote,
-				'up|shift+tab': this.focusBefore,
-				'down|tab': this.focusAfter,
+				'r|left': () => this.reply(true),
+				'e|a|plus': () => this.react(true),
+				'q|right': () => this.renote(true),
+				'ctrl+q|ctrl+right': this.renoteDirectly,
+				'up|k|shift+tab': this.focusBefore,
+				'down|j|tab': this.focusAfter,
+				'm|o': () => this.menu(true),
+				'1': () => this.reactDirectly('like'),
+				'2': () => this.reactDirectly('love'),
+				'3': () => this.reactDirectly('laugh'),
+				'4': () => this.reactDirectly('hmm'),
+				'5': () => this.reactDirectly('surprise'),
+				'6': () => this.reactDirectly('congrats'),
+				'7': () => this.reactDirectly('angry'),
+				'8': () => this.reactDirectly('confused'),
+				'9': () => this.reactDirectly('rip'),
+				'0': () => this.reactDirectly('pudding'),
 			};
 		},
 
@@ -230,16 +242,24 @@ export default Vue.extend({
 			}
 		},
 
-		reply() {
+		reply(viaKeyboard = false) {
 			(this as any).os.new(MkPostFormWindow, {
-				reply: this.p
+				reply: this.p,
+				animation: !viaKeyboard
 			}).$once('closed', this.focus);
 		},
 
-		renote() {
+		renote(viaKeyboard = false) {
 			(this as any).os.new(MkRenoteFormWindow, {
-				note: this.p
+				note: this.p,
+				animation: !viaKeyboard
 			}).$once('closed', this.focus);
+		},
+
+		renoteDirectly() {
+			(this as any).api('notes/create', {
+				renoteId: this.p.id
+			});
 		},
 
 		react(viaKeyboard = false) {
@@ -252,10 +272,18 @@ export default Vue.extend({
 			}).$once('closed', this.focus);
 		},
 
-		menu() {
+		reactDirectly(reaction) {
+			(this as any).api('notes/reactions/create', {
+				noteId: this.p.id,
+				reaction: reaction
+			});
+		},
+
+		menu(viaKeyboard = false) {
 			(this as any).os.new(MkNoteMenu, {
 				source: this.$refs.menuButton,
-				note: this.p
+				note: this.p,
+				animation: !viaKeyboard
 			}).$once('closed', this.focus);
 		},
 

@@ -1,5 +1,5 @@
 <template>
-<mk-window ref="window" is-modal @closed="onWindowClosed">
+<mk-window ref="window" is-modal @closed="onWindowClosed" :animation="animation">
 	<span slot="header" :class="$style.header">%fa:retweet%%i18n:@title%</span>
 	<mk-renote-form ref="form" :note="note" @posted="onPosted" @canceled="onCanceled" v-hotkey.global="keymap"/>
 </mk-window>
@@ -9,13 +9,25 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-	props: ['note'],
+	props: {
+		note: {
+			type: Object,
+			required: true
+		},
+
+		animation: {
+			type: Boolean,
+			required: false,
+			default: true
+		}
+	},
 
 	computed: {
 		keymap(): any {
 			return {
 				'esc': this.close,
-				'ctrl+enter': this.post
+				'enter': this.post,
+				'q': this.quote,
 			};
 		}
 	},
@@ -23,6 +35,9 @@ export default Vue.extend({
 	methods: {
 		post() {
 			(this.$refs.form as any).ok();
+		},
+		quote() {
+			(this.$refs.form as any).onQuote();
 		},
 		close() {
 			(this.$refs.window as any).close();
