@@ -1,8 +1,8 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "8.57.0",
-	"clientVersion": "1.0.9922",
+	"version": "8.57.1",
+	"clientVersion": "1.0.9928",
 	"codename": "nighthike",
 	"main": "./built/index.js",
 	"private": true,
@@ -27,7 +27,7 @@
 		"@koa/cors": "2.2.2",
 		"@prezzemolo/rap": "0.1.2",
 		"@prezzemolo/zip": "0.0.3",
-		"@types/bcryptjs": "2.4.1",
+		"@types/bcryptjs": "2.4.2",
 		"@types/dateformat": "1.0.1",
 		"@types/debug": "0.0.30",
 		"@types/deep-equal": "1.0.1",
@@ -221,7 +221,7 @@
 		"webfinger.js": "2.6.6",
 		"webpack": "4.19.1",
 		"webpack-cli": "3.1.0",
-		"websocket": "1.0.26",
+		"websocket": "1.0.28",
 		"ws": "6.0.0",
 		"xev": "2.0.1"
 	},
