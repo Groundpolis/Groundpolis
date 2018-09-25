@@ -2,6 +2,7 @@ import $ from 'cafy';
 import Vote from '../../../../../models/poll-vote';
 import Note, { pack } from '../../../../../models/note';
 import { ILocalUser } from '../../../../../models/user';
+import { unique } from '../../../../../prelude/array';
 
 export const meta = {
 	desc: {
@@ -31,7 +32,7 @@ export default (params: any, user: ILocalUser) => new Promise(async (res, rej) =
 		}
 	});
 
-	const nin = votes && votes.length != 0 ? votes.map(v => v.noteId) : [];
+	const nin = votes && votes.length != 0 ? unique(votes.map(v => v.noteId)) : [];
 
 	const notes = await Note
 		.find({
