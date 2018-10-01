@@ -48,6 +48,7 @@ export default class Resolver {
 
 		this.history.add(value);
 
+		console.log(`ResolveRequest: ${value}`);
 		const object = await request({
 			url: value,
 			headers: {
