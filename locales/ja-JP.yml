@@ -311,6 +311,10 @@ common/views/components/theme.vue:
   uninstalled: "「{}」をアンインストールしました"
   author: "作者"
   desc: "説明"
+  export: "エクスポート"
+  import: "インポート"
+  import-by-code: "またはコードをペースト"
+  theme-name-required: "テーマ名は必須です。"
 
 common/views/components/cw-button.vue:
   hide: "隠す"
