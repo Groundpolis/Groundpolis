@@ -18,7 +18,7 @@ export default async (job: bq.Job, done: any): Promise<void> => {
 			}
 		} else {
 			console.warn(`deliver failed: ${res}`);
-			return done();
+			done();
 		}
 	}
 };
