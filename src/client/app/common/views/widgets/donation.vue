@@ -4,9 +4,7 @@
 		<article class="dolfvtibguprpxxhfndqaosjitixjohx">
 			<h1>%fa:heart%%i18n:@title%</h1>
 			<p v-if="meta">
-				{{ '%i18n:@text%'.substr(0, '%i18n:@text%'.indexOf('{')) }}
-				<a :href="meta.maintainer.url">{{ meta.maintainer.name }}</a>
-				{{ '%i18n:@text%'.substr('%i18n:@text%'.indexOf('}') + 1) }}
+				愛の言葉は随時募集中💛
 			</p>
 		</article>
 	</mk-widget-container>
@@ -34,7 +32,6 @@ export default define({
 <style lang="stylus" scoped>
 .dolfvtibguprpxxhfndqaosjitixjohx
 	padding 20px
-	background var(--donationBg)
 	color var(--donationFg)
 
 	> h1
