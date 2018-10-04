@@ -13,11 +13,11 @@ export default async (job: bq.Job, done: any): Promise<void> => {
 				// 何回再送しても成功することはないということなのでエラーにはしないでおく
 				done();
 			} else {
-				console.warn(`deliver failed: ${res.statusCode} ${res.statusMessage}`);
+				console.warn(`deliver failed: ${res.statusCode} ${res.statusMessage} to=${job.data.to}`);
 				done(res.statusMessage);
 			}
 		} else {
-			console.warn(`deliver failed: ${res}`);
+			console.warn(`deliver failed: ${res} to=${job.data.to}`);
 			done();
 		}
 	}
