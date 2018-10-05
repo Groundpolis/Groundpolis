@@ -1,6 +1,6 @@
 {
 	id: 'promo',
-	revision: 1,
+	revision: 2,
 
 	name: 'エレガントなお嬢様',
 	author: 'めいめい',
@@ -9,8 +9,8 @@
 	base: 'dark',
 
 	vars: {
-		primary: 'rgb(0, 192, 0)',
-		secondary: 'rgb(160, 0, 0)',
+		primary: 'rgb(24, 192, 24)',
+		secondary: 'rgb(128, 0, 0)',
 		text: 'rgb(255, 251, 185)',
 	},
 
