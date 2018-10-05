@@ -1,0 +1,23 @@
+{
+	id: 'promo',
+	revision: 1,
+
+	name: 'エレガントなお嬢様',
+	author: 'めいめい',
+	desc: 'エレガントなお嬢様のためのテーマなのだわ',
+
+	base: 'dark',
+
+	vars: {
+		primary: 'rgb(0, 192, 0)',
+		secondary: 'rgb(160, 0, 0)',
+		text: 'rgb(255, 251, 185)',
+	},
+
+	props: {
+		announcementsBg: ':lighten<5<$secondary',
+		announcementsTitle: '#e3e5e8',
+		donationBg: ':lighten<5<$secondary',
+		renoteGradient: '#b72ddc',
+	},
+}

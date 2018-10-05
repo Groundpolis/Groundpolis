@@ -14,10 +14,24 @@ import App from './app.vue';
 import checkForUpdate from './common/scripts/check-for-update';
 import MiOS, { API } from './mios';
 import { version, codename, lang } from './config';
-import { builtinThemes, lightTheme, applyTheme } from './theme';
+import { builtinThemes, promoTheme, applyTheme, Theme } from './theme';
 
-if (localStorage.getItem('theme') == null) {
-	applyTheme(lightTheme);
+// Try to get/parse existing theme
+let currentThemeData: Theme;
+try {
+	currentThemeData = JSON.parse(localStorage.getItem('theme'));
+} catch { }
+
+if (currentThemeData == null) {
+	// If failed, apply promo
+	applyTheme(promoTheme);
+} else {
+	// If new promo released, apply it.
+	const promoRevision = localStorage.getItem('promoRevision') || 0;
+	if (promoTheme.revision && promoTheme.revision > promoRevision) {
+		localStorage.setItem('promoRevision', promoTheme.revision.toString());
+		applyTheme(promoTheme);
+	}
 }
 
 Vue.use(Vuex);
