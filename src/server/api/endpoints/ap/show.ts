@@ -10,7 +10,7 @@ import Resolver from '../../../../remote/activitypub/resolver';
 
 export const meta = {
 	desc: {
-		'ja-JP': 'ActivityPubオブジェクトを参照します。'
+		'ja-JP': 'URIを指定してActivityPubオブジェクトを参照します。'
 	},
 
 	requireCredential: false,
@@ -18,7 +18,7 @@ export const meta = {
 	params: {
 		uri: $.str.note({
 			desc: {
-				'ja-JP': 'URI'
+				'ja-JP': 'ActivityPubオブジェクトのURI'
 			}
 		}),
 	},
@@ -28,13 +28,16 @@ export default (params: any) => new Promise(async (res, rej) => {
 	const [ps, psErr] = getParams(meta, params);
 	if (psErr) return rej(psErr);
 
-	const object = await fetchAny(ps.uri, true);
+	const object = await fetchAny(ps.uri);
 	if (object !== null) res(object);
 
 	return rej('object not found');
 });
 
-async function fetchAny(uri: string, searchUrl: boolean = true) {
+/***
+ * URIからUserかNoteを解決する
+ */
+async function fetchAny(uri: string) {
 	// URIがこのサーバーを指しているなら、ローカルユーザーIDとしてDBからフェッチ
 	if (uri.startsWith(config.url + '/')) {
 		const id = new mongo.ObjectID(uri.split('/').pop());
@@ -47,7 +50,7 @@ async function fetchAny(uri: string, searchUrl: boolean = true) {
 		if (packed !== null) return packed;
 	}
 
-	// uri(AP Object id)としてDB検索
+	// URI(AP Object id)としてDB検索
 	{
 		const [ user, note ] = await Promise.all([
 			User.findOne({ uri: uri }),
@@ -58,22 +61,23 @@ async function fetchAny(uri: string, searchUrl: boolean = true) {
 		if (packed !== null) return packed;
 	}
 
-	// オプションによりurlからもDB検索
-	if (searchUrl) {
+	// リモートから一旦オブジェクトフェッチ
+	const resolver = new Resolver();
+	const object = await resolver.resolve(uri) as any;
+
+	// /@user のような正規id以外で取得できるURIが指定されていた場合、ここで初めて正規URIが確定する
+	// これはDBに存在する可能性があるため再度DB検索
+	if (uri !== object.id) {
 		const [ user, note ] = await Promise.all([
-			User.findOne({ url: uri }),
-			null // TODO: Note.url は蓄積してないためここで取得不可
+			User.findOne({ uri: object.id }),
+			Note.findOne({ uri: object.id })
 		]);
 
 		const packed = await mergePack(user, note);
 		if (packed !== null) return packed;
 	}
 
-	// リモートからフェッチ
-	// /@user のような正規id以外で取得できるURLのために、一度fetchしてidに正規化する
-	const resolver = new Resolver();
-	const object = await resolver.resolve(uri) as any;
-
+	// それでもみつからなければ新規であるため登録
 	if (object.type === 'Person') {
 		const user = await createPerson(object.id);
 		return {
@@ -83,7 +87,6 @@ async function fetchAny(uri: string, searchUrl: boolean = true) {
 	}
 
 	if (object.type === 'Note') {
-		// TODO: URIが正規idでなかった && DB上では正規idが既存だった 場合にduplicate keyでエラーになる
 		const note = await createNote(object.id);
 		return {
 			type: 'Note',
