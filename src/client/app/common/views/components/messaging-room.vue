@@ -30,7 +30,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { MessagingStream } from '../../scripts/streaming/messaging';
 import XMessage from './messaging-room.message.vue';
 import XForm from './messaging-room.form.vue';
 import { url } from '../../../config';
@@ -72,7 +71,7 @@ export default Vue.extend({
 	},
 
 	mounted() {
-		this.connection = new MessagingStream((this as any).os, this.$store.state.i, this.user.id);
+		this.connection =((this as any).os.stream.connectToChannel('messaging', { otherparty: this.user.id });
 
 		this.connection.on('message', this.onMessage);
 		this.connection.on('read', this.onRead);
@@ -92,9 +91,7 @@ export default Vue.extend({
 	},
 
 	beforeDestroy() {
-		this.connection.off('message', this.onMessage);
-		this.connection.off('read', this.onRead);
-		this.connection.close();
+		this.connection.dispose();
 
 		if (this.isNaked) {
 			window.removeEventListener('scroll', this.onScroll);
@@ -177,8 +174,7 @@ export default Vue.extend({
 
 			this.messages.push(message);
 			if (message.userId != this.$store.state.i.id && !document.hidden) {
-				this.connection.send({
-					type: 'read',
+				this.connection.send('read', {
 					id: message.id
 				});
 			}
@@ -250,8 +246,7 @@ export default Vue.extend({
 			if (document.hidden) return;
 			this.messages.forEach(message => {
 				if (message.userId !== this.$store.state.i.id && !message.isRead) {
-					this.connection.send({
-						type: 'read',
+					this.connection.send('read', {
 						id: message.id
 					});
 				}
