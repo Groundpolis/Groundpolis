@@ -4,6 +4,7 @@
 	name: 'Dark',
 	author: 'syuilo',
 	desc: 'Default dark theme',
+	kind: 'dark',
 
 	vars: {
 		primary: '#e64ff6',
@@ -25,7 +26,7 @@
 		face: '$secondary',
 		faceText: '#fff',
 		faceHeader: ':lighten<5<$secondary',
-		faceHeaderText: '#e3e5e8',
+		faceHeaderText: '$text',
 		faceDivider: 'rgba(0, 0, 0, 0.3)',
 		faceTextButton: '$text',
 		faceTextButtonHover: ':lighten<10<$text',
@@ -83,7 +84,8 @@
 
 		reactionPickerButtonHoverBg: 'rgba(255, 255, 255, 0.18)',
 
-		reactionViewerBorder: 'rgba(255, 255, 255, 0.1)',
+		reactionViewerButtonBg: 'rgba(255, 255, 255, 0.1)',
+		reactionViewerButtonHoverBg: 'rgba(255, 255, 255, 0.2)',
 
 		pollEditorInputBg: 'rgba(0, 0, 0, 0.25)',
 
@@ -98,7 +100,7 @@
 
 		calendarWeek: '#43d5dc',
 		calendarSaturdayOrSunday: '#ff6679',
-		calendarDay: '#c5ced6',
+		calendarDay: '$text',
 
 		materBg: 'rgba(0, 0, 0, 0.3)',
 
@@ -120,6 +122,9 @@
 		mfmTitleBg: 'rgba(0, 0, 0, 0.2)',
 		mfmQuote: ':alpha<0.7<$text',
 		mfmQuoteLine: ':alpha<0.6<$text',
+		mfmLink: '$primary',
+		mfmMention: '$primary',
+		mfmHashtag: '$primary',
 
 		suspendedInfoBg: '#611d1d',
 		suspendedInfoFg: '#ffb4b4',
@@ -175,6 +180,7 @@
 		mobileNavBackdrop: 'rgba(0, 0, 0, 0.7)',
 		mobilePostFormDivider: 'rgba(0, 0, 0, 0.2)',
 		mobilePostFormTextareaBg: 'rgba(0, 0, 0, 0.3)',
+		mobilePostFormButton: '$text',
 		mobileDriveNavBg: ':alpha<0.75<$secondary',
 		mobileHomeTlItemHover: 'rgba(255, 255, 255, 0.1)',
 		mobileUserPageName: '#fff',

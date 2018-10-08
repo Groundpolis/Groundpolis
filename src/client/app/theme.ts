@@ -14,6 +14,7 @@ export type Theme = {
 export const lightTheme: Theme = require('../theme/light.json5');
 export const darkTheme: Theme = require('../theme/dark.json5');
 export const pinkTheme: Theme = require('../theme/pink.json5');
+export const blackTheme: Theme = require('../theme/black.json5');
 export const halloweenTheme: Theme = require('../theme/halloween.json5');
 export const promoTheme: Theme = require('../theme/promo.json5');
 
@@ -21,6 +22,7 @@ export const builtinThemes = [
 	lightTheme,
 	darkTheme,
 	pinkTheme,
+	blackTheme,
 	halloweenTheme,
 	promoTheme
 ];
