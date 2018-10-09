@@ -43,7 +43,7 @@ export default (params: any, user: ILocalUser) => new Promise(async (res, rej) =
 				$ne: user._id
 			},
 			createdAt: {
-				$gte: new Date(Date.now() - ms('30 days'))
+				$gte: new Date(Date.now() - ms('10 days'))
 			},
 			poll: {
 				$exists: true,
