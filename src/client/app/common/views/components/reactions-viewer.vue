@@ -54,17 +54,14 @@ export default Vue.extend({
 			pointer-events none
 
 		&.reacted
-			background var(--primary)
-
-			> span
-				color var(--primaryForeground)
+			background rgba(128, 128, 128, 0.3)
 
 		&:not(.reacted)
 			cursor pointer
-			background var(--reactionViewerButtonBg)
+			background rgba(128, 128, 128, 0.2)
 
 			&:hover
-				background var(--reactionViewerButtonHoverBg)
+				background rgba(128, 128, 128, 0.3)
 
 		> .mk-reaction-icon
 			font-size 1.4em
