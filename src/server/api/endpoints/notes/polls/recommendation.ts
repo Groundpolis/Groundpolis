@@ -2,6 +2,7 @@ import $ from 'cafy';
 import Vote from '../../../../../models/poll-vote';
 import Note, { pack } from '../../../../../models/note';
 import { ILocalUser } from '../../../../../models/user';
+const ms = require('ms');
 
 export const meta = {
 	desc: {
@@ -40,6 +41,9 @@ export default (params: any, user: ILocalUser) => new Promise(async (res, rej) =
 			},
 			userId: {
 				$ne: user._id
+			},
+			createdAt: {
+				$gte: new Date(Date.now() - ms('30 days'))
 			},
 			poll: {
 				$exists: true,
