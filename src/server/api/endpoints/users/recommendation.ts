@@ -27,7 +27,7 @@ async function main(params: any, me: ILocalUser) {
 		result = await getExternal(params, me);
 	}
 
-	if (result.length === 0) {
+	if (result == null || result.length === 0) {
 		result = await getInternal(params, me);
 	}
 
@@ -56,7 +56,7 @@ async function getExternal(params: any, me: ILocalUser) {
 		followAllRedirects: true
 	});
 
-	return result;
+	return result || [];
 }
 
 async function getInternal(params: any, me: ILocalUser) {
