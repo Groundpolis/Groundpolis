@@ -43,10 +43,10 @@ export default Vue.extend({
 	computed: {
 		stream(): any {
 			switch (this.src) {
-				case 'home': return (this as any).os.stream.useSharedConnection('homeTimeline');
-				case 'local': return (this as any).os.stream.useSharedConnection('localTimeline');
-				case 'hybrid': return (this as any).os.stream.useSharedConnection('hybridTimeline');
-				case 'global': return (this as any).os.stream.useSharedConnection('globalTimeline');
+				case 'home': return (this as any).os.stream.connectToChannel('homeTimeline');
+				case 'local': return (this as any).os.stream.connectToChannel('localTimeline');
+				case 'hybrid': return (this as any).os.stream.connectToChannel('hybridTimeline');
+				case 'global': return (this as any).os.stream.connectToChannel('globalTimeline');
 			}
 		},
 
