@@ -2,17 +2,17 @@
 <div class="nav">
 	<ul>
 		<template v-if="$store.getters.isSignedIn">
-			<li class="home" :class="{ active: $route.name == 'index' }">
-				<a href="/">
+			<li class="home" :class="{ active: $route.name == 'index' }" @click="goToTop">
+				<router-link to="/">
 					%fa:home%
 					<p>%i18n:@home%</p>
-				</a>
+				</router-link>
 			</li>
-			<li class="deck" :class="{ active: $route.name == 'deck' }">
-				<a href="/deck">
+			<li class="deck" :class="{ active: $route.name == 'deck' }" @click="goToTop">
+				<router-link to="/deck">
 					%fa:columns%
 					<p>%i18n:@deck%</p>
-				</a>
+				</router-link>
 			</li>
 			<li class="messaging">
 				<a @click="messaging">
