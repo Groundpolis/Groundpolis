@@ -229,7 +229,10 @@ export default Vue.extend({
 			try {
 				theme = JSON5.parse(code);
 			} catch (e) {
-				alert('%i18n:@invalid-theme%');
+				this.$swal({
+					type: 'error',
+					text: '%i18n:@invalid-theme%'
+				});
 				return;
 			}
 
@@ -239,12 +242,18 @@ export default Vue.extend({
 			}
 
 			if (theme.id == null) {
-				alert('%i18n:@invalid-theme%');
+				this.$swal({
+					type: 'error',
+					text: '%i18n:@invalid-theme%'
+				});
 				return;
 			}
 
 			if (this.$store.state.device.themes.some(t => t.id == theme.id)) {
-				alert('%i18n:@already-installed%');
+				this.$swal({
+					type: 'info',
+					text: '%i18n:@already-installed%'
+				});
 				return;
 			}
 
@@ -253,7 +262,10 @@ export default Vue.extend({
 				key: 'themes', value: themes
 			});
 
-			alert('%i18n:@installed%'.replace('{}', theme.name));
+			this.$swal({
+				type: 'success',
+				text: '%i18n:@installed%'.replace('{}', theme.name)
+			});
 		},
 
 		uninstall() {
@@ -262,7 +274,11 @@ export default Vue.extend({
 			this.$store.commit('device/set', {
 				key: 'themes', value: themes
 			});
-			alert('%i18n:@uninstalled%'.replace('{}', theme.name));
+
+			this.$swal({
+				type: 'info',
+				text: '%i18n:@uninstalled%'.replace('{}', theme.name)
+			});
 		},
 
 		import_() {
@@ -294,16 +310,26 @@ export default Vue.extend({
 
 		gen() {
 			const theme = this.myTheme;
+
 			if (theme.name == null || theme.name.trim() == '') {
-				alert('%i18n:@theme-name-required%');
+				this.$swal({
+					type: 'warning',
+					text: '%i18n:@theme-name-required%'
+				});
 				return;
 			}
+
 			theme.id = uuid();
+
 			const themes = this.$store.state.device.themes.concat(theme);
 			this.$store.commit('device/set', {
 				key: 'themes', value: themes
 			});
-			alert('%i18n:@saved%');
+
+			this.$swal({
+				type: 'success',
+				text: '%i18n:@saved%'
+			});
 		}
 	}
 });
