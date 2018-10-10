@@ -134,7 +134,13 @@ export default Vue.extend({
 			if (this.mediaOnly && note.files.length == 0) return;
 
 			// Prepend a note
-			(this.$refs.timeline as any).prepend(note);
+			try {
+				(this.$refs.timeline as any).prepend(note)
+			} catch (e) {
+				console.warn(`TL prepend failed at deck/src[${this.src}]`);
+				(this as any).apis.notify('TL追加失敗, リロードをおすすめします');
+				throw e;
+			};
 		},
 
 		onChangeFollowing() {
