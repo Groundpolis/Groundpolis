@@ -10,11 +10,21 @@ DriveFile.find({
 		withoutChunks: { $exists: false }
 	}, {
 		withoutChunks: false
-	}]
+	}],
+	'metadata.deletedAt': { $exists: false }
+}, {
+	fields: {
+		_id: true
+	}
 }).then(async files => {
+	console.log(`there is ${files.length} files`);
+
 	await sequential(files.map(file => async () => {
+		file = await DriveFile.findOne({ _id: file._id });
+
 		const minio = new Minio.Client(config.drive.config);
 
+		const name = file.filename;
 		const keyDir = `${config.drive.prefix}/${uuid.v4()}`;
 		const key = `${keyDir}/${name}`;
 		const thumbnailKeyDir = `${config.drive.prefix}/${uuid.v4()}`;
