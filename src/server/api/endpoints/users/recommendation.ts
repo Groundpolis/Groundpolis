@@ -50,6 +50,7 @@ async function getExternal(params: any, me: ILocalUser) {
 
 	const result = await request({
 		url: url,
+		proxy: config.proxy,
 		timeout: timeout,
 		json: true,
 		followRedirect: true,
