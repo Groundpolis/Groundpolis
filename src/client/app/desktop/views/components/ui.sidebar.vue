@@ -1,50 +1,67 @@
 <template>
-<div class="header" :class="$store.state.device.navbar">
-	<div class="post">
-		<button @click="post" title="%i18n:@post%">%fa:pencil-alt%</button>
+<div class="header" :class="navbar">
+	<div class="body">
+		<div class="post">
+			<button @click="post" title="%i18n:@post%">%fa:pencil-alt%</button>
+		</div>
+
+		<div class="nav" v-if="$store.getters.isSignedIn">
+			<div class="home" :class="{ active: $route.name == 'index' }" @click="goToTop">
+				<router-link to="/">%fa:home%</router-link>
+			</div>
+			<div class="deck" :class="{ active: $route.name == 'deck' }" @click="goToTop">
+				<router-link to="/deck">%fa:columns%</router-link>
+			</div>
+			<div class="messaging">
+				<a @click="messaging">%fa:comments%<template v-if="hasUnreadMessagingMessage">%fa:circle%</template></a>
+			</div>
+			<div class="game">
+				<a @click="game">%fa:gamepad%<template v-if="hasGameInvitations">%fa:circle%</template></a>
+			</div>
+		</div>
+
+		<div class="nav bottom" v-if="$store.getters.isSignedIn">
+			<div>
+				<a @click="drive">%fa:cloud%</a>
+			</div>
+			<div ref="notificationsButton" :class="{ active: showNotifications }">
+				<a @click="notifications">%fa:R bell%</a>
+			</div>
+			<div>
+				<a @click="settings">%fa:cog%</a>
+			</div>
+		</div>
+
+		<div class="account">
+			<router-link :to="`/@${ $store.state.i.username }`">
+				<mk-avatar class="avatar" :user="$store.state.i"/>
+			</router-link>
+
+			<div class="nav menu">
+				<div class="signout">
+					<a @click="signout">%fa:power-off%</a>
+				</div>
+				<div>
+					<router-link to="/i/favorites">%fa:star%</router-link>
+				</div>
+				<div v-if="($store.state.i.isLocked || $store.state.i.carefulBot)">
+					<a @click="followRequests">%fa:envelope R%<i v-if="$store.state.i.pendingReceivedFollowRequestsCount">{{ $store.state.i.pendingReceivedFollowRequestsCount }}</i></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="nav dark">
+			<div>
+				<a @click="dark"><template v-if="$store.state.device.darkmode">%fa:moon%</template><template v-else>%fa:R moon%</template></a>
+			</div>
+		</div>
 	</div>
 
-	<div class="nav" v-if="$store.getters.isSignedIn">
-		<div class="home" :class="{ active: $route.name == 'index' }" @click="goToTop">
-			<router-link to="/">%fa:home%</router-link>
+	<transition :name="`slide-${navbar}`">
+		<div class="notifications" v-if="showNotifications" ref="notifications" :class="navbar">
+			<mk-notifications/>
 		</div>
-		<div class="deck" :class="{ active: $route.name == 'deck' }" @click="goToTop">
-			<router-link to="/deck">%fa:columns%</router-link>
-		</div>
-		<div class="messaging">
-			<a @click="messaging">%fa:comments%<template v-if="hasUnreadMessagingMessage">%fa:circle%</template></a>
-		</div>
-		<div class="game">
-			<a @click="game">%fa:gamepad%<template v-if="hasGameInvitations">%fa:circle%</template></a>
-		</div>
-	</div>
-
-	<div class="nav bottom" v-if="$store.getters.isSignedIn">
-		<div>
-			<a @click="drive">%fa:cloud%</a>
-		</div>
-		<div>
-			<router-link to="/i/favorites">%fa:star%</router-link>
-		</div>
-		<div v-if="($store.state.i.isLocked || $store.state.i.carefulBot)">
-			<a @click="followRequests">%fa:envelope R%<i v-if="$store.state.i.pendingReceivedFollowRequestsCount">{{ $store.state.i.pendingReceivedFollowRequestsCount }}</i></a>
-		</div>
-		<div>
-			<a @click="settings">%fa:cog%</a>
-		</div>
-		<div>
-			<a @click="dark"><template v-if="$store.state.device.darkmode">%fa:moon%</template><template v-else>%fa:R moon%</template></a>
-		</div>
-		<div class="signout">
-			<a @click="signout">%fa:power-off%</a>
-		</div>
-	</div>
-
-	<div class="account">
-		<router-link :to="`/@${ $store.state.i.username }`">
-			<mk-avatar class="avatar" :user="$store.state.i"/>
-		</router-link>
-	</div>
+	</transition>
 </div>
 </template>
 
@@ -56,19 +73,25 @@ import MkSettingsWindow from './settings-window.vue';
 import MkDriveWindow from './drive-window.vue';
 import MkMessagingWindow from './messaging-window.vue';
 import MkGameWindow from './game-window.vue';
+import contains from '../../../common/scripts/contains';
 
 export default Vue.extend({
 	data() {
 		return {
 			hasGameInvitations: false,
-			connection: null
+			connection: null,
+			showNotifications: false
 		};
 	},
 
 	computed: {
 		hasUnreadMessagingMessage(): boolean {
 			return this.$store.getters.isSignedIn && this.$store.state.i.hasUnreadMessagingMessage;
-		}
+		},
+
+		navbar(): string {
+			return this.$store.state.device.navbar;
+		},
 	},
 
 	mounted() {
@@ -130,6 +153,37 @@ export default Vue.extend({
 			(this as any).os.signout();
 		},
 
+		notifications() {
+			this.showNotifications ? this.closeNotifications() : this.openNotifications();
+		},
+
+		openNotifications() {
+			this.showNotifications = true;
+			Array.from(document.querySelectorAll('body *')).forEach(el => {
+				el.addEventListener('mousedown', this.onMousedown);
+			});
+		},
+
+		closeNotifications() {
+			this.showNotifications = false;
+			Array.from(document.querySelectorAll('body *')).forEach(el => {
+				el.removeEventListener('mousedown', this.onMousedown);
+			});
+		},
+
+		onMousedown(e) {
+			e.preventDefault();
+			if (
+				!contains(this.$refs.notifications, e.target) &&
+				this.$refs.notifications != e.target &&
+				!contains(this.$refs.notificationsButton, e.target) &&
+				this.$refs.notificationsButton != e.target
+			) {
+				this.closeNotifications();
+			}
+			return false;
+		},
+
 		dark() {
 			this.$store.commit('device/set', {
 				key: 'darkmode',
@@ -156,82 +210,159 @@ export default Vue.extend({
 	z-index 1000
 	width $width
 	height 100%
-	background var(--desktopHeaderBg)
-	box-shadow var(--shadow)
 
 	&.left
 		left 0
+		box-shadow var(--shadowRight)
 
 	&.right
 		right 0
+		box-shadow var(--shadowLeft)
 
-	> .nav
+	> .body
+		position fixed
+		top 0
+		z-index 1
+		width $width
+		height 100%
+		background var(--desktopHeaderBg)
+
+		> .post
+			width $width
+			height $width
+			padding 12px
+
+			> button
+				display inline-block
+				margin 0
+				padding 0
+				height 100%
+				width 100%
+				font-size 1.2em
+				font-weight normal
+				text-decoration none
+				color var(--primaryForeground)
+				background var(--primary) !important
+				outline none
+				border none
+				border-radius 100%
+				transition background 0.1s ease
+				cursor pointer
+
+				*
+					pointer-events none
+
+				&:hover
+					background var(--primaryLighten10) !important
+
+				&:active
+					background var(--primaryDarken10) !important
+					transition background 0s ease
+
+		> .nav.bottom
+			position absolute
+			bottom 128px
+			left 0
+
+		> .account
+			position absolute
+			bottom 64px
+			left 0
+			width $width
+			height $width
+			padding 14px
+
+			> .menu
+				display none
+				position absolute
+				bottom 64px
+				left 0
+				background var(--desktopHeaderBg)
+
+			&:hover
+				> .menu
+					display block
+
+			> *:not(.menu)
+				display block
+				width 100%
+				height 100%
+
+				> .avatar
+					pointer-events none
+					width 100%
+					height 100%
+
+		> .dark
+			position absolute
+			bottom 0
+			left 0
+			width $width
+			height $width
+
+	> .notifications
+		position fixed
+		top 0
+		width 350px
+		height 100%
+		overflow auto
+		background var(--face)
+
+		&.left
+			left $width
+			box-shadow var(--shadowRight)
+
+		&.right
+			right $width
+			box-shadow var(--shadowLeft)
+
+	.nav
 		> *
 			> *
 				display block
 				width $width
-				line-height 56px
+				line-height 52px
 				text-align center
 				font-size 18px
 				color var(--desktopHeaderFg)
 
 				&:hover
+					background rgba(0, 0, 0, 0.05)
 					color var(--desktopHeaderHoverFg)
 					text-decoration none
 
-	> .nav.bottom
-		position absolute
-		bottom 64px
-		left 0
+				&:active
+					background rgba(0, 0, 0, 0.1)
 
-	> .post
-		width $width
-		height $width
-		padding 10px
+	&.left
+		.nav
+			> *
+				&.active
+					box-shadow -4px 0 var(--primary) inset
 
-		> button
-			display inline-block
-			margin 0
-			padding 0 10px
-			height 100%
-			width 100%
-			font-size 1.2em
-			font-weight normal
-			text-decoration none
-			color var(--primaryForeground)
-			background var(--primary) !important
-			outline none
-			border none
-			border-radius 4px
-			transition background 0.1s ease
-			cursor pointer
+	&.right
+		.nav
+			> *
+				&.active
+					box-shadow 4px 0 var(--primary) inset
 
-			*
-				pointer-events none
+.slide-left-enter-active,
+.slide-left-leave-active {
+	transition: all 0.2s ease;
+}
 
-			&:hover
-				background var(--primaryLighten10) !important
+.slide-left-enter, .slide-left-leave-to {
+	transform: translateX(-16px);
+	opacity: 0;
+}
 
-			&:active
-				background var(--primaryDarken10) !important
-				transition background 0s ease
+.slide-right-enter-active,
+.slide-right-leave-active {
+	transition: all 0.2s ease;
+}
 
-	> .account
-		position absolute
-		bottom 0
-		left 0
-		width $width
-		height $width
-		padding 12px
-
-		> *
-			display block
-			width 100%
-			height 100%
-
-			> .avatar
-				pointer-events none
-				width 100%
-				height 100%
-
+.slide-right-enter, .slide-right-leave-to {
+	transform: translateX(16px);
+	opacity: 0;
+}
 </style>
