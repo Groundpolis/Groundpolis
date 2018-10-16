@@ -23,17 +23,31 @@ const log = debug('misskey:drive:add-file');
 
 async function save(path: string, name: string, type: string, hash: string, size: number, metadata: any): Promise<IDriveFile> {
 	let thumbnail: Buffer;
+	let thumbnailExt = 'jpg';
+	let thumbnailType = 'image/jpeg';
 
-	if (['image/jpeg', 'image/png', 'image/webp'].includes(type)) {
+	if (['image/jpeg', 'image/webp'].includes(type)) {
 		thumbnail = await sharp(path)
-			.resize(498, 280)
-			.max()
-			.withoutEnlargement()
+			.resize(498, 280, {
+				fit: 'inside',
+				withoutEnlargement: true
+			})
 			.jpeg({
-				quality: 80,
+				quality: 85,
 				progressive: true
 			})
 			.toBuffer();
+	} else if (['image/png'].includes(type)) {
+		thumbnail = await sharp(path)
+			.resize(498, 280, {
+				fit: 'inside',
+				withoutEnlargement: true
+			})
+			.png()
+			.toBuffer();
+
+		thumbnailExt = 'png';
+		thumbnailType = 'image/png';
 	}
 
 	if (config.drive && config.drive.storage == 'minio') {
@@ -42,7 +56,7 @@ async function save(path: string, name: string, type: string, hash: string, size
 		const keyDir = `${config.drive.prefix}/${uuid.v4()}`;
 		const key = `${keyDir}/${name}`;
 		const thumbnailKeyDir = `${config.drive.prefix}/${uuid.v4()}`;
-		const thumbnailKey = `${thumbnailKeyDir}/${name}.thumbnail.jpg`;
+		const thumbnailKey = `${thumbnailKeyDir}/${name}.thumbnail.${thumbnailExt}`;
 
 		const baseUrl = config.drive.baseUrl
 			|| `${ config.drive.config.useSSL ? 'https' : 'http' }://${ config.drive.config.endPoint }${ config.drive.config.port ? `:${config.drive.config.port}` : '' }/${ config.drive.bucket }`;
@@ -54,7 +68,7 @@ async function save(path: string, name: string, type: string, hash: string, size
 
 		if (thumbnail) {
 			await minio.putObject(config.drive.bucket, thumbnailKey, thumbnail, size, {
-				'Content-Type': 'image/jpeg',
+				'Content-Type': thumbnailType,
 				'Cache-Control': 'max-age=31536000, immutable'
 			});
 		}
@@ -67,7 +81,7 @@ async function save(path: string, name: string, type: string, hash: string, size
 				thumbnailKey: thumbnailKey
 			},
 			url: `${ baseUrl }/${ keyDir }/${ encodeURIComponent(name) }`,
-			thumbnailUrl: thumbnail ? `${ baseUrl }/${ thumbnailKeyDir }/${ encodeURIComponent(name) }.thumbnail.jpg` : null
+			thumbnailUrl: thumbnail ? `${ baseUrl }/${ thumbnailKeyDir }/${ encodeURIComponent(name) }.thumbnail.${thumbnailExt}` : null
 		});
 
 		const file = await DriveFile.insert({
@@ -101,7 +115,7 @@ async function save(path: string, name: string, type: string, hash: string, size
 
 			await new Promise<IDriveFile>((resolve, reject) => {
 				const writeStream = thumbnailBucket.openUploadStream(name, {
-					contentType: 'image/jpeg',
+					contentType: thumbnailType,
 					metadata: {
 						originalId: file._id
 					}
