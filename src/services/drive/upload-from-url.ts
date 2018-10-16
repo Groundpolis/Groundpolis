@@ -55,7 +55,7 @@ export default async (url: string, user: IUser, folderId: mongodb.ObjectID = nul
 	let error;
 
 	try {
-		driveFile = await create(user, path, name, null, folderId, false, config.preventCacheRemoteFiles, url, uri, sensitive);
+		driveFile = await create(user, path, name, null, folderId, true, config.preventCacheRemoteFiles, url, uri, sensitive);
 		log(`got: ${driveFile._id}`);
 	} catch (e) {
 		error = e;

@@ -76,7 +76,7 @@ export default async (file: any, params: any, user: ILocalUser): Promise<any> =>
 
 	try {
 		// Create file
-		const driveFile = await create(user, file.path, name, null, ps.folderId, false, false, null, null, ps.isSensitive);
+		const driveFile = await create(user, file.path, name, null, ps.folderId, true, false, null, null, ps.isSensitive);
 
 		cleanup();
 
