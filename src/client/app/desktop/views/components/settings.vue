@@ -114,6 +114,7 @@
 				<ui-switch v-model="suggestRecentHashtags">%i18n:@suggest-recent-hashtags%</ui-switch>
 				<ui-switch v-model="showClockOnHeader">%i18n:@show-clock-on-header%</ui-switch>
 				<ui-switch v-model="alwaysShowNsfw">%i18n:common.always-show-nsfw%</ui-switch>
+				<ui-switch v-model="loadRawImages">ext: %i18n:@load-raw-images%</ui-switch>
 				<ui-switch v-model="showReplyTarget">%i18n:@show-reply-target%</ui-switch>
 				<ui-switch v-model="showMaps">%i18n:@show-maps%</ui-switch>
 				<ui-switch v-model="disableAnimatedMfm">%i18n:common.disable-animated-mfm%</ui-switch>
@@ -407,6 +408,11 @@ export default Vue.extend({
 		alwaysShowNsfw: {
 			get() { return this.$store.state.device.alwaysShowNsfw; },
 			set(value) { this.$store.commit('device/set', { key: 'alwaysShowNsfw', value }); }
+		},
+
+		loadRawImages: {
+			get() { return this.$store.state.device.loadRawImages; },
+			set(value) { this.$store.commit('device/set', { key: 'loadRawImages', value }); }
 		},
 
 		useShadow: {
