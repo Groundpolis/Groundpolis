@@ -162,6 +162,25 @@ export default (callback: (launch: (router: VueRouter, api?: (os: MiOS) => API) 
 			});
 			//#endregion
 
+			// Navigation hook
+			router.beforeEach((to, from, next) => {
+				if (os.store.state.navHook) {
+					if (os.store.state.navHook(to)) {
+						next(false);
+					} else {
+						next();
+					}
+				} else {
+					next();
+				}
+			});
+
+			document.addEventListener('visibilitychange', () => {
+				if (!document.hidden) {
+					os.store.commit('clearBehindNotes');
+				}
+			}, false);
+
 			Vue.mixin({
 				data() {
 					return {
