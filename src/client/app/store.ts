@@ -20,7 +20,7 @@ const defaultSettings = {
 	showClockOnHeader: true,
 	useShadow: true,
 	roundedCorners: false,
-	circleIcons: true,
+	circleIcons: false,
 	contrastedAcct: true,
 	showFullAcct: false,
 	showReplyTarget: true,
