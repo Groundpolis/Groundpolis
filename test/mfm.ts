@@ -122,6 +122,12 @@ describe('Text', () => {
 				{ type: 'hashtag', content: '#piyo', hashtag: 'piyo' },
 				{ type: 'text', content: '.' }
 			], tokens2);
+
+			const tokens3 = analyze('#Foo!');
+			assert.deepEqual([
+				{ type: 'hashtag', content: '#Foo', hashtag: 'Foo' },
+				{ type: 'text', content: '!' },
+			], tokens3);
 		});
 
 		it('quote', () => {
