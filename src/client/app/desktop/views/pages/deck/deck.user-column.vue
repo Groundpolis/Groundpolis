@@ -5,7 +5,12 @@
 	</span>
 
 	<div class="zubukjlciycdsyynicqrnlsmdwmymzqu" v-if="user">
-		<div class="is-remote" v-if="user.host != null">%fa:exclamation-triangle% %i18n:@is-remote%<a :href="user.url || user.uri" target="_blank">%i18n:@view-remote%</a></div>
+		<div class="is-remote" v-if="user.host != null">
+			<details>
+				<summary>%fa:exclamation-triangle% %i18n:common.is-remote-user%</summary>
+				<a :href="user.url || user.uri" target="_blank">%i18n:common.view-on-remote%</a>
+			</details>
+		</div>
 		<header :style="bannerStyle">
 			<div>
 				<button class="menu" @click="menu" ref="menu">%fa:ellipsis-h%</button>
@@ -120,7 +125,7 @@ export default Vue.extend({
 					});
 				});
 				const files = concat(notes.map((n: any): any[] => n.files));
-				this.images = files.filter(f => image.includes(f.type)).slice(0, 6);
+				this.images = files.filter(f => image.includes(f.type)).slice(0, 9);
 			});
 		});
 	},
@@ -256,7 +261,7 @@ export default Vue.extend({
 
 	> .info
 		padding 16px
-		font-size 14px
+		font-size 12px
 		color var(--text)
 		text-align center
 		background var(--face)
