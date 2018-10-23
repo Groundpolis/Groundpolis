@@ -24,23 +24,55 @@
 			<div class="description">
 				<misskey-flavored-markdown v-if="user.description" :text="user.description" :i="$store.state.i"/>
 			</div>
+			<div class="counts">
+				<div>
+					<b>{{ user.notesCount | number }}</b>
+					<span>%i18n:@posts%</span>
+				</div>
+				<div>
+					<b>{{ user.followingCount | number }}</b>
+					<span>%i18n:@following%</span>
+				</div>
+				<div>
+					<b>{{ user.followersCount | number }}</b>
+					<span>%i18n:@followers%</span>
+				</div>
+			</div>
 		</div>
 		<div class="pinned" v-if="user.pinnedNotes && user.pinnedNotes.length > 0">
-			<p>%fa:thumbtack% %i18n:@pinned-notes%</p>
-			<div class="notes">
+			<p class="caption" @click="toggleShowPinned">%fa:thumbtack% %i18n:@pinned-notes%</p>
+			<span class="angle" v-if="showPinned">%fa:angle-up%</span>
+			<span class="angle" v-else>%fa:angle-down%</span>
+			<div class="notes" v-show="showPinned">
 				<x-note v-for="n in user.pinnedNotes" :key="n.id" :note="n" :mini="true"/>
 			</div>
 		</div>
 		<div class="images" v-if="images.length > 0">
-			<router-link v-for="image in images"
-				:style="`background-image: url(${image.thumbnailUrl})`"
-				:key="`${image.id}:${image._note.id}`"
-				:to="image._note | notePage"
-				:title="`${image.name}\n${(new Date(image.createdAt)).toLocaleString()}`"
-			></router-link>
+			<p class="caption" @click="toggleShowImages">%fa:images R% %i18n:@images%</p>
+			<span class="angle" v-if="showImages">%fa:angle-up%</span>
+			<span class="angle" v-else>%fa:angle-down%</span>
+			<div v-show="showImages">
+				<router-link v-for="image in images"
+					:style="`background-image: url(${image.thumbnailUrl})`"
+					:key="`${image.id}:${image._note.id}`"
+					:to="image._note | notePage"
+					:title="`${image.name}\n${(new Date(image.createdAt)).toLocaleString()}`"
+				></router-link>
+			</div>
+		</div>
+		<div class="activity">
+			<p class="caption" @click="toggleShowActivity">%fa:chart-bar R% %i18n:@activity%</p>
+			<span class="angle" v-if="showActivity">%fa:angle-up%</span>
+			<span class="angle" v-else>%fa:angle-down%</span>
+			<div v-show="showActivity">
+				<div ref="chart"></div>
+			</div>
 		</div>
 		<div class="tl">
-			<x-notes ref="timeline" :more="existMore ? fetchMoreNotes : null"/>
+			<p class="caption">%fa:comment-alt R% %i18n:@timeline%</p>
+			<div>
+				<x-notes ref="timeline" :more="existMore ? fetchMoreNotes : null"/>
+			</div>
 		</div>
 	</div>
 </x-column>
@@ -56,6 +88,7 @@ import Menu from '../../../../common/views/components/menu.vue';
 import MkUserListsWindow from '../../components/user-lists-window.vue';
 import Ok from '../../../../common/views/components/ok.vue';
 import { concat } from '../../../../../../prelude/array';
+import * as ApexCharts from 'apexcharts';
 
 const fetchLimit = 10;
 
@@ -80,7 +113,10 @@ export default Vue.extend({
 			existMore: false,
 			moreFetching: false,
 			withFiles: false,
-			images: []
+			images: [],
+			showPinned: true,
+			showImages: true,
+			showActivity: true
 		};
 	},
 
@@ -126,6 +162,86 @@ export default Vue.extend({
 				});
 				const files = concat(notes.map((n: any): any[] => n.files));
 				this.images = files.filter(f => image.includes(f.type)).slice(0, 9);
+			});
+
+			(this as any).api('charts/user/notes', {
+				userId: this.user.id,
+				span: 'day',
+				limit: 21
+			}).then(stats => {
+				const normal = [];
+				const reply = [];
+				const renote = [];
+
+				const now = new Date();
+				const y = now.getFullYear();
+				const m = now.getMonth();
+				const d = now.getDate();
+
+				for (let i = 0; i < 21; i++) {
+					const x = new Date(y, m, d - i);
+					normal.push([
+						x,
+						stats.diffs.normal[i]
+					]);
+					reply.push([
+						x,
+						stats.diffs.reply[i]
+					]);
+					renote.push([
+						x,
+						stats.diffs.renote[i]
+					]);
+				}
+
+				const chart = new ApexCharts(this.$refs.chart, {
+					chart: {
+						type: 'bar',
+						stacked: true,
+						height: 100,
+						sparkline: {
+							enabled: true
+						},
+					},
+					plotOptions: {
+						bar: {
+							columnWidth: '90%',
+							endingShape: 'rounded'
+						}
+					},
+					grid: {
+						clipMarkers: false,
+						padding: {
+							top: 16,
+							right: 16,
+							bottom: 16,
+							left: 16
+						}
+					},
+					tooltip: {
+						shared: true,
+						intersect: false
+					},
+					series: [{
+						name: 'Normal',
+						data: normal
+					}, {
+						name: 'Reply',
+						data: reply
+					}, {
+						name: 'Renote',
+						data: renote
+					}],
+					xaxis: {
+						type: 'datetime',
+						crosshairs: {
+							width: 1,
+							opacity: 1
+						}
+					}
+				});
+
+				chart.render();
 			});
 		});
 	},
@@ -198,6 +314,18 @@ export default Vue.extend({
 				compact: false,
 				items: menu
 			});
+		},
+
+		toggleShowPinned() {
+			this.showPinned = !this.showPinned;
+		},
+
+		toggleShowImages() {
+			this.showImages = !this.showImages;
+		},
+
+		toggleShowActivity() {
+			this.showActivity = !this.showActivity;
 		}
 	}
 });
@@ -205,7 +333,7 @@ export default Vue.extend({
 
 <style lang="stylus" scoped>
 .zubukjlciycdsyynicqrnlsmdwmymzqu
-	background var(--deckUserColumnBg)
+	background var(--deckColumnBg)
 
 	> .is-remote
 		padding 8px 16px
@@ -265,7 +393,6 @@ export default Vue.extend({
 		color var(--text)
 		text-align center
 		background var(--face)
-		border-bottom solid 1px var(--faceDivider)
 
 		&:before
 			content ""
@@ -281,35 +408,65 @@ export default Vue.extend({
 			border-right solid 16px transparent
 			border-bottom solid 16px var(--face)
 
-	> .pinned
-		padding-bottom 16px
-		background var(--deckUserColumnBg)
+		> .counts
+			display grid
+			grid-template-columns 1fr 1fr 1fr
+			margin-top 8px
+			border-top solid 1px var(--faceDivider)
 
-		> p
+			> div
+				padding 8px 8px 0 8px
+				text-align center
+
+				> b
+					display block
+					font-size 110%
+
+				> span
+					display block
+					font-size 80%
+					opacity 0.7
+
+	> *
+		> p.caption
 			margin 0
 			padding 8px 16px
 			font-size 12px
 			color var(--text)
 
+			& + .angle
+				position absolute
+				top 0
+				right 8px
+				padding 6px
+				font-size 14px
+				color var(--text)
+
+	> .pinned
 		> .notes
 			background var(--face)
 
 	> .images
-		display grid
-		grid-template-rows 1fr 1fr 1fr
-		grid-template-columns 1fr 1fr 1fr
-		gap 4px
-		height 250px
-		padding 16px
-		margin-bottom 16px
-		background var(--face)
+		> div
+			display grid
+			grid-template-columns 1fr 1fr 1fr
+			gap 8px
+			padding 16px
+			background var(--face)
 
-		> *
-			background-position center center
-			background-size cover
-			background-clip content-box
+			> *
+				height 70px
+				background-position center center
+				background-size cover
+				background-clip content-box
+				border-radius 4px
+
+	> .activity
+		> div
+			background var(--face)
 
 	> .tl
-		background var(--face)
+		> div
+			background var(--face)
 
 </style>

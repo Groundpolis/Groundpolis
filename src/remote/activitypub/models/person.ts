@@ -10,7 +10,7 @@ import { isCollectionOrOrderedCollection, isCollection, IPerson } from '../type'
 import { IDriveFile } from '../../../models/drive-file';
 import Meta from '../../../models/meta';
 import htmlToMFM from '../../../mfm/html-to-mfm';
-import { updateUserStats } from '../../../services/update-chart';
+import usersChart from '../../../chart/users';
 import { URL } from 'url';
 import { resolveNote } from './note';
 
@@ -180,7 +180,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 		}
 	}, { upsert: true });
 
-	updateUserStats(user, true);
+	usersChart.update(user, true);
 	//#endregion
 
 	//#region アイコンとヘッダー画像をフェッチ
@@ -190,7 +190,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 	].map(img =>
 		img == null
 			? Promise.resolve(null)
-			: resolveImage(user, img)
+			: resolveImage(user, img).catch(() => null)
 	)));
 
 	const avatarId = avatar ? avatar._id : null;
@@ -276,7 +276,7 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: obje
 	].map(img =>
 		img == null
 			? Promise.resolve(null)
-			: resolveImage(exist, img)
+			: resolveImage(exist, img).catch(() => null)
 	)));
 
 	// Update user
