@@ -17,7 +17,8 @@ import { isLocalUser, IUser, IRemoteUser } from '../../models/user';
 import delFile from './delete-file';
 import config from '../../config';
 import { getDriveFileThumbnailBucket } from '../../models/drive-file-thumbnail';
-import { updateDriveStats } from '../update-chart';
+import driveChart from '../../chart/drive';
+import perUserDriveChart from '../../chart/per-user-drive';
 
 const log = debug('misskey:drive:add-file');
 
@@ -411,11 +412,12 @@ export default async function(
 	pack(driveFile).then(packedFile => {
 		// Publish driveFileCreated event
 		publishMainStream(user._id, 'driveFileCreated', packedFile);
-		publishDriveStream(user._id, 'file_created', packedFile);
+		publishDriveStream(user._id, 'fileCreated', packedFile);
 	});
 
 	// 統計を更新
-	updateDriveStats(driveFile, true);
+	driveChart.update(driveFile, true);
+	perUserDriveChart.update(driveFile, true);
 
 	return driveFile;
 }
