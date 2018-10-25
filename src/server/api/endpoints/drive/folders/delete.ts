@@ -1,19 +1,21 @@
 import $ from 'cafy'; import ID from '../../../../../misc/cafy-id';
-import DriveFolder, { pack } from '../../../../../models/drive-folder';
+import DriveFolder from '../../../../../models/drive-folder';
 import { ILocalUser } from '../../../../../models/user';
 import getParams from '../../../get-params';
+import { publishDriveStream } from '../../../../../stream';
+import DriveFile from '../../../../../models/drive-file';
 
 export const meta = {
 	stability: 'stable',
 
 	desc: {
-		'ja-JP': '指定したドライブのフォルダの情報を取得します。',
-		'en-US': 'Get specified folder of drive.'
+		'ja-JP': '指定したドライブのフォルダを削除します。',
+		'en-US': 'Delete specified folder of drive.'
 	},
 
 	requireCredential: true,
 
-	kind: 'drive-read',
+	kind: 'drive-write',
 
 	params: {
 		folderId: $.type(ID).note({
@@ -40,8 +42,19 @@ export default (params: any, user: ILocalUser) => new Promise(async (res, rej) =
 		return rej('folder-not-found');
 	}
 
-	// Serialize
-	res(await pack(folder, {
-		detail: true
-	}));
+	const [childFoldersCount, childFilesCount] = await Promise.all([
+		DriveFolder.count({ parentId: folder._id }),
+		DriveFile.count({ folderId: folder._id })
+	]);
+
+	if (childFoldersCount !== 0 || childFilesCount !== 0) {
+		return rej('has-child-contents');
+	}
+
+	await DriveFolder.remove({ _id: folder._id });
+
+	// Publish folderCreated event
+	publishDriveStream(user._id, 'folderDeleted', folder._id);
+
+	res();
 });

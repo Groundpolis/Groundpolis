@@ -314,7 +314,8 @@ async function renderActivity(data: Option, note: INote) {
 function incRenoteCount(renote: INote) {
 	Note.update({ _id: renote._id }, {
 		$inc: {
-			renoteCount: 1
+			renoteCount: 1,
+			score: 1
 		}
 	});
 }
@@ -567,8 +568,7 @@ function saveQuote(renote: INote, note: INote) {
 	Note.update({ _id: renote._id }, {
 		$push: {
 			_quoteIds: note._id
-		},
-
+		}
 	});
 }
 
