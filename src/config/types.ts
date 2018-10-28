@@ -47,6 +47,7 @@ export type Source = {
 	};
 
 	localDriveCapacityMb: number;
+	localDriveCapacityFactor: number;
 	remoteDriveCapacityMb: number;
 	preventCacheRemoteFiles: boolean;
 
