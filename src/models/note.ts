@@ -164,7 +164,7 @@ export const hideNote = async (packedNote: any, meId: mongo.ObjectID) => {
 	}
 };
 
-export const packMany = async (
+export const packMany = (
 	notes: (string | mongo.ObjectID | INote)[],
 	me?: string | mongo.ObjectID | IUser,
 	options?: {
@@ -172,7 +172,7 @@ export const packMany = async (
 		skipHide?: boolean;
 	}
 ) => {
-	return (await Promise.all(notes.map(n => pack(n, me, options)))).filter(x => x != null);
+	return Promise.all(notes.map(n => pack(n, me, options)));
 };
 
 /**
@@ -259,11 +259,6 @@ export const pack = async (
 
 	// When requested a detailed note data
 	if (opts.detail) {
-		//#region 重いので廃止
-		_note.prev = null;
-		_note.next = null;
-		//#endregion
-
 		if (_note.replyId) {
 			// Populate reply to note
 			_note.reply = pack(_note.replyId, meId, {
