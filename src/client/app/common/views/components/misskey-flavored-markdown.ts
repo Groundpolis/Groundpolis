@@ -3,7 +3,6 @@ import * as emojilib from 'emojilib';
 import { length } from 'stringz';
 import parse from '../../../../../mfm/parse';
 import getAcct from '../../../../../misc/acct/render';
-import { url } from '../../../config';
 import MkUrl from './url.vue';
 import MkGoogle from './google.vue';
 import { concat } from '../../../../../prelude/array';
@@ -25,6 +24,9 @@ export default Vue.component('misskey-flavored-markdown', {
 		i: {
 			type: Object,
 			default: null
+		},
+		customEmojis: {
+			required: false,
 		}
 	},
 
@@ -186,6 +188,22 @@ export default Vue.component('misskey-flavored-markdown', {
 				}
 
 				case 'emoji': {
+					//#region カスタム絵文字
+					if (this.customEmojis != null) {
+						const customEmoji = this.customEmojis.find(e => e.name == token.emoji || (e.aliases || []).includes(token.emoji));
+						if (customEmoji) {
+							return [createElement('img', {
+								attrs: {
+									src: customEmoji.url,
+									alt: token.emoji,
+									title: token.emoji,
+									style: 'height: 2.5em; vertical-align: middle;'
+								}
+							})];
+						}
+					}
+					//#endregion
+
 					const emoji = emojilib.lib[token.emoji];
 					return [createElement('span', emoji ? emoji.char : token.content)];
 				}

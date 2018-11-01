@@ -223,24 +223,16 @@ export const pack = (
 
 	let _user: any;
 
-	const fields = opts.detail ? {
-	} : {
-		bannerColor: false,
-		bannerUrl: false,
-		description: false,
-		notesCount: false,
-		followersCount: false,
-		followingCount: false,
-		lastUsedAt: false,
-		settings: false,
-		clientSettings: false,
-		profile: false,
-		keywords: false,
-		domains: false,
-		pinnedNoteIds: false,
-		wallpaperColor: false,
-		wallpaperId: false,
-		wallpaperUrl: false
+	const fields = opts.detail ? {} : {
+		name: true,
+		username: true,
+		host: true,
+		avatarColor: true,
+		avatarUrl: true,
+		isCat: true,
+		isBot: true,
+		isAdmin: true,
+		isVerified: true
 	};
 
 	// Populate the user if 'user' is ID
@@ -275,6 +267,8 @@ export const pack = (
 	_user.id = _user._id;
 	delete _user._id;
 
+	delete _user.usernameLower;
+
 	if (_user.host == null) {
 		// Remove private properties
 		delete _user.keypair;
@@ -282,7 +276,6 @@ export const pack = (
 		delete _user.token;
 		delete _user.twoFactorTempSecret;
 		delete _user.twoFactorSecret;
-		delete _user.usernameLower;
 		if (_user.twitter) {
 			delete _user.twitter.accessToken;
 			delete _user.twitter.accessTokenSecret;
