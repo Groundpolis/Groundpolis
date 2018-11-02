@@ -17,5 +17,3 @@ api-docs.json
 /mongo
 /elasticsearch
 *.code-workspace
-
-.node-version
