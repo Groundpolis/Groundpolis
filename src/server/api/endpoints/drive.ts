@@ -1,6 +1,6 @@
 import DriveFile from '../../../models/drive-file';
-import { ILocalUser } from '../../../models/user';
 import getDriveCapacity from '../../../misc/get-drive-capacity';
+import define from '../define';
 
 export const meta = {
 	desc: {
@@ -13,7 +13,7 @@ export const meta = {
 	kind: 'drive-read'
 };
 
-export default (params: any, user: ILocalUser) => new Promise(async (res, rej) => {
+export default define(meta, (ps, user) => new Promise(async (res, rej) => {
 	// Calculate drive usage
 	const usage = await DriveFile
 		.aggregate([{
@@ -42,4 +42,4 @@ export default (params: any, user: ILocalUser) => new Promise(async (res, rej) =
 		capacity: getDriveCapacity(user),
 		usage: usage
 	});
-});
+}));

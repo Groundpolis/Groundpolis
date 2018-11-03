@@ -3,13 +3,13 @@
  */
 
 export type TextElementEmoji = {
-	type: 'emoji'
-	content: string
-	emoji: string
+	type: 'emoji';
+	content: string;
+	emoji: string;
 };
 
 export default function(text: string) {
-	const match = text.match(/^:([a-zA-Z0-9+-_]+):/);
+	const match = text.match(/^:([a-zA-Z0-9+-_]+?):/);
 	if (!match) return null;
 	const emoji = match[0];
 	return {

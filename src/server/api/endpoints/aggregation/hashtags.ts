@@ -1,7 +1,12 @@
 import Note from '../../../../models/note';
 import Meta from '../../../../models/meta';
+import define from '../../define';
 
-export default () => new Promise(async (res, rej) => {
+export const meta = {
+	requireCredential: false,
+};
+
+export default define(meta, (ps) => new Promise(async (res, rej) => {
 	const meta = await Meta.findOne({});
 	const hidedTags = meta ? (meta.hidedTags || []).map(t => t.toLowerCase()) : [];
 
@@ -63,4 +68,4 @@ export default () => new Promise(async (res, rej) => {
 	tags = tags.slice(0, 30);
 
 	res(tags);
-});
+}));

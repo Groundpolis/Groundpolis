@@ -128,6 +128,13 @@
 			<mk-api-settings />
 
 			<ui-card>
+				<div slot="title">%fa:unlock-alt% %i18n:@password%</div>
+				<section>
+					<mk-password-settings/>
+				</section>
+			</ui-card>
+
+			<ui-card>
 				<div slot="title">%fa:sync-alt% %i18n:@update%</div>
 
 				<section>
@@ -154,7 +161,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { apiUrl, version, codename, langs } from '../../../config';
+import { apiUrl, clientVersion as version, codename, langs } from '../../../config';
 import checkForUpdate from '../../../common/scripts/check-for-update';
 
 export default Vue.extend({

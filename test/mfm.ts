@@ -180,10 +180,17 @@ describe('Text', () => {
 		});
 
 		it('emoji', () => {
-			const tokens = analyze(':cat:');
+			const tokens1 = analyze(':cat:');
 			assert.deepEqual([
 				{ type: 'emoji', content: ':cat:', emoji: 'cat'}
-			], tokens);
+			], tokens1);
+
+			const tokens2 = analyze(':cat::cat::cat:');
+			assert.deepEqual([
+				{ type: 'emoji', content: ':cat:', emoji: 'cat'},
+				{ type: 'emoji', content: ':cat:', emoji: 'cat'},
+				{ type: 'emoji', content: ':cat:', emoji: 'cat'}
+			], tokens2);
 		});
 
 		it('block code', () => {
@@ -230,6 +237,11 @@ describe('Text', () => {
 			assert.deepEqual(
 				{ type: 'title', content: '[yee]\n', title: 'yee'}
 			, tokens2[0]);
+
+			const tokens3 = analyze('a [a]\nb [b]\nc [c]');
+			assert.deepEqual(
+				{ type: 'text', content: 'a [a]\nb [b]\nc [c]' }
+			, tokens3[0]);
 		});
 	});
 

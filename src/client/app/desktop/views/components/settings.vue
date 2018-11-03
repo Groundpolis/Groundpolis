@@ -215,7 +215,7 @@
 		<ui-card class="password" v-show="page == 'security'">
 			<div slot="title">%fa:unlock-alt% %i18n:@password%</div>
 			<section>
-				<x-password/>
+				<mk-password-settings/>
 			</section>
 		</ui-card>
 
@@ -287,17 +287,15 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import XPassword from './settings.password.vue';
 import X2fa from './settings.2fa.vue';
 import XApps from './settings.apps.vue';
 import XSignins from './settings.signins.vue';
 import XTags from './settings.tags.vue';
-import { url, langs, version } from '../../../config';
+import { url, langs, clientVersion as version } from '../../../config';
 import checkForUpdate from '../../../common/scripts/check-for-update';
 
 export default Vue.extend({
 	components: {
-		XPassword,
 		X2fa,
 		XApps,
 		XSignins,

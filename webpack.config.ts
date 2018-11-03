@@ -57,6 +57,7 @@ const entry = {
 	mobile: './src/client/app/mobile/script.ts',
 	dev: './src/client/app/dev/script.ts',
 	auth: './src/client/app/auth/script.ts',
+	admin: './src/client/app/admin/script.ts',
 	sw: './src/client/app/sw.js'
 };
 
@@ -69,7 +70,8 @@ const output = {
 const consts = {
 	_THEME_COLOR_: constants.themeColor,
 	_COPYRIGHT_: constants.copyright,
-	_VERSION_: version,
+	_VERSION_: meta.version,
+	_CLIENT_VERSION_: version,
 	_CODENAME_: codename,
 	_LANG_: '%lang%',
 	_LANGS_: Object.keys(locales).map(l => [l, locales[l].meta.lang]),
