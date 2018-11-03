@@ -35,8 +35,6 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 		}
 	});
 
-	const emojis = await Emoji.find({ host: null });
-
 	res({
 		maintainer: config.maintainer,
 
