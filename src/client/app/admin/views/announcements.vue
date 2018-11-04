@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="cdeuzmsthagexbkpofbmatmugjuvogfb">
 	<ui-card>
 		<div slot="title">%fa:broadcast-tower% %i18n:@announcements%</div>
 		<section v-for="(announcement, i) in announcements" class="fit-top">
@@ -9,10 +9,10 @@
 			<ui-textarea v-model="announcement.text">
 				<span>%i18n:@text%</span>
 			</ui-textarea>
-			<ui-button-group>
-				<ui-button inline @click="save">%fa:save R% %i18n:@save%</ui-button>
-				<ui-button inline @click="remove(i)">%fa:trash-alt R% %i18n:@remove%</ui-button>
-			</ui-button-group>
+			<ui-horizon-group>
+				<ui-button @click="save">%fa:save R% %i18n:@save%</ui-button>
+				<ui-button @click="remove(i)">%fa:trash-alt R% %i18n:@remove%</ui-button>
+			</ui-horizon-group>
 		</section>
 		<section>
 			<ui-button @click="add">%fa:plus% %i18n:@add%</ui-button>
@@ -54,11 +54,18 @@ export default Vue.extend({
 			(this as any).api('admin/update-meta', {
 				broadcasts: this.announcements
 			}).then(() => {
-				(this as any).os.apis.dialog({ text: `Saved` });
+				//(this as any).os.apis.dialog({ text: `Saved` });
 			}).catch(e => {
-				(this as any).os.apis.dialog({ text: `Failed ${e}` });
+				//(this as any).os.apis.dialog({ text: `Failed ${e}` });
 			});
 		}
 	}
 });
 </script>
+
+<style lang="stylus" scoped>
+.cdeuzmsthagexbkpofbmatmugjuvogfb
+	@media (min-width 500px)
+		padding 16px
+
+</style>

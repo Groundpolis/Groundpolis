@@ -63,11 +63,11 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 .hyhctythnmwihguaaapnbrbszsjqxpio
 	display block
-	padding 16px
+	padding 12px 16px 16px 16px
 	height 250px
-	overflow auto
+	overflow hidden
 	box-shadow 0 2px 4px rgba(0, 0, 0, 0.1)
-	background var(--face)
+	background var(--adminDashboardCardBg)
 	border-radius 8px
 
 	> table
@@ -76,10 +76,11 @@ export default Vue.extend({
 		overflow auto
 		border-spacing 0
 		border-collapse collapse
-		color #555
+		color var(--adminDashboardCardFg)
+		font-size 14px
 
 		thead
-			border-bottom solid 2px #eee
+			border-bottom solid 1px var(--adminDashboardCardDivider)
 
 			tr
 				th
@@ -89,7 +90,7 @@ export default Vue.extend({
 		tbody
 			tr
 				&:nth-child(odd)
-					background #fbfbfb
+					background rgba(0, 0, 0, 0.025)
 
 		th, td
 			padding 8px 16px
