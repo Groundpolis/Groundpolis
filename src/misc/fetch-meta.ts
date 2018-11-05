@@ -5,6 +5,7 @@ const defaultMeta: any = {
 	cacheRemoteFiles: true,
 	localDriveCapacityMb: 256,
 	remoteDriveCapacityMb: 8,
+	localDriveCapacityFactor: 8,
 	hidedTags: [],
 	stats: {
 		originalNotesCount: 0,

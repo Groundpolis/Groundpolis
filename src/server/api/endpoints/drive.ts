@@ -1,7 +1,6 @@
 import DriveFile from '../../../models/drive-file';
 import getDriveCapacity from '../../../misc/get-drive-capacity';
 import define from '../define';
-import fetchMeta from '../../../misc/fetch-meta';
 
 export const meta = {
 	desc: {
@@ -15,8 +14,6 @@ export const meta = {
 };
 
 export default define(meta, (ps, user) => new Promise(async (res, rej) => {
-	const instance = await fetchMeta();
-
 	// Calculate drive usage
 	const usage = await DriveFile
 		.aggregate([{
