@@ -131,6 +131,7 @@ common:
   show-full-acct: "ユーザー名のホストを省略しない"
   reduce-motion: "UIの動きを減らす"
   this-setting-is-this-device-only: "このデバイスのみ"
+  use-os-default-emojis: "OS標準の絵文字を使用"
 
   do-not-use-in-production: 'これは開発ビルドです。本番環境で使用しないでください。'
 
@@ -1077,10 +1078,12 @@ admin/views/instance.vue:
   instance-name: "インスタンス名"
   instance-description: "インスタンスの紹介"
   banner-url: "バナー画像URL"
-  disableRegistration: "ユーザー登録の受付を停止する"
-  disableLocalTimeline: "ローカルタイムラインを無効にする"
+  max-note-text-length: "投稿の最大文字数"
+  disable-registration: "ユーザー登録の受付を停止する"
+  disable-local-timeline: "ローカルタイムラインを無効にする"
   invite: "招待"
   save: "保存"
+  saved: "保存しました"
 
 admin/views/charts.vue:
   title: "チャート"
@@ -1132,10 +1135,15 @@ admin/views/emoji.vue:
     url: "絵文字画像URL"
     add: "追加"
     info: "50KB以下のPNG画像をおすすめします。"
+    added: "絵文字を登録しました"
   emojis:
     title: "絵文字一覧"
     update: "更新"
     remove: "削除"
+  updated: "更新しました"
+  remove-emoji:
+    are-you-sure: "「$1」を削除しますか？"
+    removed: "削除しました"
 
 admin/views/announcements.vue:
   announcements: "お知らせ"
@@ -1144,6 +1152,10 @@ admin/views/announcements.vue:
   add: "追加"
   title: "タイトル"
   text: "内容"
+  saved: "保存しました"
+  _remove:
+    are-you-sure: "「$1」を削除しますか？"
+    removed: "削除しました"
 
 admin/views/hashtags.vue:
   hided-tags: "Hidden Tags"
