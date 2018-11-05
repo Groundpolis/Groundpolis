@@ -1,7 +1,7 @@
 <template>
 <div class="tumhkfkmgtvzljezfvmgkeurkfncshbe">
 	<ui-card>
-		<div slot="title">%fa:plus% %i18n:@add-emoji.title%</div>
+		<div slot="title"><fa icon="plus"/> %i18n:@add-emoji.title%</div>
 		<section class="fit-top">
 			<ui-horizon-group inputs>
 				<ui-input v-model="name">
@@ -14,6 +14,7 @@
 				</ui-input>
 			</ui-horizon-group>
 			<ui-input v-model="url">
+				<i slot="icon"><fa icon="link"/></i>
 				<span>%i18n:@add-emoji.url%</span>
 			</ui-input>
 			<ui-info>%i18n:@add-emoji.info%</ui-info>
@@ -22,7 +23,7 @@
 	</ui-card>
 
 	<ui-card>
-		<div slot="title">%fa:grin R% %i18n:@emojis.title%</div>
+		<div slot="title"><fa :icon="['far', 'grin']"/> %i18n:@emojis.title%</div>
 		<section v-for="emoji in emojis">
 			<img :src="emoji.url" :alt="emoji.name" style="width: 64px;"/>
 			<ui-horizon-group inputs>
@@ -34,11 +35,12 @@
 				</ui-input>
 			</ui-horizon-group>
 			<ui-input v-model="emoji.url">
+				<i slot="icon"><fa icon="link"/></i>
 				<span>%i18n:@add-emoji.url%</span>
 			</ui-input>
 			<ui-horizon-group>
-				<ui-button @click="updateEmoji(emoji)">%fa:save R% %i18n:@emojis.update%</ui-button>
-				<ui-button @click="removeEmoji(emoji)">%fa:trash-alt R% %i18n:@emojis.remove%</ui-button>
+				<ui-button @click="updateEmoji(emoji)"><fa :icon="['far', 'save']"/> %i18n:@emojis.update%</ui-button>
+				<ui-button @click="removeEmoji(emoji)"><fa :icon="['far', 'trash-alt']"/> %i18n:@emojis.remove%</ui-button>
 			</ui-horizon-group>
 		</section>
 	</ui-card>

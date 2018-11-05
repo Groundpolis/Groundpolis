@@ -65,6 +65,29 @@ export const meta = {
 			desc: {
 				'ja-JP': '投稿の最大文字数'
 			}
+		},
+
+		localDriveCapacityMb: {
+			validator: $.num.optional.min(0),
+			desc: {
+				'ja-JP': 'ローカルユーザーひとりあたりのドライブ容量 (メガバイト単位)',
+				'en-US': 'Drive capacity of a local user (MB)'
+			}
+		},
+
+		remoteDriveCapacityMb: {
+			validator: $.num.optional.min(0),
+			desc: {
+				'ja-JP': 'リモートユーザーひとりあたりのドライブ容量 (メガバイト単位)',
+				'en-US': 'Drive capacity of a remote user (MB)'
+			}
+		},
+
+		cacheRemoteFiles: {
+			validator: $.bool.optional,
+			desc: {
+				'ja-JP': 'リモートのファイルをキャッシュするか否か'
+			}
 		}
 	}
 };
@@ -102,6 +125,18 @@ export default define(meta, (ps) => new Promise(async (res, rej) => {
 
 	if (ps.maxNoteTextLength) {
 		set.maxNoteTextLength = ps.maxNoteTextLength;
+	}
+
+	if (ps.localDriveCapacityMb !== undefined) {
+		set.localDriveCapacityMb = ps.localDriveCapacityMb;
+	}
+
+	if (ps.remoteDriveCapacityMb !== undefined) {
+		set.remoteDriveCapacityMb = ps.remoteDriveCapacityMb;
+	}
+
+	if (ps.cacheRemoteFiles !== undefined) {
+		set.cacheRemoteFiles = ps.cacheRemoteFiles;
 	}
 
 	await Meta.update({}, {

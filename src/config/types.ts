@@ -46,11 +46,6 @@ export type Source = {
 		secret_key: string;
 	};
 
-	localDriveCapacityMb: number;
-	localDriveCapacityFactor: number;
-	remoteDriveCapacityMb: number;
-	preventCacheRemoteFiles: boolean;
-
 	drive?: {
 		storage: string;
 		bucket?: string;
@@ -58,6 +53,8 @@ export type Source = {
 		baseUrl?: string;
 		config?: any;
 	};
+
+	autoAdmin?: boolean;
 
 	/**
 	 * ゴーストアカウントのID

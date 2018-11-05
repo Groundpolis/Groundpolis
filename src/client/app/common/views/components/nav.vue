@@ -7,8 +7,6 @@
 	<a :href="feedbackUrl" target="_blank">%i18n:@feedback%</a>
 	<i>・</i>
 	<a href="/dev">%i18n:@develop%</a>
-	<i>・</i>
-	<a href="https://twitter.com/misskey_xyz" target="_blank">Follow us on %fa:B twitter%</a>
 </span>
 </template>
 

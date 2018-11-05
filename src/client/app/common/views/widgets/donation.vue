@@ -2,7 +2,7 @@
 <div>
 	<mk-widget-container :show-header="false">
 		<article class="dolfvtibguprpxxhfndqaosjitixjohx">
-			<h1>%fa:heart%%i18n:@title%</h1>
+			<h1><fa icon="heart"/>%i18n:@title%</h1>
 			<p v-if="meta">
 				愛の言葉は随時募集中💛
 			</p>
@@ -38,7 +38,7 @@ export default define({
 		margin 0 0 5px 0
 		font-size 1em
 
-		> [data-fa]
+		> [data-icon]
 			margin-right 0.25em
 
 	> p

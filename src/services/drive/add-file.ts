@@ -272,7 +272,7 @@ export default async function(
 
 		log(`drive usage is ${usage}`);
 
-		const driveCapacity = getDriveCapacity(user);
+		const driveCapacity = await getDriveCapacity(user);
 
 		// If usage limit exceeded
 		if (usage + size > driveCapacity) {
