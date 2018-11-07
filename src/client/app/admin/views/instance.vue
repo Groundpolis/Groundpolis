@@ -6,11 +6,12 @@
 			<ui-input v-model="name">%i18n:@instance-name%</ui-input>
 			<ui-textarea v-model="description">%i18n:@instance-description%</ui-textarea>
 			<ui-input v-model="bannerUrl"><i slot="icon"><fa icon="link"/></i>%i18n:@banner-url%</ui-input>
+			<ui-input v-model="languages"><i slot="icon"><fa icon="language"/></i>%i18n:@languages%<span slot="desc">%i18n:@languages-desc%</span></ui-input>
 		</section>
 		<section class="fit-bottom">
 			<header><fa icon="headset"/> %i18n:@maintainer-config%</header>
 			<ui-input v-model="maintainerName">%i18n:@maintainer-name%</ui-input>
-			<ui-input v-model="maintainerEmail">%i18n:@maintainer-email%</ui-input>
+			<ui-input v-model="maintainerEmail" type="email"><i slot="icon"><fa :icon="['far', 'envelope']"/></i>%i18n:@maintainer-email%</ui-input>
 		</section>
 		<section class="fit-top fit-bottom">
 			<ui-input v-model="maxNoteTextLength">%i18n:@max-note-text-length%</ui-input>
@@ -31,7 +32,7 @@
 		<section>
 			<header><fa icon="ghost"/> %i18n:@proxy-account-config%</header>
 			<ui-info>%i18n:@proxy-account-info%</ui-info>
-			<ui-input v-model="proxyAccount"><i slot="prefix">@</i>%i18n:@proxy-account-username%<span slot="desc">%i18n:@proxy-account-username-desc%</span></ui-input>
+			<ui-input v-model="proxyAccount"><span slot="prefix">@</span>%i18n:@proxy-account-username%<span slot="desc">%i18n:@proxy-account-username-desc%</span></ui-input>
 			<ui-info warn>%i18n:@proxy-account-warn%</ui-info>
 		</section>
 		<section>
@@ -52,6 +53,28 @@
 			<p v-if="inviteCode">Code: <code>{{ inviteCode }}</code></p>
 		</section>
 	</ui-card>
+
+	<ui-card>
+		<div slot="title"><fa :icon="['fab', 'twitter']"/> %i18n:@twitter-integration-config%</div>
+		<section>
+			<ui-switch v-model="enableTwitterIntegration">%i18n:@enable-twitter-integration%</ui-switch>
+			<ui-info>%i18n:@twitter-integration-info%</ui-info>
+			<ui-input v-model="twitterConsumerKey" :disabled="!enableTwitterIntegration"><i slot="icon"><fa icon="key"/></i>%i18n:@twitter-integration-consumer-key%</ui-input>
+			<ui-input v-model="twitterConsumerSecret" :disabled="!enableTwitterIntegration"><i slot="icon"><fa icon="key"/></i>%i18n:@twitter-integration-consumer-secret%</ui-input>
+			<ui-button @click="updateMeta">%i18n:@save%</ui-button>
+		</section>
+	</ui-card>
+
+	<ui-card>
+		<div slot="title"><fa :icon="['fab', 'github']"/> %i18n:@github-integration-config%</div>
+		<section>
+			<ui-switch v-model="enableGithubIntegration">%i18n:@enable-github-integration%</ui-switch>
+			<ui-info>%i18n:@github-integration-info%</ui-info>
+			<ui-input v-model="githubClientId" :disabled="!enableGithubIntegration"><i slot="icon"><fa icon="key"/></i>%i18n:@github-integration-client-id%</ui-input>
+			<ui-input v-model="githubClientSecret" :disabled="!enableGithubIntegration"><i slot="icon"><fa icon="key"/></i>%i18n:@github-integration-client-secret%</ui-input>
+			<ui-button @click="updateMeta">%i18n:@save%</ui-button>
+		</section>
+	</ui-card>
 </div>
 </template>
 
@@ -68,6 +91,7 @@ export default Vue.extend({
 			bannerUrl: null,
 			name: null,
 			description: null,
+			languages: null,
 			cacheRemoteFiles: false,
 			localDriveCapacityMb: null,
 			remoteDriveCapacityMb: null,
@@ -75,6 +99,12 @@ export default Vue.extend({
 			enableRecaptcha: false,
 			recaptchaSiteKey: null,
 			recaptchaSecretKey: null,
+			enableTwitterIntegration: false,
+			twitterConsumerKey: null,
+			twitterConsumerSecret: null,
+			enableGithubIntegration: false,
+			githubClientId: null,
+			githubClientSecret: null,
 			proxyAccount: null,
 			inviteCode: null,
 		};
@@ -87,6 +117,7 @@ export default Vue.extend({
 			this.bannerUrl = meta.bannerUrl;
 			this.name = meta.name;
 			this.description = meta.description;
+			this.languages = meta.langs.join(' ');
 			this.cacheRemoteFiles = meta.cacheRemoteFiles;
 			this.localDriveCapacityMb = meta.driveCapacityPerLocalUserMb;
 			this.remoteDriveCapacityMb = meta.driveCapacityPerRemoteUserMb;
@@ -95,6 +126,12 @@ export default Vue.extend({
 			this.recaptchaSiteKey = meta.recaptchaSiteKey;
 			this.recaptchaSecretKey = meta.recaptchaSecretKey;
 			this.proxyAccount = meta.proxyAccount;
+			this.enableTwitterIntegration = meta.enableTwitterIntegration;
+			this.twitterConsumerKey = meta.twitterConsumerKey;
+			this.twitterConsumerSecret = meta.twitterConsumerSecret;
+			this.enableGithubIntegration = meta.enableGithubIntegration;
+			this.githubClientId = meta.githubClientId;
+			this.githubClientSecret = meta.githubClientSecret;
 		});
 	},
 
@@ -119,6 +156,7 @@ export default Vue.extend({
 				bannerUrl: this.bannerUrl,
 				name: this.name,
 				description: this.description,
+				langs: this.languages.split(' '),
 				cacheRemoteFiles: this.cacheRemoteFiles,
 				localDriveCapacityMb: parseInt(this.localDriveCapacityMb, 10),
 				remoteDriveCapacityMb: parseInt(this.remoteDriveCapacityMb, 10),
@@ -127,6 +165,12 @@ export default Vue.extend({
 				recaptchaSiteKey: this.recaptchaSiteKey,
 				recaptchaSecretKey: this.recaptchaSecretKey,
 				proxyAccount: this.proxyAccount,
+				enableTwitterIntegration: this.enableTwitterIntegration,
+				twitterConsumerKey: this.twitterConsumerKey,
+				twitterConsumerSecret: this.twitterConsumerSecret,
+				enableGithubIntegration: this.enableGithubIntegration,
+				githubClientId: this.githubClientId,
+				githubClientSecret: this.githubClientSecret,
 			}).then(() => {
 				this.$swal({
 					type: 'success',

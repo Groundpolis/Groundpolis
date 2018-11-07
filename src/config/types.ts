@@ -4,7 +4,6 @@
 export type Source = {
 	repository_url?: string;
 	feedback_url?: string;
-	languages?: string[];
 	url: string;
 	port: number;
 	https?: { [x: string]: string };
@@ -41,14 +40,7 @@ export type Source = {
 	summalyProxy?: string;
 
 	accesslog?: string;
-	twitter?: {
-		consumer_key: string;
-		consumer_secret: string;
-	};
-	github?: {
-		client_id: string;
-		client_secret: string;
-	};
+
 	github_bot?: {
 		hook_secret: string;
 		username: string;

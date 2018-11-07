@@ -43,6 +43,7 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 
 		name: instance.name,
 		description: instance.description,
+		langs: instance.langs,
 
 		secure: config.https != null,
 		machine: os.hostname(),
@@ -60,7 +61,8 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 		driveCapacityPerLocalUserMb: instance.localDriveCapacityMb,
 		driveCapacityPerRemoteUserMb: instance.remoteDriveCapacityMb,
 		cacheRemoteFiles: instance.cacheRemoteFiles,
-		recaptchaSiteKey: instance.enableRecaptcha ? instance.recaptchaSiteKey : null,
+		enableRecaptcha: instance.enableRecaptcha,
+		recaptchaSiteKey: instance.recaptchaSiteKey,
 		swPublickey: config.sw ? config.sw.public_key : null,
 		bannerUrl: instance.bannerUrl,
 		maxNoteTextLength: instance.maxNoteTextLength,
@@ -75,8 +77,8 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 			elasticsearch: config.elasticsearch ? true : false,
 			recaptcha: instance.enableRecaptcha,
 			objectStorage: config.drive && config.drive.storage === 'minio',
-			twitter: config.twitter ? true : false,
-			github: config.github ? true : false,
+			twitter: instance.enableTwitterIntegration,
+			github: instance.enableGithubIntegration,
 			serviceWorker: config.sw ? true : false,
 			userRecommendation: config.user_recommendation ? config.user_recommendation : {}
 		};
