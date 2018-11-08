@@ -4,14 +4,14 @@ import rap from '@prezzemolo/rap';
 import db from '../db/mongodb';
 import isObjectId from '../misc/is-objectid';
 import { length } from 'stringz';
-import { IUser, pack as packUser } from './user';
+import User, { IUser, pack as packUser } from './user';
 import { pack as packApp } from './app';
 import PollVote from './poll-vote';
 import Reaction from './note-reaction';
 import { packMany as packFileMany, IDriveFile } from './drive-file';
 import Favorite from './favorite';
 import Following from './following';
-import Emoji from './emoji';
+import Emoji, { IEmoji } from './emoji';
 
 const Note = db.get<INote>('notes');
 Note.createIndex('uri', { sparse: true, unique: true });
@@ -236,12 +236,44 @@ export const pack = async (
 				fields: { _id: false }
 			});
 		} else {
-			_note.emojis = Emoji.find({
-				name: { $in: _note.emojis },
-				host: host
-			}, {
-				fields: { _id: false }
-			});
+			const queryCustom = async () => {
+				const customKeys = _note.emojis.filter(name => name.match(/^[a-zA-Z0-9+_-]+$/));
+
+				return await Emoji.find({
+					name: { $in: customKeys },
+					host: host
+				}, {
+					fields: { _id: false }
+				});
+			};
+
+			const queryProfile = async () => {
+				const profileKeys = _note.emojis.map(name => {
+					const match = name.match(/^@([a-zA-Z0-9_]+)$/);
+					return match ? match[1] : null;
+				}).filter(x => x != null);
+
+				const users = await User.find({
+					username: { $in: profileKeys },
+					host: host,
+					avatarUrl: { $ne: null }
+				});
+
+				return users.map(user => {
+					return {
+						name: `@${user.username}`,
+						url: user.avatarUrl,
+						host: user.host
+					} as IEmoji;
+				});
+			};
+
+			const queryEmojis = async () => {
+				const [profileEmojis, customEmojis] = await Promise.all([queryProfile(), queryCustom()]);
+				return profileEmojis.concat(customEmojis);
+			};
+
+			_note.emojis = queryEmojis();
 		}
 	}
 
