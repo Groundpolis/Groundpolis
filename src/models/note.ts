@@ -237,7 +237,7 @@ export const pack = async (
 			});
 		} else {
 			const queryCustom = async () => {
-				const customKeys = _note.emojis.filter(name => name.match(/^[a-zA-Z0-9+_-]+$/));
+				const customKeys = (_note.emojis as string[]).filter(name => name.match(/^[a-zA-Z0-9+_-]+$/));
 
 				return await Emoji.find({
 					name: { $in: customKeys },
@@ -248,7 +248,7 @@ export const pack = async (
 			};
 
 			const queryProfile = async () => {
-				const profileKeys = _note.emojis.map(name => {
+				const profileKeys = (_note.emojis as string[]).map(name => {
 					const match = name.match(/^@([a-zA-Z0-9_]+)$/);
 					return match ? match[1] : null;
 				}).filter(x => x != null);
