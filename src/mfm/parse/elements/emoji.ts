@@ -12,7 +12,7 @@ export type TextElementEmoji = {
 };
 
 export default function(text: string) {
-	const name = text.match(/^:([a-zA-Z0-9+_-]+):/);
+	const name = text.match(/^:(@?[a-zA-Z0-9+_-]+):/);
 	if (name) {
 		return {
 			type: 'emoji',
