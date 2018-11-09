@@ -2,7 +2,7 @@
 <div>
 	<mk-widget-container :show-header="false">
 		<article class="dolfvtibguprpxxhfndqaosjitixjohx">
-			<h1><fa icon="heart"/>%i18n:@title%</h1>
+			<h1><fa icon="heart"/>{{ $t('title') }}</h1>
 			<p v-if="meta">
 				愛の言葉は随時募集中💛
 			</p>
@@ -13,16 +13,19 @@
 
 <script lang="ts">
 import define from '../../../common/define-widget';
+import i18n from '../../../i18n';
+
 export default define({
 	name: 'donation'
 }).extend({
+	i18n: i18n('common/views/widgets/donation.vue'),
 	data() {
 		return {
 			meta: null
 		};
 	},
 	created() {
-		(this as any).os.getMeta().then(meta => {
+		this.$root.getMeta().then(meta => {
 			this.meta = meta;
 		});
 	}
