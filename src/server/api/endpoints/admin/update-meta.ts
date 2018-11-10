@@ -75,6 +75,14 @@ export const meta = {
 			}
 		},
 
+		localDriveCapacityFactor: {
+			validator: $.num.optional.min(0),
+			desc: {
+				'ja-JP': 'm544独自 ローカルユーザーに1日毎に追加で与えるドライブ容量 (メガバイト/日)',
+				'en-US': 'm544Only Additional drive capacity of a local user per day (MB/day)'
+			}
+		},
+
 		remoteDriveCapacityMb: {
 			validator: $.num.optional.min(0),
 			desc: {
@@ -220,6 +228,10 @@ export default define(meta, (ps) => new Promise(async (res, rej) => {
 
 	if (ps.localDriveCapacityMb !== undefined) {
 		set.localDriveCapacityMb = ps.localDriveCapacityMb;
+	}
+
+	if (ps.localDriveCapacityFactor !== undefined) {
+		set.localDriveCapacityFactor = ps.localDriveCapacityFactor;
 	}
 
 	if (ps.remoteDriveCapacityMb !== undefined) {

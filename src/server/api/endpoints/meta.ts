@@ -59,6 +59,7 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 		disableRegistration: instance.disableRegistration,
 		disableLocalTimeline: instance.disableLocalTimeline,
 		driveCapacityPerLocalUserMb: instance.localDriveCapacityMb,
+		driveCapacityPerLocalUserPerDayMb: instance.localDriveCapacityFactor,
 		driveCapacityPerRemoteUserMb: instance.remoteDriveCapacityMb,
 		cacheRemoteFiles: instance.cacheRemoteFiles,
 		enableRecaptcha: instance.enableRecaptcha,
