@@ -935,6 +935,10 @@ common/views/components/mute-and-block.vue:
   block: "ブロック"
   no-muted-users: "ミュートしているユーザーはいません"
   no-blocked-users: "ブロックしているユーザーはいません"
+  word-mute: "ワードミュート"
+  muted-words: "ミュートされたキーワード"
+  muted-words-description: "スペースで区切るとAND指定になり、改行で区切るとOR指定になります"
+  save: "保存"
 
 common/views/components/password-settings.vue:
   reset: "パスワードを変更する"
@@ -1045,6 +1049,7 @@ admin/views/instance.vue:
   instance: "インスタンス"
   instance-name: "インスタンス名"
   instance-description: "インスタンスの紹介"
+  host: "ホスト"
   banner-url: "バナー画像URL"
   languages: "インスタンスの対象言語"
   languages-desc: "スペースで区切って複数設定できます。"
@@ -1239,7 +1244,7 @@ desktop/views/pages/user/user.header.vue:
   following: "フォロー"
   followers: "フォロワー"
   is-bot: "このアカウントはBotです"
-  years-old: "歳"
+  years-old: "{age}歳"
   year: "年"
   month: "月"
   day: "日"
@@ -1545,6 +1550,7 @@ mobile/views/pages/user.vue:
   unmute: "ミュート解除"
   block: "ブロック"
   unblock: "ブロック解除"
+  years-old: "{age}歳"
 
 mobile/views/pages/user/home.vue:
   recent-notes: "最近の投稿"
