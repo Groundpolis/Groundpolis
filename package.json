@@ -1,8 +1,8 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "10.49.1",
-	"clientVersion": "2.0.11745",
+	"version": "10.49.2",
+	"clientVersion": "2.0.11761",
 	"codename": "nighthike",
 	"main": "./built/index.js",
 	"private": true,
@@ -198,6 +198,7 @@
 		"summaly": "2.2.0",
 		"systeminformation": "3.47.0",
 		"syuilo-password-strength": "0.0.1",
+		"terser-webpack-plugin": "1.1.0",
 		"textarea-caret": "3.1.0",
 		"tinycolor2": "1.4.1",
 		"tmp": "0.0.33",
