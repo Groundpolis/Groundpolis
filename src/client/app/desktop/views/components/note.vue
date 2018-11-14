@@ -20,6 +20,12 @@
 		<router-link class="name" :to="note.user | userPage" v-user-preview="note.userId">{{ note.user | userName }}</router-link>
 		<span>{{ this.$t('reposted-by').substr(this.$t('reposted-by').indexOf('}') + 1) }}</span>
 		<mk-time :time="note.createdAt"/>
+		<span class="visibility" v-if="note.visibility != 'public'">
+			<template v-if="note.visibility == 'home'"><fa icon="home"/></template>
+			<template v-if="note.visibility == 'followers'"><fa icon="unlock"/></template>
+			<template v-if="note.visibility == 'specified'"><fa icon="envelope"/></template>
+			<template v-if="note.visibility == 'private'"><fa icon="lock"/></template>
+		</span>
 	</div>
 	<article>
 		<mk-avatar class="avatar" :user="appearNote.user"/>
@@ -199,9 +205,6 @@ export default Vue.extend({
 		> span
 			flex-shrink 0
 
-			&:last-of-type
-				margin-right 8px
-
 		.name
 			overflow hidden
 			flex-shrink 1
@@ -214,6 +217,12 @@ export default Vue.extend({
 			margin-left auto
 			flex-shrink 0
 			font-size 0.9em
+
+		> .visibility
+			margin-left 8px
+
+			[data-icon]
+				margin-right 0
 
 		& + article
 			padding-top 8px
