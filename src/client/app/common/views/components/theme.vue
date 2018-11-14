@@ -1,7 +1,7 @@
 <template>
 <div class="nicnklzforebnpfgasiypmpdaaglujqm">
 	<label>
-		<span>{{ $t('light-theme') }}</span>
+		<span><fa :icon="faSun"/> {{ $t('light-theme') }}</span>
 		<ui-select v-model="light" :placeholder="$t('light-theme')">
 			<optgroup label="おすすめテーマ">
 				<option v-for="x in promoThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
@@ -16,7 +16,7 @@
 	</label>
 
 	<label>
-		<span>{{ $t('dark-theme') }}</span>
+		<span><fa :icon="faMoon"/> {{ $t('dark-theme') }}</span>
 		<ui-select v-model="dark" :placeholder="$t('dark-theme')">
 			<optgroup label="おすすめテーマ">
 				<option v-for="x in promoThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
@@ -110,6 +110,7 @@ import { Chrome } from 'vue-color';
 import * as uuid from 'uuid';
 import * as tinycolor from 'tinycolor2';
 import * as JSON5 from 'json5';
+import { faMoon, faSun } from '@fortawesome/free-regular-svg-icons';
 
 // 後方互換性のため
 function convertOldThemedefinition(t) {
@@ -141,7 +142,8 @@ export default Vue.extend({
 			myThemeDesc: '',
 			myThemePrimary: lightTheme.vars.primary,
 			myThemeSecondary: lightTheme.vars.secondary,
-			myThemeText: lightTheme.vars.text
+			myThemeText: lightTheme.vars.text,
+			faMoon, faSun
 		};
 	},
 
