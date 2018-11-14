@@ -7,7 +7,6 @@ import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import VAnimateCss from 'v-animate-css';
 import VModal from 'vue-js-modal';
-import VueSweetalert2 from 'vue-sweetalert2';
 import VueI18n from 'vue-i18n';
 
 import VueHotkey from './common/hotkey';
@@ -16,6 +15,7 @@ import checkForUpdate from './common/scripts/check-for-update';
 import MiOS from './mios';
 import { clientVersion as version, codename, lang } from './config';
 import { builtinThemes, promoTheme, applyTheme, Theme } from './theme';
+import Alert from './common/views/components/alert.vue';
 
 // Try to get/parse existing theme
 let currentThemeData: Theme;
@@ -125,7 +125,10 @@ import {
 	faServer,
 	faExclamationCircle,
 	faSpinner,
-	faBroadcastTower
+	faBroadcastTower,
+	faChartLine,
+	faEllipsisV,
+	faStickyNote,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -241,6 +244,9 @@ library.add(
 	faExclamationCircle,
 	faSpinner,
 	faBroadcastTower,
+	faChartLine,
+	faEllipsisV,
+	faStickyNote,
 
 	farBell,
 	farEnvelope,
@@ -270,7 +276,6 @@ Vue.use(VueRouter);
 Vue.use(VAnimateCss);
 Vue.use(VModal);
 Vue.use(VueHotkey);
-Vue.use(VueSweetalert2);
 Vue.use(VueI18n);
 
 Vue.component('fa', FontAwesomeIcon);
@@ -442,6 +447,13 @@ export default (callback: (launch: (router: VueRouter) => [Vue, MiOS]) => void, 
 						document.body.appendChild(x.$el);
 						return x;
 					},
+					alert(opts) {
+						return new Promise((res) => {
+							const vm = this.new(Alert, opts);
+							vm.$once('ok', () => res(true));
+							vm.$once('cancel', () => res(false));
+						});
+					}
 				},
 				router,
 				render: createEl => createEl(App)

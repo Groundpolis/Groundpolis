@@ -9,7 +9,6 @@ import Vue from 'vue';
 import i18n from '../../../i18n';
 import { url } from '../../../config';
 import copyToClipboard from '../../../common/scripts/copy-to-clipboard';
-import Ok from './ok.vue';
 import { concat, intersperse } from '../../../../../prelude/array';
 
 export default Vue.extend({
@@ -79,7 +78,8 @@ export default Vue.extend({
 			this.$root.api('i/pin', {
 				noteId: this.note.id
 			}).then(() => {
-				this.$root.new(Ok);
+				// TODO
+				//this.$root.new(Ok);
 				this.destroyDom();
 			});
 		},
@@ -93,11 +93,18 @@ export default Vue.extend({
 		},
 
 		del() {
-			if (!window.confirm(this.$t('delete-confirm'))) return;
-			this.$root.api('notes/delete', {
-				noteId: this.note.id
-			}).then(() => {
-				this.destroyDom();
+			this.$root.alert({
+				type: 'warning',
+				text: this.$t('delete-confirm'),
+				showCancelButton: true
+			}).then(res => {
+				if (!res) return;
+
+				this.$root.api('notes/delete', {
+					noteId: this.note.id
+				}).then(() => {
+					this.destroyDom();
+				});
 			});
 		},
 
@@ -105,7 +112,8 @@ export default Vue.extend({
 			this.$root.api('notes/favorites/create', {
 				noteId: this.note.id
 			}).then(() => {
-				this.$root.new(Ok);
+				// TODO
+				//this.$root.new(Ok);
 				this.destroyDom();
 			});
 		},
@@ -114,7 +122,8 @@ export default Vue.extend({
 			this.$root.api('notes/favorites/delete', {
 				noteId: this.note.id
 			}).then(() => {
-				this.$root.new(Ok);
+				// TODO
+				//this.$root.new(Ok);
 				this.destroyDom();
 			});
 		},
