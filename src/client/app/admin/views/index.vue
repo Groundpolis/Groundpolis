@@ -20,6 +20,7 @@
 		<ul>
 			<li @click="nav('dashboard')" :class="{ active: page == 'dashboard' }"><fa icon="home" fixed-width/>{{ $t('dashboard') }}</li>
 			<li @click="nav('instance')" :class="{ active: page == 'instance' }"><fa icon="cog" fixed-width/>{{ $t('instance') }}</li>
+			<li @click="nav('moderators')" :class="{ active: page == 'moderators' }"><fa :icon="faHeadset" fixed-width/>{{ $t('moderators') }}</li>
 			<li @click="nav('users')" :class="{ active: page == 'users' }"><fa icon="users" fixed-width/>{{ $t('users') }}</li>
 			<li @click="nav('emoji')" :class="{ active: page == 'emoji' }"><fa :icon="faGrin" fixed-width/>{{ $t('emoji') }}</li>
 			<li @click="nav('announcements')" :class="{ active: page == 'announcements' }"><fa icon="broadcast-tower" fixed-width/>{{ $t('announcements') }}</li>
@@ -36,14 +37,22 @@
 		</div>
 	</nav>
 	<main>
-		<div v-if="page == 'dashboard'"><x-dashboard/></div>
-		<div v-if="page == 'instance'"><x-instance/></div>
-		<div v-if="page == 'users'"><x-users/></div>
-		<div v-if="page == 'emoji'"><x-emoji/></div>
-		<div v-if="page == 'announcements'"><x-announcements/></div>
-		<div v-if="page == 'hashtags'"><x-hashtags/></div>
-		<div v-if="page == 'drive'"></div>
-		<div v-if="page == 'update'"></div>
+		<marquee-text v-if="instances.length > 0" class="instances" :repeat="10" :duration="30">
+			<span v-for="instance in instances" class="instance">
+				<b :style="{ background: instance.bg }">{{ instance.host }}</b>{{ instance.notesCount | number }} / {{ instance.usersCount | number }}
+			</span>
+		</marquee-text>
+		<div class="page">
+			<div v-if="page == 'dashboard'"><x-dashboard/></div>
+			<div v-if="page == 'instance'"><x-instance/></div>
+			<div v-if="page == 'moderators'"><x-moderators/></div>
+			<div v-if="page == 'users'"><x-users/></div>
+			<div v-if="page == 'emoji'"><x-emoji/></div>
+			<div v-if="page == 'announcements'"><x-announcements/></div>
+			<div v-if="page == 'hashtags'"><x-hashtags/></div>
+			<div v-if="page == 'drive'"></div>
+			<div v-if="page == 'update'"></div>
+		</div>
 	</main>
 </div>
 </template>
@@ -54,12 +63,15 @@ import i18n from '../../i18n';
 import { version } from '../../config';
 import XDashboard from "./dashboard.vue";
 import XInstance from "./instance.vue";
+import XModerators from "./moderators.vue";
 import XEmoji from "./emoji.vue";
 import XAnnouncements from "./announcements.vue";
 import XHashtags from "./hashtags.vue";
 import XUsers from "./users.vue";
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faHeadset, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faGrin } from '@fortawesome/free-regular-svg-icons';
+import MarqueeText from 'vue-marquee-text-component';
+import randomColor from 'randomcolor';
 
 // Detect the user agent
 const ua = navigator.userAgent.toLowerCase();
@@ -70,10 +82,12 @@ export default Vue.extend({
 	components: {
 		XDashboard,
 		XInstance,
+		XModerators,
 		XEmoji,
 		XAnnouncements,
 		XHashtags,
-		XUsers
+		XUsers,
+		MarqueeText
 	},
 	provide: {
 		isMobile
@@ -84,9 +98,24 @@ export default Vue.extend({
 			version,
 			isMobile,
 			navOpend: !isMobile,
+			instances: [],
 			faGrin,
-			faArrowLeft
+			faArrowLeft,
+			faHeadset
 		};
+	},
+	created() {
+		this.$root.api('instances', {
+			sort: '+notes'
+		}).then(instances => {
+			instances.forEach(i => {
+				i.bg = randomColor({
+					seed: i.host,
+					luminosity: 'dark'
+				});
+			});
+			this.instances = instances;
+		});
 	},
 	methods: {
 		nav(page: string) {
@@ -96,7 +125,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .mk-admin
 	$headerHeight = 48px
 
@@ -257,7 +286,23 @@ export default Vue.extend({
 	> main
 		width 100%
 		padding 0 0 0 250px
-		max-width 1300px
+
+		> .instances
+			padding 10px
+			background #000
+			color #fff
+			font-size 13px
+
+			>>> .instance
+				margin 0 10px
+
+				> b
+					padding 0px 6px
+					margin-right 4px
+					border-radius 4px
+
+		> .page
+			max-width 1300px
 
 	&.isMobile
 		> main
