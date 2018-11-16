@@ -152,6 +152,7 @@ import {
 	faClock as farClock,
 	faCalendarAlt as farCalendarAlt,
 	faHdd as farHdd,
+	faMoon as farMoon,
 } from '@fortawesome/free-regular-svg-icons';
 
 import {
@@ -272,6 +273,7 @@ library.add(
 	farClock,
 	farCalendarAlt,
 	farHdd,
+	farMoon,
 
 	fabTwitter,
 	fabGithub,

@@ -112,7 +112,12 @@ async function init(): Promise<Config> {
 	Logger.info('Welcome to Misskey!');
 	Logger.info(`<<< Misskey v${pkg.version} >>>`);
 
-	new Logger('Deps').info(`Node.js ${process.version}`);
+	new Logger('Nodejs').info(`Version ${process.version}`);
+	if (lessThan(process.version.slice(1).split('.').map(x => parseInt(x, 10)), [10, 0, 0])) {
+		new Logger('Nodejs').error(`Node.js version is less than 10.0.0. Please upgrade it.`);
+		process.exit(1);
+	}
+
 	await MachineInfo.show();
 	EnvironmentInfo.show();
 
@@ -134,6 +139,11 @@ async function init(): Promise<Config> {
 	}
 
 	configLogger.succ('Loaded');
+
+	if (config.port == null) {
+		Logger.error('The port is not configured. Please configure port.');
+		process.exit(1);
+	}
 
 	if (process.platform === 'linux' && !isRoot() && config.port < 1024) {
 		Logger.error('You need root privileges to listen on port below 1024 on Linux');

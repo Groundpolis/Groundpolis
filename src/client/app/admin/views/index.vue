@@ -22,12 +22,12 @@
 			<li @click="nav('instance')" :class="{ active: page == 'instance' }"><fa icon="cog" fixed-width/>{{ $t('instance') }}</li>
 			<li @click="nav('moderators')" :class="{ active: page == 'moderators' }"><fa :icon="faHeadset" fixed-width/>{{ $t('moderators') }}</li>
 			<li @click="nav('users')" :class="{ active: page == 'users' }"><fa icon="users" fixed-width/>{{ $t('users') }}</li>
+			<!-- <li @click="nav('federation')" :class="{ active: page == 'federation' }"><fa :icon="faShareAlt" fixed-width/>{{ $t('federation') }}</li> -->
 			<li @click="nav('emoji')" :class="{ active: page == 'emoji' }"><fa :icon="faGrin" fixed-width/>{{ $t('emoji') }}</li>
 			<li @click="nav('announcements')" :class="{ active: page == 'announcements' }"><fa icon="broadcast-tower" fixed-width/>{{ $t('announcements') }}</li>
 			<li @click="nav('hashtags')" :class="{ active: page == 'hashtags' }"><fa icon="hashtag" fixed-width/>{{ $t('hashtags') }}</li>
 
 			<!-- <li @click="nav('drive')" :class="{ active: page == 'drive' }"><fa icon="cloud" fixed-width/>{{ $t('@.drive') }}</li> -->
-			<!-- <li @click="nav('update')" :class="{ active: page == 'update' }">{{ $t('update') }}</li> -->
 		</ul>
 		<div class="back-to-misskey">
 			<a href="/"><fa :icon="faArrowLeft"/> {{ $t('back-to-misskey') }}</a>
@@ -37,11 +37,6 @@
 		</div>
 	</nav>
 	<main>
-		<marquee-text v-if="instances.length > 0" class="instances" :repeat="10" :duration="30">
-			<span v-for="instance in instances" class="instance">
-				<b :style="{ background: instance.bg }">{{ instance.host }}</b>{{ instance.notesCount | number }} / {{ instance.usersCount | number }}
-			</span>
-		</marquee-text>
 		<div class="page">
 			<div v-if="page == 'dashboard'"><x-dashboard/></div>
 			<div v-if="page == 'instance'"><x-instance/></div>
@@ -68,10 +63,8 @@ import XEmoji from "./emoji.vue";
 import XAnnouncements from "./announcements.vue";
 import XHashtags from "./hashtags.vue";
 import XUsers from "./users.vue";
-import { faHeadset, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faHeadset, faArrowLeft, faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { faGrin } from '@fortawesome/free-regular-svg-icons';
-import MarqueeText from 'vue-marquee-text-component';
-import randomColor from 'randomcolor';
 
 // Detect the user agent
 const ua = navigator.userAgent.toLowerCase();
@@ -86,8 +79,7 @@ export default Vue.extend({
 		XEmoji,
 		XAnnouncements,
 		XHashtags,
-		XUsers,
-		MarqueeText
+		XUsers
 	},
 	provide: {
 		isMobile
@@ -98,24 +90,11 @@ export default Vue.extend({
 			version,
 			isMobile,
 			navOpend: !isMobile,
-			instances: [],
 			faGrin,
 			faArrowLeft,
-			faHeadset
+			faHeadset,
+			faShareAlt
 		};
-	},
-	created() {
-		this.$root.api('instances', {
-			sort: '+notes'
-		}).then(instances => {
-			instances.forEach(i => {
-				i.bg = randomColor({
-					seed: i.host,
-					luminosity: 'dark'
-				});
-			});
-			this.instances = instances;
-		});
 	},
 	methods: {
 		nav(page: string) {
@@ -287,22 +266,8 @@ export default Vue.extend({
 		width 100%
 		padding 0 0 0 250px
 
-		> .instances
-			padding 10px
-			background #000
-			color #fff
-			font-size 13px
-
-			>>> .instance
-				margin 0 10px
-
-				> b
-					padding 0px 6px
-					margin-right 4px
-					border-radius 4px
-
 		> .page
-			max-width 1300px
+			max-width 1150px
 
 	&.isMobile
 		> main

@@ -22,6 +22,9 @@
 			<template v-if="note.visibility == 'specified'"><fa icon="envelope"/></template>
 			<template v-if="note.visibility == 'private'"><fa icon="lock"/></template>
 		</span>
+		<span class="localOnly" v-if="note.localOnly == true">
+			<template><fa icon="heart"/></template>
+		</span>
 	</div>
 	<article>
 		<mk-avatar class="avatar" :user="appearNote.user" v-if="$store.state.device.postStyle != 'smart'"/>
@@ -183,6 +186,12 @@ export default Vue.extend({
 
 		> .visibility
 			margin-left 8px
+
+			[data-icon]
+				margin-right 0
+
+		> .localOnly
+			margin-left 4px
 
 			[data-icon]
 				margin-right 0
