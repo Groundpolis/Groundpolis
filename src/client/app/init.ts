@@ -157,6 +157,7 @@ import {
 import {
 	faTwitter as fabTwitter,
 	faGithub as fabGithub,
+	faDiscord as fabDiscord
 } from '@fortawesome/free-brands-svg-icons';
 import i18n from './i18n';
 
@@ -273,7 +274,8 @@ library.add(
 	farHdd,
 
 	fabTwitter,
-	fabGithub
+	fabGithub,
+	fabDiscord
 );
 //#endregion
 

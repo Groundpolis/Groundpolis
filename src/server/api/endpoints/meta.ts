@@ -80,6 +80,7 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 			objectStorage: config.drive && config.drive.storage === 'minio',
 			twitter: instance.enableTwitterIntegration,
 			github: instance.enableGithubIntegration,
+			discord: instance.enableDiscordIntegration,
 			serviceWorker: config.sw ? true : false,
 			userRecommendation: config.user_recommendation ? config.user_recommendation : {}
 		};
@@ -95,6 +96,9 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 		response.enableGithubIntegration = instance.enableGithubIntegration;
 		response.githubClientId = instance.githubClientId;
 		response.githubClientSecret = instance.githubClientSecret;
+		response.enableDiscordIntegration = instance.enableDiscordIntegration;
+		response.discordClientId = instance.discordClientId;
+		response.discordClientSecret = instance.discordClientSecret;
 	}
 
 	res(response);

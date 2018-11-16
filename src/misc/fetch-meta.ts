@@ -16,6 +16,7 @@ const defaultMeta: any = {
 	maxNoteTextLength: 1000,
 	enableTwitterIntegration: false,
 	enableGithubIntegration: false,
+	enableDiscordIntegration: false
 };
 
 export default async function(): Promise<IMeta> {
