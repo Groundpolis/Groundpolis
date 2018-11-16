@@ -75,9 +75,9 @@ handler.on('status', event => {
 				const parentState = parentStatuses[0].state;
 				const stillFailed = parentState == 'failure' || parentState == 'error';
 				if (stillFailed) {
-					post(`**⚠️BUILD STILL FAILED⚠️**: ?[${commit.commit.message}](${commit.html_url})`);
+					post(`⚠️**BUILD STILL FAILED**⚠️: ?[${commit.commit.message}](${commit.html_url})`);
 				} else {
-					post(`**🚨BUILD FAILED🚨**: →→→?[${commit.commit.message}](${commit.html_url})←←←`);
+					post(`🚨**BUILD FAILED**🚨: →→→?[${commit.commit.message}](${commit.html_url})←←←`);
 				}
 			});
 			break;
@@ -87,7 +87,7 @@ handler.on('status', event => {
 handler.on('push', event => {
 	const ref = event.ref;
 	switch (ref) {
-		case 'refs/heads/master':
+		case 'refs/heads/develop':
 			const pusher = event.pusher;
 			const compare = event.compare;
 			const commits: any[] = event.commits;
@@ -95,10 +95,6 @@ handler.on('push', event => {
 				`🆕 Pushed by **${pusher.name}** with ?[${commits.length} commit${commits.length > 1 ? 's' : ''}](${compare}):`,
 				commits.reverse().map(commit => `・[?[${commit.id.substr(0, 7)}](${commit.url})] ${commit.message.split('\n')[0]}`).join('\n'),
 			].join('\n'));
-			break;
-		case 'refs/heads/release':
-			const commit = event.commits[0];
-			post(`RELEASED: ${commit.message}`);
 			break;
 	}
 });
@@ -123,6 +119,17 @@ handler.on('issue_comment', event => {
 	let text: string;
 	switch (action) {
 		case 'created': text = `💬 Commented to「${issue.title}」:${comment.user.login}「${comment.body}」\n${comment.html_url}`; break;
+		default: return;
+	}
+	post(text);
+});
+
+handler.on('release', event => {
+	const action = event.action;
+	const release = event.release;
+	let text: string;
+	switch (action) {
+		case 'published': text = `🎁 **NEW RELEASE**: [${release.tag_name}](${release.html_url}) is out now. Enjoy!`; break;
 		default: return;
 	}
 	post(text);

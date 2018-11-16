@@ -17,20 +17,18 @@
 		<span>{{ this.$t('reposted-by').substr(this.$t('reposted-by').indexOf('}') + 1) }}</span>
 		<mk-time :time="note.createdAt"/>
 		<span class="visibility" v-if="note.visibility != 'public'">
-			<template v-if="note.visibility == 'home'"><fa icon="home"/></template>
-			<template v-if="note.visibility == 'followers'"><fa icon="unlock"/></template>
-			<template v-if="note.visibility == 'specified'"><fa icon="envelope"/></template>
-			<template v-if="note.visibility == 'private'"><fa icon="lock"/></template>
+			<fa v-if="note.visibility == 'home'" icon="home"/>
+			<fa v-if="note.visibility == 'followers'" icon="unlock"/>
+			<fa v-if="note.visibility == 'specified'" icon="envelope"/>
+			<fa v-if="note.visibility == 'private'" icon="lock"/>
 		</span>
-		<span class="localOnly" v-if="note.localOnly == true">
-			<template><fa icon="heart"/></template>
-		</span>
+		<span class="localOnly" v-if="note.localOnly == true"><fa icon="heart"/></span>
 	</div>
 	<article>
 		<mk-avatar class="avatar" :user="appearNote.user" v-if="$store.state.device.postStyle != 'smart'"/>
 		<div class="main">
 			<mk-note-header class="header" :note="appearNote" :mini="true"/>
-			<div class="body">
+			<div class="body" v-if="appearNote.deletedAt == null">
 				<p v-if="appearNote.cw != null" class="cw">
 					<span class="text" v-if="appearNote.cw != ''">{{ appearNote.cw }}</span>
 					<mk-cw-button v-model="showContent"/>
@@ -39,7 +37,7 @@
 					<div class="text">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $t('private') }})</span>
 						<a class="reply" v-if="appearNote.reply"><fa icon="reply"/></a>
-						<misskey-flavored-markdown v-if="appearNote.text" :text="appearNote.text" :i="$store.state.i" :class="$style.text" :customEmojis="appearNote.emojis"/>
+						<misskey-flavored-markdown v-if="appearNote.text" :text="appearNote.text" :i="$store.state.i" :class="$style.text" :custom-emojis="appearNote.emojis"/>
 						<a class="rp" v-if="appearNote.renote != null">RN:</a>
 					</div>
 					<div class="files" v-if="appearNote.files.length > 0">
@@ -52,7 +50,7 @@
 				</div>
 				<span class="app" v-if="appearNote.app && $store.state.settings.showVia">via <b>{{ appearNote.app.name }}</b></span>
 			</div>
-			<footer>
+			<footer v-if="appearNote.deletedAt == null">
 				<mk-reactions-viewer :note="appearNote" ref="reactionsViewer"/>
 				<button @click="reply()">
 					<template v-if="appearNote.reply"><fa icon="reply-all"/></template>
@@ -69,6 +67,7 @@
 					<fa icon="ellipsis-h"/>
 				</button>
 			</footer>
+			<div class="deleted" v-if="appearNote.deletedAt != null">{{ $t('deleted') }}</div>
 		</div>
 	</article>
 </div>
@@ -357,6 +356,10 @@ export default Vue.extend({
 
 					&.reacted
 						color var(--primary)
+
+			> .deleted
+				color var(--noteText)
+				opacity 0.7
 
 </style>
 
