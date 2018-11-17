@@ -5,8 +5,8 @@
 		<footer>
 			<a class="quote" v-if="!quote" @click="onQuote">{{ $t('quote') }}</a>
 			<ui-button class="button cancel" inline @click="cancel">{{ $t('cancel') }}</ui-button>
-			<ui-button class="button home" inline :primary="visibility != 'public'" @click="ok('home')"   :disabled="wait"><fa icon="home"/></ui-button>
-			<ui-button class="button ok"   inline :primary="visibility == 'public'" @click="ok('public')" :disabled="wait"><fa icon="globe"/></ui-button>
+			<ui-button class="button home" inline :primary="visibility != 'public'" @click="ok('home')"   :disabled="wait">{{ wait ? this.$t('reposting') : this.$t('renote-home') }}</ui-button>
+			<ui-button class="button ok"   inline :primary="visibility == 'public'" @click="ok('public')" :disabled="wait">{{ wait ? this.$t('reposting') : this.$t('renote') }}</ui-button>
 		</footer>
 	</template>
 	<template v-if="quote">
@@ -88,6 +88,7 @@ export default Vue.extend({
 
 			&.home
 				right 148px
+				font-size 13px
 
 			&.ok
 				right 16px
