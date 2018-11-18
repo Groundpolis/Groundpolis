@@ -34,6 +34,7 @@ async function save(path: string, name: string, type: string, hash: string, size
 				fit: 'inside',
 				withoutEnlargement: true
 			})
+			.rotate()
 			.jpeg({
 				quality: 85,
 				progressive: true
@@ -45,6 +46,7 @@ async function save(path: string, name: string, type: string, hash: string, size
 				fit: 'inside',
 				withoutEnlargement: true
 			})
+			.rotate()
 			.png()
 			.toBuffer();
 
