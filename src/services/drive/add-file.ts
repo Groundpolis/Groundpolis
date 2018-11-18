@@ -149,6 +149,10 @@ async function deleteOldFile(user: IRemoteUser) {
  * @param comment Comment
  * @param folderId Folder ID
  * @param force If set to true, forcibly upload the file even if there is a file with the same hash.
+ * @param isLink Do not save file to local
+ * @param url URL of source (URLからアップロードされた場合(ローカル/リモート)の元URL)
+ * @param uri URL of source (リモートインスタンスのURLからアップロードされた場合の元URL)
+ * @param sensitive Mark file as sensitive
  * @return Created drive file
  */
 export default async function(

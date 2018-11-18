@@ -28,16 +28,26 @@ export type IMetadata = {
 	_user: any;
 	folderId: mongo.ObjectID;
 	comment: string;
+
+	/***
+	 * リモートインスタンスから取得した場合元URL
+	 */
 	uri?: string;
+
+	/**
+	 * URL for client
+	 * (オブジェクトストレージを利用している or リモートサーバーへの直リンクである 場合のみ)
+	 */
 	url?: string;
+
 	thumbnailUrl?: string;
 	src?: string;
 	deletedAt?: Date;
 
 	/**
-	 * このファイルの中身データがMongoDB内に保存されているのか否か
+	 * このファイルの中身データがMongoDB内に保存されていないか否か
 	 * オブジェクトストレージを利用している or リモートサーバーへの直リンクである
-	 * な場合は false になります
+	 * な場合は true になります
 	 */
 	withoutChunks?: boolean;
 
