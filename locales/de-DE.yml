@@ -43,13 +43,13 @@ common:
     unknown: "Unbekannt"
     future: "Zukunft"
     just_now: "Gerade eben"
-    seconds_ago: "vor {0} Sekunde{0:n}"
-    minutes_ago: "vor {0} Minuten"
-    hours_ago: "vor {0} Stunden"
-    days_ago: "vor {0} Tag{0:en}"
-    weeks_ago: "vor {0} Woche{0:n}"
-    months_ago: "vor {0} Monat{0:en}"
-    years_ago: "vor {} Jahr{0:en}"
+    seconds_ago: "vor {} Sekunde(n)"
+    minutes_ago: "vor {} Minute(n)"
+    hours_ago: "vor {} Stunde(n)"
+    days_ago: "vor {} Tag(en)"
+    weeks_ago: "vor {} Woche(n)"
+    months_ago: "vor {} Monat(en)"
+    years_ago: "vor {} Jahr(en)"
   month-and-day: "{day}/{month}"
   trash: "Papierkorb"
   drive: "ドライブ"
@@ -123,6 +123,7 @@ common:
   is-remote-user: "このユーザー情報はコピーです。"
   is-remote-post: "この投稿情報はコピーです。"
   view-on-remote: "正確な情報を見る"
+  renoted-by: "{user}がRenote"
   error:
     title: '問題が発生しました'
     retry: 'Erneut versuchen'
@@ -643,12 +644,10 @@ desktop/views/components/messaging-window.vue:
 desktop/views/components/note-detail.vue:
   private: "Dieser Post ist privat"
   deleted: "Dieser Beitrag wurde entfernt"
-  reposted-by: "Repostet von {}"
   location: "Ort"
   renote: "Anmerkung"
   add-reaction: "Reaktion hinzufügen"
 desktop/views/components/note.vue:
-  reposted-by: "{}がRenote"
   reply: "返信"
   renote: "Renote"
   add-reaction: "リアクション"
@@ -1212,14 +1211,12 @@ mobile/views/components/friends-maker.vue:
   refresh: "もっと見る"
   close: "閉じる"
 mobile/views/components/note.vue:
-  reposted-by: "{}がRenote"
   private: "この投稿は非公開です"
   deleted: "この投稿は削除されました"
   location: "位置情報"
 mobile/views/components/note-detail.vue:
   reply: "返信"
   reaction: "リアクション"
-  reposted-by: "{}がRenote"
   private: "この投稿は非公開です"
   deleted: "この投稿は削除されました"
   location: "位置情報"

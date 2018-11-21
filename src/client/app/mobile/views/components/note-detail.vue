@@ -15,17 +15,7 @@
 	<div class="reply-to" v-if="appearNote.reply">
 		<x-sub :note="appearNote.reply"/>
 	</div>
-	<div class="renote" v-if="isRenote">
-		<p>
-			<mk-avatar class="avatar" :user="note.user"/>
-			<fa icon="retweet"/>
-			<router-link class="name" :href="note.user | userPage">{{ note.user | userName }}</router-link>
-			<span>{{ this.$t('reposted-by').substr(0, this.$t('reposted-by').indexOf('{')) }}</span>
-			<a class="name" :href="note.user | userPage" v-user-preview="note.userId">{{ note.user | userName }}</a>
-			<span>{{ this.$t('reposted-by').substr(this.$t('reposted-by').indexOf('}') + 1) }}</span>
-			<mk-time :time="note.createdAt"/>
-		</p>
-	</div>
+	<mk-renote class="renote" v-if="isRenote" :note="note" mini/>
 	<article>
 		<header>
 			<mk-avatar class="avatar" :user="appearNote.user"/>
@@ -43,7 +33,7 @@
 				<div class="text">
 					<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $t('private') }})</span>
 					<span v-if="appearNote.deletedAt" style="opacity: 0.5">({{ $t('deleted') }})</span>
-					<misskey-flavored-markdown v-if="appearNote.text" :text="appearNote.text" :i="$store.state.i" :customEmojis="appearNote.emojis"/>
+					<misskey-flavored-markdown v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
 				</div>
 				<div class="files" v-if="appearNote.files.length > 0">
 					<mk-media-list :media-list="appearNote.files" :raw="true"/>
@@ -277,29 +267,8 @@ export default Vue.extend({
 		> *
 			border-bottom 1px solid var(--faceDivider)
 
-	> .renote
-		color var(--renoteText)
-		background linear-gradient(to bottom, var(--renoteGradient) 0%, var(--face) 100%)
-
-		> p
-			margin 0
-			padding 16px 32px
-
-			.avatar
-				display inline-block
-				width 28px
-				height 28px
-				margin 0 8px 0 0
-				border-radius 6px
-
-			[data-icon]
-				margin-right 4px
-
-			.name
-				font-weight bold
-
-		& + article
-			padding-top 8px
+	> .renote + article
+		padding-top 8px
 
 	> .reply-to
 		border-bottom 1px solid var(--faceDivider)

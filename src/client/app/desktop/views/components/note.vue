@@ -13,21 +13,7 @@
 	<div class="reply-to" v-if="appearNote.reply && (!$store.getters.isSignedIn || $store.state.settings.showReplyTarget)">
 		<x-sub :note="appearNote.reply" :mini="mini"/>
 	</div>
-	<div class="renote" v-if="isRenote">
-		<mk-avatar class="avatar" :user="note.user"/>
-		<fa icon="retweet"/>
-		<span>{{ this.$t('reposted-by').substr(0, this.$t('reposted-by').indexOf('{')) }}</span>
-		<router-link class="name" :to="note.user | userPage" v-user-preview="note.userId">{{ note.user | userName }}</router-link>
-		<span>{{ this.$t('reposted-by').substr(this.$t('reposted-by').indexOf('}') + 1) }}</span>
-		<mk-time :time="note.createdAt"/>
-		<span class="visibility" v-if="note.visibility != 'public'">
-			<fa v-if="note.visibility == 'home'" icon="home"/>
-			<fa v-if="note.visibility == 'followers'" icon="unlock"/>
-			<fa v-if="note.visibility == 'specified'" icon="envelope"/>
-			<fa v-if="note.visibility == 'private'" icon="lock"/>
-		</span>
-		<span class="localOnly" v-if="note.localOnly == true"><fa icon="heart"/></span>
-	</div>
+	<mk-renote class="renote" v-if="isRenote" :note="note"/>
 	<article>
 		<mk-avatar class="avatar" :user="appearNote.user"/>
 		<div class="main">
@@ -41,7 +27,7 @@
 					<div class="text">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">{{ $t('private') }}</span>
 						<a class="reply" v-if="appearNote.reply"><fa icon="reply"/></a>
-						<misskey-flavored-markdown v-if="appearNote.text" :text="appearNote.text" :i="$store.state.i" :class="$style.text" :customEmojis="appearNote.emojis"
+						<misskey-flavored-markdown v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"
 							:style="{ 'font-size': appearNote.text && appearNote.text.length > 160 ? '11px' : 'inherit' }"/>
 						<a class="rp" v-if="appearNote.renote">RN:</a>
 					</div>
@@ -186,56 +172,8 @@ export default Vue.extend({
 			border 2px solid var(--primaryAlpha03)
 			border-radius 4px
 
-	> .renote
-		display flex
-		align-items center
-		padding 16px 32px 8px 32px
-		line-height 28px
-		white-space pre
-		color var(--renoteText)
-		background linear-gradient(to bottom, var(--renoteGradient) 0%, var(--face) 100%)
-
-		.avatar
-			flex-shrink 0
-			display inline-block
-			width 28px
-			height 28px
-			margin 0 8px 0 0
-			border-radius 6px
-
-		[data-icon]
-			margin-right 4px
-
-		> span
-			flex-shrink 0
-
-		.name
-			overflow hidden
-			flex-shrink 1
-			text-overflow ellipsis
-			white-space nowrap
-			font-weight bold
-
-		> .mk-time
-			display block
-			margin-left auto
-			flex-shrink 0
-			font-size 0.9em
-
-		> .visibility
-			margin-left 8px
-
-			[data-icon]
-				margin-right 0
-
-		> .localOnly
-			margin-left 4px
-
-			[data-icon]
-				margin-right 0
-
-		& + article
-			padding-top 8px
+	> .renote + article
+		padding-top 8px
 
 	> article
 		display flex
@@ -287,24 +225,6 @@ export default Vue.extend({
 						color var(--noteText)
 						max-height 200px
 						overflow auto
-
-						>>> .title
-							display block
-							margin-bottom 4px
-							padding 4px
-							font-size 90%
-							text-align center
-							background var(--mfmTitleBg)
-							border-radius 4px
-
-						>>> .code
-							margin 8px 0
-
-						>>> .quote
-							margin 8px
-							padding 6px 12px
-							color var(--mfmQuote)
-							border-left solid 3px var(--mfmQuoteLine)
 
 						> .reply
 							margin-right 8px
@@ -386,29 +306,4 @@ export default Vue.extend({
 				color var(--noteText)
 				opacity 0.7
 
-</style>
-
-<style lang="stylus" module>
-.text
-
-	code
-		padding 4px 8px
-		margin 0 0.5em
-		font-size 80%
-		color #525252
-		background #f8f8f8
-		border-radius 2px
-
-	pre > code
-		padding 16px
-		margin 0
-
-	[data-is-me]:after
-		content "you"
-		padding 0 4px
-		margin-left 4px
-		font-size 80%
-		color var(--primaryForeground)
-		background var(--primary)
-		border-radius 4px
 </style>
