@@ -96,6 +96,13 @@ export async function createNote(value: any, resolver?: Resolver, silent = false
 	// リプライ
 	const reply = note.inReplyTo ? await resolveNote(note.inReplyTo, resolver) : null;
 
+	// 引用
+	let quote: INote;
+
+	if (note._misskey_quote && typeof note._misskey_quote == 'string') {
+		quote = await resolveNote(note._misskey_quote).catch(() => null);
+	}
+
 	// テキストのパース
 	const text = note._misskey_content ? note._misskey_content : htmlToMFM(note.content);
 
@@ -104,7 +111,7 @@ export async function createNote(value: any, resolver?: Resolver, silent = false
 	});
 
 	// ユーザーの情報が古かったらついでに更新しておく
-	if (actor.updatedAt == null || Date.now() - actor.updatedAt.getTime() > 1000 * 60 * 60 * 24) {
+	if (actor.lastFetchedAt == null || Date.now() - actor.lastFetchedAt.getTime() > 1000 * 60 * 60 * 24) {
 		updatePerson(note.attributedTo);
 	}
 
@@ -112,7 +119,7 @@ export async function createNote(value: any, resolver?: Resolver, silent = false
 		createdAt: new Date(note.published),
 		files: files,
 		reply,
-		renote: undefined,
+		renote: quote,
 		cw: note.summary,
 		text: text,
 		viaMobile: false,

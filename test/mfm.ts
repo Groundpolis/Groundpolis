@@ -381,6 +381,15 @@ describe('Text', () => {
 				], tokens);
 			});
 
+			it('ignore parent brackets 2', () => {
+				const tokens = analyze('(foo https://example.com/foo)');
+				assert.deepEqual([
+					text('(foo '),
+					node('url', { url: 'https://example.com/foo' }),
+					text(')')
+				], tokens);
+			});
+
 			it('ignore parent brackets with internal brackets', () => {
 				const tokens = analyze('(https://example.com/foo(bar))');
 				assert.deepEqual([
@@ -391,13 +400,46 @@ describe('Text', () => {
 			});
 		});
 
-		it('link', () => {
-			const tokens = analyze('[foo](https://example.com)');
-			assert.deepEqual([
-				nodeWithChildren('link', [
-					text('foo')
-				], { url: 'https://example.com', silent: false })
-			], tokens);
+		describe('link', () => {
+			it('simple', () => {
+				const tokens = analyze('[foo](https://example.com)');
+				assert.deepEqual([
+					nodeWithChildren('link', [
+						text('foo')
+					], { url: 'https://example.com', silent: false })
+				], tokens);
+			});
+
+			it('in text', () => {
+				const tokens = analyze('before[foo](https://example.com)after');
+				assert.deepEqual([
+					text('before'),
+					nodeWithChildren('link', [
+						text('foo')
+					], { url: 'https://example.com', silent: false }),
+					text('after'),
+				], tokens);
+			});
+
+			it('with brackets', () => {
+				const tokens = analyze('[foo](https://example.com/foo(bar))');
+				assert.deepEqual([
+					nodeWithChildren('link', [
+						text('foo')
+					], { url: 'https://example.com/foo(bar)', silent: false })
+				], tokens);
+			});
+
+			it('with parent brackets', () => {
+				const tokens = analyze('([foo](https://example.com/foo(bar)))');
+				assert.deepEqual([
+					text('('),
+					nodeWithChildren('link', [
+						text('foo')
+					], { url: 'https://example.com/foo(bar)', silent: false }),
+					text(')')
+				], tokens);
+			});
 		});
 
 		it('emoji', () => {
@@ -469,11 +511,27 @@ describe('Text', () => {
 			});
 		});
 
-		it('inline code', () => {
-			const tokens = analyze('`var x = "Strawberry Pasta";`');
-			assert.deepEqual([
-				node('inlineCode', { code: 'var x = "Strawberry Pasta";' })
-			], tokens);
+		describe('inline code', () => {
+			it('simple', () => {
+				const tokens = analyze('`var x = "Strawberry Pasta";`');
+				assert.deepEqual([
+					node('inlineCode', { code: 'var x = "Strawberry Pasta";' })
+				], tokens);
+			});
+
+			it('disallow line break', () => {
+				const tokens = analyze('`foo\nbar`');
+				assert.deepEqual([
+					text('`foo\nbar`')
+				], tokens);
+			});
+
+			it('disallow ´', () => {
+				const tokens = analyze('`foo´bar`');
+				assert.deepEqual([
+					text('`foo´bar`')
+				], tokens);
+			});
 		});
 
 		it('math', () => {
