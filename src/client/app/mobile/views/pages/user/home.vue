@@ -31,7 +31,6 @@
 			<x-followers-you-know :user="user"/>
 		</div>
 	</section>
-	<p v-if="user.host === null">{{ $t('last-used-at') }}: <b><mk-time :time="user.lastUsedAt"/></b></p>
 </div>
 </template>
 
@@ -90,7 +89,7 @@ export default Vue.extend({
 			@media (min-width 500px)
 				padding 10px 16px
 
-			> i
+			> [data-icon]
 				margin-right 6px
 
 	> .activity
