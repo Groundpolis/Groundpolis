@@ -205,10 +205,42 @@ describe('Text', () => {
 				], tokens);
 			});
 
+			it('allow including number', () => {
+				const tokens = analyze('#foo123');
+				assert.deepEqual([
+					node('hashtag', { hashtag: 'foo123' }),
+				], tokens);
+			});
+
+			it('with brackets', () => {
+				const tokens = analyze('(#foo)');
+				assert.deepEqual([
+					text('('),
+					node('hashtag', { hashtag: 'foo' }),
+					text(')'),
+				], tokens);
+			});
+
+			it('with brackets (space before)', () => {
+				const tokens = analyze('(bar #foo)');
+				assert.deepEqual([
+					text('(bar '),
+					node('hashtag', { hashtag: 'foo' }),
+					text(')'),
+				], tokens);
+			});
+
 			it('disallow number only', () => {
 				const tokens = analyze('#123');
 				assert.deepEqual([
 					text('#123'),
+				], tokens);
+			});
+
+			it('disallow number only (with brackets)', () => {
+				const tokens = analyze('(#123)');
+				assert.deepEqual([
+					text('(#123)'),
 				], tokens);
 			});
 		});
