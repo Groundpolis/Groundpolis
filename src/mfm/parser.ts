@@ -29,6 +29,26 @@ function makeNodeWithChildren(name: string, children: Node[], props?: any): Node
 	return _makeNode(name, children, props);
 }
 
+function getTrailingPosition(x: string): number {
+	let pendingBracket = 0;
+	const end = x.split('').findIndex(char => {
+		if (char == ')') {
+			if (pendingBracket > 0) {
+				pendingBracket--;
+				return false;
+			} else {
+				return true;
+			}
+		} else if (char == '(') {
+			pendingBracket++;
+			return false;
+		} else {
+			return false;
+		}
+	});
+	return end > 0 ? end : x.length;
+}
+
 const newline = P((input, i) => {
 	if (i == 0 || input[i] == '\n' || input[i - 1] == '\n') {
 		return P.makeSuccess(i, null);
@@ -53,6 +73,7 @@ const mfm = P.createLanguage({
 		r.math,
 		r.search,
 		r.title,
+		r.center,
 		r.text
 	).atLeast(1),
 
@@ -65,6 +86,7 @@ const mfm = P.createLanguage({
 			r.mention,
 			r.hashtag,
 			r.emoji,
+			r.math,
 			r.text
 		).atLeast(1).tryParse(x))),
 	//#endregion
@@ -87,7 +109,26 @@ const mfm = P.createLanguage({
 		.map(x => makeNodeWithChildren('bold', P.alt(
 			r.mention,
 			r.hashtag,
+			r.url,
+			r.link,
 			r.emoji,
+			r.text
+		).atLeast(1).tryParse(x))),
+	//#endregion
+
+	//#region Center
+	center: r =>
+		P.regexp(/<center>([\s\S]+?)<\/center>/, 1)
+		.map(x => makeNodeWithChildren('center', P.alt(
+			r.big,
+			r.bold,
+			r.motion,
+			r.mention,
+			r.hashtag,
+			r.emoji,
+			r.math,
+			r.url,
+			r.link,
 			r.text
 		).atLeast(1).tryParse(x))),
 	//#endregion
@@ -113,23 +154,7 @@ const mfm = P.createLanguage({
 			const match = text.match(/^#([^\s\.,!\?#]+)/i);
 			if (!match) return P.makeFailure(i, 'not a hashtag');
 			let hashtag = match[1];
-			let pendingBracket = 0;
-			const end = hashtag.split('').findIndex(char => {
-				if (char == ')') {
-					if (pendingBracket > 0) {
-						pendingBracket--;
-						return false;
-					} else {
-						return true;
-					}
-				} else if (char == '(') {
-					pendingBracket++;
-					return false;
-				} else {
-					return false;
-				}
-			});
-			if (end > 0) hashtag = hashtag.substr(0, end);
+			hashtag = hashtag.substr(0, getTrailingPosition(hashtag));
 			if (hashtag.match(/^[0-9]+$/)) return P.makeFailure(i, 'not a hashtag');
 			if (!['\n', ' ', '(', null, undefined].includes(input[i - 1])) return P.makeFailure(i, 'require space before "#"');
 			return P.makeSuccess(i + ('#' + hashtag).length, makeNode('hashtag', { hashtag: hashtag }));
@@ -199,6 +224,9 @@ const mfm = P.createLanguage({
 			r.mention,
 			r.hashtag,
 			r.emoji,
+			r.url,
+			r.link,
+			r.math,
 			r.text
 		).atLeast(1).tryParse(x))),
 	//#endregion
@@ -264,23 +292,7 @@ const mfm = P.createLanguage({
 			const match = text.match(/^https?:\/\/[\w\/:%#@\$&\?!\(\)\[\]~\.,=\+\-]+/);
 			if (!match) return P.makeFailure(i, 'not a url');
 			let url = match[0];
-			let pendingBracket = 0;
-			const end = url.split('').findIndex(char => {
-				if (char == ')') {
-					if (pendingBracket > 0) {
-						pendingBracket--;
-						return false;
-					} else {
-						return true;
-					}
-				} else if (char == '(') {
-					pendingBracket++;
-					return false;
-				} else {
-					return false;
-				}
-			});
-			if (end > 0) url = url.substr(0, end);
+			url = url.substr(0, getTrailingPosition(url));
 			if (url.endsWith('.')) url = url.substr(0, url.lastIndexOf('.'));
 			if (url.endsWith(',')) url = url.substr(0, url.lastIndexOf(','));
 			return P.makeSuccess(i + url.length, url);
