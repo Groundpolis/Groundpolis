@@ -75,7 +75,7 @@ export default Vue.extend({
 		this.column.$on('top', this.onTop);
 		this.column.$on('bottom', this.onBottom);
 
-		const max = 10;
+		const max = 20;
 
 		this.$root.api('i/notifications', {
 			limit: max + 1
