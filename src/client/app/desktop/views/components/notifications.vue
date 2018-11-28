@@ -146,7 +146,7 @@ export default Vue.extend({
 
 		this.connection.on('notification', this.onNotification);
 
-		const max = 10;
+		const max = 20;
 
 		this.$root.api('i/notifications', {
 			limit: max + 1
@@ -217,9 +217,9 @@ export default Vue.extend({
 		> div
 			> .notification
 				margin 0
-				padding 16px
+				padding 4px 16px
 				overflow-wrap break-word
-				font-size 13px
+				font-size 12px
 				border-bottom solid 1px var(--faceDivider)
 
 				&:last-child
@@ -228,7 +228,7 @@ export default Vue.extend({
 				> .mk-time
 					display inline
 					position absolute
-					top 16px
+					top 4px
 					right 12px
 					vertical-align top
 					color var(--noteHeaderInfo)
