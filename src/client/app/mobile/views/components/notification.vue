@@ -107,7 +107,7 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 .mk-notification
 	> .notification
-		padding 16px
+		padding 8px 16px
 		font-size 12px
 		overflow-wrap break-word
 
