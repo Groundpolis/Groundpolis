@@ -91,6 +91,11 @@
 					</ui-select>
 				</section>
 			</section>
+
+			<section>
+				<header>{{ $t('web-search-engine') }}</header>
+				<ui-input v-model="webSearchEngine">{{ $t('web-search-engine') }}<span slot="desc">{{ $t('web-search-engine-desc') }}</span></ui-input>
+			</section>
 		</ui-card>
 
 		<ui-card class="web" v-show="page == 'web'">
@@ -178,6 +183,7 @@
 					</optgroup>
 				</ui-select>
 				<div class="none ui info">
+					<div>Current: <i>{{ this.currentLanguage }}</i></div>
 					<p><fa icon="info-circle"/>{{ $t('language-desc') }}</p>
 				</div>
 			</section>
@@ -346,6 +352,7 @@ export default Vue.extend({
 			meta: null,
 			version,
 			langs,
+			currentLanguage: 'Unknown',
 			latestVersion: undefined,
 			checkingForUpdate: false
 		};
@@ -461,6 +468,11 @@ export default Vue.extend({
 			set(value) { this.$store.dispatch('settings/set', { key: 'defaultNoteVisibility', value }); }
 		},
 
+		webSearchEngine: {
+			get() { return this.$store.state.settings.webSearchEngine; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'webSearchEngine', value }); }
+		},
+
 		showReplyTarget: {
 			get() { return this.$store.state.settings.showReplyTarget; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'showReplyTarget', value }); }
@@ -550,6 +562,12 @@ export default Vue.extend({
 		this.$root.getMeta().then(meta => {
 			this.meta = meta;
 		});
+
+		try {
+			const locale = JSON.parse(localStorage.getItem('locale') || "{}");
+			const localeKey = localStorage.getItem('localeKey');
+			this.currentLanguage = `${locale.meta.lang} (${localeKey})`;
+		} catch { }
 	},
 	methods: {
 		readAllUnreadNotes() {

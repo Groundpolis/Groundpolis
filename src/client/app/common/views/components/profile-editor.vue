@@ -66,6 +66,19 @@
 			<ui-switch v-model="carefulBot" @change="save(false)">{{ $t('careful-bot') }}</ui-switch>
 		</div>
 	</section>
+
+	<section v-if="enableEmail">
+		<header>{{ $t('email') }}</header>
+
+		<div>
+			<template v-if="$store.state.i.email != null">
+				<ui-info v-if="$store.state.i.emailVerified">{{ $t('email-verified') }}</ui-info>
+				<ui-info v-else warn>{{ $t('email-not-verified') }}</ui-info>
+			</template>
+			<ui-input v-model="email" type="email"><span>{{ $t('email-address') }}</span></ui-input>
+			<ui-button @click="updateEmail()">{{ $t('save') }}</ui-button>
+		</div>
+	</section>
 </ui-card>
 </template>
 
@@ -77,9 +90,12 @@ import { toUnicode } from 'punycode';
 
 export default Vue.extend({
 	i18n: i18n('common/views/components/profile-editor.vue'),
+
 	data() {
 		return {
 			host: toUnicode(host),
+			enableEmail: false,
+			email: null,
 			name: null,
 			username: null,
 			location: null,
@@ -113,7 +129,11 @@ export default Vue.extend({
 	},
 
 	created() {
-		this.name = this.$store.state.i.name || '';
+		this.$root.getMeta().then(meta => {
+			this.enableEmail = meta.enableEmail;
+		});
+		this.email = this.$store.state.i.email;
+		this.name = this.$store.state.i.name;
 		this.username = this.$store.state.i.username;
 		this.location = this.$store.state.i.profile.location;
 		this.description = this.$store.state.i.description;
@@ -198,6 +218,18 @@ export default Vue.extend({
 						text: this.$t('saved')
 					});
 				}
+			});
+		},
+
+		updateEmail() {
+			this.$input({
+				title: this.$t('@.enter-password'),
+				type: 'password'
+			}).then(password => {
+				this.$root.api('i/update_email', {
+					password: password,
+					email: this.email == '' ? null : this.email
+				});
 			});
 		}
 	}

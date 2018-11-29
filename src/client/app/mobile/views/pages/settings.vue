@@ -86,6 +86,11 @@
 						</ui-select>
 					</section>
 				</section>
+
+				<section>
+					<header>{{ $t('web-search-engine') }}</header>
+					<ui-input v-model="webSearchEngine">{{ $t('web-search-engine') }}<span slot="desc">{{ $t('web-search-engine-desc') }}</span></ui-input>
+				</section>
 			</ui-card>
 
 			<x-drive-settings/>
@@ -113,7 +118,8 @@
 							<option v-for="x in langs" :value="x[0]" :key="x[0]">{{ x[1] }}</option>
 						</optgroup>
 					</ui-select>
-					<span><fa icon="info-circle"/> {{ $t('lang-tip') }}</span>
+					<div>Current: <i>{{ this.currentLanguage }}</i></div>
+					<p><fa icon="info-circle"/> {{ $t('lang-tip') }}</p>
 				</section>
 			</ui-card>
 
@@ -220,6 +226,7 @@ export default Vue.extend({
 			version,
 			codename,
 			langs,
+			currentLanguage: 'Unknown',
 			latestVersion: undefined,
 			checkingForUpdate: false
 		};
@@ -365,6 +372,19 @@ export default Vue.extend({
 			get() { return this.$store.state.settings.defaultNoteVisibility; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'defaultNoteVisibility', value }); }
 		},
+
+		webSearchEngine: {
+			get() { return this.$store.state.settings.webSearchEngine; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'webSearchEngine', value }); }
+		},
+	},
+
+	created() {
+		try {
+			const locale = JSON.parse(localStorage.getItem('locale') || "{}");
+			const localeKey = localStorage.getItem('localeKey');
+			this.currentLanguage = `${locale.meta.lang} (${localeKey})`;
+		} catch { }
 	},
 
 	mounted() {
