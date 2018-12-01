@@ -55,9 +55,9 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 			followRedirect: true,
 			followAllRedirects: true
 		})
-		.then(body => convertUsers(body, me))
-		.then(packed => res(packed))
-		.catch(e => rej(e));
+			.then(body => convertUsers(body, me))
+			.then(packed => res(packed))
+			.catch(e => rej(e));
 	} else {
 		// ID list of the user itself and other users who the user follows
 		const followingIds = await getFriendIds(me._id);
@@ -101,8 +101,17 @@ type IRecommendUser = {
  * Resolve/Pack dummy users
  */
 async function convertUsers(src: IRecommendUser[], me: ILocalUser) {
-	return await Promise.all(src.map(async x => {
-		const user = await resolveUser(x.username, x.host);
+	const packed = await Promise.all(src.map(async x => {
+		const user = await resolveUser(x.username, x.host)
+			.catch(() => {
+				console.warn(`Can't resolve ${x.username}@${x.host}`);
+				return null;
+			});
+
+		if (user == null) return x;
+
 		return await pack(user, me, { detail: true });
 	}));
+
+	return packed;
 }
