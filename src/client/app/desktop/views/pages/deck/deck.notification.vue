@@ -111,7 +111,7 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 .dsfykdcjpuwfvpefwufddclpjhzktmpw
 	> .notification
-		padding 8px 16px
+		padding 16px
 		font-size 12px
 		overflow-wrap break-word
 
@@ -153,7 +153,7 @@ export default Vue.extend({
 				display inline-block
 				width: 100%
 				overflow hidden
-				white-space: nowrap
+				white-space nowrap
 				text-overflow ellipsis
 
 				[data-icon]
