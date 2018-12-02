@@ -233,7 +233,7 @@ export default Vue.extend({
 			try {
 				theme = JSON5.parse(code);
 			} catch (e) {
-				this.$root.alert({
+				this.$root.dialog({
 					type: 'error',
 					text: this.$t('invalid-theme')
 				});
@@ -246,7 +246,7 @@ export default Vue.extend({
 			}
 
 			if (theme.id == null) {
-				this.$root.alert({
+				this.$root.dialog({
 					type: 'error',
 					text: this.$t('invalid-theme')
 				});
@@ -254,7 +254,7 @@ export default Vue.extend({
 			}
 
 			if (this.$store.state.device.themes.some(t => t.id == theme.id)) {
-				this.$root.alert({
+				this.$root.dialog({
 					type: 'info',
 					text: this.$t('already-installed')
 				});
@@ -266,7 +266,7 @@ export default Vue.extend({
 				key: 'themes', value: themes
 			});
 
-			this.$root.alert({
+			this.$root.dialog({
 				type: 'success',
 				text: this.$t('installed').replace('{}', theme.name)
 			});
@@ -279,7 +279,7 @@ export default Vue.extend({
 				key: 'themes', value: themes
 			});
 
-			this.$root.alert({
+			this.$root.dialog({
 				type: 'info',
 				text: this.$t('uninstalled').replace('{}', theme.name)
 			});
@@ -316,7 +316,7 @@ export default Vue.extend({
 			const theme = this.myTheme;
 
 			if (theme.name == null || theme.name.trim() == '') {
-				this.$root.alert({
+				this.$root.dialog({
 					type: 'warning',
 					text: this.$t('theme-name-required')
 				});
@@ -330,7 +330,7 @@ export default Vue.extend({
 				key: 'themes', value: themes
 			});
 
-			this.$root.alert({
+			this.$root.dialog({
 				type: 'success',
 				text: this.$t('saved')
 			});

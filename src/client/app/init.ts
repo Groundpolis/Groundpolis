@@ -15,7 +15,7 @@ import checkForUpdate from './common/scripts/check-for-update';
 import MiOS from './mios';
 import { clientVersion as version, codename, lang } from './config';
 import { builtinThemes, promoTheme, applyTheme, Theme } from './theme';
-import Alert from './common/views/components/alert.vue';
+import Dialog from './common/views/components/dialog.vue';
 
 // Try to get/parse existing theme
 let currentThemeData: Theme;
@@ -471,10 +471,10 @@ export default (callback: (launch: (router: VueRouter) => [Vue, MiOS]) => void, 
 						document.body.appendChild(x.$el);
 						return x;
 					},
-					alert(opts) {
+					dialog(opts) {
 						return new Promise((res) => {
-							const vm = this.new(Alert, opts);
-							vm.$once('ok', () => res(true));
+							const vm = this.new(Dialog, opts);
+							vm.$once('ok', result => res(result));
 							vm.$once('cancel', () => res(false));
 						});
 					}
