@@ -49,6 +49,10 @@ export default Vue.component('misskey-flavored-markdown', {
 			type: Boolean,
 			default: true
 		},
+		plainText: {
+			type: Boolean,
+			default: false
+		},
 		author: {
 			type: Object,
 			default: null
@@ -69,7 +73,7 @@ export default Vue.component('misskey-flavored-markdown', {
 
 		if (this.ast == null) {
 			// Parse text to ast
-			ast = parse(this.text);
+			ast = parse(this.text, this.plainText);
 		} else {
 			ast = this.ast as Node[];
 		}
@@ -96,6 +100,18 @@ export default Vue.component('misskey-flavored-markdown', {
 					return [createElement('b', genEl(token.children))];
 				}
 
+				case 'strike': {
+					return [createElement('del', genEl(token.children))];
+				}
+
+				case 'italic': {
+					return (createElement as any)('i', {
+						attrs: {
+							style: 'font-style: oblique;'
+						},
+					}, genEl(token.children));
+				}
+
 				case 'big': {
 					bigCount++;
 					const isLong = getTextCount(token.children) > 10 || getChildrenCount(token.children) > 5;
@@ -109,6 +125,10 @@ export default Vue.component('misskey-flavored-markdown', {
 							value: { classes: 'tada', iteration: 'infinite' }
 						}]
 					}, genEl(token.children));
+				}
+
+				case 'small': {
+					return [createElement('small', genEl(token.children))];
 				}
 
 				case 'center': {
@@ -238,7 +258,8 @@ export default Vue.component('misskey-flavored-markdown', {
 							name: token.props.name
 						},
 						props: {
-							customEmojis: this.customEmojis || customEmojis
+							customEmojis: this.customEmojis || customEmojis,
+							normal: this.plainText
 						}
 					})];
 				}

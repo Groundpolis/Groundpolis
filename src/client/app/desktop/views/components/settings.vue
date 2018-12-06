@@ -112,7 +112,7 @@
 				<ui-switch v-model="iLikeSushi">{{ $t('@.i-like-sushi') }}</ui-switch>
 			</section>
 			<section>
-				<ui-switch v-model="suggestRecentHashtags">{{ $t('suggest-recent-hashtags') }}</ui-switch>
+				<ui-switch v-model="suggestRecentHashtags">{{ $t('@.suggest-recent-hashtags') }}</ui-switch>
 				<ui-switch v-model="showClockOnHeader">{{ $t('show-clock-on-header') }}</ui-switch>
 				<ui-switch v-model="alwaysShowNsfw">{{ $t('@.always-show-nsfw') }}</ui-switch>
 				<ui-switch v-model="loadRawImages">{{ $t('@.load-raw-images') }}</ui-switch>
@@ -125,9 +125,19 @@
 				<header>{{ $t('deck-column-align') }}</header>
 				<ui-radio v-model="deckColumnAlign" value="center">{{ $t('deck-column-align-center') }}</ui-radio>
 				<ui-radio v-model="deckColumnAlign" value="left">{{ $t('deck-column-align-left') }}</ui-radio>
+				<ui-radio v-model="deckColumnAlign" value="flexible">{{ $t('deck-column-align-flexible') }}</ui-radio>
+			</section>
+			<section>
+				<header>{{ $t('deck-column-width') }}</header>
+				<ui-radio v-model="deckColumnWidth" value="narrow">{{ $t('deck-column-width-narrow') }}</ui-radio>
+				<ui-radio v-model="deckColumnWidth" value="narrower">{{ $t('deck-column-width-narrower') }}</ui-radio>
+				<ui-radio v-model="deckColumnWidth" value="normal">{{ $t('deck-column-width-normal') }}</ui-radio>
+				<ui-radio v-model="deckColumnWidth" value="wider">{{ $t('deck-column-width-wider') }}</ui-radio>
+				<ui-radio v-model="deckColumnWidth" value="wide">{{ $t('deck-column-width-wide') }}</ui-radio>
 			</section>
 			<section>
 				<ui-switch v-model="games_reversi_showBoardLabels">{{ $t('@.show-reversi-board-labels') }}</ui-switch>
+				<ui-switch v-model="games_reversi_useWhiteBlackStones">{{ $t('@.use-white-black-reversi-stones') }}</ui-switch>
 				<ui-switch v-model="games_reversi_useContrastStones">{{ $t('@.use-contrast-reversi-stones') }}</ui-switch>
 			</section>
 		</ui-card>
@@ -357,6 +367,11 @@ export default Vue.extend({
 			set(value) { this.$store.commit('device/set', { key: 'deckColumnAlign', value }); }
 		},
 
+		deckColumnWidth: {
+			get() { return this.$store.state.device.deckColumnWidth; },
+			set(value) { this.$store.commit('device/set', { key: 'deckColumnWidth', value }); }
+		},
+
 		deckDefault: {
 			get() { return this.$store.state.device.deckDefault; },
 			set(value) { this.$store.commit('device/set', { key: 'deckDefault', value }); }
@@ -495,6 +510,11 @@ export default Vue.extend({
 		games_reversi_showBoardLabels: {
 			get() { return this.$store.state.settings.games.reversi.showBoardLabels; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'games.reversi.showBoardLabels', value }); }
+		},
+
+		games_reversi_useWhiteBlackStones: {
+			get() { return this.$store.state.settings.games.reversi.useWhiteBlackStones; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'games.reversi.useWhiteBlackStones', value }); }
 		},
 
 		games_reversi_useContrastStones: {

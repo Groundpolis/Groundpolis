@@ -70,6 +70,15 @@ describe('Text', () => {
 			], tokens);
 		});
 
+		it('small', () => {
+			const tokens = analyze('<small>smaller</small>');
+			assert.deepEqual([
+				nodeWithChildren('small', [
+					text('smaller')
+				]),
+			], tokens);
+		});
+
 		describe('motion', () => {
 			it('by triple brackets', () => {
 				const tokens = analyze('(((foo)))');
@@ -697,6 +706,28 @@ describe('Text', () => {
 				const tokens = analyze('<center>foo</center>');
 				assert.deepEqual([
 					nodeWithChildren('center', [
+						text('foo')
+					]),
+				], tokens);
+			});
+		});
+
+		describe('strike', () => {
+			it('simple', () => {
+				const tokens = analyze('~~foo~~');
+				assert.deepEqual([
+					nodeWithChildren('strike', [
+						text('foo')
+					]),
+				], tokens);
+			});
+		});
+
+		describe('italic', () => {
+			it('simple', () => {
+				const tokens = analyze('<i>foo</i>');
+				assert.deepEqual([
+					nodeWithChildren('italic', [
 						text('foo')
 					]),
 				], tokens);

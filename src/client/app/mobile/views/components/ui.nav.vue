@@ -11,7 +11,7 @@
 		<div class="body" v-if="isOpen">
 			<router-link class="me" v-if="$store.getters.isSignedIn" :to="`/@${$store.state.i.username}`">
 				<img class="avatar" :src="$store.state.i.avatarUrl" alt="avatar"/>
-				<p class="name">{{ $store.state.i | userName }}</p>
+				<p class="name"><mk-user-name :user="$store.state.i"/></p>
 			</router-link>
 			<div class="links">
 				<ul>

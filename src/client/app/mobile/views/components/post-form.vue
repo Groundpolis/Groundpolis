@@ -13,7 +13,10 @@
 			<mk-note-preview class="preview" v-if="reply" :note="reply"/>
 			<mk-note-preview class="preview" v-if="renote" :note="renote"/>
 			<div v-if="visibility == 'specified'" class="visibleUsers">
-				<span v-for="u in visibleUsers">{{ u | userName }}<a @click="removeVisibleUser(u)">[x]</a></span>
+				<span v-for="u in visibleUsers">
+					<mk-user-name :user="u"/>
+					<a @click="removeVisibleUser(u)">[x]</a>
+				</span>
 				<a @click="addVisibleUser">+{{ $t('add-visible-user') }}</a>
 			</div>
 			<input v-show="useCw" ref="cw" v-model="cw" :placeholder="$t('annotations')" v-autocomplete="'cw'">
