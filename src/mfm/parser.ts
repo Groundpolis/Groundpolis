@@ -75,7 +75,7 @@ export const plainParser = P.createLanguage({
 	//#region Emoji
 	emoji: r =>
 		P.alt(
-			P.regexp(/:([a-z0-9_+-]+):/i, 1)
+			P.regexp(/:(@?[a-z0-9_+-]+):/i, 1)
 			.map(x => makeNode('emoji', {
 				name: x
 			})),
