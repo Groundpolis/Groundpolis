@@ -162,6 +162,9 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 
 		tags = data.apHashtags || extractHashtags(combinedTokens);
 
+		// MongoDBのインデックス対象は128文字以上にできない
+		tags = tags.filter(tag => tag.length <= 100);
+
 		emojis = data.apEmojis || extractEmojis(combinedTokens);
 
 		mentionedUsers = data.apMentions || await extractMentionedUsers(user, combinedTokens);
@@ -467,9 +470,7 @@ function extractHashtags(tokens: ReturnType<typeof parse>): string[] {
 
 	const extract = (tokens: Node[]) => {
 		tokens.filter(x => x.name === 'hashtag').forEach(x => {
-			if (x.props.hashtag.length <= 100) {
-				hashtags.push(x.props.hashtag);
-			}
+			hashtags.push(x.props.hashtag);
 		});
 		tokens.filter(x => x.children).forEach(x => {
 			extract(x.children);
