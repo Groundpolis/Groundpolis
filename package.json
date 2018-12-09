@@ -1,8 +1,8 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "10.62.1",
-	"clientVersion": "2.0.12580",
+	"version": "10.62.1-m1",
+	"clientVersion": "2.0.12580-m1",
 	"codename": "nighthike",
 	"main": "./built/index.js",
 	"private": true,
