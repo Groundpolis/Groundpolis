@@ -399,9 +399,11 @@ export default (callback: (launch: (router: VueRouter) => [Vue, MiOS]) => void, 
 			const shadow = '0 3px 8px rgba(0, 0, 0, 0.2)';
 			const shadowRight = '4px 0 4px rgba(0, 0, 0, 0.1)';
 			const shadowLeft = '-4px 0 4px rgba(0, 0, 0, 0.1)';
-			if (os.store.state.settings.useShadow) document.documentElement.style.setProperty('--shadow', shadow);
-			if (os.store.state.settings.useShadow) document.documentElement.style.setProperty('--shadowRight', shadowRight);
-			if (os.store.state.settings.useShadow) document.documentElement.style.setProperty('--shadowLeft', shadowLeft);
+			if (os.store.state.settings.useShadow) {
+				document.documentElement.style.setProperty('--shadow', shadow);
+				document.documentElement.style.setProperty('--shadowRight', shadowRight);
+				document.documentElement.style.setProperty('--shadowLeft', shadowLeft);
+			}
 			os.store.watch(s => {
 				return s.settings.useShadow;
 			}, v => {
@@ -423,15 +425,7 @@ export default (callback: (launch: (router: VueRouter) => [Vue, MiOS]) => void, 
 
 			// Navigation hook
 			router.beforeEach((to, from, next) => {
-				if (os.store.state.navHook) {
-					if (os.store.state.navHook(to)) {
-						next(false);
-					} else {
-						next();
-					}
-				} else {
-					next();
-				}
+				next(os.store.state.navHook && os.store.state.navHook(to) ? false : undefined);
 			});
 
 			document.addEventListener('visibilitychange', () => {

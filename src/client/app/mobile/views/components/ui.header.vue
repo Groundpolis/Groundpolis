@@ -45,13 +45,15 @@ export default Vue.extend({
 	},
 
 	mounted() {
-		this.$store.commit('setUiHeaderHeight', this.$refs.root.offsetHeight);
+		this.$nextTick(() => {
+			this.$store.commit('setUiHeaderHeight', this.$refs.root.offsetHeight);
+		});
 
 		if (this.$store.getters.isSignedIn) {
 			this.connection = this.$root.stream.useSharedConnection('main');
 
 			this.connection.on('reversiInvited', this.onReversiInvited);
-			this.connection.on('reversi_no_invites', this.onReversiNoInvites);
+			this.connection.on('reversiNoInvites', this.onReversiNoInvites);
 		}
 	},
 
