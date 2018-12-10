@@ -27,15 +27,36 @@ export interface IActivity extends IObject {
 }
 
 export interface ICollection extends IObject {
-	type: 'Collection';
+	//type: 'Collection';
 	totalItems: number;
-	items: IObject | string | IObject[] | string[];
+	items?: IObject | string | IObject[] | string[];
+	current?: ICollectionPage;
+	first?: ICollectionPage;
+	last?: ICollectionPage;
+}
+
+export interface ICollectionPage extends ICollection {
+	//type: 'CollectionPage';
+	partOf: string;
+	next?: ICollectionPage;
+	prev?: ICollectionPage;
 }
 
 export interface IOrderedCollection extends IObject {
-	type: 'OrderedCollection';
+	//type: 'OrderedCollection';
 	totalItems: number;
-	orderedItems: IObject | string | IObject[] | string[];
+	orderedItems?: IObject | string | IObject[] | string[];
+	current?: IOrderedCollectionPage;
+	first?: IOrderedCollectionPage;
+	last?: IOrderedCollectionPage;
+}
+
+export interface IOrderedCollectionPage extends IOrderedCollection {
+	//type: 'OrderedCollectionPage';
+	partOf: string;
+	next?: IOrderedCollectionPage;
+	prev?: IOrderedCollectionPage;
+	startIndex?: number;
 }
 
 export interface INote extends IObject {

@@ -19,16 +19,18 @@ export default class Resolver {
 			: value;
 
 		switch (collection.type) {
-		case 'Collection':
-			collection.objects = collection.items;
-			break;
+			case 'Collection':
+			case 'CollectionPage':
+				collection.objects = collection.items;
+				break;
 
-		case 'OrderedCollection':
-			collection.objects = collection.orderedItems;
-			break;
+			case 'OrderedCollection':
+			case 'OrderedCollectionPage':
+				collection.objects = collection.orderedItems;
+				break;
 
-		default:
-			throw new Error(`unknown collection type: ${collection.type}`);
+			default:
+				throw new Error(`unknown collection type: ${collection.type}`);
 		}
 
 		return collection;
