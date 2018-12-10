@@ -27,7 +27,7 @@ export interface IActivity extends IObject {
 }
 
 export interface ICollection extends IObject {
-	//type: 'Collection';
+	type: 'Collection';
 	totalItems: number;
 	items?: IObject | string | IObject[] | string[];
 	current?: ICollectionPage;
@@ -35,15 +35,19 @@ export interface ICollection extends IObject {
 	last?: ICollectionPage;
 }
 
-export interface ICollectionPage extends ICollection {
-	//type: 'CollectionPage';
-	partOf: string;
+export interface ICollectionPage extends IObject {
+	type: 'CollectionPage';
+	totalItems: number;
+	items?: IObject | string | IObject[] | string[];
+	current?: ICollectionPage;
+	first?: ICollectionPage;
+	last?: ICollectionPage;	partOf: string;
 	next?: ICollectionPage;
 	prev?: ICollectionPage;
 }
 
 export interface IOrderedCollection extends IObject {
-	//type: 'OrderedCollection';
+	type: 'OrderedCollection';
 	totalItems: number;
 	orderedItems?: IObject | string | IObject[] | string[];
 	current?: IOrderedCollectionPage;
@@ -51,8 +55,13 @@ export interface IOrderedCollection extends IObject {
 	last?: IOrderedCollectionPage;
 }
 
-export interface IOrderedCollectionPage extends IOrderedCollection {
-	//type: 'OrderedCollectionPage';
+export interface IOrderedCollectionPage extends IObject {
+	type: 'OrderedCollectionPage';
+	totalItems: number;
+	orderedItems?: IObject | string | IObject[] | string[];
+	current?: IOrderedCollectionPage;
+	first?: IOrderedCollectionPage;
+	last?: IOrderedCollectionPage;
 	partOf: string;
 	next?: IOrderedCollectionPage;
 	prev?: IOrderedCollectionPage;
@@ -137,6 +146,8 @@ export interface IBlock extends IActivity {
 export type Object =
 	ICollection |
 	IOrderedCollection |
+	ICollectionPage |
+	IOrderedCollectionPage |
 	ICreate |
 	IDelete |
 	IUndo |
