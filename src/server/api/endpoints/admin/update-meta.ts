@@ -46,6 +46,13 @@ export const meta = {
 			}
 		},
 
+		errorImageUrl: {
+			validator: $.str.optional.nullable,
+			desc: {
+				'ja-JP': 'インスタンスのエラー画像URL'
+			}
+		},
+
 		name: {
 			validator: $.str.optional.nullable,
 			desc: {
@@ -446,6 +453,10 @@ export default define(meta, (ps) => new Promise(async (res, rej) => {
 
 	if (ps.smtpPass !== undefined) {
 		set.smtpPass = ps.smtpPass;
+	}
+
+	if (ps.errorImageUrl !== undefined) {
+		set.errorImageUrl = ps.errorImageUrl;
 	}
 
 	await Meta.update({}, {

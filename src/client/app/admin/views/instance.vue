@@ -7,6 +7,7 @@
 			<ui-input v-model="name">{{ $t('instance-name') }}</ui-input>
 			<ui-textarea v-model="description">{{ $t('instance-description') }}</ui-textarea>
 			<ui-input v-model="bannerUrl"><i slot="icon"><fa icon="link"/></i>{{ $t('banner-url') }}</ui-input>
+			<ui-input v-model="errorImageUrl"><i slot="icon"><fa icon="link"/></i>{{ $t('error-image-url') }}</ui-input>
 			<ui-input v-model="languages"><i slot="icon"><fa icon="language"/></i>{{ $t('languages') }}<span slot="desc">{{ $t('languages-desc') }}</span></ui-input>
 		</section>
 		<section class="fit-bottom">
@@ -133,6 +134,7 @@ export default Vue.extend({
 			disableRegistration: false,
 			disableLocalTimeline: false,
 			bannerUrl: null,
+			errorImageUrl: null,
 			name: null,
 			description: null,
 			languages: null,
@@ -174,7 +176,10 @@ export default Vue.extend({
 		this.$root.getMeta().then(meta => {
 			this.maintainerName = meta.maintainer.name;
 			this.maintainerEmail = meta.maintainer.email;
+			this.disableRegistration = meta.disableRegistration;
+			this.disableLocalTimeline = meta.disableLocalTimeline;
 			this.bannerUrl = meta.bannerUrl;
+			this.errorImageUrl = meta.errorImageUrl;
 			this.name = meta.name;
 			this.description = meta.description;
 			this.languages = meta.langs.join(' ');
@@ -229,6 +234,7 @@ export default Vue.extend({
 				disableRegistration: this.disableRegistration,
 				disableLocalTimeline: this.disableLocalTimeline,
 				bannerUrl: this.bannerUrl,
+				errorImageUrl: this.errorImageUrl,
 				name: this.name,
 				description: this.description,
 				langs: this.languages.split(' '),
