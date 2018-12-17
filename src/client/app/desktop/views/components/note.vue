@@ -24,7 +24,7 @@
 					<mk-cw-button v-model="showContent" :note="appearNote"/>
 				</p>
 				<div class="content" v-show="appearNote.cw == null || showContent">
-					<div class="text">
+					<div class="text" :class="{ scroll : true }">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">{{ $t('private') }}</span>
 						<a class="reply" v-if="appearNote.reply"><fa icon="reply"/></a>
 						<misskey-flavored-markdown v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"
@@ -37,7 +37,9 @@
 					<mk-poll v-if="appearNote.poll" :note="appearNote" ref="pollViewer"/>
 					<a class="location" v-if="appearNote.geo" :href="`https://maps.google.com/maps?q=${appearNote.geo.coordinates[1]},${appearNote.geo.coordinates[0]}`" target="_blank"><fa icon="map-marker-alt"/> 位置情報</a>
 					<div class="renote" v-if="appearNote.renote"><mk-note-preview :note="appearNote.renote" :mini="mini"/></div>
-					<mk-url-preview v-for="url in urls" :url="url" :key="url" :mini="mini"/>
+					<div v-if="urls" class="url-previews" :class="{ scroll : true }">
+						<mk-url-preview v-for="url in urls" :url="url" :key="url" :mini="mini"/>
+					</div>
 				</div>
 			</div>
 			<footer v-if="appearNote.deletedAt == null">
@@ -226,8 +228,11 @@ export default Vue.extend({
 						padding 0
 						overflow-wrap break-word
 						color var(--noteText)
-						max-height 200px
-						overflow auto
+
+						&.scroll
+							max-height 200px
+							overflow auto
+							padding 2px
 
 						> .reply
 							margin-right 8px
@@ -249,6 +254,11 @@ export default Vue.extend({
 
 						&:empty
 							display none
+
+					> .url-previews
+						&.scroll
+							max-height 200px
+							overflow auto
 
 					.mk-url-preview
 						margin-top 8px
