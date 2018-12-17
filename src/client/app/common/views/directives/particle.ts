@@ -2,6 +2,8 @@ import Particle from '../components/particle.vue';
 
 export default {
 	bind(el, binding, vn) {
+		if (vn.context.$store.state.device.reduceMotion) return;
+
 		el.addEventListener('click', () => {
 			const rect = el.getBoundingClientRect();
 
@@ -18,9 +20,5 @@ export default {
 
 			document.body.appendChild(particle.$el);
 		});
-	},
-
-	unbind(el, binding, vn) {
-
 	}
 };
