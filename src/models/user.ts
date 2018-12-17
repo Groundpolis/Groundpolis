@@ -11,7 +11,7 @@ import { getFriendIds } from '../server/api/common/get-friends';
 import config from '../config';
 import FollowRequest from './follow-request';
 import fetchMeta from '../misc/fetch-meta';
-import Emoji, { IEmoji } from './emoji';
+import packEmojis from '../misc/pack-emojis';
 
 const User = db.get<IUser>('users');
 
@@ -387,44 +387,14 @@ export const pack = (
 
 	// カスタム絵文字添付
 	if (_user.emojis) {
-		const queryCustom = async () => {
-			const customKeys = (_user.emojis as string[]).filter(name => name.match(/^[a-zA-Z0-9+_-]+$/));
-
-			return await Emoji.find({
-				name: { $in: customKeys },
-				host: _user.host
-			}, {
-				fields: { _id: false }
-			});
-		};
-
-		const queryProfile = async () => {
-			const profileKeys = (_user.emojis as string[]).map(name => {
-				const match = name.match(/^@([a-zA-Z0-9_]+)$/);
-				return match ? match[1] : null;
-			}).filter(x => x != null);
-
-			const users = await User.find({
-				username: { $in: profileKeys },
-				host: _user.host,
-				avatarUrl: { $ne: null }
-			});
-
-			return users.map(user => {
-				return {
-					name: `@${user.username}`,
-					url: user.avatarUrl,
-					host: user.host
-				} as IEmoji;
-			});
-		};
-
-		const queryEmojis = async () => {
-			const [profileEmojis, customEmojis] = await Promise.all([queryProfile(), queryCustom()]);
-			return profileEmojis.concat(customEmojis);
-		};
-
-		_user.emojis = queryEmojis();
+		_user.emojis = packEmojis(_user.emojis, _user.host, {
+			custom: true,
+			avatar: true,
+			foreign: true
+		}).catch(e => {
+			console.warn(e);
+			return [];
+		});
 	}
 
 	// resolve promises in _user object
