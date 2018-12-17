@@ -11,7 +11,7 @@ import { getFriendIds } from '../server/api/common/get-friends';
 import config from '../config';
 import FollowRequest from './follow-request';
 import fetchMeta from '../misc/fetch-meta';
-import Emoji from './emoji';
+import packEmojis from '../misc/pack-emojis';
 
 const User = db.get<IUser>('users');
 
@@ -386,11 +386,13 @@ export const pack = (
 
 	// カスタム絵文字添付
 	if (_user.emojis) {
-		_user.emojis = Emoji.find({
-			name: { $in: _user.emojis },
-			host: _user.host
-		}, {
-			fields: { _id: false }
+		_user.emojis = packEmojis(_user.emojis, _user.host, {
+			custom: true,
+			avatar: true,
+			foreign: true
+		}).catch(e => {
+			console.warn(e);
+			return [];
 		});
 	}
 
