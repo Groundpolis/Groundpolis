@@ -1,6 +1,7 @@
 <template>
 <router-link class="ldlomzub" :to="`/@${ canonical }`" v-user-preview="canonical">
 	<span class="me" v-if="isMe">{{ $t('@.you') }}</span>
+	<img class="avator" v-if="!isMe && avator != null" :src="avator"/>
 	<span class="main">
 		<span class="username">@{{ username }}</span>
 		<span class="host" :class="{ fade: $store.state.settings.contrastedAcct }" v-if="(host != localHost) || $store.state.settings.showFullAcct">@{{ toUnicode(host) }}</span>
@@ -24,6 +25,10 @@ export default Vue.extend({
 		host: {
 			type: String,
 			required: true
+		},
+		customEmojis: {
+			required: false,
+			default: () => []
 		}
 	},
 	data() {
@@ -37,6 +42,11 @@ export default Vue.extend({
 		},
 		isMe(): boolean {
 			return this.$store.getters.isSignedIn && this.canonical.toLowerCase() === `@${this.$store.state.i.username}@${toUnicode(localHost)}`.toLowerCase();
+		},
+		avator(): string {
+			const ascii = `@${this.username}` + (this.host != localHost ? `@${this.host}` : '');
+			const customEmoji = this.customEmojis.find(x => x.name == ascii);
+			return customEmoji ? customEmoji.url : null;
 		}
 	},
 	methods: {
@@ -62,6 +72,11 @@ export default Vue.extend({
 			padding 0 4px
 			border solid 1px var(--primary)
 			border-radius 0 4px 4px 0
+
+	> .avator
+		height 1.25em
+		vertical-align -0.25em
+		margin-right 0.2em
 
 	> .main
 		> .host.fade

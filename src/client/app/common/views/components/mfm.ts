@@ -163,7 +163,8 @@ export default Vue.component('misskey-flavored-markdown', {
 						key: Math.random(),
 						props: {
 							host: (token.props.host == null && this.author && this.author.host != null ? this.author.host : token.props.host) || host,
-							username: token.props.username
+							username: token.props.username,
+							customEmojis: this.customEmojis
 						}
 					})];
 				}
