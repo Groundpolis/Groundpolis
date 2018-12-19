@@ -30,6 +30,7 @@ import registerInstance from '../register-instance';
 import Instance from '../../models/instance';
 import { Node } from '../../mfm/parser';
 import { toASCII } from 'punycode';
+import extractMentions from '../../misc/extract-mentions';
 
 type NotificationType = 'reply' | 'renote' | 'quote' | 'mention';
 
@@ -163,13 +164,13 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 
 		tags = data.apHashtags || extractHashtags(combinedTokens);
 
-		// MongoDBのインデックス対象は128文字以上にできない
-		tags = tags.filter(tag => tag.length <= 100);
-
 		emojis = data.apEmojis || extractEmojis(combinedTokens);
 
 		mentionedUsers = data.apMentions || await extractMentionedUsers(user, combinedTokens);
 	}
+
+	// MongoDBのインデックス対象は128文字以上にできない
+	tags = tags.filter(tag => tag.length <= 100);
 
 	const normalizeAsciiHost = (host: string) => {
 		if (host == null) return null;
@@ -674,19 +675,7 @@ function incNotesCount(user: IUser) {
 async function extractMentionedUsers(user: IUser, tokens: ReturnType<typeof parse>): Promise<IUser[]> {
 	if (tokens == null) return [];
 
-	const mentions: any[] = [];
-
-	const extract = (tokens: Node[]) => {
-		for (const x of tokens.filter(x => x.name === 'mention')) {
-			mentions.push(x.props);
-		}
-		for (const x of tokens.filter(x => x.children)) {
-			extract(x.children);
-		}
-	};
-
-	// Extract hashtags
-	extract(tokens);
+	const mentions = extractMentions(tokens);
 
 	let mentionedUsers =
 		erase(null, await Promise.all(mentions.map(async m => {
