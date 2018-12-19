@@ -29,6 +29,7 @@ import insertNoteUnread from './unread';
 import registerInstance from '../register-instance';
 import Instance from '../../models/instance';
 import { Node } from '../../mfm/parser';
+import { toASCII } from 'punycode';
 
 type NotificationType = 'reply' | 'renote' | 'quote' | 'mention';
 
@@ -169,6 +170,14 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 
 		mentionedUsers = data.apMentions || await extractMentionedUsers(user, combinedTokens);
 	}
+
+	const normalizeAsciiHost = (host: string) => {
+		if (host == null) return null;
+		return toASCII(host.toLowerCase());
+	};
+
+	const mentionEmojis = mentionedUsers.map(user => `@${user.usernameLower}` + (user.host != null ? `@${normalizeAsciiHost(user.host)}` : ''));
+	emojis = emojis.concat(mentionEmojis);
 
 	if (data.reply && !user._id.equals(data.reply.userId) && !mentionedUsers.some(u => u._id.equals(data.reply.userId))) {
 		mentionedUsers.push(await User.findOne({ _id: data.reply.userId }));
