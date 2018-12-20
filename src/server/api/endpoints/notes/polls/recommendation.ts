@@ -47,9 +47,6 @@ export default define(meta, (ps, user) => new Promise(async (res, rej) => {
 			userId: {
 				$ne: user._id
 			},
-			createdAt: {
-				$gte: new Date(Date.now() - ms('10 days'))
-			},
 			poll: {
 				$exists: true,
 				$ne: null
