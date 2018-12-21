@@ -1,7 +1,6 @@
 import $ from 'cafy';
 import Vote from '../../../../../models/poll-vote';
 import Note, { pack } from '../../../../../models/note';
-const ms = require('ms');
 import define from '../../../define';
 
 export const meta = {
