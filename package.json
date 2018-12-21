@@ -1,8 +1,8 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "10.65.0",
-	"clientVersion": "2.0.12846",
+	"version": "10.66.0",
+	"clientVersion": "2.0.12855",
 	"codename": "nighthike",
 	"main": "./built/index.js",
 	"private": true,
@@ -114,6 +114,7 @@
 		"eslint": "5.8.0",
 		"eslint-plugin-vue": "4.7.1",
 		"eventemitter3": "3.1.0",
+		"feed": "2.0.2",
 		"file-loader": "2.0.0",
 		"file-type": "10.6.0",
 		"fuckadblock": "3.2.1",
