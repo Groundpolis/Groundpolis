@@ -86,7 +86,7 @@ export interface IPerson extends IObject {
 	following: any;
 	featured?: any;
 	outbox: any;
-	endpoints: string[];
+	endpoints: any;
 }
 
 export const isCollection = (object: IObject): object is ICollection =>
