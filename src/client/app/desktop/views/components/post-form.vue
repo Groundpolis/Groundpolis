@@ -207,9 +207,8 @@ export default Vue.extend({
 			this.visibility = this.reply.visibility;
 		}
 
-		// ダイレクトへのリプライはリプライ先ユーザーを初期設定
-		if (this.reply && this.reply.visibility === 'specified') {
-			this.$root.api('users/show', {	userId: this.reply.userId }).then(user => {
+		if (this.reply) {
+			this.$root.api('users/show', { userId: this.reply.userId }).then(user => {
 				this.visibleUsers.push(user);
 			});
 		}
@@ -236,7 +235,7 @@ export default Vue.extend({
 	},
 
 	methods: {
-	  trimmedLength(text: string) {
+		trimmedLength(text: string) {
 			return length(text.trim());
 		},
 

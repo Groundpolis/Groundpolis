@@ -445,7 +445,7 @@ export async function updateFeatured(userId: mongo.ObjectID) {
 
 	await User.update({ _id: user._id }, {
 		$set: {
-			pinnedNoteIds: featuredNotes.map(note => note._id)
+			pinnedNoteIds: featuredNotes.filter(note => note != null).map(note => note._id)
 		}
 	});
 }

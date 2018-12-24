@@ -1,5 +1,5 @@
 <template>
-<router-link class="ldlomzub" :to="`/@${ canonical }`" v-user-preview="canonical">
+<router-link class="ldlomzub" :to="`/${ canonical }`" v-user-preview="canonical">
 	<span class="me" v-if="isMe">{{ $t('@.you') }}</span>
 	<img class="avator" v-if="!isMe && avator != null" :src="avator"/>
 	<span class="main">

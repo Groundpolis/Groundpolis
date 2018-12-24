@@ -191,6 +191,17 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 				mentionedUsers.push(u);
 			}
 		}
+
+		for (const u of mentionedUsers) {
+			if (!data.visibleUsers.some(x => x._id.equals(u._id))) {
+				data.visibleUsers.push(u);
+			}
+		}
+
+		// ダイレクト投稿でユーザーが指定されていなかったらreject
+		if (data.visibleUsers.length === 0) {
+			return rej('Target user is not specified');
+		}
 	}
 
 	const note = await insertNote(user, data, tags, emojis, mentionedUsers);
