@@ -359,6 +359,7 @@ common/views/components/nav.vue:
   feedback: "フィードバック"
 
 common/views/components/note-menu.vue:
+  mention: "メンション"
   detail: "詳細"
   copy-link: "リンクをコピー"
   favorite: "お気に入り"
@@ -1366,6 +1367,7 @@ desktop/views/pages/user/user.header.vue:
   posts: "投稿"
   following: "フォロー"
   followers: "フォロワー"
+  mention: "メンション"
   is-bot: "このアカウントはBotです"
   years-old: "{age}歳"
   year: "年"
@@ -1717,6 +1719,7 @@ deck/deck.user-column.vue:
   posts: "投稿"
   following: "フォロー"
   followers: "フォロワー"
+  mention: "メンション"
   images: "画像"
   activity: "アクティビティ"
   timeline: "タイムライン"
