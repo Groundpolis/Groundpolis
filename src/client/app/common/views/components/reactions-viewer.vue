@@ -162,7 +162,6 @@ export default Vue.extend({
 
 		&:not(.reacted)
 			cursor pointer
-			background rgba(128, 128, 128, 0.2)
 
 			&:hover
 				background rgba(128, 128, 128, 0.3)
