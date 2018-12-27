@@ -130,16 +130,16 @@ common:
   this-setting-is-this-device-only: "このデバイスのみ"
   use-os-default-emojis: "OS標準の絵文字を使用"
 
-  do-not-use-in-production: 'これは開発ビルドです。本番環境で使用しないでください。'
-
+  do-not-use-in-production: "これは開発ビルドです。本番環境で使用しないでください。"
+  user-suspended: "このユーザーは凍結されています。"
   is-remote-user: "このユーザー情報はコピーです。"
   is-remote-post: "この投稿情報はコピーです。"
   view-on-remote: "正確な情報を見る"
   renoted-by: "{user}がRenote"
 
   error:
-    title: '問題が発生しました'
-    retry: 'やり直す'
+    title: "問題が発生しました"
+    retry: "やり直す"
 
   reversi:
     drawn: "引き分け"
@@ -324,6 +324,7 @@ common/views/components/cw-button.vue:
   show: "もっと見る"
   chars: "{count}文字"
   files: "{count}ファイル"
+  poll: "アンケート"
 
 common/views/components/messaging.vue:
   search-user: "ユーザーを探す"
@@ -589,7 +590,7 @@ common/views/widgets/tips.vue:
   tips-line24: "Misskeyは2014年にサービスを開始しました"
   tips-line25: "対応ブラウザではMisskeyを開いていなくても通知を受け取れます"
 
-common/views/pages/404.vue:
+common/views/pages/not-found.vue:
   page-not-found: "ページが見つかりませんでした"
 
 common/views/pages/follow.vue:
@@ -961,13 +962,13 @@ common/views/components/api-settings.vue:
   token: "Token:"
   enter-password: "パスワードを入力してください"
   console:
-    title: 'APIコンソール'
-    endpoint: 'エンドポイント'
-    parameter: 'パラメータ'
+    title: "APIコンソール"
+    endpoint: "エンドポイント"
+    parameter: "パラメータ"
     credential-info: "「i」パラメータは自動で付与されます。"
-    send: '送信'
-    sending: '応答待ち'
-    response: '結果'
+    send: "送信"
+    sending: "応答待ち"
+    response: "結果"
 
 desktop/views/components/settings.apps.vue:
   no-apps: "連携しているアプリケーションはありません"
@@ -1657,7 +1658,6 @@ mobile/views/pages/user.vue:
   overview: "概要"
   timeline: "タイムライン"
   media: "メディア"
-  is-suspended: "このユーザーは凍結されています。"
   mute: "ミュート"
   unmute: "ミュート解除"
   block: "ブロック"
