@@ -484,11 +484,8 @@ export async function fetchOutbox(userId: mongo.ObjectID) {
 			// Note
 			if (activity.object.inReplyTo) {
 				// Note[Replay]
-				console.log("Replay");
-				await resolveNote(activity.object, resolver);
 			} else {
 				// Note[Original]
-				console.log("Original");
 				await resolveNote(activity.object, resolver);
 			}
 		} else if (activity.type === 'Announce') {
