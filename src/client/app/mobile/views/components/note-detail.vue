@@ -54,8 +54,7 @@
 			<span class="visibility" v-if="appearNote.visibility != 'public'">
 				<fa v-if="appearNote.visibility == 'home'" icon="home"/>
 				<fa v-if="appearNote.visibility == 'followers'" icon="unlock"/>
-				<fa v-if="appearNote.visibility == 'specified'" icon="envelope"/>
-				<fa v-if="appearNote.visibility == 'private'" icon="lock"/>
+				<fa v-if="appearNote.visibility == 'specified'" icon="lock"/>
 			</span>
 			<span class="localOnly" v-if="appearNote.localOnly == true"><fa icon="heart"/></span>
 		</div>
@@ -67,7 +66,7 @@
 				<p class="count" v-if="appearNote.repliesCount > 0">{{ appearNote.repliesCount }}</p>
 			</button>
 			<button v-if="['public', 'home'].includes(appearNote.visibility)" @click="renote()" title="Renote">
-				<fa icon="retweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
+				<fa icon="retweet"/>
 			</button>
 			<button v-else>
 				<fa icon="ban"/>
