@@ -259,7 +259,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 
 	await updateFeatured(user._id).catch(err => console.log(err));
 
-	await fetchOutbox(user._id).catch(err => console.log(err));
+	//await fetchOutbox(user._id).catch(err => console.log(err));
 
 	return user;
 }
@@ -382,7 +382,7 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: obje
 
 	await updateFeatured(exist._id).catch(err => console.log(err));
 
-	await fetchOutbox(exist._id).catch(err => console.log(err));
+	//await fetchOutbox(exist._id).catch(err => console.log(err));
 }
 
 /**
