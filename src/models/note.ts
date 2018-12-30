@@ -314,6 +314,7 @@ export const pack = async (
 						.filter((c: any) => c.id == vote.choice)[0];
 
 					myChoice.isVoted = true;
+					poll.passed = vote.passed == true;
 				}
 
 				return poll;

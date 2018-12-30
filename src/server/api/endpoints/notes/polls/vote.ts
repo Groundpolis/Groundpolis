@@ -47,7 +47,7 @@ export default define(meta, (ps, user) => new Promise(async (res, rej) => {
 		return rej('poll not found');
 	}
 
-	if (!note.poll.choices.some(x => x.id == ps.choice)) return rej('invalid choice param');
+	if (!note.poll.choices.some(x => x.id == ps.choice) && ps.choice != -1) return rej('invalid choice param');
 
 	// if already voted
 	const exist = await Vote.findOne({
@@ -59,16 +59,21 @@ export default define(meta, (ps, user) => new Promise(async (res, rej) => {
 		return rej('already voted');
 	}
 
+	const passed = ps.choice < 0;
+
 	// Create vote
 	await Vote.insert({
 		createdAt: new Date(),
 		noteId: note._id,
 		userId: user._id,
-		choice: ps.choice
+		choice: !passed ? ps.choice : 0,
+		passed
 	});
 
 	// Send response
 	res();
+
+	if (passed) return;
 
 	const inc: any = {};
 	inc[`poll.choices.${note.poll.choices.findIndex(c => c.id == ps.choice)}.votes`] = 1;
