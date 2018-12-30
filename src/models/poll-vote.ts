@@ -12,4 +12,5 @@ export interface IPollVote {
 	userId: mongo.ObjectID;
 	noteId: mongo.ObjectID;
 	choice: number;
+	passed?: boolean;
 }

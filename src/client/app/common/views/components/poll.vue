@@ -4,7 +4,7 @@
 		<li v-for="choice in poll.choices" :key="choice.id" @click="vote(choice.id)" :class="{ voted: choice.voted }" :title="!isVoted ? $t('vote-to').replace('{}', choice.text) : ''">
 			<div class="backdrop" :style="{ 'width': (showResult ? (choice.votes / total * 100) : 0) + '%' }"></div>
 			<span>
-				<template v-if="choice.isVoted"><fa icon="check"/></template>
+				<template v-if="choice.isVoted && !isPassed"><fa icon="check"/></template>
 				<span>{{ choice.text }}</span>
 				<span class="votes" v-if="showResult">({{ $t('vote-count').replace('{}', choice.votes) }})</span>
 			</span>
@@ -15,6 +15,13 @@
 		<span>・</span>
 		<a v-if="!isVoted" @click="toggleShowResult">{{ showResult ? $t('vote') : $t('show-result') }}</a>
 		<span v-if="isVoted">{{ $t('voted') }}</span>
+	</p>
+	<p v-if="!isVoted">
+		<span> </span>
+		<a @click="pass">パスする</a>
+	</p>
+	<p v-if="isPassed">
+		<span>パスしています</span>
 	</p>
 </div>
 </template>
@@ -38,6 +45,9 @@ export default Vue.extend({
 		total(): number {
 			return sum(this.poll.choices.map(x => x.votes));
 		},
+		isPassed(): boolean {
+			return this.poll.passed == true;
+		},
 		isVoted(): boolean {
 			return this.poll.choices.some(c => c.isVoted);
 		}
@@ -48,6 +58,14 @@ export default Vue.extend({
 	methods: {
 		toggleShowResult() {
 			this.showResult = !this.showResult;
+		},
+		pass() {
+			this.$root.api('notes/polls/vote', {
+				noteId: this.note.id,
+				choice: -1
+			}).then(() => {
+				this.showResult = true;
+			});
 		},
 		vote(id) {
 			if (this.poll.choices.some(c => c.isVoted)) return;
