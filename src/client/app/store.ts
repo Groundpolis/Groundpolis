@@ -52,6 +52,7 @@ const defaultDeviceSettings = {
 	darkmode: false,
 	darkTheme: 'promo',
 	lightTheme: 'promo',
+	lineWidth: 1,
 	themes: [],
 	enableSounds: true,
 	soundVolume: 0.5,
