@@ -17,6 +17,10 @@ export const pinkTheme: Theme = require('../theme/pink.json5');
 export const blackTheme: Theme = require('../theme/black.json5');
 export const halloweenTheme: Theme = require('../theme/halloween.json5');
 export const promoTheme: Theme = require('../theme/promo.json5');
+export const cafeTheme: Theme = require('../theme/cafe.json5');
+export const japaneseSushiSetTheme: Theme = require('../theme/japanese-sushi-set.json5');
+export const gruvboxDarkTheme: Theme = require('../theme/gruvbox-dark.json5');
+export const monokaiTheme: Theme = require('../theme/monokai.json5');
 
 export const builtinThemes = [
 	lightTheme,
@@ -24,7 +28,11 @@ export const builtinThemes = [
 	pinkTheme,
 	blackTheme,
 	halloweenTheme,
-	promoTheme
+	promoTheme,
+	cafeTheme,
+	japaneseSushiSetTheme,
+	gruvboxDarkTheme,
+	monokaiTheme
 ];
 
 export function applyTheme(theme: Theme, persisted = true) {
