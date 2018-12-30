@@ -5,7 +5,7 @@
 		<label>
 			<ui-select v-model="light" :placeholder="$t('light-theme')">
 				<span slot="label"><fa :icon="faSun"/> {{ $t('light-theme') }}</span>
-				<optgroup :label="おすすめテーマ">
+				<optgroup label="おすすめテーマ">
 					<option v-for="x in promoThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
 				</optgroup>
 				<optgroup :label="$t('light-themes')">
@@ -20,7 +20,7 @@
 		<label>
 			<ui-select v-model="dark" :placeholder="$t('dark-theme')">
 				<span slot="label"><fa :icon="faMoon"/> {{ $t('dark-theme') }}</span>
-				<optgroup :label="おすすめテーマ">
+				<optgroup label="おすすめテーマ">
 					<option v-for="x in promoThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
 				</optgroup>
 				<optgroup :label="$t('dark-themes')">
