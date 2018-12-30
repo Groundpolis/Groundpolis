@@ -59,10 +59,18 @@ import * as anime from 'animejs';
 
 export default Vue.extend({
 	i18n: i18n('common/views/components/visibility-chooser.vue'),
-	props: ['source'],
+	props: {
+		source: {
+			required: true
+		},
+		currentVisibility: {
+			type: String,
+			required: false
+		}
+	},
 	data() {
 		return {
-			v: this.$store.state.settings.rememberNoteVisibility ? (this.$store.state.device.visibility || this.$store.state.settings.defaultNoteVisibility) : this.$store.state.settings.defaultNoteVisibility
+			v: this.$store.state.settings.rememberNoteVisibility ? (this.$store.state.device.visibility || this.$store.state.settings.defaultNoteVisibility) : (this.currentVisibility || this.$store.state.settings.defaultNoteVisibility)
 		}
 	},
 	mounted() {
@@ -162,7 +170,6 @@ export default Vue.extend({
 		width 240px
 		padding 8px 0
 		background $bgcolor
-		border 1px solid $border-color
 		border-radius 4px
 		box-shadow 0 3px 12px rgba(27, 31, 35, 0.15)
 		transform scale(0.5)

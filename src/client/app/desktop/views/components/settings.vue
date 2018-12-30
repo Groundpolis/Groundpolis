@@ -19,13 +19,7 @@
 			<x-integration-settings/>
 		</div>
 
-		<ui-card class="theme" v-show="page == 'theme'">
-			<div slot="title"><fa icon="palette"/> {{ $t('theme') }}</div>
-
-			<section>
-				<x-theme/>
-			</section>
-		</ui-card>
+		<x-theme class="theme" v-show="page == 'theme'"/>
 
 		<ui-card class="web" v-show="page == 'web'">
 			<div slot="title"><fa icon="sliders-h"/> {{ $t('behaviour') }}</div>
@@ -86,8 +80,10 @@
 			</section>
 			<section>
 				<header>{{ $t('wallpaper') }}</header>
-				<ui-button @click="updateWallpaper">{{ $t('choose-wallpaper') }}</ui-button>
-				<ui-button @click="deleteWallpaper">{{ $t('delete-wallpaper') }}</ui-button>
+				<ui-horizon-group class="fit-bottom">
+					<ui-button @click="updateWallpaper">{{ $t('choose-wallpaper') }}</ui-button>
+					<ui-button @click="deleteWallpaper">{{ $t('delete-wallpaper') }}</ui-button>
+				</ui-horizon-group>
 			</section>
 			<section>
 				<header>{{ $t('navbar-position') }}</header>
@@ -103,6 +99,12 @@
 				<ui-switch v-model="useShadow">{{ $t('use-shadow') }}</ui-switch>
 				<ui-switch v-model="roundedCorners">{{ $t('rounded-corners') }}</ui-switch>
 				<ui-switch v-model="circleIcons">{{ $t('circle-icons') }}</ui-switch>
+				<section>
+					<header>{{ $t('@.line-width') }}</header>
+					<ui-radio v-model="lineWidth" :value="0.5">{{ $t('@.line-width-thin') }}</ui-radio>
+					<ui-radio v-model="lineWidth" :value="1">{{ $t('@.line-width-normal') }}</ui-radio>
+					<ui-radio v-model="lineWidth" :value="2">{{ $t('@.line-width-thick') }}</ui-radio>
+				</section>
 				<ui-switch v-model="reduceMotion">{{ $t('@.reduce-motion') }}</ui-switch>
 				<ui-switch v-model="contrastedAcct">{{ $t('contrasted-acct') }}</ui-switch>
 				<ui-switch v-model="showFullAcct">{{ $t('@.show-full-acct') }}</ui-switch>
@@ -136,7 +138,7 @@
 			</section>
 			<section>
 				<ui-switch v-model="games_reversi_showBoardLabels">{{ $t('@.show-reversi-board-labels') }}</ui-switch>
-				<ui-switch v-model="games_reversi_useWhiteBlackStones">{{ $t('@.use-white-black-reversi-stones') }}</ui-switch>
+				<ui-switch v-model="games_reversi_useAvatarStones">{{ $t('@.use-avatar-reversi-stones') }}</ui-switch>
 			</section>
 		</ui-card>
 
@@ -417,6 +419,11 @@ export default Vue.extend({
 			set(value) { this.$store.dispatch('settings/set', { key: 'roundedCorners', value }); }
 		},
 
+		lineWidth: {
+			get() { return this.$store.state.settings.lineWidth; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'lineWidth', value }); }
+		},
+
 		fetchOnScroll: {
 			get() { return this.$store.state.settings.fetchOnScroll; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'fetchOnScroll', value }); }
@@ -507,9 +514,9 @@ export default Vue.extend({
 			set(value) { this.$store.dispatch('settings/set', { key: 'games.reversi.showBoardLabels', value }); }
 		},
 
-		games_reversi_useWhiteBlackStones: {
-			get() { return this.$store.state.settings.games.reversi.useWhiteBlackStones; },
-			set(value) { this.$store.dispatch('settings/set', { key: 'games.reversi.useWhiteBlackStones', value }); }
+		games_reversi_useAvatarStones: {
+			get() { return this.$store.state.settings.games.reversi.useAvatarStones; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'games.reversi.useAvatarStones', value }); }
 		},
 
 		disableAnimatedMfm: {

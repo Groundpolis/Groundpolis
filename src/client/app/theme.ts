@@ -21,6 +21,9 @@ export const cafeTheme: Theme = require('../theme/cafe.json5');
 export const japaneseSushiSetTheme: Theme = require('../theme/japanese-sushi-set.json5');
 export const gruvboxDarkTheme: Theme = require('../theme/gruvbox-dark.json5');
 export const monokaiTheme: Theme = require('../theme/monokai.json5');
+export const colorfulTheme: Theme = require('../theme/colorful.json5');
+export const naturalTheme: Theme = require('../theme/natural.json5');
+export const mauveTheme: Theme = require('../theme/mauve.json5');
 
 export const builtinThemes = [
 	lightTheme,
@@ -32,7 +35,10 @@ export const builtinThemes = [
 	cafeTheme,
 	japaneseSushiSetTheme,
 	gruvboxDarkTheme,
-	monokaiTheme
+	monokaiTheme,
+	colorfulTheme,
+	naturalTheme,
+	mauveTheme,
 ];
 
 export function applyTheme(theme: Theme, persisted = true) {
@@ -96,12 +102,12 @@ function compile(theme: Theme): { [key: string]: string } {
 		props['primaryAlpha0' + i] = genValue(color);
 	}
 
-	for (let i = 1; i < 100; i++) {
+	for (let i = 5; i < 100; i += 5) {
 		const color = primary.clone().lighten(i);
 		props['primaryLighten' + i] = genValue(color);
 	}
 
-	for (let i = 1; i < 100; i++) {
+	for (let i = 5; i < 100; i += 5) {
 		const color = primary.clone().darken(i);
 		props['primaryDarken' + i] = genValue(color);
 	}

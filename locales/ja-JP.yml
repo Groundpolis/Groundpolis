@@ -117,7 +117,7 @@ common:
   my-token-regenerated: "あなたのトークンが更新されたのでサインアウトします。"
   i-like-sushi: "私は(プリンよりむしろ)寿司が好き"
   show-reversi-board-labels: "リバーシのボードの行と列のラベルを表示"
-  use-white-black-reversi-stones: "リバーシに白黒の石を使う"
+  use-avatar-reversi-stones: "リバーシの石にアバターを使う"
   verified-user: "公式アカウント"
   disable-animated-mfm: "投稿内の動きのあるテキストを無効にする"
   suggest-recent-hashtags: "最近のハッシュタグを投稿フォームに表示する"
@@ -128,6 +128,10 @@ common:
   reduce-motion: "UIの動きを減らす"
   this-setting-is-this-device-only: "このデバイスのみ"
   use-os-default-emojis: "OS標準の絵文字を使用"
+  line-width: "線の太さ"
+  line-width-thin: "細い"
+  line-width-normal: "普通"
+  line-width-thick: "太い"
 
   do-not-use-in-production: "これは開発ビルドです。本番環境で使用しないでください。"
   user-suspended: "このユーザーは凍結されています。"
@@ -283,6 +287,7 @@ common/views/components/media-banner.vue:
   click-to-show: "クリックして表示"
 
 common/views/components/theme.vue:
+  theme: "テーマ"
   light-theme: "非ダークモード時に使用するテーマ"
   dark-theme: "ダークモード時に使用するテーマ"
   light-themes: "明るいテーマ"
@@ -299,6 +304,7 @@ common/views/components/theme.vue:
   base-theme: "ベーステーマ"
   base-theme-light: "Light"
   base-theme-dark: "Dark"
+  find-more-theme: "その他のテーマを入手"
   theme-name: "テーマ名"
   preview-created-theme: "プレビュー"
   invalid-theme: "テーマが正しくありません。"
@@ -1630,7 +1636,6 @@ mobile/views/pages/settings.vue:
   notification-position: "通知の表示"
   notification-position-bottom: "下"
   notification-position-top: "上"
-  theme: "テーマ"
   behavior: "動作"
   fetch-on-scroll: "スクロールで自動読み込み"
   note-visibility: "投稿の公開範囲"
