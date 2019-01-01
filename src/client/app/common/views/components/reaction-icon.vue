@@ -13,6 +13,7 @@
 		<img v-if="$store.getters.isSignedIn && $store.state.settings.iLikeSushi" src="https://twemoji.maxcdn.com/2/svg/1f363.svg" :alt="$t('@.reactions.pudding')">
 		<img v-else src="https://twemoji.maxcdn.com/2/svg/1f36e.svg" :alt="$t('@.reactions.pudding')">
 	</template>
+	<img v-if="reaction == 'star'" src="https://twemoji.maxcdn.com/2/svg/2b50.svg" :alt="$t('@.reactions.star')">
 </span>
 </template>
 

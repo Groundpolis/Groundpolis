@@ -18,7 +18,7 @@ export default async (actor: IRemoteUser, activity: ILike) => {
 		throw new Error();
 	}
 
-	let reaction = 'like';
+	let reaction = 'star';
 
 	// 他のMisskeyインスタンスからのリアクション
 	if (activity._misskey_reaction && validateReaction.ok(activity._misskey_reaction)) {
