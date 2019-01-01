@@ -87,6 +87,7 @@ common:
     confused: "こまこまのこまり"
     rip: "RIP"
     pudding: "Pudding"
+    star: "スター"
 
   note-visibility:
     public: "公開"

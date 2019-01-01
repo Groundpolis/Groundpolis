@@ -30,7 +30,8 @@ export const validateReaction = $.str.or([
 	'angry',
 	'confused',
 	'rip',
-	'pudding'
+	'pudding',
+	'star'
 ]);
 
 /**

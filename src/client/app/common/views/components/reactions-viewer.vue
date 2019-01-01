@@ -11,6 +11,7 @@
 		<span :class="{ reacted: note.myReaction == 'confused' }" @click="toggleReaction('confused')" v-if="reactions.confused" v-particle="!isMe"><mk-reaction-icon reaction="confused" ref="confused"/><span>{{ reactions.confused }}</span></span>
 		<span :class="{ reacted: note.myReaction == 'rip' }" @click="toggleReaction('rip')" v-if="reactions.rip" v-particle="!isMe"><mk-reaction-icon reaction="rip" ref="rip"/><span>{{ reactions.rip }}</span></span>
 		<span :class="{ reacted: note.myReaction == 'pudding' }" @click="toggleReaction('pudding')" v-if="reactions.pudding" v-particle="!isMe"><mk-reaction-icon reaction="pudding" ref="pudding"/><span>{{ reactions.pudding }}</span></span>
+		<span :class="{ reacted: note.myReaction == 'star' }" v-if="reactions.star" v-particle="!isMe"><mk-reaction-icon reaction="star" ref="star"/><span>{{ reactions.star }}</span></span>
 	</template>
 </div>
 </template>
@@ -65,7 +66,10 @@ export default Vue.extend({
 		},
 		'reactions.pudding'() {
 			this.anime('pudding');
-		}
+		},
+		'reactions.star'() {
+			this.anime('star');
+		},
 	},
 	methods: {
 		toggleReaction(reaction: string) {
