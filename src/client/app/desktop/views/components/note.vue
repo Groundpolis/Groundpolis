@@ -38,7 +38,7 @@
 					<a class="location" v-if="appearNote.geo" :href="`https://maps.google.com/maps?q=${appearNote.geo.coordinates[1]},${appearNote.geo.coordinates[0]}`" target="_blank"><fa icon="map-marker-alt"/> 位置情報</a>
 					<div class="renote" v-if="appearNote.renote"><mk-note-preview :note="appearNote.renote" :mini="mini"/></div>
 					<div v-if="urls" class="url-previews" :class="{ scroll : true }">
-						<mk-url-preview v-for="url in urls" :url="url" :key="url" :mini="mini"/>
+						<mk-url-preview v-for="url in urls" :url="url" :key="url" :mini="mini" :compact="compact"/>
 					</div>
 				</div>
 			</div>
@@ -101,6 +101,11 @@ export default Vue.extend({
 			required: true
 		},
 		detail: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
+		compact: {
 			type: Boolean,
 			required: false,
 			default: false
