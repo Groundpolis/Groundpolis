@@ -14,7 +14,7 @@
 			<header>
 				<h1 :title="title">{{ title }}</h1>
 			</header>
-			<p v-if="description" :title="description">{{ description.length > 85 ? description.slice(0, 85) + '…' : description }}</p>
+			<p v-if="description" :title="description">{{ description.length > 1000 ? description.slice(0, 1000) + '…' : description }}</p>
 			<footer>
 				<img class="icon" v-if="icon" :src="icon"/>
 				<p :title="sitename">{{ sitename }}</p>
@@ -367,7 +367,7 @@ export default Vue.extend({
 
 		&.compact
 			> article
-				> header, p, footer
+				> header h1, p, footer
 					overflow: hidden;
 					white-space: nowrap;
 					text-overflow: ellipsis;
