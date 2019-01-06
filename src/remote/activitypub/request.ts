@@ -13,7 +13,7 @@ const log = debug('misskey:activitypub:deliver');
 export default (user: ILocalUser, url: string, object: any) => new Promise((resolve, reject) => {
 	log(`--> ${url}`);
 
-	const timeout = 10 * 1000;
+	const timeout = 60 * 1000;
 
 	const { protocol, hostname, port, pathname, search } = new URL(url);
 
