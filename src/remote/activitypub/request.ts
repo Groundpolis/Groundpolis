@@ -3,7 +3,7 @@ const { sign } = require('http-signature');
 import { URL } from 'url';
 import * as debug from 'debug';
 const crypto = require('crypto');
-const { lookup } = require('dns-lookup-cache');
+const { lookup } = require('lookup-dns-cache');
 
 import config from '../../config';
 import { ILocalUser } from '../../models/user';
