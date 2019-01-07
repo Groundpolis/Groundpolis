@@ -85,14 +85,7 @@ export default (user: ILocalUser, url: string, object: any) => new Promise(async
 /**
  * Resolve host (with cached, asynchrony)
  */
-async function resolveHost(domain: string) {
-	const v4 = await resolveHostInner(domain).catch(() => null);
-	if (v4) return v4;
-
-	return await resolveHostInner(domain, { ipv6: true });
-}
-
-function resolveHostInner(domain: string, options = { }): Promise<string> {
+function resolveHost(domain: string, options = { }): Promise<string> {
 	return new Promise((res, rej) => {
 		lookup(domain, options, (error: any, address: string) => {
 			if (error) return rej(error);
