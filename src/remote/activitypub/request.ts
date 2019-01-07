@@ -24,7 +24,7 @@ export default (user: ILocalUser, url: string, object: any) => new Promise(async
 	sha256.update(data);
 	const hash = sha256.digest('base64');
 
-	const addr = await resolveAddr(hostname).catch(e => reject(e));
+	const addr = await resolveHost(hostname).catch(e => reject(e));
 	if (!addr) return;
 
 	const req = request({
@@ -83,18 +83,13 @@ export default (user: ILocalUser, url: string, object: any) => new Promise(async
 });
 
 /**
- * Resolve address (with cached, asynchrony)
+ * Resolve host (with cached, asynchrony)
  */
-export async function resolveAddr(domain: string): Promise<string> {
-	const addrs = await resolveAddrs(domain);
-	return addrs[0];
-}
-
-export function resolveAddrs(domain: string): Promise<string[]> {
+function resolveHost(domain: string, options = { }): Promise<string> {
 	return new Promise((res, rej) => {
-		lookup(domain, { all: true }, (error: any, results: any[]) => {
+		lookup(domain, options, (error: any, address: string) => {
 			if (error) return rej(error);
-			return res(results.map(result => result.address));
+			return res(address);
 		});
 	});
 }
