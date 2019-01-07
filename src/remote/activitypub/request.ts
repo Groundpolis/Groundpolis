@@ -11,7 +11,7 @@ import { publishApLogStream } from '../../stream';
 
 const log = debug('misskey:activitypub:deliver');
 
-export default (user: ILocalUser, url: string, object: any) => new Promise((resolve, reject) => {
+export default (user: ILocalUser, url: string, object: any) => new Promise(async (resolve, reject) => {
 	log(`--> ${url}`);
 
 	const timeout = 60 * 1000;
@@ -24,52 +24,53 @@ export default (user: ILocalUser, url: string, object: any) => new Promise((reso
 	sha256.update(data);
 	const hash = sha256.digest('base64');
 
-	resolveHost(hostname).then(addr => {
-		const req = request({
-			protocol,
-			hostname: addr,
-			setHost: false,
-			port,
-			method: 'POST',
-			path: pathname + search,
-			timeout,
-			headers: {
-				'Host': host,
-				'User-Agent': config.user_agent,
-				'Content-Type': 'application/activity+json',
-				'Digest': `SHA-256=${hash}`
-			}
-		}, res => {
-			log(`${url} --> ${res.statusCode}`);
+	const addr = await resolveHost(hostname).catch(e => reject(e));
+	if (!addr) return;
 
-			if (res.statusCode >= 400) {
-				reject(res);
-			} else {
-				resolve();
-			}
-		});
+	const req = request({
+		protocol,
+		hostname: addr,
+		setHost: false,
+		port,
+		method: 'POST',
+		path: pathname + search,
+		timeout,
+		headers: {
+			'Host': host,
+			'User-Agent': config.user_agent,
+			'Content-Type': 'application/activity+json',
+			'Digest': `SHA-256=${hash}`
+		}
+	}, res => {
+		log(`${url} --> ${res.statusCode}`);
 
-		sign(req, {
-			authorizationHeaderName: 'Signature',
-			key: user.keypair,
-			keyId: `${config.url}/users/${user._id}/publickey`,
-			headers: ['date', 'host', 'digest']
-		});
-
-		// Signature: Signature ... => Signature: ...
-		let sig = req.getHeader('Signature').toString();
-		sig = sig.replace(/^Signature /, '');
-		req.setHeader('Signature', sig);
-
-		req.on('timeout', () => req.abort());
-
-		req.on('error', e => {
-			if (req.aborted) reject('timeout');
-			reject(e);
-		});
-
-		req.end(data);
+		if (res.statusCode >= 400) {
+			reject(res);
+		} else {
+			resolve();
+		}
 	});
+
+	sign(req, {
+		authorizationHeaderName: 'Signature',
+		key: user.keypair,
+		keyId: `${config.url}/users/${user._id}/publickey`,
+		headers: ['date', 'host', 'digest']
+	});
+
+	// Signature: Signature ... => Signature: ...
+	let sig = req.getHeader('Signature').toString();
+	sig = sig.replace(/^Signature /, '');
+	req.setHeader('Signature', sig);
+
+	req.on('timeout', () => req.abort());
+
+	req.on('error', e => {
+		if (req.aborted) reject('timeout');
+		reject(e);
+	});
+
+	req.end(data);
 
 	//#region Log
 	publishApLogStream({
