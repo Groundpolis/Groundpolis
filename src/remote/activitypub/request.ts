@@ -90,7 +90,7 @@ async function resolveAddr(domain: string) {
 	// v4/v6で先に取得できた方を採用する
 	return await promiseAny([
 		resolveAddrInner(domain, { ipv6: false }),
-		resolveAddrInner(domain, { ipv6: true  }),
+		resolveAddrInner(domain, { ipv6: true  })
 	]);
 }
 
