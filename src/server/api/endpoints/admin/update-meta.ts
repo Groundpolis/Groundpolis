@@ -39,6 +39,13 @@ export const meta = {
 			}
 		},
 
+		mascotImageUrl: {
+			validator: $.str.optional.nullable,
+			desc: {
+				'ja-JP': 'インスタンスキャラクター画像のURL'
+			}
+		},
+
 		bannerUrl: {
 			validator: $.str.optional.nullable,
 			desc: {
@@ -334,6 +341,10 @@ export default define(meta, (ps) => new Promise(async (res, rej) => {
 
 	if (Array.isArray(ps.hidedTags)) {
 		set.hidedTags = ps.hidedTags;
+	}
+
+	if (ps.mascotImageUrl !== undefined) {
+		set.mascotImageUrl = ps.mascotImageUrl;
 	}
 
 	if (ps.bannerUrl !== undefined) {
