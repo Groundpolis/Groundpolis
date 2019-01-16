@@ -59,6 +59,7 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 		broadcasts: instance.broadcasts || [],
 		disableRegistration: instance.disableRegistration,
 		disableLocalTimeline: instance.disableLocalTimeline,
+		disableGlobalTimeline: instance.disableGlobalTimeline,
 		driveCapacityPerLocalUserMb: instance.localDriveCapacityMb,
 		driveCapacityPerLocalUserPerDayMb: instance.localDriveCapacityFactor,
 		driveCapacityPerRemoteUserMb: instance.remoteDriveCapacityMb,
@@ -82,6 +83,7 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 		response.features = {
 			registration: !instance.disableRegistration,
 			localTimeLine: !instance.disableLocalTimeline,
+			globalTimeLine: !instance.disableGlobalTimeline,
 			elasticsearch: config.elasticsearch ? true : false,
 			recaptcha: instance.enableRecaptcha,
 			objectStorage: config.drive && config.drive.storage === 'minio',
