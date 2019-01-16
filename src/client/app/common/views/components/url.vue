@@ -1,5 +1,5 @@
 <template>
-<a class="mk-url" :href="url" :target="target">
+<a class="mk-url" :href="url" :target="target" :title="title">
 	<span class="schema" v-if="!trim">{{ schema }}//</span>
 	<span class="hostname">{{ hostname }}</span>
 	<span class="port" v-if="port != ''">:{{ port }}</span>
@@ -23,7 +23,8 @@ export default Vue.extend({
 			port: null,
 			pathname: null,
 			query: null,
-			hash: null
+			hash: null,
+			title: null
 		};
 	},
 	created() {
@@ -34,6 +35,13 @@ export default Vue.extend({
 		this.pathname = decodeURIComponent(url.pathname);
 		this.query = decodeURIComponent(url.search);
 		this.hash = decodeURIComponent(url.hash);
+
+		this.title = this.schema + '//'
+			+ this.hostname
+			+ (this.port != '' ? ':' + this.port : '')
+			+ this.pathname
+			+ this.query
+			+ this.hash;
 
 		if (this.trim) {
 			let postfix = this.pathname + this.query + this.hash;
