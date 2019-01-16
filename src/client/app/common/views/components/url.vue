@@ -1,6 +1,6 @@
 <template>
 <a class="mk-url" :href="url" :target="target">
-	<span class="schema">{{ schema }}//</span>
+	<span class="schema" v-if="!trim">{{ schema }}//</span>
 	<span class="hostname">{{ hostname }}</span>
 	<span class="port" v-if="port != ''">:{{ port }}</span>
 	<span class="pathname" v-if="pathname != ''">{{ pathname }}</span>
@@ -15,7 +15,7 @@ import Vue from 'vue';
 import { toUnicode as decodePunycode } from 'punycode';
 
 export default Vue.extend({
-	props: ['url', 'target'],
+	props: ['url', 'target', 'trim'],
 	data() {
 		return {
 			schema: null,
@@ -34,6 +34,16 @@ export default Vue.extend({
 		this.pathname = decodeURIComponent(url.pathname);
 		this.query = decodeURIComponent(url.search);
 		this.hash = decodeURIComponent(url.hash);
+
+		if (this.trim) {
+			let postfix = this.pathname + this.query + this.hash;
+			if (postfix.length > 20) postfix = postfix.slice(0, 20) + '…';
+			if (postfix == '/') postfix = '';
+
+			this.pathname = postfix;
+			this.query = '';
+			this.hash = '';
+		}
 	}
 });
 </script>
