@@ -32,13 +32,6 @@
 					<span slot="desc">{{ $t('auto-popout-desc') }}</span>
 				</ui-switch>
 				<ui-switch v-model="deckNav">{{ $t('deck-nav') }}<span slot="desc">{{ $t('deck-nav-desc') }}</span></ui-switch>
-
-				<details>
-					<summary>{{ $t('advanced') }}</summary>
-					<ui-switch v-model="apiViaStream">{{ $t('api-via-stream') }}
-						<span slot="desc">{{ $t('api-via-stream-desc') }}</span>
-					</ui-switch>
-				</details>
 			</section>
 
 			<section>
