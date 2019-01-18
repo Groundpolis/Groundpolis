@@ -32,6 +32,7 @@ import { toASCII } from 'punycode';
 import extractMentions from '../../misc/extract-mentions';
 import extractEmojis from '../../misc/extract-emojis';
 import extractHashtags from '../../misc/extract-hashtags';
+import computeSha256 from '../../misc/compute-sha256';
 
 type NotificationType = 'reply' | 'renote' | 'quote' | 'mention';
 
@@ -541,6 +542,7 @@ async function publishToFollowers(note: INote, user: IUser, noteActivity: any) {
 	});
 
 	const queue: string[] = [];
+	const sha256 = noteActivity != null ? computeSha256(JSON.stringify(noteActivity)) : null;
 
 	for (const following of followers) {
 		const follower = following._follower;
@@ -569,7 +571,7 @@ async function publishToFollowers(note: INote, user: IUser, noteActivity: any) {
 	}
 
 	for (const inbox of queue) {
-		deliver(user as any, noteActivity, inbox);
+		deliver(user as any, noteActivity, inbox, { sha256 });
 	}
 }
 
