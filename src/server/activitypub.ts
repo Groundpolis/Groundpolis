@@ -17,6 +17,7 @@ import SharedOutbox from './activitypub/shared-outbox';
 import Followers from './activitypub/followers';
 import Following from './activitypub/following';
 import Featured from './activitypub/featured';
+import renderQuestion from '../remote/activitypub/renderer/question';
 
 // Init router
 const router = new Router();
@@ -108,6 +109,36 @@ router.get('/notes/:note/activity', async ctx => {
 
 	ctx.body = pack(await packActivity(note));
 	ctx.set('Cache-Control', 'public, max-age=180');
+	setResponseType(ctx);
+});
+
+// question
+router.get('/questions/:question', async (ctx, next) => {
+	if (!ObjectID.isValid(ctx.params.question)) {
+		ctx.status = 404;
+		return;
+	}
+
+	const poll = await Note.findOne({
+		_id: new ObjectID(ctx.params.question),
+		visibility: { $in: ['public', 'home'] },
+		localOnly: { $ne: true },
+		poll: {
+			$exists: true,
+			$ne: null
+		},
+	});
+
+	if (poll === null) {
+		ctx.status = 404;
+		return;
+	}
+
+	const user = await User.findOne({
+			_id: poll.userId
+	});
+
+	ctx.body = pack(await renderQuestion(user as ILocalUser, poll));
 	setResponseType(ctx);
 });
 

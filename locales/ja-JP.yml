@@ -27,6 +27,7 @@ common:
   do-not-copy-paste: "ここにコードを入力したり張り付けたりしないでください。アカウントが不正利用される可能性があります。"
   load-more: "もっと読み込む"
   enter-password: "パスワードを入力してください"
+  2fa: "二段階認証"
 
   got-it: "わかった"
   customization-tips:
@@ -379,6 +380,19 @@ common/views/components/note-menu.vue:
   delete: "削除"
   delete-confirm: "この投稿を削除しますか？"
   remote: "投稿元で見る"
+
+common/views/components/user-menu.vue:
+  mention: "メンション"
+  mute: "ミュート"
+  unmute: "ミュート解除"
+  block: "ブロック"
+  unblock: "ブロック解除"
+  push-to-list: "リストに追加"
+  select-list: "リストを選択してください"
+  list-pushed: "{user}を{list}に追加しました"
+  report-abuse: "スパムを報告"
+  report-abuse-detail: "どのような迷惑行為を行っていますか？"
+  report-abuse-reported: "管理者に報告されました。ご協力ありがとうございました。"
 
 common/views/components/poll.vue:
   vote-to: "「{}」に投票する"
@@ -856,7 +870,6 @@ desktop/views/components/settings.vue:
   security: "セキュリティ"
   signin: "サインイン履歴"
   password: "パスワード"
-  2fa: "二段階認証"
   other: "その他"
   license: "ライセンス"
   theme: "テーマ"
@@ -871,9 +884,6 @@ desktop/views/components/settings.vue:
   web-search-engine-desc: "例: https://www.google.com/?#q={{query}}"
   auto-popout: "ウィンドウの自動ポップアウト"
   auto-popout-desc: "ウィンドウが開かれるとき、ポップアウト(ブラウザ外に切り離す)可能なら自動でポップアウトします。この設定はブラウザに記憶されます。"
-  advanced: "詳細設定"
-  api-via-stream: "ストリームを経由したAPIリクエスト"
-  api-via-stream-desc: "この設定をオンにすると、websocket接続を経由してAPIリクエストが行われます(パフォーマンス向上が期待できます)。オフにすると、ネイティブの fetch APIが利用されます。この設定はこのデバイスのみ有効です。"
   deck-nav: "デッキ内ナビゲーション"
   deck-nav-desc: "デッキを使用しているとき、ナビゲーションが発生する際にページ遷移を行わずに一時的なカラムで受けるようにします。"
   deck-default: "デッキをデフォルトのUIにする"
@@ -1107,6 +1117,7 @@ admin/views/index.vue:
   federation: "連合"
   announcements: "お知らせ"
   hashtags: "ハッシュタグ"
+  abuse: "スパム報告"
   back-to-misskey: "Misskeyに戻る"
 
 admin/views/dashboard.vue:
@@ -1117,6 +1128,13 @@ admin/views/dashboard.vue:
   instances: "インスタンス"
   this-instance: "このインスタンス"
   federated: "連合"
+
+admin/views/abuse.vue:
+  title: "スパム報告"
+  target: "対象"
+  reporter: "報告者"
+  details: "詳細"
+  remove-report: "削除"
 
 admin/views/instance.vue:
   instance: "インスタンス"
@@ -1167,6 +1185,7 @@ admin/views/instance.vue:
   disable-registration: "ユーザー登録の受付を停止する"
   disable-local-timeline: "ローカルタイムラインを無効にする"
   disable-global-timeline: "グローバルタイムラインを無効にする"
+  disabling-timelines-info: "これらのタイムラインを無効にしても、管理者およびモデレーターは引き続き利用できます。"
   invite: "招待"
   save: "保存"
   saved: "保存しました"
@@ -1211,6 +1230,7 @@ admin/views/charts.vue:
     notes-total: "投稿の積算"
     users: "ユーザーの増減"
     users-total: "ユーザーの積算"
+    active-users: "アクティブユーザー数"
     drive: "ドライブ使用量の増減"
     drive-total: "ドライブ使用量の積算"
     drive-files: "ドライブのファイル数の増減"
@@ -1220,6 +1240,10 @@ admin/views/charts.vue:
     network-usage: "通信量"
 
 admin/views/drive.vue:
+  operation: "操作"
+  fileid-or-url: "ファイルIDまたはファイルURL"
+  file-not-found: "ファイルが見つかりません"
+  lookup: "照会"
   sort:
     title: "ソート"
     createdAtAsc: "アップロード日時が古い順"
@@ -1235,6 +1259,8 @@ admin/views/drive.vue:
   deleted: "削除しました"
   mark-as-sensitive: "閲覧注意に設定"
   unmark-as-sensitive: "閲覧注意を解除"
+  marked-as-sensitive: "閲覧注意に設定しました"
+  unmarked-as-sensitive: "閲覧注意を解除しました"
 
 admin/views/users.vue:
   operation: "操作"
@@ -1379,23 +1405,12 @@ desktop/views/pages/user/user.photos.vue:
 
 desktop/views/pages/user/user.profile.vue:
   follows-you: "フォローされています"
-  stalk: "ストークする"
-  stalking: "ストーキングしています"
-  unstalk: "ストーク解除"
-  mute: "ミュートする"
-  muted: "ミュートしています"
-  unmute: "ミュート解除"
-  block: "ブロックする"
-  unblock: "ブロック解除"
-  block-confirm: "このユーザーをブロックしますか？"
-  push-to-a-list: "リストに追加"
-  list-pushed: "{user}を{list}に追加しました。"
+  menu: "メニュー"
 
 desktop/views/pages/user/user.header.vue:
   posts: "投稿"
   following: "フォロー"
   followers: "フォロワー"
-  mention: "メンション"
   is-bot: "このアカウントはBotです"
   years-old: "{age}歳"
   year: "年"
@@ -1684,14 +1699,7 @@ mobile/views/pages/user.vue:
   overview: "概要"
   timeline: "タイムライン"
   media: "メディア"
-  mute: "ミュート"
-  unmute: "ミュート解除"
-  block: "ブロック"
-  unblock: "ブロック解除"
   years-old: "{age}歳"
-  push-to-list: "リストに追加"
-  select-list: "リストを選択してください"
-  list-pushed: "{user}を{list}に追加しました"
 
 mobile/views/pages/user/home.vue:
   recent-notes: "最近の投稿"
@@ -1745,12 +1753,10 @@ deck/deck.user-column.vue:
   posts: "投稿"
   following: "フォロー"
   followers: "フォロワー"
-  mention: "メンション"
   images: "画像"
   activity: "アクティビティ"
   timeline: "タイムライン"
   pinned-notes: "ピン留めされた投稿"
-  push-to-a-list: "リストに追加"
 
 docs:
   edit-this-page-on-github: "間違いや改善点を見つけましたか？"

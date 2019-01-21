@@ -72,6 +72,7 @@ export interface INote extends IObject {
 	type: 'Note';
 	_misskey_content: string;
 	_misskey_quote: string;
+	_misskey_question: string;
 }
 
 export interface IPerson extends IObject {

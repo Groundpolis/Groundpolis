@@ -154,7 +154,7 @@ const mfm = P.createLanguage({
 
 	//#region Bold
 	bold: r =>
-		P.regexp(/\*\*([\s\S]+?)\*\*/, 1)
+		P.alt(P.regexp(/\*\*([\s\S]+?)\*\*/, 1), P.regexp(/__([a-zA-Z0-9\s]+?)__/, 1))
 		.map(x => createTree('bold', P.alt(
 			r.strike,
 			r.italic,
@@ -205,7 +205,7 @@ const mfm = P.createLanguage({
 	hashtag: r =>
 		P((input, i) => {
 			const text = input.substr(i);
-			const match = text.match(/^#([^\s\.,!\?#:]+)/i);
+			const match = text.match(/^#([^\s\.,!\?'"#:]+)/i);
 			if (!match) return P.makeFailure(i, 'not a hashtag');
 			let hashtag = match[1];
 			hashtag = removeOrphanedBrackets(hashtag);
@@ -224,7 +224,7 @@ const mfm = P.createLanguage({
 
 	//#region Italic
 	italic: r =>
-		P.regexp(/<i>([\s\S]+?)<\/i>/, 1)
+		P.alt(P.regexp(/<i>([\s\S]+?)<\/i>/, 1), P.regexp(/(\*|_)([a-zA-Z0-9]+?[\s\S]*?)\1/, 2))
 		.map(x => createTree('italic', P.alt(
 			r.bold,
 			r.strike,

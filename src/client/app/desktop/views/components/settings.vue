@@ -197,7 +197,7 @@
 		</ui-card>
 
 		<ui-card class="2fa" v-show="page == 'security'">
-			<div slot="title"><fa icon="mobile-alt"/> {{ $t('2fa') }}</div>
+			<div slot="title"><fa icon="mobile-alt"/> {{ $t('@.2fa') }}</div>
 			<section>
 				<x-2fa/>
 			</section>
@@ -325,11 +325,6 @@ export default Vue.extend({
 		reduceMotion: {
 			get() { return this.$store.state.device.reduceMotion; },
 			set(value) { this.$store.commit('device/set', { key: 'reduceMotion', value }); }
-		},
-
-		apiViaStream: {
-			get() { return this.$store.state.device.apiViaStream; },
-			set(value) { this.$store.commit('device/set', { key: 'apiViaStream', value }); }
 		},
 
 		autoPopout: {

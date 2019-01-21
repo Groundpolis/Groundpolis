@@ -6,6 +6,7 @@ import { packMany } from '../../../../models/note';
 import define from '../../define';
 import { countIf } from '../../../../prelude/array';
 import fetchMeta from '../../../../misc/fetch-meta';
+import activeUsersChart from '../../../../chart/active-users';
 
 export const meta = {
 	desc: {
@@ -118,12 +119,10 @@ export default define(meta, (ps, user) => new Promise(async (res, rej) => {
 		_id: -1
 	};
 
-	const followQuery = followings.map(f => f.stalk ? {
-		userId: f.id
-	} : {
+	const followQuery = followings.map(f => ({
 		userId: f.id,
 
-		// ストーキングしてないならリプライは含めない(ただし投稿者自身の投稿へのリプライ、自分の投稿へのリプライ、自分のリプライは含める)
+		// リプライは含めない(ただし投稿者自身の投稿へのリプライ、自分の投稿へのリプライ、自分のリプライは含める)
 		$or: [{
 			// リプライでない
 			replyId: null
@@ -139,12 +138,12 @@ export default define(meta, (ps, user) => new Promise(async (res, rej) => {
 			// 自分(フォロワー)が送信したリプライ
 			userId: user._id
 		}]
-	});
+	}));
 
 	const visibleQuery = user == null ? [{
-		visibility: { $in: [ 'public', 'home' ] }
+		visibility: { $in: ['public', 'home'] }
 	}] : [{
-		visibility: { $in: [ 'public', 'home' ] }
+		visibility: { $in: ['public', 'home', 'followers'] }
 	}, {
 		// myself (for specified/private)
 		userId: user._id
@@ -168,6 +167,9 @@ export default define(meta, (ps, user) => new Promise(async (res, rej) => {
 			}, {
 				// public only
 				visibility: 'public',
+
+				// リプライでない
+				replyId: null,
 
 				// local
 				'_user.host': null
@@ -272,4 +274,6 @@ export default define(meta, (ps, user) => new Promise(async (res, rej) => {
 		});
 
 	res(await packMany(timeline, user));
+
+	activeUsersChart.update(user);
 }));

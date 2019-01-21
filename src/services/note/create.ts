@@ -23,6 +23,7 @@ import registerHashtag from '../register-hashtag';
 import isQuote from '../../misc/is-quote';
 import notesChart from '../../chart/notes';
 import perUserNotesChart from '../../chart/per-user-notes';
+import activeUsersChart from '../../chart/active-users';
 
 import { erase } from '../../prelude/array';
 import insertNoteUnread from './unread';
@@ -104,6 +105,7 @@ type Option = {
 	apMentions?: IUser[];
 	apHashtags?: string[];
 	apEmojis?: string[];
+	questionUri?: string;
 	uri?: string;
 	app?: IApp;
 };
@@ -206,6 +208,8 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 	// 統計を更新
 	notesChart.update(note, true);
 	perUserNotesChart.update(user, note, true);
+	// ローカルユーザーのチャートはタイムライン取得時に更新しているのでリモートユーザーの場合だけでよい
+	if (isRemoteUser(user)) activeUsersChart.update(user);
 
 	// Register host
 	if (isRemoteUser(user)) {
@@ -376,17 +380,30 @@ async function publish(user: IUser, note: INote, noteObj: any, reply: INote, ren
 			// Publish event to myself's stream
 			publishHomeTimelineStream(note.userId, detailPackedNote);
 			publishHybridTimelineStream(note.userId, detailPackedNote);
+
+			if (note.visibility == 'specified') {
+				for (const u of visibleUsers) {
+					publishHomeTimelineStream(u._id, detailPackedNote);
+					publishHybridTimelineStream(u._id, detailPackedNote);
+				}
+			}
 		} else {
 			// Publish event to myself's stream
 			publishHomeTimelineStream(note.userId, noteObj);
 
 			// Publish note to local and hybrid timeline stream
 			if (note.visibility != 'home') {
-				publishLocalTimelineStream(noteObj);
+				// Ignore if it is a reply
+				if (note.replyId == null) {
+					publishLocalTimelineStream(noteObj);
+				}
 			}
 
 			if (note.visibility == 'public') {
-				publishHybridTimelineStream(null, noteObj);
+				// Ignore if it is a reply
+				if (note.replyId == null) {
+					publishHybridTimelineStream(null, noteObj);
+				}
 			} else {
 				// Publish event to myself's stream
 				publishHybridTimelineStream(note.userId, noteObj);
@@ -527,7 +544,13 @@ async function publishToUserLists(note: INote, noteObj: any) {
 	});
 
 	for (const list of lists) {
-		publishUserListStream(list._id, 'note', noteObj);
+		if (note.visibility == 'specified') {
+			if (note.visibleUserIds.some(id => id.equals(list.userId))) {
+				publishUserListStream(list._id, 'note', noteObj);
+			}
+		} else {
+			publishUserListStream(list._id, 'note', noteObj);
+		}
 	}
 }
 
@@ -548,12 +571,9 @@ async function publishToFollowers(note: INote, user: IUser, noteActivity: any) {
 		const follower = following._follower;
 
 		if (isLocalUser(follower)) {
-			// ストーキングしていない場合
-			if (!following.stalk) {
-				// この投稿が返信ならスキップ
-				if (note.replyId && !note._reply.userId.equals(following.followerId) && !note._reply.userId.equals(note.userId))
-					continue;
-			}
+			// この投稿が返信ならスキップ
+			if (note.replyId && !note._reply.userId.equals(following.followerId) && !note._reply.userId.equals(note.userId))
+				continue;
 
 			// Publish event to followers stream
 			publishHomeTimelineStream(following.followerId, detailPackedNote);
