@@ -10,6 +10,7 @@ import i18n from '../../../i18n';
 import { url } from '../../../config';
 import copyToClipboard from '../../../common/scripts/copy-to-clipboard';
 import { concat, intersperse } from '../../../../../prelude/array';
+import { faCopy } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
 	i18n: i18n('common/views/components/note-menu.vue'),
@@ -30,7 +31,7 @@ export default Vue.extend({
 						text: this.$t('detail'),
 						action: this.detail
 					}], [{
-						icon: 'align-left',
+						icon: faCopy,
 						text: this.$t('copy-content'),
 						action: this.copyContent
 					}], [{
@@ -87,10 +88,18 @@ export default Vue.extend({
 
 		copyContent() {
 			copyToClipboard(this.note.text);
+			this.$root.dialog({
+				type: 'success',
+				splash: true
+			});
 		},
 
 		copyLink() {
 			copyToClipboard(`${url}/notes/${this.note.id}`);
+			this.$root.dialog({
+				type: 'success',
+				splash: true
+			});
 		},
 
 		pin() {
