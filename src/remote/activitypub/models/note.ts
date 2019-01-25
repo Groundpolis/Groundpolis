@@ -16,6 +16,7 @@ import { toUnicode } from 'punycode';
 import { unique, concat, difference } from '../../../prelude/array';
 import { extractPollFromQuestion } from './question';
 import vote from '../../../services/note/polls/vote';
+import { IDriveFile } from '../../../models/drive-file';
 
 const log = debug('misskey:activitypub');
 
@@ -92,10 +93,12 @@ export async function createNote(value: any, resolver?: Resolver, silent = false
 	// TODO: attachmentは必ずしもImageではない
 	// TODO: attachmentは必ずしも配列ではない
 	// Noteがsensitiveなら添付もsensitiveにする
-	const files = note.attachment
-		.map(attach => attach.sensitive = note.sensitive)
-		? await Promise.all(note.attachment.map(x => resolveImage(actor, x)))
-		: [];
+	const files: IDriveFile[] = [];
+	for (const attachment of note.attachment) {
+		attachment.sensitive = note.sensitive;
+		const file = await resolveImage(actor, attachment).catch(() => null);
+		if (file != null) files.push(file);
+	}
 
 	// リプライ
 	const reply = note.inReplyTo ? await resolveNote(note.inReplyTo, resolver) : null;
@@ -233,11 +236,13 @@ async function extractMentionedUsers(actor: IRemoteUser, to: string[], cc: strin
 	const ignoreUris = ['https://www.w3.org/ns/activitystreams#Public', `${actor.uri}/followers`];
 	const uris = difference(unique(concat([to || [], cc || []])), ignoreUris);
 
-	const users = await Promise.all(
-		uris.map(async uri => await resolvePerson(uri, null, resolver).catch(() => null))
-	);
+	const users = [];
+	for (const uri of uris) {
+		const user = await resolvePerson(uri, null, resolver).catch(() => null);
+		if (user != null) users.push(user);
+	}
 
-	return users.filter(x => x != null);
+	return users;
 }
 
 function extractHashtags(tags: ITag[]) {
