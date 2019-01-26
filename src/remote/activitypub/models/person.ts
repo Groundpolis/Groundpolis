@@ -259,8 +259,6 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 
 	await updateFeatured(user._id).catch(err => console.log(err));
 
-	//await fetchOutbox(user._id).catch(err => console.log(err));
-
 	return user;
 }
 
@@ -390,7 +388,6 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: obje
 		multi: true
 	});
 
-	//await fetchOutbox(exist._id).catch(err => console.log(err));
 	await updateFeatured(exist._id).catch(err => console.log(err));
 }
 
@@ -457,50 +454,4 @@ export async function updateFeatured(userId: mongo.ObjectID) {
 			pinnedNoteIds: featuredNotes.filter(note => note != null).map(note => note._id)
 		}
 	});
-}
-
-export async function fetchOutbox(userId: mongo.ObjectID) {
-	const user = await User.findOne({ _id: userId });
-	if (!isRemoteUser(user)) return;
-	if (!user.outbox) return;
-
-	log(`Updating the outbox: ${user.outbox}`);
-
-	const resolver = new Resolver();
-
-	// Resolve to OrderedCollection Object
-	const collection = await resolver.resolveCollection(user.outbox);
-	if (!isOrderedCollection(collection)) throw new Error(`Object is not OrderedCollection`);
-
-	// Get first page items
-	let unresolvedItems;
-
-	if (collection.orderedItems) {
-		unresolvedItems = collection.orderedItems;
-	} else if (collection.first) {
-		const page = await resolver.resolveCollection(collection.first);
-		unresolvedItems = page.orderedItems;
-	} else {
-		throw new Error('');
-	}
-
-	// Resolve to Activity arrays
-	const items = await resolver.resolve(unresolvedItems);
-	if (!Array.isArray(items)) throw new Error(`Collection items is not an array`);
-
-	for (const activity of items.reverse()) {	// なるべく古い順に登録する
-		if (activity.type === 'Create' && activity.object && activity.object.type === 'Note') {
-			// Note
-			if (activity.object.inReplyTo) {
-				// Note[Replay]
-			} else {
-				// Note[Original]
-				await resolveNote(activity.object, resolver);
-			}
-		} else if (activity.type === 'Announce') {
-			// Renote
-			// Renoteを追うと終わらないので・・・
-			// await resolveNote(activity.object, resolver);
-		}
-	}
 }
