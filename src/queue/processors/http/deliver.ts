@@ -4,9 +4,7 @@ import request from '../../../remote/activitypub/request';
 
 export default async (job: bq.Job, done: any): Promise<void> => {
 	try {
-		console.log('start', job.data.to);
-		await request(job.data.user, job.data.to, job.data.content, job.data.sha256);
-		console.log('end', job.data.to);
+		await request(job.data.user, job.data.to, job.data.content);
 		done();
 	} catch (res) {
 		if (res != null && res.hasOwnProperty('statusCode')) {

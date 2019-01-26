@@ -2,7 +2,7 @@ import { request } from 'https';
 const { sign } = require('http-signature');
 import { URL } from 'url';
 import * as debug from 'debug';
-import computeSha256 from '../../misc/compute-sha256';
+const crypto = require('crypto');
 const { lookup } = require('lookup-dns-cache');
 const promiseAny = require('promise-any');
 
@@ -12,14 +12,7 @@ import { publishApLogStream } from '../../stream';
 
 const log = debug('misskey:activitypub:deliver');
 
-/**
- * Deliver to remote inbox
- * @param user Actor
- * @param url Target inbox
- * @param object Activity to send
- * @param sha256 Pre computed SHA256 digest
- */
-export default (user: ILocalUser, url: string, object: Object, sha256?: string) => new Promise(async (resolve, reject) => {
+export default (user: ILocalUser, url: string, object: any) => new Promise(async (resolve, reject) => {
 	log(`--> ${url}`);
 
 	const timeout = 60 * 1000;
@@ -28,9 +21,9 @@ export default (user: ILocalUser, url: string, object: Object, sha256?: string) 
 
 	const data = JSON.stringify(object);
 
-	if (sha256 == null) {
-		sha256 = computeSha256(data);
-	}
+	const sha256 = crypto.createHash('sha256');
+	sha256.update(data);
+	const hash = sha256.digest('base64');
 
 	const addr = await resolveAddr(hostname).catch(e => reject(e));
 	if (!addr) return;
@@ -47,7 +40,7 @@ export default (user: ILocalUser, url: string, object: Object, sha256?: string) 
 			'Host': host,
 			'User-Agent': config.user_agent,
 			'Content-Type': 'application/activity+json',
-			'Digest': `SHA-256=${sha256}`
+			'Digest': `SHA-256=${hash}`
 		}
 	}, res => {
 		log(`${url} --> ${res.statusCode}`);
