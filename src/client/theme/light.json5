@@ -7,7 +7,7 @@
 	kind: 'light',
 
 	vars: {
-		primary: '#e64ff6',
+		primary: '#fb4e4e',
 		secondary: '#fff',
 		text: '#666',
 	},
