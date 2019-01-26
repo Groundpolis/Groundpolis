@@ -257,7 +257,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 	});
 	//#endregion
 
-	updateFeatured(user._id).catch(err => console.log(err));
+	await updateFeatured(user._id).catch(err => console.log(err));
 
 	//await fetchOutbox(user._id).catch(err => console.log(err));
 
@@ -391,7 +391,7 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: obje
 	});
 
 	//await fetchOutbox(exist._id).catch(err => console.log(err));
-	updateFeatured(exist._id).catch(err => console.log(err));
+	await updateFeatured(exist._id).catch(err => console.log(err));
 }
 
 /**
@@ -447,15 +447,14 @@ export async function updateFeatured(userId: mongo.ObjectID) {
 	if (!Array.isArray(items)) throw new Error(`Collection items is not an array`);
 
 	// Resolve and regist Notes
-	const pinnedNoteIds = [];
-	for (const item of items.filter(item => item.type === 'Note')) {
-		const note = await resolveNote(item, resolver);
-		if (note != null) pinnedNoteIds.push(note._id);
-	}
+	const featuredNotes = await Promise.all(items
+		.filter(item => item.type === 'Note')
+		.slice(0, 5)
+		.map(item => resolveNote(item, resolver)));
 
 	await User.update({ _id: user._id }, {
 		$set: {
-			pinnedNoteIds
+			pinnedNoteIds: featuredNotes.filter(note => note != null).map(note => note._id)
 		}
 	});
 }
