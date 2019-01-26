@@ -83,7 +83,7 @@ export default (user: ILocalUser, url: string, object: Object, sha256?: string) 
 	//#region Log
 	publishApLogStream({
 		direction: 'out',
-		activity: (object as any).type,
+		activity: object.type,
 		host: null,
 		actor: user.username
 	});
