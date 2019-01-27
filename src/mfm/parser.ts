@@ -150,7 +150,7 @@ const mfm = P.createLanguage({
 	spin: r =>
 		P((input, i) => {
 			const text = input.substr(i);
-			const match = text.match(/^<spin(\s[a-z]+?)?>(.+?)<\/spin>/i);
+			const match = text.match(/^<spin(\s[a-z-]+?)?>(.+?)<\/spin>/i);
 			if (!match) return P.makeFailure(i, 'not a spin');
 			return P.makeSuccess(i + match[0].length, {
 				content: match[2], attr: match[1] ? match[1].trim() : null
