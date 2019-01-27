@@ -92,6 +92,7 @@ const mfm = P.createLanguage({
 		r.big,
 		r.small,
 		r.spin,
+		r.jump,
 		r.bold,
 		r.strike,
 		r.italic,
@@ -126,6 +127,7 @@ const mfm = P.createLanguage({
 			r.emoji,
 			r.mathInline,
 			r.spin,
+			r.jump,
 			r.text
 		).atLeast(1).tryParse(x), {})),
 	//#endregion
@@ -146,8 +148,27 @@ const mfm = P.createLanguage({
 
 	//#region Spin
 	spin: r =>
-		P.regexp(/<spin>(.+?)<\/spin>/, 1)
+		P((input, i) => {
+			const text = input.substr(i);
+			const match = text.match(/^<spin(\s[a-z]+?)?>(.+?)<\/spin>/i);
+			if (!match) return P.makeFailure(i, 'not a spin');
+			return P.makeSuccess(i + match[0].length, {
+				content: match[2], attr: match[1] ? match[1].trim() : null
+			});
+		})
 		.map(x => createTree('spin', P.alt(
+			r.emoji,
+			r.flip,
+			r.text
+		).atLeast(1).tryParse(x.content), {
+			attr: x.attr
+		})),
+	//#endregion
+
+	//#region Jump
+	jump: r =>
+		P.regexp(/<jump>(.+?)<\/jump>/, 1)
+		.map(x => createTree('jump', P.alt(
 			r.emoji,
 			r.text
 		).atLeast(1).tryParse(x), {})),
@@ -188,6 +209,7 @@ const mfm = P.createLanguage({
 			r.big,
 			r.small,
 			r.spin,
+			r.jump,
 			r.bold,
 			r.strike,
 			r.italic,
@@ -239,6 +261,7 @@ const mfm = P.createLanguage({
 			r.big,
 			r.small,
 			r.spin,
+			r.jump,
 			r.bold,
 			r.strike,
 			r.link,
@@ -296,6 +319,7 @@ const mfm = P.createLanguage({
 				r.big,
 				r.small,
 				r.spin,
+				r.jump,
 				r.bold,
 				r.strike,
 				r.italic,
@@ -346,6 +370,7 @@ const mfm = P.createLanguage({
 			r.bold,
 			r.small,
 			r.spin,
+			r.jump,
 			r.strike,
 			r.italic,
 			r.mention,
@@ -409,6 +434,7 @@ const mfm = P.createLanguage({
 				r.big,
 				r.small,
 				r.spin,
+				r.jump,
 				r.bold,
 				r.strike,
 				r.italic,

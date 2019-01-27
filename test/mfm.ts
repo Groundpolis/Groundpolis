@@ -253,10 +253,34 @@ describe('MFM', () => {
 			]);
 		});
 
-		it('spin', () => {
-			const tokens = analyze('<spin>:foo:</spin>');
+		describe('spin', () => {
+			it('simple', () => {
+				const tokens = analyze('<spin>:foo:</spin>');
+				assert.deepStrictEqual(tokens, [
+					tree('spin', [
+						leaf('emoji', { name: 'foo' })
+					], {
+						attr: null
+					}),
+				]);
+			});
+
+			it('with attr', () => {
+				const tokens = analyze('<spin left>:foo:</spin>');
+				assert.deepStrictEqual(tokens, [
+					tree('spin', [
+						leaf('emoji', { name: 'foo' })
+					], {
+						attr: 'left'
+					}),
+				]);
+			});
+		});
+
+		it('jump', () => {
+			const tokens = analyze('<jump>:foo:</jump>');
 			assert.deepStrictEqual(tokens, [
-				tree('spin', [
+				tree('jump', [
 					leaf('emoji', { name: 'foo' })
 				], {}),
 			]);
