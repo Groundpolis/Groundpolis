@@ -131,6 +131,7 @@ export default Vue.component('misskey-flavored-markdown', {
 					const direction =
 						token.node.props.attr == 'left' ? 'reverse' :
 						token.node.props.attr == 'alternate' ? 'alternate' :
+						token.node.props.attr == 'alternate-left' ? 'alternate-reverse' :
 						'normal';
 					const style = (this.$store.state.settings.disableAnimatedMfm || isLong || isMany)
 						? ''
