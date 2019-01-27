@@ -240,7 +240,7 @@ export default Vue.extend({
 						&.scroll
 							max-height 200px
 							overflow auto
-							padding 2px
+							padding 0.5em 0em 0.5em 0.5em
 
 						> .reply
 							margin-right 8px
