@@ -55,6 +55,18 @@ export default (tokens: MfmForest, mentionedRemoteUsers: INote['mentionedRemoteU
 			return el;
 		},
 
+		spin(token) {
+			const el = doc.createElement('i');
+			appendChildren(token.children, el);
+			return el;
+		},
+
+		flip(token) {
+			const el = doc.createElement('span');
+			appendChildren(token.children, el);
+			return el;
+		},
+
 		blockCode(token) {
 			const pre = doc.createElement('pre');
 			const inner = doc.createElement('code');
@@ -87,7 +99,13 @@ export default (tokens: MfmForest, mentionedRemoteUsers: INote['mentionedRemoteU
 			return el;
 		},
 
-		math(token) {
+		mathInline(token) {
+			const el = doc.createElement('code');
+			el.textContent = token.node.props.formula;
+			return el;
+		},
+
+		mathBlock(token) {
 			const el = doc.createElement('code');
 			el.textContent = token.node.props.formula;
 			return el;

@@ -26,7 +26,7 @@ import User from '../models/user';
 const app = new Koa();
 app.proxy = true;
 
-if (process.env.NODE_ENV != 'production') {
+if (!['production', 'test'].includes(process.env.NODE_ENV)) {
 	// Logger
 	app.use(logger());
 
@@ -100,6 +100,19 @@ function createServer() {
 		return http.createServer(app.callback());
 	}
 }
+
+// For testing
+export const startServer = () => {
+	const server = createServer();
+
+	// Init stream server
+	require('./api/streaming')(server);
+
+	// Listen
+	server.listen(config.port);
+
+	return server;
+};
 
 export default () => new Promise(resolve => {
 	const server = createServer();
