@@ -1,7 +1,7 @@
 import * as Router from 'koa-router';
 import config from '../../config';
 import $ from 'cafy'; import ID from '../../misc/cafy-id';
-import pack from '../../remote/activitypub/renderer';
+import { renderActivity } from '../../remote/activitypub/renderer';
 import renderOrderedCollection from '../../remote/activitypub/renderer/ordered-collection';
 import renderOrderedCollectionPage from '../../remote/activitypub/renderer/ordered-collection-page';
 import { setResponseType } from '../activitypub';
@@ -73,7 +73,7 @@ export default async (ctx: Router.IRouterContext) => {
 			notes.length > 0 ? `${partOf}?page=true&until_id=${notes[notes.length - 1]._id}` : null
 		);
 
-		ctx.body = pack(rendered);
+		ctx.body = renderActivity(rendered);
 		setResponseType(ctx);
 	} else {
 		// index page
@@ -81,7 +81,7 @@ export default async (ctx: Router.IRouterContext) => {
 			`${partOf}?page=true`,
 			`${partOf}?page=true&since_id=000000000000000000000000`
 		);
-		ctx.body = pack(rendered);
+		ctx.body = renderActivity(rendered);
 		setResponseType(ctx);
 	}
 };
