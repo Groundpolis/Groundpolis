@@ -4,7 +4,7 @@ const json = require('koa-json-body');
 const httpSignature = require('http-signature');
 
 import { createHttpJob } from '../queue';
-import pack from '../remote/activitypub/renderer';
+import { renderActivity } from '../remote/activitypub/renderer';
 import Note from '../models/note';
 import User, { isLocalUser, ILocalUser, IUser } from '../models/user';
 import Emoji from '../models/emoji';
@@ -84,7 +84,7 @@ router.get('/notes/:note', async (ctx, next) => {
 		return;
 	}
 
-	ctx.body = pack(await renderNote(note, false));
+	ctx.body = renderActivity(await renderNote(note, false));
 	ctx.set('Cache-Control', 'public, max-age=180');
 	setResponseType(ctx);
 });
@@ -107,7 +107,7 @@ router.get('/notes/:note/activity', async ctx => {
 		return;
 	}
 
-	ctx.body = pack(await packActivity(note));
+	ctx.body = renderActivity(await packActivity(note));
 	ctx.set('Cache-Control', 'public, max-age=180');
 	setResponseType(ctx);
 });
@@ -138,7 +138,7 @@ router.get('/questions/:question', async (ctx, next) => {
 			_id: poll.userId
 	});
 
-	ctx.body = pack(await renderQuestion(user as ILocalUser, poll));
+	ctx.body = renderActivity(await renderQuestion(user as ILocalUser, poll));
 	setResponseType(ctx);
 });
 
@@ -177,7 +177,7 @@ router.get('/users/:user/publickey', async ctx => {
 	}
 
 	if (isLocalUser(user)) {
-		ctx.body = pack(renderKey(user));
+		ctx.body = renderActivity(renderKey(user));
 		ctx.set('Cache-Control', 'public, max-age=180');
 		setResponseType(ctx);
 	} else {
@@ -192,7 +192,7 @@ async function userInfo(ctx: Router.IRouterContext, user: IUser) {
 		return;
 	}
 
-	ctx.body = pack(await renderPerson(user as ILocalUser));
+	ctx.body = renderActivity(await renderPerson(user as ILocalUser));
 	ctx.set('Cache-Control', 'public, max-age=180');
 	setResponseType(ctx);
 }
@@ -239,7 +239,7 @@ router.get('/emojis/:emoji', async ctx => {
 		return;
 	}
 
-	ctx.body = pack(await renderEmoji(emoji));
+	ctx.body = renderActivity(await renderEmoji(emoji));
 	ctx.set('Cache-Control', 'public, max-age=180');
 	setResponseType(ctx);
 });

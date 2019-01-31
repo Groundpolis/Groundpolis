@@ -55,6 +55,11 @@ type IUserBase = {
 	isSuspended: boolean;
 
 	/**
+	 * サイレンスされているか否か
+	 */
+	isSilenced: boolean;
+
+	/**
 	 * 鍵アカウントか否か
 	 */
 	isLocked: boolean;
@@ -307,6 +312,7 @@ export const pack = (
 		delete _user.password;
 		delete _user.token;
 		delete _user.twoFactorTempSecret;
+		delete _user.two_factor_temp_secret; // 後方互換性のため
 		delete _user.twoFactorSecret;
 		if (_user.twitter) {
 			delete _user.twitter.accessToken;
