@@ -239,7 +239,7 @@ export default Vue.extend({
 
 						&.scroll
 							max-height 200px
-							overflow auto
+							overflow hidden auto
 							padding 0.5em 0em 0.5em 0.5em
 
 						> .reply
@@ -266,7 +266,7 @@ export default Vue.extend({
 					> .url-previews
 						&.scroll
 							max-height 200px
-							overflow auto
+							overflow hidden auto
 
 					.mk-url-preview
 						margin-top 8px
