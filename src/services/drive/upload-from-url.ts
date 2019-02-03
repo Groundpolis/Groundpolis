@@ -83,7 +83,7 @@ export default async (
 	let error;
 
 	try {
-		driveFile = await create(user, path, name, null, folderId, force, link, url, uri, sensitive);
+		driveFile = await create(user, path, name, null, folderId, force || true, link, url, uri, sensitive);
 		logger.succ(`Got: ${driveFile._id}`);
 	} catch (e) {
 		error = e;
