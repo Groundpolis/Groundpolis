@@ -3,7 +3,7 @@
 	<ui-card>
 		<div slot="title"><fa :icon="faTerminal"/> {{ $t('operation') }}</div>
 		<section class="fit-top">
-			<ui-input class="target" v-model="target" type="text">
+			<ui-input class="target" v-model="target" type="text" @enter="showUser">
 				<span>{{ $t('username-or-userid') }}</span>
 			</ui-input>
 			<ui-button @click="showUser"><fa :icon="faSearch"/> {{ $t('lookup') }}</ui-button>
@@ -124,22 +124,23 @@ export default Vue.extend({
 
 	methods: {
 		/** テキストエリアのユーザーを解決する */
-		async fetchUser() {
-			try {
-				return await this.$root.api('users/show', this.target.startsWith('@') ? parseAcct(this.target) : { userId: this.target });
-			} catch (e) {
-				if (e == 'user not found') {
-					this.$root.dialog({
-						type: 'error',
-						text: this.$t('user-not-found')
-					});
-				} else {
-					this.$root.dialog({
-						type: 'error',
-						text: e.toString()
-					});
-				}
-			}
+		fetchUser() {
+			return new Promise((res) => {
+				const usernamePromise = this.$root.api('users/show', parseAcct(this.target));
+				const idPromise = this.$root.api('users/show', { userId: this.target });
+
+				usernamePromise.then(res);
+				idPromise.then(res);
+
+				idPromise.catch(e => {
+					if (e == 'user not found') {
+						this.$root.dialog({
+							type: 'error',
+							text: this.$t('user-not-found')
+						});
+					}
+				});
+			});
 		},
 
 		/** テキストエリアから処理対象ユーザーを設定する */

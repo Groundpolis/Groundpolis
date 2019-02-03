@@ -5,13 +5,14 @@
 import * as fs from 'fs';
 import * as http from 'http';
 import * as http2 from 'http2';
+import * as https from 'https';
 import * as zlib from 'zlib';
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import * as mount from 'koa-mount';
 import * as compress from 'koa-compress';
-import * as logger from 'koa-logger';
-const requestStats = require('request-stats');
+import * as koaLogger from 'koa-logger';
+import * as requestStats from 'request-stats';
 //const slow = require('koa-slow');
 
 import activityPub from './activitypub';
@@ -21,6 +22,9 @@ import networkChart from '../chart/network';
 import apiServer from './api';
 import { sum } from '../prelude/array';
 import User from '../models/user';
+import Logger from '../misc/logger';
+
+export const serverLogger = new Logger('server', 'gray');
 
 // Init app
 const app = new Koa();
@@ -28,7 +32,9 @@ app.proxy = true;
 
 if (!['production', 'test'].includes(process.env.NODE_ENV)) {
 	// Logger
-	app.use(logger());
+	app.use(koaLogger(str => {
+		serverLogger.info(str);
+	}));
 
 	// Delay
 	//app.use(slow({
@@ -95,7 +101,7 @@ function createServer() {
 			certs[k] = fs.readFileSync(config.https[k]);
 		}
 		certs['allowHTTP1'] = true;
-		return http2.createSecureServer(certs, app.callback());
+		return http2.createSecureServer(certs, app.callback()) as https.Server;
 	} else {
 		return http.createServer(app.callback());
 	}

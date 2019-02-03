@@ -6,8 +6,9 @@ import * as nodemailer from 'nodemailer';
 import fetchMeta from '../../../../misc/fetch-meta';
 import rndstr from 'rndstr';
 import config from '../../../../config';
-const ms = require('ms');
+import * as ms from 'ms';
 import * as bcrypt from 'bcryptjs';
+import { apiLogger } from '../../logger';
 
 export const meta = {
 	requireCredential: true,
@@ -91,10 +92,11 @@ export default define(meta, (ps, user) => new Promise(async (res, rej) => {
 			text: `To verify email, please click this link: ${link}`
 		}, (error, info) => {
 			if (error) {
-				return console.error(error);
+				apiLogger.error(error);
+				return;
 			}
 
-			console.log('Message sent: %s', info.messageId);
+			apiLogger.info('Message sent: %s', info.messageId);
 		});
 	}
 }));

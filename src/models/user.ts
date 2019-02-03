@@ -1,7 +1,7 @@
 import * as mongo from 'mongodb';
-const deepcopy = require('deepcopy');
+import * as deepcopy from 'deepcopy';
 import rap from '@prezzemolo/rap';
-import db from '../db/mongodb';
+import db, { dbLogger } from '../db/mongodb';
 import isObjectId from '../misc/is-objectid';
 import { packMany as packNoteMany } from './note';
 import Following from './following';
@@ -48,6 +48,7 @@ type IUserBase = {
 	lang?: string;
 	pinnedNoteIds: mongo.ObjectID[];
 	emojis?: string[];
+	tags?: string[];
 
 	/**
 	 * 凍結されているか否か
@@ -286,7 +287,7 @@ export const pack = (
 
 	// (データベースの欠損などで)ユーザーがデータベース上に見つからなかったとき
 	if (_user == null) {
-		console.warn(`user not found on database: ${user}`);
+		dbLogger.warn(`user not found on database: ${user}`);
 		return resolve(null);
 	}
 

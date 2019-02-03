@@ -1,7 +1,7 @@
 import * as mongo from 'mongodb';
-const deepcopy = require('deepcopy');
+import * as deepcopy from 'deepcopy';
 import rap from '@prezzemolo/rap';
-import db from '../db/mongodb';
+import db, { dbLogger } from '../db/mongodb';
 import isObjectId from '../misc/is-objectid';
 import { length } from 'stringz';
 import { IUser, pack as packUser } from './user';
@@ -232,7 +232,7 @@ export const pack = async (
 
 	// (データベースの欠損などで)投稿がデータベース上に見つからなかったとき
 	if (_note == null) {
-		console.warn(`[DAMAGED DB] (missing) pkg: note :: ${note}`);
+		dbLogger.warn(`[DAMAGED DB] (missing) pkg: note :: ${note}`);
 		return null;
 	}
 
@@ -273,6 +273,7 @@ export const pack = async (
 	delete _note._renote;
 	delete _note._files;
 	delete _note._replyIds;
+	delete _note.mentionedRemoteUsers;
 
 	if (_note.geo) delete _note.geo.type;
 
@@ -370,18 +371,18 @@ export const pack = async (
 
 	//#region (データベースの欠損などで)参照しているデータがデータベース上に見つからなかったとき
 	if (_note.user == null) {
-		console.warn(`[DAMAGED DB] (missing) pkg: note -> user :: ${_note.id} (user ${_note.userId})`);
+		dbLogger.warn(`[DAMAGED DB] (missing) pkg: note -> user :: ${_note.id} (user ${_note.userId})`);
 		return null;
 	}
 
 	if (opts.detail) {
 		if (_note.replyId != null && _note.reply == null) {
-			console.warn(`[DAMAGED DB] (missing) pkg: note -> reply :: ${_note.id} (reply ${_note.replyId})`);
+			dbLogger.warn(`[DAMAGED DB] (missing) pkg: note -> reply :: ${_note.id} (reply ${_note.replyId})`);
 			return null;
 		}
 
 		if (_note.renoteId != null && _note.renote == null) {
-			console.warn(`[DAMAGED DB] (missing) pkg: note -> renote :: ${_note.id} (renote ${_note.renoteId})`);
+			dbLogger.warn(`[DAMAGED DB] (missing) pkg: note -> renote :: ${_note.id} (renote ${_note.renoteId})`);
 			return null;
 		}
 	}

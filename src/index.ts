@@ -8,7 +8,6 @@ require('events').EventEmitter.defaultMaxListeners = 128;
 
 import * as os from 'os';
 import * as cluster from 'cluster';
-import * as debug from 'debug';
 import chalk from 'chalk';
 import * as portscanner from 'portscanner';
 import * as isRoot from 'is-root';
@@ -25,18 +24,17 @@ import { Config } from './config/types';
 import { lessThan } from './prelude/array';
 import * as pkg from '../package.json';
 
-const clusterLog = debug('misskey:cluster');
+const logger = new Logger('core', 'cyan');
+const bootLogger = logger.createSubLogger('boot', 'magenta');
+const clusterLog = logger.createSubLogger('cluster', 'orange');
 const ev = new Xev();
-
-if (process.env.NODE_ENV != 'production' && process.env.DEBUG == null) {
-	debug.enable('misskey');
-}
 
 //#region Command line argument definitions
 program
 	.version(pkg.version)
 	.option('--no-daemons', 'Disable daemon processes (for debbuging)')
 	.option('--disable-clustering', 'Disable clustering')
+	.option('--quiet', 'Suppress all logs')
 	.parse(process.argv);
 //#endregion
 
@@ -70,22 +68,34 @@ function main() {
 async function masterMain() {
 	let config: Config;
 
+	if (!program.quiet) {
+		//#region Misskey logo
+		console.log(' _____ _         _           ');
+		console.log('|     |_|___ ___| |_ ___ _ _ ');
+		console.log('| | | | |_ -|_ -| \'_| -_| | |');
+		console.log('|_|_|_|_|___|___|_,_|___|_  |');
+		console.log('                        |___|\n');
+		//#endregion
+	}
+
+	bootLogger.info('Welcome to Misskey!');
+	bootLogger.info(`Misskey v${pkg.version}`, true);
+
 	try {
 		// initialize app
 		config = await init();
 	} catch (e) {
-		console.error(e);
-		Logger.error('Fatal error occurred during initialization');
+		bootLogger.error('Fatal error occurred during initialization', true);
 		process.exit(1);
 	}
 
-	Logger.succ('Misskey initialized');
+	bootLogger.succ('Misskey initialized');
 
 	if (!program.disableClustering) {
 		await spawnWorkers(config.clusterLimit);
 	}
 
-	Logger.succ(`Now listening on port ${config.port} on ${config.url}`);
+	bootLogger.succ(`Now listening on port ${config.port} on ${config.url}`, true);
 }
 
 /**
@@ -114,7 +124,7 @@ async function isPortAvailable(port: number): Promise<boolean> {
 }
 
 async function showMachine() {
-	const logger = new Logger('Machine');
+	const logger = bootLogger.createSubLogger('machine');
 	logger.info(`Hostname: ${os.hostname()}`);
 	logger.info(`Platform: ${process.platform}`);
 	logger.info(`Architecture: ${process.arch}`);
@@ -127,12 +137,12 @@ async function showMachine() {
 
 function showEnvironment(): void {
 	const env = process.env.NODE_ENV;
-	const logger = new Logger('Env');
+	const logger = bootLogger.createSubLogger('env');
 	logger.info(typeof env == 'undefined' ? 'NODE_ENV is not set' : `NODE_ENV: ${env}`);
 
 	if (env !== 'production') {
-		logger.warn('The environment is not in production mode');
-		logger.warn('Do not use for production purpose');
+		logger.warn('The environment is not in production mode.');
+		logger.warn('DO NOT USE FOR PRODUCTION PURPOSE!', true);
 	}
 
 	logger.info(`You ${isRoot() ? '' : 'do not '}have root privileges`);
@@ -142,20 +152,20 @@ function showEnvironment(): void {
  * Init app
  */
 async function init(): Promise<Config> {
-	Logger.info('Welcome to Misskey!');
-	Logger.info(`<<< Misskey v${pkg.version} >>>`);
+	showEnvironment();
 
-	new Logger('Nodejs').info(`Version ${runningNodejsVersion.join('.')}`);
+	const nodejsLogger = bootLogger.createSubLogger('nodejs');
+
+	nodejsLogger.info(`Version ${runningNodejsVersion.join('.')}`);
 
 	if (!satisfyNodejsVersion) {
-		new Logger('Nodejs').error(`Node.js version is less than ${requiredNodejsVersion.join('.')}. Please upgrade it.`);
+		nodejsLogger.error(`Node.js version is less than ${requiredNodejsVersion.join('.')}. Please upgrade it.`);
 		process.exit(1);
 	}
 
 	await showMachine();
-	showEnvironment();
 
-	const configLogger = new Logger('Config');
+	const configLogger = bootLogger.createSubLogger('config');
 	let config;
 
 	try {
@@ -175,17 +185,17 @@ async function init(): Promise<Config> {
 	configLogger.succ('Loaded');
 
 	if (config.port == null) {
-		Logger.error('The port is not configured. Please configure port.');
+		bootLogger.error('The port is not configured. Please configure port.');
 		process.exit(1);
 	}
 
 	if (process.platform === 'linux' && isWellKnownPort(config.port) && !isRoot()) {
-		Logger.error('You need root privileges to listen on well-known port on Linux');
+		bootLogger.error('You need root privileges to listen on well-known port on Linux');
 		process.exit(1);
 	}
 
 	if (!await isPortAvailable(config.port)) {
-		Logger.error(`Port ${config.port} is already in use`);
+		bootLogger.error(`Port ${config.port} is already in use`, true);
 		process.exit(1);
 	}
 
@@ -198,7 +208,7 @@ async function init(): Promise<Config> {
 const requiredMongoDBVersion = [3, 6];
 
 function checkMongoDB(config: Config) {
-	const mongoDBLogger = new Logger('MongoDB');
+	const mongoDBLogger = bootLogger.createSubLogger('db');
 	const u = config.mongodb.user ? encodeURIComponent(config.mongodb.user) : null;
 	const p = config.mongodb.pass ? encodeURIComponent(config.mongodb.pass) : null;
 	const uri = `mongodb://${u && p ? `${u}:****@` : ''}${config.mongodb.host}:${config.mongodb.port}/${config.mongodb.db}`;
@@ -221,9 +231,9 @@ function checkMongoDB(config: Config) {
 
 async function spawnWorkers(limit: number = Infinity) {
 	const workers = Math.min(limit, os.cpus().length);
-	Logger.info(`Starting ${workers} worker${workers === 1 ? '' : 's'}...`);
+	bootLogger.info(`Starting ${workers} worker${workers === 1 ? '' : 's'}...`);
 	await Promise.all([...Array(workers)].map(spawnWorker));
-	Logger.succ('All workers started');
+	bootLogger.succ('All workers started');
 }
 
 function spawnWorker(): Promise<void> {
@@ -231,7 +241,6 @@ function spawnWorker(): Promise<void> {
 		const worker = cluster.fork();
 		worker.on('message', message => {
 			if (message !== 'ready') return;
-			Logger.succ('A worker started');
 			res();
 		});
 	});
@@ -241,33 +250,35 @@ function spawnWorker(): Promise<void> {
 
 // Listen new workers
 cluster.on('fork', worker => {
-	clusterLog(`Process forked: [${worker.id}]`);
+	clusterLog.info(`Process forked: [${worker.id}]`);
 });
 
 // Listen online workers
 cluster.on('online', worker => {
-	clusterLog(`Process is now online: [${worker.id}]`);
+	clusterLog.succ(`Process is now online: [${worker.id}]`);
 });
 
 // Listen for dying workers
 cluster.on('exit', worker => {
 	// Replace the dead worker,
 	// we're not sentimental
-	clusterLog(chalk.red(`[${worker.id}] died :(`));
+	clusterLog.error(chalk.red(`[${worker.id}] died :(`));
 	cluster.fork();
 });
 
 // Display detail of unhandled promise rejection
-process.on('unhandledRejection', console.dir);
+if (!program.quiet) {
+	process.on('unhandledRejection', console.dir);
+}
 
 // Display detail of uncaught exception
 process.on('uncaughtException', err => {
-	console.error(err);
+	logger.error(err);
 });
 
 // Dying away...
 process.on('exit', code => {
-	Logger.info(`The process is going to exit with code ${code}`);
+	logger.info(`The process is going to exit with code ${code}`);
 });
 
 //#endregion

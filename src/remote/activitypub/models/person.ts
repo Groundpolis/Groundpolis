@@ -1,6 +1,5 @@
 import * as mongo from 'mongodb';
 import { toUnicode } from 'punycode';
-import * as debug from 'debug';
 
 import config from '../../../config';
 import User, { validateUsername, isValidName, IUser, IRemoteUser, isRemoteUser } from '../../../models/user';
@@ -17,11 +16,12 @@ import registerInstance from '../../../services/register-instance';
 import Instance from '../../../models/instance';
 import getDriveFileUrl from '../../../misc/get-drive-file-url';
 import { IEmoji } from '../../../models/emoji';
-import { ITag } from './tag';
+import { ITag, extractHashtags } from './tag';
 import Following from '../../../models/following';
 import { IIdentifier } from './identifier';
+import { apLogger } from '../logger';
 
-const log = debug('misskey:activitypub');
+const logger = apLogger;
 
 /**
  * Validate Person object
@@ -119,7 +119,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 
 	const person: IPerson = object;
 
-	log(`Creating the Person: ${person.id}`);
+	logger.info(`Creating the Person: ${person.id}`);
 
 	const [followersCount = 0, followingCount = 0, notesCount = 0] = await Promise.all([
 		resolver.resolve(person.followers).then(
@@ -139,6 +139,8 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 	const host = toUnicode(new URL(object.id).hostname.toLowerCase());
 
 	const { fields, services } = analyzeAttachments(person.attachment);
+
+	const tags = extractHashtags(person.tag);
 
 	const isBot = object.type == 'Service';
 
@@ -171,6 +173,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 			url: person.url,
 			fields,
 			...services,
+			tags,
 			isBot,
 			isCat: (person as any).isCat === true
 		}) as IRemoteUser;
@@ -180,7 +183,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 			throw new Error('already registered');
 		}
 
-		console.error(e);
+		logger.error(e);
 		throw e;
 	}
 
@@ -244,7 +247,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 
 	//#region カスタム絵文字取得
 	const emojis = await extractEmojis(person.tag, host).catch(e => {
-		console.log(`extractEmojis: ${e}`);
+		logger.info(`extractEmojis: ${e}`);
 		return [] as IEmoji[];
 	});
 
@@ -257,7 +260,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 	});
 	//#endregion
 
-	await updateFeatured(user._id).catch(err => console.log(err));
+	await updateFeatured(user._id).catch(err => logger.error(err));
 
 	return user;
 }
@@ -297,7 +300,7 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: obje
 
 	const person: IPerson = object;
 
-	log(`Updating the Person: ${person.id}`);
+	logger.info(`Updating the Person: ${person.id}`);
 
 	const [followersCount = 0, followingCount = 0, notesCount = 0] = await Promise.all([
 		resolver.resolve(person.followers).then(
@@ -326,13 +329,15 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: obje
 
 	// カスタム絵文字取得
 	const emojis = await extractEmojis(person.tag, exist.host).catch(e => {
-		console.log(`extractEmojis: ${e}`);
+		logger.info(`extractEmojis: ${e}`);
 		return [] as IEmoji[];
 	});
 
 	const emojiNames = emojis.map(emoji => emoji.name);
 
 	const { fields, services } = analyzeAttachments(person.attachment);
+
+	const tags = extractHashtags(person.tag);
 
 	const updates = {
 		lastFetchedAt: new Date(),
@@ -349,6 +354,7 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: obje
 		endpoints: person.endpoints,
 		fields,
 		...services,
+		tags,
 		isBot: object.type == 'Service',
 		isCat: (person as any).isCat === true,
 		isLocked: person.manuallyApprovesFollowers,
@@ -387,7 +393,7 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: obje
 		multi: true
 	});
 
-	await updateFeatured(exist._id).catch(err => console.log(err));
+	await updateFeatured(exist._id).catch(err => logger.error(err));
 }
 
 /**
@@ -474,7 +480,7 @@ export async function updateFeatured(userId: mongo.ObjectID) {
 	if (!isRemoteUser(user)) return;
 	if (!user.featured) return;
 
-	log(`Updating the featured: ${user.uri}`);
+	logger.info(`Updating the featured: ${user.uri}`);
 
 	const resolver = new Resolver();
 
