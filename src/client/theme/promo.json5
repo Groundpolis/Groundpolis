@@ -19,5 +19,7 @@
 		announcementsTitle: '#e3e5e8',
 		donationBg: ':lighten<5<$secondary',
 		renoteGradient: '#b72ddc',
+		noteText: '#ffe0e0',
+		noteHeaderName: '#ffe0e0',
 	},
 }
