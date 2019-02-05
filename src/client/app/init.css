@@ -6,7 +6,7 @@
 
 @font-face {
 	font-family: 'Koruri';
-	src: url('/proxy/cdn.plusminus.io/font/webkoruri/20140628/WebKoruri.woff') format('woff'); 
+	src: url('/assets/WebKoruri.woff2') format('woff2'); 
 }
 
 html {
