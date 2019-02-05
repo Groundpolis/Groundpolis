@@ -228,7 +228,7 @@ common/views/components/games/reversi/reversi.game.vue:
 
 common/views/components/games/reversi/reversi.index.vue:
   title: "Misskey Reversi"
-  sub-title: "他のMisskeyユーザーとリバーシで対戦しよう"
+  sub-title: "他のMisskeyユーザーとリバーシで対戦しましょう"
   invite: "招待"
   rule: "遊び方"
   rule-desc: "リバーシは、相手と交互に石をボードに置いて、相手の石を挟んで自分の色に変えてゆき、最終的に残った石が多い方が勝ちというボードゲームです。"
@@ -1082,7 +1082,7 @@ desktop/views/components/ui.header.account.vue:
 desktop/views/components/ui.header.nav.vue:
   home: "ホーム"
   deck: "デッキ"
-  game: "ゲーム"
+  game: "お遊戯"
 
 desktop/views/components/ui.header.notifications.vue:
   title: "通知"
@@ -1585,7 +1585,7 @@ mobile/views/components/ui.nav.vue:
   favorites: "お気に入り"
   user-lists: "リスト"
   widgets: "ウィジェット"
-  game: "ゲーム"
+  game: "お遊戯"
   darkmode: "ダークモード"
   settings: "設定"
   admin: "管理"
