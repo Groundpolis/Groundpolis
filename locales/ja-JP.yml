@@ -122,6 +122,7 @@ common:
   use-avatar-reversi-stones: "リバーシの石にアバターを使う"
   verified-user: "公式アカウント"
   disable-animated-mfm: "投稿内の動きのあるテキストを無効にする"
+  disable-showing-animated-images: "アニメーション画像を再生しない"
   suggest-recent-hashtags: "最近のハッシュタグを投稿フォームに表示する"
   always-show-nsfw: "常に閲覧注意のメディアを表示する"
   always-mark-nsfw: "常にメディアを閲覧注意として投稿"
@@ -375,6 +376,8 @@ common/views/components/note-menu.vue:
   copy-link: "リンクをコピー"
   favorite: "お気に入り"
   unfavorite: "お気に入り解除"
+  watch: "ウォッチ"
+  unwatch: "ウォッチ解除"
   pin: "ピン留め"
   unpin: "ピン留め解除"
   delete: "削除"
@@ -555,6 +558,9 @@ common/views/components/profile-editor.vue:
   email-address: "メールアドレス"
   email-verified: "メールアドレスが確認されました"
   email-not-verified: "メールアドレスが確認されていません。メールボックスをご確認ください。"
+  export: "エクスポート"
+  export-notes: "すべての投稿のエクスポート"
+  export-requested: "エクスポートをリクエストしました。これには時間がかかる場合があります。エクスポートが終わると、ドライブにファイルが追加されます。"
 
 common/views/components/user-list-editor.vue:
   users: "ユーザー"

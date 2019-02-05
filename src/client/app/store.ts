@@ -70,7 +70,8 @@ const defaultDeviceSettings = {
 	mobileNotificationPosition: 'bottom',
 	deckTemporaryColumn: null,
 	deckDefault: false,
-	useOsDefaultEmojis: false
+	useOsDefaultEmojis: false,
+	disableShowingAnimatedImages: false
 };
 
 export default (os: MiOS) => new Vuex.Store({

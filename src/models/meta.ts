@@ -211,7 +211,7 @@ export type IMeta = {
 	localDriveCapacityFactor?: number;
 
 	/**
-	 * Max allowed note text length in charactors
+	 * Max allowed note text length in characters
 	 */
 	maxNoteTextLength?: number;
 

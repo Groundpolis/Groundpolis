@@ -6,7 +6,7 @@ import perform from '../../../remote/activitypub/perform';
 import { resolvePerson, updatePerson } from '../../../remote/activitypub/models/person';
 import { toUnicode } from 'punycode';
 import { URL } from 'url';
-import { publishApLogStream } from '../../../stream';
+import { publishApLogStream } from '../../../services/stream';
 import Logger from '../../../misc/logger';
 
 const logger = new Logger('inbox');
@@ -20,7 +20,7 @@ export default async (job: bq.Job, done: any): Promise<void> => {
 	const info = Object.assign({}, activity);
 	delete info['@context'];
 	delete info['signature'];
-	logger.info(info);
+	logger.debug(JSON.stringify(info, null, 2));
 	//#endregion
 
 	const keyIdLower = signature.keyId.toLowerCase();
