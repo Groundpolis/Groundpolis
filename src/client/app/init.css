@@ -4,13 +4,9 @@
 
 @charset 'utf-8';
 
-@font-face {
-	font-family: 'Koruri';
-	src: url('/assets/WebKoruri.woff2') format('woff2'); 
-}
-
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif|Noto+Serif+JP');
 html {
-	font-family: Koruri, sans-serif;
+	font-family: 'Noto Serif', 'Noto Serif JP', serif;
 }
 
 body > noscript {
