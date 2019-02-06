@@ -1,8 +1,8 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "10.82.0",
-	"clientVersion": "2.0.14114-m9",
+	"version": "10.82.2",
+	"clientVersion": "2.0.14142",
 	"codename": "nighthike",
 	"repository": {
 		"type": "git",
@@ -70,7 +70,7 @@
 		"@types/mkdirp": "0.5.2",
 		"@types/mocha": "5.2.5",
 		"@types/mongodb": "3.1.19",
-		"@types/node": "10.12.18",
+		"@types/node": "10.12.21",
 		"@types/nodemailer": "4.6.5",
 		"@types/nprogress": "0.0.29",
 		"@types/oauth": "0.9.1",
@@ -148,7 +148,7 @@
 		"is-root": "2.0.0",
 		"is-svg": "3.0.0",
 		"js-yaml": "3.12.1",
-		"jsdom": "13.1.0",
+		"jsdom": "13.2.0",
 		"json5": "2.1.0",
 		"json5-loader": "1.0.1",
 		"katex": "0.10.0",

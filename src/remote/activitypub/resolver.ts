@@ -30,6 +30,7 @@ export default class Resolver {
 				break;
 
 			default:
+				logger.error(`unknown collection type: ${collection.type}`);
 				throw new Error(`unknown collection type: ${collection.type}`);
 		}
 
@@ -38,6 +39,7 @@ export default class Resolver {
 
 	public async resolve(value: any): Promise<IObject> {
 		if (value == null) {
+			logger.error('resolvee is null (or undefined)');
 			throw new Error('resolvee is null (or undefined)');
 		}
 
@@ -46,6 +48,7 @@ export default class Resolver {
 		}
 
 		if (this.history.has(value)) {
+			logger.error(`cannot resolve already resolved one`);
 			throw new Error('cannot resolve already resolved one');
 		}
 
@@ -62,6 +65,7 @@ export default class Resolver {
 			},
 			json: true
 		}).catch(e => {
+			logger.error(`request error: ${e.message}`);
 			throw new Error(`request error: ${e.message}`);
 		});
 

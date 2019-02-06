@@ -3,7 +3,6 @@ import * as Router from 'koa-router';
 import * as json from 'koa-json-body';
 import * as httpSignature from 'http-signature';
 
-import { createHttpJob } from '../queue';
 import { renderActivity } from '../remote/activitypub/renderer';
 import Note from '../models/note';
 import User, { isLocalUser, ILocalUser, IUser } from '../models/user';
@@ -18,6 +17,7 @@ import Followers from './activitypub/followers';
 import Following from './activitypub/following';
 import Featured from './activitypub/featured';
 import renderQuestion from '../remote/activitypub/renderer/question';
+import { processInbox } from '../queue';
 
 // Init router
 const router = new Router();
@@ -36,11 +36,7 @@ function inbox(ctx: Router.IRouterContext) {
 		return;
 	}
 
-	createHttpJob({
-		type: 'processInbox',
-		activity: ctx.request.body,
-		signature
-	});
+	processInbox(ctx.request.body, signature);
 
 	ctx.status = 202;
 }
