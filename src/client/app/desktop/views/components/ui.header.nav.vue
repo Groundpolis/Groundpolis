@@ -7,12 +7,12 @@
 					<router-link to="/"><fa icon="columns"/><p>{{ $t('deck') }}</p></router-link>
 				</li>
 				<li class="home" :class="{ active: $route.name == 'home' }" @click="goToTop">
-					<router-link to="/home"><fa icon="home"/><p>{{ $t('home') }}</p></router-link>
+					<router-link to="/home"><fa :icon="faHotel"/><p>{{ $t('home') }}</p></router-link>
 				</li>
 			</template>
 			<template v-else>
 				<li class="home" :class="{ active: $route.name == 'home' || $route.name == 'index' }" @click="goToTop">
-					<router-link to="/"><fa icon="home"/><p>{{ $t('home') }}</p></router-link>
+					<router-link to="/"><fa :icon="faHotel"/><p>{{ $t('home') }}</p></router-link>
 				</li>
 				<li class="deck" :class="{ active: $route.name == 'deck' }" @click="goToTop">
 					<router-link to="/deck"><fa icon="columns"/><p>{{ $t('deck') }}</p></router-link>
@@ -42,11 +42,13 @@ import Vue from 'vue';
 import i18n from '../../../i18n';
 import MkMessagingWindow from './messaging-window.vue';
 import MkGameWindow from './game-window.vue';
+import { faHotel } from '@fortawesome/free-solid-svg-icons';
 
 export default Vue.extend({
 	i18n: i18n('desktop/views/components/ui.header.nav.vue'),
 	data() {
 		return {
+			faHotel,
 			hasGameInvitations: false,
 			connection: null
 		};
