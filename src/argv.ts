@@ -10,11 +10,12 @@ program
 	.option('--only-queue', 'Pocessing job queue only')
 	.option('--quiet', 'Suppress all logs')
 	.option('--verbose', 'Enable all logs')
+	.option('--with-log-time', 'Include timestamp for each logs')
 	.option('--slow', 'Delay all requests (for debbuging)')
 	.option('--color', 'This option is a dummy for some external program\'s (e.g. forever) issue.')
 	.parse(process.argv);
 
-if (process.env.MK_DISABLE_AP_QUEUE) program.disableApQueue = true;
+/*if (process.env.MK_DISABLE_AP_QUEUE)*/ program.disableApQueue = true;
 if (process.env.MK_DISABLE_QUEUE) program.disableQueue = true;
 if (process.env.MK_ONLY_QUEUE) program.onlyQueue = true;
 

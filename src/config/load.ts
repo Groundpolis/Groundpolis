@@ -26,6 +26,7 @@ export default function load() {
 	const mixin = {} as Mixin;
 
 	const url = validateUrl(config.url);
+
 	config.url = normalizeUrl(config.url);
 
 	mixin.host = url.host;
