@@ -1,12 +1,12 @@
 import $ from 'cafy';
 import define from '../../define';
-import driveChart from '../../../../services/chart/drive';
+import instanceChart from '../../../../services/chart/instance';
 
 export const meta = {
 	stability: 'stable',
 
 	desc: {
-		'ja-JP': 'ドライブのチャートを取得します。'
+		'ja-JP': 'インスタンスごとのチャートを取得します。'
 	},
 
 	params: {
@@ -24,11 +24,19 @@ export const meta = {
 				'ja-JP': '最大数。例えば 30 を指定したとすると、スパンが"day"の場合は30日分のデータが、スパンが"hour"の場合は30時間分のデータが返ります。'
 			}
 		},
+
+		host: {
+			validator: $.str,
+			desc: {
+				'ja-JP': '対象のインスタンスのホスト',
+				'en-US': 'Target instance host'
+			}
+		}
 	}
 };
 
 export default define(meta, (ps) => new Promise(async (res, rej) => {
-	const stats = await driveChart.getChart(ps.span as any, ps.limit);
+	const stats = await instanceChart.getChart(ps.span as any, ps.limit, ps.host);
 
 	res(stats);
 }));

@@ -9,9 +9,10 @@ import renderAccept from '../../remote/activitypub/renderer/accept';
 import renderReject from '../../remote/activitypub/renderer/reject';
 import { deliver } from '../../queue';
 import createFollowRequest from './requests/create';
-import perUserFollowingChart from '../../chart/per-user-following';
+import perUserFollowingChart from '../../services/chart/per-user-following';
 import { registerOrFetchInstanceDoc } from '../register-or-fetch-instance-doc';
 import Instance from '../../models/instance';
+import instanceChart from '../../services/chart/instance';
 
 export default async function(follower: IUser, followee: IUser, requestId?: string) {
 	// check blocking
@@ -108,8 +109,7 @@ export default async function(follower: IUser, followee: IUser, requestId?: stri
 				}
 			});
 
-			// TODO
-			//perInstanceChart.newFollowing();
+			instanceChart.updateFollowing(i.host, true);
 		});
 	} else if (isLocalUser(follower) && isRemoteUser(followee)) {
 		registerOrFetchInstanceDoc(followee.host).then(i => {
@@ -119,8 +119,7 @@ export default async function(follower: IUser, followee: IUser, requestId?: stri
 				}
 			});
 
-			// TODO
-			//perInstanceChart.newFollower();
+			instanceChart.updateFollowers(i.host, true);
 		});
 	}
 	//#endregion

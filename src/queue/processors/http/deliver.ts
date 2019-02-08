@@ -4,31 +4,38 @@ import request from '../../../remote/activitypub/request';
 import { queueLogger } from '../../logger';
 import { registerOrFetchInstanceDoc } from '../../../services/register-or-fetch-instance-doc';
 import Instance from '../../../models/instance';
+import instanceChart from '../../../services/chart/instance';
 
 export default async (job: bq.Job, done: any): Promise<void> => {
+	const { host } = new URL(job.data.to);
+
 	try {
 		await request(job.data.user, job.data.to, job.data.content);
 
 		// Update stats
-		registerOrFetchInstanceDoc(job.data.user.host).then(i => {
+		registerOrFetchInstanceDoc(host).then(i => {
 			Instance.update({ _id: i._id }, {
 				$set: {
 					latestRequestSentAt: new Date(),
 					latestStatus: 200
 				}
 			});
+
+			instanceChart.requestSent(i.host, true);
 		});
 
 		done();
 	} catch (res) {
 		// Update stats
-		registerOrFetchInstanceDoc(job.data.user.host).then(i => {
+		registerOrFetchInstanceDoc(host).then(i => {
 			Instance.update({ _id: i._id }, {
 				$set: {
 					latestRequestSentAt: new Date(),
 					latestStatus: res != null && res.hasOwnProperty('statusCode') ? res.statusCode : null
 				}
 			});
+
+			instanceChart.requestSent(i.host, false);
 		});
 
 		if (res != null && res.hasOwnProperty('statusCode')) {
