@@ -3,10 +3,10 @@
 	<ui-card>
 		<div slot="title"><fa :icon="faTerminal"/> {{ $t('federation') }}</div>
 		<section class="fit-top">
-			<ui-input class="target" v-model="target" type="text" @enter="showInstance">
+			<ui-input class="target" v-model="target" type="text" @enter="showInstance()">
 				<span>{{ $t('host') }}</span>
 			</ui-input>
-			<ui-button @click="showInstance"><fa :icon="faSearch"/> {{ $t('lookup') }}</ui-button>
+			<ui-button @click="showInstance()"><fa :icon="faSearch"/> {{ $t('lookup') }}</ui-button>
 
 			<div class="instance" v-if="instance">
 				<ui-input :value="instance.host" type="text" readonly>
@@ -40,6 +40,7 @@
 					<span>{{ $t('latest-request-received-at') }}</span>
 				</ui-input>
 				<ui-switch v-model="instance.isBlocked" @change="updateInstance()">{{ $t('block') }}</ui-switch>
+				<ui-switch v-model="instance.isMarkedAsClosed" @change="updateInstance()">{{ $t('marked-as-closed') }}</ui-switch>
 				<details>
 					<summary>{{ $t('charts') }}</summary>
 					<ui-horizon-group inputs>
@@ -80,6 +81,8 @@
 					<span slot="label">{{ $t('sort') }}</span>
 					<option value="-caughtAt">{{ $t('sorts.caughtAtAsc') }}</option>
 					<option value="+caughtAt">{{ $t('sorts.caughtAtDesc') }}</option>
+					<option value="-lastCommunicatedAt">{{ $t('sorts.lastCommunicatedAtAsc') }}</option>
+					<option value="+lastCommunicatedAt">{{ $t('sorts.lastCommunicatedAtDesc') }}</option>
 					<option value="-notes">{{ $t('sorts.notesAsc') }}</option>
 					<option value="+notes">{{ $t('sorts.notesDesc') }}</option>
 					<option value="-users">{{ $t('sorts.usersAsc') }}</option>
@@ -97,6 +100,8 @@
 					<span slot="label">{{ $t('state') }}</span>
 					<option value="all">{{ $t('states.all') }}</option>
 					<option value="blocked">{{ $t('states.blocked') }}</option>
+					<option value="notResponding">{{ $t('states.not-responding') }}</option>
+					<option value="markedAsClosed">{{ $t('states.marked-as-closed') }}</option>
 				</ui-select>
 			</ui-horizon-group>
 
@@ -109,8 +114,8 @@
 					<span>{{ $t('followers') }}</span>
 					<span>{{ $t('status') }}</span>
 				</header>
-				<div v-for="instance in instances">
-					<span>{{ instance.host }}</span>
+				<div v-for="instance in instances" :style="{ opacity: instance.isNotResponding ? 0.5 : 1 }">
+					<a @click.prevent="showInstance(instance.host)" target="_blank" :href="`https://${instance.host}`" :style="{ textDecoration: instance.isMarkedAsClosed ? 'line-through' : 'none' }">{{ instance.host }}</a>
 					<span>{{ instance.notesCount | number }}</span>
 					<span>{{ instance.usersCount | number }}</span>
 					<span>{{ instance.followingCount | number }}</span>
@@ -228,9 +233,9 @@ export default Vue.extend({
 	},
 
 	methods: {
-		showInstance() {
+		showInstance(target?: string) {
 			this.$root.api('federation/show-instance', {
-				host: this.target
+				host: target || this.target
 			}).then(instance => {
 				if (instance == null) {
 					this.$root.dialog({
@@ -247,7 +252,9 @@ export default Vue.extend({
 		fetchInstances() {
 			this.instances = [];
 			this.$root.api('federation/instances', {
-				state: this.state,
+				blocked: this.state === 'blocked' ? true : null,
+				notResponding: this.state === 'notResponding' ? true : null,
+				markedAsClosed: this.state === 'markedAsClosed' ? true : null,
 				sort: this.sort,
 				limit: this.limit
 			}).then(instances => {
@@ -269,7 +276,8 @@ export default Vue.extend({
 		updateInstance() {
 			this.$root.api('admin/federation/update-instance', {
 				host: this.instance.host,
-				isBlocked: this.instance.isBlocked,
+				isBlocked: this.instance.isBlocked || false,
+				isClosed: this.instance.isMarkedAsClosed || false
 			});
 		},
 
@@ -308,6 +316,9 @@ export default Vue.extend({
 				stroke: {
 					curve: 'straight',
 					width: 2
+				},
+				tooltip: {
+					theme: this.$store.state.device.darkmode ? 'dark' : 'light'
 				},
 				legend: {
 					labels: {
