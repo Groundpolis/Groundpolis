@@ -14,11 +14,30 @@ export default function(file: IDriveFile, thumbnail = false): string {
 		}
 	} else {
 		if (thumbnail) {
-			return `${config.drive_url}/${file._id}?thumbnail`;
+			return `${config.drive_url}/${file._id}/${generateFilename(file)}?thumbnail`;
 		} else {
-			return `${config.drive_url}/${file._id}?web`;
+			return `${config.drive_url}/${file._id}/${generateFilename(file)}?web`;
 		}
 	}
+}
+
+/**
+ * 拡張子付きのファイル名を生成する
+ */
+function generateFilename(file: IDriveFile) {
+	let ext = '';
+
+	if (file.filename) {
+		[ext] = (file.filename.match(/\.(\w+)$/) || ['']);
+	}
+
+	if (ext === '' && file.contentType) {
+		if (file.contentType === 'image/jpeg') ext = '.jpg';
+		if (file.contentType === 'image/png') ext = '.png';
+		if (file.contentType === 'image/webp') ext = '.webp';
+	}
+
+	return `${file._id}${ext}`;
 }
 
 export function getOriginalUrl(file: IDriveFile) {
