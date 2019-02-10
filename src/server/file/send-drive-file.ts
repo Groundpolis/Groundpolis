@@ -9,6 +9,7 @@ import DriveFileWebpublic, { getDriveFileWebpublicBucket } from '../../models/dr
 import { serverLogger } from '..';
 import { fetch, detectMine } from '../proxy/proxy-media';
 import { ConvertToJpeg, ConvertToPng } from '../../services/drive/image-processor';
+import { GenerateVideoThumbnail } from '../../services/drive/generate-video-thumbnail';
 
 const assets = `${__dirname}/../../server/file/assets/`;
 
@@ -64,6 +65,8 @@ export default async function(ctx: Koa.BaseContext) {
 						return await ConvertToJpeg(path, 498, 280);
 					} else if (['image/png'].includes(type)) {
 						return await ConvertToPng(path, 498, 280);
+					} else if (type.startsWith('video/')) {
+						return await GenerateVideoThumbnail(path);
 					}
 				}
 
@@ -75,8 +78,7 @@ export default async function(ctx: Koa.BaseContext) {
 			};
 
 			const file = await convertFile();
-
-			ctx.set('Content-Type', type);
+			ctx.set('Content-Type', file.type);
 			ctx.set('Cache-Control', 'max-age=31536000, immutable');
 			ctx.body = file.data;
 		} catch (e) {
