@@ -31,7 +31,6 @@ export default function(file: IDriveFile, thumbnail = false): string {
  * 拡張子付きのファイル名を生成する
  */
 function generateFilename(file: IDriveFile, thumbnail = false) {
-
 	let ext = '';
 
 	if (thumbnail && file.contentType !== 'image/png') {
@@ -45,6 +44,7 @@ function generateFilename(file: IDriveFile, thumbnail = false) {
 			if (file.contentType === 'image/jpeg') ext = '.jpg';
 			if (file.contentType === 'image/png') ext = '.png';
 			if (file.contentType === 'image/webp') ext = '.webp';
+			if (file.contentType === 'video/mp4') ext = '.mp4';
 		}
 	}
 
