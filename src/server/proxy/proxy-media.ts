@@ -53,7 +53,7 @@ export async function proxyMedia(ctx: Koa.BaseContext) {
 	}
 }
 
-async function fetch(url: string, path: string) {
+export async function fetch(url: string, path: string) {
 	await new Promise((res, rej) => {
 		const writable = fs.createWriteStream(path);
 
@@ -92,7 +92,7 @@ async function fetch(url: string, path: string) {
 	});
 }
 
-async function detectMine(path: string) {
+export async function detectMine(path: string) {
 	return new Promise<[string, string]>((res, rej) => {
 		const readable = fs.createReadStream(path);
 		readable
