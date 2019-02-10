@@ -8,7 +8,7 @@ export default function(file: IDriveFile, thumbnail = false): string {
 
 	if (file.metadata.withoutChunks && file.metadata.isRemote) {
 		if (thumbnail) {
-			return `${config.drive_url}/${file._id}/${generateFilename(file)}?thumbnail`;
+			return `${config.drive_url}/${file._id}/${generateFilename(file, true)}?thumbnail`;
 		} else {
 			return `${config.drive_url}/${file._id}/${generateFilename(file)}?web`;
 		}
@@ -20,7 +20,7 @@ export default function(file: IDriveFile, thumbnail = false): string {
 		}
 	} else {
 		if (thumbnail) {
-			return `${config.drive_url}/${file._id}/${generateFilename(file)}?thumbnail`;
+			return `${config.drive_url}/${file._id}/${generateFilename(file, true)}?thumbnail`;
 		} else {
 			return `${config.drive_url}/${file._id}/${generateFilename(file)}?web`;
 		}
@@ -30,17 +30,22 @@ export default function(file: IDriveFile, thumbnail = false): string {
 /**
  * 拡張子付きのファイル名を生成する
  */
-function generateFilename(file: IDriveFile) {
+function generateFilename(file: IDriveFile, thumbnail = false) {
+
 	let ext = '';
 
-	if (file.filename) {
-		[ext] = (file.filename.match(/\.(\w+)$/) || ['']);
-	}
+	if (thumbnail && file.contentType !== 'image/png') {
+		ext = '.jpg';
+	} else {
+		if (file.filename) {
+			[ext] = (file.filename.match(/\.(\w+)$/) || ['']);
+		}
 
-	if (ext === '' && file.contentType) {
-		if (file.contentType === 'image/jpeg') ext = '.jpg';
-		if (file.contentType === 'image/png') ext = '.png';
-		if (file.contentType === 'image/webp') ext = '.webp';
+		if (ext === '' && file.contentType) {
+			if (file.contentType === 'image/jpeg') ext = '.jpg';
+			if (file.contentType === 'image/png') ext = '.png';
+			if (file.contentType === 'image/webp') ext = '.webp';
+		}
 	}
 
 	return `${file._id}${ext}`;
