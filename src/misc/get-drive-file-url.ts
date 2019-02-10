@@ -6,7 +6,13 @@ export default function(file: IDriveFile, thumbnail = false): string {
 
 	const isImage = file.contentType && file.contentType.startsWith('image/');
 
-	if (file.metadata.withoutChunks) {
+	if (file.metadata.withoutChunks && file.metadata.isRemote) {
+		if (thumbnail) {
+			return `${config.drive_url}/${file._id}/${generateFilename(file)}?thumbnail`;
+		} else {
+			return `${config.drive_url}/${file._id}/${generateFilename(file)}?web`;
+		}
+	} else if (file.metadata.withoutChunks) {
 		if (thumbnail) {
 			return file.metadata.thumbnailUrl || file.metadata.webpublicUrl || (isImage ? file.metadata.url : null);
 		} else {
