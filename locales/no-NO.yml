@@ -1186,6 +1186,7 @@ admin/views/users.vue:
       moderator: "モデレーター"
       adminOrModerator: "管理者+モデレーター"
       verified: "公式アカウント"
+      silenced: "サイレンス済み"
       suspended: "凍結済み"
     origin:
       title: "オリジン"
@@ -1626,6 +1627,7 @@ deck/deck.tl-column.vue:
   is-media-view: "メディアビュー"
   edit: "オプション"
 deck/deck.user-column.vue:
+  follows-you: "フォローされています"
   posts: "投稿"
   following: "フォロー"
   followers: "フォロワー"
