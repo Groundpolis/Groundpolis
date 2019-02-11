@@ -44,12 +44,13 @@ async function save(path: string, name: string, type: string, hash: string, size
 
 	if (config.drive && config.drive.storage == 'minio') {
 		//#region ObjectStorage params
-		let [ext] = (name.match(/\.([a-zA-Z0-9_-]+)$/) || ['']);
+		let [ext] = (name.match(/\.(\w+)$/) || ['']);
 
 		if (ext === '') {
 			if (type === 'image/jpeg') ext = '.jpg';
 			if (type === 'image/png') ext = '.png';
 			if (type === 'image/webp') ext = '.webp';
+			if (type === 'video/mp4') ext = '.mp4';
 		}
 
 		const baseUrl = config.drive.baseUrl
