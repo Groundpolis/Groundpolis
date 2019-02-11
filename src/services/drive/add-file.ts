@@ -50,7 +50,6 @@ async function save(path: string, name: string, type: string, hash: string, size
 			if (type === 'image/jpeg') ext = '.jpg';
 			if (type === 'image/png') ext = '.png';
 			if (type === 'image/webp') ext = '.webp';
-			if (type === 'video/mp4') ext = '.mp4';
 		}
 
 		const baseUrl = config.drive.baseUrl
