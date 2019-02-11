@@ -44,7 +44,6 @@ function generateFilename(file: IDriveFile, thumbnail = false) {
 			if (file.contentType === 'image/jpeg') ext = '.jpg';
 			if (file.contentType === 'image/png') ext = '.png';
 			if (file.contentType === 'image/webp') ext = '.webp';
-			if (file.contentType === 'video/mp4') ext = '.mp4';
 		}
 	}
 
