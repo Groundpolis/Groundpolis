@@ -132,7 +132,7 @@ export async function packCustomEmojis(emojis: string[], ownerHost: string, fore
 
 		const customEmoji = {
 			name: key.emoji,
-			url: emoji.url,
+			url: key.host ? `/files/${emoji.name}@${emoji.host}/${emoji.updatedAt ? emoji.updatedAt.getTime() : '0'}.png` : emoji.url,
 			host: key.host,
 			fqName: key.fqName,
 		} as IREmoji;
