@@ -12,7 +12,6 @@ import renderKey from '../remote/activitypub/renderer/key';
 import renderPerson from '../remote/activitypub/renderer/person';
 import renderEmoji from '../remote/activitypub/renderer/emoji';
 import Outbox, { packActivity } from './activitypub/outbox';
-import SharedOutbox from './activitypub/shared-outbox';
 import Followers from './activitypub/followers';
 import Following from './activitypub/following';
 import Featured from './activitypub/featured';
@@ -140,9 +139,6 @@ router.get('/questions/:question', async (ctx, next) => {
 
 // outbox
 router.get('/users/:user/outbox', Outbox);
-
-// shared-outbox
-router.get('/outbox', SharedOutbox);
 
 // followers
 router.get('/users/:user/followers', Followers);
