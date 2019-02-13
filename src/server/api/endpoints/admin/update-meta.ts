@@ -97,7 +97,7 @@ export const meta = {
 		},
 
 		localDriveCapacityFactor: {
-			validator: $.num.optional.min(0),
+			validator: $.optional.num.min(0),
 			desc: {
 				'ja-JP': 'm544独自 ローカルユーザーに1日毎に追加で与えるドライブ容量 (メガバイト/日)',
 				'en-US': 'm544Only Additional drive capacity of a local user per day (MB/day)'

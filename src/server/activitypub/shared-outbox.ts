@@ -12,13 +12,13 @@ import Meta from '../../models/meta';
 
 export default async (ctx: Router.IRouterContext) => {
 	// Get 'sinceId' parameter
-	const [sinceId, sinceIdErr] = $.type(ID).optional.get(ctx.request.query.since_id);
+	const [sinceId, sinceIdErr] = $.optional.type(ID).get(ctx.request.query.since_id);
 
 	// Get 'untilId' parameter
-	const [untilId, untilIdErr] = $.type(ID).optional.get(ctx.request.query.until_id);
+	const [untilId, untilIdErr] = $.optional.type(ID).get(ctx.request.query.until_id);
 
 	// Get 'page' parameter
-	const pageErr = !$.str.optional.or(['true', 'false']).ok(ctx.request.query.page);
+	const pageErr = !$.optional.str.or(['true', 'false']).ok(ctx.request.query.page);
 	const page: boolean = ctx.request.query.page === 'true';
 
 	// Validate parameters
