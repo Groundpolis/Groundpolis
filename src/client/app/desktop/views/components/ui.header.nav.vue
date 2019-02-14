@@ -2,20 +2,20 @@
 <div class="nav">
 	<ul>
 		<template v-if="$store.getters.isSignedIn">
-			<template v-if="$store.state.device.deckDefault">
-				<li class="deck" :class="{ active: $route.name == 'deck' || $route.name == 'index' }" @click="goToTop">
+			<template v-if="$store.state.device.deckMode">
+				<li class="deck active" @click="goToTop">
 					<router-link to="/"><fa icon="columns"/><p>{{ $t('deck') }}</p></router-link>
 				</li>
-				<li class="home" :class="{ active: $route.name == 'home' }" @click="goToTop">
-					<router-link to="/home"><fa :icon="faHotel"/><p>{{ $t('home') }}</p></router-link>
+				<li class="home">
+					<a @click="toggleDeckMode(false)"><fa icon="home"/><p>{{ $t('home') }}</p></a>
 				</li>
 			</template>
 			<template v-else>
-				<li class="home" :class="{ active: $route.name == 'home' || $route.name == 'index' }" @click="goToTop">
-					<router-link to="/"><fa :icon="faHotel"/><p>{{ $t('home') }}</p></router-link>
+				<li class="home active" @click="faHotel">
+					<router-link to="/"><fa icon="home"/><p>{{ $t('home') }}</p></router-link>
 				</li>
-				<li class="deck" :class="{ active: $route.name == 'deck' }" @click="goToTop">
-					<router-link to="/deck"><fa icon="columns"/><p>{{ $t('deck') }}</p></router-link>
+				<li class="deck">
+					<a @click="toggleDeckMode(true)"><fa icon="columns"/><p>{{ $t('deck') }}</p></a>
 				</li>
 			</template>
 			<li class="messaging">
@@ -25,14 +25,17 @@
 					<template v-if="hasUnreadMessagingMessage"><fa icon="circle"/></template>
 				</a>
 			</li>
-			<li class="game">
-				<a @click="game">
-					<fa icon="gamepad"/>
-					<p>{{ $t('game') }}</p>
-					<template v-if="hasGameInvitations"><fa icon="circle"/></template>
-				</a>
-			</li>
 		</template>
+		<li class="featured">
+			<router-link to="/featured"><fa :icon="faNewspaper"/><p>{{ $t('@.featured-notes') }}</p></router-link>
+		</li>
+		<li class="game">
+			<a @click="game">
+				<fa icon="gamepad"/>
+				<p>{{ $t('game') }}</p>
+				<template v-if="hasGameInvitations"><fa icon="circle"/></template>
+			</a>
+		</li>
 	</ul>
 </div>
 </template>
@@ -43,6 +46,7 @@ import i18n from '../../../i18n';
 import MkMessagingWindow from './messaging-window.vue';
 import MkGameWindow from './game-window.vue';
 import { faHotel } from '@fortawesome/free-solid-svg-icons';
+import { faNewspaper } from '@fortawesome/free-solid-svg-icons';
 
 export default Vue.extend({
 	i18n: i18n('desktop/views/components/ui.header.nav.vue'),
@@ -50,7 +54,8 @@ export default Vue.extend({
 		return {
 			faHotel,
 			hasGameInvitations: false,
-			connection: null
+			connection: null,
+			faNewspaper
 		};
 	},
 	computed: {
@@ -72,6 +77,11 @@ export default Vue.extend({
 		}
 	},
 	methods: {
+		toggleDeckMode(deck) {
+			this.$store.commit('device/set', { key: 'deckMode', value: deck });
+			location.reload();
+		},
+
 		onReversiInvited() {
 			this.hasGameInvitations = true;
 		},

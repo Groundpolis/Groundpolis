@@ -10,7 +10,6 @@ const defaultSettings = {
 	home: null,
 	mobileHome: [],
 	deck: null,
-	deckNav: true,
 	keepCw: false,
 	tagTimelines: [],
 	fetchOnScroll: true,
@@ -68,8 +67,7 @@ const defaultDeviceSettings = {
 	deckColumnAlign: 'center',
 	deckColumnWidth: 'normal',
 	mobileNotificationPosition: 'bottom',
-	deckTemporaryColumn: null,
-	deckDefault: false,
+	deckMode: false,
 	useOsDefaultEmojis: false,
 	disableShowingAnimatedImages: false
 };
@@ -83,7 +81,6 @@ export default (os: MiOS) => new Vuex.Store({
 		i: null,
 		indicate: false,
 		uiHeaderHeight: 0,
-		navHook: null,
 		behindNotes: []
 	},
 
@@ -106,10 +103,6 @@ export default (os: MiOS) => new Vuex.Store({
 
 		setUiHeaderHeight(state, height) {
 			state.uiHeaderHeight = height;
-		},
-
-		navHook(state, callback) {
-			state.navHook = callback;
 		},
 
 		pushBehindNote(state, note) {
