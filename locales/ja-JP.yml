@@ -62,6 +62,7 @@ common:
   messaging: "トーク"
   home: "ホーム"
   deck: "デッキ"
+  timeline: "タイムライン"
   explore: "みつける"
   following: "フォロー中"
   followers: "フォロワー"
@@ -1089,7 +1090,6 @@ desktop/views/components/ui.header.account.vue:
   dark: "闇に飲まれる"
 
 desktop/views/components/ui.header.nav.vue:
-  home: "ホーム"
   game: "ゲーム"
 
 desktop/views/components/ui.header.notifications.vue:
