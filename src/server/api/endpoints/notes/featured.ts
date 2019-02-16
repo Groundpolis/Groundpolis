@@ -18,12 +18,19 @@ export const meta = {
 			desc: {
 				'ja-JP': '最大数'
 			}
-		}
+		},
+		days: {
+			validator: $.optional.num.range(1, 1000),
+			default: 2,
+			desc: {
+				'ja-JP': '最大数'
+			}
+		},
 	}
 };
 
 export default define(meta, (ps, user) => new Promise(async (res, rej) => {
-	const day = 1000 * 60 * 60 * 24 * 2;
+	const day = 1000 * 60 * 60 * 24 * ps.days;
 
 	const notes = await Note
 		.find({
