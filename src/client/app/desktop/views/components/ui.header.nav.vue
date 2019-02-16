@@ -2,7 +2,7 @@
 <div class="nav">
 	<ul>
 		<li class="home" @click="goToTop">
-			<router-link to="/"><fa icon="home"/><p>タイムライン</p></router-link>
+			<router-link to="/"><fa icon="list"/><p>タイムライン</p></router-link>
 		</li>
 		<li class="featured">
 			<router-link to="/featured"><fa :icon="faNewspaper"/><p>{{ $t('@.featured-notes') }}</p></router-link>
