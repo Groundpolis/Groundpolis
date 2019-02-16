@@ -3,6 +3,10 @@
 	<header v-if="showHeader">
 		<div class="title"><slot name="header"></slot></div>
 		<slot name="func"></slot>
+		<button v-if="bodyTogglable" @click="() => showBody = !showBody">
+			<template v-if="showBody"><fa icon="angle-up"/></template>
+			<template v-else><fa icon="angle-down"/></template>
+		</button>
 	</header>
 	<div v-show="showBody">
 		<slot></slot>
@@ -21,7 +25,16 @@ export default Vue.extend({
 		naked: {
 			type: Boolean,
 			default: false
-		}
+		},
+		bodyTogglable: {
+			type: Boolean,
+			default: false
+		},
+	},
+	data() {
+		return {
+			showBody: true
+		};
 	}
 });
 </script>
@@ -32,6 +45,9 @@ export default Vue.extend({
 	border-radius 8px
 	box-shadow 0 4px 16px rgba(#000, 0.1)
 	overflow hidden
+
+	& + .ukygtjoj
+		margin-top 16px
 
 	&.naked
 		background transparent !important

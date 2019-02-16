@@ -15,6 +15,9 @@ import packEmojis from '../misc/pack-emojis';
 
 const User = db.get<IUser>('users');
 
+User.createIndex('createdAt');
+User.createIndex('updatedAt');
+User.createIndex('followersCount');
 User.createIndex('username');
 User.createIndex('usernameLower');
 User.createIndex('host');
