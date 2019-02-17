@@ -43,7 +43,7 @@ export default Vue.extend({
 			(this.$refs.timeline as any).init(() => new Promise((res, rej) => {
 				this.$root.api('notes/featured', {
 					limit: 20,
-					days: 1000,
+					days: 7,
 				}).then(notes => {
 					notes.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 					res(notes);
