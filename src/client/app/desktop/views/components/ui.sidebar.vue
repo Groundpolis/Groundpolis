@@ -6,11 +6,9 @@
 		</div>
 
 		<div class="nav" v-if="$store.getters.isSignedIn">
-			<template v-if="!$store.state.device.deckMode">
-				<div class="home" :class="{ active: $route.name == 'index' }" @click="goToTop">
-					<router-link to="/"><fa icon="home"/></router-link>
-				</div>
-			</template>
+			<div class="home" :class="{ active: $route.name == 'index' }" @click="goToTop">
+				<router-link to="/"><fa icon="home"/></router-link>
+			</div>
 			<div class="featured" :class="{ active: $route.name == 'featured' }">
 				<router-link to="/featured"><fa :icon="faNewspaper"/></router-link>
 			</div>
@@ -50,7 +48,7 @@
 				</router-link>
 			</div>
 			<div>
-				<template v-if="$store.state.device.deckMode">
+				<template v-if="$store.state.device.inDeckMode">
 					<a @click="toggleDeckMode(false)"><fa icon="home"/></a>
 				</template>
 				<template v-else>
@@ -122,7 +120,7 @@ export default Vue.extend({
 	methods: {
 		toggleDeckMode(deck) {
 			this.$store.commit('device/set', { key: 'deckMode', value: deck });
-			location.reload();
+			location.replace('/');
 		},
 
 		onReversiInvited() {

@@ -11,6 +11,7 @@ import { parse, parsePlain } from '../../../../mfm/parse';
 import extractEmojis from '../../../../misc/extract-emojis';
 import extractHashtags from '../../../../misc/extract-hashtags';
 import * as langmap from 'langmap';
+import { updateHashtag } from '../../../../services/update-hashtag';
 
 export const meta = {
 	desc: {
@@ -216,11 +217,15 @@ export default define(meta, (ps, user, app) => new Promise(async (res, rej) => {
 		if (updates.description != null) {
 			const tokens = parse(updates.description);
 			emojis = emojis.concat(extractEmojis(tokens));
-			tags = extractHashtags(tokens);
+			tags = extractHashtags(tokens).map(tag => tag.toLowerCase());
 		}
 
 		updates.emojis = emojis;
 		updates.tags = tags;
+
+		// ハッシュタグ更新
+		for (const tag of tags) updateHashtag(user, tag, true, true);
+		for (const tag of (user.tags || []).filter(x => !tags.includes(x))) updateHashtag(user, tag, true, false);
 	}
 	//#endregion
 

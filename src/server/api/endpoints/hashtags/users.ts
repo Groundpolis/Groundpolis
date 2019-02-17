@@ -1,25 +1,22 @@
 import $ from 'cafy';
 import User, { pack } from '../../../../models/user';
 import define from '../../define';
-import { fallback } from '../../../../prelude/symbol';
 
 export const meta = {
-	requireCredential: true,
-	requireModerator: true,
+	requireCredential: false,
 
 	params: {
+		tag: {
+			validator: $.str,
+		},
+
 		limit: {
 			validator: $.optional.num.range(1, 100),
 			default: 10
 		},
 
-		offset: {
-			validator: $.optional.num.min(0),
-			default: 0
-		},
-
 		sort: {
-			validator: $.optional.str.or([
+			validator: $.str.or([
 				'+follower',
 				'-follower',
 				'+createdAt',
@@ -32,12 +29,7 @@ export const meta = {
 		state: {
 			validator: $.optional.str.or([
 				'all',
-				'admin',
-				'moderator',
-				'adminOrModerator',
-				'verified',
-				'silenced',
-				'suspended',
+				'alive'
 			]),
 			default: 'all'
 		},
@@ -53,35 +45,24 @@ export const meta = {
 	}
 };
 
-const sort: any = { // < https://github.com/Microsoft/TypeScript/issues/1863
+const sort: any = {
 	'+follower': { followersCount: -1 },
 	'-follower': { followersCount: 1 },
 	'+createdAt': { createdAt: -1 },
 	'-createdAt': { createdAt: 1 },
 	'+updatedAt': { updatedAt: -1 },
 	'-updatedAt': { updatedAt: 1 },
-	[fallback]: { _id: -1 }
 };
 
 export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 	const q = {
+		tags: ps.tag,
 		$and: []
 	} as any;
 
 	// state
 	q.$and.push(
-		ps.state == 'admin' ? { isAdmin: true } :
-		ps.state == 'moderator' ? { isModerator: true } :
-		ps.state == 'adminOrModerator' ? {
-			$or: [{
-				isAdmin: true
-			}, {
-				isModerator: true
-			}]
-		} :
-		ps.state == 'verified' ? { isVerified: true } :
-		ps.state == 'silenced' ? { isSilenced: true } :
-		ps.state == 'suspended' ? { isSuspended: true } :
+		ps.state == 'alive' ? { updatedAt: { $gt: new Date(Date.now() - (1000 * 60 * 60 * 24 * 5)) } } :
 		{}
 	);
 
@@ -95,8 +76,7 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 	const users = await User
 		.find(q, {
 			limit: ps.limit,
-			sort: sort[ps.sort] || sort[fallback],
-			skip: ps.offset
+			sort: sort[ps.sort],
 		});
 
 	res(await Promise.all(users.map(user => pack(user, me, { detail: true }))));
