@@ -1,11 +1,16 @@
 <template>
-<div class="mk-timeline-core">
-	<mk-friends-maker v-if="src == 'home' && alone"/>
-
-	<mk-notes ref="timeline" :more="existMore ? more : null">
-		<p :class="$style.empty" slot="empty">
+<div>
+	<mk-notes ref="timeline" :make-promise="makePromise" @inited="() => $emit('loaded')">
+		<template #header>
+			<slot></slot>
+			<div v-if="src == 'home' && alone" class="ibpylqas">
+				<p>{{ $t('@.empty-timeline-info.follow-users-to-make-your-timeline') }}</p>
+				<router-link to="/explore">{{ $t('@.empty-timeline-info.explore') }}</router-link>
+			</div>
+		</template>
+		<template #empty>
 			<fa :icon="['far', 'comments']"/>{{ $t('empty') }}
-		</p>
+		</template>
 	</mk-notes>
 </div>
 </template>
@@ -18,6 +23,7 @@ const fetchLimit = 10;
 
 export default Vue.extend({
 	i18n: i18n('desktop/views/components/timeline.core.vue'),
+
 	props: {
 		src: {
 			type: String,
@@ -30,9 +36,6 @@ export default Vue.extend({
 
 	data() {
 		return {
-			fetching: true,
-			moreFetching: false,
-			existMore: false,
 			connection: null,
 			date: null,
 			baseQuery: {
@@ -41,21 +44,18 @@ export default Vue.extend({
 				includeLocalRenotes: this.$store.state.settings.showLocalRenotes
 			},
 			query: {},
-			endpoint: null
+			endpoint: null,
+			makePromise: null
 		};
 	},
 
 	computed: {
 		alone(): boolean {
 			return this.$store.state.i.followingCount == 0;
-		},
-
-		canFetchMore(): boolean {
-			return !this.moreFetching && !this.fetching && this.existMore;
 		}
 	},
 
-	mounted() {
+	created() {
 		const prepend = note => {
 			(this.$refs.timeline as any).prepend(note);
 		};
@@ -106,7 +106,25 @@ export default Vue.extend({
 			this.connection.on('mention', onNote);
 		}
 
-		this.fetch();
+		this.makePromise = cursor => this.$root.api(this.endpoint, {
+			limit: fetchLimit + 1,
+			untilDate: cursor ? undefined : (this.date ? this.date.getTime() : undefined),
+			untilId: cursor ? cursor : undefined,
+			...this.baseQuery, ...this.query
+		}).then(notes => {
+			if (notes.length == fetchLimit + 1) {
+				notes.pop();
+				return {
+					notes: notes,
+					cursor: notes[notes.length - 1].id
+				};
+			} else {
+				return {
+					notes: notes,
+					cursor: null
+				};
+			}
+		});
 	},
 
 	beforeDestroy() {
@@ -114,82 +132,22 @@ export default Vue.extend({
 	},
 
 	methods: {
-		fetch() {
-			this.fetching = true;
-
-			(this.$refs.timeline as any).init(() => new Promise((res, rej) => {
-				this.$root.api(this.endpoint, Object.assign({
-					limit: fetchLimit + 1,
-					untilDate: this.date ? this.date.getTime() : undefined
-				}, this.baseQuery, this.query)).then(notes => {
-					if (notes.length == fetchLimit + 1) {
-						notes.pop();
-						this.existMore = true;
-					}
-					res(notes);
-					this.fetching = false;
-					this.$emit('loaded');
-				}, rej);
-			}));
-		},
-
-		more() {
-			if (!this.canFetchMore) return;
-
-			this.moreFetching = true;
-
-			const promise = this.$root.api(this.endpoint, Object.assign({
-				limit: fetchLimit + 1,
-				untilId: (this.$refs.timeline as any).tail().id
-			}, this.baseQuery, this.query));
-
-			promise.then(notes => {
-				if (notes.length == fetchLimit + 1) {
-					notes.pop();
-				} else {
-					this.existMore = false;
-				}
-				for (const n of notes) {
-					(this.$refs.timeline as any).append(n);
-				}
-				this.moreFetching = false;
-			});
-
-			return promise;
-		},
-
 		focus() {
 			(this.$refs.timeline as any).focus();
-		},
-
-		warp(date) {
-			this.date = date;
-			this.fetch();
 		}
 	}
 });
 </script>
 
 <style lang="stylus" scoped>
-.mk-timeline-core
-	> .mk-friends-maker
-		border-bottom solid var(--lineWidth) #eee
-
-</style>
-
-<style lang="stylus" module>
-.empty
-	display block
-	margin 0 auto
-	padding 32px
-	max-width 400px
+.ibpylqas
+	padding 16px
 	text-align center
-	color #999
+	color var(--text)
+	border-bottom solid var(--lineWidth) var(--faceDivider)
+	font-size 14px
 
-	> [data-icon]
-		display block
-		margin-bottom 16px
-		font-size 3em
-		color #ccc
+	> p
+		margin 0 0 8px 0
 
 </style>

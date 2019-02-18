@@ -136,7 +136,7 @@ init(async (launch, os) => {
 		routes: [
 			os.store.state.device.inDeckMode
 				? { path: '/', name: 'index', component: MkDeck, children: [
-					{ path: '/@:user', name: 'user', component: () => import('./views/deck/deck.user-column.vue').then(m => m.default), children: [
+					{ path: '/@:user', component: () => import('./views/deck/deck.user-column.vue').then(m => m.default), children: [
 						{ path: '', name: 'user', component: () => import('./views/deck/deck.user-column.home.vue').then(m => m.default) },
 						{ path: 'following', component: () => import('../common/views/pages/following.vue').then(m => m.default) },
 						{ path: 'followers', component: () => import('../common/views/pages/followers.vue').then(m => m.default) },
@@ -146,7 +146,7 @@ init(async (launch, os) => {
 					{ path: '/tags/:tag', name: 'tag', component: () => import('./views/deck/deck.hashtag-column.vue').then(m => m.default) },
 					{ path: '/featured', name: 'featured', component: () => import('./views/deck/deck.featured-column.vue').then(m => m.default) },
 					{ path: '/explore', name: 'explore', component: () => import('./views/deck/deck.explore-column.vue').then(m => m.default) },
-					{ path: '/explore/tags/:tag', props: true, component: () => import('./views/deck/deck.explore-column.vue').then(m => m.default) },
+					{ path: '/explore/tags/:tag', name: 'explore-tag', props: true, component: () => import('./views/deck/deck.explore-column.vue').then(m => m.default) },
 					{ path: '/i/favorites', component: () => import('./views/deck/deck.favorites-column.vue').then(m => m.default) }
 				]}
 				: { path: '/', component: MkHome, children: [
@@ -161,7 +161,7 @@ init(async (launch, os) => {
 					{ path: '/tags/:tag', name: 'tag', component: () => import('./views/home/tag.vue').then(m => m.default) },
 					{ path: '/featured', name: 'featured', component: () => import('./views/home/featured.vue').then(m => m.default) },
 					{ path: '/explore', name: 'explore', component: () => import('../common/views/pages/explore.vue').then(m => m.default) },
-					{ path: '/explore/tags/:tag', name: 'explore', props: true, component: () => import('../common/views/pages/explore.vue').then(m => m.default) },
+					{ path: '/explore/tags/:tag', name: 'explore-tag', props: true, component: () => import('../common/views/pages/explore.vue').then(m => m.default) },
 					{ path: '/i/favorites', component: () => import('./views/home/favorites.vue').then(m => m.default) },
 				]},
 			{ path: '/i/messaging/:user', component: MkMessagingRoom },

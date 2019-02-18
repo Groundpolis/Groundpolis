@@ -62,7 +62,7 @@
 			<ul>
 				<li @click="toggleDeckMode">
 					<p>
-						<template v-if="$store.state.device.inDeckMode"><span>{{ $t('@.home') }}</span><i><fa :icon="faHome"/></i></template>
+						<template v-if="$store.state.device.inDeckMode"><span>ホーム</span><i><fa :icon="faHome"/></i></template>
 						<template v-else><span>{{ $t('@.deck') }}</span><i><fa :icon="faColumns"/></i></template>
 					</p>
 				</li>

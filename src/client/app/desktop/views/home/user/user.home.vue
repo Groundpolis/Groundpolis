@@ -5,12 +5,12 @@
 	<!--<mk-calendar @chosen="warp" :start="new Date(user.createdAt)"/>-->
 	<div class="activity">
 		<ui-container :body-togglable="true">
-			<template slot="header"><fa icon="chart-bar"/>{{ $t('activity') }}</template>
+			<template #header><fa icon="chart-bar"/>{{ $t('activity') }}</template>
 			<x-activity :user="user" :limit="35" style="padding: 16px;"/>
 		</ui-container>
 	</div>
 	<x-photos :user="user"/>
-	<x-timeline class="timeline" ref="tl" :user="user"/>
+	<x-timeline ref="tl" :user="user"/>
 </div>
 </template>
 
@@ -50,8 +50,5 @@ export default Vue.extend({
 .lnctpgve
 	> *
 		margin-bottom 16px
-
-	> .timeline
-		box-shadow var(--shadow)
 
 </style>

@@ -1,8 +1,8 @@
 <template>
 <x-column>
-	<span slot="header">
+	<template #header>
 		<fa icon="hashtag"/><span>{{ tag }}</span>
-	</span>
+	</template>
 
 	<div class="xroyrflcmhhtmlwmyiwpfqiirqokfueb">
 		<div ref="chart" class="chart"></div>

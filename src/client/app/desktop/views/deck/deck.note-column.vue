@@ -1,8 +1,8 @@
 <template>
 <x-column>
-	<span slot="header">
+	<template #header>
 		<fa :icon="['far', 'comment-alt']"/><mk-user-name :user="note.user" v-if="note"/>
-	</span>
+	</template>
 
 	<div class="rvtscbadixhhbsczoorqoaygovdeecsx" v-if="note">
 		<div class="is-remote" v-if="note.user.host != null">
