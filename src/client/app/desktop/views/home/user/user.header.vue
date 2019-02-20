@@ -23,6 +23,7 @@
 		<div class="description">
 			<mfm v-if="user.description" :text="user.description" :is-note="false" :author="user" :i="$store.state.i" :custom-emojis="user.emojis"/>
 			<p v-else class="empty">{{ $t('no-description') }}</p>
+			<x-integrations :user="user" style="margin-top:16px;"/>
 		</div>
 		<div class="fields" v-if="user.fields">
 			<dl class="field" v-for="(field, i) in user.fields" :key="i">
@@ -52,9 +53,13 @@ import Vue from 'vue';
 import i18n from '../../../../i18n';
 import * as age from 's-age';
 import XUserMenu from '../../../../common/views/components/user-menu.vue';
+import XIntegrations from '../../../../common/views/components/integrations.vue';
 
 export default Vue.extend({
 	i18n: i18n('desktop/views/pages/user/user.header.vue'),
+	components: {
+		XIntegrations
+	},
 	props: ['user'],
 	computed: {
 		style(): any {
@@ -215,6 +220,8 @@ export default Vue.extend({
 		color var(--text)
 
 		> .description
+			font-size 15px
+
 			> .empty
 				margin 0
 				opacity 0.5
@@ -251,6 +258,7 @@ export default Vue.extend({
 			margin-top 16px
 			padding-top 16px
 			border-top solid 1px var(--faceDivider)
+			font-size 15px
 
 			&:empty
 				display none
