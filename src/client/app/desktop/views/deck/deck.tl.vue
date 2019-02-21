@@ -6,7 +6,7 @@
 	</p>
 	<p class="desc">{{ $t('disabled-timeline.description') }}</p>
 </div>
-<x-notes v-else ref="timeline" :make-promise="makePromise" :media-view="mediaView" @inited="() => $emit('loaded')"/>
+<x-notes v-else ref="timeline" :make-promise="makePromise" @inited="() => $emit('loaded')"/>
 </template>
 
 <script lang="ts">
@@ -31,11 +31,6 @@ export default Vue.extend({
 			default: 'home'
 		},
 		mediaOnly: {
-			type: Boolean,
-			required: false,
-			default: false
-		},
-		mediaView: {
 			type: Boolean,
 			required: false,
 			default: false
@@ -73,16 +68,18 @@ export default Vue.extend({
 
 	watch: {
 		mediaOnly() {
-			this.fetch();
+			(this.$refs.timeline as any).reload();
 		}
 	},
 
 	created() {
 		this.makePromise = cursor => this.$root.api(this.endpoint, {
 			limit: fetchLimit + 1,
-			untilDate: cursor ? undefined : (this.date ? this.date.getTime() : undefined),
 			untilId: cursor ? cursor : undefined,
-			...this.baseQuery, ...this.query
+			withFiles: this.mediaOnly,
+			includeMyRenotes: this.$store.state.settings.showMyRenotes,
+			includeRenotedMyNotes: this.$store.state.settings.showRenotedMyNotes,
+			includeLocalRenotes: this.$store.state.settings.showLocalRenotes
 		}).then(notes => {
 			if (notes.length == fetchLimit + 1) {
 				notes.pop();

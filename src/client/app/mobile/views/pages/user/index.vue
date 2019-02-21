@@ -1,7 +1,7 @@
 <template>
 <mk-ui>
-	<template #header v-if="!fetching"><img :src="avator" alt="">
-		<mk-user-name :user="user"/>
+	<template #header v-if="!fetching">
+		<img :src="avator" alt=""><mk-user-name :user="user"/>
 	</template>
 	<div class="wwtwuxyh" v-if="!fetching">
 		<div class="is-suspended" v-if="user.isSuspended"><p><fa icon="exclamation-triangle"/> {{ $t('@.user-suspended') }}</p></div>
@@ -23,7 +23,7 @@
 				</div>
 				<div class="description">
 					<mfm v-if="user.description" :text="user.description" :is-note="false" :author="user" :i="$store.state.i" :custom-emojis="user.emojis"/>
-					<x-integrations :user="user" style="margin:24px 0;"/>
+					<x-integrations :user="user" style="margin:20px 0;"/>
 				</div>
 				<div class="fields" v-if="user.fields">
 					<dl class="field" v-for="(field, i) in user.fields" :key="i">
@@ -68,9 +68,9 @@
 		</nav>
 		<main>
 			<template v-if="$route.name == 'user'">
-				<x-home v-if="page == 'home'" :user="user"/>
-				<mk-user-timeline v-if="page == 'notes'" :user="user" key="tl"/>
-				<mk-user-timeline v-if="page == 'media'" :user="user" :with-media="true" key="media"/>
+				<x-home v-if="page == 'home'" :user="user" :key="user.id"/>
+				<mk-user-timeline v-if="page == 'notes'" :user="user" :key="`tl:${user.id}`"/>
+				<mk-user-timeline v-if="page == 'media'" :user="user" :with-media="true" :key="`media:${user.id}`"/>
 			</template>
 			<router-view :user="user"></router-view>
 		</main>
@@ -251,9 +251,6 @@ export default Vue.extend({
 				@media (max-width 450px)
 					font-size 15px
 
-				@media (max-width 400px)
-					font-size 14px
-
 			> .fields
 				margin 8px 0
 
@@ -284,6 +281,9 @@ export default Vue.extend({
 
 			> .info
 				margin 8px 0
+
+				@media (max-width 450px)
+					font-size 15px
 
 				> p
 					display inline

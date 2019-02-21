@@ -1,6 +1,6 @@
 <template>
 <div class="eamppglmnmimdhrlzhplwpvyeaqmmhxu">
-	<slot name="empty" v-if="notes.length == 0 && !fetching && inited"></slot>
+	<div class="empty" v-if="notes.length == 0 && !fetching && inited">{{ $t('@.no-notes') }}</div>
 
 	<mk-error v-if="!fetching && !inited" @retry="init()"/>
 
@@ -17,7 +17,6 @@
 				:note="note"
 				:key="note.id"
 				@update:note="onNoteUpdated(i, $event)"
-				:media-view="mediaView"
 				:compact="true"
 				:mini="true"/>
 			<p class="date" :key="note.id + '_date'" v-if="i != notes.length - 1 && note._date != _notes[i + 1]._date">
@@ -56,11 +55,6 @@ export default Vue.extend({
 	props: {
 		makePromise: {
 			required: true
-		},
-		mediaView: {
-			type: Boolean,
-			required: false,
-			default: false
 		}
 	},
 
@@ -91,6 +85,9 @@ export default Vue.extend({
 	watch: {
 		queue(q) {
 			this.count(q.length);
+		},
+		makePromise() {
+			this.init();
 		}
 	},
 
@@ -115,12 +112,12 @@ export default Vue.extend({
 		},
 
 		reload() {
-			this.queue = [];
-			this.notes = [];
 			this.init();
 		},
 
 		init() {
+			this.queue = [];
+			this.notes = [];
 			this.fetching = true;
 			this.makePromise().then(x => {
 				if (Array.isArray(x)) {
@@ -203,6 +200,11 @@ export default Vue.extend({
 
 		> *
 			transition transform .3s ease, opacity .3s ease
+
+	> .empty
+		padding 16px
+		text-align center
+		color var(--text)
 
 	> .placeholder
 		padding 16px
