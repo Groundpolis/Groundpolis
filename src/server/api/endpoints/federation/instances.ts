@@ -3,6 +3,8 @@ import define from '../../define';
 import Instance from '../../../../models/instance';
 
 export const meta = {
+	tags: ['federation'],
+
 	requireCredential: false,
 
 	params: {
@@ -34,7 +36,7 @@ export const meta = {
 	}
 };
 
-export default define(meta, (ps, me) => new Promise(async (res, rej) => {
+export default define(meta, async (ps, me) => {
 	let sort;
 
 	if (ps.sort) {
@@ -122,5 +124,5 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 			skip: ps.offset
 		});
 
-	res(instances);
-}));
+	return instances;
+});

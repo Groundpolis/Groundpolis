@@ -9,6 +9,8 @@ export const meta = {
 		'ja-JP': 'ハッシュタグごとのチャートを取得します。'
 	},
 
+	tags: ['charts', 'hashtags'],
+
 	params: {
 		span: {
 			validator: $.str.or(['day', 'hour']),
@@ -31,11 +33,16 @@ export const meta = {
 				'ja-JP': '対象のハッシュタグ'
 			}
 		},
-	}
+	},
+
+	res: {
+		type: 'array',
+		items: {
+			type: 'object',
+		},
+	},
 };
 
-export default define(meta, (ps) => new Promise(async (res, rej) => {
-	const stats = await hashtagChart.getChart(ps.span as any, ps.limit, ps.tag);
-
-	res(stats);
-}));
+export default define(meta, async (ps) => {
+	return await hashtagChart.getChart(ps.span as any, ps.limit, ps.tag);
+});

@@ -5,6 +5,8 @@ import define from '../../define';
 export const meta = {
 	requireCredential: false,
 
+	tags: ['hashtags', 'users'],
+
 	params: {
 		tag: {
 			validator: $.str,
@@ -54,7 +56,7 @@ const sort: any = {
 	'-updatedAt': { updatedAt: 1 },
 };
 
-export default define(meta, (ps, me) => new Promise(async (res, rej) => {
+export default define(meta, async (ps, me) => {
 	const q = {
 		tags: ps.tag,
 		$and: []
@@ -79,5 +81,5 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 			sort: sort[ps.sort],
 		});
 
-	res(await Promise.all(users.map(user => pack(user, me, { detail: true }))));
-}));
+	return await Promise.all(users.map(user => pack(user, me, { detail: true })));
+});

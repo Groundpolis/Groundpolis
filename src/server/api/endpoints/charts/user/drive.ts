@@ -10,6 +10,8 @@ export const meta = {
 		'ja-JP': 'ユーザーごとのドライブのチャートを取得します。'
 	},
 
+	tags: ['charts', 'drive', 'users'],
+
 	params: {
 		span: {
 			validator: $.str.or(['day', 'hour']),
@@ -34,11 +36,16 @@ export const meta = {
 				'en-US': 'Target user ID'
 			}
 		}
-	}
+	},
+
+	res: {
+		type: 'array',
+		items: {
+			type: 'object',
+		},
+	},
 };
 
-export default define(meta, (ps) => new Promise(async (res, rej) => {
-	const stats = await perUserDriveChart.getChart(ps.span as any, ps.limit, ps.userId);
-
-	res(stats);
-}));
+export default define(meta, async (ps) => {
+	return await perUserDriveChart.getChart(ps.span as any, ps.limit, ps.userId);
+});

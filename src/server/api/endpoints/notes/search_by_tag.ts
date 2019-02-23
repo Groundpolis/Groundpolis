@@ -11,6 +11,8 @@ export const meta = {
 		'ja-JP': '指定されたタグが付けられた投稿を取得します。'
 	},
 
+	tags: ['notes', 'hashtags'],
+
 	params: {
 		tag: {
 			validator: $.optional.str,
@@ -100,10 +102,17 @@ export const meta = {
 			validator: $.optional.num.range(1, 30),
 			default: 10
 		},
-	}
+	},
+
+	res: {
+		type: 'array',
+		items: {
+			type: 'Note',
+		},
+	},
 };
 
-export default define(meta, (ps, me) => new Promise(async (res, rej) => {
+export default define(meta, async (ps, me) => {
 	const visibleQuery = me == null ? [{
 		visibility: { $in: [ 'public', 'home' ] }
 	}] : [{
@@ -317,15 +326,13 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 	}
 
 	// Search notes
-	const notes = await Note
-		.find(q, {
-			sort: {
-				_id: -1
-			},
-			limit: ps.limit,
-			skip: ps.offset
-		});
+	const notes = await Note.find(q, {
+		sort: {
+			_id: -1
+		},
+		limit: ps.limit,
+		skip: ps.offset
+	});
 
-	// Serialize
-	res(await packMany(notes, me));
-}));
+	return await packMany(notes, me);
+});

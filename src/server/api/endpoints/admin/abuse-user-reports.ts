@@ -4,6 +4,8 @@ import Report, { packMany } from '../../../../models/abuse-user-report';
 import define from '../../define';
 
 export const meta = {
+	tags: ['admin'],
+
 	requireCredential: true,
 	requireModerator: true,
 
@@ -25,11 +27,7 @@ export const meta = {
 	}
 };
 
-export default define(meta, (ps) => new Promise(async (res, rej) => {
-	if (ps.sinceId && ps.untilId) {
-		return rej('cannot set sinceId and untilId');
-	}
-
+export default define(meta, async (ps) => {
 	const sort = {
 		_id: -1
 	};
@@ -51,5 +49,5 @@ export default define(meta, (ps) => new Promise(async (res, rej) => {
 			sort: sort
 		});
 
-	res(await packMany(reports));
-}));
+	return await packMany(reports);
+});

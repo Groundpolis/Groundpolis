@@ -4,6 +4,8 @@ import define from '../../define';
 import { fallback } from '../../../../prelude/symbol';
 
 export const meta = {
+	tags: ['admin'],
+
 	requireCredential: true,
 	requireModerator: true,
 
@@ -63,7 +65,7 @@ const sort: any = { // < https://github.com/Microsoft/TypeScript/issues/1863
 	[fallback]: { _id: -1 }
 };
 
-export default define(meta, (ps, me) => new Promise(async (res, rej) => {
+export default define(meta, async (ps, me) => {
 	const q = {
 		$and: []
 	} as any;
@@ -99,5 +101,5 @@ export default define(meta, (ps, me) => new Promise(async (res, rej) => {
 			skip: ps.offset
 		});
 
-	res(await Promise.all(users.map(user => pack(user, me, { detail: true }))));
-}));
+	return await Promise.all(users.map(user => pack(user, me, { detail: true })));
+});

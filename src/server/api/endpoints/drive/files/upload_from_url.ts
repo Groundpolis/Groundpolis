@@ -10,6 +10,8 @@ export const meta = {
 		'ja-JP': 'ドライブに指定されたURLに存在するファイルをアップロードします。'
 	},
 
+	tags: ['drive'],
+
 	limit: {
 		duration: ms('1hour'),
 		max: 60
@@ -50,6 +52,6 @@ export const meta = {
 	}
 };
 
-export default define(meta, (ps, user) => new Promise(async (res, rej) => {
-	res(pack(await uploadFromUrl(ps.url, user, ps.folderId, null, ps.isSensitive, ps.force), { self: true }));
-}));
+export default define(meta, async (ps, user) => {
+	return await pack(await uploadFromUrl(ps.url, user, ps.folderId, null, ps.isSensitive, ps.force), { self: true });
+});

@@ -7,6 +7,8 @@ export const meta = {
 		'ja-JP': 'インスタンスの設定を更新します。'
 	},
 
+	tags: ['admin'],
+
 	requireCredential: true,
 	requireModerator: true,
 
@@ -331,7 +333,7 @@ export const meta = {
 	}
 };
 
-export default define(meta, (ps) => new Promise(async (res, rej) => {
+export default define(meta, async (ps) => {
 	const set = {} as any;
 
 	if (ps.broadcasts) {
@@ -518,5 +520,5 @@ export default define(meta, (ps) => new Promise(async (res, rej) => {
 		$set: set
 	}, { upsert: true });
 
-	res();
-}));
+	return;
+});

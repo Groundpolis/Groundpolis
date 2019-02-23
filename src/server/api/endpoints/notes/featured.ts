@@ -10,16 +10,11 @@ export const meta = {
 		'en-US': 'Get featured notes.'
 	},
 
+	tags: ['notes'],
+
 	requireCredential: false,
 
 	params: {
-		limit: {
-			validator: $.optional.num.range(1, 30),
-			default: 10,
-			desc: {
-				'ja-JP': '最大数'
-			}
-		},
 		days: {
 			validator: $.optional.num.range(1, 1000),
 			default: 2,
@@ -27,32 +22,45 @@ export const meta = {
 				'ja-JP': '最大数'
 			}
 		},
-	}
+		limit: {
+			validator: $.optional.num.range(1, 30),
+			default: 10,
+			desc: {
+				'ja-JP': '最大数'
+			}
+		}
+	},
+
+	res: {
+		type: 'array',
+		items: {
+			type: 'Note',
+		},
+	},
 };
 
-export default define(meta, (ps, user) => new Promise(async (res, rej) => {
+export default define(meta, async (ps, user) => {
 	const day = 1000 * 60 * 60 * 24 * ps.days;
 
 	const hideUserIds = await getHideUserIds(user);
 
-	const notes = await Note
-		.find({
-			createdAt: {
-				$gt: new Date(Date.now() - day)
-			},
-			deletedAt: null,
-			visibility: { $in: ['public', 'home'] },
-			'_user.host': null,
-			...(hideUserIds && hideUserIds.length > 0 ? { userId: { $nin: hideUserIds } } : {})
-		}, {
-			limit: ps.limit,
-			sort: {
-				score: -1
-			},
-			hint: {
-				score: -1
-			}
-		});
+	const notes = await Note.find({
+		createdAt: {
+			$gt: new Date(Date.now() - day)
+		},
+		deletedAt: null,
+		visibility: { $in: ['public', 'home'] },
+		'_user.host': null,
+		...(hideUserIds && hideUserIds.length > 0 ? { userId: { $nin: hideUserIds } } : {})
+	}, {
+		limit: ps.limit,
+		sort: {
+			score: -1
+		},
+		hint: {
+			score: -1
+		}
+	});
 
-	res(await packMany(notes, user));
-}));
+	return await packMany(notes, user);
+});

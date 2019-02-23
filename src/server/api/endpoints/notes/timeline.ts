@@ -4,7 +4,6 @@ import Note from '../../../../models/note';
 import { getFriends } from '../../common/get-friends';
 import { packMany } from '../../../../models/note';
 import define from '../../define';
-import { countIf } from '../../../../prelude/array';
 import activeUsersChart from '../../../../services/chart/active-users';
 import { getHideUserIds } from '../../common/get-hide-users';
 
@@ -13,6 +12,8 @@ export const meta = {
 		'ja-JP': 'タイムラインを取得します。',
 		'en-US': 'Get timeline of myself.'
 	},
+
+	tags: ['notes'],
 
 	requireCredential: true,
 
@@ -92,16 +93,17 @@ export const meta = {
 				'ja-JP': 'true にすると、ファイルが添付された投稿だけ取得します (このパラメータは廃止予定です。代わりに withFiles を使ってください。)'
 			}
 		},
-	}
+	},
+
+	res: {
+		type: 'array',
+		items: {
+			type: 'Note',
+		},
+	},
 };
 
-export default define(meta, (ps, user) => new Promise(async (res, rej) => {
-	// Check if only one of sinceId, untilId, sinceDate, untilDate specified
-	if (countIf(x => x != null, [ps.sinceId, ps.untilId, ps.sinceDate, ps.untilDate]) > 1) {
-		rej('only one of sinceId, untilId, sinceDate, untilDate can be specified');
-		return;
-	}
-
+export default define(meta, async (ps, user) => {
 	const [followings, hideUserIds] = await Promise.all([
 		// フォローを取得
 		// Fetch following
@@ -255,15 +257,12 @@ export default define(meta, (ps, user) => new Promise(async (res, rej) => {
 	}
 	//#endregion
 
-	// Issue query
-	const timeline = await Note
-		.find(query, {
-			limit: ps.limit,
-			sort: sort
-		});
-
-	// Serialize
-	res(await packMany(timeline, user));
+	const timeline = await Note.find(query, {
+		limit: ps.limit,
+		sort: sort
+	});
 
 	activeUsersChart.update(user);
-}));
+
+	return await packMany(timeline, user);
+});
