@@ -13,7 +13,15 @@ export default (endpoint: IEndpoint, ctx: Koa.BaseContext) => new Promise((res) 
 			ctx.status = 204;
 		} else if (typeof x === 'number') {
 			ctx.status = x;
-			ctx.body = { error: y };
+			ctx.body = {
+				error: {
+					message: y.message,
+					code: y.code,
+					id: y.id,
+					kind: y.kind,
+					...(y.info ? { info: y.info } : {})
+				}
+			};
 		} else {
 			ctx.body = x;
 		}
@@ -26,7 +34,7 @@ export default (endpoint: IEndpoint, ctx: Koa.BaseContext) => new Promise((res) 
 		call(endpoint.name, user, app, body, (ctx.req as any).file).then(res => {
 			reply(res);
 		}).catch(e => {
-			reply(e.httpStatusCode ? e.httpStatusCode :  e.kind == 'client' ? 400 : 500, e);
+			reply(e.httpStatusCode ? e.httpStatusCode : e.kind == 'client' ? 400 : 500, e);
 		});
 	}).catch(() => {
 		reply(403, new ApiError({

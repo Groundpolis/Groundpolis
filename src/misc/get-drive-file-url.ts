@@ -8,9 +8,9 @@ export default function(file: IDriveFile, thumbnail = false): string {
 
 	if (file.metadata.withoutChunks && file.metadata.isRemote) {
 		if (thumbnail) {
-			return `${config.drive_url}/${file._id}/${generateFilename(file, true)}?thumbnail`;
+			return `${config.driveUrl}/${file._id}/${generateFilename(file, true)}?thumbnail`;
 		} else {
-			return `${config.drive_url}/${file._id}/${generateFilename(file)}?web`;
+			return `${config.driveUrl}/${file._id}/${generateFilename(file)}?web`;
 		}
 	} else if (file.metadata.withoutChunks) {
 		if (thumbnail) {
@@ -20,9 +20,9 @@ export default function(file: IDriveFile, thumbnail = false): string {
 		}
 	} else {
 		if (thumbnail) {
-			return `${config.drive_url}/${file._id}/${generateFilename(file, true)}?thumbnail`;
+			return `${config.driveUrl}/${file._id}/${generateFilename(file, true)}?thumbnail`;
 		} else {
-			return `${config.drive_url}/${file._id}/${generateFilename(file)}?web`;
+			return `${config.driveUrl}/${file._id}/${generateFilename(file)}?web`;
 		}
 	}
 }
@@ -56,5 +56,5 @@ export function getOriginalUrl(file: IDriveFile) {
 	}
 
 	const accessKey = file.metadata ? file.metadata.accessKey : null;
-	return `${config.drive_url}/${file._id}${accessKey ? '?original=' + accessKey : ''}`;
+	return `${config.driveUrl}/${file._id}${accessKey ? '?original=' + accessKey : ''}`;
 }
