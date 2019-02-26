@@ -87,10 +87,10 @@
 				<ui-radio v-model="navbar" value="right">{{ $t('navbar-position-right') }}</ui-radio>
 			</section>
 			<section>
-				<ui-switch v-model="darkmode">{{ $t('dark-mode') }}</ui-switch>
-				<ui-switch v-model="useShadow">{{ $t('use-shadow') }}</ui-switch>
-				<ui-switch v-model="roundedCorners">{{ $t('rounded-corners') }}</ui-switch>
-				<ui-switch v-model="circleIcons">{{ $t('circle-icons') }}</ui-switch>
+				<ui-switch v-model="darkmode">{{ $t('@.dark-mode') }}</ui-switch>
+				<ui-switch v-model="useShadow">{{ $t('@.use-shadow') }}</ui-switch>
+				<ui-switch v-model="roundedCorners">{{ $t('@.rounded-corners') }}</ui-switch>
+				<ui-switch v-model="circleIcons">{{ $t('@.circle-icons') }}</ui-switch>
 				<section>
 					<header>{{ $t('@.line-width') }}</header>
 					<ui-radio v-model="lineWidth" :value="0.5">{{ $t('@.line-width-thin') }}</ui-radio>
@@ -98,7 +98,7 @@
 					<ui-radio v-model="lineWidth" :value="2">{{ $t('@.line-width-thick') }}</ui-radio>
 				</section>
 				<ui-switch v-model="reduceMotion">{{ $t('@.reduce-motion') }}</ui-switch>
-				<ui-switch v-model="contrastedAcct">{{ $t('contrasted-acct') }}</ui-switch>
+				<ui-switch v-model="contrastedAcct">{{ $t('@.contrasted-acct') }}</ui-switch>
 				<ui-switch v-model="showFullAcct">{{ $t('@.show-full-acct') }}</ui-switch>
 				<ui-switch v-model="showVia">{{ $t('@.show-via') }}</ui-switch>
 				<ui-switch v-model="useOsDefaultEmojis">{{ $t('@.use-os-default-emojis') }}</ui-switch>
@@ -387,13 +387,13 @@ export default Vue.extend({
 		},
 
 		useShadow: {
-			get() { return this.$store.state.settings.useShadow; },
-			set(value) { this.$store.dispatch('settings/set', { key: 'useShadow', value }); }
+			get() { return this.$store.state.device.useShadow; },
+			set(value) { this.$store.commit('device/set', { key: 'useShadow', value }); }
 		},
 
 		roundedCorners: {
-			get() { return this.$store.state.settings.roundedCorners; },
-			set(value) { this.$store.dispatch('settings/set', { key: 'roundedCorners', value }); }
+			get() { return this.$store.state.device.roundedCorners; },
+			set(value) { this.$store.commit('device/set', { key: 'roundedCorners', value }); }
 		},
 
 		lineWidth: {
