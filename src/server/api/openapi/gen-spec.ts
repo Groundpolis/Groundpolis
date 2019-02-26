@@ -4,7 +4,7 @@ import config from '../../../config';
 import { errors as basicErrors } from './errors';
 import { schemas } from './schemas';
 import { description } from './description';
-import { convertOpenApiSchema } from '../../../prelude/schema';
+import { convertOpenApiSchema } from '../../../misc/schema';
 
 export function genOpenapiSpec(lang = 'ja-JP') {
 	const spec = {
@@ -41,24 +41,23 @@ export function genOpenapiSpec(lang = 'ja-JP') {
 		}
 	};
 
-	function genProps(props: { [key: string]: Context & { desc: any, default: any }; }) {
+	function genProps(props: { [key: string]: Context; }) {
 		const properties = {} as any;
 
-		const kvs = Object.entries(props);
-
-		for (const kv of kvs) {
-			properties[kv[0]] = genProp(kv[1], kv[1].desc, kv[1].default);
+		for (const [k, v] of Object.entries(props)) {
+			properties[k] = genProp(v);
 		}
 
 		return properties;
 	}
 
-	function genProp(param: Context, desc?: string, _default?: any): any {
+	function genProp(param: Context): any {
 		const required = param.name === 'Object' ? (param as any).props ? Object.entries((param as any).props).filter(([k, v]: any) => !v.isOptional).map(([k, v]) => k) : [] : [];
 		return {
-			description: desc,
-			default: _default,
-			...(_default ? { default: _default } : {}),
+			description: (param.data || {}).desc,
+			default: (param.data || {}).default,
+			deprecated: (param.data || {}).deprecated,
+			...((param.data || {}).default ? { default: (param.data || {}).default } : {}),
 			type: param.name === 'ID' ? 'string' : param.name.toLowerCase(),
 			...(param.name === 'ID' ? { example: 'xxxxxxxxxxxxxxxxxxxxxxxx', format: 'id' } : {}),
 			nullable: param.isNullable,
@@ -96,10 +95,12 @@ export function genOpenapiSpec(lang = 'ja-JP') {
 		}
 
 		if (endpoint.meta.params) {
-			for (const kv of Object.entries(endpoint.meta.params)) {
-				if (kv[1].desc) (kv[1].validator as any).desc = kv[1].desc[lang];
-				if (kv[1].default) (kv[1].validator as any).default = kv[1].default;
-				porops[kv[0]] = kv[1].validator;
+			for (const [k, v] of Object.entries(endpoint.meta.params)) {
+				if (v.validator.data == null) v.validator.data = {};
+				if (v.desc) v.validator.data.desc = v.desc[lang];
+				if (v.deprecated) v.validator.data.deprecated = v.deprecated;
+				if (v.default) v.validator.data.default = v.default;
+				porops[k] = v.validator;
 			}
 		}
 
@@ -107,10 +108,14 @@ export function genOpenapiSpec(lang = 'ja-JP') {
 
 		const resSchema = endpoint.meta.res ? convertOpenApiSchema(endpoint.meta.res) : {};
 
+		let desc = (endpoint.meta.desc ? endpoint.meta.desc[lang] : 'No description provided.') + '\n\n';
+		desc += `**Credential required**: *${endpoint.meta.requireCredential ? 'Yes' : 'No'}*`;
+		if (endpoint.meta.kind) desc += ` / **Permission**: *${endpoint.meta.kind}*`;
+
 		const info = {
 			operationId: endpoint.name,
 			summary: endpoint.name,
-			description: endpoint.meta.desc ? endpoint.meta.desc[lang] : 'No description provided.',
+			description: desc,
 			externalDocs: {
 				description: 'Source code',
 				url: `https://github.com/syuilo/misskey/blob/develop/src/server/api/endpoints/${endpoint.name}.ts`
