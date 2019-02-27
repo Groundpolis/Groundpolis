@@ -1,5 +1,5 @@
 <template>
-<div v-if="player.url" class="player" :style="`padding: ${(player.height || 0) / (player.width || 1) * 100}% 0 0`">
+<div v-if="playerEnabled" class="player" :style="`padding: ${(player.height || 0) / (player.width || 1) * 100}% 0 0`">
 	<iframe :src="player.url" :width="player.width || '100%'" :heigth="player.height || 250" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen />
 </div>
 <div v-else-if="tweetUrl && detail" class="twitter">
@@ -13,6 +13,9 @@
 		<article>
 			<header>
 				<h1 :title="title">{{ title }}</h1>
+				<div class="embedActions" v-if="!playerEnabled && player.url">
+					<button @click.prevent="playerEnabled = true" title="プレイヤーを開く"><fa :icon="['far', 'play-circle']"/></button>
+				</div>
 			</header>
 			<p v-if="description" :title="description">{{ description.length > 85 ? description.slice(0, 85) + '…' : description }}</p>
 			<footer>
@@ -27,85 +30,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import { url as misskeyUrl } from '../../../config';
-
-// THIS IS THE WHITELIST FOR THE EMBED PLAYER
-const whiteList = [
-	'afreecatv.com',
-	'aparat.com',
-	'applemusic.com',
-	'amazon.com',
-	'awa.fm',
-	'bandcamp.com',
-	'bbc.co.uk',
-	'beatport.com',
-	'bilibili.com',
-	'boomstream.com',
-	'breakers.tv',
-	'cam4.com',
-	'cavelis.net',
-	'chaturbate.com',
-	'cnn.com',
-	'cybergame.tv',
-	'dailymotion.com',
-	'deezer.com',
-	'djlive.pl',
-	'e-onkyo.com',
-	'eventials.com',
-	'facebook.com',
-	'fc2.com',
-	'gameplank.tv',
-	'goodgame.ru',
-	'google.com',
-	'hardtunes.com',
-	'instagram.com',
-	'johnnylooch.com',
-	'kexp.org',
-	'lahzenegar.com',
-	'liveedu.tv',
-	'livetube.cc',
-	'livestream.com',
-	'meridix.com',
-	'mixcloud.com',
-	'mixer.com',
-	'mobcrush.com',
-	'mylive.in.th',
-	'myspace.com',
-	'netflix.com',
-	'newretrowave.com',
-	'nhk.or.jp',
-	'nicovideo.jp',
-	'nico.ms',
-	'noisetrade.com',
-	'nood.tv',
-	'npr.org',
-	'openrec.tv',
-	'pandora.com',
-	'pandora.tv',
-	'picarto.tv',
-	'pscp.tv',
-	'restream.io',
-	'reverbnation.com',
-	'sermonaudio.com',
-	'smashcast.tv',
-	'songkick.com',
-	'soundcloud.com',
-	'spinninrecords.com',
-	'spotify.com',
-	'stitcher.com',
-	'stream.me',
-	'switchboard.live',
-	'tunein.com',
-	'twitcasting.tv',
-	'twitch.tv',
-	'twitter.com',
-	'vaughnlive.tv',
-	'veoh.com',
-	'vimeo.com',
-	'watchpeoplecode.com',
-	'web.tv',
-	'youtube.com',
-	'youtu.be'
-];
 
 export default Vue.extend({
 	props: {
@@ -147,7 +71,8 @@ export default Vue.extend({
 				height: null
 			},
 			tweetUrl: null,
-			misskeyUrl
+			playerEnabled: false,
+			misskeyUrl,
 		};
 	},
 
@@ -188,9 +113,7 @@ export default Vue.extend({
 				this.icon = info.icon;
 				this.sitename = info.sitename;
 				this.fetching = false;
-				if (whiteList.some(x => x == url.hostname || url.hostname.endsWith(`.${x}`))) {
-					this.player = info.player;
-				}
+				this.player = info.player;
 			})
 		});
 	}
@@ -245,6 +168,18 @@ export default Vue.extend({
 					margin 0
 					font-size 1em
 					color var(--urlPreviewTitle)
+				
+				> .embedActions
+					position absolute
+					top 0
+					right -8px
+
+					> button
+						color var(--text)
+						opacity 0.7
+
+						&:hover
+							opacity 1.0
 
 			> p
 				margin 0
@@ -279,7 +214,7 @@ export default Vue.extend({
 				& + article
 					left 0
 					width 100%
-
+			
 		@media (max-width 550px)
 			font-size 12px
 
