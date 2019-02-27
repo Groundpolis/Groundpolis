@@ -9,13 +9,12 @@
 </div>
 <div v-else class="mk-url-preview">
 	<a :class="{ mini: narrow, compact }" :href="url" target="_blank" :title="url" v-if="!fetching">
-		<div class="thumbnail" v-if="thumbnail" :style="`background-image: url('${thumbnail}')`"></div>
+		<div class="thumbnail" v-if="thumbnail" :style="`background-image: url('${thumbnail}')`">
+			<button v-if="!playerEnabled && player.url" @click.prevent="playerEnabled = true" title="プレイヤーを開く"><fa :icon="['far', 'play-circle']"/></button>
+		</div>
 		<article>
 			<header>
 				<h1 :title="title">{{ title }}</h1>
-				<div class="embedActions" v-if="!playerEnabled && player.url">
-					<button @click.prevent="playerEnabled = true" title="プレイヤーを開く"><fa :icon="['far', 'play-circle']"/></button>
-				</div>
 			</header>
 			<p v-if="description" :title="description">{{ description.length > 85 ? description.slice(0, 85) + '…' : description }}</p>
 			<footer>
@@ -153,6 +152,17 @@ export default Vue.extend({
 			height 100%
 			background-position center
 			background-size cover
+			display flex
+			justify-content center
+			align-items center
+
+			> button
+				font-size 3.5em
+				opacity: 0.7
+
+				&:hover
+					font-size 4em
+					opacity 0.9
 
 			& + article
 				left 100px
@@ -168,18 +178,6 @@ export default Vue.extend({
 					margin 0
 					font-size 1em
 					color var(--urlPreviewTitle)
-				
-				> .embedActions
-					position absolute
-					top 0
-					right -8px
-
-					> button
-						color var(--text)
-						opacity 0.7
-
-						&:hover
-							opacity 1.0
 
 			> p
 				margin 0
