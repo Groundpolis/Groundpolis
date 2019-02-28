@@ -10,7 +10,7 @@
 <div v-else class="mk-url-preview">
 	<a :class="{ mini: narrow, compact }" :href="url" target="_blank" :title="url" v-if="!fetching">
 		<div class="thumbnail" v-if="thumbnail" :style="`background-image: url('${thumbnail}')`">
-			<button v-if="!playerEnabled && player.url" @click.prevent="playerEnabled = true" title="プレイヤーを開く"><fa :icon="['far', 'play-circle']"/></button>
+			<button v-if="!playerEnabled && player.url" @click.prevent="playerEnabled = true" :title="$t('enable-player')"><fa :icon="['far', 'play-circle']"/></button>
 		</div>
 		<article>
 			<header>
@@ -28,9 +28,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import i18n from '../../../i18n';
 import { url as misskeyUrl } from '../../../config';
 
 export default Vue.extend({
+	i18n: i18n('common/views/components/url-preview.vue'),
 	props: {
 		url: {
 			type: String,

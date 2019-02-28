@@ -7,7 +7,7 @@
 		<div class="mkw-rss--body" :data-mobile="platform == 'mobile'">
 			<p class="fetching" v-if="fetching"><fa icon="spinner" pulse fixed-width/>{{ $t('@.loading') }}<mk-ellipsis/></p>
 			<div class="feed" v-else>
-				<a v-for="item in items" :href="item.link" target="_blank">{{ item.title }}</a>
+				<a v-for="item in items" :href="item.link" target="_blank" :title="item.title">{{ item.title }}</a>
 			</div>
 		</div>
 	</ui-container>
@@ -55,12 +55,18 @@ export default define({
 			});
 		},
 		setting() {
-			const url = window.prompt('URL', this.props.url);
-			if (url && url != '') {
+			this.$root.dialog({
+				title: 'URL',
+				input: {
+					type: 'url',
+					default: this.props.url
+				}
+			}).then(({ canceled, result: url }) => {
+				if (canceled) return;
 				this.props.url = url;
 				this.save();
 				this.fetch();
-			}
+			});
 		}
 	}
 });

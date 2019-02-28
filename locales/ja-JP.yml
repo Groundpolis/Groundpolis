@@ -38,6 +38,7 @@ common:
   signin: "ログイン"
   signup: "新規登録"
   signout: "ログアウト"
+  reload-to-apply-the-setting: "この設定を反映するにはページをリロードする必要があります。今すぐリロードしますか？"
 
   got-it: "わかった"
   customization-tips:
@@ -257,6 +258,9 @@ common/views/pages/explore.vue:
   federated: "連合"
   explore: "{host}を探索"
   users-info: "現在{users}ユーザーが登録されています"
+
+common/views/components/url-preview.vue:
+  enable-player: "プレイヤーを開く"
 
 common/views/components/user-list.vue:
   no-users: "ユーザーがいません"

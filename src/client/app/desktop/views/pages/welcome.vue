@@ -35,7 +35,7 @@
 						<span class="signin" @click="signin">{{ $t('@.signin') }}</span>
 					</p>
 
-					<img :src="meta.mascotImageUrl" alt="" title="藍" class="char">
+					<img v-if="meta" :src="meta.mascotImageUrl" alt="" title="藍" class="char">
 				</div>
 			</div>
 
@@ -344,8 +344,6 @@ export default Vue.extend({
 		.block
 			color var(--text)
 			background var(--face)
-			box-shadow var(--shadow)
-			//border-radius 8px
 			overflow auto
 
 			> header

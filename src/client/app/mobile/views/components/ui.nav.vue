@@ -51,6 +51,7 @@
 			<div class="notifications" v-if="showNotifications">
 				<header>
 					<button @click="showNotifications = false"><fa icon="times"/></button>
+					<i v-if="hasUnreadNotification" class="circle"><fa icon="circle"/></i>
 				</header>
 				<mk-notifications/>
 			</div>
@@ -207,7 +208,7 @@ export default Vue.extend({
 		font-size 15px
 
 		&.notifications
-			width 340px
+			width 330px
 
 		> .notifications
 			padding-top 42px
@@ -217,7 +218,7 @@ export default Vue.extend({
 				top 0
 				left 0
 				z-index 1000
-				width 340px
+				width 330px
 				line-height 42px
 				background var(--secondary)
 
@@ -227,6 +228,13 @@ export default Vue.extend({
 					font-size 20px
 					line-height 42px
 					color var(--text)
+
+				> i
+					position absolute
+					top 0
+					right 16px
+					font-size 12px
+					color var(--notificationIndicator)
 
 		> .nav
 

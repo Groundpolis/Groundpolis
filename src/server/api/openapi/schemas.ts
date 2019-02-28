@@ -312,7 +312,7 @@ export const schemas = {
 				example: 'xxxxxxxxxxxxxxxxxxxxxxxx',
 			},
 			parent: {
-				type: 'DriveFolder',
+				$ref: '#/components/schemas/DriveFolder'
 			},
 		},
 		required: ['id', 'createdAt', 'name']
@@ -360,5 +360,87 @@ export const schemas = {
 			},
 		},
 		required: ['id', 'createdAt', 'blockee']
+	},
+
+	Reaction: {
+		type: 'object',
+		properties: {
+			id: {
+				type: 'string',
+				format: 'id',
+				description: 'The unique identifier for this reaction.',
+				example: 'xxxxxxxxxxxxxxxxxxxxxxxx',
+			},
+			createdAt: {
+				type: 'string',
+				format: 'date-time',
+				description: 'The date that the reaction was created.'
+			},
+			user: {
+				$ref: '#/components/schemas/User',
+				description: 'User who performed this reaction.'
+			},
+			type: {
+				type: 'string',
+				enum: [
+					'like',
+					'love',
+					'laugh',
+					'hmm',
+					'surprise',
+					'congrats',
+					'angry',
+					'confused',
+					'rip',
+					'pudding'
+				],
+				description: 'The reaction type.'
+			},
+		},
+		required: ['id', 'createdAt', 'user', 'type']
+	},
+
+	Hashtag: {
+		type: 'object',
+		properties: {
+			tag: {
+				type: 'string',
+				description: 'The hashtag name. No # prefixed.',
+				example: 'misskey',
+			},
+			mentionedUsersCount: {
+				type: 'number',
+				description: 'Number of all users using this hashtag.'
+			},
+			mentionedLocalUsersCount: {
+				type: 'number',
+				description: 'Number of local users using this hashtag.'
+			},
+			mentionedRemoteUsersCount: {
+				type: 'number',
+				description: 'Number of remote users using this hashtag.'
+			},
+			attachedUsersCount: {
+				type: 'number',
+				description: 'Number of all users who attached this hashtag to profile.'
+			},
+			attachedLocalUsersCount: {
+				type: 'number',
+				description: 'Number of local users who attached this hashtag to profile.'
+			},
+			attachedRemoteUsersCount: {
+				type: 'number',
+				description: 'Number of remote users who attached this hashtag to profile.'
+			},
+		},
+		required: [
+			'tag',
+			'mentionedUsersCount',
+			'mentionedLocalUsersCount',
+			'mentionedRemoteUsersCount',
+			'attachedUsersCount',
+			'attachedLocalUsersCount',
+			'attachedRemoteUsersCount',
+		]
 	},
 };
