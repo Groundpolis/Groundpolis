@@ -3,6 +3,7 @@
 	<div class="backdrop" ref="backdrop" @click="close"></div>
 	<div class="popover" :class="{ isMobile: $root.isMobile }" ref="popover">
 		<p v-if="!$root.isMobile">{{ title }}</p>
+		<input v-if="!$root.isMobile" v-model="text" @keyup.enter="reactText" v-autocomplete="{ model: 'text' }">
 		<div ref="buttons" :class="{ showFocus }">
 			<button @click="react('like')" @mouseover="onMouseover" @mouseout="onMouseout" tabindex="1" :title="$t('@.reactions.like')" v-particle><mk-reaction-icon reaction="like"/></button>
 			<button @click="react('love')" @mouseover="onMouseover" @mouseout="onMouseout" tabindex="2" :title="$t('@.reactions.love')" v-particle><mk-reaction-icon reaction="love"/></button>
@@ -56,6 +57,7 @@ export default Vue.extend({
 	data() {
 		return {
 			title: this.$t('choose-reaction'),
+			text: null,
 			focus: null
 		};
 	},
@@ -141,6 +143,11 @@ export default Vue.extend({
 				this.$emit('closed');
 				this.destroyDom();
 			});
+		},
+
+		reactText() {
+			if (!this.text) return;
+			this.react(this.text);
 		},
 
 		onMouseover(e) {
@@ -255,6 +262,33 @@ export default Vue.extend({
 			font-size 14px
 			color var(--popupFg)
 			border-bottom solid var(--lineWidth) var(--faceDivider)
+
+		> input
+			display block
+			width 100%
+			padding 12px
+			font-size 16px
+			color var(--desktopPostFormTextareaFg)
+			background var(--desktopPostFormTextareaBg)
+			outline none
+			border solid 1px var(--primaryAlpha01)
+			border-radius 4px
+			transition border-color .2s ease
+			padding-right 30px
+
+			&:hover
+				border-color var(--primaryAlpha02)
+				transition border-color .1s ease
+
+			&:focus
+				border-color var(--primaryAlpha05)
+				transition border-color 0s ease
+
+			&:disabled
+				opacity 0.5
+
+		> input
+			margin-bottom 8px
 
 		> div
 			padding 4px
