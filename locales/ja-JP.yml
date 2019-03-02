@@ -1812,6 +1812,8 @@ deck:
 
 deck/deck.tl-column.vue:
   is-media-only: "メディア投稿のみ"
+  is-sfw-media-only: "SFWメディア投稿のみ"
+  is-nsfw-media-only: "NSFWメディア投稿のみ"
   edit: "オプション"
 
 deck/deck.user-column.vue:

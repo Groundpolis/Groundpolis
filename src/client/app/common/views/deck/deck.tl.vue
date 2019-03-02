@@ -34,7 +34,17 @@ export default Vue.extend({
 			type: Boolean,
 			required: false,
 			default: false
-		}
+		},
+		sfwMediaOnly: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
+		nsfwMediaOnly: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
 	},
 
 	data() {
@@ -69,7 +79,13 @@ export default Vue.extend({
 	watch: {
 		mediaOnly() {
 			(this.$refs.timeline as any).reload();
-		}
+		},
+		sfwMediaOnly() {
+			(this.$refs.timeline as any).reload();
+		},
+		nsfwMediaOnly() {
+			(this.$refs.timeline as any).reload();
+		},
 	},
 
 	created() {
@@ -77,6 +93,9 @@ export default Vue.extend({
 			limit: fetchLimit + 1,
 			untilId: cursor ? cursor : undefined,
 			withFiles: this.mediaOnly,
+			fileType: (this.sfwMediaOnly || this.nsfwMediaOnly) ? ['image/jpeg','image/png','image/gif','video/mp4'] : undefined,
+			excludeNsfw: this.sfwMediaOnly,
+			excludeSfw: this.nsfwMediaOnly,
 			includeMyRenotes: this.$store.state.settings.showMyRenotes,
 			includeRenotedMyNotes: this.$store.state.settings.showRenotedMyNotes,
 			includeLocalRenotes: this.$store.state.settings.showLocalRenotes
@@ -119,6 +138,8 @@ export default Vue.extend({
 	methods: {
 		onNote(note) {
 			if (this.mediaOnly && note.files.length == 0) return;
+			if (this.sfwMediaOnly && (note.files.length == 0 || note.files.some((x: any) => x.isSensitive))) return;
+			if (this.nsfwMediaOnly && (note.files.length == 0 || note.files.every((x: any) => !x.isSensitive))) return;
 			(this.$refs.timeline as any).prepend(note);
 		},
 

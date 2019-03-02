@@ -46,6 +46,14 @@ export const meta = {
 			}
 		},
 
+		excludeSfw: {
+			validator: $.optional.bool,
+			default: false,
+			desc: {
+				'ja-JP': 'true にすると、NSFW指定されてないファイルを除外します(fileTypeが指定されている場合のみ有効)'
+			}
+		},
+
 		limit: {
 			validator: $.optional.num.range(1, 100),
 			default: 10
@@ -146,6 +154,10 @@ export default define(meta, async (ps, user) => {
 			query['_files.metadata.isSensitive'] = {
 				$ne: true
 			};
+		}
+
+		if (ps.excludeSfw) {
+			query['_files.metadata.isSensitive'] = true;
 		}
 	}
 

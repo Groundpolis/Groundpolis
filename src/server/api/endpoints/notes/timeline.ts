@@ -87,6 +87,29 @@ export const meta = {
 			}
 		},
 
+		fileType: {
+			validator: $.optional.arr($.str),
+			desc: {
+				'ja-JP': '指定された種類のファイルが添付された投稿のみを取得します'
+			}
+		},
+
+		excludeNsfw: {
+			validator: $.optional.bool,
+			default: false,
+			desc: {
+				'ja-JP': 'true にすると、NSFW指定されたファイルを除外します(fileTypeが指定されている場合のみ有効)'
+			}
+		},
+
+		excludeSfw: {
+			validator: $.optional.bool,
+			default: false,
+			desc: {
+				'ja-JP': 'true にすると、NSFW指定されてないファイルを除外します(fileTypeが指定されている場合のみ有効)'
+			}
+		},
+
 		mediaOnly: {
 			validator: $.optional.bool,
 			deprecated: true,
@@ -235,6 +258,24 @@ export default define(meta, async (ps, user) => {
 		query.$and.push({
 			fileIds: { $exists: true, $ne: [] }
 		});
+	}
+
+	if (ps.fileType) {
+		query.fileIds = { $exists: true, $ne: [] };
+
+		query['_files.contentType'] = {
+			$in: ps.fileType
+		};
+
+		if (ps.excludeNsfw) {
+			query['_files.metadata.isSensitive'] = {
+				$ne: true
+			};
+		}
+
+		if (ps.excludeSfw) {
+			query['_files.metadata.isSensitive'] = true;
+		}
 	}
 
 	if (ps.sinceId) {
