@@ -2,7 +2,7 @@ import * as Koa from 'koa';
 import * as tmp from 'tmp';
 import * as fs from 'fs';
 import { serverLogger } from '..';
-import { fetch } from '../proxy/proxy-media';
+import { fetch, detectMine } from '../proxy/proxy-media';
 import Emoji from '../../models/emoji';
 
 export default async function(ctx: Koa.BaseContext) {
@@ -27,7 +27,9 @@ export default async function(ctx: Koa.BaseContext) {
 	try {
 		await fetch(emoji.url, path);
 
-		ctx.set('Content-Type', 'image/png');
+		const [type] = await detectMine(path);
+
+		ctx.set('Content-Type', type);
 		ctx.set('Cache-Control', 'max-age=31536000, immutable');
 		ctx.body = fs.readFileSync(path);
 	} catch (e) {
