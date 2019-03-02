@@ -12,11 +12,15 @@
 
 	<div class="editor" style="padding:12px" v-if="edit">
 		<ui-switch v-model="column.isMediaOnly" @change="onChangeSettings">{{ $t('is-media-only') }}</ui-switch>
+		<ui-switch v-model="column.sfwMediaOnly" @change="onChangeSettings">{{ $t('is-sfw-media-only') }}</ui-switch>
+		<ui-switch v-model="column.nsfwMediaOnly" @change="onChangeSettings">{{ $t('is-nsfw-media-only') }}</ui-switch>
 	</div>
 
 	<x-list-tl v-if="column.type == 'list'"
 		:list="column.list"
 		:media-only="column.isMediaOnly"
+		:sfwMediaOnly="column.sfwMediaOnly"
+		:nsfwMediaOnly="column.nsfwMediaOnly"
 		ref="tl"
 	/>
 	<x-hashtag-tl v-else-if="column.type == 'hashtag'"
@@ -27,6 +31,8 @@
 	<x-tl v-else
 		:src="column.type"
 		:media-only="column.isMediaOnly"
+		:sfwMediaOnly="column.sfwMediaOnly"
+		:nsfwMediaOnly="column.nsfwMediaOnly"
 		ref="tl"
 	/>
 </x-column>
