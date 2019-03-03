@@ -327,10 +327,8 @@ export default Vue.extend({
 
 			> button
 				cursor pointer
-				padding 4px
+				padding 0px 8px
 				margin 0px 2px
-				width 40px
-				height 40px
 				font-size 1em
 				color var(--desktopPostFormTransparentButtonFg)
 				background transparent
