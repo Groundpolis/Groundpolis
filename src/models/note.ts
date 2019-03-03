@@ -11,7 +11,6 @@ import Reaction from './note-reaction';
 import { packMany as packFileMany, IDriveFile } from './drive-file';
 import Following from './following';
 import Emoji from './emoji';
-import { concat, unique } from '../prelude/array';
 
 const Note = db.get<INote>('notes');
 Note.createIndex('uri', { sparse: true, unique: true });
@@ -248,10 +247,6 @@ export const pack = async (
 				fields: { _id: false }
 			});
 		} else {
-			if (_note.reactionCounts) {
-				_note.emojis = unique(concat([_note.emojis, Object.keys(_note.reactionCounts).map(x => x.replace(/:/g, ''))]));
-			}
-
 			_note.emojis = Emoji.find({
 				name: { $in: _note.emojis },
 				host: host
