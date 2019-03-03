@@ -13,7 +13,6 @@ import Following from './following';
 import Emoji from './emoji';
 import packEmojis from '../misc/pack-emojis';
 import { dbLogger } from '../db/logger';
-import { concat, unique } from '../prelude/array';
 
 const Note = db.get<INote>('notes');
 Note.createIndex('uri', { sparse: true, unique: true });
@@ -250,10 +249,6 @@ export const pack = async (
 				fields: { _id: false }
 			});
 		} else {
-			if (_note.reactionCounts) {
-			_note.emojis = unique(concat([_note.emojis, Object.keys(_note.reactionCounts).map(x => x.replace(/:/g, ''))]));
-			}
-
 			_note.emojis = packEmojis(_note.emojis, host, {
 				custom: true,
 				avatar: true,
