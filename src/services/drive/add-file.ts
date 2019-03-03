@@ -378,7 +378,7 @@ export default async function(
 				return 0;
 			});
 
-		logger.info(`drive usage is ${usage}`);
+		logger.debug(`drive usage is ${usage}`);
 
 		const driveCapacity = await getDriveCapacity(user);
 
