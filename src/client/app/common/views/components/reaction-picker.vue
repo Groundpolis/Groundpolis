@@ -17,7 +17,7 @@
 		</div>
 		<div class="text">
 			<input v-model="text" placeholder="または絵文字を入力" @keyup.enter="reactText" v-autocomplete="{ model: 'text' }">
-			<button class="ok" @click="reactText">OK</button>
+			<button class="ok" @click="reactText"><fa icon="check"/></button>
 		</div>
 	</div>
 </div>
