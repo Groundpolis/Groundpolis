@@ -16,25 +16,11 @@ import App from './app.vue';
 import checkForUpdate from './common/scripts/check-for-update';
 import MiOS from './mios';
 import { version, codename, lang, locale } from './config';
-import { builtinThemes, promoTheme, applyTheme, Theme } from './theme';
+import { builtinThemes, promoTheme, applyTheme } from './theme';
 import Dialog from './common/views/components/dialog.vue';
 
-// Try to get/parse existing theme
-let currentThemeData: Theme;
-try {
-	currentThemeData = JSON.parse(localStorage.getItem('theme'));
-} catch { }
-
-if (currentThemeData == null) {
-	// If failed, apply promo
+if (localStorage.getItem('theme') == null) {
 	applyTheme(promoTheme);
-} else {
-	// If new promo released, apply it.
-	const promoRevision = localStorage.getItem('promoRevision') || 0;
-	if (promoTheme.revision && promoTheme.revision > promoRevision) {
-		localStorage.setItem('promoRevision', promoTheme.revision.toString());
-		applyTheme(promoTheme);
-	}
 }
 
 //#region FontAwesome
