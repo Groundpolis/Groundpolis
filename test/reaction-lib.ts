@@ -2,17 +2,17 @@
  * Tests of MFM
  *
  * How to run the tests:
- * > mocha test/reaction.ts --require ts-node/register
+ * > mocha test/reaction-lib.ts --require ts-node/register
  *
  * To specify test:
- * > mocha test/reaction.ts --require ts-node/register -g 'test name'
+ * > mocha test/reaction-lib.ts --require ts-node/register -g 'test name'
  */
 
 import * as assert from 'assert';
 
 import { toDbReaction } from '../src/misc/reaction-lib';
 
-describe('createLeaf', () => {
+describe('toDbReaction', () => {
 	it('既存の文字列リアクションはそのまま', () => {
 		assert.strictEqual(toDbReaction('like'), 'like');
 	});
@@ -92,5 +92,4 @@ describe('createLeaf', () => {
 	it('Unicode star は fallback star ではない', () => {
 		assert.strictEqual(toDbReaction('⭐'), '⭐');
 	});
-
 });
