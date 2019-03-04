@@ -27,7 +27,10 @@ export function toDbReaction(reaction: string): string {
 
 		// pick top unicode emoji
 		const match = emojiRegex.exec(reaction);
-		if (match) return match[0];
+		if (match) {
+			const org = match[0];
+			return org.match('\u200d') ? org : org.replace(/\ufe0f/g, '');
+		}
 	}
 
 	return 'star';
