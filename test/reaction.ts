@@ -29,6 +29,10 @@ describe('createLeaf', () => {
 		assert.strictEqual(toDbReaction('❤️'), 'love');
 	});
 
+	it('プリン以外の既存のリアクションは文字列化する love 異体字セレクタなし', () => {
+		assert.strictEqual(toDbReaction('❤'), 'love');
+	});
+
 	it('プリン以外の既存のリアクションは文字列化する laugh', () => {
 		assert.strictEqual(toDbReaction('😆'), 'laugh');
 	});
@@ -39,10 +43,6 @@ describe('createLeaf', () => {
 
 	it('プリン以外の既存のリアクションは文字列化する surprise', () => {
 		assert.strictEqual(toDbReaction('😮'), 'surprise');
-	});
-
-	it('プリン以外の既存のリアクションは文字列化する congrats', () => {
-		assert.strictEqual(toDbReaction('🎉'), 'congrats');
 	});
 
 	it('プリン以外の既存のリアクションは文字列化する congrats', () => {
