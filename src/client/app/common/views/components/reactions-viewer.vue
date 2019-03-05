@@ -1,6 +1,6 @@
 <template>
 <div class="mk-reactions-viewer" :class="{ isMe }">
-	<x-reaction v-for="(count, reaction) in reactions" :reaction="reaction" :count="count" :note="note" :canToggle="reaction !== 'star'" :key="reaction"/>
+	<x-reaction v-for="(count, reaction) in reactions" :reaction="reaction" :count="count" :note="note" :key="reaction"/>
 </div>
 </template>
 

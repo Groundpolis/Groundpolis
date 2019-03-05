@@ -1,7 +1,7 @@
 <template>
 <span
 	class="reaction"
-	:class="{ reacted: note.myReaction == reaction, canToggle }"
+	:class="{ reacted: note.myReaction == reaction }"
 	@click="toggleReaction(reaction)"
 	v-if="count > 0"
 	v-particle="!isMe"
@@ -135,12 +135,6 @@ export default Vue.extend({
 
 		&:hover
 			background var(--reactionViewerButtonHoverBg)
-
-	&:not(.canToggle)
-		cursor default
-
-		&:hover
-			background var(--reactionViewerButtonBg)
 
 	> .mk-reaction-icon
 		font-size 1.4em
