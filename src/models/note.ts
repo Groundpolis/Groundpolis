@@ -345,7 +345,6 @@ export const pack = async (
 						.filter(x => x.id == vote.choice)[0] as any;
 
 					myChoice.isVoted = true;
-					poll.passed = vote.passed == true;
 				}
 
 				return poll;
