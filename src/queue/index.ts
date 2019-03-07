@@ -1,164 +1,137 @@
-import * as Queue from 'bee-queue';
+import * as Queue from 'bull';
 import * as httpSignature from 'http-signature';
 
 import config from '../config';
 import { ILocalUser } from '../models/user';
 import { program } from '../argv';
-import handler from './processors';
+
+import processDeliver from './processors/deliver';
+import processInbox from './processors/process-inbox';
+import processDb from './processors/db';
 import { queueLogger } from './logger';
 
-const enableQueue = !program.disableQueue;
-const enableQueueProcessing = !program.onlyServer && enableQueue;
-const queueAvailable = config.redis != null;
-
-const queue = initializeQueue();
-
-function initializeQueue() {
-	if (queueAvailable && enableQueue) {
-		return new Queue('misskey-queue', {
-			redis: {
-				port: config.redis.port,
-				host: config.redis.host,
-				password: config.redis.pass
-			},
-
-			removeOnSuccess: true,
-			removeOnFailure: true,
-			getEvents: false,
-			sendEvents: false,
-			storeJobs: false
-		});
-	} else {
-		return null;
-	}
+function initializeQueue(name: string) {
+	return new Queue(name, config.redis != null ? {
+		redis: {
+			port: config.redis.port,
+			host: config.redis.host,
+			password: config.redis.pass,
+			db: 1
+		}
+	} : null);
 }
 
+const deliverQueue = initializeQueue('deliver');
+const inboxQueue = initializeQueue('inbox');
+const dbQueue = initializeQueue('db');
+
 export function deliver(user: ILocalUser, content: any, to: any) {
-	if (content == null) return;
+	if (content == null) return null;
 
 	const data = {
-		type: 'deliver',
 		user,
 		content,
 		to
 	};
 
-	if (queueAvailable && enableQueueProcessing) {
-		return queue.createJob(data)
-			.retries(8)
-			.backoff('exponential', 1000)
-			.save();
-	} else {
-		return handler({ data }, () => {});
-	}
+	return deliverQueue.add(data, {
+		attempts: 4,
+		backoff: {
+			type: 'exponential',
+			delay: 1000
+		},
+		removeOnComplete: true,
+		removeOnFail: true
+	});
 }
 
-export function processInbox(activity: any, signature: httpSignature.IParsedSignature) {
+export function inbox(activity: any, signature: httpSignature.IParsedSignature) {
 	const data = {
-		type: 'processInbox',
 		activity: activity,
 		signature
 	};
 
-	if (queueAvailable && enableQueueProcessing) {
-		return queue.createJob(data)
-			.retries(3)
-			.backoff('exponential', 500)
-			.save();
-	} else {
-		return handler({ data }, () => {});
-	}
+	return inboxQueue.add(data, {
+		attempts: 4,
+		backoff: {
+			type: 'exponential',
+			delay: 1000
+		},
+		removeOnComplete: true,
+		removeOnFail: true
+	});
 }
 
 export function createDeleteNotesJob(user: ILocalUser) {
-	const data = {
-		type: 'deleteNotes',
+	return dbQueue.add('deleteNotes', {
 		user: user
-	};
-
-	if (queueAvailable && enableQueueProcessing) {
-		return queue.createJob(data).save();
-	} else {
-		return handler({ data }, () => {});
-	}
+	}, {
+		removeOnComplete: true,
+		removeOnFail: true
+	});
 }
 
 export function createDeleteDriveFilesJob(user: ILocalUser) {
-	const data = {
-		type: 'deleteDriveFiles',
+	return dbQueue.add('deleteDriveFiles', {
 		user: user
-	};
-
-	if (queueAvailable && enableQueueProcessing) {
-		return queue.createJob(data).save();
-	} else {
-		return handler({ data }, () => {});
-	}
+	}, {
+		removeOnComplete: true,
+		removeOnFail: true
+	});
 }
 
 export function createExportNotesJob(user: ILocalUser) {
-	const data = {
-		type: 'exportNotes',
+	return dbQueue.add('exportNotes', {
 		user: user
-	};
-
-	if (queueAvailable && enableQueueProcessing) {
-		return queue.createJob(data).save();
-	} else {
-		return handler({ data }, () => {});
-	}
+	}, {
+		removeOnComplete: true,
+		removeOnFail: true
+	});
 }
 
 export function createExportFollowingJob(user: ILocalUser) {
-	const data = {
-		type: 'exportFollowing',
+	return dbQueue.add('exportFollowing', {
 		user: user
-	};
-
-	if (queueAvailable && enableQueueProcessing) {
-		return queue.createJob(data).save();
-	} else {
-		return handler({ data }, () => {});
-	}
+	}, {
+		removeOnComplete: true,
+		removeOnFail: true
+	});
 }
 
 export function createExportMuteJob(user: ILocalUser) {
-	const data = {
-		type: 'exportMute',
+	return dbQueue.add('exportMute', {
 		user: user
-	};
-
-	if (queueAvailable && enableQueueProcessing) {
-		return queue.createJob(data).save();
-	} else {
-		return handler({ data }, () => {});
-	}
+	}, {
+		removeOnComplete: true,
+		removeOnFail: true
+	});
 }
 
 export function createExportBlockingJob(user: ILocalUser) {
-	const data = {
-		type: 'exportBlocking',
+	return dbQueue.add('exportBlocking', {
 		user: user
-	};
-
-	if (queueAvailable && enableQueueProcessing) {
-		return queue.createJob(data).save();
-	} else {
-		return handler({ data }, () => {});
-	}
+	}, {
+		removeOnComplete: true,
+		removeOnFail: true
+	});
 }
 
 export default function() {
-	if (queueAvailable && enableQueueProcessing) {
-		queue.process(128, handler);
-		queueLogger.succ('Processing started');
+	if (!program.onlyServer) {
+		deliverQueue.process(processDeliver);
+		inboxQueue.process(processInbox);
+		processDb(dbQueue);
 	}
-
-	return queue;
 }
 
 export function destroy() {
-	queue.destroy().then(n => {
-		queueLogger.succ(`All job removed (${n} jobs)`);
+	deliverQueue.once('cleaned', (jobs, status) => {
+		queueLogger.succ(`[deliver] Cleaned ${jobs.length} ${status} jobs`);
 	});
+	deliverQueue.clean(0, 'wait');
+
+	inboxQueue.once('cleaned', (jobs, status) => {
+		queueLogger.succ(`[inbox] Cleaned ${jobs.length} ${status} jobs`);
+	});
+	inboxQueue.clean(0, 'wait');
 }

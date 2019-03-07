@@ -1,12 +1,12 @@
 ---
-name: Feature Request
+name: ✨ Feature Request
 about: Suggest an idea for this project
 title: ''
-labels: feature
+labels: ✨Feature
 assignees: ''
 
 ---
 
-# Summary
+## Summary
 
 <!-- Tell us what the suggestion is -->
