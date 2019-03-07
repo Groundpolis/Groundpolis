@@ -1,19 +1,19 @@
-import * as Bull from 'bull';
+import * as bq from 'bee-queue';
 import * as tmp from 'tmp';
 import * as fs from 'fs';
 import * as mongo from 'mongodb';
 
-import { queueLogger } from '../../logger';
-import addFile from '../../../services/drive/add-file';
-import User from '../../../models/user';
+import { queueLogger } from '../logger';
+import addFile from '../../services/drive/add-file';
+import User from '../../models/user';
 import dateFormat = require('dateformat');
-import Blocking from '../../../models/blocking';
-import config from '../../../config';
+import Following from '../../models/following';
+import config from '../../config';
 
-const logger = queueLogger.createSubLogger('export-blocking');
+const logger = queueLogger.createSubLogger('export-following');
 
-export async function exportBlocking(job: Bull.Job, done: any): Promise<void> {
-	logger.info(`Exporting blocking of ${job.data.user._id} ...`);
+export async function exportFollowing(job: bq.Job, done: any): Promise<void> {
+	logger.info(`Exporting following of ${job.data.user._id} ...`);
 
 	const user = await User.findOne({
 		_id: new mongo.ObjectID(job.data.user._id.toString())
@@ -36,8 +36,8 @@ export async function exportBlocking(job: Bull.Job, done: any): Promise<void> {
 	let cursor: any = null;
 
 	while (!ended) {
-		const blockings = await Blocking.find({
-			blockerId: user._id,
+		const followings = await Following.find({
+			followerId: user._id,
 			...(cursor ? { _id: { $gt: cursor } } : {})
 		}, {
 			limit: 100,
@@ -46,16 +46,16 @@ export async function exportBlocking(job: Bull.Job, done: any): Promise<void> {
 			}
 		});
 
-		if (blockings.length === 0) {
+		if (followings.length === 0) {
 			ended = true;
-			job.progress(100);
+			if (job.reportProgress) job.reportProgress(100);
 			break;
 		}
 
-		cursor = blockings[blockings.length - 1]._id;
+		cursor = followings[followings.length - 1]._id;
 
-		for (const block of blockings) {
-			const u = await User.findOne({ _id: block.blockeeId }, { fields: { username: true, host: true } });
+		for (const following of followings) {
+			const u = await User.findOne({ _id: following.followeeId }, { fields: { username: true, host: true } });
 			const content = u.host ? `${u.username}@${u.host}` : `${u.username}@${config.host}`;
 			await new Promise((res, rej) => {
 				stream.write(content + '\n', err => {
@@ -70,17 +70,17 @@ export async function exportBlocking(job: Bull.Job, done: any): Promise<void> {
 			exportedCount++;
 		}
 
-		const total = await Blocking.count({
-			blockerId: user._id,
+		const total = await Following.count({
+			followerId: user._id,
 		});
 
-		job.progress(exportedCount / total);
+		if (job.reportProgress) job.reportProgress(exportedCount / total);
 	}
 
 	stream.end();
 	logger.succ(`Exported to: ${path}`);
 
-	const fileName = 'blocking-' + dateFormat(new Date(), 'yyyy-mm-dd-HH-MM-ss') + '.csv';
+	const fileName = 'following-' + dateFormat(new Date(), 'yyyy-mm-dd-HH-MM-ss') + '.csv';
 	const driveFile = await addFile(user, path, fileName);
 
 	logger.succ(`Exported to: ${driveFile._id}`);
