@@ -132,6 +132,7 @@ export default function() {
 	if (!program.onlyServer) {
 		deliverQueue.process(128, processDeliver);
 		inboxQueue.process(128, processInbox);
+		deliverQueue.clean(60 * 1000, 'active');
 		processDb(dbQueue);
 	}
 }
@@ -141,7 +142,6 @@ export function destroy() {
 		queueLogger.succ(`[deliver] Cleaned ${jobs.length} ${status} jobs`);
 	});
 	deliverQueue.clean(0, 'wait');
-	deliverQueue.clean(60 * 1000, 'active');
 
 	inboxQueue.once('cleaned', (jobs, status) => {
 		queueLogger.succ(`[inbox] Cleaned ${jobs.length} ${status} jobs`);
