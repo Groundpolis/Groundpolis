@@ -150,7 +150,7 @@ async function queueMain() {
 	bootLogger.succ('Misskey initialized');
 
 	// start processor
-	require('./queue').default();
+	//require('./queue').default();
 
 	bootLogger.succ('Queue started', null, true);
 }
