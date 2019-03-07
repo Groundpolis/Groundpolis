@@ -118,7 +118,7 @@ export function createExportBlockingJob(user: ILocalUser) {
 
 export default function() {
 	if (!program.onlyServer) {
-		deliverQueue.process(16, processDeliver);
+		deliverQueue.process(128, processDeliver);
 		inboxQueue.process(4, processInbox);
 		processDb(dbQueue);
 	}
