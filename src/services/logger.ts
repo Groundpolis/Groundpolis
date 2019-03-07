@@ -17,7 +17,7 @@ export default class Logger {
 	private parentLogger: Logger;
 	private store: boolean;
 
-	constructor(domain: string, color?: string, store = true) {
+	constructor(domain: string, color?: string, store = false) {
 		this.domain = {
 			name: domain,
 			color: color,
@@ -25,13 +25,13 @@ export default class Logger {
 		this.store = store;
 	}
 
-	public createSubLogger(domain: string, color?: string, store = true): Logger {
+	public createSubLogger(domain: string, color?: string, store = false): Logger {
 		const logger = new Logger(domain, color, store);
 		logger.parentLogger = this;
 		return logger;
 	}
 
-	private log(level: Level, message: string, data: Record<string, any>, important = false, subDomains: Domain[] = [], store = true): void {
+	private log(level: Level, message: string, data: Record<string, any>, important = false, subDomains: Domain[] = [], store = false): void {
 		if (program.quiet) return;
 		if (process.env.NODE_ENV === 'test') return;
 		if (!this.store) store = false;
