@@ -25,6 +25,12 @@ const deliverQueue = initializeQueue('deliver');
 const inboxQueue = initializeQueue('inbox');
 const dbQueue = initializeQueue('db');
 
+setInterval(() => {
+	deliverQueue.getJobCounts().then(c => {
+		console.log(`wait: ${c.waiting}, active: ${c.active}, completed: ${c.completed}, failed: ${c.failed}, delayed ${c.delayed}`);
+	});
+}, 10 * 1000);
+
 export function deliver(user: ILocalUser, content: any, to: any) {
 	if (content == null) return null;
 
