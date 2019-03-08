@@ -21,9 +21,9 @@ function initializeQueue(name: string) {
 	} : null);
 }
 
-const deliverQueue = initializeQueue('deliver');
-const inboxQueue = initializeQueue('inbox');
-const dbQueue = initializeQueue('db');
+export const deliverQueue = initializeQueue('deliver');
+export const inboxQueue = initializeQueue('inbox');
+export const dbQueue = initializeQueue('db');
 
 setInterval(() => {
 	deliverQueue.getJobCounts().then(c => {
