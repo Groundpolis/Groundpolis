@@ -24,7 +24,7 @@ export default (user: ILocalUser, url: string, object: any) => new Promise(async
 	// ブロックしてたら中断
 	// TODO: いちいちデータベースにアクセスするのはコスト高そうなのでどっかにキャッシュしておく
 	const instance = await Instance.findOne({ host: toUnicode(host) });
-	if (instance && instance.isBlocked) return;
+	if (instance && instance.isBlocked) return resolve();
 
 	const data = JSON.stringify(object);
 
@@ -33,7 +33,7 @@ export default (user: ILocalUser, url: string, object: any) => new Promise(async
 	const hash = sha256.digest('base64');
 
 	const addr = await resolveAddr(hostname).catch(e => reject(e));
-	if (!addr) return;
+	if (!addr) return resolve();
 
 	const req = request({
 		protocol,
