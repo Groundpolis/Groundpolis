@@ -24,9 +24,6 @@ function initializeQueue(name: string) {
 const deliverQueue = initializeQueue('deliver');
 const inboxQueue = initializeQueue('inbox');
 const dbQueue = initializeQueue('db');
-deliverQueue.on('cleaned', (jobs, status) => {
-	queueLogger.succ(`[deliver] Cleaned ${jobs.length} ${status} jobs`);
-});
 
 setInterval(() => {
 	deliverQueue.getJobCounts().then(c => {
