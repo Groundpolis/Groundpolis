@@ -47,7 +47,7 @@ export function deliver(user: ILocalUser, content: any, to: any) {
 		attempts: 8,
 		backoff: {
 			type: 'exponential',
-			delay: 1000
+			delay: 60 * 1000
 		},
 		removeOnComplete: true,
 		removeOnFail: true
@@ -128,7 +128,7 @@ export function createExportBlockingJob(user: ILocalUser) {
 export default function() {
 	if (!program.onlyServer) {
 		deliverQueue.process(128, processDeliver);
-		inboxQueue.process(2, processInbox);
+		inboxQueue.process(128, processInbox);
 		processDb(dbQueue);
 	}
 }
