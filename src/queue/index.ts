@@ -33,8 +33,6 @@ setInterval(() => {
 	inboxQueue.getJobCounts().then(c => {
 		console.log(`inboxQueue: wait: ${c.waiting}, active: ${c.active}, completed: ${c.completed}, failed: ${c.failed}, delayed ${c.delayed}`);
 	});
-
-	deliverQueue.clean(60 * 1000, 'active');
 }, 10 * 1000);
 
 export function deliver(user: ILocalUser, content: any, to: any) {
@@ -134,6 +132,7 @@ export default function() {
 	if (!program.onlyServer) {
 		deliverQueue.process(128, processDeliver);
 		inboxQueue.process(128, processInbox);
+		deliverQueue.clean(60 * 1000, 'active');
 		processDb(dbQueue);
 	}
 }
