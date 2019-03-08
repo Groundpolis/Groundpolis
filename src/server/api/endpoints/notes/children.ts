@@ -124,6 +124,7 @@ export default define(meta, async (ps, user) => {
 	}
 
 	const notes = await Note.find(q, {
+		maxTimeMS: 10000,
 		limit: ps.limit,
 		sort: sort
 	});
