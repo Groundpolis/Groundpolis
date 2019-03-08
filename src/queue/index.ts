@@ -27,7 +27,10 @@ const dbQueue = initializeQueue('db');
 
 setInterval(() => {
 	deliverQueue.getJobCounts().then(c => {
-		console.log(`wait: ${c.waiting}, active: ${c.active}, completed: ${c.completed}, failed: ${c.failed}, delayed ${c.delayed}`);
+		console.log(`deliverQueue wait: ${c.waiting}, active: ${c.active}, completed: ${c.completed}, failed: ${c.failed}, delayed ${c.delayed}`);
+	});
+	inboxQueue.getJobCounts().then(c => {
+		console.log(`inboxQueue wait: ${c.waiting}, active: ${c.active}, completed: ${c.completed}, failed: ${c.failed}, delayed ${c.delayed}`);
 	});
 }, 10 * 1000);
 
