@@ -27,11 +27,7 @@ const dbQueue = initializeQueue('db');
 
 setInterval(() => {
 	deliverQueue.getJobCounts().then(c => {
-		console.log(`deliverQueue: wait: ${c.waiting}, active: ${c.active}, completed: ${c.completed}, failed: ${c.failed}, delayed ${c.delayed}`);
-	});
-
-	inboxQueue.getJobCounts().then(c => {
-		console.log(`inboxQueue: wait: ${c.waiting}, active: ${c.active}, completed: ${c.completed}, failed: ${c.failed}, delayed ${c.delayed}`);
+		console.log(`wait: ${c.waiting}, active: ${c.active}, completed: ${c.completed}, failed: ${c.failed}, delayed ${c.delayed}`);
 	});
 }, 10 * 1000);
 
@@ -141,7 +137,6 @@ export function destroy() {
 		queueLogger.succ(`[deliver] Cleaned ${jobs.length} ${status} jobs`);
 	});
 	deliverQueue.clean(0, 'wait');
-	deliverQueue.clean(60 * 1000, 'active');
 
 	inboxQueue.once('cleaned', (jobs, status) => {
 		queueLogger.succ(`[inbox] Cleaned ${jobs.length} ${status} jobs`);
