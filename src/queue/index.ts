@@ -25,6 +25,26 @@ export const deliverQueue = initializeQueue('deliver');
 export const inboxQueue = initializeQueue('inbox');
 export const dbQueue = initializeQueue('db');
 
+deliverQueue
+	.on('waiting', (jobId) => {
+		queueLogger.debug(`[deliver] waiting id=${jobId}`);
+	})
+	.on('active', (job) => {
+		queueLogger.debug(`[deliver] active id=${job.id} to=${job.data.to}`);
+	})
+	.on('completed', (job, result) => {
+		queueLogger.debug(`[deliver] completed(${result}) id=${job.id} to=${job.data.to}`);
+	})
+	.on('failed', (job, err) => {
+		queueLogger.debug(`[deliver] failed(${err}) id=${job.id} to=${job.data.to}`);
+	})
+	.on('error', (error) => {
+		queueLogger.error(`[deliver] error ${error}`);
+	})
+	.on('stalled', (job) => {
+		queueLogger.warn(`[deliver] stalled id=${job.id} to=${job.data.to}`);
+	});
+
 setInterval(() => {
 	deliverQueue.getJobCounts().then(c => {
 		console.log(`deliverQueue wait: ${c.waiting}, active: ${c.active}, completed: ${c.completed}, failed: ${c.failed}, delayed ${c.delayed}`);
