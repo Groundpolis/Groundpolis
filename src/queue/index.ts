@@ -6,7 +6,7 @@ import { ILocalUser } from '../models/user';
 import { program } from '../argv';
 
 import processDeliver from './processors/deliver';
-import processInbox from './processors/process-inbox';
+import processInbox from './processors/inbox';
 import processDb from './processors/db';
 import { queueLogger } from './logger';
 
@@ -16,8 +16,9 @@ function initializeQueue(name: string) {
 			port: config.redis.port,
 			host: config.redis.host,
 			password: config.redis.pass,
-			db: 1
-		}
+			db: config.redis.db || 0,
+		},
+		prefix: config.redis.prefix ? `${config.redis.prefix}:queue` : 'queue'
 	} : null);
 }
 
@@ -25,34 +26,24 @@ export const deliverQueue = initializeQueue('deliver');
 export const inboxQueue = initializeQueue('inbox');
 export const dbQueue = initializeQueue('db');
 
-deliverQueue
-	.on('waiting', (jobId) => {
-		queueLogger.debug(`[deliver] waiting id=${jobId}`);
-	})
-	.on('active', (job) => {
-		queueLogger.debug(`[deliver] active id=${job.id} to=${job.data.to}`);
-	})
-	.on('completed', (job, result) => {
-		queueLogger.debug(`[deliver] completed(${result}) id=${job.id} to=${job.data.to}`);
-	})
-	.on('failed', (job, err) => {
-		queueLogger.debug(`[deliver] failed(${err}) id=${job.id} to=${job.data.to}`);
-	})
-	.on('error', (error) => {
-		queueLogger.error(`[deliver] error ${error}`);
-	})
-	.on('stalled', (job) => {
-		queueLogger.warn(`[deliver] stalled id=${job.id} to=${job.data.to}`);
-	});
+const deliverLogger = queueLogger.createSubLogger('deliver');
+const inboxLogger = queueLogger.createSubLogger('inbox');
 
-setInterval(() => {
-	deliverQueue.getJobCounts().then(c => {
-		console.log(`deliverQueue wait: ${c.waiting}, active: ${c.active}, completed: ${c.completed}, failed: ${c.failed}, delayed ${c.delayed}`);
-	});
-	inboxQueue.getJobCounts().then(c => {
-		console.log(`inboxQueue wait: ${c.waiting}, active: ${c.active}, completed: ${c.completed}, failed: ${c.failed}, delayed ${c.delayed}`);
-	});
-}, 10 * 1000);
+deliverQueue
+	.on('waiting', (jobId) => deliverLogger.debug(`waiting id=${jobId}`))
+	.on('active', (job) => deliverLogger.debug(`active id=${job.id} to=${job.data.to}`))
+	.on('completed', (job, result) => deliverLogger.debug(`completed(${result}) id=${job.id} to=${job.data.to}`))
+	.on('failed', (job, err) => deliverLogger.debug(`failed(${err}) id=${job.id} to=${job.data.to}`))
+	.on('error', (error) => deliverLogger.error(`error ${error}`))
+	.on('stalled', (job) => deliverLogger.warn(`stalled id=${job.id} to=${job.data.to}`));
+
+inboxQueue
+	.on('waiting', (jobId) => inboxLogger.debug(`waiting id=${jobId}`))
+	.on('active', (job) => inboxLogger.debug(`active id=${job.id}`))
+	.on('completed', (job, result) => inboxLogger.debug(`completed(${result}) id=${job.id}`))
+	.on('failed', (job, err) => inboxLogger.debug(`failed(${err}) id=${job.id}`))
+	.on('error', (error) => inboxLogger.error(`error ${error}`))
+	.on('stalled', (job) => inboxLogger.warn(`stalled id=${job.id}`));
 
 export function deliver(user: ILocalUser, content: any, to: any) {
 	if (content == null) return null;
@@ -155,12 +146,12 @@ export default function() {
 
 export function destroy() {
 	deliverQueue.once('cleaned', (jobs, status) => {
-		queueLogger.succ(`[deliver] Cleaned ${jobs.length} ${status} jobs`);
+		deliverLogger.succ(`Cleaned ${jobs.length} ${status} jobs`);
 	});
 	deliverQueue.clean(0, 'wait');
 
 	inboxQueue.once('cleaned', (jobs, status) => {
-		queueLogger.succ(`[inbox] Cleaned ${jobs.length} ${status} jobs`);
+		inboxLogger.succ(`Cleaned ${jobs.length} ${status} jobs`);
 	});
 	inboxQueue.clean(0, 'wait');
 }
