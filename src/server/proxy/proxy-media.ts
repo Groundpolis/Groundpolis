@@ -21,7 +21,7 @@ export async function proxyMedia(ctx: Koa.BaseContext) {
 	});
 
 	try {
-		await fetch(url, path);
+		await fetch(url, path, config.proxyProxy);
 
 		const [type, ext] = await detectMine(path);
 
@@ -55,7 +55,7 @@ export async function proxyMedia(ctx: Koa.BaseContext) {
 	}
 }
 
-export async function fetch(url: string, path: string) {
+export async function fetch(url: string, path: string, proxy?: string) {
 	await new Promise((res, rej) => {
 		const writable = fs.createWriteStream(path);
 
@@ -71,7 +71,7 @@ export async function fetch(url: string, path: string) {
 
 		const req = request({
 			url: requestUrl,
-			proxy: config.proxyProxy || config.proxy,
+			proxy: proxy || config.proxy,
 			timeout: 10 * 1000,
 			headers: {
 				'User-Agent': config.userAgent
