@@ -41,7 +41,7 @@ inboxQueue
 	.on('waiting', (jobId) => inboxLogger.debug(`waiting id=${jobId}`))
 	.on('active', (job) => inboxLogger.debug(`active id=${job.id}`))
 	.on('completed', (job, result) => inboxLogger.debug(`completed(${result}) id=${job.id}`))
-	.on('failed', (job, err) => inboxLogger.warn(`failed(${err}) id=${job.id}`))
+	.on('failed', (job, err) => inboxLogger.warn(`failed(${err}) id=${job.id} ${job.data.activity ? job.data.activity.id : 'unknown'}`))
 	.on('error', (error) => inboxLogger.error(`error ${error}`))
 	.on('stalled', (job) => inboxLogger.debug(`stalled id=${job.id}`));
 
