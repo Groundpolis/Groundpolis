@@ -51,12 +51,12 @@
 				<template #desc v-if="bannerUploading">{{ $t('uploading') }}<mk-ellipsis/></template>
 			</ui-input>
 
-			<ui-button @click="save(true)">{{ $t('save') }}</ui-button>
+			<ui-button @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</ui-button>
 		</ui-form>
 	</section>
 
 	<section>
-		<header>{{ $t('advanced') }}</header>
+		<header><fa :icon="faCogs"/> {{ $t('advanced') }}</header>
 
 		<div>
 			<ui-switch v-model="isCat" @change="save(false)">{{ $t('is-cat') }}</ui-switch>
@@ -66,7 +66,7 @@
 	</section>
 
 	<section>
-		<header>{{ $t('privacy') }}</header>
+		<header><fa :icon="faUnlockAlt"/> {{ $t('privacy') }}</header>
 
 		<div>
 			<ui-switch v-model="isLocked" @change="save(false)">{{ $t('is-locked') }}</ui-switch>
@@ -76,7 +76,7 @@
 	</section>
 
 	<section v-if="enableEmail">
-		<header>{{ $t('email') }}</header>
+		<header><fa :icon="faEnvelope"/> {{ $t('email') }}</header>
 
 		<div>
 			<template v-if="$store.state.i.email != null">
@@ -84,12 +84,12 @@
 				<ui-info v-else warn>{{ $t('email-not-verified') }}</ui-info>
 			</template>
 			<ui-input v-model="email" type="email"><span>{{ $t('email-address') }}</span></ui-input>
-			<ui-button @click="updateEmail()">{{ $t('save') }}</ui-button>
+			<ui-button @click="updateEmail()"><fa :icon="faSave"/> {{ $t('save') }}</ui-button>
 		</div>
 	</section>
 
 	<section>
-		<header>{{ $t('export') }}</header>
+		<header><fa :icon="faBoxes"/> {{ $t('export-and-import') }}</header>
 
 		<div>
 			<ui-select v-model="exportTarget">
@@ -99,7 +99,10 @@
 				<option value="blocking">{{ $t('export-targets.blocking-list') }}</option>
 				<option value="user-lists">{{ $t('export-targets.user-lists') }}</option>
 			</ui-select>
-			<ui-button @click="doExport()"><fa :icon="faDownload"/> {{ $t('export') }}</ui-button>
+			<ui-horizon-group class="fit-bottom">
+				<ui-button @click="doExport()"><fa :icon="faDownload"/> {{ $t('export') }}</ui-button>
+				<ui-button @click="doImport()" :disabled="!['following', 'user-lists'].includes(exportTarget)"><fa :icon="faUpload"/> {{ $t('import') }}</ui-button>
+			</ui-horizon-group>
 		</div>
 	</section>
 
@@ -118,7 +121,8 @@ import { apiUrl, host } from '../../../../config';
 import { toUnicode } from 'punycode';
 import langmap from 'langmap';
 import { unique } from '../../../../../../prelude/array';
-import { faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faUpload, faUnlockAlt, faBoxes, faCogs } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
 	i18n: i18n('common/views/components/profile-editor.vue'),
@@ -147,7 +151,7 @@ export default Vue.extend({
 			avatarUploading: false,
 			bannerUploading: false,
 			exportTarget: 'notes',
-			faDownload
+			faDownload, faUpload, faSave, faEnvelope, faUnlockAlt, faBoxes, faCogs
 		};
 	},
 
@@ -290,6 +294,22 @@ export default Vue.extend({
 			this.$root.dialog({
 				type: 'info',
 				text: this.$t('export-requested')
+			});
+		},
+
+		doImport() {
+			this.$chooseDriveFile().then(file => {
+				this.$root.api(
+					this.exportTarget == 'following' ? 'i/import-following' :
+					this.exportTarget == 'user-lists' ? 'i/import-user-lists' :
+					null, {
+						fileId: file.id
+					});
+
+				this.$root.dialog({
+					type: 'info',
+					text: this.$t('import-requested')
+				});
 			});
 		},
 

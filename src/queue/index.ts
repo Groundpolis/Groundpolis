@@ -9,6 +9,7 @@ import processDeliver from './processors/deliver';
 import processInbox from './processors/inbox';
 import processDb from './processors/db';
 import { queueLogger } from './logger';
+import { IDriveFile } from '../models/drive-file';
 
 function initializeQueue(name: string) {
 	return new Queue(name, config.redis != null ? {
@@ -41,9 +42,9 @@ inboxQueue
 	.on('waiting', (jobId) => inboxLogger.debug(`waiting id=${jobId}`))
 	.on('active', (job) => inboxLogger.debug(`active id=${job.id}`))
 	.on('completed', (job, result) => inboxLogger.debug(`completed(${result}) id=${job.id}`))
-	.on('failed', (job, err) => inboxLogger.warn(`failed(${err}) id=${job.id} ${job.data.activity ? job.data.activity.id : 'unknown'}`))
+	.on('failed', (job, err) => inboxLogger.warn(`failed(${err}) id=${job.id} activity=${job.data.activity ? job.data.activity.id : 'none'}`))
 	.on('error', (error) => inboxLogger.error(`error ${error}`))
-	.on('stalled', (job) => inboxLogger.warn(`stalled id=${job.id} ${job.data.activity ? job.data.activity.id : 'unknown'}`));
+	.on('stalled', (job) => inboxLogger.warn(`stalled id=${job.id} activity=${job.data.activity ? job.data.activity.id : 'none'}`));
 
 export function deliver(user: ILocalUser, content: any, to: any) {
 	if (content == null) return null;
@@ -139,6 +140,26 @@ export function createExportBlockingJob(user: ILocalUser) {
 export function createExportUserListsJob(user: ILocalUser) {
 	return dbQueue.add('exportUserLists', {
 		user: user
+	}, {
+		removeOnComplete: true,
+		removeOnFail: true
+	});
+}
+
+export function createImportFollowingJob(user: ILocalUser, fileId: IDriveFile['_id']) {
+	return dbQueue.add('importFollowing', {
+		user: user,
+		fileId: fileId
+	}, {
+		removeOnComplete: true,
+		removeOnFail: true
+	});
+}
+
+export function createImportUserListsJob(user: ILocalUser, fileId: IDriveFile['_id']) {
+	return dbQueue.add('importUserLists', {
+		user: user,
+		fileId: fileId
 	}, {
 		removeOnComplete: true,
 		removeOnFail: true

@@ -3,7 +3,7 @@
 	<h1>{{ $t('share-with', { name }) }}</h1>
 	<div>
 		<mk-signin v-if="!$store.getters.isSignedIn"/>
-		<mk-post-form v-else-if="!posted" :initial-text="text" :instant="true" @posted="posted = true"/>
+		<mk-post-form v-else-if="!posted" :initial-text="template" :instant="true" @posted="posted = true"/>
 		<p v-if="posted" class="posted"><fa icon="check"/></p>
 	</div>
 	<ui-button class="close" v-if="posted" @click="close">{{ $t('@.close') }}</ui-button>
@@ -20,8 +20,20 @@ export default Vue.extend({
 		return {
 			name: null,
 			posted: false,
-			text: new URLSearchParams(location.search).get('text')
+			text: new URLSearchParams(location.search).get('text'),
+			url: new URLSearchParams(location.search).get('url'),
+			title: new URLSearchParams(location.search).get('title'),
 		};
+	},
+	computed: {
+		template(): string {
+			let t = '';
+			if (this.title && this.url) t += `【[${title}](${url})】\n`;
+			if (this.title && !this.url) t += `【${title}】\n`;
+			if (this.text) t += `${text}\n`;
+			if (!this.title && this.url) t += `${url}`;
+			return t.trim();
+		}
 	},
 	methods: {
 		close() {
