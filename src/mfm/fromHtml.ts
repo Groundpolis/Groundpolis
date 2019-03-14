@@ -1,5 +1,6 @@
 import { parseFragment, DefaultTreeDocumentFragment } from 'parse5';
 import { URL } from 'url';
+import { urlRegex } from './prelude';
 
 export function fromHtml(html: string): string {
 	if (html == null) return null;
@@ -14,7 +15,7 @@ export function fromHtml(html: string): string {
 
 	return text.trim();
 
-	function getText(node: any) {
+	function getText(node: any): string {
 		if (node.nodeName == '#text') return node.value;
 
 		if (node.childNodes) {
@@ -38,10 +39,11 @@ export function fromHtml(html: string): string {
 				const txt = getText(node);
 				const rel = node.attrs.find((x: any) => x.name == 'rel');
 				const href = node.attrs.find((x: any) => x.name == 'href');
+				const isHashtag = rel && rel.value.match('tag') !== null;
 
 				// ハッシュタグ / hrefがない / txtがURL
-				if ((rel && rel.value.match('tag') !== null) || !href || href.value == txt) {
-					text += txt;
+				if (isHashtag || !href || href.value == txt) {
+					text += isHashtag || txt.match(urlRegex) ? txt : `<${txt}>`;
 				// メンション
 				} else if (txt.startsWith('@') && !(rel && rel.value.match(/^me /))) {
 					const part = txt.split('@');

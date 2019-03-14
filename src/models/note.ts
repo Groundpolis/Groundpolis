@@ -42,6 +42,7 @@ export type INote = {
 	replyId: mongo.ObjectID;
 	renoteId: mongo.ObjectID;
 	poll: IPoll;
+	name?: string;
 	text: string;
 	tags: string[];
 	tagsLower: string[];
@@ -393,6 +394,10 @@ export const pack = async (
 		}
 	}
 	//#endregion
+
+	if (_note.name) {
+		_note.text = `【${_note.name}】\n${_note.text}`;
+	}
 
 	if (_note.user.isCat && _note.text) {
 		_note.text = (_note.text
