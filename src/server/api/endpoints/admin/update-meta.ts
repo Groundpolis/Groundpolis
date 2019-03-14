@@ -69,6 +69,13 @@ export const meta = {
 			}
 		},
 
+		iconUrl: {
+			validator: $.optional.nullable.str,
+			desc: {
+				'ja-JP': 'インスタンスのアイコンURL'
+			}
+		},
+
 		name: {
 			validator: $.optional.nullable.str,
 			desc: {
@@ -362,6 +369,10 @@ export default define(meta, async (ps) => {
 
 	if (ps.bannerUrl !== undefined) {
 		set.bannerUrl = ps.bannerUrl;
+	}
+
+	if (ps.iconUrl !== undefined) {
+		set.iconUrl = ps.iconUrl;
 	}
 
 	if (ps.name !== undefined) {
