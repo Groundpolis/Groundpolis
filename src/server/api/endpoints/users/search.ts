@@ -2,6 +2,7 @@ import $ from 'cafy';
 import * as escapeRegexp from 'escape-regexp';
 import User, { pack, validateUsername, IUser } from '../../../../models/user';
 import define from '../../define';
+import { toDbHost } from '../../../../misc/convert-host';
 
 export const meta = {
 	desc: {
@@ -63,6 +64,7 @@ export const meta = {
 
 export default define(meta, async (ps, me) => {
 	const isUsername = validateUsername(ps.query.replace('@', ''), !ps.localOnly);
+	const isHostname = ps.query.replace('@', '').match(/\./) != null;
 
 	let users: IUser[] = [];
 
@@ -89,6 +91,14 @@ export default define(meta, async (ps, me) => {
 
 			users = users.concat(otherUsers);
 		}
+	} else if (isHostname) {
+		users = await User
+		.find({
+			host: toDbHost(ps.query.replace('@', '')),
+			isSuspended: { $ne: true }
+		}, {
+			limit: ps.limit - users.length
+		});
 	}
 
 	return await Promise.all(users.map(user => pack(user, me, { detail: ps.detail })));
