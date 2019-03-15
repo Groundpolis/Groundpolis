@@ -1,0 +1,34 @@
+#! /usr/bin/env perl
+
+use strict;
+use POSIX qw(strftime);
+
+my $file = 'package.json';
+
+# read
+open my $FH, $file or die $!;
+my @lines = <$FH>;
+close $FH;
+
+my $newver;
+
+for my $line (@lines) {
+	if ($line =~ /^(\s*"version"\s*:\s*")(\d+[.]\d+[.]\d+)(-\w+)?(.*)$/) {
+		print "old: $line";
+
+		my $postfix = strftime('%Y%m%d%H%M%S', localtime(time));
+		$newver = "$2-$postfix";
+		$line = "$1$2-$postfix$4\n";
+
+		print "new : $line";
+	}
+}
+
+if ($newver) {
+	# save
+	open my $FH, '>', $file or die;
+	for my $line (@lines) {
+		print {$FH} $line;
+	}
+	close $FH;
+}
