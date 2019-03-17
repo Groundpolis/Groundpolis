@@ -18,6 +18,7 @@
 		<div class="text">
 			<input v-model="text" placeholder="または絵文字を入力" @keyup.enter="reactText" v-autocomplete="{ model: 'text' }">
 			<button class="ok" @click="reactText"><fa icon="check"/></button>
+			<button class="random" @click="react('-random')"><fa :icon="faQuestion"/></button>
 		</div>
 	</div>
 </div>
@@ -27,6 +28,7 @@
 import Vue from 'vue';
 import i18n from '../../../i18n';
 import anime from 'animejs';
+import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 
 export default Vue.extend({
 	i18n: i18n('common/views/components/reaction-picker.vue'),
@@ -59,6 +61,7 @@ export default Vue.extend({
 
 	data() {
 		return {
+			faQuestion,
 			title: this.$t('choose-reaction'),
 			text: null,
 			focus: null

@@ -4,6 +4,7 @@ import createReaction from '../../../../../services/note/reaction/create';
 import define from '../../../define';
 import { getNote } from '../../../common/getters';
 import { ApiError } from '../../../error';
+const emojilib = require('emojilib');
 
 export const meta = {
 	stability: 'stable',
@@ -62,6 +63,13 @@ export default define(meta, async (ps, user) => {
 		if (e.id === '9725d0ce-ba28-4dde-95a7-2cbb2c15de24') throw new ApiError(meta.errors.noSuchNote);
 		throw e;
 	});
+
+	if (ps.reaction === '-random') {
+		const list: string[] = emojilib.ordered;
+		const code = list[Math.floor(Math.random() * list.length)];
+		ps.reaction = emojilib.lib[code].char;
+	}
+
 	await createReaction(user, note, ps.reaction).catch(e => {
 		if (e.id === '2d8e7297-1873-4c00-8404-792c68d7bef0') throw new ApiError(meta.errors.isMyNote);
 		if (e.id === '51c42bb4-931a-456b-bff7-e5a8a70dd298') throw new ApiError(meta.errors.alreadyReacted);
