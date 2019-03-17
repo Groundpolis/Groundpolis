@@ -13,6 +13,7 @@ import Following from './following';
 import Emoji from './emoji';
 import packEmojis from '../misc/pack-emojis';
 import { dbLogger } from '../db/logger';
+import { unique, concat } from '../prelude/array';
 
 const Note = db.get<INote>('notes');
 Note.createIndex('uri', { sparse: true, unique: true });
@@ -243,6 +244,11 @@ export const pack = async (
 
 	const id = _note._id;
 
+	// Some counts
+	_note.renoteCount = _note.renoteCount || 0;
+	_note.repliesCount = _note.repliesCount || 0;
+	_note.reactionCounts = _note.reactionCounts || {};
+
 	// _note._userを消す前か、_note.userを解決した後でないとホストがわからない
 	if (_note._user) {
 		const host = _note._user.host;
@@ -254,6 +260,8 @@ export const pack = async (
 				fields: { _id: false }
 			});
 		} else {
+			_note.emojis = unique(concat([_note.emojis, Object.keys(_note.reactionCounts)]));
+
 			_note.emojis = packEmojis(_note.emojis, host, {
 				custom: true,
 				avatar: true,
@@ -292,11 +300,6 @@ export const pack = async (
 
 	// Populate files
 	_note.files = packFileMany(_note.fileIds || []);
-
-	// Some counts
-	_note.renoteCount = _note.renoteCount || 0;
-	_note.repliesCount = _note.repliesCount || 0;
-	_note.reactionCounts = _note.reactionCounts || {};
 
 	// 後方互換性のため
 	_note.mediaIds = _note.fileIds;

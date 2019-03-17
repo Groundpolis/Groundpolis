@@ -14,6 +14,7 @@ const defaultMeta: any = {
 		originalUsersCount: 0
 	},
 	maxNoteTextLength: 1000,
+	enableEmojiReaction: true,
 	enableTwitterIntegration: false,
 	enableGithubIntegration: false,
 	enableDiscordIntegration: false,

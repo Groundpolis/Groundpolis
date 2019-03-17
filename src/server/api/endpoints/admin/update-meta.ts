@@ -41,6 +41,20 @@ export const meta = {
 			}
 		},
 
+		enableEmojiReaction: {
+			validator: $.optional.nullable.bool,
+			desc: {
+				'ja-JP': '絵文字リアクションを有効にするか否か'
+			}
+		},
+
+		useStarForReactionFallback: {
+			validator: $.optional.nullable.bool,
+			desc: {
+				'ja-JP': '不明なリアクションのフォールバックに star リアクションを使うか'
+			}
+		},
+
 		hidedTags: {
 			validator: $.optional.nullable.arr($.str),
 			desc: {
@@ -357,6 +371,14 @@ export default define(meta, async (ps) => {
 
 	if (typeof ps.disableGlobalTimeline === 'boolean') {
 		set.disableGlobalTimeline = ps.disableGlobalTimeline;
+	}
+
+	if (typeof ps.enableEmojiReaction === 'boolean') {
+		set.enableEmojiReaction = ps.enableEmojiReaction;
+	}
+
+	if (typeof ps.useStarForReactionFallback === 'boolean') {
+		set.useStarForReactionFallback = ps.useStarForReactionFallback;
 	}
 
 	if (Array.isArray(ps.hidedTags)) {

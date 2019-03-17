@@ -1,5 +1,4 @@
 import * as mongo from 'mongodb';
-import $ from 'cafy';
 import * as deepcopy from 'deepcopy';
 import db from '../db/mongodb';
 import isObjectId from '../misc/is-objectid';
@@ -19,20 +18,6 @@ export interface INoteReaction {
 	userId: mongo.ObjectID;
 	reaction: string;
 }
-
-export const validateReaction = $.str.or([
-	'like',
-	'love',
-	'laugh',
-	'hmm',
-	'surprise',
-	'congrats',
-	'angry',
-	'confused',
-	'rip',
-	'pudding',
-	'star'
-]);
 
 /**
  * Pack a reaction for API response
