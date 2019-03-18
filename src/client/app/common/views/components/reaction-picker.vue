@@ -17,6 +17,7 @@
 		</div>
 		<div v-if="enableEmojiReaction" class="text">
 			<input v-model="text" placeholder="または絵文字を入力" @keyup.enter="reactText" @input="tryReactText" v-autocomplete="{ model: 'text' }">
+			<button class="random" @click="react('-random')"><fa :icon="faRandom"/></button>
 		</div>
 	</div>
 </div>
@@ -27,6 +28,7 @@ import Vue from 'vue';
 import i18n from '../../../i18n';
 import anime from 'animejs';
 import { emojiRegex } from '../../../../../misc/emoji-regex';
+import { faRandom } from '@fortawesome/free-solid-svg-icons';
 
 export default Vue.extend({
 	i18n: i18n('common/views/components/reaction-picker.vue'),
@@ -59,6 +61,7 @@ export default Vue.extend({
 
 	data() {
 		return {
+			faRandom,
 			title: this.$t('choose-reaction'),
 			text: null,
 			enableEmojiReaction: false,
@@ -315,8 +318,9 @@ export default Vue.extend({
 					box-shadow inset 0 0.15em 0.3em rgba(27, 31, 35, 0.15)
 
 		> .text
-			width 216px
-			padding 4px 8px 8px 8px
+			display flex
+			justify-content center
+			align-items center
 
 			> input
 				width 100%
@@ -338,5 +342,16 @@ export default Vue.extend({
 				&:focus
 					border-color var(--primaryAlpha05)
 					transition border-color 0s ease
+
+			> button
+				cursor pointer
+				padding 0 8px
+				margin 0
+				font-size 1em
+				color var(--desktopPostFormTransparentButtonFg)
+				background transparent
+				outline none
+				border solid 1px transparent
+				border-radius 4px
 
 </style>
