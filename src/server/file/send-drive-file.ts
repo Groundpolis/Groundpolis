@@ -3,6 +3,7 @@ import * as send from 'koa-send';
 import * as mongodb from 'mongodb';
 import * as tmp from 'tmp';
 import * as fs from 'fs';
+import * as rename from 'rename';
 import DriveFile, { getDriveFileBucket } from '../../models/drive-file';
 import DriveFileThumbnail, { getDriveFileThumbnailBucket } from '../../models/drive-file-thumbnail';
 import DriveFileWebpublic, { getDriveFileWebpublicBucket } from '../../models/drive-file-webpublic';
@@ -10,6 +11,7 @@ import { serverLogger } from '..';
 import { fetch, detectMine } from '../proxy/proxy-media';
 import { ConvertToJpeg, ConvertToPng } from '../../services/drive/image-processor';
 import { GenerateVideoThumbnail } from '../../services/drive/generate-video-thumbnail';
+import { contentDisposition } from '../../misc/content-disposition';
 
 const assets = `${__dirname}/../../server/file/assets/`;
 
@@ -120,10 +122,12 @@ export default async function(ctx: Koa.BaseContext) {
 
 		if (thumb != null) {
 			ctx.set('Content-Type', 'image/jpeg');
+			ctx.set('Content-Disposition', contentDisposition('inline', `${rename(file.filename, { suffix: '-thumb', extname: '.jpeg' })}"`));
 			const bucket = await getDriveFileThumbnailBucket();
 			ctx.body = bucket.openDownloadStream(thumb._id);
 		} else {
 			if (file.contentType.startsWith('image/')) {
+				ctx.set('Content-Disposition', contentDisposition('inline', `${file.filename}"`));
 				await sendRaw();
 			} else {
 				ctx.status = 404;
@@ -137,15 +141,17 @@ export default async function(ctx: Koa.BaseContext) {
 
 		if (web != null) {
 			ctx.set('Content-Type', file.contentType);
+			ctx.set('Content-Disposition', contentDisposition('inline', `${rename(file.filename, { suffix: '-web' })}"`));
 
 			const bucket = await getDriveFileWebpublicBucket();
 			ctx.body = bucket.openDownloadStream(web._id);
 		} else {
+			ctx.set('Content-Disposition', contentDisposition('inline', `${file.filename}"`));
 			await sendRaw();
 		}
 	} else {
 		if ('download' in ctx.query) {
-			ctx.set('Content-Disposition', 'attachment');
+			ctx.set('Content-Disposition', contentDisposition('attachment', `${file.filename}`));
 		}
 
 		await sendRaw();

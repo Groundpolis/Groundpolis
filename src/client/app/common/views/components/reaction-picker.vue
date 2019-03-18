@@ -281,7 +281,7 @@ export default Vue.extend({
 			border-bottom solid var(--lineWidth) var(--faceDivider)
 
 		> .buttons
-			padding 4px
+			padding 4px 4px 8px 4px
 			width 216px
 			text-align center
 
