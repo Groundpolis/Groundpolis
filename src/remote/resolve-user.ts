@@ -1,5 +1,5 @@
 import { toUnicode, toASCII } from 'punycode';
-import User, { IUser, IRemoteUser } from '../models/user';
+import User, { IUser, IRemoteUser, isRemoteUser } from '../models/user';
 import webFinger from './webfinger';
 import config from '../config';
 import { createPerson, updatePerson } from './activitypub/models/person';
@@ -70,6 +70,13 @@ export default async (username: string, _host: string, option?: any, resync?: bo
 
 		logger.info(`return resynced remote user: ${acctLower}`);
 		return await User.findOne({ uri: self.href });
+	}
+
+	// ユーザーの情報が古かったらついでに更新しておく
+	if (isRemoteUser(user)) {
+		if (user.lastFetchedAt == null || Date.now() - user.lastFetchedAt.getTime() > 1000 * 60 * 60 * 24) {
+			updatePerson(user.uri);
+		}
 	}
 
 	logger.info(`return existing remote user: ${acctLower}`);
