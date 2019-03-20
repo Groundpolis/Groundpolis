@@ -20,7 +20,7 @@ import { getDriveFileThumbnailBucket } from '../../models/drive-file-thumbnail';
 import driveChart from '../../services/chart/drive';
 import perUserDriveChart from '../../services/chart/per-user-drive';
 import instanceChart from '../../services/chart/instance';
-import getDriveCapacity from '../../misc/get-drive-capacity';
+import fetchMeta from '../../misc/fetch-meta';
 import { GenerateVideoThumbnail } from './generate-video-thumbnail';
 import { driveLogger } from './logger';
 import { IImage, ConvertToJpeg, ConvertToWebp, ConvertToPng } from './image-processor';
@@ -389,7 +389,8 @@ export default async function(
 
 		logger.debug(`drive usage is ${usage}`);
 
-		const driveCapacity = await getDriveCapacity(user);
+		const instance = await fetchMeta();
+		const driveCapacity = 1024 * 1024 * (isLocalUser(user) ? instance.localDriveCapacityMb : instance.remoteDriveCapacityMb);
 
 		// If usage limit exceeded
 		if (usage + size > driveCapacity) {

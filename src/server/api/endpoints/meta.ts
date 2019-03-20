@@ -113,7 +113,6 @@ export default define(meta, async (ps, me) => {
 		disableGlobalTimeline: instance.disableGlobalTimeline,
 		enableEmojiReaction: instance.enableEmojiReaction,
 		driveCapacityPerLocalUserMb: instance.localDriveCapacityMb,
-		driveCapacityPerLocalUserPerDayMb: instance.localDriveCapacityFactor,
 		driveCapacityPerRemoteUserMb: instance.remoteDriveCapacityMb,
 		cacheRemoteFiles: instance.cacheRemoteFiles,
 		enableRecaptcha: instance.enableRecaptcha,

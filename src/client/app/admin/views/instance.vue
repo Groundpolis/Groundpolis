@@ -32,7 +32,6 @@
 			<header><fa icon="cloud"/> {{ $t('drive-config') }}</header>
 			<ui-switch v-model="cacheRemoteFiles">{{ $t('cache-remote-files') }}<template #desc>{{ $t('cache-remote-files-desc') }}</template></ui-switch>
 			<ui-input v-model="localDriveCapacityMb" type="number">{{ $t('local-drive-capacity-mb') }}<template #suffix>MB</template><template #desc>{{ $t('mb') }}</template></ui-input>
-			<ui-input v-model="localDriveCapacityFactor" type="number">{{ $t('local-drive-capacity-factor') }}<template #suffix>MB/day</template><template #desc>{{ $t('mb-day') }}</template></ui-input>
 			<ui-input v-model="remoteDriveCapacityMb" type="number" :disabled="!cacheRemoteFiles">{{ $t('remote-drive-capacity-mb') }}<template #suffix>MB</template><template #desc>{{ $t('mb') }}</template></ui-input>
 		</section>
 		<section class="fit-bottom">
@@ -169,7 +168,6 @@ export default Vue.extend({
 			languages: null,
 			cacheRemoteFiles: false,
 			localDriveCapacityMb: null,
-			localDriveCapacityFactor: null,
 			remoteDriveCapacityMb: null,
 			maxNoteTextLength: null,
 			enableRecaptcha: false,
@@ -223,7 +221,6 @@ export default Vue.extend({
 			this.languages = meta.langs.join(' ');
 			this.cacheRemoteFiles = meta.cacheRemoteFiles;
 			this.localDriveCapacityMb = meta.driveCapacityPerLocalUserMb;
-			this.localDriveCapacityFactor = meta.driveCapacityPerLocalUserPerDayMb;
 			this.remoteDriveCapacityMb = meta.driveCapacityPerRemoteUserMb;
 			this.maxNoteTextLength = meta.maxNoteTextLength;
 			this.enableRecaptcha = meta.enableRecaptcha;
@@ -287,7 +284,6 @@ export default Vue.extend({
 				langs: this.languages.split(' '),
 				cacheRemoteFiles: this.cacheRemoteFiles,
 				localDriveCapacityMb: parseInt(this.localDriveCapacityMb, 10),
-				localDriveCapacityFactor: parseInt(this.localDriveCapacityFactor, 10),
 				remoteDriveCapacityMb: parseInt(this.remoteDriveCapacityMb, 10),
 				maxNoteTextLength: parseInt(this.maxNoteTextLength, 10),
 				enableRecaptcha: this.enableRecaptcha,

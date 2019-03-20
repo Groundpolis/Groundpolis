@@ -220,8 +220,6 @@ export type IMeta = {
 	 */
 	remoteDriveCapacityMb?: number;
 
-	localDriveCapacityFactor?: number;
-
 	/**
 	 * Max allowed note text length in characters
 	 */
