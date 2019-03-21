@@ -269,8 +269,6 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 
 	await updateFeatured(user._id).catch(err => logger.error(err));
 
-	fetchOutbox(user._id).catch(err => logger.warn(err));
-
 	return user;
 }
 

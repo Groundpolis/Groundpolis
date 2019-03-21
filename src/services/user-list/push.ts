@@ -4,7 +4,6 @@ import { renderActivity } from '../../remote/activitypub/renderer';
 import { deliver } from '../../queue';
 import renderFollow from '../../remote/activitypub/renderer/follow';
 import { publishUserListStream } from '../stream';
-import { fetchOutbox } from '../../remote/activitypub/models/person';
 
 export async function pushUserToUserList(target: IUser, list: IUserList) {
 	await UserList.update({ _id: list._id }, {
@@ -20,7 +19,5 @@ export async function pushUserToUserList(target: IUser, list: IUserList) {
 		const proxy = await fetchProxyAccount();
 		const content = renderActivity(renderFollow(proxy, target));
 		deliver(proxy, content, target.inbox);
-
-		fetchOutbox(target._id, true);
 	}
 }

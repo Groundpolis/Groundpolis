@@ -6,7 +6,6 @@ import renderFollow from '../../../remote/activitypub/renderer/follow';
 import { deliver } from '../../../queue';
 import FollowRequest from '../../../models/follow-request';
 import Blocking from '../../../models/blocking';
-import { fetchOutbox } from '../../../remote/activitypub/models/person';
 
 export default async function(follower: IUser, followee: IUser, requestId?: string) {
 	// check blocking
@@ -64,7 +63,5 @@ export default async function(follower: IUser, followee: IUser, requestId?: stri
 	if (isLocalUser(follower) && isRemoteUser(followee)) {
 		const content = renderActivity(renderFollow(follower, followee));
 		deliver(follower, content, followee.inbox);
-
-		fetchOutbox(followee._id, true);
 	}
 }
