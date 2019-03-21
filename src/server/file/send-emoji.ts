@@ -2,8 +2,9 @@ import * as Koa from 'koa';
 import * as tmp from 'tmp';
 import * as fs from 'fs';
 import { serverLogger } from '..';
-import { fetch, detectMine } from '../proxy/proxy-media';
 import Emoji from '../../models/emoji';
+import { detectMine } from '../../misc/detect-mine';
+import { downloadUrl } from '../../misc/donwload-url';
 
 export default async function(ctx: Koa.BaseContext) {
 	const emoji = await Emoji.findOne({
@@ -25,7 +26,7 @@ export default async function(ctx: Koa.BaseContext) {
 	});
 
 	try {
-		await fetch(emoji.url, path);
+		await downloadUrl(emoji.url, path);
 
 		const [type] = await detectMine(path);
 
