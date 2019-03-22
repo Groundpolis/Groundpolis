@@ -16,8 +16,9 @@
 			<button @click="react('pudding')" @mouseover="onMouseover" @mouseout="onMouseout" tabindex="10" :title="$t('@.reactions.pudding')" v-particle><mk-reaction-icon reaction="pudding"/></button>
 		</div>
 		<div v-if="enableEmojiReaction" class="text">
-			<input v-model="text" placeholder="または絵文字を入力" @keyup.enter="reactText" @input="tryReactText" v-autocomplete="{ model: 'text' }">
-			<button class="random" @click="react('-random')"><fa :icon="faRandom"/></button>
+			<input v-model="text" placeholder="絵文字を入力" @keyup.enter="reactText" @input="tryReactText" v-autocomplete="{ model: 'text' }">
+			<button title="リアクション" @click="reactText"><fa icon="check"/></button>
+			<button title="ランダム" @click="react('-random')"><fa :icon="faRandom"/></button>
 		</div>
 	</div>
 </div>
@@ -321,12 +322,12 @@ export default Vue.extend({
 			display flex
 			justify-content center
 			align-items center
+			width 216px
 
 			> input
 				width 100%
 				padding 10px
 				margin 0
-				text-align center
 				font-size 16px
 				color var(--desktopPostFormTextareaFg)
 				background var(--desktopPostFormTextareaBg)
