@@ -87,7 +87,7 @@ export default define(meta, async (ps, user, app, file, cleanup) => {
 
 	try {
 		// Create file
-		const driveFile = await create(user, file.path, name, null, ps.folderId, true, false, null, null, ps.isSensitive);
+		const driveFile = await create(user, file.path, name, null, ps.folderId, ps.force, false, null, null, ps.isSensitive);
 		return pack(driveFile, { self: true });
 	} catch (e) {
 		apiLogger.error(e);
