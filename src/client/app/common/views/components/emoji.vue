@@ -1,5 +1,5 @@
 <template>
-<img v-if="customEmoji" class="fvgwvorwhxigeolkkrcderjzcawqrscl custom" :class="{ normal: normal }" :src="url" :alt="alt" :title="alt"/>
+<img v-if="customEmoji" class="fvgwvorwhxigeolkkrcderjzcawqrscl custom" :class="{ normal: normal }" :src="url" :alt="alt" :title="title"/>
 <img v-else-if="char && !useOsDefaultEmojis" class="fvgwvorwhxigeolkkrcderjzcawqrscl" :src="url" :alt="alt" :title="alt"/>
 <span v-else-if="char && useOsDefaultEmojis">{{ char }}</span>
 <span v-else>:{{ name }}:</span>
@@ -47,6 +47,10 @@ export default Vue.extend({
 
 	computed: {
 		alt(): string {
+			return this.customEmoji ? `:${this.customEmoji.resolvable}:` : this.char;
+		},
+
+		title(): string {
 			return this.customEmoji ? `:${this.customEmoji.name}:` : this.char;
 		},
 
