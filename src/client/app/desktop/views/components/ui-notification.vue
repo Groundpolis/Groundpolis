@@ -1,5 +1,5 @@
 <template>
-<div class="mk-ui-notification">
+<div class="mk-ui-notification" @click="onClick">
 	<p>{{ message }}</p>
 </div>
 </template>
@@ -31,7 +31,19 @@ export default Vue.extend({
 				});
 			}, 6000);
 		});
-	}
+	},
+	methods: {
+		onClick() {
+			anime({
+				targets: this.$el,
+				opacity: 0,
+				translateY: -64,
+				duration: 100,
+				easing: 'easeInElastic',
+				complete: () => this.destroyDom()
+			});
+		},
+	},
 });
 </script>
 
