@@ -106,7 +106,6 @@ common:
     confused: "こまこまのこまり"
     rip: "RIP"
     pudding: "Pudding"
-    star: "スター"
 
   note-visibility:
     public: "公開"
@@ -354,7 +353,7 @@ common/views/components/games/reversi/reversi.game.vue:
 
 common/views/components/games/reversi/reversi.index.vue:
   title: "Misskey Reversi"
-  sub-title: "他のMisskeyユーザーとリバーシで対戦しましょう"
+  sub-title: "他のMisskeyユーザーとリバーシで対戦しよう"
   invite: "招待"
   rule: "遊び方"
   rule-desc: "リバーシは、相手と交互に石をボードに置いて、相手の石を挟んで自分の色に変えてゆき、最終的に残った石が多い方が勝ちというボードゲームです。"
@@ -1209,10 +1208,8 @@ admin/views/instance.vue:
   cache-remote-files: "リモートのファイルをキャッシュする"
   cache-remote-files-desc: "この設定を無効にすると、リモートファイルをキャッシュせず直リンクするようになります。そのためサーバーのストレージを節約できますが、プライバシー設定で直リンクを無効にしているユーザーにはファイルが見えなくなったり、サムネイルが生成されないので通信量が増加します。通常はこの設定をオンにしておくことをおすすめします。"
   local-drive-capacity-mb: "ローカルユーザーひとりあたりのドライブ容量"
-  local-drive-capacity-factor: "ローカルユーザーに1日毎に追加で与えるドライブ容量"
   remote-drive-capacity-mb: "リモートユーザーひとりあたりのドライブ容量"
   mb: "メガバイト単位"
-  mb-day: "1日あたりの追加メガバイト"
   recaptcha-config: "reCAPTCHAの設定"
   recaptcha-info: "reCAPTCHAを有効にする場合、reCAPTCHAトークンを取得する必要があります。https://www.google.com/recaptcha/intro/ にアクセスしてトークンを取得してください。"
   enable-recaptcha: "reCAPTCHAを有効にする"
