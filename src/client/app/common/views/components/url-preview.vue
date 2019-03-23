@@ -231,7 +231,7 @@ export default Vue.extend({
 				& + article
 					left 0
 					width 100%
-			
+
 		@media (max-width 550px)
 			font-size 12px
 
