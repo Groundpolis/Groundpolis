@@ -13,7 +13,7 @@ type IREmoji = {
 	 * resolved host(in unicode)
 	 */
 	host: string,
-	fqName: string,
+	resolvable: string,
 };
 
 /**
@@ -69,7 +69,7 @@ export async function packAvatarEmojis(emojis: string[], ownerHost: string, fore
 				emoji: match[0],
 				usernameLower: match[1].toLowerCase(),
 				host: normalizeHost(queryHost),
-				fqName: `@${match[1]}` + (queryHost ? `@${normalizeAsciiHost(queryHost)}` : '')
+				resolvable: `@${match[1]}` + (queryHost ? `@${normalizeAsciiHost(queryHost)}` : '')
 			};
 		})
 		.filter(x => x != null);
@@ -87,7 +87,7 @@ export async function packAvatarEmojis(emojis: string[], ownerHost: string, fore
 			name: key.emoji,
 			url: user.avatarUrl,
 			host: key.host,
-			fqName: key.fqName,
+			resolvable: key.resolvable,
 		} as IREmoji;
 
 		return profileEmoji;
@@ -116,7 +116,7 @@ export async function packCustomEmojis(emojis: string[], ownerHost: string, fore
 				emoji: match[0],
 				name: match[1],
 				host: normalizeHost(queryHost),
-				fqName: `@${match[1]}` + (queryHost ? `@${normalizeAsciiHost(queryHost)}` : '')
+				resolvable: `${match[1]}` + (queryHost ? `@${normalizeAsciiHost(queryHost)}` : '')
 			};
 		})
 		.filter(x => x != null);
@@ -135,7 +135,7 @@ export async function packCustomEmojis(emojis: string[], ownerHost: string, fore
 			name: key.emoji,
 			url: key.host ? `${config.url}/files/${emoji.name}@${emoji.host}/${emoji.updatedAt ? emoji.updatedAt.getTime().toString(16) : '0'}.png` : emoji.url,
 			host: key.host,
-			fqName: key.fqName,
+			resolvable: key.resolvable,
 		} as IREmoji;
 
 		return customEmoji;
