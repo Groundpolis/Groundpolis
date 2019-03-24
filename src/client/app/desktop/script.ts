@@ -63,6 +63,7 @@ init(async (launch, os) => {
 				} else {
 					const vm = this.$root.new(PostFormWindow, {
 						reply: o.reply,
+						airReply: o.airReply,
 						mention: o.mention,
 						animation: o.animation == null ? true : o.animation
 					});

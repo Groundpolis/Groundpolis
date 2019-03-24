@@ -14,6 +14,7 @@
 		<mk-note-preview v-if="reply" class="notePreview" :note="reply"/>
 		<mk-post-form ref="form"
 			:reply="reply"
+			:airReply="airReply"
 			:mention="mention"
 			@posted="onPosted"
 			@change-uploadings="onChangeUploadings"
@@ -32,6 +33,10 @@ export default Vue.extend({
 	i18n: i18n('desktop/views/components/post-form-window.vue'),
 	props: {
 		reply: {
+			type: Object,
+			required: false
+		},
+		airReply: {
 			type: Object,
 			required: false
 		},
