@@ -234,7 +234,6 @@ export default Vue.extend({
 			this.cw = this.reply.cw;
 		}
 
-		console.log('2', JSON.stringify(this.airReply));
 		// 空リプ
 		if (this.airReply) {
 			this.localOnly = !!this.airReply.localOnly;
