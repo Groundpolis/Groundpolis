@@ -53,7 +53,7 @@ export const meta = {
 };
 
 export default define(meta, async (ps, me) => {
-	const internal = await searchInternal(me, ps.query, ps.limit, ps.offset).catch(e => console.log(e));
+	const internal = await searchInternal(me, ps.query, ps.limit, ps.offset);
 	if (internal !== null) return internal;
 
 	if (es == null) throw new ApiError(meta.errors.searchingNotAvailable);
@@ -155,11 +155,11 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		});
 	}
 
-	// console.log(JSON.stringify(noteQuery, null, 2));
-
 	const notes = await Note.find(noteQuery, {
+		maxTimeMS: 20000,
 		limit,
 		skip: offset,
+		sort: { createdAt: -1 },
 	});
 
 	return await packMany(notes, me);
