@@ -476,8 +476,12 @@ common/views/components/user-menu.vue:
   mention: "Mention"
   mute: "Mute"
   unmute: "Unmute"
+  mute-confirm: "Do you want to mute this account?"
+  unmute-confirm: "Do you want to unmute this account?"
   block: "Block"
   unblock: "Unblock"
+  block-confirm: "Do you want to block this account?"
+  unblock-confirm: "Do you want to unblock this account?"
   push-to-list: "Add to list"
   select-list: "Select a list"
   report-abuse: "Report abuse"
@@ -1586,6 +1590,8 @@ deck:
     description: "This timeline has been disabled by the server's administrator."
 deck/deck.tl-column.vue:
   is-media-only: "Only media posts"
+  is-sfw-media-only: "Only SFW media posts"
+  is-nsfw-media-only: "Only NSFW media posts"
   edit: "Options"
 deck/deck.user-column.vue:
   follows-you: "Follows you"
