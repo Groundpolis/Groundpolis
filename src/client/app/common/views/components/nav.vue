@@ -20,15 +20,9 @@ export default Vue.extend({
 	data() {
 		return {
 			aboutUrl: `/docs/${lang}/about`,
-			repositoryUrl: 'https://github.com/syuilo/misskey',
+			repositoryUrl: 'https://github.com/mei23/misskey/tree/mei-love',
 			feedbackUrl: 'https://github.com/syuilo/misskey/issues/new'
 		}
-	},
-	created() {
-		this.$root.getMeta().then(meta => {
-			if (meta.maintainer.repository_url) this.repositoryUrl = meta.maintainer.repository_url;
-			if (meta.maintainer.feedback_url) this.feedbackUrl = meta.maintainer.feedback_url;
-		});
 	}
 });
 </script>
