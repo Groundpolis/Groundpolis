@@ -24,9 +24,6 @@
 		<label>
 			<ui-select v-model="light" :placeholder="$t('light-theme')">
 				<template #label><fa :icon="faSun"/> {{ $t('light-theme') }}</template>
-				<optgroup label="おすすめのテーマ">
-					<option v-for="x in promoThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
-				</optgroup>
 				<optgroup :label="$t('light-themes')">
 					<option v-for="x in lightThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
 				</optgroup>
@@ -39,9 +36,6 @@
 		<label>
 			<ui-select v-model="dark" :placeholder="$t('dark-theme')">
 				<template #label><fa :icon="faMoon"/> {{ $t('dark-theme') }}</template>
-				<optgroup label="おすすめのテーマ">
-					<option v-for="x in promoThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
-				</optgroup>
 				<optgroup :label="$t('dark-themes')">
 					<option v-for="x in darkThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
 				</optgroup>
@@ -177,15 +171,11 @@ export default Vue.extend({
 		},
 
 		darkThemes(): Theme[] {
-			return this.themes.filter(t => t.base == 'dark' || t.kind == 'dark').filter(t => t.id != 'promo');
+			return this.themes.filter(t => t.base == 'dark' || t.kind == 'dark');
 		},
 
 		lightThemes(): Theme[] {
-			return this.themes.filter(t => t.base == 'light' || t.kind == 'light').filter(t => t.id != 'promo');
-		},
-
-		promoThemes(): Theme[] {
-			return this.themes.filter(t => t.id == 'promo');
+			return this.themes.filter(t => t.base == 'light' || t.kind == 'light');
 		},
 
 		installedThemes(): Theme[] {
