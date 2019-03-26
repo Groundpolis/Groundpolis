@@ -151,7 +151,7 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 
 	for (const word of words) {
 		noteQuery.$and.push({
-			text: new RegExp(escapeRegexp(word))
+			text: new RegExp(escapeRegexp(word), 'i')
 		});
 	}
 
