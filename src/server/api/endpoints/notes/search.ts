@@ -6,8 +6,9 @@ import es from '../../../../db/elasticsearch';
 import define from '../../define';
 import { ApiError } from '../../error';
 import User, { IUser, ILocalUser } from '../../../../models/user';
-import { toDbHost } from '../../../../misc/convert-host';
+import { toDbHost, isSelfHost } from '../../../../misc/convert-host';
 import Following from '../../../../models/following';
+import { concat } from '../../../../prelude/array';
 const escapeRegexp = require('escape-regexp');
 
 export const meta = {
@@ -53,7 +54,10 @@ export const meta = {
 };
 
 export default define(meta, async (ps, me) => {
-	const internal = await searchInternal(me, ps.query, ps.limit, ps.offset);
+	const internal = await searchInternal(me, ps.query, ps.limit, ps.offset).catch(e => {
+		console.warn(e);
+		throw e;
+	});
 	if (internal !== null) return internal;
 
 	if (es == null) throw new ApiError(meta.errors.searchingNotAvailable);
@@ -102,6 +106,9 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 	const tokens = query.trim().split(/\s+/);
 	const words: string[] = [];
 	let from: IUser = null;
+	let types: string[] = [];
+	let withFiles = false;
+	let host: string;	// = undefined
 
 	for (const token of tokens) {
 		// from
@@ -117,13 +124,46 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 			continue;
 		}
 
+		// filter
+		const matchFilter = token.match(/^filter:(\w+)$/);
+		if (matchFilter) {
+			// files
+			if (matchFilter[1] === 'files') {
+				withFiles = true;
+			}
+
+			// medias (images/videos/audios)
+			if (matchFilter[1] === 'medias' || matchFilter[1] === 'images') {
+				types = concat([types, ['image/jpeg', 'image/gif', 'image/png']]);
+			}
+			if (matchFilter[1] === 'medias' || matchFilter[1] === 'videos') {
+				types = concat([types, ['video/mp4', 'video/webm']]);
+			}
+			if (matchFilter[1] === 'medias' || matchFilter[1] === 'audios') {
+				types = concat([types, ['audio/mpeg', 'audio/mp4']]);
+			}
+
+			continue;
+		}
+
+		// host
+		const matchHost = token.match(/^host:([\w.-]+)$/);
+		if (matchHost) {
+			if (matchHost[1].match(/^(\.|local)$/) || isSelfHost(matchHost[1])) {
+				host = null;
+			} else {
+				host = toDbHost(matchHost[1]);
+			}
+			continue;
+		}
+
 		words.push(token);
 	}
 
-	if (from == null) return null;	// fromが指定されてなかったら検索させない
+	//if (from == null) return null;	// fromが指定されてなかったら検索させない
 
 	// constract query
-	const isFollowing = me == null ? false : ((await Following.findOne({
+	const isFollowing = (me == null || from == null) ? false : ((await Following.findOne({
 		followerId: me._id,
 		followeeId: from._id
 	})) != null);
@@ -142,18 +182,42 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		visibleUserIds: { $in: [ me._id ] }
 	}];
 
+	// note
 	const noteQuery = {
 		$and: [ {} ],
 		deletedAt: null,
-		userId: from._id,
 		$or: visibleQuery
 	} as any;
 
+	// note - from
+	if (from != null) {
+		noteQuery.userId = from._id;
+	}
+
+	// note - files / medias
+	if (withFiles) {
+		noteQuery.fileIds = { $exists: true, $ne: [] };
+	} else if (types.length > 0) {
+		noteQuery.fileIds = { $exists: true, $ne: [] };
+
+		noteQuery['_files.contentType'] = {
+			$in: types
+		};
+	}
+
+	// note - host
+	if (typeof host != 'undefined') {
+		noteQuery['_user.host'] = host;
+	}
+
+	// note - words
 	for (const word of words) {
 		noteQuery.$and.push({
 			text: new RegExp(escapeRegexp(word), 'i')
 		});
 	}
+
+	console.log(JSON.stringify(noteQuery, null, 2));
 
 	const notes = await Note.find(noteQuery, {
 		maxTimeMS: 20000,
