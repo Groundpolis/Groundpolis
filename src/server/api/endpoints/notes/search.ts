@@ -109,6 +109,8 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 	let types: string[] = [];
 	let withFiles = false;
 	let host: string;	// = undefined
+	let sensitive: 'all' | 'sfw' | 'nsfw' = 'all';
+	let filtered = false;
 
 	for (const token of tokens) {
 		// from
@@ -121,6 +123,8 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 
 			if (user == null) return [];	// fromが存在しないユーザーならno match
 			from = user;
+
+			filtered = true;
 			continue;
 		}
 
@@ -143,6 +147,16 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 				types = concat([types, ['audio/mpeg', 'audio/mp4']]);
 			}
 
+			filtered = true;
+			continue;
+		}
+
+		// sensitive
+		const matchSensitive = token.match(/^sensitive:(all|sfw|nsfw)$/);
+		if (matchSensitive) {
+			sensitive = matchSensitive[1] as 'all' | 'sfw' | 'nsfw';
+
+			// filteredにしない
 			continue;
 		}
 
@@ -154,13 +168,17 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 			} else {
 				host = toDbHost(matchHost[1]);
 			}
+
+			filtered = true;
 			continue;
 		}
 
 		words.push(token);
 	}
 
-	//if (from == null) return null;	// fromが指定されてなかったら検索させない
+	if (!filtered) {
+		return null;	// フィルタ系が指定されてなかったら検索させない
+	}
 
 	// constract query
 	const isFollowing = (me == null || from == null) ? false : ((await Following.findOne({
@@ -203,6 +221,14 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		noteQuery['_files.contentType'] = {
 			$in: types
 		};
+	}
+
+	if (noteQuery.fileIds && sensitive === 'sfw') {
+		noteQuery['_files.metadata.isSensitive'] = { $ne: true };
+	}
+
+	if (noteQuery.fileIds && sensitive === 'nsfw') {
+		noteQuery['_files.metadata.isSensitive'] = true;
 	}
 
 	// note - host
