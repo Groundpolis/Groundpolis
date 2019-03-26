@@ -9,6 +9,7 @@ import User, { IUser, ILocalUser } from '../../../../models/user';
 import { toDbHost, isSelfHost } from '../../../../misc/convert-host';
 import Following from '../../../../models/following';
 import { concat } from '../../../../prelude/array';
+import { getHideUserIds } from '../../common/get-hide-users';
 const escapeRegexp = require('escape-regexp');
 
 export const meta = {
@@ -200,6 +201,9 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		visibleUserIds: { $in: [ me._id ] }
 	}];
 
+	// mute / suspend
+	const hideUserIds = await getHideUserIds(me);
+
 	// note
 	const noteQuery = {
 		$and: [ {} ],
@@ -207,9 +211,11 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		$or: visibleQuery
 	} as any;
 
-	// note - from
+	// note - userId
 	if (from != null) {
 		noteQuery.userId = from._id;
+	} else {
+		noteQuery.userId = { $nin: hideUserIds };
 	}
 
 	// note - files / medias
