@@ -13,7 +13,7 @@ import Vue from 'vue';
 import i18n from '../../../i18n';
 import Progress from '../../../common/scripts/loading';
 
-const limit = 20;
+const limit = 10;
 
 export default Vue.extend({
 	i18n: i18n('mobile/views/pages/search.vue'),
