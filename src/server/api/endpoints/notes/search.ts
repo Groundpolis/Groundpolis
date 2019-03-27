@@ -177,8 +177,14 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		words.push(token);
 	}
 
+	// フィルタ系が指定されてなかったら検索させない
 	if (!filtered) {
-		return null;	// フィルタ系が指定されてなかったら検索させない
+		return null;
+	}
+
+	// word検索はfrom指定時のみ
+	if (words.length > 0 && from == null) {
+		return null;
 	}
 
 	// constract query
