@@ -36,6 +36,9 @@ export default Vue.extend({
 						cursor: null
 					};
 				}
+			}).catch((e: any) => {
+				this.$notify(e.message || e);
+				throw e;
 			})
 		};
 	},

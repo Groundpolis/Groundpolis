@@ -40,6 +40,7 @@ export default Vue.extend({
 				}
 			}).catch((e: any) => {
 				this.$notify(e.message || e);
+				throw e;
 			})
 		};
 	},
