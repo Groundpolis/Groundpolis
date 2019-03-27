@@ -46,11 +46,6 @@ export const meta = {
 	},
 
 	errors: {
-		notesLimitExceeded: {
-			message: 'Notes Limit Exceeded.',
-			code: 'NOTES_LIMIT_EXCEEDED',
-			id: '2e9c0cdb-3628-488c-aee9-660166dbe137'
-		},
 		searchingNotAvailable: {
 			message: 'Searching not available.',
 			code: 'SEARCHING_NOT_AVAILABLE',
@@ -182,8 +177,14 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		words.push(token);
 	}
 
+	// フィルタ系が指定されてなかったら検索させない
 	if (!filtered) {
-		return null;	// フィルタ系が指定されてなかったら検索させない
+		return null;
+	}
+
+	// word検索はfrom指定時のみ
+	if (words.length > 0 && from == null) {
+		return null;
 	}
 
 	// constract query
@@ -247,19 +248,11 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		noteQuery['_user.host'] = host;
 	}
 
-	if (words.length > 0) {
-		const count = await Note.count(noteQuery);
-
-		if (count > 1 * 1000 * 1000) {
-			throw new ApiError(meta.errors.notesLimitExceeded);
-		}
-
-		// note - words
-		for (const word of words) {
-			noteQuery.$and.push({
-				text: new RegExp(escapeRegexp(word), 'i')
-			});
-		}
+	// note - words
+	for (const word of words) {
+		noteQuery.$and.push({
+			text: new RegExp(escapeRegexp(word), 'i')
+		});
 	}
 
 	//console.log(JSON.stringify(noteQuery, null, 2));
