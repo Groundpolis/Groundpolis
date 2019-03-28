@@ -10,7 +10,7 @@
 			<x-activity :user="user" :limit="35" style="padding: 16px;"/>
 		</ui-container>
 	</div>
-	<x-photos :user="user"/>
+	<!--x-photos :user="user"/-->
 	<x-timeline ref="tl" :user="user"/>
 </div>
 </template>
