@@ -161,7 +161,7 @@ export default Vue.extend({
 				text-overflow ellipsis
 				opacity 0.7
 				font-size 14px
-				padding-right 32px
+				padding-right 40px
 
 			> .follow-button
 				position absolute
