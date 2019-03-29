@@ -50,7 +50,7 @@ const defaultDeviceSettings = {
 	reduceMotion: false,
 	darkmode: true,
 	darkTheme: 'promo',
-	lightTheme: 'promo',
+	lightTheme: 'light',
 	lineWidth: 1,
 	fontSize: 0,
 	themes: [],
