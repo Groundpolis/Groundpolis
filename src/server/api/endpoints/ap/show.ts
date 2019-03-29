@@ -39,10 +39,7 @@ export const meta = {
 };
 
 export default define(meta, async (ps) => {
-	const object = await fetchAny(ps.uri).catch(e => {
-		console.log(`ap/show ${JSON.stringify(e, null, 2)}`);
-		throw e;
-	});
+	const object = await fetchAny(ps.uri);
 	if (object) {
 		return object;
 	} else {
