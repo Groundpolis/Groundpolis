@@ -1,10 +1,11 @@
 import { IRemoteUser } from '../../../../models/user';
-import { IUndo, IFollow, IBlock, ILike } from '../../type';
+import { IUndo, IFollow, IBlock, ILike, IAnnounce } from '../../type';
 import unfollow from './follow';
 import unblock from './block';
 import undoLike from './like';
 import Resolver from '../../resolver';
 import { apLogger } from '../../logger';
+import { undoAnnounce } from './announce';
 
 const logger = apLogger;
 
@@ -38,7 +39,10 @@ export default async (actor: IRemoteUser, activity: IUndo): Promise<void> => {
 		case 'Like':
 			undoLike(actor, object as ILike);
 			break;
-	}
+		case 'Announce':
+			undoAnnounce(actor, object as IAnnounce);
+			break;
+		}
 
 	return null;
 };

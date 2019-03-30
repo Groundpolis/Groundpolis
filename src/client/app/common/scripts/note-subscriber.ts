@@ -124,6 +124,26 @@ export default prop => ({
 					break;
 				}
 
+				case 'renoted': {
+					Vue.set(this.$_ns_target, 'renoteCount', body.renoteCount);
+
+					if (body.renoteeId == this.$store.state.i.id) {
+						Vue.set(this.$_ns_target, 'myRenoteId', body.noteId);
+					}
+
+					break;
+				}
+
+				case 'unrenoted': {
+					this.$_ns_target.renoteCount--;
+
+					if (body.renoteeId == this.$store.state.i.id) {
+						Vue.set(this.$_ns_target, 'myRenoteId', null);
+					}
+
+					break;
+				}
+
 				case 'pollVoted': {
 					if (body.userId == this.$store.state.i.id) return;
 					const choice = body.choice;

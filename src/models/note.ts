@@ -373,6 +373,19 @@ export const pack = async (
 
 				return null;
 			})();
+
+			// Fetch my renote
+			_note.myRenoteId = (async () => {
+				const renote = await Note.findOne({
+					userId: meId,
+					renoteId: _note.id,
+					deletedAt: { $exists: false }
+				}, {
+					_id: 1
+				});
+
+				return renote ? renote._id : null;
+			})();
 		}
 	}
 

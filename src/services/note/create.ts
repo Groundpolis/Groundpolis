@@ -1,7 +1,7 @@
 import es from '../../db/elasticsearch';
 import Note, { pack, INote, IChoice } from '../../models/note';
 import User, { isLocalUser, IUser, isRemoteUser, IRemoteUser, ILocalUser } from '../../models/user';
-import { publishMainStream, publishHomeTimelineStream, publishLocalTimelineStream, publishHybridTimelineStream, publishGlobalTimelineStream, publishUserListStream, publishHashtagStream } from '../stream';
+import { publishMainStream, publishHomeTimelineStream, publishLocalTimelineStream, publishHybridTimelineStream, publishGlobalTimelineStream, publishUserListStream, publishHashtagStream, publishNoteStream } from '../stream';
 import Following from '../../models/following';
 import { deliver } from '../../queue';
 import renderNote from '../../remote/activitypub/renderer/note';
@@ -350,6 +350,13 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 		if (!user._id.equals(data.renote.userId) && isLocalUser(data.renote._user)) {
 			publishMainStream(data.renote.userId, 'renote', noteObj);
 		}
+
+		// renote対象noteに対してrenotedイベント
+		publishNoteStream(data.renote._id, 'renoted', {
+			renoteeId: user._id,	// renoteした人
+			noteId: note._id,	// renote扱いのNoteId
+			renoteCount: (data.renote.renoteCount || 0) + 1,
+		});
 	}
 
 	if (!silent) {
