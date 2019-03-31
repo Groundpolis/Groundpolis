@@ -16,8 +16,11 @@
 			<button @click="react('pudding')" @mouseover="onMouseover" @mouseout="onMouseout" tabindex="10" :title="$t('@.reactions.pudding')" v-particle><mk-reaction-icon reaction="pudding"/></button>
 		</div>
 		<div v-if="enableEmojiReaction" class="text">
-			<input v-model="text" placeholder="絵文字を入力" @keyup.enter="reactText" @input="tryReactText" v-autocomplete="{ model: 'text' }">
-			<button title="リアクション" @click="reactText"><fa icon="check"/></button>
+			<input v-model="text" placeholder="絵文字入力" @keyup.enter="reactText" @input="tryReactText" v-autocomplete="{ model: 'text' }">
+			<button title="決定" @click="reactText"><fa icon="check"/></button>
+			<button title="選択" class="emoji" @click="emoji" ref="emoji" v-if="!$root.isMobile">
+				<fa :icon="['far', 'laugh']"/>
+			</button>
 			<button title="ランダム" @click="react('-random')"><fa :icon="faRandom"/></button>
 		</div>
 	</div>
@@ -166,6 +169,19 @@ export default Vue.extend({
 			if (!this.text) return;
 			if (!this.text.match(emojiRegex)) return;
 			this.reactText();
+		},
+
+		async emoji() {
+			const Picker = await import('../../../desktop/views/components/emoji-picker-dialog.vue').then(m => m.default);
+			const button = this.$refs.emoji;
+			const rect = button.getBoundingClientRect();
+			const vm = this.$root.new(Picker, {
+				x: button.offsetWidth + rect.left + window.pageXOffset,
+				y: rect.top + window.pageYOffset
+			});
+			vm.$once('chosen', emoji => {
+				this.react(emoji);
+			});
 		},
 
 		onMouseover(e) {
