@@ -65,7 +65,10 @@
 				<template v-else><fa icon="reply"/></template>
 				<p class="count" v-if="appearNote.repliesCount > 0">{{ appearNote.repliesCount }}</p>
 			</button>
-			<button v-if="['public', 'home'].includes(appearNote.visibility)" @click="renote()" title="Renote">
+			<button v-if="appearNote.myRenoteId != null" @click="undoRenote()" title="Undo" class="renoted">
+				<fa icon="retweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
+			</button>
+			<button v-else-if="['public', 'home'].includes(appearNote.visibility)" @click="renote()" title="Renote">
 				<fa icon="retweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
 			</button>
 			<button v-else>
@@ -346,6 +349,9 @@ export default Vue.extend({
 					opacity 0.7
 
 				&.reacted
+					color var(--primary)
+
+				&.renoted
 					color var(--primary)
 
 	> .replies

@@ -8,7 +8,7 @@
 		<div class="no-users" v-if="inited && us.length == 0">
 			<p>{{ $t('no-users') }}</p>
 		</div>
-		<div class="user" v-for="user in us">
+		<div class="user" v-for="user in us" :key="user.id">
 			<mk-avatar class="avatar" :user="user"/>
 			<div class="body" v-if="!iconOnly">
 				<div class="name">
@@ -16,8 +16,9 @@
 					<p class="username">@{{ user | acct }}</p>
 				</div>
 				<div class="description" v-if="user.description" :title="user.description">
-					<mfm :text="user.description" :is-note="false" :author="user" :i="$store.state.i" :custom-emojis="user.emojis" :should-break="false"/>
+					<mfm :text="user.description" :is-note="false" :author="user" :i="$store.state.i" :custom-emojis="user.emojis" :should-break="false" :plain-text="true"/>
 				</div>
+				<mk-follow-button class="follow-button" v-if="$store.getters.isSignedIn && user.id != $store.state.i.id" :user="user" mini/>
 			</div>
 		</div>
 		<button class="more" :class="{ fetching: fetchingMoreUsers }" v-if="cursor != null" @click="fetchMoreUsers()" :disabled="fetchingMoreUsers">
@@ -94,6 +95,7 @@ export default Vue.extend({
 	&.narrow
 		> .user > .body > .name
 			width 100%
+			padding-right 40px
 
 		> .user > .body > .description
 			display none
@@ -160,6 +162,12 @@ export default Vue.extend({
 				text-overflow ellipsis
 				opacity 0.7
 				font-size 14px
+				padding-right 40px
+
+			> .follow-button
+				position absolute
+				top 8px
+				right 0px
 
 	> .more
 		display block

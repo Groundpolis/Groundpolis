@@ -117,6 +117,12 @@ export default (opts: Opts = {}) => ({
 			});
 		},
 
+		undoRenote() {
+			this.$root.api('notes/delete', {
+				noteId: this.appearNote.myRenoteId
+			});
+		},
+
 		renoteDirectly() {
 			(this as any).api('notes/create', {
 				renoteId: this.appearNote.id

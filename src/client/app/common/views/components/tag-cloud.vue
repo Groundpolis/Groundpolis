@@ -36,7 +36,7 @@ export default Vue.extend({
 	},
 	mounted() {
 		this.fetch();
-		this.clock = setInterval(this.fetch, 1000 * 60);
+		this.clock = setInterval(this.fetch, 1000 * 900);
 	},
 	beforeDestroy() {
 		clearInterval(this.clock);
