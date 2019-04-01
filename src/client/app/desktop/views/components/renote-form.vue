@@ -33,7 +33,7 @@ export default Vue.extend({
 		return {
 			wait: false,
 			quote: false,
-			visibility: this.$store.state.settings.defaultNoteVisibility
+			visibility: 'home'
 		};
 	},
 
@@ -98,10 +98,10 @@ export default Vue.extend({
 				right 280px
 
 			&.home
-				right 148px
+				right 16px
 				font-size 13px
 
 			&.ok
-				right 16px
+				right 148px
 
 </style>
