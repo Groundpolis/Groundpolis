@@ -45,7 +45,6 @@
 	<button class="kao" :title="$t('insert-a-kao')" @click="kao"><fa :icon="['far', 'smile']"/></button>
 	<button class="poll" :title="$t('create-poll')" @click="poll = !poll"><fa icon="chart-pie"/></button>
 	<button class="cw" :title="$t('hide-contents')" @click="useCw = !useCw"><fa :icon="['far', 'eye-slash']"/></button>
-	<button class="geo" :title="$t('attach-location-information')" @click="geo ? removeGeo() : setGeo()"><fa icon="map-marker-alt"/></button>
 	<button class="visibility" :title="$t('visibility')" @click="setVisibility" ref="visibilityButton">
 		<span v-if="visibility === 'public'"><fa icon="globe"/></span>
 		<span v-if="visibility === 'home'"><fa icon="home"/></span>
@@ -385,27 +384,6 @@ export default Vue.extend({
 			//#endregion
 		},
 
-		setGeo() {
-			if (navigator.geolocation == null) {
-				alert(this.$t('geolocation-alert'));
-				return;
-			}
-
-			navigator.geolocation.getCurrentPosition(pos => {
-				this.geo = pos.coords;
-				this.$emit('geo-attached', this.geo);
-			}, err => {
-				alert(`%i18n:@error%: ${err.message}`);
-			}, {
-					enableHighAccuracy: true
-				});
-		},
-
-		removeGeo() {
-			this.geo = null;
-			this.$emit('geo-dettached');
-		},
-
 		setVisibility() {
 			const w = this.$root.new(MkVisibilityChooser, {
 				source: this.$refs.visibilityButton,
@@ -467,14 +445,7 @@ export default Vue.extend({
 				visibility: this.visibility,
 				visibleUserIds: this.visibility == 'specified' ? this.visibleUsers.map(u => u.id) : undefined,
 				localOnly: this.localOnly,
-				geo: this.geo ? {
-					coordinates: [this.geo.longitude, this.geo.latitude],
-					altitude: this.geo.altitude,
-					accuracy: this.geo.accuracy,
-					altitudeAccuracy: this.geo.altitudeAccuracy,
-					heading: isNaN(this.geo.heading) ? null : this.geo.heading,
-					speed: this.geo.speed,
-				} : null
+				geo: null
 			}).then(data => {
 				this.clear();
 				this.deleteDraft();
