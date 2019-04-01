@@ -77,10 +77,6 @@ export default Vue.extend({
 			type: Object,
 			required: false
 		},
-		airReply: {
-			type: Object,
-			required: false
-		},
 		renote: {
 			type: Object,
 			required: false
@@ -218,17 +214,6 @@ export default Vue.extend({
 		if (this.$store.state.settings.keepCw && this.reply && this.reply.cw) {
 			this.useCw = true;
 			this.cw = this.reply.cw;
-		}
-
-		// 空リプ
-		if (this.airReply) {
-			this.localOnly = !!this.airReply.localOnly;
-			this.visibility = this.airReply.visibility;
-
-			// リモートの投稿に対する空リプはLTLに流さない
-			if (this.airReply.visibility === 'public' && this.airReply.user.host != null) {
-				this.visibility = 'home';
-			}
 		}
 
 		this.focus();

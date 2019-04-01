@@ -11,7 +11,6 @@ import { url } from '../../../config';
 import copyToClipboard from '../../../common/scripts/copy-to-clipboard';
 import { concat, intersperse } from '../../../../../prelude/array';
 import { faCopy, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 export default Vue.extend({
 	i18n: i18n('common/views/components/note-menu.vue'),
@@ -25,10 +24,6 @@ export default Vue.extend({
 	computed: {
 		items(): any[] {
 			return [{
-				icon: faPaperPlane,
-				text: '空リプ',
-				action: this.airReply
-			},{
 				icon: 'at',
 				text: this.$t('mention'),
 				action: this.mention
@@ -101,10 +96,6 @@ export default Vue.extend({
 	},
 
 	methods: {
-		airReply() {
-			this.$post({ airReply: this.note });
-		},
-
 		mention() {
 			this.$post({ mention: this.note.user });
 		},
