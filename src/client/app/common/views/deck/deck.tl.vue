@@ -14,6 +14,7 @@ import Vue from 'vue';
 import XNotes from './deck.notes.vue';
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 import i18n from '../../../i18n';
+import * as config from '../../../config';
 
 const fetchLimit = 10;
 
@@ -141,6 +142,13 @@ export default Vue.extend({
 			if (this.sfwMediaOnly && (note.files.length == 0 || note.files.some((x: any) => x.isSensitive))) return;
 			if (this.nsfwMediaOnly && (note.files.length == 0 || note.files.every((x: any) => !x.isSensitive))) return;
 			(this.$refs.timeline as any).prepend(note);
+
+			// サウンドを再生する
+			if (this.$store.state.device.enableSounds && this.$store.state.device.enableSoundsInTimeline) {
+				const sound = new Audio(`${config.url}/assets/post.mp3`);
+				sound.volume = this.$store.state.device.soundVolume;
+				sound.play();
+			}
 		},
 
 		onChangeFollowing() {
