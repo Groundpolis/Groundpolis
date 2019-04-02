@@ -76,6 +76,14 @@ export const meta = {
 		untilDate: {
 			validator: $.optional.num,
 		},
+
+		includeLocalRenotes: {
+			validator: $.optional.bool,
+			default: true,
+			desc: {
+				'ja-JP': 'Renoteされたローカルの投稿を含めるかどうか'
+			}
+		},
 	},
 
 	res: {
@@ -111,6 +119,8 @@ export default define(meta, async (ps, user) => {
 	};
 
 	const query = {
+		$and: [ {} ],
+
 		deletedAt: null,
 
 		// public only
@@ -137,6 +147,21 @@ export default define(meta, async (ps, user) => {
 		};
 	}
 
+	if (ps.includeLocalRenotes === false) {
+		query.$and.push({
+			$or: [{
+				'_renote.user.host': { $ne: null }
+			}, {
+				renoteId: null
+			}, {
+				text: { $ne: null }
+			}, {
+				fileIds: { $ne: [] }
+			}, {
+				poll: { $ne: null }
+			}]
+		});
+	}
 	const withFiles = ps.withFiles != null ? ps.withFiles : ps.mediaOnly;
 
 	if (withFiles) {
