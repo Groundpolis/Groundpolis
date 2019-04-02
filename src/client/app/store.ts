@@ -55,6 +55,8 @@ const defaultDeviceSettings = {
 	fontSize: 0,
 	themes: [],
 	enableSounds: true,
+	enableSoundsInTimeline: false,
+	enableSoundsInNotifications: true,
 	soundVolume: 0.5,
 	mediaVolume: 0.5,
 	lang: null,

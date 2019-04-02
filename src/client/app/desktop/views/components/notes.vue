@@ -148,7 +148,7 @@ export default Vue.extend({
 				this.notes.unshift(note);
 
 				// サウンドを再生する
-				if (this.$store.state.device.enableSounds && !silent) {
+				if (this.$store.state.device.enableSounds && this.$store.state.device.enableSoundsInTimeline && !silent) {
 					const sound = new Audio(`${config.url}/assets/post.mp3`);
 					sound.volume = this.$store.state.device.soundVolume;
 					sound.play();
