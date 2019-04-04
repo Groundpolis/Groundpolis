@@ -5,6 +5,7 @@ import * as nestedProperty from 'nested-property';
 import MiOS from './mios';
 import { erase } from '../../prelude/array';
 import getNoteSummary from '../../misc/get-note-summary';
+import getNotificationSummary from '../../misc/get-notification-summary';
 
 const defaultSettings = {
 	home: null,
@@ -111,6 +112,11 @@ export default (os: MiOS) => new Vuex.Store({
 			if (state.behindNotes.some(n => n.id === note.id)) return;
 			state.behindNotes.push(note);
 			document.title = `(${state.behindNotes.length}) ${getNoteSummary(note)}`;
+		},
+
+		pushBehindNotification(state, notification) {
+			state.behindNotes.push(notification);
+			document.title = `(${state.behindNotes.length}) ${getNotificationSummary(notification)}`;
 		},
 
 		clearBehindNotes(state) {

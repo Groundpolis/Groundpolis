@@ -126,6 +126,11 @@ export default Vue.extend({
 			});
 
 			this.prepend(notification);
+
+			// タブが非表示ならタイトルで通知
+			if (document.hidden) {
+				this.$store.commit('pushBehindNotification', notification);
+			}
 		},
 
 		prepend(notification) {

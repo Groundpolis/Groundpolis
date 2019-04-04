@@ -139,11 +139,6 @@ export default Vue.extend({
 			// 弾く
 			if (shouldMuteNote(this.$store.state.i, this.$store.state.settings, note)) return;
 
-			// タブが非表示またはスクロール位置が最上部ではないならタイトルで通知
-			if (document.hidden || !this.isScrollTop()) {
-				this.$store.commit('pushBehindNote', note);
-			}
-
 			if (this.isScrollTop()) {
 				// Prepend the note
 				this.notes.unshift(note);

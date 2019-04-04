@@ -145,11 +145,6 @@ export default Vue.extend({
 			// 弾く
 			if (shouldMuteNote(this.$store.state.i, this.$store.state.settings, note)) return;
 
-			// タブが非表示ならタイトルで通知
-			if (document.hidden) {
-				this.$store.commit('pushBehindNote', note);
-			}
-
 			if (this.isScrollTop()) {
 				// Prepend the note
 				this.notes.unshift(note);
