@@ -13,7 +13,7 @@ export default async (actor: IRemoteUser, activity: ILike): Promise<void> => {
 	const id = typeof activity.object == 'string' ? activity.object : activity.object.id;
 
 	if (!isSelfHost(extractApHost(id))) {
-		apLogger.warn(`skip Undo Like to foregin host (${id})`);
+		apLogger.warn(`skip Undo Like to foreign host (${id})`);
 		return;
 	}
 	const noteId = new mongo.ObjectID(id.split('/').pop());

@@ -10,7 +10,7 @@ export default async (actor: IRemoteUser, activity: ILike) => {
 	const id = typeof activity.object == 'string' ? activity.object : activity.object.id;
 
 	if (!isSelfHost(extractApHost(id))) {
-		apLogger.warn(`skip Like to foregin host (${id})`);
+		apLogger.warn(`skip Like to foreign host (${id})`);
 		return;
 	}
 
