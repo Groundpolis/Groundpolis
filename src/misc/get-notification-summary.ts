@@ -9,20 +9,20 @@ import getReactionEmoji from './get-reaction-emoji';
 export default function(notification: any): string {
 	switch (notification.type) {
 		case 'follow':
-			return `${getUserName(notification.user)}にフォローされました`;
+			return `Follow ${getUserName(notification.user)}`;
 		case 'mention':
-			return `言及されました:\n${getUserName(notification.user)}「${getNoteSummary(notification.note)}」`;
+			return `Mention ${getUserName(notification.user)} ${getNoteSummary(notification.note)}`;
 		case 'reply':
-			return `返信されました:\n${getUserName(notification.user)}「${getNoteSummary(notification.note)}」`;
+			return `Reply ${getUserName(notification.user)} ${getNoteSummary(notification.note)}`;
 		case 'renote':
-			return `Renoteされました:\n${getUserName(notification.user)}「${getNoteSummary(notification.note)}」`;
+			return `Renote ${getUserName(notification.user)} ${getNoteSummary(notification.note)}`;
 		case 'quote':
-			return `引用されました:\n${getUserName(notification.user)}「${getNoteSummary(notification.note)}」`;
+			return `Quote ${getUserName(notification.user)} ${getNoteSummary(notification.note)}`;
 		case 'reaction':
-			return `リアクションされました:\n${getUserName(notification.user)} <${getReactionEmoji(notification.reaction)}>「${getNoteSummary(notification.note)}」`;
+			return `${getReactionEmoji(notification.reaction)} ${getUserName(notification.user)} ${getNoteSummary(notification.note)}`;
 		case 'poll_vote':
-			return `投票されました:\n${getUserName(notification.user)}「${getNoteSummary(notification.note)}」`;
+			return `Vote ${getUserName(notification.user)} ${getNoteSummary(notification.note)}`;
 		default:
-			return `<不明な通知タイプ: ${notification.type}>`;
+			return `Unknown ${notification.type}`;
 	}
 }

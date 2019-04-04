@@ -138,17 +138,12 @@ export default Vue.extend({
 			// 弾く
 			if (shouldMuteNote(this.$store.state.i, this.$store.state.settings, note)) return;
 
-			// タブが非表示またはスクロール位置が最上部ではないならタイトルで通知
-			if (document.hidden || !this.isScrollTop()) {
-				this.$store.commit('pushBehindNote', note);
-			}
-
 			if (this.isScrollTop()) {
 				// Prepend the note
 				this.notes.unshift(note);
 
 				// サウンドを再生する
-				if (this.$store.state.device.enableSounds && !silent) {
+				if (this.$store.state.device.enableSounds && this.$store.state.device.enableSoundsInTimeline && !silent) {
 					const sound = new Audio(`${config.url}/assets/post.mp3`);
 					sound.volume = this.$store.state.device.soundVolume;
 					sound.play();
@@ -157,6 +152,7 @@ export default Vue.extend({
 				// オーバーフローしたら古い投稿は捨てる
 				if (this.notes.length >= displayLimit) {
 					this.notes = this.notes.slice(0, displayLimit);
+					this.cursor = this.notes[this.notes.length - 1].id
 				}
 			} else {
 				this.queue.push(note);
@@ -165,6 +161,7 @@ export default Vue.extend({
 
 		append(note) {
 			this.notes.push(note);
+			this.cursor = this.notes[this.notes.length - 1].id
 		},
 
 		releaseQueue() {

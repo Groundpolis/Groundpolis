@@ -27,6 +27,7 @@
 import Vue from 'vue';
 import i18n from '../../../i18n';
 import XNotification from './deck.notification.vue';
+import * as config from '../../../config';
 
 const displayLimit = 20;
 
@@ -125,6 +126,11 @@ export default Vue.extend({
 			});
 
 			this.prepend(notification);
+
+			// タブが非表示ならタイトルで通知
+			if (document.hidden) {
+				this.$store.commit('pushBehindNotification', notification);
+			}
 		},
 
 		prepend(notification) {
@@ -138,6 +144,13 @@ export default Vue.extend({
 				}
 			} else {
 				this.queue.push(notification);
+			}
+
+			// サウンドを再生する
+			if (this.$store.state.device.enableSounds && this.$store.state.device.enableSoundsInNotifications) {
+				const sound = new Audio(`${config.url}/assets/piko.mp3`);
+				sound.volume = this.$store.state.device.soundVolume;
+				sound.play();
 			}
 		},
 

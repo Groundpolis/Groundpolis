@@ -143,6 +143,8 @@
 import Vue from 'vue';
 import i18n from '../../../i18n';
 import getNoteSummary from '../../../../../misc/get-note-summary';
+import getNotificationSummary from '../../../../../misc/get-notification-summary';
+import * as config from '../../../config';
 
 export default Vue.extend({
 	i18n: i18n(),
@@ -221,6 +223,18 @@ export default Vue.extend({
 			});
 
 			this.notifications.unshift(notification);
+
+			// タブが非表示ならタイトルで通知
+			if (document.hidden) {
+				this.$store.commit('pushBehindNotification', notification);
+			}
+
+			// サウンドを再生する
+			if (this.$store.state.device.enableSounds && this.$store.state.device.enableSoundsInNotifications) {
+				const sound = new Audio(`${config.url}/assets/piko.mp3`);
+				sound.volume = this.$store.state.device.soundVolume;
+				sound.play();
+			}
 		}
 	}
 });

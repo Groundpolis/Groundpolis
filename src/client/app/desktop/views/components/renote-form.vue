@@ -3,10 +3,16 @@
 	<mk-note-preview class="preview" :note="note"/>
 	<template v-if="!quote">
 		<footer>
-			<a class="quote" v-if="!quote" @click="onQuote">{{ $t('quote') }}</a>
-			<ui-button class="button cancel" inline @click="cancel">{{ $t('cancel') }}</ui-button>
-			<ui-button class="button home" inline :primary="visibility != 'public'" @click="ok('home')"   :disabled="wait">{{ wait ? this.$t('reposting') : this.$t('renote-home') }}</ui-button>
-			<ui-button class="button ok"   inline :primary="visibility == 'public'" @click="ok('public')" :disabled="wait">{{ wait ? this.$t('reposting') : this.$t('renote') }}</ui-button>
+			<div class="buttons">
+				<a class="quote" v-if="!quote" @click="onQuote">{{ $t('quote') }}</a>
+				<ui-button class="button cancel" inline @click="cancel">{{ $t('cancel') }}</ui-button>
+				<ui-button class="button ok"   inline :primary="visibility == 'public'" @click="ok('public')" :disabled="wait">
+					<fa icon="globe"/> {{ 'Renote' }}
+				</ui-button>
+				<ui-button class="button home" inline :primary="visibility == 'home'"   @click="ok('home')"   :disabled="wait">
+					<fa icon="home"/> {{ 'Renote' }}
+				</ui-button>
+			</div>
 		</footer>
 	</template>
 	<template v-if="quote">
@@ -33,7 +39,7 @@ export default Vue.extend({
 		return {
 			wait: false,
 			quote: false,
-			visibility: this.$store.state.settings.defaultNoteVisibility
+			visibility: 'home'
 		};
 	},
 
@@ -81,27 +87,18 @@ export default Vue.extend({
 		height 72px
 		background var(--desktopRenoteFormFooter)
 
-		> .quote
-			position absolute
-			bottom 16px
-			left 28px
-			line-height 40px
+		> .buttons
+			display flex
+			padding 12px
+			align-items center
 
-		> .button
-			display block
-			position absolute
-			bottom 16px
-			width 120px
-			height 40px
+			> .quote
+				display block
+				margin-right auto
+				margin-left 8px
 
-			&.cancel
-				right 280px
-
-			&.home
-				right 148px
-				font-size 13px
-
-			&.ok
-				right 16px
+			> .button
+				display block
+				margin 4px
 
 </style>

@@ -36,7 +36,6 @@
 				<button class="kao" @click="kao"><fa :icon="['far', 'smile']"/></button>
 				<button class="poll" @click="poll = true"><fa icon="chart-pie"/></button>
 				<button class="poll" @click="useCw = !useCw"><fa :icon="['far', 'eye-slash']"/></button>
-				<button class="geo" @click="geo ? removeGeo() : setGeo()"><fa icon="map-marker-alt"/></button>
 				<button class="visibility" @click="setVisibility" ref="visibilityButton">
 					<span v-if="visibility === 'public'"><fa icon="globe"/></span>
 					<span v-if="visibility === 'home'"><fa icon="home"/></span>
@@ -75,10 +74,6 @@ export default Vue.extend({
 
 	props: {
 		reply: {
-			type: Object,
-			required: false
-		},
-		airReply: {
 			type: Object,
 			required: false
 		},
@@ -221,17 +216,6 @@ export default Vue.extend({
 			this.cw = this.reply.cw;
 		}
 
-		// 空リプ
-		if (this.airReply) {
-			this.localOnly = !!this.airReply.localOnly;
-			this.visibility = this.airReply.visibility;
-
-			// リモートの投稿に対する空リプはLTLに流さない
-			if (this.airReply.visibility === 'public' && this.airReply.user.host != null) {
-				this.visibility = 'home';
-			}
-		}
-
 		this.focus();
 
 		this.$nextTick(() => {
@@ -302,25 +286,6 @@ export default Vue.extend({
 			this.$emit('change-uploadings', uploads);
 		},
 
-		setGeo() {
-			if (navigator.geolocation == null) {
-				alert(this.$t('location-alert'));
-				return;
-			}
-
-			navigator.geolocation.getCurrentPosition(pos => {
-				this.geo = pos.coords;
-			}, err => {
-				alert(`%i18n:@error%: ${err.message}`);
-			}, {
-					enableHighAccuracy: true
-				});
-		},
-
-		removeGeo() {
-			this.geo = null;
-		},
-
 		setVisibility() {
 			const w = this.$root.new(MkVisibilityChooser, {
 				source: this.$refs.visibilityButton,
@@ -363,14 +328,7 @@ export default Vue.extend({
 				renoteId: this.renote ? this.renote.id : undefined,
 				poll: this.poll ? (this.$refs.poll as any).get() : undefined,
 				cw: this.useCw ? this.cw || '' : undefined,
-				geo: this.geo ? {
-					coordinates: [this.geo.longitude, this.geo.latitude],
-					altitude: this.geo.altitude,
-					accuracy: this.geo.accuracy,
-					altitudeAccuracy: this.geo.altitudeAccuracy,
-					heading: isNaN(this.geo.heading) ? null : this.geo.heading,
-					speed: this.geo.speed,
-				} : null,
+				geo: null,
 				visibility: this.visibility,
 				visibleUserIds: this.visibility == 'specified' ? this.visibleUsers.map(u => u.id) : undefined,
 				localOnly: this.localOnly,
