@@ -76,7 +76,7 @@ export function inbox(activity: any, signature: httpSignature.IParsedSignature) 
 		attempts: 8,
 		backoff: {
 			type: 'exponential',
-			delay: 1000
+			delay: 60 * 1000
 		},
 		removeOnComplete: true,
 		removeOnFail: true
