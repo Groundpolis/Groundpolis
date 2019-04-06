@@ -32,6 +32,7 @@ export async function downloadUrl(url: string, path: string) {
 			url: requestUrl,
 			proxy: config.proxy,
 			timeout: 10 * 1000,
+			forever: true,
 			headers: {
 				'User-Agent': config.userAgent
 			}
