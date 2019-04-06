@@ -61,6 +61,7 @@ export default define(meta, async (ps, me) => {
 			url: url,
 			proxy: config.proxy,
 			timeout: timeout,
+			forever: true,
 			json: true,
 			followRedirect: true,
 			followAllRedirects: true
