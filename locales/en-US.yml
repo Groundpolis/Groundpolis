@@ -990,6 +990,7 @@ desktop/views/components/timeline.vue:
   home: "Home"
   local: "Local"
   hybrid: "Social"
+  hybrid-desc: "Home+Local"
   global: "Global"
   mentions: "Mentions"
   messages: "Direct posts"

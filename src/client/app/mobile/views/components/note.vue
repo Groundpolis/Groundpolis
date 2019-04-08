@@ -6,11 +6,11 @@
 	:class="{ renote: isRenote, smart: $store.state.device.postStyle == 'smart', mini: narrow }"
 	v-hotkey="keymap"
 >
+	<mk-renote class="renote" v-if="isRenote" :note="note"/>
 	<x-sub v-for="note in conversation" :key="note.id" :note="note"/>
 	<div class="reply-to" v-if="appearNote.reply && (!$store.getters.isSignedIn || $store.state.settings.showReplyTarget)">
 		<x-sub :note="appearNote.reply"/>
 	</div>
-	<mk-renote class="renote" v-if="isRenote" :note="note"/>
 	<article class="article">
 		<mk-avatar class="avatar" :user="appearNote.user" v-if="$store.state.device.postStyle != 'smart'"/>
 		<div class="main">

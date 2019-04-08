@@ -14,7 +14,7 @@
 		<header :style="bannerStyle">
 			<div>
 				<button class="menu" @click="menu" ref="menu"><fa icon="ellipsis-h"/></button>
-				<mk-follow-button v-if="$store.getters.isSignedIn && user.id != $store.state.i.id" :user="user" class="follow" mini/>
+				<mk-follow-button v-if="$store.getters.isSignedIn && user.id != $store.state.i.id" :user="user" :key="user.id" class="follow" mini/>
 				<mk-avatar class="avatar" :user="user" :disable-preview="true" :key="user.id"/>
 				<router-link class="name" :to="user | userPage()">
 					<mk-user-name :user="user" :key="user.id"/>
