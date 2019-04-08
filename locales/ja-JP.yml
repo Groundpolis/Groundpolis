@@ -1100,6 +1100,7 @@ desktop/views/components/timeline.vue:
   home: "ホーム"
   local: "ローカル"
   hybrid: "ソーシャル"
+  hybrid-desc: "ホーム+ローカル"
   global: "グローバル"
   mentions: "あなた宛て"
   messages: "ダイレクト投稿"
