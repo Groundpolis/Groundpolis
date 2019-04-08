@@ -10,13 +10,13 @@
 		<template v-if="!conversationFetching"><fa icon="ellipsis-v"/></template>
 		<template v-if="conversationFetching"><fa icon="spinner" pulse/></template>
 	</button>
+	<mk-renote class="renote" v-if="isRenote" :note="note"/>
 	<div class="conversation">
 		<x-sub v-for="note in conversation" :key="note.id" :note="note"/>
 	</div>
 	<div class="reply-to" v-if="appearNote.reply">
 		<x-sub :note="appearNote.reply"/>
 	</div>
-	<mk-renote class="renote" v-if="isRenote" :note="note"/>
 	<article>
 		<mk-avatar class="avatar" :user="appearNote.user"/>
 		<header>
