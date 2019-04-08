@@ -139,6 +139,11 @@ export default Vue.extend({
 		},
 
 		onSubmit() {
+			if (this.password != this.retypedPassword) {
+				alert(this.$t('password-not-matched'));
+				return;
+			}
+
 			this.$root.api('signup', {
 				username: this.username,
 				password: this.password,
