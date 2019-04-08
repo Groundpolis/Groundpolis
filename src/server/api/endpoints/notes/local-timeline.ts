@@ -77,6 +77,22 @@ export const meta = {
 			validator: $.optional.num,
 		},
 
+		includeMyRenotes: {
+			validator: $.optional.bool,
+			default: true,
+			desc: {
+				'ja-JP': '自分の行ったRenoteを含めるかどうか'
+			}
+		},
+
+		includeRenotedMyNotes: {
+			validator: $.optional.bool,
+			default: true,
+			desc: {
+				'ja-JP': 'Renoteされた自分の投稿を含めるかどうか'
+			}
+		},
+
 		includeLocalRenotes: {
 			validator: $.optional.bool,
 			default: true,
@@ -145,6 +161,38 @@ export default define(meta, async (ps, user) => {
 		query['_renote.userId'] = {
 			$nin: hideUserIds
 		};
+	}
+
+	if (ps.includeMyRenotes === false) {
+		query.$and.push({
+			$or: [{
+				userId: { $ne: user._id }
+			}, {
+				renoteId: null
+			}, {
+				text: { $ne: null }
+			}, {
+				fileIds: { $ne: [] }
+			}, {
+				poll: { $ne: null }
+			}]
+		});
+	}
+
+	if (ps.includeRenotedMyNotes === false) {
+		query.$and.push({
+			$or: [{
+				'_renote.userId': { $ne: user._id }
+			}, {
+				renoteId: null
+			}, {
+				text: { $ne: null }
+			}, {
+				fileIds: { $ne: [] }
+			}, {
+				poll: { $ne: null }
+			}]
+		});
 	}
 
 	if (ps.includeLocalRenotes === false) {
