@@ -93,7 +93,17 @@ export default async (job: Bull.Job): Promise<void> => {
 
 	// アクティビティを送信してきたユーザーがまだMisskeyサーバーに登録されていなかったら登録する
 	if (user === null) {
-		user = await resolvePerson(activity.actor) as IRemoteUser;
+		try {
+			user = await resolvePerson(activity.actor) as IRemoteUser;
+		} catch (e) {
+			// 対象が4xxならスキップ
+			if (e.statusCode >= 400 && e.statusCode < 500) {
+				logger.warn(`Ignored actor ${activity.actor} - ${e.statusCode}`);
+				return;
+			}
+			logger.error(`Error in actor ${activity.actor} - ${e.statusCode || e}`);
+			throw e;
+		}
 	}
 
 	if (user === null) {

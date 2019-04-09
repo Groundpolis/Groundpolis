@@ -14,7 +14,7 @@ export default function(file: IDriveFile, thumbnail = false): string {
 		}
 	} else if (file.metadata.withoutChunks) {
 		if (thumbnail) {
-			return file.metadata.thumbnailUrl || file.metadata.webpublicUrl || (isImage ? file.metadata.url : null);
+			return file.metadata.thumbnailUrl || file.metadata.webpublicUrl || (isImage ? file.metadata.url : '/assets/thumbnail-not-available.png');
 		} else {
 			return file.metadata.webpublicUrl || file.metadata.url;
 		}
