@@ -30,7 +30,7 @@
 						</div>
 					</template>
 
-					<template v-if="notification.type == 'renote'">
+					<template v-if="notification.type == 'renote' && notification.note">
 						<mk-avatar class="avatar" :user="notification.note.user"/>
 						<div class="text">
 							<p><fa icon="retweet"/>
@@ -38,7 +38,7 @@
 									<mk-user-name :user="notification.note.user"/>
 								</router-link>
 							</p>
-							<router-link class="note-ref" :to="notification.note | notePage" :title="getNoteSummary(notification.note.renote)">
+							<router-link v-if="notification.note.renote" class="note-ref" :to="notification.note | notePage" :title="getNoteSummary(notification.note.renote)">
 								<fa icon="quote-left"/>
 									<mfm :text="getNoteSummary(notification.note.renote)" :should-break="false" :plain-text="true" :custom-emojis="notification.note.renote.emojis"/>
 								<fa icon="quote-right"/>
