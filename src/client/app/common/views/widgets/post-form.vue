@@ -34,6 +34,14 @@
 			<footer>
 				<button @click="chooseFile"><fa icon="upload"/></button>
 				<button @click="chooseFileFromDrive"><fa icon="cloud"/></button>
+				<button @click="kao"><fa :icon="['far', 'smile']"/></button>
+				<button @click="setVisibility" ref="visibilityButton">
+					<span v-if="visibility === 'public'"><fa icon="globe"/></span>
+					<span v-if="visibility === 'home'"><fa icon="home"/></span>
+					<span v-if="visibility === 'followers'"><fa icon="unlock"/></span>
+					<span v-if="visibility === 'specified'"><fa icon="envelope"/></span>
+					<span v-if="localOnly" class="localOnly"><fa icon="heart"/></span>
+				</button>
 				<button @click="post" :disabled="posting" class="post">{{ $t('note') }}</button>
 			</footer>
 		</div>
@@ -46,6 +54,8 @@ import define from '../../../common/define-widget';
 import i18n from '../../../i18n';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import * as XDraggable from 'vuedraggable';
+import getFace from '../../../common/scripts/get-face';
+import MkVisibilityChooser from '../../../common/views/components/visibility-chooser.vue';
 
 export default define({
 	name: 'post-form',
@@ -56,7 +66,8 @@ export default define({
 	i18n: i18n('desktop/views/widgets/post-form.vue'),
 
 	components: {
-		XDraggable
+		XDraggable,
+		MkVisibilityChooser
 	},
 
 	data() {
@@ -64,6 +75,8 @@ export default define({
 			posting: false,
 			text: '',
 			files: [],
+			visibility: 'public',
+			localOnly: false,
 		};
 	},
 
@@ -79,6 +92,11 @@ export default define({
 			];
 			return xs[Math.floor(Math.random() * xs.length)];
 		}
+	},
+
+	mounted() {
+		// デフォルト公開範囲
+		this.applyVisibility(this.$store.state.settings.defaultNoteVisibility);
 	},
 
 	methods: {
@@ -173,25 +191,39 @@ export default define({
 			});
 		},
 
+		kao() {
+			this.text += getFace();
+		},
+
+		setVisibility() {
+			const w = this.$root.new(MkVisibilityChooser, {
+				source: this.$refs.visibilityButton,
+				currentVisibility: this.visibility
+			});
+			w.$once('chosen', v => {
+				this.applyVisibility(v);
+			});
+		},
+
+		applyVisibility(v :string) {
+			const m = v.match(/^local-(.+)/);
+			if (m) {
+				this.localOnly = true;
+				this.visibility = m[1];
+			} else {
+				this.localOnly = false;
+				this.visibility = v;
+			}
+		},
+
 		post() {
 			this.posting = true;
-
-			let visibility = 'public';
-			let localOnly = false;
-
-			const m = this.$store.state.settings.defaultNoteVisibility.match(/^local-(.+)/);
-			if (m) {
-				visibility = m[1];
-				localOnly = true;
-			} else {
-				visibility = this.$store.state.settings.defaultNoteVisibility;
-			}
 
 			this.$root.api('notes/create', {
 				text: this.text == '' ? undefined : this.text,
 				fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
-				visibility,
-				localOnly,
+				visibility: this.visibility,
+				localOnly: this.localOnly,
 			}).then(data => {
 				this.clear();
 			}).catch(err => {
@@ -293,6 +325,13 @@ export default define({
 
 			&:hover
 				color var(--textHighlighted)
+
+		> button > .localOnly
+			color var(--primary)
+			position absolute
+			top 0
+			right 2px
+			transform scale(.8)
 
 		> .post
 			display block
