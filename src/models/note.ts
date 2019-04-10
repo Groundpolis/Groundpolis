@@ -374,13 +374,14 @@ export const pack = async (
 				return null;
 			})();
 
-			// Fetch my renote TODO: Query fileIds null or zero
+			// Fetch my renote
 			_note.myRenoteId = (async () => {
 				const renote = await Note.findOne({
 					userId: meId,
 					renoteId: _note.id,
 					text: null,
 					poll: null,
+					'fileIds.0': { $exists: false },
 					deletedAt: { $exists: false }
 				}, {
 					_id: 1
