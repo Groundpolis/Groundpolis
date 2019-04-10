@@ -379,6 +379,9 @@ export const pack = async (
 				const renote = await Note.findOne({
 					userId: meId,
 					renoteId: _note.id,
+					text: null,
+					poll: null,
+					'fileIds.0': { $exists: false },
 					deletedAt: { $exists: false }
 				}, {
 					_id: 1

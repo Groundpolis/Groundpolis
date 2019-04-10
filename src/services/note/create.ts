@@ -352,11 +352,13 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 		}
 
 		// renote対象noteに対してrenotedイベント
-		publishNoteStream(data.renote._id, 'renoted', {
-			renoteeId: user._id,	// renoteした人
-			noteId: note._id,	// renote扱いのNoteId
-			renoteCount: (data.renote.renoteCount || 0) + 1,
-		});
+		if (!isQuote(note)) {
+			publishNoteStream(data.renote._id, 'renoted', {
+				renoteeId: user._id,	// renoteした人
+				noteId: note._id,	// renote扱いのNoteId
+				renoteCount: (data.renote.renoteCount || 0) + 1,
+			});
+		}
 	}
 
 	if (!silent) {
