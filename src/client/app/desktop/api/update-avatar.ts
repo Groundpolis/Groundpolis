@@ -14,6 +14,7 @@ export default ($root: any) => {
 		w.$once('cropped', blob => {
 			const data = new FormData();
 			data.append('i', $root.$store.state.i.token);
+			data.append('force', 'true');
 			data.append('file', blob, file.name + '.cropped.png');
 
 			$root.api('drive/folders/find', {

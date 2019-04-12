@@ -23,7 +23,6 @@
 import Vue from 'vue';
 import i18n from '../../../i18n';
 import { apiUrl } from '../../../config';
-import getMD5 from '../../scripts/get-md5';
 
 export default Vue.extend({
 	i18n: i18n('common/views/components/uploader.vue'),
