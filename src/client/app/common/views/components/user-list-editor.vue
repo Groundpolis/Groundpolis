@@ -14,7 +14,7 @@
 
 		<section>
 			<sequential-entrance animation="entranceFromTop" delay="25">
-				<div class="phcqulfl" v-for="user in users">
+				<div class="phcqulfl" v-for="user in users" :key="user.id">
 					<div>
 						<a :href="user | userPage">
 							<mk-avatar class="avatar" :user="user" :disable-link="true"/>
@@ -115,7 +115,12 @@ export default Vue.extend({
 				listId: this.list.id,
 				userId: user.id
 			}).then(() => {
-				this.fetchUsers();
+				this.$root.api('users/lists/show', {
+					listId: this.list.id
+				}).then(list => {
+					this.list = list;
+					this.fetchUsers();
+				});
 			});
 		}
 	}
