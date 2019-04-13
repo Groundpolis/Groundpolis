@@ -14,6 +14,7 @@
 				<div class="name">
 					<router-link class="name" :to="user | userPage" v-user-preview="user.id"><mk-user-name :user="user"/></router-link>
 					<p class="username">@{{ user | acct }}</p>
+					<p class="followed" v-if="showFollows && user.isFollowed">{{ $t('follows-you') }}</p>
 				</div>
 				<div class="description" v-if="user.description" :title="user.description">
 					<mfm :text="user.description" :is-note="false" :author="user" :i="$store.state.i" :custom-emojis="user.emojis" :should-break="false" :plain-text="true"/>
@@ -42,7 +43,11 @@ export default Vue.extend({
 		iconOnly: {
 			type: Boolean,
 			default: false
-		}
+		},
+		showFollows: {
+			type: Boolean,
+			default: false
+		},
 	},
 
 	data() {
@@ -148,8 +153,17 @@ export default Vue.extend({
 				> .username
 					display block
 					margin 0
-					font-size 15px
-					line-height 16px
+					font-size 13px
+					line-height 13px
+					color var(--text)
+					opacity 0.7
+
+				> .followed
+					display inline-block
+					margin 0
+					font-size 11px
+					font-style italic
+					margin-top: 2px
 					color var(--text)
 					opacity 0.7
 
@@ -166,7 +180,7 @@ export default Vue.extend({
 
 			> .follow-button
 				position absolute
-				top 8px
+				top 0px
 				right 0px
 
 	> .more

@@ -338,6 +338,7 @@ common/views/components/url-preview.vue:
 
 common/views/components/user-list.vue:
   no-users: "ユーザーがいません"
+  follows-you: "あなたをフォローしています"
 
 common/views/components/games/reversi/reversi.vue:
   matching:

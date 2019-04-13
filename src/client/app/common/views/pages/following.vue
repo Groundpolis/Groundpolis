@@ -1,6 +1,6 @@
 <template>
 <div>
-	<mk-user-list :make-promise="makePromise">{{ $t('@.following') }}</mk-user-list>
+	<mk-user-list :make-promise="makePromise" :showFollows="true">{{ $t('@.following') }}</mk-user-list>
 </div>
 </template>
 
