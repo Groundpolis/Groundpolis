@@ -19,7 +19,7 @@ export function genOpenapiSpec(lang = 'ja-JP') {
 
 		externalDocs: {
 			description: 'Repository',
-			url: 'https://github.com/syuilo/misskey'
+			url: 'https://github.com/mei23/misskey/tree/mei-m544'
 		},
 
 		servers: [{
@@ -118,7 +118,7 @@ export function genOpenapiSpec(lang = 'ja-JP') {
 			description: desc,
 			externalDocs: {
 				description: 'Source code',
-				url: `https://github.com/syuilo/misskey/blob/develop/src/server/api/endpoints/${endpoint.name}.ts`
+				url: `https://github.com/mei23/misskey/tree/mei-m544/src/server/api/endpoints/${endpoint.name}.ts`
 			},
 			...(endpoint.meta.tags ? {
 				tags: endpoint.meta.tags
