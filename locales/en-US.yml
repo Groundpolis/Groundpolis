@@ -317,6 +317,7 @@ common/views/components/url-preview.vue:
   disable-player: "Close the player"
 common/views/components/user-list.vue:
   no-users: "There are no users."
+  follows-you: "Follows you"
 common/views/components/games/reversi/reversi.vue:
   matching:
     waiting-for: "Waiting for {}"

@@ -153,7 +153,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 		user = await User.insert({
 			avatarId: null,
 			bannerId: null,
-			createdAt: Date.parse(person.published) || null,
+			createdAt: new Date(),
 			lastFetchedAt: new Date(),
 			description: fromHtml(person.summary),
 			followersCount,
@@ -373,7 +373,6 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: obje
 		isBot: object.type == 'Service',
 		isCat: (person as any).isCat === true,
 		isLocked: person.manuallyApprovesFollowers,
-		createdAt: Date.parse(person.published) || null,
 		publicKey: {
 			id: person.publicKey.id,
 			publicKeyPem: person.publicKey.publicKeyPem
