@@ -94,6 +94,9 @@ export default Vue.extend({
 			margin 4px
 			cursor move
 
+			&:hover > .remove
+				display block
+
 			> .thumbnail
 				width 100%
 				height 100%
@@ -102,6 +105,7 @@ export default Vue.extend({
 				background-color: rgba(128, 128, 128, 0.3)
 
 			> .remove
+				display none
 				position absolute
 				top -6px
 				right -6px
