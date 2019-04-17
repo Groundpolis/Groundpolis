@@ -44,6 +44,9 @@ export type Source = {
 	accesslog?: string;
 
 	clusterLimit?: number;
+
+	deliverJobConcurrency?: number;
+	inboxJobConcurrency?: number;
 };
 
 /**
