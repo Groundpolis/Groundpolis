@@ -4,7 +4,6 @@
 		<template #title><fa :icon="faChartBar"/> {{ $t('title') }}</template>
 		<section class="wptihjuy">
 			<header><fa :icon="faPaperPlane"/> Deliver</header>
-			<ui-info warn v-if="latestStats && latestStats.deliver.waiting > 0">The queue is jammed.</ui-info>
 			<ui-horizon-group inputs v-if="latestStats" class="fit-bottom">
 				<ui-input :value="latestStats.deliver.activeSincePrevTick | number" type="text" readonly>
 					<span>Process</span>
@@ -31,7 +30,6 @@
 		</section>
 		<section class="wptihjuy">
 			<header><fa :icon="faInbox"/> Inbox</header>
-			<ui-info warn v-if="latestStats && latestStats.inbox.waiting > 0">The queue is jammed.</ui-info>
 			<ui-horizon-group inputs v-if="latestStats" class="fit-bottom">
 				<ui-input :value="latestStats.inbox.activeSincePrevTick | number" type="text" readonly>
 					<span>Process</span>
