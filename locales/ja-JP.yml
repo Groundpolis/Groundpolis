@@ -291,6 +291,7 @@ common:
     nav: "ナビゲーション"
     tips: "ヒント"
     hashtags: "ハッシュタグ"
+    queue: "キュー"
 
   dev: "アプリの作成に失敗しました。再度お試しください。"
   ai-chan-kawaii: "藍ちゃかわいい"
@@ -1097,9 +1098,6 @@ desktop/views/components/settings.tags.vue:
   query: "クエリ (省略可)"
   add: "追加"
   save: "保存"
-
-desktop/views/components/taskmanager.vue:
-  title: "タスクマネージャ"
 
 desktop/views/components/timeline.vue:
   home: "ホーム"
