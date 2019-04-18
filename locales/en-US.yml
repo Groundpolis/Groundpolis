@@ -276,6 +276,7 @@ common:
     nav: "Navigation"
     tips: "Tips"
     hashtags: "Hashtags"
+    queue: "Queue"
   dev: "Failed to create the application. Please try again."
   ai-chan-kawaii: "Ai-chan kawaii!"
   you: "You"
@@ -988,8 +989,6 @@ desktop/views/components/settings.tags.vue:
   query: "Query (optional)"
   add: "Add"
   save: "Save"
-desktop/views/components/taskmanager.vue:
-  title: "Task Manager"
 desktop/views/components/timeline.vue:
   home: "Home"
   local: "Local"

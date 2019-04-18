@@ -114,5 +114,5 @@ autoAdmin: true
 # Clustering
 #clusterLimit: 1
 
-# deliverJobConcurrency: 16;
-# inboxJobConcurrency: 16;
+# deliverJobConcurrency: 32
+# inboxJobConcurrency: 32

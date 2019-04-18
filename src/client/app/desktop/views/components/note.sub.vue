@@ -52,7 +52,7 @@ export default Vue.extend({
 	display flex
 	padding 16px 32px
 	font-size 0.9em
-	background var(--subNoteBg)
+	background linear-gradient(to bottom, var(--face), var(--subNoteBg) 10%, var(--subNoteBg) 90%, var(--face) 100%)
 
 	&.mini
 		padding 16px

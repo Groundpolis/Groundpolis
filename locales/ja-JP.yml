@@ -291,6 +291,7 @@ common:
     nav: "ナビゲーション"
     tips: "ヒント"
     hashtags: "ハッシュタグ"
+    queue: "キュー"
 
   dev: "アプリの作成に失敗しました。再度お試しください。"
   ai-chan-kawaii: "藍ちゃかわいい"
@@ -734,6 +735,10 @@ common/views/components/user-list-editor.vue:
   delete-are-you-sure: "リスト「$1」を削除しますか？"
   deleted: "削除しました"
 
+common/views/components/user-lists.vue:
+  create-list: "リストを作成"
+  list-name: "リスト名"
+
 common/views/widgets/broadcast.vue:
   fetching: "確認中"
   no-broadcasts: "お知らせはありません"
@@ -1098,9 +1103,6 @@ desktop/views/components/settings.tags.vue:
   add: "追加"
   save: "保存"
 
-desktop/views/components/taskmanager.vue:
-  title: "タスクマネージャ"
-
 desktop/views/components/timeline.vue:
   home: "ホーム"
   local: "ローカル"
@@ -1144,8 +1146,6 @@ desktop/views/components/received-follow-requests-window.vue:
 
 desktop/views/components/user-lists-window.vue:
   title: "リスト"
-  create-list: "リストを作成"
-  list-name: "リスト名"
 
 desktop/views/components/user-preview.vue:
   notes: "投稿"
@@ -1340,7 +1340,9 @@ admin/views/users.vue:
   unsuspend-confirm: "凍結を解除しますか？"
   unsuspended: "凍結を解除しました"
   make-silence: "サイレンス"
+  silence-confirm: "サイレンスしますか？"
   unmake-silence: "サイレンスの解除"
+  unsilence-confirm: "サイレンスを解除しますか？"
   verify: "公式アカウントにする"
   verify-confirm: "公式アカウントにしますか？"
   verified: "公式アカウントにしました"
@@ -1576,12 +1578,11 @@ mobile/views/components/drive.vue:
   file-count: "ファイル"
   nothing-in-drive: "ドライブには何もありません"
   folder-is-empty: "このフォルダは空です"
-  prompt: "何をしますか？(数字を入力してください): <1 → ファイルをアップロード | 2 → ファイルをURLでアップロード | 3 → フォルダ作成 | 4 → このフォルダ名を変更 | 5 → このフォルダを移動 | 6 → このフォルダを削除>"
-  deletion-alert: "ごめんなさい！フォルダの削除は未実装です...。"
   folder-name: "フォルダー名"
   here-is-root: "現在いる場所はルートで、フォルダではありません。"
   url-prompt: "アップロードしたいファイルのURL"
   uploading: "アップロードをリクエストしました。アップロードが完了するまで時間がかかる場合があります。"
+  folder-name-cannot-empty: "フォルダ名を空白にすることはできません。"
 
 mobile/views/components/drive-file-chooser.vue:
   select-file: "ファイルを選択"
@@ -1671,9 +1672,17 @@ mobile/views/components/ui.nav.vue:
   admin: "管理"
   about: "Misskeyについて"
 
+mobile/views/pages/drive.vue:
+  contextmenu:
+    upload: "ファイルをアップロード"
+    url-upload: "ファイルをURLでアップロード"
+    create-folder: "フォルダーを作成"
+    rename-folder: "フォルダー名を変更"
+    move-folder: "このフォルダを移動"
+    delete-folder: "このフォルダを削除"
+
 mobile/views/pages/user-lists.vue:
   title: "リスト"
-  enter-list-name: "リスト名を入力してください"
 
 mobile/views/pages/signup.vue:
   lets-start: "📦 始めましょう"

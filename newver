@@ -20,7 +20,11 @@ for my $line (@lines) {
 		$newver = "$2-$postfix";
 		$line = "$1$2-$postfix$4\n";
 
-		print "new : $line";
+		print "new: $line\n";
+
+		print "git add package.json && git commit -m $newver\n";
+    print "git tag -a $newver -m $newver\n";
+		print "\n";
 	}
 }
 
