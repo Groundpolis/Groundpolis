@@ -52,23 +52,17 @@ adduser --disabled-password --disabled-login misskey
 
 	`su - misskey`
 
-2. masterブランチからMisskeyレポジトリをクローン
+2. レポジトリをクローン
 
-	`git clone -b master git://github.com/syuilo/misskey.git`
+	`git clone https://github.com/mei23/misskey.git`
 
 3. misskeyディレクトリに移動
 
 	`cd misskey`
 
-4. [最新のリリース](https://github.com/syuilo/misskey/releases/latest)を確認
+4. mei-m544 を checkout
 
-	```bash
-	git tag | grep '^10\.' | sort -V --reverse | \
-	while read tag_name; do \
-	if ! curl -s "https://api.github.com/repos/syuilo/misskey/releases/tags/$tag_name" \
-	| grep -qE '"(draft|prerelease)": true'; \
-	then git checkout $tag_name; break; fi ; done
-	```
+	`git checkout mei-m544`
 
 5. Misskeyの依存パッケージをインストール
 
@@ -111,25 +105,7 @@ Debianをお使いであれば、`build-essential`パッケージをインスト
 
 2. エディタで開き、以下のコードを貼り付けて保存:
 
-	```
-	[Unit]
-	Description=Misskey daemon
-
-	[Service]
-	Type=simple
-	User=misskey
-	ExecStart=/usr/bin/npm start
-	WorkingDirectory=/home/misskey/misskey
-	Environment="NODE_ENV=production"
-	TimeoutSec=60
-	StandardOutput=syslog
-	StandardError=syslog
-	SyslogIdentifier=misskey
-	Restart=always
-
-	[Install]
-	WantedBy=multi-user.target
-	```
+	[misskey.service](examples/misskey.service)
 
 	CentOSで1024以下のポートを使用してMisskeyを使用する場合は`ExecStart=/usr/bin/sudo /usr/bin/npm start`に変更する必要があります。
 
@@ -145,16 +121,7 @@ Debianをお使いであれば、`build-essential`パッケージをインスト
 
 ### Misskeyを最新バージョンにアップデートする方法:
 1. `git fetch`
-2. 　
-
-	```bash
-	git tag | grep '^10\.' | sort -V --reverse | \
-	while read tag_name; do \
-	if ! curl -s "https://api.github.com/repos/syuilo/misskey/releases/tags/$tag_name" \
-	| grep -qE '"(draft|prerelease)": true'; \
-	then git checkout $tag_name; break; fi ; done
-	```
-
+2. `git pull`
 3. `npm install`
 4. `NODE_ENV=production npm run build`
 5. [ChangeLog](../CHANGELOG.md)でマイグレーション情報を確認する

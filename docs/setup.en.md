@@ -45,23 +45,17 @@ As root:
 
 	`su - misskey`
 
-2. Clone the misskey repo from master branch.
+2. Clone the repo.
 
-	`git clone -b master git://github.com/syuilo/misskey.git`
+	`git clone https://github.com/mei23/misskey.git`
 
 3. Navigate to misskey directory
 
 	`cd misskey`
 
-4. Checkout to the [latest release](https://github.com/syuilo/misskey/releases/latest)
+4. Checkout the mei-m544 branch
 
-	```bash
-	git tag | grep '^10\.' | sort -V --reverse | \
-	while read tag_name; do \
-	if ! curl -s "https://api.github.com/repos/syuilo/misskey/releases/tags/$tag_name" \
-	| grep -qE '"(draft|prerelease)": true'; \
-	then git checkout $tag_name; break; fi ; done
-	```
+	`git checkout mei-m544`
 
 5. Install misskey dependencies.
 
@@ -106,25 +100,8 @@ Just `NODE_ENV=production npm start`. GLHF!
 
 2. Edit it, and paste this and save:
 
-	```
-	[Unit]
-	Description=Misskey daemon
+	[misskey.service](examples/misskey.service)
 
-	[Service]
-	Type=simple
-	User=misskey
-	ExecStart=/usr/bin/npm start
-	WorkingDirectory=/home/misskey/misskey
-	Environment="NODE_ENV=production"
-	TimeoutSec=60
-	StandardOutput=syslog
-	StandardError=syslog
-	SyslogIdentifier=misskey
-	Restart=always
-
-	[Install]
-	WantedBy=multi-user.target
-	```
 
 3. Reload systemd and enable the misskey service.
 
@@ -138,15 +115,7 @@ You can check if the service is running with `systemctl status misskey`.
 
 ### How to update your Misskey server to the latest version
 1. `git fetch`
-2. 　
-
-	```bash
-	git tag | grep '^10\.' | sort -V --reverse | \
-	while read tag_name; do \
-	if ! curl -s "https://api.github.com/repos/syuilo/misskey/releases/tags/$tag_name" \
-	| grep -qE '"(draft|prerelease)": true'; \
-	then git checkout $tag_name; break; fi ; done
-	```
+2. `git pull`
 3. `npm install`
 4. `NODE_ENV=production npm run build`
 5. Check [ChangeLog](../CHANGELOG.md) for migration information
