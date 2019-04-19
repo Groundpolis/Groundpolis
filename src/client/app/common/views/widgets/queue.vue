@@ -6,12 +6,12 @@
 		<div class="mntrproz">
 			<div>
 				<b>In</b>
-				<span v-if="latestStats">{{ latestStats.inbox.activeSincePrevTick | number }} / {{ latestStats.inbox.delayed | number }}</span>
+				<span v-if="latestStats">{{ latestStats.inbox.active | number }} / {{ latestStats.inbox.limit | number }} ({{ latestStats.inbox.waiting | number }})</span>
 				<div ref="in"></div>
 			</div>
 			<div>
 				<b>Out</b>
-				<span v-if="latestStats">{{ latestStats.deliver.activeSincePrevTick | number }} / {{ latestStats.deliver.delayed | number }}</span>
+				<span v-if="latestStats">{{ latestStats.deliver.active | number }} / {{ latestStats.deliver.limit | number }} ({{ latestStats.deliver.waiting | number }})</span>
 				<div ref="out"></div>
 			</div>
 		</div>
