@@ -1,10 +1,18 @@
 import * as Deque from 'double-ended-queue';
 import Xev from 'xev';
 import { deliverQueue, inboxQueue } from '../queue';
+import { program } from './../argv';
+import config from '../config';
+import * as os from 'os';
 
 const ev = new Xev();
 
 const interval = 3000;
+
+const workers = program.disableClustering ? 1 : Math.min(config.clusterLimit || Infinity, os.cpus().length);
+
+const deliverConcurrencyPerWorker = config.deliverJobConcurrency || 32;
+const inboxConcurrencyPerWorker = config.inboxJobConcurrency || 32;
 
 /**
  * Report queue stats regularly
@@ -33,12 +41,14 @@ export default function() {
 
 		const stats = {
 			deliver: {
+				limit: deliverConcurrencyPerWorker * workers,
 				activeSincePrevTick: activeDeliverJobs,
 				active: deliverJobCounts.active,
 				waiting: deliverJobCounts.waiting,
 				delayed: deliverJobCounts.delayed
 			},
 			inbox: {
+				limit: inboxConcurrencyPerWorker * workers,
 				activeSincePrevTick: activeInboxJobs,
 				active: inboxJobCounts.active,
 				waiting: inboxJobCounts.waiting,

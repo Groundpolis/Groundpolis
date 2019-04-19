@@ -13,7 +13,7 @@
 				<ui-input :value="latestStats.deliver.active | number" type="text" readonly>
 					<span>Active</span>
 					<template #prefix><fa :icon="farPlayCircle"/></template>
-					<template #suffix>jobs</template>
+					<template #suffix>{{ `/ ${latestStats.deliver.limit | number} jobs` }}</template>
 				</ui-input>
 				<ui-input :value="latestStats.deliver.waiting | number" type="text" readonly>
 					<span>Waiting</span>
@@ -39,7 +39,7 @@
 				<ui-input :value="latestStats.inbox.active | number" type="text" readonly>
 					<span>Active</span>
 					<template #prefix><fa :icon="farPlayCircle"/></template>
-					<template #suffix>jobs</template>
+					<template #suffix>{{ `/ ${latestStats.inbox.limit | number} jobs` }}</template>
 				</ui-input>
 				<ui-input :value="latestStats.inbox.waiting | number" type="text" readonly>
 					<span>Waiting</span>
