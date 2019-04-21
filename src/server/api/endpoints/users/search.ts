@@ -102,18 +102,5 @@ export default define(meta, async (ps, me) => {
 		});
 	}
 
-	// ついでにバックグラウンドでリモートユーザー情報を更新しておく
-	updateUsers(users);
-
 	return await Promise.all(users.map(user => pack(user, me, { detail: ps.detail })));
 });
-
-async function updateUsers(users: IUser[]) {
-	for (const user of users) {
-		if (isRemoteUser(user)) {
-			if (user.lastFetchedAt == null || Date.now() - user.lastFetchedAt.getTime() > 1000 * 60 * 60 * 24 * 30) {	// 30days
-				await updatePerson(user.uri).catch(() => {});
-			}
-		}
-	}
-}
