@@ -1,5 +1,5 @@
 import { toUnicode, toASCII } from 'punycode';
-import User, { IUser, IRemoteUser, isRemoteUser } from '../models/user';
+import User, { IUser, IRemoteUser } from '../models/user';
 import webFinger from './webfinger';
 import config from '../config';
 import { createPerson, updatePerson } from './activitypub/models/person';
@@ -28,7 +28,7 @@ export default async (username: string, _host: string, option?: any, resync = fa
 		return await User.findOne({ usernameLower, host: null });
 	}
 
-	const user = await User.findOne({ usernameLower, host }, option);
+	const user = await User.findOne({ usernameLower, host }, option) as IRemoteUser;
 
 	const acctLower = `${usernameLower}@${hostAscii}`;
 
@@ -39,14 +39,22 @@ export default async (username: string, _host: string, option?: any, resync = fa
 		return await createPerson(self.href);
 	}
 
-	if (resync) {
+	// resyncオプション OR ユーザー情報が古い場合は、WebFilgerからやりなおして返す
+	if (resync || user.lastFetchedAt == null || Date.now() - user.lastFetchedAt.getTime() > 1000 * 60 * 60 * 24) {
+		// 繋がらないインスタンスに何回も試行するのを防ぐ, 後続の同様処理の連続試行を防ぐ ため 試行前にも更新する
+		await User.update({ _id: user._id }, {
+			$set: {
+				lastFetchedAt: new Date(),
+			},
+		});
+
 		logger.info(`try resync: ${acctLower}`);
 		const self = await resolveSelf(acctLower);
 
-		if ((user as IRemoteUser).uri !== self.href) {
+		if (user.uri !== self.href) {
 			// if uri mismatch, Fix (user@host <=> AP's Person id(IRemoteUser.uri)) mapping.
 			logger.info(`uri missmatch: ${acctLower}`);
-			logger.info(`recovery missmatch uri for (username=${username}, host=${host}) from ${(user as IRemoteUser).uri} to ${self.href}`);
+			logger.info(`recovery missmatch uri for (username=${username}, host=${host}) from ${user.uri} to ${self.href}`);
 
 			// validate uri
 			const uri = new URL(self.href);
@@ -70,13 +78,6 @@ export default async (username: string, _host: string, option?: any, resync = fa
 
 		logger.info(`return resynced remote user: ${acctLower}`);
 		return await User.findOne({ uri: self.href });
-	}
-
-	// ユーザーの情報が古かったらついでに更新しておく
-	if (isRemoteUser(user)) {
-		if (user.lastFetchedAt == null || Date.now() - user.lastFetchedAt.getTime() > 1000 * 60 * 60 * 24) {
-			updatePerson(user.uri);
-		}
 	}
 
 	logger.info(`return existing remote user: ${acctLower}`);

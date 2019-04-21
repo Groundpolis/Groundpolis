@@ -90,17 +90,14 @@ export default define(meta, async (ps, me) => {
 				: { usernameLower: ps.username.toLowerCase(), host: null };
 
 			user = await User.findOne(q, cursorOption);
+
+			if (isRemoteUser(user)) {
+				resolveRemoteUser(user.username, user.host);
+			}
 		}
 
 		if (user === null) {
 			throw new ApiError(meta.errors.noSuchUser);
-		}
-
-		// ユーザー情報更新
-		if (isRemoteUser(user)) {
-			if (user.lastFetchedAt == null || Date.now() - user.lastFetchedAt.getTime() > 1000 * 60 * 60 * 24) {
-				resolveRemoteUser(ps.username, ps.host, { }, true);
-			}
 		}
 
 		return await pack(user, me, {

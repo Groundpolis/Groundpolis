@@ -478,12 +478,12 @@ common/views/components/user-menu.vue:
   mention: "Mention"
   mute: "Mute"
   unmute: "Unmute"
-  mute-confirm: "Do you want to mute this account?"
-  unmute-confirm: "Do you want to unmute this account?"
+  mute-confirm: "Are you sure you want to mute this user?"
+  unmute-confirm: "Are you certain that you want to unmute this user?"
   block: "Block"
   unblock: "Unblock"
-  block-confirm: "Do you want to block this account?"
-  unblock-confirm: "Do you want to unblock this account?"
+  block-confirm: "Are you sure you want to block this user?"
+  unblock-confirm: "Are you certain that you want to unblock this user?"
   push-to-list: "Add to list"
   select-list: "Select a list"
   report-abuse: "Report abuse"
@@ -491,8 +491,12 @@ common/views/components/user-menu.vue:
   report-abuse-reported: "The issue has been reported to the administrator. Your cooperation is much appreciated."
   silence: "Silence"
   unsilence: "Unsilence"
+  silence-confirm: "Are you sure that you want to silence this user?"
+  unsilence-confirm: "Are you sure that you want to stop silencing this user?"
   suspend: "Suspend"
   unsuspend: "Unsuspend"
+  suspend-confirm: "Are you sure that you want to suspend this user?"
+  unsuspend-confirm: "Are you sure that you want to unsuspend this user?"
 common/views/components/poll.vue:
   vote-to: "Vote for '{}'"
   vote-count: "{} votes"
@@ -675,6 +679,9 @@ common/views/components/user-list-editor.vue:
   remove-user: "Remove from this list"
   delete-are-you-sure: "Delete list \"$1\"?"
   deleted: "Deleted successfully"
+common/views/components/user-lists.vue:
+  create-list: "Create a list"
+  list-name: "List name"
 common/views/widgets/broadcast.vue:
   fetching: "Checking"
   no-broadcasts: "No announcements"
@@ -1024,8 +1031,6 @@ desktop/views/components/received-follow-requests-window.vue:
   reject: "Reject"
 desktop/views/components/user-lists-window.vue:
   title: "User lists"
-  create-list: "Create a list"
-  list-name: "List name"
 desktop/views/components/user-preview.vue:
   notes: "Posts"
   following: "Following"
@@ -1208,7 +1213,9 @@ admin/views/users.vue:
   unsuspend-confirm: "Are you sure you want to unsuspend this account?"
   unsuspended: "The user has successfully unsuspended."
   make-silence: "Silence"
+  silence-confirm: "Silence user?"
   unmake-silence: "Unsilence"
+  unsilence-confirm: "Are you certain that you want to stop silencing this user?"
   verify: "Verify account"
   verify-confirm: "Do you want this to be a verified account?"
   verified: "The account is now being verified"
@@ -1402,6 +1409,7 @@ desktop/views/widgets/polls.vue:
 desktop/views/widgets/post-form.vue:
   title: "Post"
   note: "Post"
+  something-happened: "Could not be posted in this circumstance."
 desktop/views/widgets/profile.vue:
   update-banner: "Click to edit your banner"
   update-avatar: "Click to edit your avatar"
@@ -1420,12 +1428,11 @@ mobile/views/components/drive.vue:
   file-count: "File(s)"
   nothing-in-drive: "There's nothing stored."
   folder-is-empty: "This folder is empty"
-  prompt: "What do you want to do? (Please enter a number): <1 → Upload a file | 2 → Upload a file from a URL | 3 → Create a folder | 4 → Change this folder's name | 5 → Move this folder | 6 → Delete this folder>"
-  deletion-alert: "Sorry! Deleting a folder is not yet implemented."
   folder-name: "Folder name"
   here-is-root: "Currently, you are on the root, not inside of any folder."
   url-prompt: "URL of the file you want to upload"
   uploading: "Upload requested. It may take a while for the upload to finish."
+  folder-name-cannot-empty: "Folder name cannot be blank."
 mobile/views/components/drive-file-chooser.vue:
   select-file: "Choose files"
 mobile/views/components/drive-folder-chooser.vue:
@@ -1499,9 +1506,16 @@ mobile/views/components/ui.nav.vue:
   game: "Games"
   admin: "Admin"
   about: "About Misskey"
+mobile/views/pages/drive.vue:
+  contextmenu:
+    upload: "Upload a file"
+    url-upload: "Upload file from a URL"
+    create-folder: "Create a folder"
+    rename-folder: "Rename folder"
+    move-folder: "Move this folder"
+    delete-folder: "Delete this folder"
 mobile/views/pages/user-lists.vue:
   title: "Lists"
-  enter-list-name: "Enter a name of the list to make"
 mobile/views/pages/signup.vue:
   lets-start: "Your account is now ready! 📦"
 mobile/views/pages/followers.vue:
@@ -1630,6 +1644,7 @@ dev/views/apps.vue:
   create-app: "Create app"
   app-missing: "No apps"
 dev/views/new-app.vue:
+  new-app: "New Application"
   create-app: "Creating application"
   app-name: "Application name"
   app-name-desc: "The name of your app"
