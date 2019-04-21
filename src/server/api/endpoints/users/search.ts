@@ -1,9 +1,8 @@
 import $ from 'cafy';
 import * as escapeRegexp from 'escape-regexp';
-import User, { pack, validateUsername, IUser, isRemoteUser } from '../../../../models/user';
+import User, { pack, validateUsername, IUser } from '../../../../models/user';
 import define from '../../define';
 import { toDbHost } from '../../../../misc/convert-host';
-import { updatePerson } from '../../../../remote/activitypub/models/person';
 
 export const meta = {
 	desc: {
