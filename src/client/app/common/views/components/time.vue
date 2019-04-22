@@ -37,6 +37,7 @@ export default Vue.extend({
 		},
 		relative(): string {
 			const time = this._time;
+			if (time == null) return this.$t('@.time.unknown');
 			const ago = (this.now.getTime() - time.getTime()) / 1000/*ms*/;
 			return (
 				ago >= 31536000 ? this.$t('@.time.years_ago')  .replace('{}', (~~(ago / 31536000)).toString()) :
@@ -46,9 +47,8 @@ export default Vue.extend({
 				ago >= 3600     ? this.$t('@.time.hours_ago')  .replace('{}', (~~(ago / 3600)).toString()) :
 				ago >= 60       ? this.$t('@.time.minutes_ago').replace('{}', (~~(ago / 60)).toString()) :
 				ago >= 10       ? this.$t('@.time.seconds_ago').replace('{}', (~~(ago % 60)).toString()) :
-				ago >= -1       ? this.$t('@.time.just_now') :
-				ago <  -1       ? this.$t('@.time.future') :
-				this.$t('@.time.unknown'));
+				ago >= -10      ? this.$t('@.time.just_now') :
+				this.$t('@.time.future'));
 		}
 	},
 	created() {
