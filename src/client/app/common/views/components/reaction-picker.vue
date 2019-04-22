@@ -62,7 +62,7 @@ export default Vue.extend({
 			faRandom,
 			title: this.$t('choose-reaction'),
 			text: null,
-			enableEmojiReaction: false,
+			enableEmojiReaction: true,
 		};
 	},
 
