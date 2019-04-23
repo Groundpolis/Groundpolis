@@ -48,36 +48,40 @@ export default async (username: string, _host: string, option?: any, resync = fa
 			},
 		});
 
-		logger.info(`try resync: ${acctLower}`);
-		const self = await resolveSelf(acctLower);
+		try {
+			logger.info(`try resync: ${acctLower}`);
+			const self = await resolveSelf(acctLower);
 
-		if (user.uri !== self.href) {
-			// if uri mismatch, Fix (user@host <=> AP's Person id(IRemoteUser.uri)) mapping.
-			logger.info(`uri missmatch: ${acctLower}`);
-			logger.info(`recovery missmatch uri for (username=${username}, host=${host}) from ${user.uri} to ${self.href}`);
+			if (user.uri !== self.href) {
+				// if uri mismatch, Fix (user@host <=> AP's Person id(IRemoteUser.uri)) mapping.
+				logger.info(`uri missmatch: ${acctLower}`);
+				logger.info(`recovery missmatch uri for (username=${username}, host=${host}) from ${user.uri} to ${self.href}`);
 
-			// validate uri
-			const uri = new URL(self.href);
-			if (uri.hostname !== hostAscii) {
-				throw new Error(`Invalied uri`);
+				// validate uri
+				const uri = new URL(self.href);
+				if (uri.hostname !== hostAscii) {
+					throw new Error(`Invalied uri`);
+				}
+
+				await User.update({
+					usernameLower,
+					host: host
+				}, {
+					$set: {
+						uri: self.href
+					}
+				});
+			} else {
+				logger.info(`uri is fine: ${acctLower}`);
 			}
 
-			await User.update({
-				usernameLower,
-				host: host
-			}, {
-				$set: {
-					uri: self.href
-				}
-			});
-		} else {
-			logger.info(`uri is fine: ${acctLower}`);
+			await updatePerson(self.href);
+
+			logger.info(`return resynced remote user: ${acctLower}`);
+			return await User.findOne({ uri: self.href });
+		} catch (e) {
+			logger.warn(`resync failed: ${e.message || e}`);
 		}
-
-		await updatePerson(self.href);
-
-		logger.info(`return resynced remote user: ${acctLower}`);
-		return await User.findOne({ uri: self.href });
 	}
 
 	logger.info(`return existing remote user: ${acctLower}`);
