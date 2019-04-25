@@ -33,9 +33,9 @@
 		switchActiveTrack: ':alpha<0.4<@switchActive',
 		radioActive: '$primary',
 
-		face: '$secondary',
+		face: ':alpha<0.6<$secondary',
 		faceText: '$text',
-		faceHeader: ':lighten<5<$secondary',
+		faceHeader: ':lightenA<5<$secondary',
 		faceHeaderText: '$text',
 		faceDivider: 'rgba(0, 0, 0, 0.082)',
 		faceTextButton: ':alpha<0.7<$text',
@@ -71,7 +71,7 @@
 
 		modalBackdrop: 'rgba(0, 0, 0, 0.1)',
 
-		dateDividerBg: ':darken<2<$secondary',
+		dateDividerBg: ':darkenA<2<$secondary',
 		dateDividerFg: ':alpha<0.7<$text',
 
 		switchTrack: 'rgba(0, 0, 0, 0.25)',
@@ -116,7 +116,7 @@
 
 		chartCaption: ':alpha<0.6<$text',
 
-		announcementsBg: '#f3f9ff',
+		announcementsBg: ':lightenA<5<$secondary',
 		announcementsTitle: '#4078c0',
 		announcementsText: '#57616f',
 
@@ -160,7 +160,7 @@
 		formButtonHoverBorder: ':alpha<0.3<$primary',
 		formButtonActiveBg: ':alpha<0.12<$primary',
 
-		desktopHeaderBg: ':lighten<5<$secondary',
+		desktopHeaderBg: ':lightenA<5<$secondary',
 		desktopHeaderFg: '$text',
 		desktopHeaderHoverFg: ':darken<7<$text',
 		desktopHeaderSearchBg: 'rgba(0, 0, 0, 0.05)',
