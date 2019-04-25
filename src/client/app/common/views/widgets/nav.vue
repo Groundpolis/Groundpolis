@@ -21,7 +21,6 @@ export default define({
 		padding 16px
 		font-size 12px
 		color var(--text)
-		background var(--face)
 
 		a
 			color var(--text)
