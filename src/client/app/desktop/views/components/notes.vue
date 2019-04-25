@@ -187,6 +187,7 @@ export default Vue.extend({
 
 <style lang="stylus" scoped>
 .mk-notes
+	background var(--face)
 	overflow hidden
 
 	&.round
