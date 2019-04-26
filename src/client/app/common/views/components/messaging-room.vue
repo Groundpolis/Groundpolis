@@ -366,7 +366,7 @@ export default Vue.extend({
 		max-width 600px
 		margin 0 auto
 		padding 0
-		background var(--messagingRoomBg)
+		background var(--face)
 		background-clip content-box
 
 		> .new-message

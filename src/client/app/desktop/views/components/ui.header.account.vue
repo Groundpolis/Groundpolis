@@ -217,7 +217,7 @@ export default Vue.extend({
 				margin-left 8px
 
 	> .menu
-		$bgcolor = var(--face)
+		$bgcolor = var(--secondary)
 		display block
 		position absolute
 		top 56px

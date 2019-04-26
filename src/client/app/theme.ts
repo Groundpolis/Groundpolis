@@ -91,7 +91,9 @@ function compile(theme: Theme): { [key: string]: string } {
 
 			switch (func) {
 				case 'darken': return color.darken(arg);
+				case 'darkenA': return color.darken(arg).setAlpha(0.6);
 				case 'lighten': return color.lighten(arg);
+				case 'lightenA': return color.lighten(arg).setAlpha(0.6);
 				case 'alpha': return color.setAlpha(arg);
 			}
 		}

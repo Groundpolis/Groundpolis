@@ -546,7 +546,7 @@ export default Vue.extend({
 		> .body
 			height 100%
 			overflow hidden
-			background var(--face)
+			background var(--secondary)
 			border-radius 6px
 			box-shadow 0 2px 12px 0 rgba(#000, 0.5)
 

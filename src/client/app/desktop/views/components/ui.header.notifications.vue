@@ -94,7 +94,7 @@ export default Vue.extend({
 			animation blink 1s infinite
 
 	> .pop
-		$bgcolor = var(--face)
+		$bgcolor = var(--secondary)
 		display block
 		position absolute
 		top 56px
