@@ -111,7 +111,6 @@ export default Vue.extend({
 					color var(--faceTextButtonActive)
 
 	&.inNakedDeckColumn
-		background var(--face)
 
 		> header
 			margin 0

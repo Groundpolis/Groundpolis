@@ -161,6 +161,7 @@ export default Vue.extend({
 .mk-note-detail
 	overflow hidden
 	text-align left
+	background var(--face)
 
 	&.round
 		border-radius 6px
