@@ -92,7 +92,7 @@ export default Vue.extend({
 	z-index 2048
 	margin-top -8px
 	width 250px
-	background var(--face)
+	background var(--secondary)
 	background-clip content-box
 	border solid 1px rgba(#000, 0.1)
 	border-radius 4px
