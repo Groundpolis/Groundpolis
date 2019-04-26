@@ -2,6 +2,7 @@ import User from '../models/user';
 import Emoji from '../models/emoji';
 import { toUnicode, toASCII } from 'punycode';
 import config from '../config';
+import { isSelfHost } from './convert-host';
 
 type IREmoji = {
 	/**
@@ -63,7 +64,8 @@ export async function packAvatarEmojis(emojis: string[], ownerHost: string, fore
 			const match = foreign ? name.match(/^@([\w-]+)(?:@([\w.-]+))?$/) : name.match(/^@([\w-]+)$/);
 			if (!match) return null;
 
-			const queryHost = foreign ? match[2] || ownerHost || null : null;
+			let queryHost = foreign ? match[2] || ownerHost || null : null;
+			if (isSelfHost(queryHost)) queryHost = null;
 
 			return {
 				emoji: match[0],
@@ -110,7 +112,8 @@ export async function packCustomEmojis(emojis: string[], ownerHost: string, fore
 			const match = foreign ? name.match(/^(\w+)(?:@([\w.-]+))?$/) : name.match(/^(\w+)$/);
 			if (!match) return null;
 
-			const queryHost = foreign ? match[2] || ownerHost || null : null;
+			let queryHost = foreign ? match[2] || ownerHost || null : null;
+			if (isSelfHost(queryHost)) queryHost = null;
 
 			return {
 				emoji: match[0],
