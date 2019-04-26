@@ -115,7 +115,7 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 .prlncendiewqqkrevzeruhndoakghvtx
 	width 350px
-	background var(--face)
+	background var(--secondary)
 
 	> header
 		display flex
