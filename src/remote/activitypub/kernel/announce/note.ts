@@ -53,7 +53,7 @@ export default async function(resolver: Resolver, actor: IRemoteUser, activity: 
 	// skip unavailable
 	if (renote == null) {
 		logger.warn(`announce target is null: ${uri} => ${note.id || note}`);
-		return;
+		throw new Error(`announce target is null: ${uri} => ${note.id || note}`);
 	}
 
 	logger.info(`Creating the (Re)Note: ${uri}`);
