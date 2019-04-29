@@ -24,6 +24,7 @@ common:
   application-authorization: "Application authorizations"
   close: "Close"
   do-not-copy-paste: "Please do not enter or paste the code here. Account may be compromised."
+  go-first: "Go first page"
   load-more: "Read more"
   enter-password: "Enter your password"
   2fa: "Two-factor authentication"

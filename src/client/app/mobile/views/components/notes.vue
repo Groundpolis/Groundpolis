@@ -10,6 +10,10 @@
 		</template>
 	</div>
 
+	<header v-if="paged">
+		<button @click="reload">{{ $t('@.go-first') }}</button>
+	</header>
+
 	<!-- トランジションを有効にするとなぜかメモリリークする -->
 	<component :is="!$store.state.device.reduceMotion ? 'transition-group' : 'div'" name="mk-notes" class="transition" tag="div">
 		<template v-for="(note, i) in _notes">
@@ -52,6 +56,7 @@ export default Vue.extend({
 			queue: [],
 			fetching: true,
 			moreFetching: false,
+			paged: false,
 			inited: false,
 			cursor: null
 		};
@@ -101,6 +106,7 @@ export default Vue.extend({
 		},
 
 		reload() {
+			this.paged = false;
 			this.queue = [];
 			this.notes = [];
 			this.init();
@@ -127,7 +133,18 @@ export default Vue.extend({
 			if (this.cursor == null || this.moreFetching) return;
 			this.moreFetching = true;
 			this.makePromise(this.cursor).then(x => {
-				this.notes = this.notes.concat(x.notes);
+				// 改ページ
+				if (this.notes.length >= displayLimit * 2) {
+					this.paged = true;
+					this.notes = x.notes;
+					this.queue = [];
+					window.scrollTo({
+						top: 0,
+						behavior: 'smooth'
+					});
+				} else {
+					this.notes = this.notes.concat(x.notes);
+				}
 				this.cursor = x.cursor;
 				this.moreFetching = false;
 			}, e => {
@@ -136,6 +153,8 @@ export default Vue.extend({
 		},
 
 		prepend(note, silent = false) {
+			if (this.paged) return;
+
 			// 弾く
 			if (shouldMuteNote(this.$store.state.i, this.$store.state.settings, note)) return;
 
@@ -177,7 +196,7 @@ export default Vue.extend({
 				if (this.$el.offsetHeight == 0) return;
 
 				const current = window.scrollY + window.innerHeight;
-				if (current > document.body.offsetHeight - 8) this.more();
+				if (current > document.body.offsetHeight - 32) this.more();
 			}
 		}
 	}
@@ -242,9 +261,10 @@ export default Vue.extend({
 		text-align center
 		color var(--text)
 
-	> footer
+	> header, footer
 		text-align center
 		border-top solid var(--lineWidth) var(--faceDivider)
+		border-bottom solid var(--lineWidth) var(--faceDivider)
 
 		&:empty
 			display none
