@@ -145,7 +145,7 @@ export default Vue.extend({
 					this.queue = [];
 					window.scrollTo({
 						top: 0,
-						behavior: 'smooth'
+						behavior: 'instant'
 					});
 				} else {
 					this.notes = this.notes.concat(x.notes);
