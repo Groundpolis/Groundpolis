@@ -11,7 +11,7 @@
 	</div>
 
 	<header v-if="paged">
-		<button @click="reload">{{ $t('@.go-first') }}</button>
+		<button @click="reload">{{ $t('@.newest') }}</button>
 	</header>
 
 	<!-- トランジションを有効にするとなぜかメモリリークする -->
@@ -27,8 +27,9 @@
 
 	<footer v-if="cursor != null">
 		<button @click="more" :disabled="moreFetching" :style="{ cursor: moreFetching ? 'wait' : 'pointer' }">
-			<template v-if="!moreFetching">{{ $t('@.load-more') }}</template>
 			<template v-if="moreFetching"><fa icon="spinner" pulse fixed-width/></template>
+			<template v-else-if="hasNextPage">{{ $t('@.next-page') }}</template>
+			<template v-else>{{ $t('@.load-more') }}</template>
 		</button>
 	</footer>
 </div>
@@ -71,7 +72,11 @@ export default Vue.extend({
 				note._datetext = this.$t('@.month-and-day').replace('{month}', month.toString()).replace('{day}', date.toString());
 				return note;
 			});
-		}
+		},
+
+		hasNextPage(): boolean {
+			return this.cursor != null && this.notes.length >= displayLimit * 2;
+		},
 	},
 
 	watch: {
@@ -134,7 +139,7 @@ export default Vue.extend({
 			this.moreFetching = true;
 			this.makePromise(this.cursor).then(x => {
 				// 改ページ
-				if (this.notes.length >= displayLimit * 2) {
+				if (this.hasNextPage) {
 					this.paged = true;
 					this.notes = x.notes;
 					this.queue = [];
@@ -190,13 +195,14 @@ export default Vue.extend({
 			}
 
 			if (this.$store.state.settings.fetchOnScroll !== false) {
+				if (this.hasNextPage) return;
 				// 親要素が display none だったら弾く
 				// https://github.com/syuilo/misskey/issues/1569
 				// http://d.hatena.ne.jp/favril/20091105/1257403319
 				if (this.$el.offsetHeight == 0) return;
 
 				const current = window.scrollY + window.innerHeight;
-				if (current > document.body.offsetHeight - 32) this.more();
+				if (current > document.body.offsetHeight - 8) this.more();
 			}
 		}
 	}
