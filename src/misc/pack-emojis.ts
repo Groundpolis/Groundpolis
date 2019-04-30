@@ -79,15 +79,12 @@ export async function packAvatarEmojis(emojis: string[], ownerHost: string, fore
 	let avatarEmojis = await Promise.all(avatarKeys.map(async key =>  {
 		const user = await User.findOne({
 			usernameLower: key.usernameLower,
-			host: key.host,
-			avatarUrl: { $ne: null }
+			host: key.host
 		});
-
-		if (user == null) return null;
 
 		const profileEmoji = {
 			name: key.emoji,
-			url: user.avatarUrl,
+			url: (user && user.avatarUrl) ? user.avatarUrl : `${config.driveUrl}/default-avatar.jpg`,
 			host: key.host,
 			resolvable: key.resolvable,
 		} as IREmoji;
