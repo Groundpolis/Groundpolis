@@ -70,6 +70,22 @@
 		</div>
 	</div>
 
+	<div class="notification highlight" v-if="notification.type == 'highlight'">
+		<mk-avatar class="avatar" :user="notification.user"/>
+		<div>
+			<header>
+				<fa :icon="faLightbulb"/>
+				<router-link :to="notification.user | userPage">
+					<mk-user-name :user="notification.user"/>
+				</router-link>
+				<mk-time :time="notification.createdAt"/>
+			</header>
+			<router-link class="note-ref" :to="notification.note | notePage" :title="getNoteSummary(notification.note)">
+				<mfm :text="getNoteSummary(notification.note)" :should-break="false" :plain-text="true" :custom-emojis="notification.note.emojis"/>
+			</router-link>
+		</div>
+	</div>
+
 	<template v-if="notification.type == 'quote'">
 		<mk-note :note="notification.note" @update:note="onNoteUpdated"/>
 	</template>
@@ -87,12 +103,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import getNoteSummary from '../../../../../misc/get-note-summary';
+import { faLightbulb } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
 	props: ['notification'],
 	data() {
 		return {
-			getNoteSummary
+			getNoteSummary,
+			faLightbulb,
 		};
 	},
 	methods: {
@@ -176,4 +194,7 @@ export default Vue.extend({
 			> div > header [data-icon]
 				color #888
 
+		&.reply, &.mention, &.highlight
+			> div > header [data-icon]
+				color #555
 </style>

@@ -123,6 +123,20 @@
 							</router-link>
 						</div>
 					</template>
+
+					<template v-if="notification.type == 'highlight'">
+						<mk-avatar class="avatar" :user="notification.note.user"/>
+						<div class="text">
+							<p><fa :icon="faLightbulb"/>
+								<router-link :to="notification.note.user | userPage" v-user-preview="notification.note.userId">
+									<mk-user-name :user="notification.note.user"/>
+								</router-link>
+							</p>
+							<a class="note-preview" :href="notification.note | notePage" :title="getNoteSummary(notification.note)">
+								<mfm :text="getNoteSummary(notification.note)" :should-break="false" :plain-text="true" :custom-emojis="notification.note.emojis"/>
+							</a>
+						</div>
+					</template>
 				</div>
 
 				<p class="date" v-if="i != notifications.length - 1 && notification._date != _notifications[i + 1]._date" :key="notification.id + '-time'">
@@ -145,6 +159,7 @@ import i18n from '../../../i18n';
 import getNoteSummary from '../../../../../misc/get-note-summary';
 import getNotificationSummary from '../../../../../misc/get-notification-summary';
 import * as config from '../../../config';
+import { faLightbulb } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
 	i18n: i18n(),
@@ -155,7 +170,8 @@ export default Vue.extend({
 			notifications: [],
 			moreNotifications: false,
 			connection: null,
-			getNoteSummary
+			getNoteSummary,
+			faLightbulb,
 		};
 	},
 
@@ -334,7 +350,7 @@ export default Vue.extend({
 					.text p [data-icon]
 						color #888
 
-				&.reply, &.mention
+				&.reply, &.mention, &.highlight
 					.text p [data-icon]
 						color #555
 

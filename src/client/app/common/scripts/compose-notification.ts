@@ -64,6 +64,13 @@ export default function(type, data): Notification {
 						icon: data.user.avatarUrl
 					};
 
+				case 'highlight':
+					return {
+						title: `${getUserName(data.user)}:`,
+						body: getNoteSummary(data),
+						icon: data.user.avatarUrl
+					};
+
 				default:
 					return null;
 			}

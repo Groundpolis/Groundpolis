@@ -183,6 +183,10 @@
 		<x-mute-and-block/>
 	</template>
 
+	<template v-if="page == null || page == 'extendedNotification'">
+		<x-extended-notification/>
+	</template>
+
 	<!--
 	<template v-if="page == null || page == 'apps'">
 		<ui-card>
@@ -264,6 +268,7 @@ import XIntegration from './integration.vue';
 import XTheme from './theme.vue';
 import XDrive from './drive.vue';
 import XMuteAndBlock from './mute-and-block.vue';
+import XExtendedNotification from './extended-notification.vue';
 import XPassword from './password.vue';
 import XProfile from './profile.vue';
 import XApi from './api.vue';
@@ -284,6 +289,7 @@ export default Vue.extend({
 		XTheme,
 		XDrive,
 		XMuteAndBlock,
+		XExtendedNotification,
 		XPassword,
 		XProfile,
 		XApi,
