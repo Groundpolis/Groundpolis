@@ -183,7 +183,7 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 	}
 
 	// word検索はfrom指定時のみ
-	if (words.length > 0 && from == null) {
+	if (words.length > 0 && from == null && typeof host == 'undefined') {
 		return [];
 	}
 

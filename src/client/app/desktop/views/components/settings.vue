@@ -8,6 +8,7 @@
 		<p :class="{ active: page == 'drive' }" @mousedown="page = 'drive'"><fa icon="cloud" fixed-width/>{{ $t('@.drive') }}</p>
 		<p :class="{ active: page == 'hashtags' }" @mousedown="page = 'hashtags'"><fa icon="hashtag" fixed-width/>{{ $t('@._settings.tags') }}</p>
 		<p :class="{ active: page == 'muteAndBlock' }" @mousedown="page = 'muteAndBlock'"><fa icon="ban" fixed-width/>{{ $t('@._settings.mute-and-block') }}</p>
+		<p :class="{ active: page == 'extendedNotification' }" @mousedown="page = 'extendedNotification'"><fa :icon="faLightbulb" fixed-width/>{{ $t('@._settings.extended-notification') }}</p>
 		<p :class="{ active: page == 'apps' }" @mousedown="page = 'apps'"><fa icon="puzzle-piece" fixed-width/>{{ $t('@._settings.apps') }}</p>
 		<p :class="{ active: page == 'security' }" @mousedown="page = 'security'"><fa icon="unlock-alt" fixed-width/>{{ $t('@._settings.security') }}</p>
 		<p :class="{ active: page == 'api' }" @mousedown="page = 'api'"><fa icon="key" fixed-width/>API</p>
@@ -23,6 +24,7 @@
 import Vue from 'vue';
 import i18n from '../../../i18n';
 import XSettings from '../../../common/views/components/settings/settings.vue';
+import { faLightbulb } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
 	i18n: i18n(),
@@ -43,6 +45,7 @@ export default Vue.extend({
 	data() {
 		return {
 			page: this.initialPage || 'profile',
+			faLightbulb,
 		};
 	},
 });

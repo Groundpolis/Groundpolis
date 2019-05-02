@@ -43,11 +43,17 @@ export default async function(resolver: Resolver, actor: IRemoteUser, activity: 
 	} catch (e) {
 		// 対象が4xxならスキップ
 		if (e.statusCode >= 400 && e.statusCode < 500) {
-			logger.warn(`Ignored announce target ${note.inReplyTo} - ${e.statusCode}`);
+			logger.warn(`Ignored announce target: ${uri} => ${note.id || note} - ${e.statusCode}`);
 			return;
 		}
-		logger.warn(`Error in announce target ${note.inReplyTo} - ${e.statusCode || e}`);
+		logger.warn(`Error in announce target: ${uri} => ${note.id || note} - ${e.statusCode || e}`);
 		throw e;
+	}
+
+	// skip unavailable
+	if (renote == null) {
+		logger.warn(`announce target is null: ${uri} => ${note.id || note}`);
+		throw new Error(`announce target is null: ${uri} => ${note.id || note}`);
 	}
 
 	logger.info(`Creating the (Re)Note: ${uri}`);

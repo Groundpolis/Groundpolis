@@ -207,7 +207,7 @@ export default Vue.extend({
 		max-width 480px
 		width calc(100% - 32px)
 		text-align center
-		background var(--face)
+		background var(--secondary)
 		border-radius 8px
 		color var(--faceText)
 		opacity 0

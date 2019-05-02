@@ -10,6 +10,10 @@
 		</template>
 	</div>
 
+	<header v-if="paged">
+		<button @click="reload">{{ $t('@.newest') }}</button>
+	</header>
+
 	<!-- トランジションを有効にするとなぜかメモリリークする -->
 	<component :is="!$store.state.device.reduceMotion ? 'transition-group' : 'div'" name="mk-notes" class="transition" tag="div">
 		<template v-for="(note, i) in _notes">
@@ -23,8 +27,9 @@
 
 	<footer v-if="cursor != null">
 		<button @click="more" :disabled="moreFetching" :style="{ cursor: moreFetching ? 'wait' : 'pointer' }">
-			<template v-if="!moreFetching">{{ $t('@.load-more') }}</template>
 			<template v-if="moreFetching"><fa icon="spinner" pulse fixed-width/></template>
+			<template v-else-if="hasNextPage">{{ $t('@.next-page') }}</template>
+			<template v-else>{{ $t('@.load-more') }}</template>
 		</button>
 	</footer>
 </div>
@@ -52,6 +57,7 @@ export default Vue.extend({
 			queue: [],
 			fetching: true,
 			moreFetching: false,
+			paged: false,
 			inited: false,
 			cursor: null
 		};
@@ -66,7 +72,11 @@ export default Vue.extend({
 				note._datetext = this.$t('@.month-and-day').replace('{month}', month.toString()).replace('{day}', date.toString());
 				return note;
 			});
-		}
+		},
+
+		hasNextPage(): boolean {
+			return this.cursor != null && this.notes.length >= displayLimit * 2;
+		},
 	},
 
 	watch: {
@@ -101,6 +111,7 @@ export default Vue.extend({
 		},
 
 		reload() {
+			this.paged = false;
 			this.queue = [];
 			this.notes = [];
 			this.init();
@@ -127,7 +138,17 @@ export default Vue.extend({
 			if (this.cursor == null || this.moreFetching) return;
 			this.moreFetching = true;
 			this.makePromise(this.cursor).then(x => {
-				this.notes = this.notes.concat(x.notes);
+				// 改ページ
+				if (this.hasNextPage) {
+					this.paged = true;
+					this.notes = x.notes;
+					this.queue = [];
+					window.scrollTo({
+						top: 0
+					});
+				} else {
+					this.notes = this.notes.concat(x.notes);
+				}
 				this.cursor = x.cursor;
 				this.moreFetching = false;
 			}, e => {
@@ -136,6 +157,8 @@ export default Vue.extend({
 		},
 
 		prepend(note, silent = false) {
+			if (this.paged) return;
+
 			// 弾く
 			if (shouldMuteNote(this.$store.state.i, this.$store.state.settings, note)) return;
 
@@ -171,6 +194,7 @@ export default Vue.extend({
 			}
 
 			if (this.$store.state.settings.fetchOnScroll !== false) {
+				if (this.hasNextPage) return;
 				// 親要素が display none だったら弾く
 				// https://github.com/syuilo/misskey/issues/1569
 				// http://d.hatena.ne.jp/favril/20091105/1257403319
@@ -242,9 +266,10 @@ export default Vue.extend({
 		text-align center
 		color var(--text)
 
-	> footer
+	> header, footer
 		text-align center
 		border-top solid var(--lineWidth) var(--faceDivider)
+		border-bottom solid var(--lineWidth) var(--faceDivider)
 
 		&:empty
 			display none

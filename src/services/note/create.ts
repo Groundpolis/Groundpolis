@@ -37,7 +37,7 @@ import extractEmojis from '../../misc/extract-emojis';
 import extractHashtags from '../../misc/extract-hashtags';
 import { genId } from '../../misc/gen-id';
 
-type NotificationType = 'reply' | 'renote' | 'quote' | 'mention';
+type NotificationType = 'reply' | 'renote' | 'quote' | 'mention' | 'highlight';
 
 class NotificationManager {
 	private notifier: IUser;
@@ -57,11 +57,11 @@ class NotificationManager {
 		// 自分自身へは通知しない
 		if (this.notifier._id.equals(notifiee)) return;
 
-		const exist = this.queue.find(x => x.target.equals(notifiee));
+		const exist = this.queue.find(x => x.target.equals(notifiee) && x.reason == 'mention');
 
 		if (exist) {
 			// 「メンションされているかつ返信されている」場合は、メンションとしての通知ではなく返信としての通知にする
-			if (reason != 'mention') {
+			if (reason == 'reply') {
 				exist.reason = reason;
 			}
 		} else {
@@ -313,6 +313,11 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 		deliverNoteToMentionedRemoteUsers(mentionedUsers, user, noteActivity);
 	}
 
+	// Extended notification
+	if (note.visibility === 'public' || note.visibility === 'home') {
+		nmRelatedPromises.push(notifyExtended(note.text, nm));
+	}
+
 	// If has in reply to note
 	if (data.reply) {
 		// Fetch watchers
@@ -517,8 +522,16 @@ async function insertNote(user: IUser, data: Option, tags: string[], emojis: str
 	} catch (e) {
 		// duplicate key error
 		if (e.code === 11000) {
-			return null;
+			if (insert.uri != null) {
+				const n = await Note.findOne({ uri: insert.uri });
+				if (n) {
+					console.warn(`duplicated insert: ${n.uri}`);
+					return n;
+				}
+			}
 		}
+
+		console.error(e);
 
 		throw 'something happened';
 	}
@@ -564,6 +577,31 @@ async function notifyToWatchersOfReplyee(reply: INote, user: IUser, nm: Notifica
 
 	for (const watcher of watchers) {
 		nm.push(watcher.userId, 'reply');
+	}
+}
+
+async function notifyExtended(text: string, nm: NotificationManager) {
+	if (!text) return;
+
+	const us = await User.find({
+		host: null,
+		'clientSettings.highlightedWords': { $exists: true }
+	});
+
+	for (const u of us) {
+		if (!isLocalUser(u)) continue;
+
+		try {
+			const words: string[] = u.clientSettings.highlightedWords.filter((q: string) => q != null && q.length > 0);
+
+			const match = words.some(word => text.toLowerCase().includes(word.toLowerCase()));
+
+			if (match) {
+				nm.push(u._id, 'highlight');
+			}
+		} catch (e) {
+			console.error(e);
+		}
 	}
 }
 

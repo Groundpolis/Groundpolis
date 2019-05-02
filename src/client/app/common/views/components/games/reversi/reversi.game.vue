@@ -3,7 +3,7 @@
 	<button class="go-index" v-if="selfNav" @click="goIndex"><fa icon="arrow-left"/></button>
 	<header><b><router-link :to="blackUser | userPage"><mk-user-name :user="blackUser"/></router-link></b>({{ $t('@.reversi.black') }}) vs <b><router-link :to="whiteUser | userPage"><mk-user-name :user="whiteUser"/></router-link></b>({{ $t('@.reversi.white') }})</header>
 
-	<div style="overflow: hidden; line-height: 28px;">
+	<div style="overflow: hidden; line-height: 16px;">
 		<p class="turn" v-if="!iAmPlayer && !game.isEnded">
 			<mfm :key="'turn:' + $options.filters.userName(turnUser)" :text="$t('@.reversi.turn-of', { name: $options.filters.userName(turnUser) })" :should-break="false" :plain-text="true" :custom-emojis="turnUser.emojis"/>
 			<mk-ellipsis/>
