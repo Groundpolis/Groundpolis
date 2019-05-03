@@ -114,13 +114,22 @@ export const mfmLanguage = P.createLanguage({
 		return P((input, i) => {
 			const text = input.substr(i);
 			const match = text.match(/^<spin(\s[a-z]+?)?>(.+?)<\/spin>/i);
-			if (!match) return P.makeFailure(i, 'not a spin');
-			return P.makeSuccess(i + match[0].length, {
-				content: match[2], attr: match[1] ? match[1].trim() : null
-			});
+			const matchC = text.match(/^\[\[\[([\s\S]+?)\]\]\]/i);
+
+			if (match) {
+				return P.makeSuccess(i + match[0].length, {
+					content: match[2], attr: match[1] ? match[1].trim() : null
+				});
+			} else if (matchC) {
+				return P.makeSuccess(i + matchC[0].length, {
+					content: matchC[1], attr: null
+				});
+			} else {
+				return P.makeFailure(i, 'not a spin');
+			}
 		}).map(x => createTree('spin', r.inline.atLeast(1).tryParse(x.content), { attr: x.attr }));
 	},
-	jump: r => P.regexp(/<jump>(.+?)<\/jump>/, 1).map(x => createTree('jump', r.inline.atLeast(1).tryParse(x), {})),
+	jump: r => P.alt(P.regexp(/<jump>(.+?)<\/jump>/, 1), P.regexp(/\{\{\{([\s\S]+?)\}\}\}/, 1)).map(x => createTree('jump', r.inline.atLeast(1).tryParse(x), {})),
 	flip: r => P.regexp(/<flip>(.+?)<\/flip>/, 1).map(x => createTree('flip', r.inline.atLeast(1).tryParse(x), {})),
 	center: r => r.startOfLine.then(P.regexp(/<center>([\s\S]+?)<\/center>/, 1).map(x => createTree('center', r.inline.atLeast(1).tryParse(x), {}))),
 	inlineCode: () => P.regexp(/`([^´\n]+?)`/, 1).map(x => createLeaf('inlineCode', { code: x })),
