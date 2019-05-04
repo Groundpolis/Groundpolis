@@ -5,6 +5,7 @@
 			:title="category.text"
 			@click="go(category)"
 			:class="{ active: category.isActive }"
+			:key="category.text"
 		>
 			<fa :icon="category.icon" fixed-width/>
 		</button>
@@ -24,6 +25,7 @@
 			<button v-for="emoji in customEmojis"
 				:title="emoji.name"
 				@click="chosen(`:${emoji.name}:`)"
+				:key="emoji.name"
 			>
 				<img :src="emoji.url" :alt="emoji.name"/>
 			</button>
@@ -95,7 +97,7 @@ export default Vue.extend({
 	},
 
 	created() {
-		this.customEmojis = (this.$root.getMetaSync() || { emojis: [] }).emojis || [];
+		this.customEmojis = (this.$root.getMetaSync() || { emojis: [] }).emojis.sort((a: any, b: any) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0) || [];
 	},
 
 	methods: {
