@@ -16,7 +16,7 @@ for my $line (@lines) {
 	if ($line =~ /^(\s*"version"\s*:\s*")(\d+[.]\d+[.]\d+)(-\w+)?(.*)$/) {
 		print "old: $line";
 
-		my $postfix = strftime('l%y%m%d%H%M%S', localtime(time));
+		my $postfix = strftime('m%y%m%d%H%M%S', localtime(time));
 		$newver = "$2-$postfix";
 		$line = "$1$2-$postfix$4\n";
 
