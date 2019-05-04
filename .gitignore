@@ -17,6 +17,5 @@ api-docs.json
 /mongo
 /elasticsearch
 *.code-workspace
-yarn.lock
 .DS_Store
 /files
