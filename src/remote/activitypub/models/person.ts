@@ -24,6 +24,7 @@ import { IIdentifier } from './identifier';
 import { apLogger } from '../logger';
 import { INote } from '../../../models/note';
 import { updateHashtag } from '../../../services/update-hashtag';
+import FollowRequest from '../../../models/follow-request';
 const logger = apLogger;
 
 /**
@@ -529,14 +530,20 @@ export async function fetchOutbox(userId: mongo.ObjectID, force = false) {
 	}
 
 	if (!force) {
-		// フォロワーがいない場合はfetchしない
+		// フォロワーもリクエストもない場合はfetchしない
 		const followerExists = await Following.findOne({
 			followeeId: userId
 		});
 
-		if (followerExists === null) {
-			logger.debug(`no follower: ${userId}`);
-			return;
+		if (followerExists == null) {
+			const requestExists = await FollowRequest.findOne({
+				followeeId: userId
+			});
+
+			if (requestExists == null) {
+				logger.debug(`no follower/request: ${userId}`);
+				return;
+			}
 		}
 	}
 
