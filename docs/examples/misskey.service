@@ -8,7 +8,6 @@ User=misskey
 ExecStart=/usr/bin/npm start
 WorkingDirectory=/home/misskey/misskey
 Environment="NODE_ENV=production"
-Environment="UV_THREADPOOL_SIZE=32"
 ExecReload=/bin/kill -SIGUSR1 $MAINPID
 TimeoutSec=60
 StandardOutput=syslog
