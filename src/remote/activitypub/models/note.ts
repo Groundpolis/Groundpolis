@@ -21,8 +21,11 @@ import { IDriveFile } from '../../../models/drive-file';
 import { deliverQuestionUpdate } from '../../../services/note/polls/update';
 import Instance from '../../../models/instance';
 import { extractDbHost, extractApHost } from '../../../misc/convert-host';
+import redis from '../../../db/redis';
+import { promisify } from 'util';
 
 const logger = apLogger;
+const lock = promisify(require('redis-lock')(redis));
 
 export function validateNote(object: any, uri: string) {
 	const expectHost = extractApHost(uri);
@@ -254,18 +257,26 @@ export async function resolveNote(value: string | IObject, resolver?: Resolver):
 	const instance = await Instance.findOne({ host: extractDbHost(uri) });
 	if (instance && instance.isBlocked) throw { statusCode: 451 };
 
-	//#region このサーバーに既に登録されていたらそれを返す
-	const exist = await fetchNote(uri);
+	const key = `AP-Create:${uri}`;
 
-	if (exist) {
-		return exist;
+	const unlock = await lock(key, 30 * 1000);
+
+	try {
+		//#region このサーバーに既に登録されていたらそれを返す
+		const exist = await fetchNote(uri);
+
+		if (exist) {
+			return exist;
+		}
+		//#endregion
+
+		// リモートサーバーからフェッチしてきて登録
+		// ここでuriの代わりに添付されてきたNote Objectが指定されていると、サーバーフェッチを経ずにノートが生成されるが
+		// 添付されてきたNote Objectは偽装されている可能性があるため、常にuriを指定してサーバーフェッチを行う。
+		return await createNote(uri, resolver, true);
+	} finally {
+		unlock();
 	}
-	//#endregion
-
-	// リモートサーバーからフェッチしてきて登録
-	// ここでuriの代わりに添付されてきたNote Objectが指定されていると、サーバーフェッチを経ずにノートが生成されるが
-	// 添付されてきたNote Objectは偽装されている可能性があるため、常にuriを指定してサーバーフェッチを行う。
-	return await createNote(uri, resolver, true);
 }
 
 export async function extractEmojis(tags: ITag[], host_: string) {
