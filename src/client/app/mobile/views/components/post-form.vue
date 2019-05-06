@@ -369,7 +369,7 @@ export default Vue.extend({
 		margin 32px auto
 
 	> .form
-		background var(--face)
+		background var(--bg)
 		border-radius 8px
 		box-shadow 0 0 2px rgba(#000, 0.1)
 

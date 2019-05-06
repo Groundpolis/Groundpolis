@@ -240,7 +240,7 @@ export default Vue.extend({
 		font-size 1.5em
 
 	.v--modal-box
-		background var(--face)
+		background var(--bg)
 		color var(--text)
 
 		.formHeader
