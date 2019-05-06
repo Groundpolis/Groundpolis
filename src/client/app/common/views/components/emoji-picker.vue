@@ -97,7 +97,8 @@ export default Vue.extend({
 	},
 
 	created() {
-		this.customEmojis = (this.$root.getMetaSync() || { emojis: [] }).emojis.sort((a: any, b: any) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0) || [];
+		this.customEmojis = (this.$root.getMetaSync() || { emojis: [] }).emojis || [];
+		this.customEmojis = this.customEmojis.sort((a: any, b: any) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0);
 	},
 
 	methods: {

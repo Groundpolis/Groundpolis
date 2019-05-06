@@ -169,7 +169,7 @@ export function createImportUserListsJob(user: ILocalUser, fileId: IDriveFile['_
 export default function() {
 	if (!program.onlyServer) {
 		deliverQueue.process(config.deliverJobConcurrency || 32, processDeliver);
-		inboxQueue.process(config.inboxJobConcurrency || 32, processInbox);
+		inboxQueue.process(config.inboxJobConcurrency || 8, processInbox);
 		processDb(dbQueue);
 	}
 }

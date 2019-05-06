@@ -291,7 +291,7 @@ export default define({
 			color var(--primary)
 			position absolute
 			top 0
-			right 2px
+			right 0.2em
 			transform scale(.8)
 
 		> .post

@@ -16,7 +16,7 @@ export default function() {
 	const workers = program.disableClustering ? 1 : Math.min(config.clusterLimit || Infinity, os.cpus().length);
 
 	const deliverConcurrencyPerWorker = config.deliverJobConcurrency || 32;
-	const inboxConcurrencyPerWorker = config.inboxJobConcurrency || 32;
+	const inboxConcurrencyPerWorker = config.inboxJobConcurrency || 8;
 
 	const log = new Deque<any>();
 

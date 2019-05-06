@@ -35,6 +35,7 @@
 					<span v-if="visibility === 'home'"><fa icon="home"/></span>
 					<span v-if="visibility === 'followers'"><fa icon="unlock"/></span>
 					<span v-if="visibility === 'specified'"><fa icon="envelope"/></span>
+					<span v-if="localOnly" class="localOnly"><fa icon="heart"/></span>
 				</button>
 			</footer>
 			<input ref="file" class="file" type="file" multiple="multiple" @change="onChangeFile"/>
@@ -368,7 +369,7 @@ export default Vue.extend({
 		margin 32px auto
 
 	> .form
-		background var(--face)
+		background var(--bg)
 		border-radius 8px
 		box-shadow 0 0 2px rgba(#000, 0.1)
 
@@ -474,6 +475,13 @@ export default Vue.extend({
 					border none
 					border-radius 0
 					box-shadow none
+
+				> .visibility > .localOnly
+					color var(--primary)
+					position absolute
+					top 0
+					right 0.2em
+					transform scale(.8)
 
 	> .hashtags
 		margin 8px
