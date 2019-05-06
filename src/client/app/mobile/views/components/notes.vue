@@ -75,7 +75,7 @@ export default Vue.extend({
 		},
 
 		hasNextPage(): boolean {
-			return this.cursor != null && this.notes.length >= displayLimit * 2;
+			return this.cursor != null && this.notes.length >= displayLimit * 5;
 		},
 	},
 
