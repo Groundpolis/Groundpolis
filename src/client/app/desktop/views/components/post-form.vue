@@ -694,21 +694,14 @@ export default Vue.extend({
 		width 40px
 		height 40px
 		font-size 1em
-		color var(--desktopPostFormTransparentButtonFg)
+		color var(--text)
 		background transparent
 		outline none
 		border solid 1px transparent
 		border-radius 4px
 
 		&:hover
-			background transparent
-			border-color var(--primaryAlpha03)
-
-		&:active
-			color var(--primaryAlpha06)
-			background linear-gradient(to bottom, var(--desktopPostFormTransparentButtonActiveGradientStart) 0%, var(--desktopPostFormTransparentButtonActiveGradientEnd) 100%)
-			border-color var(--primaryAlpha05)
-			box-shadow 0 2px 4px rgba(#000, 0.15) inset
+				color var(--textHighlighted)
 
 		&:focus
 			&:after
