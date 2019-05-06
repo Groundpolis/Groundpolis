@@ -10,7 +10,7 @@
 		</div>
 		<div @click="choose('home')" :class="{ active: v == 'home' }">
 			<div><fa icon="home"/></div>
-			<div>
+		<div>
 				<span>{{ $t('home') }}</span>
 				<span>{{ $t('home-desc') }}</span>
 			</div>
@@ -30,20 +30,20 @@
 			</div>
 		</div>
 		<div @click="choose('local-public')" :class="{ active: v == 'local-public' }">
-			<div><fa icon="globe"/></div>
+			<div><div><fa icon="globe"/><fa class="localOnly" icon="heart"/></div></div>
 			<div>
 				<span>{{ $t('local-public') }}</span>
 				<span>{{ $t('local-public-desc') }}</span>
 			</div>
 		</div>
 		<div @click="choose('local-home')" :class="{ active: v == 'local-home' }">
-			<div><fa icon="home"/></div>
+			<div><div><fa icon="home"/><fa class="localOnly" icon="heart"/></div></div>
 			<div>
 				<span>{{ $t('local-home') }}</span>
 			</div>
 		</div>
 		<div @click="choose('local-followers')" :class="{ active: v == 'local-followers' }">
-			<div><fa icon="unlock"/></div>
+			<div><div><fa icon="unlock"/><fa class="localOnly" icon="heart"/></div></div>
 			<div>
 				<span>{{ $t('local-followers') }}</span>
 			</div>
@@ -219,6 +219,13 @@ export default Vue.extend({
 				align-items center
 				margin-right 10px
 				width 16px
+
+				>>> .localOnly
+					color var(--primary)
+					position absolute
+					top -0.2em
+					right -0.5em
+					transform scale(0.8)
 
 			> *:last-child
 				flex 1 1 auto
