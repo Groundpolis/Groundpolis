@@ -700,9 +700,11 @@ export default Vue.extend({
 		outline none
 		border solid 1px transparent
 		border-radius 4px
+		opacity 0.7
 
 		&:hover
-				color var(--textHighlighted)
+			color var(--textHighlighted)
+			opacity 1.0
 
 		&:focus
 			&:after
