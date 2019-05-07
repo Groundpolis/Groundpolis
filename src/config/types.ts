@@ -45,6 +45,8 @@ export type Source = {
 
 	clusterLimit?: number;
 
+	outgoingAddressFamily?: 'ipv4' | 'ipv6' | 'dual';
+
 	deliverJobConcurrency?: number;
 	inboxJobConcurrency?: number;
 };
