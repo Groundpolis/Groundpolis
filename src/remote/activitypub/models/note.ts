@@ -21,11 +21,9 @@ import { IDriveFile } from '../../../models/drive-file';
 import { deliverQuestionUpdate } from '../../../services/note/polls/update';
 import Instance from '../../../models/instance';
 import { extractDbHost, extractApHost } from '../../../misc/convert-host';
-import redis from '../../../db/redis';
-import { promisify } from 'util';
+import { getApLock } from '../../../misc/app-lock';
 
 const logger = apLogger;
-const lock = promisify(require('redis-lock')(redis));
 
 export function validateNote(object: any, uri: string) {
 	const expectHost = extractApHost(uri);
@@ -257,9 +255,7 @@ export async function resolveNote(value: string | IObject, resolver?: Resolver):
 	const instance = await Instance.findOne({ host: extractDbHost(uri) });
 	if (instance && instance.isBlocked) throw { statusCode: 451 };
 
-	const key = `AP-Create:${uri}`;
-
-	const unlock = await lock(key, 30 * 1000);
+	const unlock = await getApLock(uri);
 
 	try {
 		//#region このサーバーに既に登録されていたらそれを返す
