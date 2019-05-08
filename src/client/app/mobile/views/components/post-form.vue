@@ -475,6 +475,7 @@ export default Vue.extend({
 					border none
 					border-radius 0
 					box-shadow none
+					opacity 0.7
 
 				> .visibility > .localOnly
 					color var(--primary)

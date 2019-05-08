@@ -1,7 +1,7 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "10.102.1-l190506104154",
+	"version": "10.102.2-l190507210657",
 	"codename": "nighthike",
 	"repository": {
 		"type": "git",
@@ -10,7 +10,7 @@
 	"main": "./index.js",
 	"private": true,
 	"scripts": {
-		"start": "UV_THREADPOOL_SIZE=32 node ./index.js",
+		"start": "node ./index.js",
 		"debug": "DEBUG=misskey:* node ./index.js",
 		"build": "webpack && gulp build",
 		"webpack": "webpack",
@@ -195,6 +195,7 @@
 		"recaptcha-promise": "0.1.3",
 		"reconnecting-websocket": "4.1.10",
 		"redis": "2.8.0",
+		"redis-lock": "0.1.4",
 		"rename": "1.0.4",
 		"request": "2.88.0",
 		"request-promise-native": "1.0.7",

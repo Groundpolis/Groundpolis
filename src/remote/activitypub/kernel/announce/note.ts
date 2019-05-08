@@ -7,6 +7,7 @@ import { resolvePerson } from '../../models/person';
 import { apLogger } from '../../logger';
 import { extractDbHost } from '../../../../misc/convert-host';
 import Instance from '../../../../models/instance';
+import { getApLock } from '../../../../misc/app-lock';
 
 const logger = apLogger;
 
@@ -30,50 +31,56 @@ export default async function(resolver: Resolver, actor: IRemoteUser, activity: 
 	const instance = await Instance.findOne({ host: extractDbHost(uri) });
 	if (instance && instance.isBlocked) return;
 
-	// 既に同じURIを持つものが登録されていないかチェック
-	const exist = await fetchNote(uri);
-	if (exist) {
-		return;
-	}
+	const unlock = await getApLock(uri);
 
-	// Announce対象をresolve
-	let renote;
 	try {
-		renote = await resolveNote(note);
-	} catch (e) {
-		// 対象が4xxならスキップ
-		if (e.statusCode >= 400 && e.statusCode < 500) {
-			logger.warn(`Ignored announce target: ${uri} => ${note.id || note} - ${e.statusCode}`);
+		// 既に同じURIを持つものが登録されていないかチェック
+		const exist = await fetchNote(uri);
+		if (exist) {
 			return;
 		}
-		logger.warn(`Error in announce target: ${uri} => ${note.id || note} - ${e.statusCode || e}`);
-		throw e;
+
+		// Announce対象をresolve
+		let renote;
+		try {
+			renote = await resolveNote(note);
+		} catch (e) {
+			// 対象が4xxならスキップ
+			if (e.statusCode >= 400 && e.statusCode < 500) {
+				logger.warn(`Ignored announce target: ${uri} => ${note.id || note} - ${e.statusCode}`);
+				return;
+			}
+			logger.warn(`Error in announce target: ${uri} => ${note.id || note} - ${e.statusCode || e}`);
+			throw e;
+		}
+
+		// skip unavailable
+		if (renote == null) {
+			logger.warn(`announce target is null: ${uri} => ${note.id || note}`);
+			throw new Error(`announce target is null: ${uri} => ${note.id || note}`);
+		}
+
+		logger.info(`Creating the (Re)Note: ${uri}`);
+
+		//#region Visibility
+		const visibility = getVisibility(activity.to, activity.cc, actor);
+
+		let visibleUsers: IUser[] = [];
+		if (visibility == 'specified') {
+			visibleUsers = await Promise.all(note.to.map(uri => resolvePerson(uri)));
+		}
+		//#endergion
+
+		await post(actor, {
+			createdAt: new Date(activity.published),
+			renote,
+			visibility,
+			visibleUsers,
+			uri
+		});
+	} finally {
+		unlock();
 	}
-
-	// skip unavailable
-	if (renote == null) {
-		logger.warn(`announce target is null: ${uri} => ${note.id || note}`);
-		throw new Error(`announce target is null: ${uri} => ${note.id || note}`);
-	}
-
-	logger.info(`Creating the (Re)Note: ${uri}`);
-
-	//#region Visibility
-	const visibility = getVisibility(activity.to, activity.cc, actor);
-
-	let visibleUsers: IUser[] = [];
-	if (visibility == 'specified') {
-		visibleUsers = await Promise.all(note.to.map(uri => resolvePerson(uri)));
-	}
-	//#endergion
-
-	await post(actor, {
-		createdAt: new Date(activity.published),
-		renote,
-		visibility,
-		visibleUsers,
-		uri
-	});
 }
 
 type visibility = 'public' | 'home' | 'followers' | 'specified';
