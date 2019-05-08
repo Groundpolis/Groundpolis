@@ -522,16 +522,8 @@ async function insertNote(user: IUser, data: Option, tags: string[], emojis: str
 	} catch (e) {
 		// duplicate key error
 		if (e.code === 11000) {
-			if (insert.uri != null) {
-				const n = await Note.findOne({ uri: insert.uri });
-				if (n) {
-					console.warn(`duplicated insert: ${n.uri}`);
-					return n;
-				}
-			}
+			return null;
 		}
-
-		console.error(e);
 
 		throw 'something happened';
 	}
