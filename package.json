@@ -10,7 +10,7 @@
 	"main": "./index.js",
 	"private": true,
 	"scripts": {
-		"start": "UV_THREADPOOL_SIZE=32 node ./index.js",
+		"start": "node ./index.js",
 		"debug": "DEBUG=misskey:* node ./index.js",
 		"build": "webpack && gulp build",
 		"webpack": "webpack",
