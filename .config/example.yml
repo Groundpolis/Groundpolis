@@ -66,17 +66,15 @@ drive:
 #    accessKey:
 #    secretKey:
 
-# S3/GCS/wasabi example
+# S3/GCS example
 #
 # * Replace <endpoint> to
 #     S3: see https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
 #     GCS: use 'storage.googleapis.com'
-#     wasabi: use 's3.wasabisys.com'
 #
 # * Replace <region> to
 #     S3: see https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
 #     GCS: not needed (just delete the region line)
-#     wasabi: your region
 #
 #drive:
 #  storage: 'minio'
@@ -90,7 +88,7 @@ drive:
 #    accessKey: XXX
 #    secretKey: YYY
 
-# S3/GCS/wasabi example (with CDN, custom domain)
+# S3/GCS example (with CDN, custom domain)
 #
 #drive:
 #  storage: 'minio'
