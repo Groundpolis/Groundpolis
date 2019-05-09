@@ -13,7 +13,6 @@ import { pack } from '../../models/drive-file';
 import { publishMainStream, publishDriveStream } from '../stream';
 import { isLocalUser, IUser, IRemoteUser, isRemoteUser } from '../../models/user';
 import delFile from './delete-file';
-import config from '../../config';
 import { getDriveFileWebpublicBucket } from '../../models/drive-file-webpublic';
 import { getDriveFileThumbnailBucket } from '../../models/drive-file-thumbnail';
 import driveChart from '../../services/chart/drive';
@@ -26,6 +25,8 @@ import { IImage, ConvertToJpeg, ConvertToWebp, ConvertToPng } from './image-proc
 import Instance from '../../models/instance';
 import { contentDisposition } from '../../misc/content-disposition';
 import { detectMine } from '../../misc/detect-mine';
+import { DriveConfig } from '../../config/types';
+import { getDriveConfig } from '../../misc/get-drive-config';
 
 const logger = driveLogger.createSubLogger('register', 'yellow');
 
@@ -38,11 +39,11 @@ const logger = driveLogger.createSubLogger('register', 'yellow');
  * @param size Size for original
  * @param metadata
  */
-async function save(path: string, name: string, type: string, hash: string, size: number, metadata: IMetadata): Promise<IDriveFile> {
+async function save(path: string, name: string, type: string, hash: string, size: number, metadata: IMetadata, drive: DriveConfig): Promise<IDriveFile> {
 	// thunbnail, webpublic を必要なら生成
 	const alts = await generateAlts(path, type, !metadata.uri);
 
-	if (config.drive && config.drive.storage == 'minio') {
+	if (drive.storage == 'minio') {
 		//#region ObjectStorage params
 		let [ext] = (name.match(/\.(\w+)$/) || ['']);
 
@@ -52,11 +53,11 @@ async function save(path: string, name: string, type: string, hash: string, size
 			if (type === 'image/webp') ext = '.webp';
 		}
 
-		const baseUrl = config.drive.baseUrl
-			|| `${ config.drive.config.useSSL ? 'https' : 'http' }://${ config.drive.config.endPoint }${ config.drive.config.port ? `:${config.drive.config.port}` : '' }/${ config.drive.bucket }`;
+		const baseUrl = drive.baseUrl
+			|| `${ drive.config.useSSL ? 'https' : 'http' }://${ drive.config.endPoint }${ drive.config.port ? `:${drive.config.port}` : '' }/${ drive.bucket }`;
 
 		// for original
-		const key = `${config.drive.prefix}/${uuid.v4()}${ext}`;
+		const key = `${drive.prefix}/${uuid.v4()}${ext}`;
 		const url = `${ baseUrl }/${ key }`;
 
 		// for alts
@@ -69,23 +70,23 @@ async function save(path: string, name: string, type: string, hash: string, size
 		//#region Uploads
 		logger.info(`uploading original: ${key}`);
 		const uploads = [
-			upload(key, fs.createReadStream(path), type, name)
+			upload(key, fs.createReadStream(path), type, name, drive)
 		];
 
 		if (alts.webpublic) {
-			webpublicKey = `${config.drive.prefix}/${uuid.v4()}.${alts.webpublic.ext}`;
+			webpublicKey = `${drive.prefix}/${uuid.v4()}.${alts.webpublic.ext}`;
 			webpublicUrl = `${ baseUrl }/${ webpublicKey }`;
 
 			logger.info(`uploading webpublic: ${webpublicKey}`);
-			uploads.push(upload(webpublicKey, alts.webpublic.data, alts.webpublic.type, name));
+			uploads.push(upload(webpublicKey, alts.webpublic.data, alts.webpublic.type, name, drive));
 		}
 
 		if (alts.thumbnail) {
-			thumbnailKey = `${config.drive.prefix}/${uuid.v4()}.${alts.thumbnail.ext}`;
+			thumbnailKey = `${drive.prefix}/${uuid.v4()}.${alts.thumbnail.ext}`;
 			thumbnailUrl = `${ baseUrl }/${ thumbnailKey }`;
 
 			logger.info(`uploading thumbnail: ${thumbnailKey}`);
-			uploads.push(upload(thumbnailKey, alts.thumbnail.data, alts.thumbnail.type));
+			uploads.push(upload(thumbnailKey, alts.thumbnail.data, alts.thumbnail.type, null, drive));
 		}
 
 		await Promise.all(uploads);
@@ -198,8 +199,8 @@ export async function generateAlts(path: string, type: string, generateWeb: bool
 /**
  * Upload to ObjectStorage
  */
-async function upload(key: string, stream: fs.ReadStream | Buffer, type: string, filename?: string) {
-	const minio = new Minio.Client(config.drive.config);
+async function upload(key: string, stream: fs.ReadStream | Buffer, type: string, filename: string, drive: DriveConfig) {
+	const minio = new Minio.Client(drive.config);
 
 	const metadata = {
 		'Content-Type': type,
@@ -208,7 +209,7 @@ async function upload(key: string, stream: fs.ReadStream | Buffer, type: string,
 
 	if (filename) metadata['Content-Disposition'] = contentDisposition('inline', filename);
 
-	await minio.putObject(config.drive.bucket, key, stream, null, metadata);
+	await minio.putObject(drive.bucket, key, stream, null, metadata);
 }
 
 /**
@@ -492,7 +493,8 @@ export default async function(
 			}
 		}
 	} else {
-		driveFile = await (save(path, detectedName, mime, hash, size, metadata));
+		const drive = getDriveConfig(uri != null);
+		driveFile = await (save(path, detectedName, mime, hash, size, metadata, drive));
 	}
 
 	logger.succ(`drive file has been created ${driveFile._id}`);
@@ -515,6 +517,5 @@ export default async function(
 			}
 		});
 	}
-
 	return driveFile;
 }
