@@ -174,6 +174,7 @@ export default Vue.component('misskey-flavored-markdown', {
 						key: Math.random(),
 						props: {
 							url: token.node.props.url,
+							rel: 'nofollow noopener',
 							target: '_blank',
 							trim: true
 						},
@@ -188,6 +189,7 @@ export default Vue.component('misskey-flavored-markdown', {
 						attrs: {
 							class: 'link',
 							href: token.node.props.url,
+							rel: 'nofollow noopener',
 							target: '_blank',
 							title: token.node.props.url,
 							style: 'color:var(--mfmLink);'
