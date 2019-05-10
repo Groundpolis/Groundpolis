@@ -7,7 +7,7 @@ import * as osUtils from 'os-utils';
 
 const ev = new Xev();
 
-const interval = 1000;
+const interval = 3000;
 
 /**
  * Report server stats regularly
