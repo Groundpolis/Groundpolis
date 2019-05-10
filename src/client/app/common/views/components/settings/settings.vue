@@ -129,6 +129,19 @@
 						<option value="local-followers">{{ $t('@.note-visibility.local-followers') }}</option>
 					</ui-select>
 				</section>
+				<section>
+					<header>{{ $t('@._settings.secondary-note-visibility') }}</header>
+					<ui-select v-model="secondaryNoteVisibility">
+						<option value="none">None</option>
+						<option value="public">{{ $t('@.note-visibility.public') }}</option>
+						<option value="home">{{ $t('@.note-visibility.home') }}</option>
+						<option value="followers">{{ $t('@.note-visibility.followers') }}</option>
+						<option value="specified">{{ $t('@.note-visibility.specified') }}</option>
+						<option value="local-public">{{ $t('@.note-visibility.local-public') }}</option>
+						<option value="local-home">{{ $t('@.note-visibility.local-home') }}</option>
+						<option value="local-followers">{{ $t('@.note-visibility.local-followers') }}</option>
+					</ui-select>
+				</section>
 			</section>
 
 			<section>
@@ -415,6 +428,11 @@ export default Vue.extend({
 		defaultNoteVisibility: {
 			get() { return this.$store.state.settings.defaultNoteVisibility; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'defaultNoteVisibility', value }); }
+		},
+
+		secondaryNoteVisibility: {
+			get() { return this.$store.state.settings.secondaryNoteVisibility || 'none'; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'secondaryNoteVisibility', value }); }
 		},
 
 		webSearchEngine: {

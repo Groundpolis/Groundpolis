@@ -29,11 +29,7 @@
 				<button @click="chooseFileFromDrive"><fa icon="cloud"/></button>
 				<button @click="kao"><fa :icon="['far', 'smile']"/></button>
 				<button @click="setVisibility" ref="visibilityButton">
-					<span v-if="visibility === 'public'"><fa icon="globe"/></span>
-					<span v-if="visibility === 'home'"><fa icon="home"/></span>
-					<span v-if="visibility === 'followers'"><fa icon="unlock"/></span>
-					<span v-if="visibility === 'specified'"><fa icon="envelope"/></span>
-					<span v-if="localOnly" class="localOnly"><fa icon="heart"/></span>
+					<x-visibility-icon :v="visibility" :localOnly="localOnly"/>
 				</button>
 				<button @click="post" :disabled="posting" class="post">{{ $t('note') }}</button>
 			</footer>
@@ -49,6 +45,7 @@ import insertTextAtCursor from 'insert-text-at-cursor';
 import getFace from '../../../common/scripts/get-face';
 import MkVisibilityChooser from '../../../common/views/components/visibility-chooser.vue';
 import XPostFormAttaches from '../components/post-form-attaches.vue';
+import XVisibilityIcon from '../components/visibility-icon.vue';
 
 export default define({
 	name: 'post-form',
@@ -60,7 +57,8 @@ export default define({
 
 	components: {
 		XPostFormAttaches,
-		MkVisibilityChooser
+		MkVisibilityChooser,
+		XVisibilityIcon,
 	},
 
 	data() {
@@ -288,13 +286,6 @@ export default define({
 			&:hover
 				color var(--textHighlighted)
 				opacity 1.0
-
-		> button > .localOnly
-			color var(--primary)
-			position absolute
-			top 0
-			right 0.2em
-			transform scale(.8)
 
 		> .post
 			display block

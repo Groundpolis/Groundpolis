@@ -32,22 +32,26 @@
 		</div>
 	</div>
 	<mk-uploader ref="uploader" @uploaded="attachMedia" @change="onChangeUploadings"/>
-	<button class="upload" :title="$t('attach-media-from-local')" @click="chooseFile"><fa icon="upload"/></button>
-	<button class="drive" :title="$t('attach-media-from-drive')" @click="chooseFileFromDrive"><fa icon="cloud"/></button>
-	<button class="kao" :title="$t('insert-a-kao')" @click="kao"><fa :icon="['far', 'smile']"/></button>
-	<button class="poll" :title="$t('create-poll')" @click="poll = !poll"><fa icon="chart-pie"/></button>
-	<button class="cw" :title="$t('hide-contents')" @click="useCw = !useCw"><fa :icon="['far', 'eye-slash']"/></button>
-	<button class="visibility" :title="$t('visibility')" @click="setVisibility" ref="visibilityButton">
-		<span v-if="visibility === 'public'"><fa icon="globe"/></span>
-		<span v-if="visibility === 'home'"><fa icon="home"/></span>
-		<span v-if="visibility === 'followers'"><fa icon="unlock"/></span>
-		<span v-if="visibility === 'specified'"><fa icon="envelope"/></span>
-		<span v-if="localOnly" class="localOnly"><fa icon="heart"/></span>
-	</button>
-	<p class="text-count" :class="{ over: trimmedLength(text) > maxNoteTextLength }">{{ maxNoteTextLength - trimmedLength(text) }}</p>
-	<ui-button primary :wait="posting" class="submit" :disabled="!canPost" @click="post">
-		{{ posting ? $t('posting') : submitText }}<mk-ellipsis v-if="posting"/>
-	</ui-button>
+	
+	<footer>
+		<button class="upload" :title="$t('attach-media-from-local')" @click="chooseFile"><fa icon="upload"/></button>
+		<button class="drive" :title="$t('attach-media-from-drive')" @click="chooseFileFromDrive"><fa icon="cloud"/></button>
+		<button class="kao" :title="$t('insert-a-kao')" @click="kao"><fa :icon="['far', 'smile']"/></button>
+		<button class="poll" :title="$t('create-poll')" @click="poll = !poll"><fa icon="chart-pie"/></button>
+		<button class="cw" :title="$t('hide-contents')" @click="useCw = !useCw"><fa :icon="['far', 'eye-slash']"/></button>
+		<button class="visibility" :title="$t('visibility')" @click="setVisibility" ref="visibilityButton">
+			<x-visibility-icon :v="visibility" :localOnly="localOnly"/>
+		</button>
+		<div class="text-count" :class="{ over: trimmedLength(text) > maxNoteTextLength }">{{ maxNoteTextLength - trimmedLength(text) }}</div>
+		<ui-button v-if="secondaryNoteVisibility != null && secondaryNoteVisibility != 'none'" inline :wait="posting" class="secondary" :disabled="!canPost" @click="post(secondaryNoteVisibility)">
+			<mk-ellipsis v-if="posting"/>
+			<x-visibility-icon v-else :v="secondaryNoteVisibility"/>
+		</ui-button>
+		<ui-button inline primary :wait="posting" class="submit" :disabled="!canPost" @click="post">
+			{{ posting ? $t('posting') : submitText }}<mk-ellipsis v-if="posting"/>
+		</ui-button>
+	</footer>
+
 	<input ref="file" type="file" multiple="multiple" tabindex="-1" @change="onChangeFile"/>
 	<div class="dropzone" v-if="draghover"></div>
 </div>
@@ -66,13 +70,15 @@ import { length } from 'stringz';
 import { toASCII } from 'punycode';
 import extractMentions from '../../../../../misc/extract-mentions';
 import XPostFormAttaches from '../../../common/views/components/post-form-attaches.vue';
+import XVisibilityIcon from '../../../common/views/components/visibility-icon.vue';
 
 export default Vue.extend({
 	i18n: i18n('desktop/views/components/post-form.vue'),
 
 	components: {
 		MkVisibilityChooser,
-		XPostFormAttaches
+		XPostFormAttaches,
+		XVisibilityIcon,
 	},
 
 	props: {
@@ -115,6 +121,7 @@ export default Vue.extend({
 			visibility: 'public',
 			visibleUsers: [],
 			localOnly: false,
+			secondaryNoteVisibility: 'none',
 			autocomplete: null,
 			draghover: false,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
@@ -204,6 +211,8 @@ export default Vue.extend({
 
 		// デフォルト公開範囲
 		this.applyVisibility(this.$store.state.settings.rememberNoteVisibility ? (this.$store.state.device.visibility || this.$store.state.settings.defaultNoteVisibility) : this.$store.state.settings.defaultNoteVisibility);
+
+		this.secondaryNoteVisibility = this.$store.state.settings.secondaryNoteVisibility;
 
 		// 公開以外へのリプライ時は元の公開範囲を引き継ぐ
 		if (this.reply && ['home', 'followers', 'specified'].includes(this.reply.visibility)) {
@@ -410,7 +419,19 @@ export default Vue.extend({
 			});
 		},
 
-		post() {
+		post(v: string) {
+			let visibility = this.visibility;
+			let localOnly = this.localOnly;
+
+			const m = v && v.match(/^local-(.+)/);
+			if (m) {
+				localOnly = true;
+				visibility = m[1];
+			} else {
+				localOnly = false;
+				visibility = v;
+			}
+
 			this.posting = true;
 
 			this.$root.api('notes/create', {
@@ -420,9 +441,9 @@ export default Vue.extend({
 				renoteId: this.renote ? this.renote.id : undefined,
 				poll: this.poll ? (this.$refs.poll as any).get() : undefined,
 				cw: this.useCw ? this.cw || '' : undefined,
-				visibility: this.visibility,
-				visibleUserIds: this.visibility == 'specified' ? this.visibleUsers.map(u => u.id) : undefined,
-				localOnly: this.localOnly,
+				visibility,
+				visibleUserIds: visibility == 'specified' ? this.visibleUsers.map(u => u.id) : undefined,
+				localOnly,
 				geo: null
 			}).then(data => {
 				this.clear();
@@ -660,70 +681,63 @@ export default Vue.extend({
 	input[type='file']
 		display none
 
-	.submit
-		display block
-		position absolute
-		bottom 16px
-		right 16px
-		width 110px
-		height 40px
+	footer
+		display flex
+		align-items: center;
+		margin-top: 6px
 
-	> .text-count
-		pointer-events none
-		display block
-		position absolute
-		bottom 16px
-		right 138px
-		margin 0
-		line-height 40px
-		color var(--primaryAlpha05)
+		> .submit
+			display block
+			margin 4px
 
-		&.over
-			color #ec3828
+		> .secondary
+			display block
+			margin 4px
+			min-width 50px !important
 
-	> .upload
-	> .drive
-	> .kao
-	> .poll
-	> .cw
-	> .geo
-	> .visibility
-		display inline-block
-		cursor pointer
-		padding 0
-		margin 8px 4px 0 0
-		width 40px
-		height 40px
-		font-size 1em
-		color var(--text)
-		background transparent
-		outline none
-		border solid 1px transparent
-		border-radius 4px
-		opacity 0.7
+		> .text-count
+			pointer-events none
+			line-height 40px
+			color var(--primaryAlpha05)
+			margin 4px 4px 4px auto
 
-		&:hover
-			color var(--textHighlighted)
-			opacity 1.0
+			&.over
+				color #ec3828
 
-		&:focus
-			&:after
-				content ""
-				pointer-events none
-				position absolute
-				top -5px
-				right -5px
-				bottom -5px
-				left -5px
-				border 2px solid var(--primaryAlpha03)
-				border-radius 8px
+		> .upload
+		> .drive
+		> .kao
+		> .poll
+		> .cw
+		> .geo
+		> .visibility
+			display block
+			cursor pointer
+			width 40px
+			height 40px
+			font-size 1em
+			color var(--text)
+			background transparent
+			outline none
+			border solid 1px transparent
+			border-radius 4px
+			opacity 0.7
 
-	> .visibility > .localOnly
-		color var(--primary)
-		position absolute
-		top 0
-		right 0.2em
-		transform scale(.8)
+			&:hover
+				color var(--textHighlighted)
+				opacity 1.0
+
+			&:focus
+				&:after
+					content ""
+					pointer-events none
+					position absolute
+					top -5px
+					right -5px
+					bottom -5px
+					left -5px
+					border 2px solid var(--primaryAlpha03)
+					border-radius 8px
 
 	> .dropzone
 		position absolute

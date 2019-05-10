@@ -31,11 +31,7 @@
 				<button class="poll" @click="poll = true"><fa icon="chart-pie"/></button>
 				<button class="poll" @click="useCw = !useCw"><fa :icon="['far', 'eye-slash']"/></button>
 				<button class="visibility" @click="setVisibility" ref="visibilityButton">
-					<span v-if="visibility === 'public'"><fa icon="globe"/></span>
-					<span v-if="visibility === 'home'"><fa icon="home"/></span>
-					<span v-if="visibility === 'followers'"><fa icon="unlock"/></span>
-					<span v-if="visibility === 'specified'"><fa icon="envelope"/></span>
-					<span v-if="localOnly" class="localOnly"><fa icon="heart"/></span>
+					<x-visibility-icon :v="visibility" :localOnly="localOnly"/>
 				</button>
 			</footer>
 			<input ref="file" class="file" type="file" multiple="multiple" @change="onChangeFile"/>
@@ -60,11 +56,13 @@ import { length } from 'stringz';
 import { toASCII } from 'punycode';
 import extractMentions from '../../../../../misc/extract-mentions';
 import XPostFormAttaches from '../../../common/views/components/post-form-attaches.vue';
+import XVisibilityIcon from '../../../common/views/components/visibility-icon.vue';
 
 export default Vue.extend({
 	i18n: i18n('mobile/views/components/post-form.vue'),
 	components: {
-		XPostFormAttaches
+		XPostFormAttaches,
+		XVisibilityIcon,
 	},
 
 	props: {
