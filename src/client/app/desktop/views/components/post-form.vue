@@ -322,6 +322,8 @@ export default Vue.extend({
 
 		onKeydown(e) {
 			if ((e.which == 10 || e.which == 13) && (e.ctrlKey || e.metaKey) && this.canPost) this.post();
+			if ((e.which == 10 || e.which == 13) && (e.altKey) && this.canPost
+				&& this.secondaryNoteVisibility != null && this.secondaryNoteVisibility != 'none') this.post(this.secondaryNoteVisibility);
 		},
 
 		onPaste(e) {
