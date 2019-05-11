@@ -43,11 +43,11 @@
 			<x-visibility-icon :v="visibility" :localOnly="localOnly"/>
 		</button>
 		<div class="text-count" :class="{ over: trimmedLength(text) > maxNoteTextLength }">{{ maxNoteTextLength - trimmedLength(text) }}</div>
-		<ui-button v-if="secondaryNoteVisibility != null && secondaryNoteVisibility != 'none'" inline :wait="posting" class="secondary" :disabled="!canPost" @click="post(secondaryNoteVisibility)">
+		<ui-button v-if="secondaryNoteVisibility != null && secondaryNoteVisibility != 'none'" inline :wait="posting" class="secondary" :disabled="!canPost" @click="post(secondaryNoteVisibility)" title="Secondary Post (Alt+Enter)">
 			<mk-ellipsis v-if="posting"/>
 			<x-visibility-icon v-else :v="secondaryNoteVisibility"/>
 		</ui-button>
-		<ui-button inline primary :wait="posting" class="submit" :disabled="!canPost" @click="post">
+		<ui-button inline primary :wait="posting" class="submit" :disabled="!canPost" @click="post" title="Post (Ctrl+Enter)">
 			{{ posting ? $t('posting') : submitText }}<mk-ellipsis v-if="posting"/>
 		</ui-button>
 	</footer>
