@@ -6,7 +6,10 @@
 			<div>
 				<span class="text-count" :class="{ over: trimmedLength(text) > maxNoteTextLength }">{{ maxNoteTextLength - trimmedLength(text) }}</span>
 				<span class="geo" v-if="geo"><fa icon="map-marker-alt"/></span>
-				<button class="submit" :disabled="!canPost" @click="post">{{ submitText }}</button>
+				<button v-if="secondaryNoteVisibility != null && secondaryNoteVisibility != 'none'" class="secondary" :disabled="!canPost" @click="post(secondaryNoteVisibility)">
+					<x-visibility-icon :v="secondaryNoteVisibility"/>
+				</button>
+				<button class="submit" :disabled="!canPost" @click="post()">{{ submitText }}</button>
 			</div>
 		</header>
 		<div class="form">
@@ -102,6 +105,7 @@ export default Vue.extend({
 			visibility: 'public',
 			visibleUsers: [],
 			localOnly: false,
+			secondaryNoteVisibility: 'none',
 			useCw: false,
 			cw: null,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
@@ -191,6 +195,8 @@ export default Vue.extend({
 
 		// デフォルト公開範囲
 		this.applyVisibility(this.$store.state.settings.rememberNoteVisibility ? (this.$store.state.device.visibility || this.$store.state.settings.defaultNoteVisibility) : this.$store.state.settings.defaultNoteVisibility);
+
+		this.secondaryNoteVisibility = this.$store.state.settings.secondaryNoteVisibility;
 
 		// 公開以外へのリプライ時は元の公開範囲を引き継ぐ
 		if (this.reply && ['home', 'followers', 'specified'].includes(this.reply.visibility)) {
@@ -311,7 +317,21 @@ export default Vue.extend({
 			this.$emit('change-attached-files');
 		},
 
-		post() {
+		post(v: any) {
+			let visibility = this.visibility;
+			let localOnly = this.localOnly;
+
+			if (typeof v == 'string') {
+				const m = v.match(/^local-(.+)/);
+				if (m) {
+					localOnly = true;
+					visibility = m[1];
+				} else {
+					localOnly = false;
+					visibility = v;
+				}
+			}
+
 			this.posting = true;
 			const viaMobile = this.$store.state.settings.disableViaMobile !== true;
 			this.$root.api('notes/create', {
@@ -322,9 +342,9 @@ export default Vue.extend({
 				poll: this.poll ? (this.$refs.poll as any).get() : undefined,
 				cw: this.useCw ? this.cw || '' : undefined,
 				geo: null,
-				visibility: this.visibility,
+				visibility,
 				visibleUserIds: this.visibility == 'specified' ? this.visibleUsers.map(u => u.id) : undefined,
-				localOnly: this.localOnly,
+				localOnly,
 				viaMobile: viaMobile
 			}).then(data => {
 				this.$emit('posted');
@@ -396,8 +416,20 @@ export default Vue.extend({
 					margin 0 8px
 					line-height 50px
 
+				> .secondary
+					margin 8px 6px
+					padding 0 16px
+					line-height 34px
+					vertical-align bottom
+					color var(--text)
+					background var(--buttonBg)
+					border-radius 4px
+
+					&:disabled
+						opacity 0.7
+
 				> .submit
-					margin 8px
+					margin 8px 6px
 					padding 0 16px
 					line-height 34px
 					vertical-align bottom

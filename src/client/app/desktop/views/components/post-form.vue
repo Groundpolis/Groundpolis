@@ -421,11 +421,11 @@ export default Vue.extend({
 			});
 		},
 
-		post(v: string) {
+		post(v: any) {
 			let visibility = this.visibility;
 			let localOnly = this.localOnly;
 
-			if (v) {
+			if (typeof v == 'string') {
 				const m = v.match(/^local-(.+)/);
 				if (m) {
 					localOnly = true;

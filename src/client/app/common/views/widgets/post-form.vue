@@ -34,7 +34,7 @@
 				<button v-if="secondaryNoteVisibility != null && secondaryNoteVisibility != 'none'" @click="post(secondaryNoteVisibility)" :disabled="posting" class="secondary" title="Secondary Post (Alt+Enter)">
 					<x-visibility-icon :v="secondaryNoteVisibility"/>
 				</button>
-				<button @click="post" :disabled="posting" class="post" title="Post (Ctrl+Enter)">{{ $t('note') }}</button>
+				<button @click="post()" :disabled="posting" class="post" title="Post (Ctrl+Enter)">{{ $t('note') }}</button>
 			</footer>
 		</div>
 	</ui-container>
@@ -215,11 +215,11 @@ export default define({
 			}
 		},
 
-		post(v: string) {
+		post(v: any) {
 			let visibility = this.visibility;
 			let localOnly = this.localOnly;
 
-			if (v) {
+			if (typeof v == 'string') {
 				const m = v.match(/^local-(.+)/);
 				if (m) {
 					localOnly = true;
