@@ -423,13 +423,15 @@ export default Vue.extend({
 			let visibility = this.visibility;
 			let localOnly = this.localOnly;
 
-			const m = v && v.match(/^local-(.+)/);
-			if (m) {
-				localOnly = true;
-				visibility = m[1];
-			} else {
-				localOnly = false;
-				visibility = v;
+			if (v) {
+				const m = v.match(/^local-(.+)/);
+				if (m) {
+					localOnly = true;
+					visibility = m[1];
+				} else {
+					localOnly = false;
+					visibility = v;
+				}
 			}
 
 			this.posting = true;
