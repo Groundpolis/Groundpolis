@@ -31,7 +31,7 @@ export default async function(ctx: Koa.BaseContext) {
 		const [type] = await detectMine(path);
 
 		ctx.set('Content-Type', type);
-		ctx.set('Cache-Control', 'max-age=31536000, immutable');
+		ctx.set('Cache-Control', 'max-age=604800, immutable');
 		ctx.body = fs.readFileSync(path);
 	} catch (e) {
 		serverLogger.error(e);
