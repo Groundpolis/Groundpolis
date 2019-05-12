@@ -77,6 +77,7 @@ export const mfmLanguage = P.createLanguage({
 		r.jump,
 		r.flip,
 		r.vflip,
+		r.rotate,
 		r.inlineCode,
 		r.mathInline,
 		r.mention,
@@ -133,6 +134,20 @@ export const mfmLanguage = P.createLanguage({
 	jump: r => P.alt(P.regexp(/<jump>(.+?)<\/jump>/, 1), P.regexp(/\{\{\{([\s\S]+?)\}\}\}/, 1)).map(x => createTree('jump', r.inline.atLeast(1).tryParse(x), {})),
 	flip: r => P.regexp(/<flip>(.+?)<\/flip>/, 1).map(x => createTree('flip', r.inline.atLeast(1).tryParse(x), {})),
 	vflip: r => P.regexp(/<vflip>(.+?)<\/vflip>/, 1).map(x => createTree('vflip', r.inline.atLeast(1).tryParse(x), {})),
+	rotate: r => {
+		return P((input, i) => {
+			const text = input.substr(i);
+			const match = text.match(/^<rotate\s+([+-]?\d+)>(.+?)<\/rotate>/i);
+
+			if (match) {
+				return P.makeSuccess(i + match[0].length, {
+					content: match[2], attr: match[1]
+				});
+			} else {
+				return P.makeFailure(i, 'not a rotate');
+			}
+		}).map(x => createTree('rotate', r.inline.atLeast(1).tryParse(x.content), { attr: x.attr }));
+	},
 	center: r => r.startOfLine.then(P.regexp(/<center>([\s\S]+?)<\/center>/, 1).map(x => createTree('center', r.inline.atLeast(1).tryParse(x), {}))),
 	inlineCode: () => P.regexp(/`([^´\n]+?)`/, 1).map(x => createLeaf('inlineCode', { code: x })),
 	mathBlock: r => r.startOfLine.then(P.regexp(/\\\[([\s\S]+?)\\\]/, 1).map(x => createLeaf('mathBlock', { formula: x.trim() }))),

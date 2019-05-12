@@ -263,6 +263,17 @@ describe('MFM', () => {
 			]);
 		});
 
+		it('rotate', () => {
+			const tokens = parse('<rotate 90>foo</rotate>');
+			assert.deepStrictEqual(tokens, [
+				tree('rotate', [
+					text('foo')
+				], {
+					attr: '90'
+				}),
+			]);
+		});
+
 		describe('spin', () => {
 			it('text', () => {
 				const tokens = parse('<spin>foo</spin>');

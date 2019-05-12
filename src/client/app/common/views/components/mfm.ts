@@ -177,6 +177,17 @@ export default Vue.component('misskey-flavored-markdown', {
 					}, genEl(token.children));
 				}
 
+				case 'rotate': {
+					const isLong = sumTextsLength(token.children) > 100 || countNodesF(token.children) > 20;
+					const deg = token.node.props.attr;
+
+					return (createElement as any)('span', {
+						attrs: {
+							style: isLong ? '' : `display: inline-block; transform: rotate(${deg}deg);`
+						},
+					}, genEl(token.children));
+				}
+
 				case 'url': {
 					return [createElement(MkUrl, {
 						key: Math.random(),
