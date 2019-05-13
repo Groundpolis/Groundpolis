@@ -33,7 +33,7 @@ export default Vue.extend({
 			makePromise: cursor => this.$root.api('users/notes', {
 				userId: this.user.id,
 				limit: fetchLimit + 1,
-				includeReplies: this.mode == 'with-replies',
+				includeReplies: this.mode == 'with-replies' || this.mode == 'with-media',
 				includeMyRenotes: this.mode != 'my-posts',
 				withFiles: this.mode == 'with-media',
 				untilDate: cursor ? cursor : new Date().getTime() + 1000 * 86400 * 365
