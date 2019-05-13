@@ -72,6 +72,18 @@ export function toHtml(tokens: MfmForest, mentionedRemoteUsers: INote['mentioned
 			return el;
 		},
 
+		vflip(token) {
+			const el = doc.createElement('span');
+			appendChildren(token.children, el);
+			return el;
+		},
+
+		rotate(token) {
+			const el = doc.createElement('span');
+			appendChildren(token.children, el);
+			return el;
+		},
+
 		blockCode(token) {
 			const pre = doc.createElement('pre');
 			const inner = doc.createElement('code');

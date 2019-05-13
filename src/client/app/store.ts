@@ -31,6 +31,7 @@ const defaultSettings = {
 	iLikeSushi: false,
 	rememberNoteVisibility: false,
 	defaultNoteVisibility: 'public',
+	secondaryNoteVisibility: null,
 	webSearchEngine: 'https://www.google.com/?#q={{query}}',
 	mutedWords: [],
 	games: {

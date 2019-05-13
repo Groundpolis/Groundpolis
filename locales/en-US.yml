@@ -138,6 +138,7 @@ common:
     fetch-on-scroll-desc: "When you scroll down the page, it automatically fetches additional content."
     note-visibility: "Post visibility"
     default-note-visibility: "Default visibility"
+    secondary-note-visibility: "Visibility of secondary post button"
     remember-note-visibility: "Remember post visibility"
     web-search-engine: "Web search engine"
     web-search-engine-desc: "Example: https://www.google.com/?#q={{query}}"

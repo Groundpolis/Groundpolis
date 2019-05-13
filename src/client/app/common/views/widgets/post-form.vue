@@ -28,14 +28,13 @@
 				<button @click="chooseFile"><fa icon="upload"/></button>
 				<button @click="chooseFileFromDrive"><fa icon="cloud"/></button>
 				<button @click="kao"><fa :icon="['far', 'smile']"/></button>
-				<button @click="setVisibility" ref="visibilityButton">
-					<span v-if="visibility === 'public'"><fa icon="globe"/></span>
-					<span v-if="visibility === 'home'"><fa icon="home"/></span>
-					<span v-if="visibility === 'followers'"><fa icon="unlock"/></span>
-					<span v-if="visibility === 'specified'"><fa icon="envelope"/></span>
-					<span v-if="localOnly" class="localOnly"><fa icon="heart"/></span>
+				<button @click="setVisibility" class="visibility" ref="visibilityButton">
+					<x-visibility-icon :v="visibility" :localOnly="localOnly"/>
 				</button>
-				<button @click="post" :disabled="posting" class="post">{{ $t('note') }}</button>
+				<button v-if="secondaryNoteVisibility != null && secondaryNoteVisibility != 'none'" @click="post(secondaryNoteVisibility)" :disabled="posting" class="secondary" title="Secondary Post (Alt+Enter)">
+					<x-visibility-icon :v="secondaryNoteVisibility"/>
+				</button>
+				<button @click="post()" :disabled="posting" class="post" title="Post (Ctrl+Enter)">{{ $t('note') }}</button>
 			</footer>
 		</div>
 	</ui-container>
@@ -49,6 +48,7 @@ import insertTextAtCursor from 'insert-text-at-cursor';
 import getFace from '../../../common/scripts/get-face';
 import MkVisibilityChooser from '../../../common/views/components/visibility-chooser.vue';
 import XPostFormAttaches from '../components/post-form-attaches.vue';
+import XVisibilityIcon from '../components/visibility-icon.vue';
 
 export default define({
 	name: 'post-form',
@@ -60,7 +60,8 @@ export default define({
 
 	components: {
 		XPostFormAttaches,
-		MkVisibilityChooser
+		MkVisibilityChooser,
+		XVisibilityIcon,
 	},
 
 	data() {
@@ -70,6 +71,7 @@ export default define({
 			files: [],
 			visibility: 'public',
 			localOnly: false,
+			secondaryNoteVisibility: 'none',
 		};
 	},
 
@@ -90,6 +92,8 @@ export default define({
 	mounted() {
 		// デフォルト公開範囲
 		this.applyVisibility(this.$store.state.settings.defaultNoteVisibility);
+
+		this.secondaryNoteVisibility = this.$store.state.settings.secondaryNoteVisibility;
 	},
 
 	methods: {
@@ -126,6 +130,8 @@ export default define({
 
 		onKeydown(e) {
 			if ((e.which == 10 || e.which == 13) && (e.ctrlKey || e.metaKey) && !this.posting && this.text) this.post();
+			if ((e.which == 10 || e.which == 13) && (e.altKey) && !this.posting && this.text
+				&& this.secondaryNoteVisibility != null && this.secondaryNoteVisibility != 'none') this.post(this.secondaryNoteVisibility);
 		},
 
 		onPaste(e) {
@@ -209,14 +215,28 @@ export default define({
 			}
 		},
 
-		post() {
+		post(v: any) {
+			let visibility = this.visibility;
+			let localOnly = this.localOnly;
+
+			if (typeof v == 'string') {
+				const m = v.match(/^local-(.+)/);
+				if (m) {
+					localOnly = true;
+					visibility = m[1];
+				} else {
+					localOnly = false;
+					visibility = v;
+				}
+			}
+
 			this.posting = true;
 
 			this.$root.api('notes/create', {
 				text: this.text == '' ? undefined : this.text,
 				fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
-				visibility: this.visibility,
-				localOnly: this.localOnly,
+				visibility,
+				localOnly,
 			}).then(data => {
 				this.clear();
 			}).catch(err => {
@@ -289,16 +309,30 @@ export default define({
 				color var(--textHighlighted)
 				opacity 1.0
 
-		> button > .localOnly
-			color var(--primary)
-			position absolute
-			top 0
-			right 0.2em
-			transform scale(.8)
+		> .visibility
+			margin 0 auto 0 0
+
+		> .secondary
+			display block
+			margin 0 5px
+			padding 0 10px
+			height 28px
+			color var(--text)
+			background: var(--buttonBg) !important
+			outline none
+			border none
+			border-radius 4px
+			transition background 0.1s ease
+			cursor pointer
+
+			&:hover
+				background var(--buttonHoverBg) !important
+
+			&:active
+				background var(--buttonActiveBg) !important
 
 		> .post
 			display block
-			margin 0 0 0 auto
 			padding 0 10px
 			height 28px
 			color var(--primaryForeground)

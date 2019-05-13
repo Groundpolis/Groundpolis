@@ -254,6 +254,26 @@ describe('MFM', () => {
 			]);
 		});
 
+		it('vflip', () => {
+			const tokens = parse('<vflip>foo</vflip>');
+			assert.deepStrictEqual(tokens, [
+				tree('vflip', [
+					text('foo')
+				], {}),
+			]);
+		});
+
+		it('rotate', () => {
+			const tokens = parse('<rotate 90>foo</rotate>');
+			assert.deepStrictEqual(tokens, [
+				tree('rotate', [
+					text('foo')
+				], {
+					attr: '90'
+				}),
+			]);
+		});
+
 		describe('spin', () => {
 			it('text', () => {
 				const tokens = parse('<spin>foo</spin>');

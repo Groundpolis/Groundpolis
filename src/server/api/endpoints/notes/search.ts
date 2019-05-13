@@ -112,6 +112,7 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 	let host: string;	// = undefined
 	let sensitive: 'all' | 'sfw' | 'nsfw' = 'all';
 	let filtered = false;
+	let withPolls = false;
 
 	for (const token of tokens) {
 		// from
@@ -146,6 +147,10 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 			}
 			if (matchFilter[1] === 'medias' || matchFilter[1] === 'audios') {
 				types = concat([types, ['audio/mpeg', 'audio/mp4']]);
+			}
+
+			if (matchFilter[1] === 'polls') {
+				withPolls = true;
 			}
 
 			filtered = true;
@@ -233,6 +238,11 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		noteQuery['_files.contentType'] = {
 			$in: types
 		};
+	}
+
+	// note - polls
+	if (withPolls) {
+		noteQuery.poll = { $exists: true, $ne: null };
 	}
 
 	if (noteQuery.fileIds && sensitive === 'sfw') {
