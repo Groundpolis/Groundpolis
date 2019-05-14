@@ -97,6 +97,6 @@ export default Vue.extend({
 		&:focus
 			box-shadow 0 0 0 2px var(--primaryAlpha05) !important
 			background var(--bg)
-			width 24em
+			width 28em
 
 </style>
