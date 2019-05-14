@@ -201,15 +201,14 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		words.push(token);
 	}
 
-	// フィルタ系が指定されてなかったらここでは検索させない
-	if (!filtered) {
-		return null;
-	}
+	// フィルタ系が指定されていないワード検索の場合
+	if (!filtered && words.length > 0) {
+		// ESがあればそちらに任せる
+		if (es) return null;
 
-	// word検索はfrom指定時のみ
-	//if (words.length > 0 && from == null && typeof host == 'undefined') {
-	//	return [];
-	//}
+		// なければ期間を縮めてDB検索
+		since = new Date(Date.now() - 15 * 86400 * 1000);
+	}
 
 	// constract query
 	const isFollowing = (me == null || from == null) ? false : ((await Following.findOne({
