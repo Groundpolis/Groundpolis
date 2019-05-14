@@ -133,7 +133,7 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		}
 
 		// Date
-		const matchSince = token.match(/^since:(\d{4}-\d{1,2}-\d{1,2})$/);
+		const matchSince = token.match(/^since:(\d{4}-\d{1,2}-\d{1,2})/);
 		if (matchSince) {
 			since = new Date(matchSince[1]);
 
@@ -141,7 +141,7 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 			continue;
 		}
 
-		const matchUntil = token.match(/^until:(\d{4}-\d{1,2}-\d{1,2})$/);
+		const matchUntil = token.match(/^until:(\d{4}-\d{1,2}-\d{1,2})/);
 		if (matchUntil) {
 			until = new Date(matchSince[1]);
 
@@ -207,7 +207,7 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		if (es) return null;
 
 		// なければ期間を縮めてDB検索
-		since = new Date(Date.now() - 15 * 86400 * 1000);
+		since = new Date(Date.now() - 7 * 86400 * 1000);
 	}
 
 	// constract query
