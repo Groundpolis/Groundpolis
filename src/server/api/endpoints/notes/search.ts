@@ -107,6 +107,8 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 	const tokens = query.trim().split(/\s+/);
 	const words: string[] = [];
 	let from: IUser = null;
+	let since: Date = null;
+	let until: Date = null;
 	let types: string[] = [];
 	let withFiles = false;
 	let host: string;	// = undefined
@@ -125,6 +127,23 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 
 			if (user == null) return [];	// fromが存在しないユーザーならno match
 			from = user;
+
+			filtered = true;
+			continue;
+		}
+
+		// Date
+		const matchSince = token.match(/^since:(\d{4}-\d{1,2}-\d{1,2}.*)/);
+		if (matchSince) {
+			since = new Date(matchSince[1]);
+
+			filtered = true;
+			continue;
+		}
+
+		const matchUntil = token.match(/^until:(\d{4}-\d{1,2}-\d{1,2}.*)/);
+		if (matchUntil) {
+			until = new Date(matchUntil[1]);
 
 			filtered = true;
 			continue;
@@ -182,14 +201,13 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		words.push(token);
 	}
 
-	// フィルタ系が指定されてなかったらここでは検索させない
-	if (!filtered) {
-		return null;
-	}
+	// フィルタ系が指定されていないワード検索の場合
+	if (!filtered && words.length > 0) {
+		// ESがあればそちらに任せる
+		if (es) return null;
 
-	// word検索はfrom指定時のみ
-	if (words.length > 0 && from == null && typeof host == 'undefined') {
-		return [];
+		// なければ期間を縮めてDB検索
+		since = new Date(Date.now() - 7 * 86400 * 1000);
 	}
 
 	// constract query
@@ -227,6 +245,15 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		noteQuery.userId = from._id;
 	} else {
 		noteQuery.userId = { $nin: hideUserIds };
+	}
+
+	// Date
+	if (since) {
+		noteQuery.$and.push({ createdAt: { $gt: since } });
+	}
+
+	if (until) {
+		noteQuery.$and.push({ createdAt: { $lt: until } });
 	}
 
 	// note - files / medias

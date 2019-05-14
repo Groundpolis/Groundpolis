@@ -503,6 +503,7 @@ common/views/components/nav.vue:
 common/views/components/note-menu.vue:
   mention: "メンション"
   detail: "詳細"
+  go-timeline: "タイムラインへ"
   copy-content: "内容をコピー"
   copy-link: "リンクをコピー"
   favorite: "お気に入り"

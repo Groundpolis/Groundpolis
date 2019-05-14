@@ -102,7 +102,7 @@ async function resolveAddr(domain: string) {
 
 	const promises = [];
 
-	if (!useV4 && !useV6) throw 'No address family available';
+	if (!useV4 && !useV6) throw 'No usable address family available';
 	if (useV4) promises.push(resolveAddrInner(domain, { family: 4 }));
 	if (useV6) promises.push(resolveAddrInner(domain, { family: 6 }));
 
