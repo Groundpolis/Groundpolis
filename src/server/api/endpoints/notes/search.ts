@@ -143,7 +143,7 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 
 		const matchUntil = token.match(/^until:(\d{4}-\d{1,2}-\d{1,2})/);
 		if (matchUntil) {
-			until = new Date(matchSince[1]);
+			until = new Date(matchUntil[1]);
 
 			filtered = true;
 			continue;
