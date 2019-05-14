@@ -7,7 +7,7 @@
 </div>
 <a class="kkjnbbplepmiyuadieoenjgutgcmtsvu" v-else
 	:href="video.url"
-	rel="noopener"
+	rel="nofollow noopener"
 	target="_blank"
 	:style="imageStyle"
 	:title="video.name"
