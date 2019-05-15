@@ -248,14 +248,21 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 	const noteQuery = {
 		$and: [ {} ],
 		deletedAt: null,
-		$or: visibleQuery
+		$or: visibleQuery,
+		userId: {
+			$nin: hideUserIds
+		},
+		'_reply.userId': {
+			$nin: hideUserIds
+		},
+		'_renote.userId': {
+			$nin: hideUserIds
+		},
 	} as any;
 
 	// note - userId
 	if (from != null) {
 		noteQuery.userId = from._id;
-	} else {
-		noteQuery.userId = { $nin: hideUserIds };
 	}
 
 	// Date
