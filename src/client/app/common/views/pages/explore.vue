@@ -70,7 +70,7 @@ export default Vue.extend({
 				limit: 10
 			}),
 			recommendedUsers: () => this.$root.api('users/recommendation', {
-				limit: 3,
+				limit: 10,
 			}),
 			popularUsers: () => this.$root.api('users', {
 				state: 'alive',
