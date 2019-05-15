@@ -82,7 +82,7 @@ export default define(meta, async (ps, me) => {
 			},
 			isLocked: { $ne: true },
 			updatedAt: {
-				$gte: new Date(Date.now() - ms('7days'))
+				$gte: new Date(Date.now() - ms('3days'))
 			},
 			host: null
 		}, {
