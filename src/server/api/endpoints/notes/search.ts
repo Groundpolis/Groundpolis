@@ -208,7 +208,7 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		if (es) return null;
 
 		// なければ期間を縮めてDB検索
-		since = new Date(Date.now() - 7 * 86400 * 1000);
+		since = new Date(Date.now() - 1 * 86400 * 1000);
 	}
 
 	let visibleQuery;
