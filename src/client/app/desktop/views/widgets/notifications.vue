@@ -34,7 +34,7 @@ export default define({
 
 <style lang="stylus" module>
 .notifications
-	max-height 300px
+	max-height 450px
 	overflow auto
 
 </style>
