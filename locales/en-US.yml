@@ -310,6 +310,7 @@ auth/views/index.vue:
   sign-in: "Please sign in."
 common/views/pages/explore.vue:
   verified-users: "Official accounts"
+  recommended-users: "Recommended users"
   popular-users: "Popular users"
   recently-updated-users: "Recently active users"
   recently-registered-users: "Users who joined recently"
