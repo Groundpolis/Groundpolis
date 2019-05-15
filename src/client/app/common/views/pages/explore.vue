@@ -32,6 +32,9 @@
 		<mk-user-list :make-promise="popularUsers">
 			<fa :icon="faChartLine" fixed-width/>{{ $t('popular-users') }}
 		</mk-user-list>
+		<mk-user-list :make-promise="recommendedUsers">
+			<fa icon="users" fixed-width/>{{ $t('recommended-users') }}
+		</mk-user-list>
 		<mk-user-list :make-promise="recentlyUpdatedUsers">
 			<fa :icon="faCommentAlt" fixed-width/>{{ $t('recently-updated-users') }}
 		</mk-user-list>
@@ -65,6 +68,9 @@ export default Vue.extend({
 				origin: 'local',
 				sort: '+follower',
 				limit: 10
+			}),
+			recommendedUsers: () => this.$root.api('users/recommendation', {
+				limit: 10,
 			}),
 			popularUsers: () => this.$root.api('users', {
 				state: 'alive',

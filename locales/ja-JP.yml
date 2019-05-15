@@ -329,6 +329,7 @@ auth/views/index.vue:
 
 common/views/pages/explore.vue:
   verified-users: "公式アカウント"
+  recommended-users: "おすすめユーザー"
   popular-users: "人気のユーザー"
   recently-updated-users: "最近投稿したユーザー"
   recently-registered-users: "新規ユーザー"

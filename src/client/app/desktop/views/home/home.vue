@@ -18,7 +18,6 @@
 						<option value="version">{{ $t('@.widgets.version') }}</option>
 						<option value="broadcast">{{ $t('@.widgets.broadcast') }}</option>
 						<option value="notifications">{{ $t('@.widgets.notifications') }}</option>
-						<option value="users">{{ $t('@.widgets.users') }}</option>
 						<option value="polls">{{ $t('@.widgets.polls') }}</option>
 						<option value="post-form">{{ $t('@.widgets.post-form') }}</option>
 						<option value="messaging">{{ $t('@.messaging') }}</option>
@@ -150,7 +149,6 @@ export default Vue.extend({
 					'customize',
 					'broadcast',
 					'notifications',
-					'users',
 					'polls',
 					'server',
 					'nav',
