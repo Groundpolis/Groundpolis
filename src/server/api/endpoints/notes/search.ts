@@ -211,38 +211,71 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		since = new Date(Date.now() - 7 * 86400 * 1000);
 	}
 
-	// constract query
-	const [followings, hideUserIds] = await Promise.all([
-		// フォローを取得
-		// Fetch following
-		getFriends(me._id),
+	let visibleQuery;
 
-		// 隠すユーザーを取得
-		getHideUserIds(me)
-	]);
+	if (me == null) {	// anonymous
+		visibleQuery = [{
+			visibility: { $in: ['public', 'home'] }
+		}];
+	} else if (from != null) {	// from指定あり
+		// ※ from指定は下でANDされる
+		if (from._id == me._id) {	// from=myself
+			visibleQuery = [ {} ];
+		} else {
+			// from指定はフォローしている人？
+			const isFollowing = ((await Following.findOne({
+				followerId: me._id,
+				followeeId: from._id
+			})) != null);
 
-	const followQuery = followings.map(f => ({
-		userId: f.id,
-	}));
-
-	const visibleQuery = me == null ? [{
-		visibility: { $in: ['public', 'home'] }
-	}] : [{
-		visibility: {
-			$in: ['public', 'home']
+			if (isFollowing) {	// from=フォローしてる人
+				visibleQuery = [{
+					visibility: {
+						$in: ['public', 'home', 'followers']
+					}
+				}, {
+					// to me (for specified)
+					visibleUserIds: { $in: [ me._id ] }
+				}];
+			} else {	// from=フォローしてない人
+				visibleQuery = [{
+					visibility: {
+						$in: ['public', 'home']
+					}
+				}, {
+					// to me (for specified)
+					visibleUserIds: { $in: [ me._id ] }
+				}];
+			}
 		}
-	}, {
-		$and: [
-			{ visibility: 'followers' },
-			{ $or: followQuery }
-		]
-	}, {
-		// myself (for specified/private)
-		userId: me._id
-	}, {
-		// to me (for specified)
-		visibleUserIds: { $in: [ me._id ] }
-	}];
+	} else {
+		// フォローを取得
+		const followings = await getFriends(me._id);
+
+		const followQuery = followings.map(f => ({
+			userId: f.id,
+		}));
+
+		visibleQuery = [{
+			visibility: {
+				$in: ['public', 'home']
+			}
+		}, {
+			$and: [
+				{ visibility: 'followers' },
+				{ $or: followQuery }
+			]
+		}, {
+			// myself (for specified/private)
+			userId: me._id
+		}, {
+			// to me (for specified)
+			visibleUserIds: { $in: [ me._id ] }
+		}];
+	}
+
+	// 隠すユーザーを取得
+	const hideUserIds = await getHideUserIds(me);
 
 	// note
 	const noteQuery = {
