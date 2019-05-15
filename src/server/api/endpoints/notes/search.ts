@@ -10,6 +10,7 @@ import { toDbHost, isSelfHost } from '../../../../misc/convert-host';
 import Following from '../../../../models/following';
 import { concat } from '../../../../prelude/array';
 import { getHideUserIds } from '../../common/get-hide-users';
+import { getFriends } from '../../common/get-friends';
 const escapeRegexp = require('escape-regexp');
 
 export const meta = {
@@ -211,17 +212,30 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 	}
 
 	// constract query
-	const isFollowing = (me == null || from == null) ? false : ((await Following.findOne({
-		followerId: me._id,
-		followeeId: from._id
-	})) != null);
+	const [followings, hideUserIds] = await Promise.all([
+		// フォローを取得
+		// Fetch following
+		getFriends(me._id),
+
+		// 隠すユーザーを取得
+		getHideUserIds(me)
+	]);
+
+	const followQuery = followings.map(f => ({
+		userId: f.id,
+	}));
 
 	const visibleQuery = me == null ? [{
 		visibility: { $in: ['public', 'home'] }
 	}] : [{
 		visibility: {
-			$in: isFollowing ? ['public', 'home', 'followers'] : ['public', 'home']
+			$in: ['public', 'home']
 		}
+	}, {
+		$and: [
+			{ visibility: 'followers' },
+			{ $or: followQuery }
+		]
 	}, {
 		// myself (for specified/private)
 		userId: me._id
@@ -229,9 +243,6 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		// to me (for specified)
 		visibleUserIds: { $in: [ me._id ] }
 	}];
-
-	// mute / suspend
-	const hideUserIds = await getHideUserIds(me);
 
 	// note
 	const noteQuery = {
