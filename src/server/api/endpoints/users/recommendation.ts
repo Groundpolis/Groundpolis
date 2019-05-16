@@ -75,16 +75,17 @@ export default define(meta, async (ps, me) => {
 		if (me != null) {
 			// 自分のローカルフォロー
 			const myFollowings = await Following.find({
-				followerId: me._id,
-				'_followee.host': null,
+				followerId: me._id
 			});
 
-			const followingIds = myFollowings.map(following => following.followeeId);
+			const followingIds = myFollowings.map(f => f.followeeId);
+
+			const localIds = myFollowings.filter(f => f._followee.host == null).map(f => f.followeeId);
 
 			// ローカルフォロワーのフォロー数
 			const followings = await Following.aggregate([{
 				$match: {
-					followerId: { $in: followingIds },
+					followerId: { $in: localIds },
 					followeeId: { $nin: followingIds.concat(hideUserIds) },
 				}
 			}, {
@@ -109,7 +110,7 @@ export default define(meta, async (ps, me) => {
 		// ローカルからのフォロー数
 		const followings = await Following.aggregate([{
 			$match: {
-					followeeId: { $nin: hideUserIds },
+				followeeId: { $nin: hideUserIds },
 			}
 		}, {
 			$group: {
