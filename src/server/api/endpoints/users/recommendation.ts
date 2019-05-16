@@ -103,9 +103,9 @@ export default define(meta, async (ps, me) => {
 					count: -1
 				}
 			}, {
-				$limit: ps.limit + ps.offset
-			}, {
 				$skip: ps.offset
+			}, {
+				$limit: ps.limit
 			}]) as any[];
 
 			if (followings.length >= ps.limit)
@@ -129,9 +129,9 @@ export default define(meta, async (ps, me) => {
 					count: -1
 				}
 			}, {
-				$limit: ps.limit + ps.offset
-			}, {
 				$skip: ps.offset
+			}, {
+				$limit: ps.limit
 			}]) as any[];
 
 			return await Promise.all(followings.map(f => pack(f._id, me, { detail: true })));
