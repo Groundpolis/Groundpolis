@@ -78,7 +78,7 @@ export default define(meta, async (ps, me) => {
 
 		const users = await User.aggregate([{
 			$match: {
-				updatedAt: { $gte: new Date(Date.now() - ms('1days')) },
+				updatedAt: { $gte: new Date(Date.now() - ms('5days')) },
 				followersCount: { $gte: 10 },
 				followingCount: { $gte: 10 },
 				notesCount: { $gte: 10 },
@@ -91,7 +91,11 @@ export default define(meta, async (ps, me) => {
 			},
 		}, {
 			$match: {
-				fb: { $gt: 0.3 },
+				fb: { $gt: 0.5 },
+			}
+		}, {
+			$match: {
+				fb: { $lt: 5 },
 			}
 		}, {
 			$sort: {
