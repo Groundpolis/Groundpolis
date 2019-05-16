@@ -106,7 +106,7 @@ export default define(meta, async (ps, me) => {
 				followersCount: -1
 			}
 		}, {
-			$limit: ps.limit
+			$limit: ps.limit + ps.offset
 		}, {
 			$skip: ps.offset
 		}]) as IUser[];
