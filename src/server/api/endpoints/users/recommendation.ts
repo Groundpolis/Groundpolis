@@ -78,7 +78,7 @@ export default define(meta, async (ps, me) => {
 
 		const users = await User.aggregate([{
 			$match: {
-				updatedAt: { $gte: new Date(Date.now() - ms('1hours')) },
+				updatedAt: { $gte: new Date(Date.now() - ms('1days')) },
 				followersCount: { $gte: 10 },
 				followingCount: { $gte: 10 },
 				notesCount: { $gte: 10 },
