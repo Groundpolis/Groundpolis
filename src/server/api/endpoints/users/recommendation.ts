@@ -17,7 +17,7 @@ export const meta = {
 
 	tags: ['users'],
 
-	requireCredential: true,
+	requireCredential: false,
 
 	kind: 'account-read',
 
@@ -44,7 +44,7 @@ export const meta = {
 export default define(meta, async (ps, me) => {
 	const instance = await fetchMeta();
 
-	if (instance.enableExternalUserRecommendation) {
+	if (instance.enableExternalUserRecommendation && me != null) {
 		const userName = me.username;
 		const hostName = config.hostname;
 		const limit = ps.limit;
@@ -71,7 +71,7 @@ export default define(meta, async (ps, me) => {
 		return users;
 	} else {
 		// ID list of the user itself and other users who the user follows
-		const followingIds = await getFriendIds(me._id);
+		const followingIds = me != null ? await getFriendIds(me._id) : [];
 
 		// 隠すユーザーを取得
 		const hideUserIds = await getHideUserIds(me);
