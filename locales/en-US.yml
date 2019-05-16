@@ -469,6 +469,7 @@ common/views/components/note-menu.vue:
   mention: "Mention"
   detail: "Details"
   go-timeline: "Go timeline"
+  up-timeline: "Go timeline (reversed)"
   copy-content: "Copy the contents"
   copy-link: "Copy link"
   favorite: "Favorite this note"

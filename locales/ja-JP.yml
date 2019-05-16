@@ -505,6 +505,7 @@ common/views/components/note-menu.vue:
   mention: "メンション"
   detail: "詳細"
   go-timeline: "タイムラインへ"
+  up-timeline: "タイムラインへ (逆順)"
   copy-content: "内容をコピー"
   copy-link: "リンクをコピー"
   favorite: "お気に入り"

@@ -11,7 +11,7 @@ import { url } from '../../../config';
 import copyToClipboard from '../../../common/scripts/copy-to-clipboard';
 import { concat, intersperse } from '../../../../../prelude/array';
 import { faCopy, faEye, faEyeSlash, } from '@fortawesome/free-regular-svg-icons';
-import { faPlane } from '@fortawesome/free-solid-svg-icons';
+import { faPlaneArrival, faPlaneDeparture } from '@fortawesome/free-solid-svg-icons';
 
 
 export default Vue.extend({
@@ -34,9 +34,13 @@ export default Vue.extend({
 				text: this.$t('detail'),
 				action: this.detail
 			}, {
-				icon: faPlane,
+				icon: faPlaneArrival,
 				text: this.$t('go-timeline'),
 				action: this.goTimeline
+			}, {
+				icon: faPlaneDeparture,
+				text: this.$t('up-timeline'),
+				action: this.upTimeline
 			}, {
 				icon: faCopy,
 				text: this.$t('copy-content'),
@@ -182,6 +186,14 @@ export default Vue.extend({
 			const date = new Date(new Date(this.note.createdAt).getTime() + 5000).toISOString();
 			const host = this.note.user.host || '.';
 			const q = `host:${host} until:${date}`;
+
+			this.$router.push(`/search?q=${encodeURIComponent(q)}`);
+		},
+
+		upTimeline() {
+			const date = new Date(new Date(this.note.createdAt).getTime() - 5000).toISOString();
+			const host = this.note.user.host || '.';
+			const q = `host:${host} since:${date}`;
 
 			this.$router.push(`/search?q=${encodeURIComponent(q)}`);
 		},
