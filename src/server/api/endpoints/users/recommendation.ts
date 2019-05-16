@@ -98,6 +98,10 @@ export default define(meta, async (ps, me) => {
 				fb: { $lt: 5 },
 			}
 		}, {
+			$sample: {
+				size: ps.limit * 10
+			}
+		}, {
 			$sort: {
 				followersCount: -1
 			}
