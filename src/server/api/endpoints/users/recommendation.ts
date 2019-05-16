@@ -1,7 +1,7 @@
 import * as ms from 'ms';
 import $ from 'cafy';
 import User, { pack, ILocalUser, IUser } from '../../../../models/user';
-//import { getFriendIds } from '../../common/get-friends';
+import { getFriendIds } from '../../common/get-friends';
 import * as request from 'request-promise-native';
 import config from '../../../../config';
 import define from '../../define';
@@ -71,7 +71,7 @@ export default define(meta, async (ps, me) => {
 		return users;
 	} else {
 		// ID list of the user itself and other users who the user follows
-		//const followingIds = await getFriendIds(me._id);
+		const followingIds = await getFriendIds(me._id);
 
 		// 隠すユーザーを取得
 		const hideUserIds = await getHideUserIds(me);
@@ -82,7 +82,7 @@ export default define(meta, async (ps, me) => {
 				followersCount: { $gte: 10 },
 				followingCount: { $gte: 10 },
 				notesCount: { $gte: 10 },
-				_id: { $nin: hideUserIds },
+				_id: { $nin: followingIds.concat(hideUserIds) },
 				isBot: { $ne: true },
 			}
 		}, {
