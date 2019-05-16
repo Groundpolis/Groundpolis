@@ -78,7 +78,7 @@ export default define(meta, async (ps, me) => {
 
 		const users = await User.aggregate([{
 			$match: {
-				updatedAt: { $gte: new Date(Date.now() - ms('3hours')) },
+				updatedAt: { $gte: new Date(Date.now() - ms('3days')) },
 				followersCount: { $gte: 10 },
 				followingCount: { $gte: 10 },
 				notesCount: { $gte: 10 },
@@ -87,19 +87,15 @@ export default define(meta, async (ps, me) => {
 			}
 		}, {
 			$addFields: {
-				// フォロー/フォロワー比が少ない方が値が小さい
-				fabs: {
-					$abs: {
-						$subtract: [
-							{ $divide: [ '$followingCount', '$followersCount' ] },
-							1
-						]
-					}
-				}
+				fb: { $divide: [ '$followingCount', '$followersCount' ] }
 			},
 		}, {
+			$match: {
+				fb: { $lt: 7 },
+			}
+		}, {
 			$sort: {
-				fabs: 1
+				fb: -1
 			}
 		}, {
 			$limit: ps.limit
