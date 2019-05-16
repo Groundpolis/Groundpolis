@@ -91,7 +91,7 @@ export default define(meta, async (ps, me) => {
 			},
 		}, {
 			$match: {
-				fb: { $gt: 3 },
+				fb: { $gt: 0.3 },
 			}
 		}, {
 			$sort: {
