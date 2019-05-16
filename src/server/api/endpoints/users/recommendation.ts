@@ -1,7 +1,7 @@
 import * as ms from 'ms';
 import $ from 'cafy';
-import User, { pack, ILocalUser } from '../../../../models/user';
-import { getFriendIds } from '../../common/get-friends';
+import User, { pack, ILocalUser, IUser } from '../../../../models/user';
+//import { getFriendIds } from '../../common/get-friends';
 import * as request from 'request-promise-native';
 import config from '../../../../config';
 import define from '../../define';
@@ -71,29 +71,43 @@ export default define(meta, async (ps, me) => {
 		return users;
 	} else {
 		// ID list of the user itself and other users who the user follows
-		const followingIds = await getFriendIds(me._id);
+		//const followingIds = await getFriendIds(me._id);
 
 		// 隠すユーザーを取得
 		const hideUserIds = await getHideUserIds(me);
 
-		const users = await User.find({
-			_id: {
-				$nin: followingIds.concat(hideUserIds)
-			},
-			isLocked: { $ne: true },
-			updatedAt: {
-				$gte: new Date(Date.now() - ms('3days'))
-			},
-			host: null
-		}, {
-			limit: ps.limit,
-			skip: ps.offset,
-			sort: {
-				followersCount: -1
+		const users = await User.aggregate([{
+			$match: {
+				updatedAt: { $gte: new Date(Date.now() - ms('3days')) },
+				followersCount: { $gte: 5 },
+				followingCount: { $gte: 5 },
+				notesCount: { $gte: 5 },
+				_id: { $nin: hideUserIds },
+				isBot: { $ne: true },
 			}
-		});
+		}, {
+			$addFields: {
+				// フォロー/フォロワー比が少ない方が値が小さい
+				fabs: {
+					$abs: {
+						$subtract: [
+							{ $divide: [ '$followingCount', '$followersCount' ] },
+							1
+						]
+					}
+				}
+			},
+		}, {
+			$sort: {
+				fabs: 1
+			}
+		}, {
+			$limit: ps.limit
+		}, {
+			$skip: ps.offset
+		}]) as IUser[];
 
-		return await Promise.all(users.map(user => pack(user, me, { detail: true })));
+		return await Promise.all(users.map(user => pack(user._id, me, { detail: true })));
 	}
 });
 
