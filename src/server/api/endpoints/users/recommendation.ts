@@ -71,50 +71,13 @@ export default define(meta, async (ps, me) => {
 
 		return users;
 	} else {
-		// ID list of the user itself and other users who the user follows
-		const followingIds = me != null ? await getFriendIds(me._id) : [];
-
 		// 隠すユーザーを取得
 		const hideUserIds = await getHideUserIds(me);
 
-		if (me == null) {
-			const users = await User.aggregate([{
-				$match: {
-					updatedAt: { $gte: new Date(Date.now() - ms('5days')) },
-					followersCount: { $gte: 10 },
-					followingCount: { $gte: 10 },
-					notesCount: { $gte: 10 },
-					_id: { $nin: followingIds.concat(hideUserIds) },
-					isBot: { $ne: true },
-				}
-			}, {
-				$addFields: {
-					fb: { $divide: [ '$followingCount', '$followersCount' ] }
-				},
-			}, {
-				$match: {
-					fb: { $gt: 0.5 },
-				}
-			}, {
-				$match: {
-					fb: { $lt: 5 },
-				}
-			}, {
-				$sample: {
-					size: ps.limit * 10
-				}
-			}, {
-				$sort: {
-					followersCount: -1
-				}
-			}, {
-				$limit: ps.limit + ps.offset
-			}, {
-				$skip: ps.offset
-			}]) as IUser[];
+		if (me != null) {
+			// ID list of the user itself and other users who the user follows
+			const followingIds = await getFriendIds(me._id);
 
-			return await Promise.all(users.map(user => pack(user._id, me, { detail: true })));
-		} else {
 			const followings = await Following.aggregate([{
 				$match: {
 					$and: [
@@ -128,8 +91,22 @@ export default define(meta, async (ps, me) => {
 				$sample: { size: ps.limit }
 			}]) as IFollowing[];
 
-			return await Promise.all(followings.map(f => pack(f.followeeId, me, { detail: true })));
+			if (followings.length >= ps.limit)
+				return await Promise.all(followings.map(f => pack(f.followeeId, me, { detail: true })));
 		}
+
+		const followings = await Following.aggregate([{
+			$match: {
+				$and: [
+					{ followerId: { $nin: hideUserIds } },
+					{ followeeId: { $nin: hideUserIds } },
+				]
+			}
+		}, {
+			$sample: { size: ps.limit }
+		}]) as IFollowing[];
+
+		return await Promise.all(followings.map(f => pack(f.followeeId, me, { detail: true })));
 	}
 });
 
