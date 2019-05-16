@@ -75,13 +75,11 @@ export default define(meta, async (ps, me) => {
 		if (me != null) {
 			// 自分のローカルフォロー
 			const myFollowings = await Following.find({
-				followerId: me,
+				followerId: me._id,
 				'_followee.host': null,
 			});
 
-			const followingIds = myFollowings.map(following => ({
-				id: following.followeeId
-			}));
+			const followingIds = myFollowings.map(following => following.followeeId);
 
 			// ローカルフォロワーのフォロー数
 			const followings = await Following.aggregate([{
