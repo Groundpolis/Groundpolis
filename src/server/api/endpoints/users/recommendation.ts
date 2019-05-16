@@ -84,12 +84,8 @@ export default define(meta, async (ps, me) => {
 			// ローカルフォロワーのフォロー数
 			const followings = await Following.aggregate([{
 				$match: {
-					$and: [
-						{ followerId: { $in: followingIds } },
-						{ followerId: { $nin: hideUserIds } },
-						{ followeeId: { $nin: followingIds } },
-						{ followeeId: { $nin: hideUserIds } },
-					]
+					followerId: { $in: followingIds },
+					followeeId: { $nin: followingIds.concat(hideUserIds) },
 				}
 			}, {
 				$group: {
@@ -109,30 +105,28 @@ export default define(meta, async (ps, me) => {
 			if (followings.length >= ps.limit)
 				return await Promise.all(followings.map(f => pack(f._id, me, { detail: true })));
 		}
-			// ローカルからのフォロー数
-			const followings = await Following.aggregate([{
-				$match: {
-					$and: [
-						{ followerId: { $nin: hideUserIds } },
-						{ followeeId: { $nin: hideUserIds } },
-					]
-				}
-			}, {
-				$group: {
-					_id: '$followeeId',
-					count: { $sum: 1 }
-				}
-			}, {
-				$sort: {
-					count: -1
-				}
-			}, {
-				$skip: ps.offset
-			}, {
-				$limit: ps.limit
-			}]) as any[];
 
-			return await Promise.all(followings.map(f => pack(f._id, me, { detail: true })));
+		// ローカルからのフォロー数
+		const followings = await Following.aggregate([{
+			$match: {
+					followeeId: { $nin: hideUserIds },
+			}
+		}, {
+			$group: {
+				_id: '$followeeId',
+				count: { $sum: 1 }
+			}
+		}, {
+			$sort: {
+				count: -1
+			}
+		}, {
+			$skip: ps.offset
+		}, {
+			$limit: ps.limit
+		}]) as any[];
+
+		return await Promise.all(followings.map(f => pack(f._id, me, { detail: true })));
 	}
 });
 
