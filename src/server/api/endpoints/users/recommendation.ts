@@ -1,7 +1,5 @@
-import * as ms from 'ms';
 import $ from 'cafy';
-import User, { pack, ILocalUser, IUser } from '../../../../models/user';
-import { getFriendIds } from '../../common/get-friends';
+import { pack, ILocalUser } from '../../../../models/user';
 import * as request from 'request-promise-native';
 import config from '../../../../config';
 import define from '../../define';
@@ -75,9 +73,17 @@ export default define(meta, async (ps, me) => {
 		const hideUserIds = await getHideUserIds(me);
 
 		if (me != null) {
-			// ID list of the user itself and other users who the user follows
-			const followingIds = await getFriendIds(me._id);
+			// 自分のローカルフォロー
+			const myFollowings = await Following.find({
+				followerId: me,
+				'_followee.host': null,
+			});
 
+			const followingIds = myFollowings.map(following => ({
+				id: following.followeeId
+			}));
+
+			// フォロワーのフォロー
 			const followings = await Following.aggregate([{
 				$match: {
 					$and: [
