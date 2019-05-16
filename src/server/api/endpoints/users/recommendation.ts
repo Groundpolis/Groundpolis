@@ -7,7 +7,7 @@ import fetchMeta from '../../../../misc/fetch-meta';
 import resolveUser from '../../../../remote/resolve-user';
 import { getHideUserIds } from '../../common/get-hide-users';
 import { apiLogger } from '../../logger';
-import Following, { IFollowing } from '../../../../models/following';
+import Following from '../../../../models/following';
 
 export const meta = {
 	desc: {
@@ -83,7 +83,7 @@ export default define(meta, async (ps, me) => {
 				id: following.followeeId
 			}));
 
-			// フォロワーのフォロー
+			// ローカルフォロワーのフォロー数
 			const followings = await Following.aggregate([{
 				$match: {
 					$and: [
@@ -94,25 +94,47 @@ export default define(meta, async (ps, me) => {
 					]
 				}
 			}, {
-				$sample: { size: ps.limit }
-			}]) as IFollowing[];
+				$group: {
+					_id: '$followeeId',
+					count: { $sum: 1 }
+				}
+			}, {
+				$sort: {
+					count: -1
+				}
+			}, {
+				$limit: ps.limit + ps.offset
+			}, {
+				$skip: ps.offset
+			}]) as any[];
 
 			if (followings.length >= ps.limit)
-				return await Promise.all(followings.map(f => pack(f.followeeId, me, { detail: true })));
+				return await Promise.all(followings.map(f => pack(f._id, me, { detail: true })));
 		}
+			// ローカルからのフォロー数
+			const followings = await Following.aggregate([{
+				$match: {
+					$and: [
+						{ followerId: { $nin: hideUserIds } },
+						{ followeeId: { $nin: hideUserIds } },
+					]
+				}
+			}, {
+				$group: {
+					_id: '$followeeId',
+					count: { $sum: 1 }
+				}
+			}, {
+				$sort: {
+					count: -1
+				}
+			}, {
+				$limit: ps.limit + ps.offset
+			}, {
+				$skip: ps.offset
+			}]) as any[];
 
-		const followings = await Following.aggregate([{
-			$match: {
-				$and: [
-					{ followerId: { $nin: hideUserIds } },
-					{ followeeId: { $nin: hideUserIds } },
-				]
-			}
-		}, {
-			$sample: { size: ps.limit }
-		}]) as IFollowing[];
-
-		return await Promise.all(followings.map(f => pack(f.followeeId, me, { detail: true })));
+			return await Promise.all(followings.map(f => pack(f._id, me, { detail: true })));
 	}
 });
 
