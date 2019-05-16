@@ -73,7 +73,7 @@ export default define(meta, async (ps, me) => {
 		const hideUserIds = await getHideUserIds(me);
 
 		// 未ログイン or フォールバックは、ローカルユーザーの全フォロワーを対象にする
-		let match = {
+		let matchQuery = {
 			followeeId: { $nin: hideUserIds },
 		} as any;
 
@@ -84,11 +84,10 @@ export default define(meta, async (ps, me) => {
 			});
 
 			const followingIds = myFollowings.map(f => f.followeeId);
-
 			const localIds = myFollowings.filter(f => f._followee.host == null).map(f => f.followeeId);
 
 			if (localIds.length > 0) {
-				match = {
+				matchQuery = {
 					followerId: { $in: localIds },
 					followeeId: { $nin: followingIds.concat(hideUserIds) },
 				};
@@ -96,9 +95,8 @@ export default define(meta, async (ps, me) => {
 		}
 		//#endregion
 
-		// ローカルフォロワーのフォロー数
 		const followings = await Following.aggregate([{
-			$match: match
+			$match: matchQuery
 		}, {
 			// フォロワー数でグルーピング
 			$group: {
