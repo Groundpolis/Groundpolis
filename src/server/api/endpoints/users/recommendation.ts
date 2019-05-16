@@ -91,11 +91,11 @@ export default define(meta, async (ps, me) => {
 			},
 		}, {
 			$match: {
-				fb: { $lt: 7 },
+				fb: { $lt: 3 },
 			}
 		}, {
 			$sort: {
-				fb: -1
+				followersCount: -1
 			}
 		}, {
 			$limit: ps.limit
