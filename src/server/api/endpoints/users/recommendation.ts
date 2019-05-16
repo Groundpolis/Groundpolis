@@ -9,6 +9,7 @@ import fetchMeta from '../../../../misc/fetch-meta';
 import resolveUser from '../../../../remote/resolve-user';
 import { getHideUserIds } from '../../common/get-hide-users';
 import { apiLogger } from '../../logger';
+import Following, { IFollowing } from '../../../../models/following';
 
 export const meta = {
 	desc: {
@@ -76,42 +77,59 @@ export default define(meta, async (ps, me) => {
 		// 隠すユーザーを取得
 		const hideUserIds = await getHideUserIds(me);
 
-		const users = await User.aggregate([{
-			$match: {
-				updatedAt: { $gte: new Date(Date.now() - ms('5days')) },
-				followersCount: { $gte: 10 },
-				followingCount: { $gte: 10 },
-				notesCount: { $gte: 10 },
-				_id: { $nin: followingIds.concat(hideUserIds) },
-				isBot: { $ne: true },
-			}
-		}, {
-			$addFields: {
-				fb: { $divide: [ '$followingCount', '$followersCount' ] }
-			},
-		}, {
-			$match: {
-				fb: { $gt: 0.5 },
-			}
-		}, {
-			$match: {
-				fb: { $lt: 5 },
-			}
-		}, {
-			$sample: {
-				size: ps.limit * 10
-			}
-		}, {
-			$sort: {
-				followersCount: -1
-			}
-		}, {
-			$limit: ps.limit + ps.offset
-		}, {
-			$skip: ps.offset
-		}]) as IUser[];
+		if (me == null) {
+			const users = await User.aggregate([{
+				$match: {
+					updatedAt: { $gte: new Date(Date.now() - ms('5days')) },
+					followersCount: { $gte: 10 },
+					followingCount: { $gte: 10 },
+					notesCount: { $gte: 10 },
+					_id: { $nin: followingIds.concat(hideUserIds) },
+					isBot: { $ne: true },
+				}
+			}, {
+				$addFields: {
+					fb: { $divide: [ '$followingCount', '$followersCount' ] }
+				},
+			}, {
+				$match: {
+					fb: { $gt: 0.5 },
+				}
+			}, {
+				$match: {
+					fb: { $lt: 5 },
+				}
+			}, {
+				$sample: {
+					size: ps.limit * 10
+				}
+			}, {
+				$sort: {
+					followersCount: -1
+				}
+			}, {
+				$limit: ps.limit + ps.offset
+			}, {
+				$skip: ps.offset
+			}]) as IUser[];
 
-		return await Promise.all(users.map(user => pack(user._id, me, { detail: true })));
+			return await Promise.all(users.map(user => pack(user._id, me, { detail: true })));
+		} else {
+			const followings = await Following.aggregate([{
+				$match: {
+					$and: [
+						{ followerId: { $in: followingIds } },
+						{ followerId: { $nin: hideUserIds } },
+						{ followeeId: { $nin: followingIds } },
+						{ followeeId: { $nin: hideUserIds } },
+					]
+				}
+			}, {
+				$sample: { size: ps.limit }
+			}]) as IFollowing[];
+
+			return await Promise.all(followings.map(f => pack(f.followeeId, me, { detail: true })));
+		}
 	}
 });
 
