@@ -1,7 +1,5 @@
-import * as ms from 'ms';
 import $ from 'cafy';
-import User, { pack, ILocalUser, IUser } from '../../../../models/user';
-import { getFriendIds } from '../../common/get-friends';
+import { pack, ILocalUser, IUser } from '../../../../models/user';
 import * as request from 'request-promise-native';
 import config from '../../../../config';
 import define from '../../define';
@@ -9,6 +7,7 @@ import fetchMeta from '../../../../misc/fetch-meta';
 import resolveUser from '../../../../remote/resolve-user';
 import { getHideUserIds } from '../../common/get-hide-users';
 import { apiLogger } from '../../logger';
+import Following from '../../../../models/following';
 
 export const meta = {
 	desc: {
@@ -70,48 +69,69 @@ export default define(meta, async (ps, me) => {
 
 		return users;
 	} else {
-		// ID list of the user itself and other users who the user follows
-		const followingIds = me != null ? await getFriendIds(me._id) : [];
-
 		// 隠すユーザーを取得
 		const hideUserIds = await getHideUserIds(me);
 
-		const users = await User.aggregate([{
+		// 未ログイン or フォールバックは、ローカルユーザーの全フォロワーを対象にする
+		let matchQuery = {
+			followeeId: { $nin: hideUserIds },
+		} as any;
+
+		// ログイン時にローカルフォローがあればそのユーザーのフォローを対象にする
+		if (me != null) {
+			const myFollowings = await Following.find({
+				followerId: me._id
+			});
+
+			const followingIds = myFollowings.map(f => f.followeeId);
+			const localIds = myFollowings.filter(f => f._followee.host == null).map(f => f.followeeId);
+
+			if (localIds.length > 0) {
+				matchQuery = {
+					followerId: { $in: localIds },
+					followeeId: { $nin: followingIds.concat(hideUserIds) },
+				};
+			}
+		}
+		//#endregion
+
+		const followings = await Following.aggregate([{
+			$match: matchQuery
+		}, {
+			// フォロワー数でグルーピング
+			$group: {
+				_id: '$followeeId',
+				count: { $sum: 1 }
+			}
+		}, {
+			// join User
+			$lookup: {
+				from: 'users',
+				localField: '_id',
+				foreignField: '_id',
+				as: '_user',
+			}
+		}, {
+			$unwind: '$_user'
+		}, {
+			// updatedAtでユーザーフィルタ
 			$match: {
-				updatedAt: { $gte: new Date(Date.now() - ms('5days')) },
-				followersCount: { $gte: 10 },
-				followingCount: { $gte: 10 },
-				notesCount: { $gte: 10 },
-				_id: { $nin: followingIds.concat(hideUserIds) },
-				isBot: { $ne: true },
+				'_user.updatedAt': { $gt: new Date(Date.now() - (1000 * 60 * 60 * 24 * 5)) }
 			}
 		}, {
-			$addFields: {
-				fb: { $divide: [ '$followingCount', '$followersCount' ] }
-			},
-		}, {
-			$match: {
-				fb: { $gt: 0.5 },
-			}
-		}, {
-			$match: {
-				fb: { $lt: 5 },
-			}
-		}, {
-			$sample: {
-				size: ps.limit * 10
-			}
-		}, {
+			// フォロワー多い順
 			$sort: {
-				followersCount: -1
+				count: -1
 			}
-		}, {
-			$limit: ps.limit + ps.offset
 		}, {
 			$skip: ps.offset
-		}]) as IUser[];
+		}, {
+			$limit: ps.limit
+		}]) as any[];
 
-		return await Promise.all(users.map(user => pack(user._id, me, { detail: true })));
+		const users = followings.map(x => x._user) as IUser[];
+
+		return await Promise.all(users.map(user => pack(user, me, { detail: true })));
 	}
 });
 
