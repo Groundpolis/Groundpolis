@@ -1,5 +1,5 @@
 import $ from 'cafy';
-import { pack, ILocalUser } from '../../../../models/user';
+import { pack, ILocalUser, IUser } from '../../../../models/user';
 import * as request from 'request-promise-native';
 import config from '../../../../config';
 import define from '../../define';
@@ -72,8 +72,13 @@ export default define(meta, async (ps, me) => {
 		// 隠すユーザーを取得
 		const hideUserIds = await getHideUserIds(me);
 
+		// 未ログイン or フォールバックは、ローカルユーザーの全フォロワーを対象にする
+		let match = {
+			followeeId: { $nin: hideUserIds },
+		} as any;
+
+		// ログイン時にローカルフォローがあればそのユーザーのフォローを対象にする
 		if (me != null) {
-			// 自分のローカルフォロー
 			const myFollowings = await Following.find({
 				followerId: me._id
 			});
@@ -82,42 +87,41 @@ export default define(meta, async (ps, me) => {
 
 			const localIds = myFollowings.filter(f => f._followee.host == null).map(f => f.followeeId);
 
-			// ローカルフォロワーのフォロー数
-			const followings = await Following.aggregate([{
-				$match: {
+			if (localIds.length > 0) {
+				match = {
 					followerId: { $in: localIds },
 					followeeId: { $nin: followingIds.concat(hideUserIds) },
-				}
-			}, {
-				$group: {
-					_id: '$followeeId',
-					count: { $sum: 1 }
-				}
-			}, {
-				$sort: {
-					count: -1
-				}
-			}, {
-				$skip: ps.offset
-			}, {
-				$limit: ps.limit
-			}]) as any[];
-
-			if (followings.length >= ps.limit)
-				return await Promise.all(followings.map(f => pack(f._id, me, { detail: true })));
-		}
-
-		// ローカルからのフォロー数
-		const followings = await Following.aggregate([{
-			$match: {
-				followeeId: { $nin: hideUserIds },
+				};
 			}
+		}
+		//#endregion
+
+		// ローカルフォロワーのフォロー数
+		const followings = await Following.aggregate([{
+			$match: match
 		}, {
+			// フォロワー数でグルーピング
 			$group: {
 				_id: '$followeeId',
 				count: { $sum: 1 }
 			}
 		}, {
+			// join User
+			$lookup: {
+				from: 'users',
+				localField: '_id',
+				foreignField: '_id',
+				as: '_user',
+			}
+		}, {
+			$unwind: '$_user'
+		}, {
+			// updatedAtでユーザーフィルタ
+			$match: {
+				'_user.updatedAt': { $gt: new Date(Date.now() - (1000 * 60 * 60 * 24 * 5)) }
+			}
+		}, {
+			// フォロワー多い順
 			$sort: {
 				count: -1
 			}
@@ -127,7 +131,9 @@ export default define(meta, async (ps, me) => {
 			$limit: ps.limit
 		}]) as any[];
 
-		return await Promise.all(followings.map(f => pack(f._id, me, { detail: true })));
+		const users = followings.map(x => x._user) as IUser[];
+
+		return await Promise.all(users.map(user => pack(user, me, { detail: true })));
 	}
 });
 
