@@ -150,6 +150,34 @@ export default Vue.component('misskey-flavored-markdown', {
 					}, genEl(token.children));
 				}
 
+				case 'xspin': {
+					motionCount++;
+					const isLong = sumTextsLength(token.children) > 100 || countNodesF(token.children) > 20;
+					const isMany = motionCount > 50;
+					const style = (this.$store.state.settings.disableAnimatedMfm || isLong || isMany)
+						? ''
+						: `animation: xspin 1.5s linear infinite;`;
+					return (createElement as any)('span', {
+						attrs: {
+							style: 'display: inline-block;' + style
+						},
+					}, genEl(token.children));
+				}
+
+				case 'yspin': {
+					motionCount++;
+					const isLong = sumTextsLength(token.children) > 100 || countNodesF(token.children) > 20;
+					const isMany = motionCount > 50;
+					const style = (this.$store.state.settings.disableAnimatedMfm || isLong || isMany)
+						? ''
+						: `animation: yspin 1.5s linear infinite;`;
+					return (createElement as any)('span', {
+						attrs: {
+							style: 'display: inline-block;' + style
+						},
+					}, genEl(token.children));
+				}
+
 				case 'jump': {
 					motionCount++;
 					const isLong = sumTextsLength(token.children) > 100 || countNodesF(token.children) > 20;
