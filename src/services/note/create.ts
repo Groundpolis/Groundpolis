@@ -140,14 +140,20 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 		return rej('Renote target has been deleted');
 	}
 
-	// Renote対象が「ホームまたは全体」以外の公開範囲ならreject
-	if (data.renote && data.renote.visibility != 'public' && data.renote.visibility != 'home') {
-		return rej('Renote target is not public or home');
+	// Renote対象が「public/home/followers」以外の公開範囲ならreject
+	if (data.renote && data.renote.visibility != 'public' && data.renote.visibility != 'home' && data.renote.visibility != 'followers') {
+		return rej('Renote target is not public, home or followers');
 	}
 
-	// Renote対象がpublicではないならhomeにする
-	if (data.renote && data.renote.visibility != 'public' && data.visibility == 'public') {
-		data.visibility = 'home';
+	// Renote/Quoteの公開範囲を絞る
+	if (data.renote) {
+		if (data.visibility == 'public' && !['public'].includes(data.renote.visibility)) {
+			data.visibility = data.renote.visibility;
+		} else if (data.visibility == 'home' && !['public', 'home'].includes(data.renote.visibility)) {
+			data.visibility = data.renote.visibility;
+		} else if (data.visibility == 'followers' && !['public', 'home', 'followers'].includes(data.renote.visibility)) {
+			data.visibility = data.renote.visibility;
+		}
 	}
 
 	// 返信対象がpublicではないならhomeにする
