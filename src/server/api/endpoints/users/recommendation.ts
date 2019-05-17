@@ -71,6 +71,7 @@ export default define(meta, async (ps, me) => {
 	} else {
 		// 隠すユーザーを取得
 		const hideUserIds = await getHideUserIds(me);
+		if (me) hideUserIds.push(me._id);
 
 		// 未ログイン or フォールバックは、ローカルユーザーの全フォロワーを対象にする
 		let matchQuery = {
