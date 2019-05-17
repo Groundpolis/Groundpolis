@@ -106,7 +106,7 @@
 		</div>
 	</section>
 
-	<section>
+	<section v-if="isAdvanced">
 		<details>
 			<summary>{{ $t('danger-zone') }}</summary>
 		</details>

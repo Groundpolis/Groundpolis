@@ -63,6 +63,7 @@ const defaultDeviceSettings = {
 	mediaVolume: 0.5,
 	lang: null,
 	debug: false,
+	showAdvancedSettings: false,
 	lightmode: false,
 	loadRawImages: false,
 	alwaysShowNsfw: false,

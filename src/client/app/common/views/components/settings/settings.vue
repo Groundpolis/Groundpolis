@@ -29,32 +29,32 @@
 				<ui-radio v-model="navbar" value="right">{{ $t('@._settings.navbar-position-right') }}</ui-radio>
 			</section>
 			<section>
-				<ui-switch v-model="useShadow">{{ $t('@._settings.use-shadow') }}</ui-switch>
-				<ui-switch v-model="roundedCorners">{{ $t('@._settings.rounded-corners') }}</ui-switch>
+				<ui-switch v-model="useShadow" v-if="isAdvanced">{{ $t('@._settings.use-shadow') }}</ui-switch>
+				<ui-switch v-model="roundedCorners" v-if="isAdvanced">{{ $t('@._settings.rounded-corners') }}</ui-switch>
 				<ui-switch v-model="circleIcons">{{ $t('@._settings.circle-icons') }}</ui-switch>
 				<ui-switch v-model="reduceMotion">{{ $t('@._settings.reduce-motion') }}</ui-switch>
-				<ui-switch v-model="contrastedAcct">{{ $t('@._settings.contrasted-acct') }}</ui-switch>
-				<ui-switch v-model="showFullAcct">{{ $t('@._settings.show-full-acct') }}</ui-switch>
+				<ui-switch v-model="contrastedAcct" v-if="isAdvanced">{{ $t('@._settings.contrasted-acct') }}</ui-switch>
+				<ui-switch v-model="showFullAcct" v-if="isAdvanced">{{ $t('@._settings.show-full-acct') }}</ui-switch>
 				<ui-switch v-model="showVia">{{ $t('@._settings.show-via') }}</ui-switch>
-				<ui-switch v-model="useOsDefaultEmojis">{{ $t('@._settings.use-os-default-emojis') }}</ui-switch>
+				<ui-switch v-model="useOsDefaultEmojis" v-if="isAdvanced">{{ $t('@._settings.use-os-default-emojis') }}</ui-switch>
 				<ui-switch v-model="iLikeSushi">{{ $t('@._settings.i-like-sushi') }}</ui-switch>
 			</section>
 			<section>
-				<ui-switch v-model="suggestRecentHashtags">{{ $t('@._settings.suggest-recent-hashtags') }}</ui-switch>
+				<ui-switch v-model="suggestRecentHashtags" v-if="isAdvanced">{{ $t('@._settings.suggest-recent-hashtags') }}</ui-switch>
 				<ui-switch v-model="showClockOnHeader" v-if="!$root.isMobile">{{ $t('@._settings.show-clock-on-header') }}</ui-switch>
 				<ui-switch v-model="alwaysShowNsfw">{{ $t('@._settings.always-show-nsfw') }}</ui-switch>
 				<ui-switch v-model="showReplyTarget">{{ $t('@._settings.show-reply-target') }}</ui-switch>
 				<ui-switch v-model="disableAnimatedMfm">{{ $t('@._settings.disable-animated-mfm') }}</ui-switch>
 				<ui-switch v-model="disableShowingAnimatedImages">{{ $t('@._settings.disable-showing-animated-images') }}</ui-switch>
-				<ui-switch v-model="remainDeletedNote">{{ $t('@._settings.remain-deleted-note') }}</ui-switch>
+				<ui-switch v-model="remainDeletedNote" v-if="isAdvanced">{{ $t('@._settings.remain-deleted-note') }}</ui-switch>
 			</section>
-			<section>
+			<section v-if="isAdvanced">
 				<header>{{ $t('@._settings.line-width') }}</header>
 				<ui-radio v-model="lineWidth" :value="0.5">{{ $t('@._settings.line-width-thin') }}</ui-radio>
 				<ui-radio v-model="lineWidth" :value="1">{{ $t('@._settings.line-width-normal') }}</ui-radio>
 				<ui-radio v-model="lineWidth" :value="2">{{ $t('@._settings.line-width-thick') }}</ui-radio>
 			</section>
-			<section>
+			<section v-if="isAdvanced">
 				<header>{{ $t('@._settings.font-size') }}</header>
 				<ui-radio v-model="fontSize" :value="-2">{{ $t('@._settings.font-size-x-small') }}</ui-radio>
 				<ui-radio v-model="fontSize" :value="-1">{{ $t('@._settings.font-size-small') }}</ui-radio>
@@ -78,7 +78,7 @@
 				<ui-radio v-model="deckColumnAlign" value="left">{{ $t('@._settings.deck-column-align-left') }}</ui-radio>
 				<ui-radio v-model="deckColumnAlign" value="flexible">{{ $t('@._settings.deck-column-align-flexible') }}</ui-radio>
 			</section>
-			<section>
+			<section v-if="isAdvanced">
 				<header>{{ $t('@._settings.deck-column-width') }}</header>
 				<ui-radio v-model="deckColumnWidth" value="narrow">{{ $t('@._settings.deck-column-width-narrow') }}</ui-radio>
 				<ui-radio v-model="deckColumnWidth" value="narrower">{{ $t('@._settings.deck-column-width-narrower') }}</ui-radio>
@@ -86,7 +86,7 @@
 				<ui-radio v-model="deckColumnWidth" value="wider">{{ $t('@._settings.deck-column-width-wider') }}</ui-radio>
 				<ui-radio v-model="deckColumnWidth" value="wide">{{ $t('@._settings.deck-column-width-wide') }}</ui-radio>
 			</section>
-			<section>
+			<section v-if="isAdvanced">
 				<ui-switch v-model="games_reversi_showBoardLabels">{{ $t('@._settings.show-reversi-board-labels') }}</ui-switch>
 				<ui-switch v-model="games_reversi_useAvatarStones">{{ $t('@._settings.use-avatar-reversi-stones') }}</ui-switch>
 			</section>
@@ -101,13 +101,13 @@
 				<ui-switch v-model="fetchOnScroll">{{ $t('@._settings.fetch-on-scroll') }}
 					<template #desc>{{ $t('@._settings.fetch-on-scroll-desc') }}</template>
 				</ui-switch>
-				<ui-switch v-model="keepCw">{{ $t('@._settings.keep-cw') }}
+				<ui-switch v-model="keepCw" v-if="isAdvanced">{{ $t('@._settings.keep-cw') }}
 					<template #desc>{{ $t('@._settings.keep-cw-desc') }}</template>
 				</ui-switch>
 				<ui-switch v-if="$root.isMobile" v-model="disableViaMobile">{{ $t('@._settings.disable-via-mobile') }}</ui-switch>
 			</section>
 
-			<section>
+			<section v-if="isAdvanced">
 				<header>{{ $t('@._settings.timeline') }}</header>
 				<ui-switch v-model="showMyRenotes">{{ $t('@._settings.show-my-renotes') }}</ui-switch>
 				<ui-switch v-model="showRenotedMyNotes">{{ $t('@._settings.show-renoted-my-notes') }}</ui-switch>
@@ -144,7 +144,7 @@
 				</section>
 			</section>
 
-			<section>
+			<section v-if="isAdvanced">
 				<header>{{ $t('@._settings.web-search-engine') }}</header>
 				<ui-input v-model="webSearchEngine">{{ $t('@._settings.web-search-engine') }}<template #desc>{{ $t('@._settings.web-search-engine-desc') }}</template></ui-input>
 			</section>
@@ -261,8 +261,11 @@
 		<ui-card>
 			<template #title><fa icon="cogs"/> {{ $t('@._settings.advanced-settings') }}</template>
 			<section>
-				<ui-switch v-model="debug">
+				<ui-switch v-model="debug" v-if="isAdvanced">
 					{{ $t('@._settings.debug-mode') }}<template #desc>{{ $t('@._settings.debug-mode-desc') }}</template>
+				</ui-switch>
+				<ui-switch v-model="showAdvancedSettings">
+					Show advanced settings
 				</ui-switch>
 			</section>
 		</ui-card>
@@ -325,6 +328,10 @@ export default Vue.extend({
 		};
 	},
 	computed: {
+		isAdvanced(): boolean {
+			return this.$store.state.device.showAdvancedSettings;
+		}
+
 		useOsDefaultEmojis: {
 			get() { return this.$store.state.device.useOsDefaultEmojis; },
 			set(value) { this.$store.commit('device/set', { key: 'useOsDefaultEmojis', value }); }
@@ -378,6 +385,11 @@ export default Vue.extend({
 		debug: {
 			get() { return this.$store.state.device.debug; },
 			set(value) { this.$store.commit('device/set', { key: 'debug', value }); }
+		},
+
+		showAdvancedSettings: {
+			get() { return this.$store.state.device.showAdvancedSettings; },
+			set(value) { this.$store.commit('device/set', { key: 'showAdvancedSettings', value }); }
 		},
 
 		alwaysShowNsfw: {
