@@ -308,10 +308,6 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		noteQuery.userId = from._id;
 	}
 
-	const sort = {
-		createdAt: -1
-	};
-
 	// Date
 	if (since) {
 		noteQuery.$and.push({ createdAt: { $gt: since } });
@@ -319,11 +315,6 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 
 	if (until) {
 		noteQuery.$and.push({ createdAt: { $lt: until } });
-	}
-
-	// sinceのみ指定されてたら逆順
-	if (since && !until) {
-		sort.createdAt = 1;
 	}
 
 	// note - files / medias
