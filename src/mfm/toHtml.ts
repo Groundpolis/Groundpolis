@@ -60,6 +60,18 @@ export function toHtml(tokens: MfmForest, mentionedRemoteUsers: INote['mentioned
 			return el;
 		},
 
+		xspin(token) {
+			const el = doc.createElement('i');
+			appendChildren(token.children, el);
+			return el;
+		},
+
+		yspin(token) {
+			const el = doc.createElement('i');
+			appendChildren(token.children, el);
+			return el;
+		},
+
 		jump(token) {
 			const el = doc.createElement('i');
 			appendChildren(token.children, el);

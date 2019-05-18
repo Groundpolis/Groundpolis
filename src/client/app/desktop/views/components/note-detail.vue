@@ -72,7 +72,7 @@
 			<button v-if="appearNote.myRenoteId != null" class="renoteButton renoted" @click="undoRenote()" title="Undo">
 				<fa icon="retweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
 			</button>
-			<button v-else-if="['public', 'home'].includes(appearNote.visibility)" class="renoteButton" @click="renote()" :title="$t('renote')">
+			<button v-else-if="['public', 'home', 'followers'].includes(appearNote.visibility)" class="renoteButton" @click="renote()" :title="$t('renote')">
 				<fa icon="retweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
 			</button>
 			<button v-else class="inhibitedButton">

@@ -202,6 +202,16 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 		words.push(token);
 	}
 
+	// 下でsince加工しているので先にソートクエリだけ作っちゃう
+	const sort = {
+		createdAt: -1
+	};
+
+	// sinceのみ指定されてたら逆順
+	if (since && !until) {
+		sort.createdAt = 1;
+	}
+
 	// フィルタ系が指定されていないワード検索の場合
 	if (!filtered && words.length > 0) {
 		// ESがあればそちらに任せる

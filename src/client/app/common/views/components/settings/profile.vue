@@ -51,7 +51,7 @@
 				<template #desc v-if="bannerUploading">{{ $t('uploading') }}<mk-ellipsis/></template>
 			</ui-input>
 
-			<ui-button @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</ui-button>
+			<ui-button primary @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</ui-button>
 		</ui-form>
 	</section>
 
@@ -106,7 +106,7 @@
 		</div>
 	</section>
 
-	<section>
+	<section v-if="isAdvanced">
 		<details>
 			<summary>{{ $t('danger-zone') }}</summary>
 		</details>
