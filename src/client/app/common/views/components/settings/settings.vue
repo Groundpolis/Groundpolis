@@ -43,6 +43,7 @@
 				<ui-switch v-model="suggestRecentHashtags" v-if="isAdvanced">{{ $t('@._settings.suggest-recent-hashtags') }}</ui-switch>
 				<ui-switch v-model="showClockOnHeader" v-if="!$root.isMobile">{{ $t('@._settings.show-clock-on-header') }}</ui-switch>
 				<ui-switch v-model="alwaysShowNsfw">{{ $t('@._settings.always-show-nsfw') }}</ui-switch>
+				<ui-switch v-model="loadRawImages" v-if="isAdvanced">{{ $t('@.load-raw-images') }}</ui-switch>
 				<ui-switch v-model="showReplyTarget">{{ $t('@._settings.show-reply-target') }}</ui-switch>
 				<ui-switch v-model="disableAnimatedMfm">{{ $t('@._settings.disable-animated-mfm') }}</ui-switch>
 				<ui-switch v-model="disableShowingAnimatedImages">{{ $t('@._settings.disable-showing-animated-images') }}</ui-switch>
@@ -395,6 +396,11 @@ export default Vue.extend({
 		alwaysShowNsfw: {
 			get() { return this.$store.state.device.alwaysShowNsfw; },
 			set(value) { this.$store.commit('device/set', { key: 'alwaysShowNsfw', value }); }
+		},
+
+		loadRawImages: {
+			get() { return this.$store.state.device.loadRawImages; },
+			set(value) { this.$store.commit('device/set', { key: 'loadRawImages', value }); }
 		},
 
 		postStyle: {
