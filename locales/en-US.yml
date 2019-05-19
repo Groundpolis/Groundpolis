@@ -1177,6 +1177,8 @@ admin/views/charts.vue:
     notes: "The number of posts: increase/decrease (Combined)"
     local-notes: "The number of posts: increase/decrease (Local)"
     remote-notes: "The number of posts: increase/decrease (Remote)"
+    notes-inc: "The number of posts: increase"
+    notes-dec: "The number of posts: decrease"
     notes-total: "Total posts"
     users: "The number of users: increase/decrease"
     users-total: "Total users"

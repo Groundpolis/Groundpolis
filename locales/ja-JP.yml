@@ -1303,6 +1303,8 @@ admin/views/charts.vue:
     notes: "投稿の増減 (統合)"
     local-notes: "投稿の増減 (ローカル)"
     remote-notes: "投稿の増減 (リモート)"
+    notes-inc: "投稿の増加数"
+    notes-dec: "投稿の減少数"
     notes-total: "投稿の積算"
     users: "ユーザーの増減"
     users-total: "ユーザーの積算"
