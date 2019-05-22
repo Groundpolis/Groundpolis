@@ -6562,11 +6562,6 @@ koa@2.7.0:
     type-is "^1.6.16"
     vary "^1.1.2"
 
-langmap@0.0.16:
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/langmap/-/langmap-0.0.16.tgz#2fe3e98a531fec0fec546624ebe168c2855bab56"
-  integrity sha512-AtYvBK7BsDvWwnSfmO7CfgeUy7GUT1wK3QX8eKH/Ey/eXodqoHuAtvdQ82hmWD9QVFVKnuiNjym9fGY4qSJeLA==
-
 last-run@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/last-run/-/last-run-1.1.1.tgz#45b96942c17b1c79c772198259ba943bebf8ca5b"
