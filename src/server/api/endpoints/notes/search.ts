@@ -11,6 +11,7 @@ import Following from '../../../../models/following';
 import { concat } from '../../../../prelude/array';
 import { getHideUserIds } from '../../common/get-hide-users';
 import { getFriends } from '../../common/get-friends';
+import NoteWatching from '../../../../models/note-watching';
 const escapeRegexp = require('escape-regexp');
 
 export const meta = {
@@ -171,6 +172,18 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 
 			if (matchFilter[1] === 'polls') {
 				withPolls = true;
+			}
+
+			// watching
+			if (matchFilter[1] === 'watching') {
+				const watches = await NoteWatching.find({
+					userId: me._id
+				}, {
+					limit,
+					skip: offset
+				});
+
+				return await packMany(watches.map(w => w.noteId), me);
 			}
 
 			filtered = true;
