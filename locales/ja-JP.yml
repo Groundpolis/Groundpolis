@@ -1145,6 +1145,7 @@ desktop/views/components/ui.header.nav.vue:
 
 desktop/views/components/ui.header.notifications.vue:
   title: "通知"
+  mark-all-as-read: "全て既読にする"
 
 desktop/views/components/ui.header.post.vue:
   post: "新規投稿"
@@ -1686,6 +1687,7 @@ mobile/views/components/ui.nav.vue:
   game: "ゲーム"
   admin: "管理"
   about: "Misskeyについて"
+  mark-all-as-read: "全て既読にする"
 
 mobile/views/pages/drive.vue:
   contextmenu:

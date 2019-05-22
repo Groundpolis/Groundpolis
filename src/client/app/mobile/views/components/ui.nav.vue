@@ -53,6 +53,9 @@
 					<button @click="showNotifications = false"><fa icon="times"/></button>
 					<i v-if="hasUnreadNotification" class="circle"><fa icon="circle"/></i>
 				</header>
+				<div class="read-all" v-if="hasUnreadNotification">
+					<button @click="readAllNotifications">{{ $t('mark-all-as-read') }}</button>
+				</div>
 				<mk-notifications/>
 			</div>
 		</div>
@@ -178,6 +181,10 @@ export default Vue.extend({
 			this.$store.commit('device/set', { key: 'deckMode', value: !this.$store.state.device.inDeckMode });
 			location.replace('/');
 		},
+
+		readAllNotifications() {
+			this.$root.api('notifications/mark_all_as_read');
+		},
 	}
 });
 </script>
@@ -212,6 +219,15 @@ export default Vue.extend({
 
 		> .notifications
 			padding-top 42px
+
+			.read-all
+				display flex
+				justify-content center
+				align-items center
+				padding 12px
+				color var(--text)
+				border-top solid var(--lineWidth) var(--faceDivider)
+				border-bottom solid var(--lineWidth) var(--faceDivider)
 
 			> header
 				position fixed

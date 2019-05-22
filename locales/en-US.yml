@@ -1033,6 +1033,7 @@ desktop/views/components/ui.header.nav.vue:
   game: "Games"
 desktop/views/components/ui.header.notifications.vue:
   title: "Notifications"
+  mark-all-as-read: "Mark all as read"
 desktop/views/components/ui.header.post.vue:
   post: "Compose new Post"
 desktop/views/components/ui.header.search.vue:
@@ -1520,6 +1521,7 @@ mobile/views/components/ui.nav.vue:
   game: "Games"
   admin: "Admin"
   about: "About Misskey"
+  mark-all-as-read: "Mark all as read"
 mobile/views/pages/drive.vue:
   contextmenu:
     upload: "Upload a file"
