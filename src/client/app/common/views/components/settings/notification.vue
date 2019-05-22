@@ -9,6 +9,7 @@
 			<ui-button @click="readAllNotifications">{{ $t('mark-as-read-all-notifications') }}</ui-button>
 			<ui-button @click="readAllUnreadNotes">{{ $t('mark-as-read-all-unread-notes') }}</ui-button>
 			<ui-button @click="readAllMessagingMessages">{{ $t('mark-as-read-all-talk-messages') }}</ui-button>
+			<ui-button @click="unwatchAll">Unwatch all</ui-button>
 		</section>
 	</section>
 </ui-card>
@@ -38,7 +39,11 @@ export default Vue.extend({
 
 		readAllNotifications() {
 			this.$root.api('notifications/mark_all_as_read');
-		}
+		},
+
+		unwatchAll() {
+			this.$root.api('notes/watching/delete-all');
+		},
 	}
 });
 </script>
