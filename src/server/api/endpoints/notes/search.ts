@@ -180,7 +180,10 @@ async function searchInternal(me: ILocalUser, query: string, limit: number, offs
 					userId: me._id
 				}, {
 					limit,
-					skip: offset
+					skip: offset,
+					sort: {
+						_id: -1
+					}
 				});
 
 				return await packMany(watches.map(w => w.noteId), me);
