@@ -12,7 +12,7 @@
 		<mk-time :time="note.createdAt"/>
 		<span class="visibility" v-if="note.visibility != 'public'">
 			<fa v-if="note.visibility == 'home'" icon="home"/>
-			<fa v-if="note.visibility == 'followers'" icon="unlock"/>
+			<fa v-if="note.visibility == 'followers'" icon="lock"/>
 			<fa v-if="note.visibility == 'specified'" icon="envelope"/>
 		</span>
 		<span class="localOnly" v-if="note.localOnly == true"><fa icon="heart"/></span>
