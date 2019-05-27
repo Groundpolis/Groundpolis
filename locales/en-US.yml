@@ -624,7 +624,7 @@ common/views/components/visibility-chooser.vue:
   followers-desc: "Post to Followers only"
   specified: "Direct"
   specified-desc: "Post to specified users only"
-  local-public: "Local (Public)"
+  local-public: "Public (Only local)"
   local-public-desc: "Do not publish to remote"
   local-home: "Home (Only local)"
   local-followers: "Followers (Only local)"
