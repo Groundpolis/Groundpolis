@@ -24,7 +24,7 @@ export default Vue.extend({
 		search() {
 			const engine = this.$store.state.settings.webSearchEngine ||
 				'https://www.google.com/?#q={{query}}';
-			const url = engine.replace('{{query}}', this.query)
+			const url = engine.replace('{{query}}', encodeURIComponent(this.query))
 			window.open(url, '_blank');
 		}
 	}
