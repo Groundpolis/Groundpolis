@@ -58,7 +58,7 @@ export const mfmLanguage = P.createLanguage({
 		const text = input.substr(i);
 		const match = text.match(/^(.+?)( |　)(検索|\[検索\]|Search|\[Search\])(\n|$)/i);
 		if (!match) return P.makeFailure(i, 'not a search');
-		return P.makeSuccess(i + match[0].length, createLeaf('search', { query: encodeURIComponent(match[1]), content: match[0].trim() }));
+		return P.makeSuccess(i + match[0].length, createLeaf('search', { query: match[1], content: match[0].trim() }));
 	})),
 	blockCode: r => r.startOfLine.then(P((input, i) => {
 		const text = input.substr(i);
