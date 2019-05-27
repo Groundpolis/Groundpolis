@@ -144,11 +144,6 @@
 					</ui-select>
 				</section>
 			</section>
-
-			<section v-if="isAdvanced">
-				<header>{{ $t('@._settings.web-search-engine') }}</header>
-				<ui-input v-model="webSearchEngine">{{ $t('@._settings.web-search-engine') }}<template #desc>{{ $t('@._settings.web-search-engine-desc') }}</template></ui-input>
-			</section>
 		</ui-card>
 
 		<ui-card>
@@ -451,11 +446,6 @@ export default Vue.extend({
 		secondaryNoteVisibility: {
 			get() { return this.$store.state.settings.secondaryNoteVisibility || 'none'; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'secondaryNoteVisibility', value }); }
-		},
-
-		webSearchEngine: {
-			get() { return this.$store.state.settings.webSearchEngine; },
-			set(value) { this.$store.dispatch('settings/set', { key: 'webSearchEngine', value }); }
 		},
 
 		showReplyTarget: {

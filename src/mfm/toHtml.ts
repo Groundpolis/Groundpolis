@@ -199,7 +199,7 @@ export function toHtml(tokens: MfmForest, mentionedRemoteUsers: INote['mentioned
 
 		search(token) {
 			const a = doc.createElement('a');
-			a.href = `https://www.google.com/?#q=${encodeURIComponent(token.node.props.query)}`;
+			a.href = `https://www.google.com/search?q=${encodeURIComponent(token.node.props.query)}`;
 			a.textContent = token.node.props.content;
 			return a;
 		}
