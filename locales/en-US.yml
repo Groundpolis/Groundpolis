@@ -112,6 +112,7 @@ common:
     local-public: "Public (Only local)"
     local-home: "Home (Only local)"
     local-followers: "Followers (Only local)"
+    local-only: "Only local"
   note-placeholders:
     a: "What are you doing?"
     b: "What's happening?"

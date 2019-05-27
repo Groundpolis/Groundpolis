@@ -120,6 +120,7 @@ common:
     local-public: "公開 (ローカルのみ)"
     local-home: "ホーム (ローカルのみ)"
     local-followers: "フォロワー (ローカルのみ)"
+    local-only: "ローカルのみ"
 
   note-placeholders:
     a: "今どうしてる？"
