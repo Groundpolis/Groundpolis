@@ -57,6 +57,7 @@
 				<fa class="specified" v-if="appearNote.visibility == 'specified'" :title="$t('@.note-visibility.specified')" icon="envelope"/>
 			</span>
 			<span class="localOnly" v-if="appearNote.localOnly == true" :title="$t('@.note-visibility.local-only')"><fa icon="heart"/></span>
+			<span class="remote" title="Remote post" v-if="appearNote.user.host != null"><fa :icon="faGlobeAmericas"/></span>
 		</div>
 		<footer>
 			<mk-reactions-viewer :note="appearNote"/>
@@ -97,6 +98,7 @@ import i18n from '../../../i18n';
 import XSub from './note.sub.vue';
 import noteSubscriber from '../../../common/scripts/note-subscriber';
 import noteMixin from '../../../common/scripts/note-mixin';
+import { faGlobeAmericas } from '@fortawesome/free-solid-svg-icons';
 
 export default Vue.extend({
 	i18n: i18n('mobile/views/components/note-detail.vue'),
@@ -119,6 +121,7 @@ export default Vue.extend({
 
 	data() {
 		return {
+			faGlobeAmericas,
 			conversation: [],
 			conversationFetching: false,
 			replies: []
@@ -326,6 +329,10 @@ export default Vue.extend({
 			> .localOnly
 				margin-left 4px
 				color var(--primary)
+
+			> .remote
+				margin-left 4px
+				color #4dabf7
 
 		> footer
 			font-size 1.2em
