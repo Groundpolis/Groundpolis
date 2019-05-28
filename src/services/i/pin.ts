@@ -18,6 +18,8 @@ export async function addPinned(user: IUser, noteId: mongo.ObjectID) {
 	// Fetch pinee
 	const note = await Note.findOne({
 		_id: noteId,
+		visibility: { $in: ['public', 'home'] },
+		localOnly: { $ne: true },
 		userId: user._id
 	});
 
