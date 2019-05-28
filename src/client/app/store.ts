@@ -32,6 +32,7 @@ const defaultSettings = {
 	rememberNoteVisibility: false,
 	defaultNoteVisibility: 'public',
 	secondaryNoteVisibility: null,
+	tertiaryNoteVisibility: null,
 	webSearchEngine: 'https://www.google.com/?#q={{query}}',
 	mutedWords: [],
 	games: {

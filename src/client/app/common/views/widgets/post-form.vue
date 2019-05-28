@@ -31,6 +31,9 @@
 				<button @click="setVisibility" class="visibility" ref="visibilityButton">
 					<x-visibility-icon :v="visibility" :localOnly="localOnly"/>
 				</button>
+				<button v-if="tertiaryNoteVisibility != null && tertiaryNoteVisibility != 'none'" @click="post(tertiaryNoteVisibility)" :disabled="posting" class="tertiary" title="Tertiary Post">
+					<x-visibility-icon :v="tertiaryNoteVisibility"/>
+				</button>
 				<button v-if="secondaryNoteVisibility != null && secondaryNoteVisibility != 'none'" @click="post(secondaryNoteVisibility)" :disabled="posting" class="secondary" title="Secondary Post (Alt+Enter)">
 					<x-visibility-icon :v="secondaryNoteVisibility"/>
 				</button>
@@ -72,6 +75,7 @@ export default define({
 			visibility: 'public',
 			localOnly: false,
 			secondaryNoteVisibility: 'none',
+			tertiaryNoteVisibility: 'none',
 		};
 	},
 
@@ -94,6 +98,7 @@ export default define({
 		this.applyVisibility(this.$store.state.settings.defaultNoteVisibility);
 
 		this.secondaryNoteVisibility = this.$store.state.settings.secondaryNoteVisibility;
+		this.tertiaryNoteVisibility = this.$store.state.settings.tertiaryNoteVisibility;
 	},
 
 	methods: {
@@ -316,9 +321,9 @@ export default define({
 		> .visibility
 			margin 0 auto 0 0
 
-		> .secondary
+		> .secondary, .tertiary
 			display block
-			margin 0 5px
+			margin 0 2px
 			padding 0 10px
 			height 28px
 			color var(--text)
@@ -338,6 +343,7 @@ export default define({
 		> .post
 			display block
 			padding 0 10px
+			margin-left 3px
 			height 28px
 			color var(--primaryForeground)
 			background var(--primary) !important

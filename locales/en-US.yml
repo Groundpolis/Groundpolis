@@ -140,6 +140,7 @@ common:
     note-visibility: "Post visibility"
     default-note-visibility: "Default visibility"
     secondary-note-visibility: "Visibility of secondary post button"
+    tertiary-note-visibility: "Visibility of tertiary post button"
     remember-note-visibility: "Remember post visibility"
     web-search-engine: "Web search engine"
     web-search-engine-desc: "Example: https://www.google.com/?#q={{query}}"
