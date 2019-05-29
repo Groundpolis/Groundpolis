@@ -119,10 +119,10 @@ export default Vue.extend({
 	padding 0 6px
 	border-radius 4px
 	cursor pointer
-	-moz-user-select none
 
 	*
 		user-select none
+		-moz-user-select none
 		pointer-events none
 
 	&.reacted
