@@ -1,6 +1,6 @@
 <template>
 <div>
-	<mk-notes ref="timeline" :make-promise="makePromise" @inited="() => $emit('loaded')">
+	<mk-notes ref="timeline" :make-promise="makePromise" :timeSplitters="[3, 6, 12, 18, 19, 20, 21, 22, 23]" @inited="() => $emit('loaded')">
 		<template #header>
 			<slot></slot>
 			<div v-if="src == 'home' && alone" class="ibpylqas">

@@ -22,6 +22,9 @@
 				<span><fa icon="angle-up"/>{{ note._datetext }}</span>
 				<span><fa icon="angle-down"/>{{ _notes[i + 1]._datetext }}</span>
 			</p>
+			<p class="date" :key="note.id + '_hour'" v-if="i != notes.length - 1 && timeSplitters.includes(note._hour) && note._hour != _notes[i + 1]._hour">
+				<span>{{ note._hourtext }}</span>
+			</p>
 		</template>
 	</div>
 
@@ -47,6 +50,11 @@ export default Vue.extend({
 	inject: ['column', 'isScrollTop', 'count'],
 
 	props: {
+		timeSplitters: {
+			type: Array,
+			required: false,
+			default: [],
+		},
 		makePromise: {
 			required: true
 		}
@@ -71,6 +79,9 @@ export default Vue.extend({
 				const month = new Date(note.createdAt).getMonth() + 1;
 				note._date = date;
 				note._datetext = this.$t('@.month-and-day').replace('{month}', month.toString()).replace('{day}', date.toString());
+				const hour = new Date(note.createdAt).getHours();
+				note._hour = hour;
+				note._hourtext = `${hour}:00`;
 				return note;
 			});
 		}
