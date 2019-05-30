@@ -173,7 +173,7 @@ export default Vue.extend({
 			if (shouldMuteNote(this.$store.state.i, this.$store.state.settings, note)) return;
 
 			// 既存をRenoteされたらそこを置き換える
-			if (note.renoteId) {
+			if (note.renoteId && !note.text && !note.poll && (!note.fileIds || !note.fileIds.length)) {
 				for (let i = 0; i < 10; i++) {
 					if (!this.notes[i]) break;
 
