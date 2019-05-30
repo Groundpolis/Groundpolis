@@ -278,7 +278,7 @@ async function deleteOldFile(user: IRemoteUser) {
  * @param sensitive Mark file as sensitive
  * @return Created drive file
  */
-export default async function(
+export async function addFile(
 	user: IUser,
 	path: string,
 	name: string = null,
@@ -288,7 +288,7 @@ export default async function(
 	isLink: boolean = false,
 	url: string = null,
 	uri: string = null,
-	sensitive: boolean = null
+	sensitive: boolean = false,
 ): Promise<IDriveFile> {
 	// Calc md5 hash
 	const calcHash = new Promise<string>((res, rej) => {
@@ -448,10 +448,7 @@ export default async function(
 		properties: properties,
 		withoutChunks: isLink,
 		isRemote: isLink,
-		isSensitive: isLocalUser(user) && user.settings.alwaysMarkNsfw ? true :
-			(sensitive !== null && sensitive !== undefined)
-				? sensitive
-				: false
+		isSensitive: (isLocalUser(user) && user.settings.alwaysMarkNsfw) || sensitive
 	} as IMetadata;
 
 	if (url !== null) {

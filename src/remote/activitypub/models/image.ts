@@ -1,4 +1,4 @@
-import uploadFromUrl from '../../../services/drive/upload-from-url';
+import { uploadFromUrl } from '../../../services/drive/upload-from-url';
 import { IRemoteUser } from '../../../models/user';
 import DriveFile, { IDriveFile } from '../../../models/drive-file';
 import Resolver from '../resolver';
@@ -29,7 +29,7 @@ export async function createImage(actor: IRemoteUser, value: any): Promise<IDriv
 
 	let file;
 	try {
-		file = await uploadFromUrl(image.url, actor, null, image.url, image.sensitive, false, !cache);
+		file = await uploadFromUrl(image.url, actor, null, image.url, !!image.sensitive, false, !cache);
 	} catch (e) {
 		// 4xxの場合は添付されてなかったことにする
 		if (e >= 400 && e < 500) {
