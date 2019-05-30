@@ -10,8 +10,7 @@
 		</template>
 	</div>
 
-	<!-- トランジションを有効にするとなぜかメモリリークする -->
-	<component :is="!$store.state.device.reduceMotion ? 'transition-group' : 'div'" name="mk-notes" class="transition notes" ref="notes" tag="div">
+	<div name="mk-notes" class="notes" ref="notes">
 		<template v-for="(note, i) in _notes">
 			<mk-note
 				:note="note"
@@ -24,7 +23,7 @@
 				<span><fa icon="angle-down"/>{{ _notes[i + 1]._datetext }}</span>
 			</p>
 		</template>
-	</component>
+	</div>
 
 	<footer v-if="cursor != null">
 		<button @click="more" :disabled="moreFetching" :style="{ cursor: moreFetching ? 'wait' : 'pointer' }">
@@ -145,6 +144,21 @@ export default Vue.extend({
 			// 弾く
 			if (shouldMuteNote(this.$store.state.i, this.$store.state.settings, note)) return;
 
+			// 既存をRenoteされたらそこを置き換える
+			if (note.renoteId) {
+				for (let i = 0; i < 10; i++) {
+					if (!this.notes[i]) break;
+
+					const extId = this.notes[i].renoteId || this.notes[i].id;
+					const newId = note.renoteId || note.id;
+
+					if (extId == newId) {
+						Vue.set((this as any).notes, i, note);
+						return;
+					}
+				}
+			}
+
 			if (this.isScrollTop()) {
 				// Prepend the note
 				this.notes.unshift(note);
@@ -184,15 +198,6 @@ export default Vue.extend({
 
 <style lang="stylus" scoped>
 .eamppglmnmimdhrlzhplwpvyeaqmmhxu
-	.transition
-		.mk-notes-enter
-		.mk-notes-leave-to
-			opacity 0
-			transform translateY(-30px)
-
-		> *
-			transition transform .3s ease, opacity .3s ease
-
 	> .empty
 		padding 16px
 		text-align center
