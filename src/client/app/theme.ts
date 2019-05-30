@@ -69,6 +69,9 @@ export function applyTheme(theme: Theme, persisted = true) {
 
 	if (persisted) {
 		localStorage.setItem('theme', JSON.stringify(props));
+
+		const themeColor = document.querySelector('meta[name="theme-color"]');
+		if (themeColor && props.bg) themeColor.setAttribute('content', props.bg);
 	}
 }
 

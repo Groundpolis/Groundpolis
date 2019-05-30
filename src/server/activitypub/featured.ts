@@ -31,7 +31,7 @@ export default async (ctx: Router.IRouterContext) => {
 
 	const pinnedNotes = await Promise.all(pinnedNoteIds.filter(ObjectID.isValid).map(id => Note.findOne({ _id: id })));
 
-	const renderedNotes = await Promise.all(pinnedNotes.map(note => renderNote(note)));
+	const renderedNotes = await Promise.all(pinnedNotes.filter(note => note != null && note.deletedAt == null).map(note => renderNote(note)));
 
 	const rendered = renderOrderedCollection(
 		`${config.url}/users/${userId}/collections/featured`,

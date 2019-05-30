@@ -7,7 +7,7 @@
 			<fa icon="home"/>
 		</div>
 		<div class="wrap" v-else-if="visibility == 'followers'">
-			<fa icon="unlock"/>
+			<fa icon="lock"/>
 		</div>
 		<div class="wrap" v-else-if="visibility == 'specified'">
 			<fa icon="envelope"/>
@@ -21,7 +21,7 @@
 			<div class="localOnly"><fa icon="heart"/></div>
 		</div>
 		<div class="wrap" v-else-if="visibility == 'local-followers'">
-			<div><fa icon="unlock"/></div>
+			<div><fa icon="lock"/></div>
 			<div class="localOnly"><fa icon="heart"/></div>
 		</div>
 	</div>

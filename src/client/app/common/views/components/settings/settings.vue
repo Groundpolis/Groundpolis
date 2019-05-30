@@ -43,6 +43,7 @@
 				<ui-switch v-model="suggestRecentHashtags" v-if="isAdvanced">{{ $t('@._settings.suggest-recent-hashtags') }}</ui-switch>
 				<ui-switch v-model="showClockOnHeader" v-if="!$root.isMobile">{{ $t('@._settings.show-clock-on-header') }}</ui-switch>
 				<ui-switch v-model="alwaysShowNsfw">{{ $t('@._settings.always-show-nsfw') }}</ui-switch>
+				<ui-switch v-model="loadRawImages" v-if="isAdvanced">{{ $t('@.load-raw-images') }}</ui-switch>
 				<ui-switch v-model="showReplyTarget">{{ $t('@._settings.show-reply-target') }}</ui-switch>
 				<ui-switch v-model="disableAnimatedMfm">{{ $t('@._settings.disable-animated-mfm') }}</ui-switch>
 				<ui-switch v-model="disableShowingAnimatedImages">{{ $t('@._settings.disable-showing-animated-images') }}</ui-switch>
@@ -142,11 +143,19 @@
 						<option value="local-followers">{{ $t('@.note-visibility.local-followers') }}</option>
 					</ui-select>
 				</section>
-			</section>
-
-			<section v-if="isAdvanced">
-				<header>{{ $t('@._settings.web-search-engine') }}</header>
-				<ui-input v-model="webSearchEngine">{{ $t('@._settings.web-search-engine') }}<template #desc>{{ $t('@._settings.web-search-engine-desc') }}</template></ui-input>
+				<section>
+					<header>{{ $t('@._settings.tertiary-note-visibility') }}</header>
+					<ui-select v-model="tertiaryNoteVisibility">
+						<option value="none">None</option>
+						<option value="public">{{ $t('@.note-visibility.public') }}</option>
+						<option value="home">{{ $t('@.note-visibility.home') }}</option>
+						<option value="followers">{{ $t('@.note-visibility.followers') }}</option>
+						<option value="specified">{{ $t('@.note-visibility.specified') }}</option>
+						<option value="local-public">{{ $t('@.note-visibility.local-public') }}</option>
+						<option value="local-home">{{ $t('@.note-visibility.local-home') }}</option>
+						<option value="local-followers">{{ $t('@.note-visibility.local-followers') }}</option>
+					</ui-select>
+				</section>
 			</section>
 		</ui-card>
 
@@ -397,6 +406,11 @@ export default Vue.extend({
 			set(value) { this.$store.commit('device/set', { key: 'alwaysShowNsfw', value }); }
 		},
 
+		loadRawImages: {
+			get() { return this.$store.state.device.loadRawImages; },
+			set(value) { this.$store.commit('device/set', { key: 'loadRawImages', value }); }
+		},
+
 		postStyle: {
 			get() { return this.$store.state.device.postStyle; },
 			set(value) { this.$store.commit('device/set', { key: 'postStyle', value }); }
@@ -447,9 +461,9 @@ export default Vue.extend({
 			set(value) { this.$store.dispatch('settings/set', { key: 'secondaryNoteVisibility', value }); }
 		},
 
-		webSearchEngine: {
-			get() { return this.$store.state.settings.webSearchEngine; },
-			set(value) { this.$store.dispatch('settings/set', { key: 'webSearchEngine', value }); }
+		tertiaryNoteVisibility: {
+			get() { return this.$store.state.settings.tertiaryNoteVisibility || 'none'; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'tertiaryNoteVisibility', value }); }
 		},
 
 		showReplyTarget: {

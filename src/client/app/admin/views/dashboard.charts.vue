@@ -16,6 +16,8 @@
 				<option value="notes">{{ $t('charts.notes') }}</option>
 				<option value="local-notes">{{ $t('charts.local-notes') }}</option>
 				<option value="remote-notes">{{ $t('charts.remote-notes') }}</option>
+				<option value="notes-inc">{{ $t('charts.notes-inc') }}</option>
+				<option value="notes-dec">{{ $t('charts.notes-dec') }}</option>
 				<option value="notes-total">{{ $t('charts.notes-total') }}</option>
 			</optgroup>
 			<optgroup :label="$t('drive')">
@@ -72,6 +74,8 @@ export default Vue.extend({
 				case 'notes': return this.notesChart('combined');
 				case 'local-notes': return this.notesChart('local');
 				case 'remote-notes': return this.notesChart('remote');
+				case 'notes-inc': return this.notesIncChart();
+				case 'notes-dec': return this.notesDecChart();
 				case 'notes-total': return this.notesTotalChart();
 				case 'drive': return this.driveChart();
 				case 'drive-total': return this.driveTotalChart();
@@ -284,6 +288,42 @@ export default Vue.extend({
 						? sum(this.stats.notes.local.diffs.normal, this.stats.notes.remote.diffs.normal)
 						: this.stats.notes[type].diffs.normal
 					)
+				}]
+			};
+		},
+
+		notesIncChart(): any {
+			return {
+				series: [{
+					name: 'Combined',
+					type: 'line',
+					data: this.format(sum(this.stats.notes.local.inc, this.stats.notes.remote.inc))
+				}, {
+					name: 'Local',
+					type: 'area',
+					data: this.format(this.stats.notes.local.inc)
+				}, {
+					name: 'Remote',
+					type: 'area',
+					data: this.format(this.stats.notes.remote.inc)
+				}]
+			};
+		},
+
+		notesDecChart(): any {
+			return {
+				series: [{
+					name: 'Combined',
+					type: 'line',
+					data: this.format(sum(this.stats.notes.local.dec, this.stats.notes.remote.dec))
+				}, {
+					name: 'Local',
+					type: 'area',
+					data: this.format(this.stats.notes.local.dec)
+				}, {
+					name: 'Remote',
+					type: 'area',
+					data: this.format(this.stats.notes.remote.dec)
 				}]
 			};
 		},

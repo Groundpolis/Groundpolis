@@ -1,9 +1,10 @@
 import $ from 'cafy';
 import ID, { transform } from '../../../../misc/cafy-id';
-import { pack } from '../../../../models/user';
+import User, { pack } from '../../../../models/user';
 import { addPinned } from '../../../../services/i/pin';
 import define from '../../define';
 import { ApiError } from '../../error';
+import { publishMainStream } from '../../../../services/stream';
 
 export const meta = {
 	stability: 'stable',
@@ -58,7 +59,15 @@ export default define(meta, async (ps, user) => {
 		throw e;
 	});
 
-	return await pack(user, user, {
+	const updated = await User.findOne({
+		_id: user._id
+	});
+
+	const packed = await pack(updated, user, {
 		detail: true
 	});
+
+	publishMainStream(user._id, 'meUpdated', packed);
+
+	return packed;
 });

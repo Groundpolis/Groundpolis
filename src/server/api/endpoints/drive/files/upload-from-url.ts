@@ -2,7 +2,7 @@ import $ from 'cafy';
 import ID, { transform } from '../../../../../misc/cafy-id';
 import * as ms from 'ms';
 import { pack } from '../../../../../models/drive-file';
-import uploadFromUrl from '../../../../../services/drive/upload-from-url';
+import { uploadFromUrl } from '../../../../../services/drive/upload-from-url';
 import define from '../../../define';
 
 export const meta = {

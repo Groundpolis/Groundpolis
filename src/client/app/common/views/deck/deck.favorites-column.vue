@@ -31,13 +31,13 @@ export default Vue.extend({
 			makePromise: cursor => this.$root.api('i/favorites', {
 				limit: fetchLimit + 1,
 				untilId: cursor ? cursor : undefined,
-			}).then(notes => {
-				notes = notes.map(x => x.note);
+			}).then((favs: any[]) => {
+				const notes = favs.map(x => x.note);
 				if (notes.length == fetchLimit + 1) {
 					notes.pop();
 					return {
 						notes: notes,
-						cursor: notes[notes.length - 1].id
+						cursor: favs[notes.length - 1].id
 					};
 				} else {
 					return {

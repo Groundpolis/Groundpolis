@@ -122,6 +122,7 @@ export default Vue.extend({
 
 	*
 		user-select none
+		-moz-user-select none
 		pointer-events none
 
 	&.reacted

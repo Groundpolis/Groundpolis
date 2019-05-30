@@ -112,6 +112,7 @@ common:
     local-public: "Public (Only local)"
     local-home: "Home (Only local)"
     local-followers: "Followers (Only local)"
+    local-only: "Only local"
   note-placeholders:
     a: "What are you doing?"
     b: "What's happening?"
@@ -139,6 +140,7 @@ common:
     note-visibility: "Post visibility"
     default-note-visibility: "Default visibility"
     secondary-note-visibility: "Visibility of secondary post button"
+    tertiary-note-visibility: "Visibility of tertiary post button"
     remember-note-visibility: "Remember post visibility"
     web-search-engine: "Web search engine"
     web-search-engine-desc: "Example: https://www.google.com/?#q={{query}}"
@@ -624,7 +626,7 @@ common/views/components/visibility-chooser.vue:
   followers-desc: "Post to Followers only"
   specified: "Direct"
   specified-desc: "Post to specified users only"
-  local-public: "Local (Public)"
+  local-public: "Public (Only local)"
   local-public-desc: "Do not publish to remote"
   local-home: "Home (Only local)"
   local-followers: "Followers (Only local)"
@@ -1033,6 +1035,7 @@ desktop/views/components/ui.header.nav.vue:
   game: "Games"
 desktop/views/components/ui.header.notifications.vue:
   title: "Notifications"
+  mark-all-as-read: "Mark all as read"
 desktop/views/components/ui.header.post.vue:
   post: "Compose new Post"
 desktop/views/components/ui.header.search.vue:
@@ -1177,6 +1180,8 @@ admin/views/charts.vue:
     notes: "The number of posts: increase/decrease (Combined)"
     local-notes: "The number of posts: increase/decrease (Local)"
     remote-notes: "The number of posts: increase/decrease (Remote)"
+    notes-inc: "The number of posts: increase"
+    notes-dec: "The number of posts: decrease"
     notes-total: "Total posts"
     users: "The number of users: increase/decrease"
     users-total: "Total users"
@@ -1518,6 +1523,7 @@ mobile/views/components/ui.nav.vue:
   game: "Games"
   admin: "Admin"
   about: "About Misskey"
+  mark-all-as-read: "Mark all as read"
 mobile/views/pages/drive.vue:
   contextmenu:
     upload: "Upload a file"

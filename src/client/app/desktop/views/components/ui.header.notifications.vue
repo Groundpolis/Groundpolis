@@ -5,6 +5,9 @@
 		<i class="circle" v-if="hasUnreadNotification"><fa icon="circle"/></i>
 	</button>
 	<div class="pop" v-if="isOpen">
+		<div class="read-all" v-if="hasUnreadNotification">
+			<button @click="readAllNotifications">{{ $t('mark-all-as-read') }}</button>
+		</div>
 		<mk-notifications/>
 	</div>
 </div>
@@ -52,6 +55,10 @@ export default Vue.extend({
 			for (const el of Array.from(document.querySelectorAll('body *'))) {
 				el.removeEventListener('mousedown', this.onMousedown);
 			}
+		},
+
+		readAllNotifications() {
+			this.$root.api('notifications/mark_all_as_read');
 		},
 
 		onMousedown(e) {
@@ -103,6 +110,14 @@ export default Vue.extend({
 		background $bgcolor
 		border-radius 4px
 		box-shadow 0 1px 4px rgba(#000, 0.25)
+
+		.read-all
+			display flex
+			justify-content center
+			align-items center
+			padding 12px
+			color var(--text)
+			border-bottom solid var(--lineWidth) var(--faceDivider)
 
 		&:before
 			content ""

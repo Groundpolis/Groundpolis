@@ -16,12 +16,13 @@
 			<button @click="react('pudding')" @mouseover="onMouseover" @mouseout="onMouseout" tabindex="10" :title="$t('@.reactions.pudding')" v-particle><mk-reaction-icon reaction="pudding"/></button>
 		</div>
 		<div v-if="enableEmojiReaction" class="text">
-			<input v-model="text" placeholder="絵文字入力" @keyup.enter="reactText" @keydown.esc="close" @input="tryReactText" v-autocomplete="{ model: 'text' }" ref="text">
-			<button title="決定" @click="reactText"><fa icon="check"/></button>
-			<button title="選択" class="emoji" @click="emoji" ref="emoji" v-if="!$root.isMobile">
+			<input v-model="text" placeholder="Emoji" @keyup.enter="reactText" @keydown.esc="close" @input="tryReactText" v-autocomplete="{ model: 'text' }" ref="text">
+			<button title="OK" @click="reactText"><fa icon="check"/></button>
+			<button title="Pick" class="emoji" @click="emoji" ref="emoji" v-if="!$root.isMobile">
 				<fa :icon="['far', 'laugh']"/>
 			</button>
 			<button title="ランダム" @click="react('-random')"><fa :icon="faRandom"/></button>
+			<button v-if="enableEmojiReaction && recentReaction != null" @click="react(recentReaction)" tabindex="11" v-particle><mk-reaction-icon :reaction="recentReaction"/></button>
 		</div>
 	</div>
 </div>
@@ -63,6 +64,7 @@ export default Vue.extend({
 			title: this.$t('choose-reaction'),
 			text: null,
 			enableEmojiReaction: true,
+			recentReaction: null,
 		};
 	},
 
@@ -78,9 +80,11 @@ export default Vue.extend({
 		this.$root.getMeta().then(meta => {
 			this.enableEmojiReaction = meta.enableEmojiReaction;
 			this.$nextTick(() => {
-				if (this.$refs.text) this.$refs.text.focus();
+				if (!this.$root.isMobile && this.$refs.text) this.$refs.text.focus();
 			});
 		});
+
+		this.recentReaction = localStorage.getItem('recentReaction');
 
 		this.$nextTick(() => {
 			const popover = this.$refs.popover as any;
@@ -131,6 +135,9 @@ export default Vue.extend({
 
 		reactText() {
 			if (!this.text) return;
+			if (this.text.match(emojiRegex)) {
+				localStorage.setItem('recentReaction', this.text);
+			}
 			this.react(this.text);
 		},
 

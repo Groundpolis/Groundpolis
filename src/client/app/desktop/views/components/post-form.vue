@@ -43,6 +43,10 @@
 			<x-visibility-icon :v="visibility" :localOnly="localOnly"/>
 		</button>
 		<div class="text-count" :class="{ over: trimmedLength(text) > maxNoteTextLength }">{{ maxNoteTextLength - trimmedLength(text) }}</div>
+		<ui-button v-if="tertiaryNoteVisibility != null && tertiaryNoteVisibility != 'none'" inline :wait="posting" class="tertiary" :disabled="!canPost" @click="post(tertiaryNoteVisibility)" title="Tertiary Post">
+			<mk-ellipsis v-if="posting"/>
+			<x-visibility-icon v-else :v="tertiaryNoteVisibility"/>
+		</ui-button>
 		<ui-button v-if="secondaryNoteVisibility != null && secondaryNoteVisibility != 'none'" inline :wait="posting" class="secondary" :disabled="!canPost" @click="post(secondaryNoteVisibility)" title="Secondary Post (Alt+Enter)">
 			<mk-ellipsis v-if="posting"/>
 			<x-visibility-icon v-else :v="secondaryNoteVisibility"/>
@@ -122,6 +126,7 @@ export default Vue.extend({
 			visibleUsers: [],
 			localOnly: false,
 			secondaryNoteVisibility: 'none',
+			tertiaryNoteVisibility: 'none',
 			autocomplete: null,
 			draghover: false,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
@@ -213,6 +218,7 @@ export default Vue.extend({
 		this.applyVisibility(this.$store.state.settings.rememberNoteVisibility ? (this.$store.state.device.visibility || this.$store.state.settings.defaultNoteVisibility) : this.$store.state.settings.defaultNoteVisibility);
 
 		this.secondaryNoteVisibility = this.$store.state.settings.secondaryNoteVisibility;
+		this.tertiaryNoteVisibility = this.$store.state.settings.tertiaryNoteVisibility;
 
 		// 公開以外へのリプライ時は元の公開範囲を引き継ぐ
 		if (this.reply && ['home', 'followers', 'specified'].includes(this.reply.visibility)) {
@@ -284,6 +290,10 @@ export default Vue.extend({
 		},
 
 		attachMedia(driveFile) {
+			if (driveFile.error) {
+				this.$notify(driveFile.error.message);
+				return;
+			}
 			this.files.push(driveFile);
 			this.$emit('change-attached-files', this.files);
 		},
@@ -694,7 +704,7 @@ export default Vue.extend({
 			display block
 			margin 4px
 
-		> .secondary
+		> .secondary, .tertiary
 			display block
 			margin 4px
 			min-width 50px !important

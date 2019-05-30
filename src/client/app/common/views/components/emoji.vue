@@ -47,7 +47,7 @@ export default Vue.extend({
 
 	computed: {
 		alt(): string {
-			return this.customEmoji ? `:${this.customEmoji.resolvable}:` : this.char;
+			return this.customEmoji ? `:${this.customEmoji.resolvable || this.customEmoji.name}:` : this.char;
 		},
 
 		title(): string {

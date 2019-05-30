@@ -120,6 +120,7 @@ common:
     local-public: "公開 (ローカルのみ)"
     local-home: "ホーム (ローカルのみ)"
     local-followers: "フォロワー (ローカルのみ)"
+    local-only: "ローカルのみ"
 
   note-placeholders:
     a: "今どうしてる？"
@@ -149,6 +150,7 @@ common:
     note-visibility: "投稿の公開範囲"
     default-note-visibility: "デフォルトの公開範囲"
     secondary-note-visibility: "セカンダリ投稿ボタンの公開範囲"
+    tertiary-note-visibility: "ターシャリ投稿ボタンの公開範囲"
     remember-note-visibility: "投稿の公開範囲を記憶する"
     web-search-engine: "ウェブ検索エンジン"
     web-search-engine-desc: "例: https://www.google.com/?#q={{query}}"
@@ -1145,6 +1147,7 @@ desktop/views/components/ui.header.nav.vue:
 
 desktop/views/components/ui.header.notifications.vue:
   title: "通知"
+  mark-all-as-read: "全て既読にする"
 
 desktop/views/components/ui.header.post.vue:
   post: "新規投稿"
@@ -1303,6 +1306,8 @@ admin/views/charts.vue:
     notes: "投稿の増減 (統合)"
     local-notes: "投稿の増減 (ローカル)"
     remote-notes: "投稿の増減 (リモート)"
+    notes-inc: "投稿の増加数"
+    notes-dec: "投稿の減少数"
     notes-total: "投稿の積算"
     users: "ユーザーの増減"
     users-total: "ユーザーの積算"
@@ -1684,6 +1689,7 @@ mobile/views/components/ui.nav.vue:
   game: "ゲーム"
   admin: "管理"
   about: "Misskeyについて"
+  mark-all-as-read: "全て既読にする"
 
 mobile/views/pages/drive.vue:
   contextmenu:

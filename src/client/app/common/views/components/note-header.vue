@@ -15,11 +15,12 @@
 			<mk-time :time="note.createdAt"/>
 		</router-link>
 		<span class="visibility" v-if="note.visibility != 'public'">
-			<fa v-if="note.visibility == 'home'" icon="home"/>
-			<fa v-if="note.visibility == 'followers'" icon="unlock"/>
-			<fa v-if="note.visibility == 'specified'" icon="envelope"/>
+			<fa class="home" v-if="note.visibility == 'home'" :title="$t('@.note-visibility.home')" icon="home"/>
+			<fa class="followers" v-if="note.visibility == 'followers'" :title="$t('@.note-visibility.followers')" icon="lock"/>
+			<fa class="specified" v-if="note.visibility == 'specified'" :title="$t('@.note-visibility.specified')" icon="envelope"/>
 		</span>
-		<span class="localOnly" v-if="note.localOnly == true"><fa icon="heart"/></span>
+		<span class="localOnly" v-if="note.localOnly == true" :title="$t('@.note-visibility.local-only')"><fa icon="heart"/></span>
+		<span class="remote" title="Remote post" v-if="note.user.host != null"><fa :icon="faGlobeAmericas"/></span>
 	</div>
 </header>
 </template>
@@ -27,9 +28,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import i18n from '../../../i18n';
+import { faGlobeAmericas } from '@fortawesome/free-solid-svg-icons';
 
 export default Vue.extend({
 	i18n: i18n(),
+	data() {
+		return {
+			faGlobeAmericas
+		}
+	},
 	props: {
 		note: {
 			type: Object,
@@ -110,8 +117,14 @@ export default Vue.extend({
 
 		> .visibility
 			margin-left 8px
+			color var(--noteActionsReactionHover)
 
 		> .localOnly
 			margin-left 4px
+			color var(--primary)
+
+		> .remote
+			margin-left 4px
+			color #4dabf7
 
 </style>

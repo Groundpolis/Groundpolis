@@ -5,7 +5,7 @@ import * as mongo from 'mongodb';
 
 import { queueLogger } from '../../logger';
 import Note, { INote } from '../../../models/note';
-import addFile from '../../../services/drive/add-file';
+import { addFile } from '../../../services/drive/add-file';
 import User from '../../../models/user';
 import dateFormat = require('dateformat');
 

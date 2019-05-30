@@ -10,7 +10,6 @@ import getDriveFileUrl from '../../../../misc/get-drive-file-url';
 import { parse, parsePlain } from '../../../../mfm/parse';
 import extractEmojis from '../../../../misc/extract-emojis';
 import extractHashtags from '../../../../misc/extract-hashtags';
-import * as langmap from 'langmap';
 import { updateHashtag } from '../../../../services/update-hashtag';
 import { ApiError } from '../../error';
 
@@ -38,13 +37,6 @@ export const meta = {
 			validator: $.optional.nullable.str.pipe(isValidDescription),
 			desc: {
 				'ja-JP': 'アカウントの説明や自己紹介'
-			}
-		},
-
-		lang: {
-			validator: $.optional.nullable.str.or(Object.keys(langmap)),
-			desc: {
-				'ja-JP': '言語'
 			}
 		},
 
@@ -170,7 +162,6 @@ export default define(meta, async (ps, user, app) => {
 
 	if (ps.name !== undefined) updates.name = ps.name;
 	if (ps.description !== undefined) updates.description = ps.description;
-	if (ps.lang !== undefined) updates.lang = ps.lang;
 	if (ps.location !== undefined) updates['profile.location'] = ps.location;
 	if (ps.birthday !== undefined) updates['profile.birthday'] = ps.birthday;
 	if (ps.avatarId !== undefined) updates.avatarId = ps.avatarId;

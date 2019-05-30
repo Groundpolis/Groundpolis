@@ -1,7 +1,7 @@
 import * as URL from 'url';
 
 import { IDriveFile, validateFileName } from '../../models/drive-file';
-import create from './add-file';
+import { addFile } from './add-file';
 import { IUser } from '../../models/user';
 import * as mongodb from 'mongodb';
 import { driveLogger } from './logger';
@@ -10,7 +10,7 @@ import { downloadUrl } from '../../misc/donwload-url';
 
 const logger = driveLogger.createSubLogger('downloader');
 
-export default async (
+export const uploadFromUrl = async (
 	url: string,
 	user: IUser,
 	folderId: mongodb.ObjectID = null,
@@ -34,7 +34,7 @@ export default async (
 	let error;
 
 	try {
-		driveFile = await create(user, path, name, null, folderId, force, link, url, uri, sensitive);
+		driveFile = await addFile(user, path, name, null, folderId, force, link, url, uri, sensitive);
 		logger.succ(`Got: ${driveFile._id}`);
 	} catch (e) {
 		error = e;
