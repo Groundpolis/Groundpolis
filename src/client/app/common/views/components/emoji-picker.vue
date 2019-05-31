@@ -23,11 +23,11 @@
 		</div>
 		<div v-else>
 			<button v-for="emoji in customEmojis"
-				:title="emoji.name"
-				@click="chosen(`:${emoji.name}:`)"
-				:key="emoji.name"
+				:title="emoji.resolvable"
+				@click="chosen(`:${emoji.resolvable}:`)"
+				:key="emoji.resolvable"
 			>
-				<img :src="emoji.url" :alt="emoji.name"/>
+				<img :src="emoji.url"/>
 			</button>
 		</div>
 	</div>
@@ -97,8 +97,16 @@ export default Vue.extend({
 	},
 
 	created() {
-		this.customEmojis = (this.$root.getMetaSync() || { emojis: [] }).emojis || [];
-		this.customEmojis = this.customEmojis.sort((a: any, b: any) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0);
+		const local = (this.$root.getMetaSync() || { emojis: [] }).emojis || [];
+		this.customEmojis = local.sort((a: any, b: any) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0);
+
+		this.$root.api('emojis', {
+			origin: 'remote',
+			sort: '+updatedAt',
+			limit: 200,
+		}).then((emojis: any[]) => {
+			this.customEmojis = this.customEmojis.concat(emojis);
+		});
 	},
 
 	methods: {
