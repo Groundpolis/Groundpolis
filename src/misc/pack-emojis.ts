@@ -1,8 +1,21 @@
 import User from '../models/user';
-import Emoji, { IREmoji, packREmoji } from '../models/emoji';
+import Emoji from '../models/emoji';
 import { toUnicode, toASCII } from 'punycode';
 import config from '../config';
 import { isSelfHost } from './convert-host';
+
+type IREmoji = {
+	/**
+	 * requested emoji key
+	 */
+	name: string,
+	url: string,
+	/***
+	 * resolved host(in unicode)
+	 */
+	host: string,
+	resolvable: string,
+};
 
 /**
  * 絵文字クエリオプション
@@ -103,6 +116,7 @@ export async function packCustomEmojis(emojis: string[], ownerHost: string, fore
 				emoji: match[0],
 				name: match[1],
 				host: normalizeHost(queryHost),
+				resolvable: `${match[1]}` + (queryHost ? `@${normalizeAsciiHost(queryHost)}` : ''),
 			};
 		})
 		.filter(x => x != null);
@@ -117,7 +131,14 @@ export async function packCustomEmojis(emojis: string[], ownerHost: string, fore
 
 		if (emoji == null) return null;
 
-		return await packREmoji(emoji);
+		const customEmoji = {
+			name: key.emoji,
+			url: key.host ? `${config.url}/files/${emoji.name}@${emoji.host}/${emoji.updatedAt ? emoji.updatedAt.getTime().toString(16) : '0'}.png` : emoji.url,
+			host: key.host,
+			resolvable: key.resolvable,
+		} as IREmoji;
+
+		return customEmoji;
 	}));
 
 	customEmojis = customEmojis.filter(x => x != null);

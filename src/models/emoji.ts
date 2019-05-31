@@ -24,29 +24,15 @@ export type IEmoji = {
 	type?: string;
 };
 
-/**
- * Emoji for render
- */
-export type IREmoji = {
-	/**
-	 * requested emoji key
-	 */
+export type IXEmoji = {
 	name: string,
 	url: string,
-	/***
-	 * resolved host (in unicode)
-	 */
-	host: string,
-	/**
-	 * resolvable name ('name' for local, 'name@host' for remote)
-	 */
-	resolvable: string,
 };
 
 /**
  * Pack custom emojis for render
  */
-export async function packREmoji(emoji: any): Promise<IREmoji> {
+export async function packXEmoji(emoji: any): Promise<IXEmoji> {
 	let _emoji: IEmoji;
 
 	// Populate if ID
@@ -65,12 +51,10 @@ export async function packREmoji(emoji: any): Promise<IREmoji> {
 	// リモートは /files/ で Proxyさせる
 	const url = _emoji.host ? `${config.url}/files/${_emoji.name}@${_emoji.host}/${_emoji.updatedAt ? _emoji.updatedAt.getTime().toString(16) : '0'}.png` : _emoji.url;
 
-	const resolvable = _emoji.name + (_emoji.host ? `@${toApHost(_emoji.host)}` : '');
+	const name = _emoji.name + (_emoji.host ? `@${toApHost(_emoji.host)}` : '');
 
 	return {
-		name: _emoji.name,
-		host: _emoji.host,
+		name,
 		url,
-		resolvable,
 	};
 }

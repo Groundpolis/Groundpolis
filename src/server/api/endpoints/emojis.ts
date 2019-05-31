@@ -1,7 +1,7 @@
 import $ from 'cafy';
 import define from '../define';
 import { fallback } from '../../../prelude/symbol';
-import Emoji, { packREmoji } from '../../../models/emoji';
+import Emoji, { packXEmoji } from '../../../models/emoji';
 
 const nonnull = { $ne: null as any };
 
@@ -75,5 +75,5 @@ export default define(meta, async (ps, me) => {
 			skip: ps.offset
 		});
 
-	return await Promise.all(emojis.map(emoji => packREmoji(emoji)));
+	return await Promise.all(emojis.map(emoji => packXEmoji(emoji)));
 });

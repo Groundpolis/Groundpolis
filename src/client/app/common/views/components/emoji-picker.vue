@@ -23,9 +23,9 @@
 		</div>
 		<div v-else>
 			<button v-for="emoji in customEmojis"
-				:title="emoji.resolvable"
-				@click="chosen(`:${emoji.resolvable}:`)"
-				:key="emoji.resolvable"
+				:title="emoji.name"
+				@click="chosen(`:${emoji.name}:`)"
+				:key="emoji.name"
 			>
 				<img :src="emoji.url"/>
 			</button>
