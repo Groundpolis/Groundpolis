@@ -22,6 +22,7 @@ export type IEmoji = {
 	/** AP object id */
 	uri?: string;
 	type?: string;
+	md5?: string;
 };
 
 export type IXEmoji = {
