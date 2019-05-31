@@ -304,7 +304,7 @@ export async function extractEmojis(tags: ITag[], host_: string) {
 							$set: {
 								uri: tag.id,
 								url: tag.icon.url,
-								updatedAt: new Date(tag.updated),
+								updatedAt: new Date(),
 							}
 						});
 				}
