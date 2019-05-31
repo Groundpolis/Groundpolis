@@ -44,6 +44,14 @@ import { faHeart, faFlag } from '@fortawesome/free-regular-svg-icons';
 export default Vue.extend({
 	i18n: i18n('common/views/components/emoji-picker.vue'),
 
+	props: {
+		includeRemote: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
+	},
+
 	data() {
 		return {
 			lib,
@@ -100,13 +108,15 @@ export default Vue.extend({
 		const local = (this.$root.getMetaSync() || { emojis: [] }).emojis || [];
 		this.customEmojis = local.sort((a: any, b: any) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0);
 
-		this.$root.api('emojis', {
-			origin: 'remote',
-			sort: '+updatedAt',
-			limit: 200,
-		}).then((emojis: any[]) => {
-			this.customEmojis = this.customEmojis.concat(emojis);
-		});
+		if (this.includeRemote) {
+			this.$root.api('emojis', {
+				origin: 'remote',
+				sort: '+updatedAt',
+				limit: 200,
+			}).then((emojis: any[]) => {
+				this.customEmojis = this.customEmojis.concat(emojis);
+			});
+		}
 	},
 
 	methods: {

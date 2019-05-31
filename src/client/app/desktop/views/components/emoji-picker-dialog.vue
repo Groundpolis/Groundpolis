@@ -1,6 +1,6 @@
 <template>
 <div class="gcafiosrssbtbnbzqupfmglvzgiaipyv">
-	<x-picker @chosen="chosen"/>
+	<x-picker :includeRemote="includeRemote" @chosen="chosen"/>
 </div>
 </template>
 
@@ -14,6 +14,11 @@ export default Vue.extend({
 	},
 
 	props: {
+		includeRemote: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
 		x: {
 			type: Number,
 			required: true
