@@ -11,25 +11,40 @@
 		</button>
 	</header>
 	<div class="emojis">
-		<header><fa :icon="categories.find(x => x.isActive).icon" fixed-width/> {{ categories.find(x => x.isActive).text }}</header>
-		<div v-if="categories.find(x => x.isActive).name">
-			<button v-for="emoji in Object.entries(lib).filter(([k, v]) => v.category === categories.find(x => x.isActive).name)"
-				:title="emoji[0]"
-				@click="chosen(emoji[1].char)"
-				:key="emoji[0]"
-			>
-				<mk-emoji :emoji="emoji[1].char"/>
-			</button>
-		</div>
-		<div v-else>
-			<button v-for="emoji in customEmojis"
-				:title="emoji.name"
-				@click="chosen(`:${emoji.name}:`)"
-				:key="emoji.name"
-			>
-				<img :src="emoji.url"/>
-			</button>
-		</div>
+		<header class="category"><fa :icon="categories.find(x => x.isActive).icon" fixed-width/> {{ categories.find(x => x.isActive).text }}</header>
+		<template v-if="categories.find(x => x.isActive).name">
+			<div class="list">
+				<button v-for="emoji in Object.entries(lib).filter(([k, v]) => v.category === categories.find(x => x.isActive).name)"
+					:title="emoji[0]"
+					@click="chosen(emoji[1].char)"
+					:key="emoji[0]"
+				>
+					<mk-emoji :emoji="emoji[1].char"/>
+				</button>
+			</div>
+		</template>
+		<template v-else>
+			<div class="list">
+				<button v-for="emoji in customEmojis"
+					:title="emoji.name"
+					@click="chosen(`:${emoji.name}:`)"
+					:key="emoji.name"
+				>
+					<img :src="emoji.url"/>
+				</button>
+			</div>
+			
+			<header class="sub" v-if="this.includeRemote">Remote emojis</header>
+			<div class="list">
+				<button v-for="emoji in remoteEmojis"
+					:title="emoji.name"
+					@click="chosen(`:${emoji.name}:`)"
+					:key="emoji.name"
+				>
+					<img :src="emoji.url"/>
+				</button>
+			</div>
+		</template>
 	</div>
 </div>
 </template>
@@ -56,6 +71,7 @@ export default Vue.extend({
 		return {
 			lib,
 			customEmojis: [],
+			remoteEmojis: [],
 			categories: [{
 				text: this.$t('custom-emoji'),
 				icon: faAsterisk,
@@ -111,10 +127,9 @@ export default Vue.extend({
 		if (this.includeRemote) {
 			this.$root.api('emojis', {
 				origin: 'remote',
-				sort: '+updatedAt',
-				limit: 200,
+				limit: 250,
 			}).then((emojis: any[]) => {
-				this.customEmojis = this.customEmojis.concat(emojis);
+				this.remoteEmojis = emojis;
 			});
 		}
 	},
@@ -161,7 +176,7 @@ export default Vue.extend({
 		overflow-y auto
 		overflow-x hidden
 
-		> header
+		> header.category
 			position sticky
 			top 0
 			left 0
@@ -171,7 +186,13 @@ export default Vue.extend({
 			color var(--text)
 			font-size 12px
 
-		> div
+		> header.sub
+			padding 4px 8px
+			background var(--faceHeader)
+			color var(--text)
+			font-size 12px
+
+		> div.list
 			display grid
 			grid-template-columns 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr
 			gap 4px
