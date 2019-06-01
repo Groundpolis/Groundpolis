@@ -50,11 +50,17 @@ export default define(meta, async (ps, me) => {
 
 	const md5s = xs.map(x => x._id);
 
-	const emojis = await Promise.all(md5s.map(md5 => Emoji.findOne({
-		md5
-	}, {
-		sort: { updatedAt: -1 }
-	})));
+	const toEmoji = async (md5: string) => {
+		const emoji = await Emoji.find({
+			md5
+		}, {
+			sort: { updatedAt: -1 },
+			limit: 1,
+		});
+		return emoji.shift();
+	};
+
+	const emojis = await Promise.all(md5s.map(md5 => toEmoji(md5)));
 
 	return await Promise.all(emojis.map(emoji => packXEmoji(emoji)));
 });
