@@ -6,7 +6,7 @@
 	</p>
 	<p class="desc">{{ $t('disabled-timeline.description') }}</p>
 </div>
-<x-notes v-else ref="timeline" :make-promise="makePromise" @inited="() => $emit('loaded')"/>
+<x-notes v-else ref="timeline" :make-promise="makePromise" :timeSplitters="[3, 6, 12, 18, 19, 20, 21, 22, 23]" @inited="() => $emit('loaded')"/>
 </template>
 
 <script lang="ts">

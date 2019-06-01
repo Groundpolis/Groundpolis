@@ -116,7 +116,7 @@ export async function packCustomEmojis(emojis: string[], ownerHost: string, fore
 				emoji: match[0],
 				name: match[1],
 				host: normalizeHost(queryHost),
-				resolvable: `${match[1]}` + (queryHost ? `@${normalizeAsciiHost(queryHost)}` : '')
+				resolvable: `${match[1]}` + (queryHost ? `@${normalizeAsciiHost(queryHost)}` : ''),
 			};
 		})
 		.filter(x => x != null);
