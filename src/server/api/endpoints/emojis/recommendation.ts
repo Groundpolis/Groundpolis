@@ -10,7 +10,7 @@ export const meta = {
 	params: {
 		limit: {
 			validator: $.optional.num.range(1, 1000),
-			default: 200
+			default: 250
 		},
 
 		offset: {
@@ -72,5 +72,5 @@ export default define(meta, async (ps, me) => {
 
 	const emojis = await Promise.all(md5s.map(md5 => toEmoji(md5)));
 
-	return await Promise.all(emojis.map(emoji => packXEmoji(emoji)));
+	return await Promise.all(emojis.sort((a: any, b: any) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0).map(emoji => packXEmoji(emoji)));
 });
