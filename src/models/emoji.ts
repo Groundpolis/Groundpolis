@@ -8,6 +8,7 @@ import { toApHost } from '../misc/convert-host';
 const Emoji = db.get<IEmoji>('emoji');
 Emoji.createIndex('name');
 Emoji.createIndex('host');
+Emoji.createIndex('md5');
 Emoji.createIndex(['name', 'host'], { unique: true });
 
 export default Emoji;

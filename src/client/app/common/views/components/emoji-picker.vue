@@ -125,9 +125,8 @@ export default Vue.extend({
 		this.customEmojis = local.sort((a: any, b: any) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0);
 
 		if (this.includeRemote) {
-			this.$root.api('emojis', {
+			this.$root.api('emojis/recommendation', {
 				origin: 'remote',
-				limit: 250,
 			}).then((emojis: any[]) => {
 				this.remoteEmojis = emojis;
 			});
