@@ -31,11 +31,20 @@ export default define(meta, async (ps, me) => {
 	const xs = await Emoji.aggregate([{
 		$match: {
 			host: { $ne: null },
-			md5: { $ne: null }
+			md5: { $ne: null },
+			updatedAt: { $gt: new Date('2000-01-01') }
+		}
+	}, {
+		// 1インスタンス内で重複登録しているとこがあるので除外
+		$group: {
+			_id: {
+				md5: '$md5',
+				host: '$host'
+			}
 		}
 	}, {
 		$group: {
-			_id: '$md5',
+			_id: '$_id.md5',
 			count: { $sum: 1 }
 		}
 	}, {
@@ -57,6 +66,7 @@ export default define(meta, async (ps, me) => {
 			sort: { updatedAt: -1 },
 			limit: 1,
 		});
+
 		return emoji.shift();
 	};
 
