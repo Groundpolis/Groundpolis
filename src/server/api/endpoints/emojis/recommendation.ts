@@ -10,7 +10,7 @@ export const meta = {
 	params: {
 		limit: {
 			validator: $.optional.num.range(1, 1000),
-			default: 250
+			default: 500
 		},
 
 		offset: {
