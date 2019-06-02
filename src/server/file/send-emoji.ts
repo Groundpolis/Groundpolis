@@ -49,6 +49,13 @@ export default async function(ctx: Koa.BaseContext) {
 		serverLogger.error(e);
 
 		if (typeof e == 'number' && e >= 400 && e < 500) {
+			console.log(`Update emoji md5 ${emoji.md5} => null`);
+			Emoji.update({ _id: emoji._id }, {
+				$set: {
+					md5: null
+				}
+			});
+
 			ctx.status = e;
 		} else {
 			ctx.status = 500;
