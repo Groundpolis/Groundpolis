@@ -444,4 +444,24 @@ export const schemas = {
 			'attachedRemoteUsersCount',
 		]
 	},
+
+	XEmoji: {
+		type: 'object',
+		properties: {
+			name: {
+				type: 'string',
+				description: 'name',
+				example: 'name',
+			},
+			url: {
+				type: 'string',
+				description: 'url',
+				example: 'example.com',
+			},
+		},
+		required: [
+			'name',
+			'url',
+		]
+	},
 };

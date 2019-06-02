@@ -43,7 +43,7 @@ export const meta = {
 	res: {
 		type: 'array',
 		items: {
-			type: 'REmoji',
+			type: 'XEmoji',
 		}
 	},
 };
