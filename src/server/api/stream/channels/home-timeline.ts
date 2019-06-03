@@ -3,6 +3,8 @@ import Mute from '../../../../models/mute';
 import { pack } from '../../../../models/note';
 import shouldMuteThisNote from '../../../../misc/should-mute-this-note';
 import Channel from '../channel';
+import { concat } from '../../../../prelude/array';
+import UserList from '../../../../models/user-list';
 
 export default class extends Channel {
 	public readonly chName = 'homeTimeline';
@@ -18,6 +20,15 @@ export default class extends Channel {
 
 		const mute = await Mute.find({ muterId: this.user._id });
 		this.mutedUserIds = mute.map(m => m.muteeId.toString());
+
+		const lists = await UserList.find({
+			userId: this.user._id,
+			hideFromHome: true,
+		});
+
+		const hideFromHomeUsers = concat(lists.map(list => list.userIds)).map(x => x.toString());
+
+		this.mutedUserIds = this.mutedUserIds.concat(hideFromHomeUsers);
 	}
 
 	@autobind

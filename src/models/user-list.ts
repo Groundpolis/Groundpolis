@@ -12,6 +12,7 @@ export interface IUserList {
 	title: string;
 	userId: mongo.ObjectID;
 	userIds: mongo.ObjectID[];
+	hideFromHome?: boolean;
 }
 
 export const pack = (

@@ -6,6 +6,8 @@ import { packMany } from '../../../../models/note';
 import define from '../../define';
 import activeUsersChart from '../../../../services/chart/active-users';
 import { getHideUserIds } from '../../common/get-hide-users';
+import UserList from '../../../../models/user-list';
+import { concat } from '../../../../prelude/array';
 
 export const meta = {
 	desc: {
@@ -137,6 +139,13 @@ export default define(meta, async (ps, user) => {
 		getHideUserIds(user)
 	]);
 
+	const lists = await UserList.find({
+		userId: user._id,
+		hideFromHome: true,
+	});
+
+	const hideFromHomeUsers = concat(lists.map(list => list.userIds));
+
 	//#region Construct query
 	const sort = {
 		_id: -1
@@ -189,7 +198,7 @@ export default define(meta, async (ps, user) => {
 
 			// mute
 			userId: {
-				$nin: hideUserIds
+				$nin: hideUserIds.concat(hideFromHomeUsers)
 			},
 			'_reply.userId': {
 				$nin: hideUserIds

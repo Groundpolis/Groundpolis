@@ -32,7 +32,14 @@ export const meta = {
 				'ja-JP': 'このユーザーリストの名前',
 				'en-US': 'name of this user list'
 			}
-		}
+		},
+
+		hideFromHome: {
+			validator: $.optional.bool,
+			desc: {
+				'ja-JP': 'これらのユーザーをホームに表示しない'
+			}
+		},
 	},
 
 	errors: {
@@ -55,10 +62,14 @@ export default define(meta, async (ps, user) => {
 		throw new ApiError(meta.errors.noSuchList);
 	}
 
+	const set = {
+		title: ps.title
+	} as any;
+
+	if (typeof ps.hideFromHome == 'boolean') set.hideFromHome = ps.hideFromHome;
+
 	await UserList.update({ _id: userList._id }, {
-		$set: {
-			title: ps.title
-		}
+		$set: set
 	});
 
 	return await pack(userList._id);

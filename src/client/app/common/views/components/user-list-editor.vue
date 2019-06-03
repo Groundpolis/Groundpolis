@@ -6,6 +6,7 @@
 		<section>
 			<ui-button @click="rename"><fa :icon="faICursor"/> {{ $t('rename') }}</ui-button>
 			<ui-button @click="del"><fa :icon="faTrashAlt"/> {{ $t('delete') }}</ui-button>
+			<ui-switch v-model="hideFromHome" @change="update">これらのユーザーをホームに表示しない</ui-switch>
 		</section>
 	</ui-card>
 
@@ -54,6 +55,7 @@ export default Vue.extend({
 	data() {
 		return {
 			users: [],
+			hideFromHome: !!(this.list as any).hideFromHome,
 			faList, faICursor, faTrashAlt, faUsers
 		};
 	},
@@ -68,6 +70,16 @@ export default Vue.extend({
 				userIds: this.list.userIds
 			}).then(users => {
 				this.users = users;
+			});
+		},
+
+		update() {
+			this.$root.api('users/lists/update', {
+				listId: this.list.id,
+				title: this.list.title,
+				hideFromHome: this.hideFromHome
+			}).then(() => {
+				this.list.hideFromHome = this.hideFromHome;
 			});
 		},
 
