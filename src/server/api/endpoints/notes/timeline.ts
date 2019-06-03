@@ -130,21 +130,22 @@ export const meta = {
 };
 
 export default define(meta, async (ps, user) => {
-	const [followings, hideUserIds] = await Promise.all([
+	const [followings, hideUserIds, hideFromHomeLists] = await Promise.all([
 		// フォローを取得
 		// Fetch following
 		getFriends(user._id),
 
 		// 隠すユーザーを取得
-		getHideUserIds(user)
+		getHideUserIds(user),
+
+		// Homeから隠すリストを取得
+		UserList.find({
+			userId: user._id,
+			hideFromHome: true,
+		})
 	]);
 
-	const lists = await UserList.find({
-		userId: user._id,
-		hideFromHome: true,
-	});
-
-	const hideFromHomeUsers = concat(lists.map(list => list.userIds));
+	const hideFromHomeUsers = concat(hideFromHomeLists.map(list => list.userIds));
 
 	//#region Construct query
 	const sort = {
