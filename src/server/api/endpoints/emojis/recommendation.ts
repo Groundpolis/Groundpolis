@@ -1,6 +1,7 @@
 import $ from 'cafy';
 import define from '../../define';
-import Emoji, { packXEmoji } from '../../../../models/emoji';
+import Emoji, { packXEmoji, IEmoji, IXEmoji } from '../../../../models/emoji';
+import { toApHost } from '../../../../misc/convert-host';
 
 export const meta = {
 	tags: ['emojis'],
@@ -16,6 +17,11 @@ export const meta = {
 		offset: {
 			validator: $.optional.num.min(0),
 			default: 0
+		},
+
+		minInstances: {
+			validator: $.optional.num.min(0),
+			default: 3
 		},
 	},
 
@@ -43,6 +49,7 @@ export default define(meta, async (ps, me) => {
 			}
 		}
 	}, {
+		// 使用インスタンス数カウント
 		$group: {
 			_id: '$_id.md5',
 			count: { $sum: 1 }
@@ -50,9 +57,10 @@ export default define(meta, async (ps, me) => {
 	}, {
 		// あまり採用インスタンスが少ないのは変なのあるので除外
 		$match: {
-			count: { $gt: 3 }
+			count: { $gt: ps.minInstances }
 		}
 	}, {
+		// 使用インスタンスが多い順でソート
 		$sort: {
 			count: -1
 		}
@@ -60,22 +68,53 @@ export default define(meta, async (ps, me) => {
 		$skip: ps.offset
 	}, {
 		$limit: ps.limit
-	}]) as any[];
+	}, {
+		// join source emojis
+		$lookup: {
+			from: 'emoji',
+			localField: '_id',	// md5
+			foreignField: 'md5',
+			as: 'emojis',
+		}
+	}]) as IRes[];
 
-	const md5s = xs.map(x => x._id);
-
-	const toEmoji = async (md5: string) => {
-		const emoji = await Emoji.find({
-			md5
-		}, {
-			sort: { updatedAt: -1 },
-			limit: 1,
-		});
-
-		return emoji.shift();
+	type IRes = {
+		/** MD5 */
+		_id: string;
+		/** Number of used instances */
+		count: number;
+		/** Source informations */
+		emojis: IEmoji[];
 	};
 
-	const emojis = await Promise.all(md5s.map(md5 => toEmoji(md5)));
+	type IXEmojiWithSources = IXEmoji & {
+		/** Sources information */
+		sources: {
+			/** name */
+			name: string,
+			/** host (Punycode) */
+			host: string
+		}[]
+	};
 
-	return await Promise.all(emojis.sort((a: any, b: any) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0).map(emoji => packXEmoji(emoji)));
+	const toTime = (date: Date) => date ? date.getTime() : 0;
+
+	const toEmoji = async (res: IRes) => {
+		// updatedAtが一番新しいインスタンスの絵文字ということにする
+		const emoji = res.emojis.sort((a, b) => toTime(b.updatedAt) - toTime(a.updatedAt))[0];
+		const xemoji = await packXEmoji(emoji) as IXEmojiWithSources;
+
+		xemoji.sources = res.emojis.map(emoji => {
+			return {
+				name: emoji.name,
+				host: toApHost(emoji.host),
+			};
+		});
+
+		return xemoji;
+	};
+
+	const xemojis = await Promise.all(xs.map(x => toEmoji(x)));
+
+	return xemojis.sort((a: any, b: any) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0);
 });
