@@ -37,7 +37,7 @@
 			<header class="sub" v-if="this.includeRemote">Remote emojis</header>
 			<div class="list">
 				<button v-for="emoji in remoteEmojis"
-					:title="emoji.name"
+					:title="emoji.sources ? emoji.sources.map(x => `${x.name}@${x.host}`).join(', ') : emoji.name"
 					@click="chosen(`:${emoji.name}:`)"
 					:key="emoji.name"
 				>
