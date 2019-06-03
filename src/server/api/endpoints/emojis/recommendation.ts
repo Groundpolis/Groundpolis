@@ -48,6 +48,11 @@ export default define(meta, async (ps, me) => {
 			count: { $sum: 1 }
 		}
 	}, {
+		// あまり採用インスタンスが少ないのは変なのあるので除外
+		$match: {
+			count: { $gt: 3 }
+		}
+	}, {
 		$sort: {
 			count: -1
 		}
