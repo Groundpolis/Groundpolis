@@ -6,7 +6,7 @@
 		<section>
 			<ui-button @click="rename"><fa :icon="faICursor"/> {{ $t('rename') }}</ui-button>
 			<ui-button @click="del"><fa :icon="faTrashAlt"/> {{ $t('delete') }}</ui-button>
-			<ui-switch v-model="hideFromHome" @change="update">これらのユーザーをホームに表示しない</ui-switch>
+			<ui-switch v-model="hideFromHome" @change="update">{{ $t('hide-from-home') }}</ui-switch>
 		</section>
 	</ui-card>
 
