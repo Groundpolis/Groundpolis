@@ -12,6 +12,7 @@ export default class extends Channel {
 	public static requireCredential = true;
 
 	private mutedUserIds: string[] = [];
+	private hideFromUsers: string[] = [];
 
 	@autobind
 	public async init(params: any) {
@@ -27,9 +28,7 @@ export default class extends Channel {
 			hideFromHome: true,
 		});
 
-		const hideFromHomeUsers = concat(lists.map(list => list.userIds)).map(x => x.toString());
-
-		this.mutedUserIds = this.mutedUserIds.concat(hideFromHomeUsers);
+		this.hideFromUsers = concat(lists.map(list => list.userIds)).map(x => x.toString());
 	}
 
 	@autobind
@@ -48,7 +47,7 @@ export default class extends Channel {
 		}
 
 		// 流れてきたNoteがミュートしているユーザーが関わるものだったら無視する
-		if (shouldMuteThisNote(note, this.mutedUserIds)) return;
+		if (shouldMuteThisNote(note, this.mutedUserIds, this.hideFromUsers)) return;
 
 		this.send('note', note);
 	}
