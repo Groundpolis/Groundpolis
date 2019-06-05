@@ -48,16 +48,26 @@ export default async function(ctx: Koa.BaseContext) {
 	} catch (e) {
 		serverLogger.error(e);
 
-		if (typeof e == 'number' && e >= 400 && e < 500) {
+		// ハッシュをリセットしてもう採用しないようにする
+		const defered = () => {
 			console.log(`Update emoji md5 ${emoji.md5} => null`);
 			Emoji.update({ _id: emoji._id }, {
 				$set: {
 					md5: null
 				}
 			});
+		};
 
+		if (typeof e == 'number' && e >= 400 && e < 500) {
+			// 4xx
+			defered();
 			ctx.status = e;
+		} else if (typeof e == 'number') {
+			// other status code
+			ctx.status = 500;
 		} else {
+			// 繋がらない
+			defered();
 			ctx.status = 500;
 		}
 	} finally {
