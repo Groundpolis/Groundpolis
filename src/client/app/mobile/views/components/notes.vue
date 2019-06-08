@@ -14,7 +14,8 @@
 		<button @click="reload">{{ $t('@.newest') }}</button>
 	</header>
 
-	<div name="mk-notes" class="notes">
+	<!-- トランジションを有効にするとなぜかメモリリークする -->
+	<component :is="!$store.state.device.reduceMotion ? 'transition-group' : 'div'" name="mk-notes" class="transition" tag="div">
 		<template v-for="(note, i) in _notes">
 			<mk-note :note="note" :key="note.id" @update:note="onNoteUpdated(i, $event)"/>
 			<p class="date" :key="note.id + '_date'" v-if="i != notes.length - 1 && note._date != _notes[i + 1]._date">
@@ -25,7 +26,7 @@
 				<span>{{ note._hourtext }}</span>
 			</p>
 		</template>
-	</div>
+	</component>
 
 	<footer v-if="cursor != null">
 		<button @click="more" :disabled="moreFetching" :style="{ cursor: moreFetching ? 'wait' : 'pointer' }">
@@ -252,7 +253,15 @@ export default Vue.extend({
 		text-align center
 		color var(--text)
 
-	.notes
+	.transition
+		.mk-notes-enter
+		.mk-notes-leave-to
+			opacity 0
+			transform translateY(-30px)
+
+		> *
+			transition transform .3s ease, opacity .3s ease
+
 		> .date
 			display block
 			margin 0

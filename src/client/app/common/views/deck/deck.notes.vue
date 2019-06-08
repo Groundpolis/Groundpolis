@@ -10,7 +10,8 @@
 		</template>
 	</div>
 
-	<div name="mk-notes" class="notes" ref="notes">
+	<!-- トランジションを有効にするとなぜかメモリリークする -->
+	<component :is="!$store.state.device.reduceMotion ? 'transition-group' : 'div'" name="mk-notes" class="transition notes" ref="notes" tag="div">
 		<template v-for="(note, i) in _notes">
 			<mk-note
 				:note="note"
@@ -26,7 +27,7 @@
 				<span>{{ note._hourtext }}</span>
 			</p>
 		</template>
-	</div>
+	</component>
 
 	<footer v-if="cursor != null">
 		<button @click="more" :disabled="moreFetching" :style="{ cursor: moreFetching ? 'wait' : 'pointer' }">
@@ -209,6 +210,13 @@ export default Vue.extend({
 
 <style lang="stylus" scoped>
 .eamppglmnmimdhrlzhplwpvyeaqmmhxu
+	.transition
+		.mk-notes-enter
+		.mk-notes-leave-to
+			opacity 0
+			transform translateY(-30px)
+		> *
+			transition transform .3s ease, opacity .3s ease
 	> .empty
 		padding 16px
 		text-align center
