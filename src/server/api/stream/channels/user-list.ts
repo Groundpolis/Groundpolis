@@ -17,6 +17,9 @@ export default class extends Channel {
 			if (data.type == 'note') data.body = await pack(data.body.id, this.user, {
 				detail: true
 			});
+
+			if (data.body && data.body.isHidden) return;
+
 			this.send(data);
 		});
 	}
