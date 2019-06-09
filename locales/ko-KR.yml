@@ -346,7 +346,7 @@ common/views/components/games/reversi/reversi.room.vue:
   settings-of-the-game: "게임 설정"
   choose-map: "맵 선택"
   random: "랜덤"
-  black-or-white: "선수/후수"
+  black-or-white: "선수"
   black-is: "{}가 흑"
   rules: "규칙"
   is-llotheo: "돌이 적은 사람이 승리 (llotheo)"

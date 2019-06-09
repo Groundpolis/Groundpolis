@@ -346,7 +346,6 @@ common/views/components/games/reversi/reversi.room.vue:
   settings-of-the-game: "游戏设置"
   choose-map: "棋盘选择"
   random: "随机"
-  black-or-white: "黑/白"
   black-is: "{}是黑"
   rules: "规则"
   is-llotheo: "棋子较少一方获胜(LLoTheO规则)"

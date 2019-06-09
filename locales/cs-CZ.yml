@@ -330,7 +330,6 @@ common/views/components/games/reversi/reversi.room.vue:
   settings-of-the-game: "Nastavení hry"
   choose-map: "Vybrat mapu"
   random: "Náhodně"
-  black-or-white: "Černé/bílé"
   black-is: "Černá je {}"
   rules: "Pravidla"
   looped-map: "Zacyklená mapa"

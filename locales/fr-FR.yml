@@ -281,7 +281,6 @@ common/views/components/games/reversi/reversi.room.vue:
   settings-of-the-game: "Paramètres du jeu"
   choose-map: "Sélectionnez une carte"
   random: "Aléatoire"
-  black-or-white: "Noirs/Blancs"
   black-is: "{} Noirs"
   rules: "Règles"
   looped-map: "Carte en boucle"

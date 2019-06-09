@@ -36,8 +36,8 @@
 
 			<div>
 				<form-radio v-model="game.settings.bw" value="random" @change="updateSettings">{{ $t('random') }}</form-radio>
-				<form-radio v-model="game.settings.bw" :value="1" @change="updateSettings">{{ this.$t('black-is').split('{}')[0] }}<b><mk-user-name :user="game.user1"/></b>{{ this.$t('black-is').split('{}')[1] }}</form-radio>
-				<form-radio v-model="game.settings.bw" :value="2" @change="updateSettings">{{ this.$t('black-is').split('{}')[0] }}<b><mk-user-name :user="game.user2"/></b>{{ this.$t('black-is').split('{}')[1] }}</form-radio>
+				<form-radio v-model="game.settings.bw" :value="1" @change="updateSettings"><b><mk-user-name :user="game.user1"/></b></form-radio>
+				<form-radio v-model="game.settings.bw" :value="2" @change="updateSettings"><b><mk-user-name :user="game.user2"/></b></form-radio>
 			</div>
 		</div>
 

@@ -219,7 +219,7 @@ common/views/components/games/reversi/reversi.room.vue:
   settings-of-the-game: "ゲームの設定"
   choose-map: "マップを選択"
   random: "いんじゃんほい"
-  black-or-white: "先手/後手"
+  black-or-white: "先手"
   black-is: "{}が黒や"
   rules: "ルール"
   is-llotheo: "石の少ない方が勝ちや！(ロセオ)"

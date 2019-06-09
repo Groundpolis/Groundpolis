@@ -1,7 +1,7 @@
 <template>
 <div class="xqnhankfuuilcwvhgsopeqncafzsquya">
 	<button class="go-index" v-if="selfNav" @click="goIndex"><fa icon="arrow-left"/></button>
-	<header><b><router-link :to="blackUser | userPage"><mk-user-name :user="blackUser"/></router-link></b>({{ $t('@.reversi.black') }}) vs <b><router-link :to="whiteUser | userPage"><mk-user-name :user="whiteUser"/></router-link></b>({{ $t('@.reversi.white') }})</header>
+	<header><b><router-link :to="blackUser | userPage"><mk-user-name :user="blackUser"/></router-link></b><span> <fa :icon="fasCircle"/></span> vs <b><router-link :to="whiteUser | userPage"><mk-user-name :user="whiteUser"/></router-link></b><span> <fa :icon="farCircle"/></span></header>
 
 	<div style="overflow: hidden; line-height: 16px;">
 		<p class="turn" v-if="!iAmPlayer && !game.isEnded">
@@ -54,7 +54,7 @@
 		</div>
 	</div>
 
-	<p class="status"><b>{{ $t('@.reversi.this-turn', { count: logPos }) }}</b> {{ $t('@.reversi.black') }}:{{ o.blackCount }} {{ $t('@.reversi.white') }}:{{ o.whiteCount }} {{ $t('@.reversi.total') }}:{{ o.blackCount + o.whiteCount }}</p>
+	<p class="status"><b>{{ $t('@.reversi.this-turn', { count: logPos }) }}</b><fa :icon="fasCircle" style="margin-left: 0.5em"/>:{{ o.blackCount }} <fa :icon="farCircle"/>:{{ o.whiteCount }} {{ $t('@.reversi.total') }}:{{ o.blackCount + o.whiteCount }}</p>
 
 	<div class="actions" v-if="!game.isEnded && iAmPlayer">
 		<form-button @click="surrender">{{ $t('surrender') }}</form-button>

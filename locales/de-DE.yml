@@ -177,7 +177,6 @@ common/views/components/games/reversi/reversi.room.vue:
   settings-of-the-game: "Spieleinstellungen"
   choose-map: "Wähle eine Karte"
   random: "Zufällige Auswahl"
-  black-or-white: "Schwarz/Weiß"
   black-is: "Schwarz ist {}"
   rules: "Regeln"
   waiting-for-other: "Warte auf den Gegner"

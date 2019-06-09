@@ -115,7 +115,6 @@ common/views/components/games/reversi/reversi.index.vue:
 common/views/components/games/reversi/reversi.room.vue:
   settings-of-the-game: "Настройки игры"
   random: "Случайно"
-  black-or-white: "Чёрные/Белые"
   black-is: "{} ходит чёрными"
   rules: "Правила"
   settings-of-the-bot: "Настройки бота"

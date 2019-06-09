@@ -248,7 +248,6 @@ common/views/components/games/reversi/reversi.room.vue:
   settings-of-the-game: "Ustawienia gry"
   choose-map: "Wybierz mapę"
   random: "Losowy"
-  black-or-white: "Czarny/biały"
   rules: "Zasady"
   settings-of-the-bot: "Ustawienia bota"
   this-game-is-started-soon: "Gra rozpocznie się wkrótce"
