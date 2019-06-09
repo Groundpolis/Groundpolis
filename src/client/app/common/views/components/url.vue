@@ -45,7 +45,7 @@ export default Vue.extend({
 
 		if (this.trim) {
 			let postfix = this.pathname + this.query + this.hash;
-			if (postfix.length > 20) postfix = postfix.slice(0, 20) + '…';
+			if (postfix.length > 16) postfix = postfix.slice(0, 16) + '…';
 			if (postfix == '/') postfix = '';
 
 			this.pathname = postfix;
