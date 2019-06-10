@@ -37,5 +37,9 @@ export default define(meta, async (ps, user) => {
 		throw new ApiError(meta.errors.noSuchSession);
 	}
 
-	return await pack(session, user);
+	const packed = await pack(session, user);
+
+	if (packed.app.name.match(/</)) throw new Error('Invalied charactor');
+
+	return packed;
 });
