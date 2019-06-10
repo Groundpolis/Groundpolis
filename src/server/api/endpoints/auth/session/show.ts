@@ -39,7 +39,7 @@ export default define(meta, async (ps, user) => {
 
 	const packed = await pack(session, user);
 
-	if (packed.app.name.match(/</)) throw new Error('Invalied charactor');
+	packed.app.name = packed.app.name.replace('<', '＜');
 
 	return packed;
 });
