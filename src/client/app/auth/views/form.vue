@@ -42,11 +42,6 @@ export default Vue.extend({
 	i18n: i18n('auth/views/form.vue'),
 	props: ['session'],
 	computed: {
-		name(): string {
-			const el = document.createElement('div');
-			el.textContent = this.app.name
-			return el.innerHTML;
-		},
 		app(): any {
 			return this.session.app;
 		}
