@@ -136,7 +136,6 @@ common:
   dev: "Fehler beim Erstellen der Applikation. Bitte versuche es erneut."
   you: "Du"
 auth/views/form.vue:
-  share-access: "Erlaubst Du <i>{name}</i> auf deinen Account zuzugreifen?"
   permission-ask: "Diese Applikation benötigt folgende Berechtigungen:"
   account-read: "Accountinformationen anzeigen."
   account-write: "Accountinformationen bearbeiten."

@@ -287,7 +287,7 @@ common:
   ai-chan-kawaii: "Ai-chan kawaii!"
   you: "You"
 auth/views/form.vue:
-  share-access: "Would you allow <i>{name}</i> to access your account?"
+  share-access: "Would you allow the following app to access your account?"
   permission-ask: "This application requires the following permissions:"
   account-read: "View account information."
   account-write: "Modify account information."

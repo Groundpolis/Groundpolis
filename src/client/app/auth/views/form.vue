@@ -1,7 +1,7 @@
 <template>
 <div class="form">
 	<header>
-		<h1 v-html="$t('share-access', { name })"></h1>
+		<h1>{{ $t('share-access') }}</h1>
 		<img :src="app.iconUrl"/>
 	</header>
 	<div class="app">
@@ -125,7 +125,7 @@ export default Vue.extend({
 				margin 0
 				font-size 16px
 				color #777
-
+			
 	> .action
 		padding 16px
 

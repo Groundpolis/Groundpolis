@@ -280,7 +280,6 @@ common:
   ai-chan-kawaii: "小蓝真可爱"
   you: "您"
 auth/views/form.vue:
-  share-access: "您要允许<i>{name}</i>来访问您的账户吗?"
   permission-ask: "这个应用程序需要以下权限:"
   account-read: "查看账户信息"
   account-write: "修改账户信息"

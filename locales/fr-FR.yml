@@ -218,7 +218,6 @@ common:
   ai-chan-kawaii: "Ai-Chan est mignonne !"
   you: "Vous"
 auth/views/form.vue:
-  share-access: "Désirez-vous autoriser <i>{name}</i> à avoir accès à votre compte ?"
   permission-ask: "Cette application nécessite les autorisations suivantes :"
   account-read: "Afficher les informations du compte."
   account-write: "Modifications des informations du compte."

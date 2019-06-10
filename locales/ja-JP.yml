@@ -304,7 +304,7 @@ common:
   you: "あなた"
 
 auth/views/form.vue:
-  share-access: "<i>{name}</i>があなたのアカウントにアクセスすることを許可しますか？"
+  share-access: "以下のアプリがあなたのアカウントにアクセスすることを許可しますか？"
   permission-ask: "このアプリは次の権限を要求しています:"
   account-read: "アカウントの情報を見る。"
   account-write: "アカウントの情報を操作する。"

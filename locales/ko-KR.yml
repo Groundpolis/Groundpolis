@@ -280,7 +280,6 @@ common:
   ai-chan-kawaii: "아이쨩 귀여워"
   you: "당신"
 auth/views/form.vue:
-  share-access: "<i>{name}</i>가 당신의 계정에 엑세스하도록 허용하시겠습니까?"
   permission-ask: "이 앱은 다음의 권한을 요청합니다:"
   account-read: "계정 정보 보기."
   account-write: "계정 정보의 수정."

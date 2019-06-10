@@ -279,7 +279,6 @@ common:
   ai-chan-kawaii: "Ai-chan kawaii!"
   you: "Vy"
 auth/views/form.vue:
-  share-access: "Chcete dovolit aplikaci <i>{name}</i> přístup k vašemu účtu?"
   permission-ask: "Tato aplikace vyžaduje následující oprávnění:"
   account-read: "Zobrazit informace účtu"
   note-write: "Odeslat."
