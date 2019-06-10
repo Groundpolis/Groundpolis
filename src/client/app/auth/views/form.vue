@@ -120,7 +120,7 @@ export default Vue.extend({
 				margin 0
 				font-size 16px
 				color #777
-			
+
 	> .action
 		padding 16px
 
