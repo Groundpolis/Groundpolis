@@ -41,7 +41,14 @@ const logger = driveLogger.createSubLogger('register', 'yellow');
  */
 async function save(path: string, name: string, type: string, hash: string, size: number, metadata: IMetadata, drive: DriveConfig): Promise<IDriveFile> {
 	// thunbnail, webpublic を必要なら生成
-	const alts = await generateAlts(path, type, !metadata.uri);
+	const alts = await generateAlts(path, type, !metadata.uri).catch(err => {
+		logger.error(err);
+
+		return {
+			webpublic: undefined as IImage,
+			thumbnail: undefined as IImage
+		};
+	});
 
 	if (drive.storage == 'minio') {
 		//#region ObjectStorage params
