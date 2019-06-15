@@ -15,16 +15,23 @@ import { toDbHost } from '../../misc/convert-host';
 export const logger = apLogger.createSubLogger('deliver');
 
 export default async (user: ILocalUser, url: string, object: any) => {
-	logger.info(`--> ${url}`);
-
 	const timeout = 10 * 1000;
 
 	const { protocol, host, hostname, port, pathname, search } = new URL(url);
 
-	// ブロックしてたら中断
+	// ブロック/閉鎖してたら中断
 	// TODO: いちいちデータベースにアクセスするのはコスト高そうなのでどっかにキャッシュしておく
 	const instance = await Instance.findOne({ host: toDbHost(host) });
-	if (instance && instance.isBlocked) return;
+	if (instance && instance.isBlocked) {
+		logger.info(`skip (blocked) ${url}`);
+		return;
+	}
+	if (instance && instance.isMarkedAsClosed) {
+		logger.info(`skip (closed) ${url}`);
+		return;
+	}
+
+	logger.info(`--> ${url}`);
 
 	const data = JSON.stringify(object);
 
