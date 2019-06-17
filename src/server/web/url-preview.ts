@@ -12,14 +12,15 @@ module.exports = async (ctx: Koa.BaseContext) => {
 	const meta = await fetchMeta();
 
 	logger.info(meta.summalyProxy
-		? `(Proxy) Getting preview of ${ctx.query.url} ...`
-		: `Getting preview of ${ctx.query.url} ...`);
+		? `(Proxy) Getting preview of ${ctx.query.url}@${ctx.query.lang} ...`
+		: `Getting preview of ${ctx.query.url}@${ctx.query.lang} ...`);
 
 	try {
 		const summary = meta.summalyProxy ? await request.get({
 			url: meta.summalyProxy,
 			qs: {
-				url: ctx.query.url
+				url: ctx.query.url,
+				lang: ctx.query.lang || 'ja-JP'
 			},
 			json: true,
 			forever: true,
