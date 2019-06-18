@@ -25,7 +25,8 @@ module.exports = async (ctx: Koa.BaseContext) => {
 			json: true,
 			forever: true,
 		}) : await summaly(ctx.query.url, {
-			followRedirects: false
+			followRedirects: false,
+			lang: ctx.query.lang || 'ja-JP'
 		});
 
 		logger.succ(`Got preview of ${ctx.query.url}: ${summary.title}`);
