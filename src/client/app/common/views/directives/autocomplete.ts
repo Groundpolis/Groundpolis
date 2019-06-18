@@ -24,6 +24,7 @@ class Autocomplete {
 	private currentType: string;
 	private opts: {
 		model: string;
+		noZwsp?: boolean;
 	};
 	private opening: boolean;
 
@@ -235,7 +236,7 @@ class Autocomplete {
 			const after = source.substr(caret);
 
 			// 挿入
-			const sep = value.startsWith(':') ? String.fromCharCode(0x200B) : '';
+			const sep = (value.startsWith(':') && !this.opts.noZwsp) ? String.fromCharCode(0x200B) : '';
 			this.text = trimmedBefore + value + sep + after;
 
 			// キャレットを戻す
