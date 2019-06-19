@@ -2,8 +2,15 @@ import Emoji from '../models/emoji';
 import { resyncEmoji } from '../remote/activitypub/models/emoji';
 import { toDbHost } from '../misc/convert-host';
 
-async function main(x: string): Promise<any> {
+async function main(xs: string[]) {
+	for (const x of xs) {
+		await resync(x).catch();
+	}
+}
+
+async function resync(x: string): Promise<any> {
 	x = x.replace(/:/g, '');
+	x = x.replace(/\u200b/g, '');
 	const m = x.match(/^([^@]+)@(.*)/);
 
 	if (m) {
@@ -25,9 +32,8 @@ async function main(x: string): Promise<any> {
 
 // get args
 const args = process.argv.slice(2);
-const x = args[0];	// name@host
 
-main(x).then(() => {
+main(args).then(() => {
 	console.log('Done');
 }).catch(e => {
 	console.warn(e);
