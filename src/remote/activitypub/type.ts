@@ -112,6 +112,16 @@ export interface IPerson extends IObject {
 	endpoints: any;
 }
 
+export interface IApEmoji extends IObject {
+	type: 'Emoji';
+	name: string;
+	updated: Date;
+	icon: IObject;
+}
+
+export const isEmoji = (object: IObject): object is IApEmoji =>
+	object.type === 'Emoji' && object.icon && object.icon.url;
+
 export const isCollection = (object: IObject): object is ICollection =>
 	object.type === 'Collection';
 
