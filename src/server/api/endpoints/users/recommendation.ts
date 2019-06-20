@@ -41,9 +41,19 @@ export const meta = {
 };
 
 export default define(meta, async (ps, me) => {
+	// 未ログインはエラーにはしないが空を返す
+	if (me == null) {
+		return [];
+	}
+
+	// 登録直後のユーザーだとタイムアウトしたり人気のユーザーと同じになったりするので空を返す
+	if (!(me.notesCount > 10 && me.followingCount > 10)) {
+		return [];
+	}
+
 	const instance = await fetchMeta();
 
-	if (instance.enableExternalUserRecommendation && me != null) {
+	if (instance.enableExternalUserRecommendation) {
 		const userName = me.username;
 		const hostName = config.hostname;
 		const limit = ps.limit;
