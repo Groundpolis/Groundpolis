@@ -24,7 +24,7 @@ export default async function(follower: IUser, followee: IUser, silent = false) 
 		return;
 	}
 
-	Following.remove({
+	await Following.remove({
 		_id: following._id
 	});
 
