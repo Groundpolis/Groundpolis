@@ -2,12 +2,13 @@ import Resolver from '../../resolver';
 import { IRemoteUser } from '../../../../models/user';
 import { createNote, fetchNote } from '../../models/note';
 import { getApLock } from '../../../../misc/app-lock';
+import { IObject, getApId } from '../../type';
 
 /**
  * 投稿作成アクティビティを捌きます
  */
-export default async function(resolver: Resolver, actor: IRemoteUser, note: any, silent = false): Promise<void> {
-	const uri = note.id || note;
+export default async function(resolver: Resolver, actor: IRemoteUser, note: IObject, silent = false): Promise<void> {
+	const uri = getApId(note);
 
 	const unlock = await getApLock(uri);
 
