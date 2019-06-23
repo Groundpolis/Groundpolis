@@ -416,6 +416,13 @@ export const pack = async (
 
 	if (_note.name) {
 		_note.text = `【${_note.name}】\n${_note.text}`;
+
+		// AP summaryを正しくCW以外の目的で使ってる実装のため
+		_note.cw = null;
+	}
+
+	if (_note.isDocument) {
+		_note.text = `${_note.text.trim()}\n${_note.uri}`;
 	}
 
 	if (_note.user.isCat && _note.text) {
