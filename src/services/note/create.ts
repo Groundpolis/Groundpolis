@@ -111,6 +111,7 @@ type Option = {
 	questionUri?: string;
 	uri?: string;
 	app?: IApp;
+	isDocument?: boolean;
 };
 
 export default async (user: IUser, data: Option, silent = false) => new Promise<INote>(async (res, rej) => {
@@ -489,6 +490,7 @@ async function insertNote(user: IUser, data: Option, tags: string[], emojis: str
 				? data.visibleUsers.map(u => u._id)
 				: []
 			: [],
+		isDocument: data.isDocument,
 
 		// 以下非正規化データ
 		_reply: data.reply ? {
