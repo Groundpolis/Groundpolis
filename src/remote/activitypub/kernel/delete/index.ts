@@ -1,8 +1,7 @@
 import Resolver from '../../resolver';
 import deleteNote from './note';
-import Note from '../../../../models/note';
 import { IRemoteUser } from '../../../../models/user';
-import { IDelete } from '../../type';
+import { IDelete, getApId, validPost } from '../../type';
 import { apLogger } from '../../logger';
 
 /**
@@ -17,24 +16,12 @@ export default async (actor: IRemoteUser, activity: IDelete): Promise<void> => {
 
 	const object = await resolver.resolve(activity.object);
 
-	const uri = (object as any).id;
+	const uri = getApId(object);
 
-	switch (object.type) {
-	case 'Note':
-	case 'Question':
-	case 'Article':
+	if (validPost.includes(object.type) || object.type === 'Tombstone') {
 		deleteNote(actor, uri);
-		break;
-
-	case 'Tombstone':
-		const note = await Note.findOne({ uri });
-		if (note != null) {
-			deleteNote(actor, uri);
-		}
-		break;
-
-	default:
+	} else {
 		apLogger.warn(`Unknown type: ${object.type}`);
-		break;
+
 	}
 };

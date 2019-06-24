@@ -10,7 +10,7 @@ import Resolver from '../../../../remote/activitypub/resolver';
 import { ApiError } from '../../error';
 import Instance from '../../../../models/instance';
 import { extractDbHost } from '../../../../misc/convert-host';
-import { validActor, validDocument } from '../../../../remote/activitypub/type';
+import { validActor, validDocument, validPost } from '../../../../remote/activitypub/type';
 import { createPureDocument } from '../../../../remote/activitypub/models/document';
 
 export const meta = {
@@ -116,7 +116,7 @@ async function fetchAny(uri: string) {
 		};
 	}
 
-	if (['Note', 'Question', 'Article'].includes(object.type)) {
+	if (validPost.includes(object.type)) {
 		const note = await createNote(object.id, null, true);
 		return {
 			type: 'Note',
