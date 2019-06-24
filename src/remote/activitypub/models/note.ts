@@ -5,7 +5,7 @@ import config from '../../../config';
 import Resolver from '../resolver';
 import Note, { INote } from '../../../models/note';
 import post from '../../../services/note/create';
-import { INote as INoteActivityStreamsObject, IObject, getApIds, getOneApId, getApId } from '../type';
+import { INote as INoteActivityStreamsObject, IObject, getApIds, getOneApId, getApId, validPost } from '../type';
 import { resolvePerson, updatePerson } from './person';
 import { resolveImage } from './image';
 import { IRemoteUser, IUser } from '../../../models/user';
@@ -32,7 +32,7 @@ export function validateNote(object: any, uri: string) {
 		return new Error('invalid Note: object is null');
 	}
 
-	if (!['Note', 'Question', 'Article'].includes(object.type)) {
+	if (!validPost.includes(object.type)) {
 		return new Error(`invalid Note: invalied object type ${object.type}`);
 	}
 
