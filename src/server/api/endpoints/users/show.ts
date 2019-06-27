@@ -100,7 +100,7 @@ export default define(meta, async (ps, me) => {
 			throw new ApiError(meta.errors.noSuchUser);
 		}
 
-		if (!(me.isAdmin || me.isModerator)) {
+		if (me == null || !(me.isAdmin || me.isModerator)) {
 			if (user.isSuspended) {
 				throw new ApiError(meta.errors.noSuchUser);
 			}
