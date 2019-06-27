@@ -1,5 +1,5 @@
 <template>
-<div class="omechnps" v-if="!fetching">
+<div class="omechnps" v-if="!fetching && user">
 	<div class="is-suspended" v-if="user.isSuspended" :class="{ shadow: $store.state.device.useShadow, round: $store.state.device.roundedCorners }">
 		<fa icon="exclamation-triangle"/> {{ $t('@.user-suspended') }}
 	</div>
@@ -43,6 +43,9 @@ export default Vue.extend({
 			Progress.start();
 			this.$root.api('users/show', parseAcct(this.$route.params.user)).then(user => {
 				this.user = user;
+				this.fetching = false;
+				Progress.done();
+			}).catch(() => {
 				this.fetching = false;
 				Progress.done();
 			});
