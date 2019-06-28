@@ -4,6 +4,7 @@ import { renderActivity } from '../../remote/activitypub/renderer';
 import { deliver } from '../../queue';
 import renderFollow from '../../remote/activitypub/renderer/follow';
 import { publishUserListStream } from '../stream';
+import Following from '../../models/following';
 
 export async function pushUserToUserList(target: IUser, list: IUserList) {
 	await UserList.update({ _id: list._id }, {
@@ -16,8 +17,15 @@ export async function pushUserToUserList(target: IUser, list: IUserList) {
 
 	// このインスタンス内にこのリモートユーザーをフォローしているユーザーがいなくても投稿を受け取るためにダミーのユーザーがフォローしたということにする
 	if (isRemoteUser(target)) {
-		const proxy = await fetchProxyAccount();
-		const content = renderActivity(renderFollow(proxy, target));
-		deliver(proxy, content, target.inbox);
+		const count = await Following.count({
+			followeeId: target._id,
+			'_follower.host': null
+		});
+
+		if (count < 1) {
+			const proxy = await fetchProxyAccount();
+			const content = renderActivity(renderFollow(proxy, target));
+			deliver(proxy, content, target.inbox);
+		}
 	}
 }
