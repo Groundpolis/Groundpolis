@@ -453,6 +453,7 @@ export default Vue.extend({
 					margin 8px 6px
 					padding 0 16px
 					line-height 34px
+					min-width 80px
 					vertical-align bottom
 					color var(--primaryForeground)
 					background var(--primary)
