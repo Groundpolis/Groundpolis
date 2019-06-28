@@ -1506,6 +1506,7 @@ mobile/views/components/post-form.vue:
   location-alert: "Your device does not provide location services"
   error: "Error"
   username-prompt: "Enter user name"
+  quote: "Quote..."
 mobile/views/components/sub-note-content.vue:
   private: "This post is private"
   deleted: "This post has been deleted"

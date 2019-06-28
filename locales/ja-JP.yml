@@ -1669,6 +1669,7 @@ mobile/views/components/post-form.vue:
   location-alert: "お使いの端末は位置情報に対応していません"
   error: "エラー"
   username-prompt: "ユーザー名を入力してください"
+  quote: "引用する..."
 
 mobile/views/components/sub-note-content.vue:
   private: "この投稿は非公開です"

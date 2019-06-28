@@ -4,7 +4,7 @@
 		<header>
 			<button class="cancel" @click="cancel"><fa icon="times"/></button>
 			<div>
-				<span class="text-count" :class="{ over: trimmedLength(text) > maxNoteTextLength }">{{ maxNoteTextLength - trimmedLength(text) }}</span>
+				<span v-if="!renote || quote" class="text-count" :class="{ over: trimmedLength(text) > maxNoteTextLength }">{{ maxNoteTextLength - trimmedLength(text) }}</span>
 				<span class="geo" v-if="geo"><fa icon="map-marker-alt"/></span>
 				<button v-if="tertiaryNoteVisibility != null && tertiaryNoteVisibility != 'none'" class="tertiary" :disabled="!canPost" @click="post(tertiaryNoteVisibility)">
 					<x-visibility-icon :v="tertiaryNoteVisibility"/>
@@ -26,11 +26,11 @@
 				<a @click="addVisibleUser">+{{ $t('add-visible-user') }}</a>
 			</div>
 			<input v-show="useCw" ref="cw" v-model="cw" :placeholder="$t('annotations')" v-autocomplete="{ model: 'cw' }">
-			<textarea v-model="text" ref="text" :disabled="posting" :placeholder="placeholder" v-autocomplete="{ model: 'text' }"></textarea>
+			<textarea v-if="!renote || quote" v-model="text" ref="text" :disabled="posting" :placeholder="placeholder" v-autocomplete="{ model: 'text' }"></textarea>
 			<x-post-form-attaches class="attaches" :files="files"/>
 			<mk-poll-editor v-if="poll" ref="poll" @destroyed="poll = false" @updated="onPollUpdate()"/>
 			<mk-uploader ref="uploader" @uploaded="attachMedia" @change="onChangeUploadings"/>
-			<footer>
+			<footer v-if="!renote || quote">
 				<button class="upload" @click="chooseFile"><fa icon="upload"/></button>
 				<button class="drive" @click="chooseFileFromDrive"><fa icon="cloud"/></button>
 				<button class="kao" @click="kao"><fa :icon="['far', 'smile']"/></button>
@@ -39,6 +39,9 @@
 				<button class="visibility" @click="setVisibility" ref="visibilityButton">
 					<x-visibility-icon :v="visibility" :localOnly="localOnly"/>
 				</button>
+			</footer>
+			<footer v-else>
+				<a class="quote" @click="quote = true">{{ $t('quote') }}</a>
 			</footer>
 			<input ref="file" class="file" type="file" multiple="multiple" @change="onChangeFile"/>
 		</div>
@@ -83,6 +86,11 @@ export default Vue.extend({
 		mention: {
 			type: Object,
 			required: false
+		},
+		quote: {
+			type: Boolean,
+			required: false,
+			default: false
 		},
 		initialText: {
 			type: String,
@@ -151,7 +159,7 @@ export default Vue.extend({
 		},
 
 		submitText(): string {
-			return this.renote
+			return (this.renote && !this.quote)
 				? this.$t('renote')
 				: this.reply
 					? this.$t('reply')
@@ -329,6 +337,9 @@ export default Vue.extend({
 		post(v: any) {
 			let visibility = this.visibility;
 			let localOnly = this.localOnly;
+
+			// ただのRenoteはクライアントでvisibilityを指定しない
+			if (this.renote && !this.quote) visibility = undefined;
 
 			if (typeof v == 'string') {
 				const m = v.match(/^local-(.+)/);
@@ -523,6 +534,12 @@ export default Vue.extend({
 					top 0
 					right 0.2em
 					transform scale(.8)
+
+				> .quote
+					display block
+					margin-right auto
+					margin-left 8px
+					color var(--link)
 
 	> .hashtags
 		margin 8px
