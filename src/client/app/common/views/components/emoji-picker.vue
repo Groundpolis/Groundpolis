@@ -219,6 +219,7 @@ export default Vue.extend({
 					left 0
 					width 100%
 					height 100%
+					object-fit contain
 					font-size 28px
 					transition transform 0.2s ease
 					pointer-events none
