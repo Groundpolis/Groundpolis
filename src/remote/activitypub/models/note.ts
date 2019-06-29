@@ -13,7 +13,7 @@ import { fromHtml } from '../../../mfm/fromHtml';
 import Emoji, { IEmoji } from '../../../models/emoji';
 import { ITag, extractHashtags } from './tag';
 import { toUnicode } from 'punycode';
-import { unique, concat, difference } from '../../../prelude/array';
+import { unique, concat, difference, toArray } from '../../../prelude/array';
 import { extractPollFromQuestion } from './question';
 import vote from '../../../services/note/polls/vote';
 import { apLogger } from '../logger';
@@ -131,12 +131,10 @@ export async function createNote(value: string | IObject, resolver?: Resolver, s
 	const apHashtags = await extractHashtags(note.tag);
 
 	// 添付ファイル
-	// TODO: attachmentは必ずしもImageではない
-	// TODO: attachmentは必ずしも配列ではない
 	// Noteがsensitiveなら添付もsensitiveにする
 	const limit = promiseLimit(2);
 
-	note.attachment = Array.isArray(note.attachment) ? note.attachment : note.attachment ? [note.attachment] : [];
+	note.attachment = toArray(note.attachment);
 	const files = note.attachment
 		.map(attach => attach.sensitive = note.sensitive)
 		? (await Promise.all(note.attachment.map(x => limit(() => resolveImage(actor, x)) as Promise<IDriveFile>)))
