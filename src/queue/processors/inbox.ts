@@ -3,7 +3,7 @@ import * as httpSignature from 'http-signature';
 import parseAcct from '../../misc/acct/parse';
 import User, { IRemoteUser } from '../../models/user';
 import perform from '../../remote/activitypub/perform';
-import { resolvePerson, updatePerson } from '../../remote/activitypub/models/person';
+import { resolvePerson } from '../../remote/activitypub/models/person';
 import { toUnicode } from 'punycode';
 import { URL } from 'url';
 import { publishApLogStream } from '../../services/stream';
@@ -11,7 +11,7 @@ import Logger from '../../services/logger';
 import { registerOrFetchInstanceDoc } from '../../services/register-or-fetch-instance-doc';
 import Instance from '../../models/instance';
 import instanceChart from '../../services/chart/instance';
-import { IActivity, isPerson, getApId } from '../../remote/activitypub/type';
+import { IActivity, getApId } from '../../remote/activitypub/type';
 import { toDbHost } from '../../misc/convert-host';
 
 const logger = new Logger('inbox');
@@ -77,20 +77,6 @@ export default async (job: Bull.Job): Promise<void> => {
 			host: { $ne: null },
 			'publicKey.id': signature.keyId
 		}) as IRemoteUser;
-	}
-
-	// Update Person activityの場合は、ここで署名検証/更新処理まで実施して終了
-	if (activity.type === 'Update') {
-		if (typeof activity.object !== 'string' && isPerson(activity.object)) {
-			if (user == null) {
-				logger.warn('Update activity received, but user not registed.');
-			} else if (!httpSignature.verifySignature(signature, user.publicKey.publicKeyPem)) {
-				logger.warn('Update activity received, but signature verification failed.');
-			} else {
-				updatePerson(getApId(activity.actor), null, activity.object);
-			}
-			return;
-		}
 	}
 
 	// アクティビティを送信してきたユーザーがまだMisskeyサーバーに登録されていなかったら登録する

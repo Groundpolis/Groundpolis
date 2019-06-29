@@ -1,7 +1,9 @@
 import { IRemoteUser } from '../../../../models/user';
-import { IUpdate, IObject } from '../../type';
+import { IUpdate, isPerson } from '../../type';
 import { apLogger } from '../../logger';
 import { updateQuestion } from '../../models/question';
+import Resolver from '../../resolver';
+import { updatePerson } from '../../models/person';
 
 /**
  * Updateアクティビティを捌きます
@@ -13,16 +15,18 @@ export default async (actor: IRemoteUser, activity: IUpdate): Promise<void> => {
 
 	apLogger.debug('Update');
 
-	const object = activity.object as IObject;
+	const resolver = new Resolver();
 
-	switch (object.type) {
-		case 'Question':
-			apLogger.debug('Question');
-			await updateQuestion(object).catch(e => console.log(e));
-			break;
+	const object = await resolver.resolve(activity.object).catch(e => {
+		apLogger.error(`Resolution failed: ${e}`);
+		throw e;
+	});
 
-		default:
-			apLogger.warn(`Unknown type: ${object.type}`);
-			break;
+	if (isPerson(object)) {
+		await updatePerson(actor.uri, resolver, object);
+	} else if (object.type === 'Question') {
+		await updateQuestion(object).catch(e => console.log(e));
+	} else {
+		apLogger.warn(`Unknown type: ${object.type}`);
 	}
 };
