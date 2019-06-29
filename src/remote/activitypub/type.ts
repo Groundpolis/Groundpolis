@@ -1,3 +1,5 @@
+import { toArray, toSingle } from '../../prelude/array';
+
 export type obj = { [x: string]: any };
 
 export interface IObject {
@@ -9,15 +11,15 @@ export interface IObject {
 	cc?: IObject | string | (IObject | string)[];
 	to?: IObject | string | (IObject | string)[];
 	attributedTo: IObject | string | (IObject | string)[];
-	attachment?: any[];
+	attachment?: IObject | IObject[];
 	inReplyTo?: any;
 	replies?: ICollection;
 	content: string;
 	name?: string;
 	startTime?: Date;
 	endTime?: Date;
-	icon?: any;
-	image?: any;
+	icon?: IApImage | IApImage[];
+	image?: IApImage | IApImage[];
 	url?: string;
 	tag?: any[];
 	sensitive?: boolean;
@@ -28,7 +30,7 @@ export interface IObject {
  */
 export function getApIds(value: IObject | string | (IObject | string)[] | undefined): string[] {
 	if (value == null) return [];
-	const array = Array.isArray(value) ? value : [value];
+	const array = toArray(value);
 	return array.map(x => getApId(x));
 }
 
@@ -36,7 +38,7 @@ export function getApIds(value: IObject | string | (IObject | string)[] | undefi
  * Get first ActivityStreams Object id
  */
 export function getOneApId(value: IObject | string | (IObject | string)[]): string {
-	const firstOne = Array.isArray(value) ? value[0] : value;
+	const firstOne = toSingle(value);
 	return getApId(firstOne);
 }
 
@@ -54,6 +56,7 @@ export interface IActivity extends IObject {
 	actor: IObject | string;
 	object: IObject | string;
 	target?: IObject | string;
+	signature?: {};
 }
 
 export interface ICollection extends IObject {
@@ -98,14 +101,15 @@ export interface IOrderedCollectionPage extends IObject {
 	startIndex?: number;
 }
 
-export const validPost = ['Note', 'Question', 'Article', 'Audio', 'Document', 'Image', 'Page', 'Video'];
-
-export interface INote extends IObject {
+export interface IApNote extends IObject {
 	type: 'Note' | 'Question' | 'Article' | 'Audio' | 'Document' | 'Image' | 'Page' | 'Video';
 	_misskey_content: string;
 	_misskey_quote: string;
 	_misskey_question: string;
 }
+
+export const isNote = (object: IObject): object is IApNote =>
+	['Note', 'Question', 'Article', 'Audio', 'Document', 'Image', 'Page', 'Video'].includes(object.type);
 
 export interface IQuestion extends IObject {
 	type: 'Note' | 'Question';
@@ -126,19 +130,34 @@ interface IQuestionChoice {
 	_misskey_votes?: number;
 }
 
-export const validDocument = ['Audio', 'Document', 'Image', 'Page', 'Video'];
-
 export interface IApDocument extends IObject {
 	type: 'Audio' | 'Document' | 'Image' | 'Page' | 'Video';
 }
 
-export const isDocumentLike = (object: IObject): object is IApDocument =>
-	validDocument.includes(object.type);
+export const isDocument = (object: IObject): object is IApDocument =>
+	['Audio', 'Document', 'Image', 'Page', 'Video'].includes(object.type);
 
-export const validActor = ['Person', 'Service'];
+export interface IApImage extends IObject {
+	type: 'Image';
+}
 
-export interface IPerson extends IObject {
-	type: 'Person';
+export const isImage = (object: IObject): object is IApImage =>
+	object.type === 'Image';
+
+export interface IApPropertyValue extends IObject {
+	type: 'PropertyValue';
+	identifier: IApPropertyValue;
+	value: string;
+}
+
+export const isPropertyValue = (object: IObject): object is IApPropertyValue =>
+	object &&
+	object.type === 'PropertyValue' &&
+	typeof object.name === 'string' &&
+	typeof (object as any).value === 'string';
+
+export interface IApPerson extends IObject {
+	type: 'Person' | 'Service';
 	name: string;
 	preferredUsername: string;
 	manuallyApprovesFollowers: boolean;
@@ -152,15 +171,17 @@ export interface IPerson extends IObject {
 	endpoints: any;
 }
 
+export const isPerson = (object: IObject): object is IApPerson =>
+	['Person', 'Service'].includes(object.type);
+
 export interface IApEmoji extends IObject {
 	type: 'Emoji';
 	name: string;
 	updated: Date;
-	icon: IObject;
 }
 
 export const isEmoji = (object: IObject): object is IApEmoji =>
-	object.type === 'Emoji' && object.icon && object.icon.url;
+	object.type === 'Emoji' && !Array.isArray(object.icon) && object.icon.url != null;
 
 export const isCollection = (object: IObject): object is ICollection =>
 	object.type === 'Collection';
@@ -219,21 +240,3 @@ export interface IAnnounce extends IActivity {
 export interface IBlock extends IActivity {
 	type: 'Block';
 }
-
-export type Object =
-	ICollection |
-	IOrderedCollection |
-	ICollectionPage |
-	IOrderedCollectionPage |
-	ICreate |
-	IDelete |
-	IUpdate |
-	IUndo |
-	IFollow |
-	IAccept |
-	IReject |
-	IAdd |
-	IRemove |
-	ILike |
-	IAnnounce |
-	IBlock;

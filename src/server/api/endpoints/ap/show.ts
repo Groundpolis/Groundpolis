@@ -10,7 +10,7 @@ import Resolver from '../../../../remote/activitypub/resolver';
 import { ApiError } from '../../error';
 import Instance from '../../../../models/instance';
 import { extractDbHost } from '../../../../misc/convert-host';
-import { validActor, validPost } from '../../../../remote/activitypub/type';
+import { isPerson, isNote } from '../../../../remote/activitypub/type';
 
 export const meta = {
 	tags: ['federation'],
@@ -81,7 +81,7 @@ async function fetchAny(uri: string) {
 
 	// リモートから一旦オブジェクトフェッチ
 	const resolver = new Resolver();
-	const object = await resolver.resolve(uri) as any;
+	const object = await resolver.resolve(uri);
 
 	// /@user のような正規id以外で取得できるURIが指定されていた場合、ここで初めて正規URIが確定する
 	// これはDBに存在する可能性があるため再度DB検索
@@ -107,7 +107,7 @@ async function fetchAny(uri: string) {
 	}
 
 	// それでもみつからなければ新規であるため登録
-	if (validActor.includes(object.type)) {
+	if (isPerson(object)) {
 		const user = await createPerson(object.id);
 		return {
 			type: 'User',
@@ -115,7 +115,7 @@ async function fetchAny(uri: string) {
 		};
 	}
 
-	if (validPost.includes(object.type)) {
+	if (isNote(object)) {
 		const note = await createNote(object.id, null, true);
 		return {
 			type: 'Note',

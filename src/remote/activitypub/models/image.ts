@@ -4,19 +4,22 @@ import DriveFile, { IDriveFile } from '../../../models/drive-file';
 import Resolver from '../resolver';
 import fetchMeta from '../../../misc/fetch-meta';
 import { apLogger } from '../logger';
+import { IObject, isDocument } from '../type';
 
 const logger = apLogger;
 
 /**
  * Imageを作成します。
  */
-export async function createImage(actor: IRemoteUser, value: any): Promise<IDriveFile> {
+export async function createImage(actor: IRemoteUser, value: IObject): Promise<IDriveFile> {
 	// 投稿者が凍結されていたらスキップ
 	if (actor.isSuspended) {
 		return null;
 	}
 
-	const image = await new Resolver().resolve(value) as any;
+	const image = await new Resolver().resolve(value);
+
+	if (!isDocument(image)) return null;
 
 	if (image.url == null) {
 		throw new Error('invalid image: url not privided');
@@ -63,7 +66,7 @@ export async function createImage(actor: IRemoteUser, value: any): Promise<IDriv
  * Misskeyに対象のImageが登録されていればそれを返し、そうでなければ
  * リモートサーバーからフェッチしてMisskeyに登録しそれを返します。
  */
-export async function resolveImage(actor: IRemoteUser, value: any): Promise<IDriveFile> {
+export async function resolveImage(actor: IRemoteUser, value: IObject): Promise<IDriveFile> {
 	// TODO
 
 	// リモートサーバーからフェッチしてきて登録

@@ -1,7 +1,7 @@
 import Resolver from '../../resolver';
 import { IRemoteUser } from '../../../../models/user';
 import createNote from './note';
-import { ICreate, getApId, validPost } from '../../type';
+import { ICreate, getApId, isNote } from '../../type';
 import { apLogger } from '../../logger';
 
 const logger = apLogger;
@@ -22,7 +22,7 @@ export default async (actor: IRemoteUser, activity: ICreate): Promise<void> => {
 		throw e;
 	}
 
-	if (validPost.includes(object.type)) {
+	if (isNote(object)) {
 		createNote(resolver, actor, object);
 	} else {
 		logger.warn(`Unknown type: ${object.type}`);

@@ -11,15 +11,15 @@ import Logger from '../../services/logger';
 import { registerOrFetchInstanceDoc } from '../../services/register-or-fetch-instance-doc';
 import Instance from '../../models/instance';
 import instanceChart from '../../services/chart/instance';
-import { validActor } from '../../remote/activitypub/type';
+import { IActivity, isPerson, getApId } from '../../remote/activitypub/type';
 import { toDbHost } from '../../misc/convert-host';
 
 const logger = new Logger('inbox');
 
 // ユーザーのinboxにアクティビティが届いた時の処理
 export default async (job: Bull.Job): Promise<void> => {
-	const signature = job.data.signature;
-	const activity = job.data.activity;
+	const signature = job.data.signature as httpSignature.IParsedSignature;
+	const activity = job.data.activity as IActivity;
 
 	//#region Log
 	const info = Object.assign({}, activity);
@@ -81,13 +81,13 @@ export default async (job: Bull.Job): Promise<void> => {
 
 	// Update Person activityの場合は、ここで署名検証/更新処理まで実施して終了
 	if (activity.type === 'Update') {
-		if (activity.object && validActor.includes(activity.object.type)) {
+		if (typeof activity.object !== 'string' && isPerson(activity.object)) {
 			if (user == null) {
 				logger.warn('Update activity received, but user not registed.');
 			} else if (!httpSignature.verifySignature(signature, user.publicKey.publicKeyPem)) {
 				logger.warn('Update activity received, but signature verification failed.');
 			} else {
-				updatePerson(activity.actor, null, activity.object);
+				updatePerson(getApId(activity.actor), null, activity.object);
 			}
 			return;
 		}
@@ -96,7 +96,7 @@ export default async (job: Bull.Job): Promise<void> => {
 	// アクティビティを送信してきたユーザーがまだMisskeyサーバーに登録されていなかったら登録する
 	if (user === null) {
 		try {
-			user = await resolvePerson(activity.actor) as IRemoteUser;
+			user = await resolvePerson(getApId(activity.actor)) as IRemoteUser;
 		} catch (e) {
 			// 対象が4xxならスキップ
 			if (e.statusCode >= 400 && e.statusCode < 500) {

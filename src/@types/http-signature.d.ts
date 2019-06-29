@@ -23,6 +23,8 @@ declare module 'http-signature' {
 		scheme: string;
 		params: ISignature;
 		signingString: string;
+		algorithm: string;
+		keyId: string;
 	}
 
 	type RequestSignerConstructorOptions =

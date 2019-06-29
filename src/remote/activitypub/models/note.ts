@@ -5,7 +5,7 @@ import config from '../../../config';
 import Resolver from '../resolver';
 import Note, { INote } from '../../../models/note';
 import post from '../../../services/note/create';
-import { INote as INoteActivityStreamsObject, IObject, getApIds, getOneApId, getApId, validPost } from '../type';
+import { IApNote, IObject, getApIds, getOneApId, getApId, isNote } from '../type';
 import { resolvePerson, updatePerson } from './person';
 import { resolveImage } from './image';
 import { IRemoteUser, IUser } from '../../../models/user';
@@ -25,26 +25,26 @@ import { getApLock } from '../../../misc/app-lock';
 
 const logger = apLogger;
 
-export function validateNote(object: any, uri: string) {
+function toNote(object: IObject, uri: string): IApNote {
 	const expectHost = extractApHost(uri);
 
 	if (object == null) {
-		return new Error('invalid Note: object is null');
+		throw new Error('invalid Note: object is null');
 	}
 
-	if (!validPost.includes(object.type)) {
-		return new Error(`invalid Note: invalied object type ${object.type}`);
+	if (!isNote(object)) {
+		throw new Error(`invalid Note: invalied object type ${object.type}`);
 	}
 
 	if (object.id && extractApHost(object.id) !== expectHost) {
-		return new Error(`invalid Note: id has different host. expected: ${expectHost}, actual: ${extractApHost(object.id)}`);
+		throw new Error(`invalid Note: id has different host. expected: ${expectHost}, actual: ${extractApHost(object.id)}`);
 	}
 
 	if (object.attributedTo && extractApHost(getOneApId(object.attributedTo)) !== expectHost) {
-		return new Error(`invalid Note: attributedTo has different host. expected: ${expectHost}, actual: ${extractApHost(object.attributedTo)}`);
+		throw new Error(`invalid Note: attributedTo has different host. expected: ${expectHost}, actual: ${extractApHost(getOneApId(object.attributedTo))}`);
 	}
 
-	return null;
+	return object;
 }
 
 /**
@@ -78,11 +78,14 @@ export async function fetchNote(value: string | IObject, resolver?: Resolver): P
 export async function createNote(value: string | IObject, resolver?: Resolver, silent = false): Promise<INote> {
 	if (resolver == null) resolver = new Resolver();
 
-	const object: any = await resolver.resolve(value);
+	const object = await resolver.resolve(value);
 
 	const entryUri = getApId(value);
-	const err = validateNote(object, entryUri);
-	if (err) {
+
+	let note: IApNote;
+	try {
+		note = toNote(object, entryUri);
+	} catch (err) {
 		logger.error(`${err.message}`, {
 			resolver: {
 				history: resolver.getHistory()
@@ -92,8 +95,6 @@ export async function createNote(value: string | IObject, resolver?: Resolver, s
 		});
 		return null;
 	}
-
-	const note: INoteActivityStreamsObject = object;
 
 	logger.debug(`Note fetched: ${JSON.stringify(note, null, 2)}`);
 

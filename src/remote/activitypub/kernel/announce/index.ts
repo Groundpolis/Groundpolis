@@ -1,7 +1,7 @@
 import Resolver from '../../resolver';
 import { IRemoteUser } from '../../../../models/user';
 import announceNote from './note';
-import { IAnnounce, INote, validPost, getApId } from '../../type';
+import { IAnnounce, getApId, isNote } from '../../type';
 import { apLogger } from '../../logger';
 
 const logger = apLogger;
@@ -22,8 +22,8 @@ export default async (actor: IRemoteUser, activity: IAnnounce): Promise<void> =>
 		throw e;
 	}
 
-	if (validPost.includes(object.type)) {
-		announceNote(resolver, actor, activity, object as INote);
+	if (isNote(object)) {
+		announceNote(resolver, actor, activity, object);
 	} else {
 		logger.warn(`Unknown announce type: ${object.type}`);
 	}

@@ -1,7 +1,7 @@
 import Resolver from '../../resolver';
 import deleteNote from './note';
 import { IRemoteUser } from '../../../../models/user';
-import { IDelete, getApId, validPost } from '../../type';
+import { IDelete, getApId, isNote } from '../../type';
 import { apLogger } from '../../logger';
 
 /**
@@ -18,7 +18,7 @@ export default async (actor: IRemoteUser, activity: IDelete): Promise<void> => {
 
 	const uri = getApId(object);
 
-	if (validPost.includes(object.type) || object.type === 'Tombstone') {
+	if (isNote(object) || object.type === 'Tombstone') {
 		deleteNote(actor, uri);
 	} else {
 		apLogger.warn(`Unknown type: ${object.type}`);

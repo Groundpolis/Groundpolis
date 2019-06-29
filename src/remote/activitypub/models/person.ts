@@ -6,7 +6,7 @@ import config from '../../../config';
 import User, { validateUsername, isValidName, IUser, IRemoteUser, isRemoteUser } from '../../../models/user';
 import Resolver from '../resolver';
 import { resolveImage } from './image';
-import { isCollectionOrOrderedCollection, isCollection, IPerson, isOrderedCollection, validActor } from '../type';
+import { isCollectionOrOrderedCollection, isCollection, isOrderedCollection, IObject, isPerson, IApPerson, isPropertyValue, IApPropertyValue } from '../type';
 import { IDriveFile } from '../../../models/drive-file';
 import Meta from '../../../models/meta';
 import { fromHtml } from '../../../mfm/fromHtml';
@@ -18,66 +18,66 @@ import { registerOrFetchInstanceDoc } from '../../../services/register-or-fetch-
 import Instance from '../../../models/instance';
 import getDriveFileUrl from '../../../misc/get-drive-file-url';
 import { IEmoji } from '../../../models/emoji';
-import { ITag, extractHashtags } from './tag';
+import { extractHashtags } from './tag';
 import Following from '../../../models/following';
-import { IIdentifier } from './identifier';
 import { apLogger } from '../logger';
 import { INote } from '../../../models/note';
 import { updateHashtag } from '../../../services/update-hashtag';
 import FollowRequest from '../../../models/follow-request';
+import { toArray, toSingle } from '../../../prelude/array';
 const logger = apLogger;
 
 /**
- * Validate Person object
- * @param x Fetched person object
+ * Validate and convert to actor object
+ * @param x Fetched object
  * @param uri Fetch target URI
  */
-function validatePerson(x: any, uri: string) {
+function toPerson(x: IObject, uri: string): IApPerson {
 	const expectHost = toUnicode(new URL(uri).hostname.toLowerCase());
 
 	if (x == null) {
-		return new Error('invalid person: object is null');
+		throw new Error('invalid person: object is null');
 	}
 
-	if (!validActor.includes(x.type)) {
-		return new Error(`invalid person: object is not a person or service '${x.type}'`);
+	if (!isPerson(x)) {
+		throw new Error(`invalid person type '${x.type}'`);
 	}
 
 	if (typeof x.preferredUsername !== 'string') {
-		return new Error('invalid person: preferredUsername is not a string');
+		throw new Error('invalid person: preferredUsername is not a string');
 	}
 
 	if (typeof x.inbox !== 'string') {
-		return new Error('invalid person: inbox is not a string');
+		throw new Error('invalid person: inbox is not a string');
 	}
 
 	if (!validateUsername(x.preferredUsername, true)) {
-		return new Error('invalid person: invalid username');
+		throw new Error('invalid person: invalid username');
 	}
 
 	if (!isValidName(x.name == '' ? null : x.name)) {
-		return new Error('invalid person: invalid name');
+		throw new Error('invalid person: invalid name');
 	}
 
 	if (typeof x.id !== 'string') {
-		return new Error('invalid person: id is not a string');
+		throw new Error('invalid person: id is not a string');
 	}
 
 	const idHost = toUnicode(new URL(x.id).hostname.toLowerCase());
 	if (idHost !== expectHost) {
-		return new Error('invalid person: id has different host');
+		throw new Error('invalid person: id has different host');
 	}
 
 	if (typeof x.publicKey.id !== 'string') {
-		return new Error('invalid person: publicKey.id is not a string');
+		throw new Error('invalid person: publicKey.id is not a string');
 	}
 
 	const publicKeyIdHost = toUnicode(new URL(x.publicKey.id).hostname.toLowerCase());
 	if (publicKeyIdHost !== expectHost) {
-		return new Error('invalid person: publicKey.id has different host');
+		throw new Error('invalid person: publicKey.id has different host');
 	}
 
-	return null;
+	return x;
 }
 
 /**
@@ -113,15 +113,9 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 
 	if (resolver == null) resolver = new Resolver();
 
-	const object = await resolver.resolve(uri) as any;
+	const object = await resolver.resolve(uri);
 
-	const err = validatePerson(object, uri);
-
-	if (err) {
-		throw err;
-	}
-
-	const person: IPerson = object;
+	const person = toPerson(object, uri);
 
 	logger.info(`Creating the Person: ${person.id}`);
 
@@ -219,8 +213,8 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 
 	//#region アイコンとヘッダー画像をフェッチ
 	const [avatar, banner] = (await Promise.all<IDriveFile>([
-		person.icon,
-		person.image
+		toSingle(person.icon),
+		toSingle(person.image)
 	].map(img =>
 		img == null
 			? Promise.resolve(null)
@@ -280,7 +274,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
  * @param resolver Resolver
  * @param hint Hint of Person object (この値が正当なPersonの場合、Remote resolveをせずに更新に利用します)
  */
-export async function updatePerson(uri: string, resolver?: Resolver, hint?: object): Promise<void> {
+export async function updatePerson(uri: string, resolver?: Resolver, hint?: IApPerson): Promise<void> {
 	if (typeof uri !== 'string') throw 'uri is not string';
 
 	// URIがこのサーバーを指しているならスキップ
@@ -300,13 +294,7 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: obje
 
 	const object = hint || await resolver.resolve(uri) as any;
 
-	const err = validatePerson(object, uri);
-
-	if (err) {
-		throw err;
-	}
-
-	const person: IPerson = object;
+	const person = toPerson(object, uri);
 
 	logger.info(`Updating the Person: ${person.id}`);
 
@@ -327,8 +315,8 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: obje
 
 	// アイコンとヘッダー画像をフェッチ
 	const [avatar, banner] = (await Promise.all<IDriveFile>([
-		person.icon,
-		person.image
+		toSingle(person.icon),
+		toSingle(person.image)
 	].map(img =>
 		img == null
 			? Promise.resolve(null)
@@ -432,16 +420,6 @@ export async function resolvePerson(uri: string, verifier?: string, resolver?: R
 	return await createPerson(uri, resolver);
 }
 
-const isPropertyValue = (x: {
-		type: string,
-		name?: string,
-		value?: string
-	}) =>
-		x &&
-		x.type === 'PropertyValue' &&
-		typeof x.name === 'string' &&
-		typeof x.value === 'string';
-
 const services: {
 		[x: string]: (id: string, username: string) => any
 	} = {
@@ -457,7 +435,7 @@ const $discord = (id: string, name: string) => {
 	return { id, username, discriminator };
 };
 
-function addService(target: { [x: string]: any }, source: IIdentifier) {
+function addService(target: { [x: string]: any }, source: IApPropertyValue) {
 	const service = services[source.name];
 
 	if (typeof source.value !== 'string')
@@ -469,22 +447,26 @@ function addService(target: { [x: string]: any }, source: IIdentifier) {
 		target[source.name.split(':')[2]] = service(id, username);
 }
 
-export function analyzeAttachments(attachments: ITag[]) {
+export function analyzeAttachments(attachments: IObject | IObject[] | undefined) {
+	attachments = toArray(attachments);
+
 	const fields: {
 		name: string,
 		value: string
 	}[] = [];
+
 	const services: { [x: string]: any } = {};
 
-	if (Array.isArray(attachments))
-		for (const attachment of attachments.filter(isPropertyValue))
-			if (isPropertyValue(attachment.identifier))
-				addService(services, attachment.identifier);
-			else
-				fields.push({
-					name: attachment.name,
-					value: fromHtml(attachment.value)
-				});
+	for (const attachment of attachments.filter(isPropertyValue)) {
+		if (isPropertyValue(attachment.identifier)) {
+			addService(services, attachment.identifier);
+		} else {
+			fields.push({
+				name: attachment.name,
+				value: fromHtml(attachment.value)
+			});
+		}
+	}
 
 	return { fields, services };
 }

@@ -115,3 +115,11 @@ export function cumulativeSum(xs: number[]): number[] {
 	for (let i = 1; i < ys.length; i++) ys[i] += ys[i - 1];
 	return ys;
 }
+
+export function toArray<T>(x: T | T[] | undefined): T[] {
+	return Array.isArray(x) ? x : x != null ? [x] : [];
+}
+
+export function toSingle<T>(x: T | T[] | undefined): T {
+	return Array.isArray(x) ? x[0] : x;
+}
