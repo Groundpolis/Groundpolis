@@ -12,7 +12,7 @@ export interface IObject {
 	to?: IObject | string | (IObject | string)[];
 	attributedTo: IObject | string | (IObject | string)[];
 	attachment?: IObject | IObject[];
-	inReplyTo?: any;
+	inReplyTo?: IObject | string | (IObject | string)[];
 	replies?: ICollection;
 	content: string;
 	name?: string;
@@ -21,7 +21,7 @@ export interface IObject {
 	icon?: IApImage | IApImage[];
 	image?: IApImage | IApImage[];
 	url?: string;
-	tag?: any[];
+	tag?: IObject | IObject[];
 	sensitive?: boolean;
 }
 
@@ -155,6 +155,14 @@ export const isPropertyValue = (object: IObject): object is IApPropertyValue =>
 	object.type === 'PropertyValue' &&
 	typeof object.name === 'string' &&
 	typeof (object as any).value === 'string';
+
+export interface IApHashtag extends IObject {
+	type: 'Hashtag';
+}
+
+export const isHashtag = (object: IObject): object is IApHashtag =>
+	object.type === 'Hashtag' &&
+	typeof object.name === 'string';
 
 export interface IApPerson extends IObject {
 	type: 'Person' | 'Service';
