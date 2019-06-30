@@ -50,12 +50,14 @@ export default async function(ctx: Koa.BaseContext) {
 
 		// ハッシュをリセットしてもう採用しないようにする
 		const defered = () => {
+			/*
 			console.log(`Update emoji md5 ${emoji.md5} => null`);
 			Emoji.update({ _id: emoji._id }, {
 				$set: {
 					md5: null
 				}
 			});
+			*/
 		};
 
 		if (typeof e == 'number' && e >= 400 && e < 500) {
