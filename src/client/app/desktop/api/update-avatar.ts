@@ -92,6 +92,7 @@ export default ($root: any) => {
 			? Promise.resolve(file)
 			: $root.$chooseDriveFile({
 				multiple: false,
+				type: 'image/*',
 				title: locale['desktop']['choose-avatar']
 			});
 
