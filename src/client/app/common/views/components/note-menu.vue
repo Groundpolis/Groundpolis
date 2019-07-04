@@ -9,7 +9,6 @@ import Vue from 'vue';
 import i18n from '../../../i18n';
 import { url } from '../../../config';
 import copyToClipboard from '../../../common/scripts/copy-to-clipboard';
-import { concat, intersperse } from '../../../../../prelude/array';
 import { faCopy, faEye, faEyeSlash, } from '@fortawesome/free-regular-svg-icons';
 import { faPlaneArrival, faPlaneDeparture } from '@fortawesome/free-solid-svg-icons';
 
