@@ -50,6 +50,8 @@ async function save(path: string, name: string, type: string, hash: string, size
 		};
 	});
 
+	if (type === 'image/apng') type = 'image/png';
+
 	if (drive.storage == 'minio') {
 		//#region ObjectStorage params
 		let [ext] = (name.match(/\.(\w+)$/) || ['']);

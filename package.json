@@ -1,7 +1,7 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "10.102.4-m190703204534",
+	"version": "10.102.4-20190705025656",
 	"codename": "nighthike",
 	"repository": {
 		"type": "git",
@@ -128,7 +128,7 @@
 		"eslint-plugin-vue": "5.2.2",
 		"eventemitter3": "3.1.2",
 		"feed": "2.0.4",
-		"file-type": "11.1.0",
+		"file-type": "12.0.0",
 		"fuckadblock": "3.2.1",
 		"gulp": "4.0.2",
 		"gulp-cssnano": "2.1.3",
