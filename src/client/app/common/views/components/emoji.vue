@@ -59,6 +59,20 @@ export default Vue.extend({
 		}
 	},
 
+	watch: {
+		customEmojis() {
+			if (this.name) {
+				const customEmoji = this.customEmojis.find(x => x.name == this.name);
+				if (customEmoji) {
+					this.customEmoji = customEmoji;
+					this.url = this.$store.state.device.disableShowingAnimatedImages
+						? getStaticImageUrl(customEmoji.url)
+						: customEmoji.url;
+				}
+			}
+		},
+	},
+
 	created() {
 		if (this.name) {
 			const customEmoji = this.customEmojis.find(x => x.name == this.name);
@@ -84,7 +98,7 @@ export default Vue.extend({
 
 			this.url = `${twemojiBase}/2/svg/${codes.join('-')}.svg`;
 		}
-	}
+	},
 });
 </script>
 
