@@ -5,15 +5,15 @@ import config from '../../../config';
 import Resolver from '../resolver';
 import Note, { INote } from '../../../models/note';
 import post from '../../../services/note/create';
-import { IApNote, IObject, getApIds, getOneApId, getApId, isNote } from '../type';
+import { IApNote, IObject, getApIds, getOneApId, getApId, isNote, isEmoji } from '../type';
 import { resolvePerson, updatePerson } from './person';
 import { resolveImage } from './image';
 import { IRemoteUser, IUser } from '../../../models/user';
 import { fromHtml } from '../../../mfm/fromHtml';
 import Emoji, { IEmoji } from '../../../models/emoji';
-import { ITag, extractHashtags } from './tag';
+import { extractHashtags } from './tag';
 import { toUnicode } from 'punycode';
-import { unique, concat, difference, toArray } from '../../../prelude/array';
+import { unique, concat, difference, toArray, toSingle } from '../../../prelude/array';
 import { extractPollFromQuestion } from './question';
 import vote from '../../../services/note/polls/vote';
 import { apLogger } from '../logger';
@@ -143,7 +143,7 @@ export async function createNote(value: string | IObject, resolver?: Resolver, s
 
 	// リプライ
 	const reply: INote = note.inReplyTo
-		? await resolveNote(note.inReplyTo, resolver).catch(e => {
+		? await resolveNote(getOneApId(note.inReplyTo), resolver).catch(e => {
 			// 4xxの場合はリプライしてないことにする
 			if (e.statusCode >= 400 && e.statusCode < 500) {
 				logger.warn(`Ignored inReplyTo ${note.inReplyTo} - ${e.statusCode} `);
@@ -274,16 +274,15 @@ export async function resolveNote(value: string | IObject, resolver?: Resolver):
 	}
 }
 
-export async function extractEmojis(tags: ITag[], host_: string) {
+export async function extractEmojis(tags: IObject | IObject[], host_: string) {
 	const host = toUnicode(host_.toLowerCase());
 
-	if (!tags) return [];
-
-	const eomjiTags = tags.filter(tag => tag.type === 'Emoji' && tag.icon && tag.icon.url);
+	const eomjiTags = toArray(tags).filter(isEmoji);
 
 	return await Promise.all(
 		eomjiTags.map(async tag => {
 			const name = tag.name.replace(/^:/, '').replace(/:$/, '');
+			tag.icon = toSingle(tag.icon);
 
 			const exists = await Emoji.findOne({
 				host,
