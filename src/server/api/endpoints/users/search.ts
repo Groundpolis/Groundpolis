@@ -75,7 +75,7 @@ export default define(meta, async (ps, me) => {
 		users = await User
 			.find({
 				host: null,
-				name: new RegExp(escapeRegexp(name), 'i'),
+				name: new RegExp('^' + escapeRegexp(name), 'i'),
 				isSuspended: { $ne: true }
 			}, {
 				limit: ps.limit,
@@ -86,7 +86,7 @@ export default define(meta, async (ps, me) => {
 			const otherUsers = await User
 				.find({
 					host: { $ne: null },
-					name: new RegExp(escapeRegexp(name), 'i'),
+					name: new RegExp('^' + escapeRegexp(name), 'i'),
 					isSuspended: { $ne: true }
 				}, {
 					limit: ps.limit - users.length
