@@ -63,12 +63,38 @@ export const meta = {
 };
 
 export default define(meta, async (ps, me) => {
+	const isName = ps.query.replace('@', '').match(/^[\W-]/) != null;
 	const isUsername = validateUsername(ps.query.replace('@', ''), !ps.localOnly);
 	const isHostname = ps.query.replace('@', '').match(/\./) != null;
 
 	let users: IUser[] = [];
 
-	if (isUsername) {
+	if (isName) {
+		const name = ps.query.replace(/^-/, '');
+
+		users = await User
+			.find({
+				host: null,
+				name: new RegExp(escapeRegexp(name), 'i'),
+				isSuspended: { $ne: true }
+			}, {
+				limit: ps.limit,
+				skip: ps.offset
+			});
+
+		if (users.length < ps.limit && !ps.localOnly) {
+			const otherUsers = await User
+				.find({
+					host: { $ne: null },
+					name: new RegExp(escapeRegexp(name), 'i'),
+					isSuspended: { $ne: true }
+				}, {
+					limit: ps.limit - users.length
+				});
+
+			users = users.concat(otherUsers);
+		}
+	} else if (isUsername) {
 		users = await User
 			.find({
 				host: null,
