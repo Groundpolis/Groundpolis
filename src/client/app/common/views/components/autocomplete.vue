@@ -193,7 +193,7 @@ export default Vue.extend({
 				} else {
 					this.$root.api('users/search', {
 						query: this.q,
-						limit: 10,
+						limit: 20,
 						detail: false
 					}).then(users => {
 						this.users = users;
