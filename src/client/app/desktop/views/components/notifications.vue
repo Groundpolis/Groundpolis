@@ -321,10 +321,7 @@ export default Vue.extend({
 				.note-preview
 					color var(--noteText)
 					display inline-block
-					width: 100%
-					overflow hidden
-					white-space nowrap
-					text-overflow ellipsis
+					word-break break-word
 
 				.note-ref
 					color var(--noteText)
