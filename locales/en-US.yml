@@ -237,6 +237,7 @@ common:
   verified-user: "Verified account"
   hide-password: "Hide Password"
   show-password: "Show Password"
+  reload: "Reload"
   do-not-use-in-production: "This is a development build. Do not use in production."
   user-suspended: "This user has been suspended."
   is-remote-user: "The information about this user may not be entirely complete."
