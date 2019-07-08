@@ -143,10 +143,14 @@ export default define({
 				&& this.secondaryNoteVisibility != null && this.secondaryNoteVisibility != 'none') this.post(this.secondaryNoteVisibility);
 		},
 
-		onPaste(e) {
+		onPaste(e: ClipboardEvent) {
 			for (const item of Array.from(e.clipboardData.items)) {
 				if (item.kind == 'file') {
-					this.upload(item.getAsFile());
+					const file = item.getAsFile();
+					const lio = file.name.lastIndexOf('.');
+					const ext = lio >= 0 ? file.name.slice(lio) : '';
+					const name = `${new Date().toISOString().replace(/\D/g, '').substr(0, 14)}${ext}`;
+					this.upload(file, name);
 				}
 			}
 		},
@@ -155,8 +159,8 @@ export default define({
 			for (const x of Array.from((this.$refs.file as any).files)) this.upload(x);
 		},
 
-		upload(file) {
-			(this.$refs.uploader as any).upload(file);
+		upload(file: File, name?: string) {
+			(this.$refs.uploader as any).upload(file, null, name);
 		},
 
 		onDragover(e) {

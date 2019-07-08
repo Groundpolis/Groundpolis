@@ -81,7 +81,11 @@ export default Vue.extend({
 
 			if (items.length == 1) {
 				if (items[0].kind == 'file') {
-					this.upload(items[0].getAsFile());
+					const file = items[0].getAsFile();
+					const lio = file.name.lastIndexOf('.');
+					const ext = lio >= 0 ? file.name.slice(lio) : '';
+					const name = `${new Date().toISOString().replace(/\D/g, '').substr(0, 14)}${ext}`;
+					this.upload(file, name);
 				}
 			} else {
 				if (items[0].kind == 'file') {
@@ -142,8 +146,8 @@ export default Vue.extend({
 			this.upload((this.$refs.file as any).files[0]);
 		},
 
-		upload(file) {
-			(this.$refs.uploader as any).upload(file);
+		upload(file: File, name?: string) {
+			(this.$refs.uploader as any).upload(file, null, name);
 		},
 
 		onUploaded(file) {
