@@ -36,3 +36,10 @@ block meta
 		link(rel='alternate' href=user.uri type='application/activity+json')
 	if user.url
 		link(rel='alternate' href=user.url type='text/html')
+
+	if !user.host
+		link(rel='alternate' href=`${url}.atom` type='application/atom+xml')
+	if !user.host
+		link(rel='alternate' href=`${url}.rss` type='application/rss+xml')
+	if !user.host
+		link(rel='alternate' href=`${url}.json` type='application/json')

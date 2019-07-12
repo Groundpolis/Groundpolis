@@ -33,7 +33,6 @@
 		"@fortawesome/free-solid-svg-icons": "5.9.0",
 		"@fortawesome/vue-fontawesome": "0.1.6",
 		"@koa/cors": "3.0.0",
-		"@typescript-eslint/parser": "1.11.0",
 		"@prezzemolo/rap": "0.1.2",
 		"@prezzemolo/zip": "0.0.3",
 		"@types/bcryptjs": "2.4.2",
@@ -99,6 +98,8 @@
 		"@types/webpack-stream": "3.2.10",
 		"@types/websocket": "0.0.40",
 		"@types/ws": "6.0.1",
+		"@types/xmlbuilder": "11.0.1",
+		"@typescript-eslint/parser": "1.11.0",
 		"animejs": "3.0.1",
 		"apexcharts": "3.8.0",
 		"autobind-decorator": "2.4.0",
@@ -127,7 +128,6 @@
 		"eslint": "5.16.0",
 		"eslint-plugin-vue": "5.2.3",
 		"eventemitter3": "4.0.0",
-		"feed": "4.0.0",
 		"file-type": "12.0.1",
 		"gulp": "4.0.2",
 		"gulp-cssnano": "2.1.3",
@@ -151,6 +151,8 @@
 		"jsdom": "15.1.1",
 		"json5": "2.1.0",
 		"json5-loader": "3.0.0",
+		"jsonfeed-to-atom": "1.1.3",
+		"jsonfeed-to-rss": "1.1.1",
 		"katex": "0.10.2",
 		"koa": "2.7.0",
 		"koa-bodyparser": "4.2.1",
@@ -256,6 +258,7 @@
 		"webpack-cli": "3.3.5",
 		"websocket": "1.0.29",
 		"ws": "7.1.0",
-		"xev": "2.0.1"
+		"xev": "2.0.1",
+		"xmlbuilder": "13.0.2"
 	}
 }
