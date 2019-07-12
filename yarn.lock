@@ -848,6 +848,13 @@
     "@types/events" "*"
     "@types/node" "*"
 
+"@types/xmlbuilder@11.0.1":
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/@types/xmlbuilder/-/xmlbuilder-11.0.1.tgz#44ea11b8b8b2294f4dcc721d774556aef9d9f16a"
+  integrity sha512-ScJDpWPSAyO7s2BO5eUQTqyhO7i8c4r7Waj5eEwQYGApaNXW6E0pb9l1llDZ1VKGiBdGLMtLmqAi4eaKbzJ0dQ==
+  dependencies:
+    xmlbuilder "*"
+
 "@typescript-eslint/experimental-utils@1.11.0":
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-1.11.0.tgz#594abe47091cbeabac1d6f9cfed06d0ad99eb7e3"
@@ -12445,6 +12452,11 @@ xml@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/xml/-/xml-1.0.1.tgz#78ba72020029c5bc87b8a81a3cfcd74b4a2fc1e5"
   integrity sha1-eLpyAgApxbyHuKgaPPzXS0ovweU=
+
+xmlbuilder@*, xmlbuilder@13.0.2:
+  version "13.0.2"
+  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-13.0.2.tgz#02ae33614b6a047d1c32b5389c1fdacb2bce47a7"
+  integrity sha512-Eux0i2QdDYKbdbA6AM6xE4m6ZTZr4G4xF9kahI2ukSEMCzwce2eX9WlTI5J3s+NU7hpasFsr8hWIONae7LluAQ==
 
 xmlbuilder@^10.0.0:
   version "10.1.1"

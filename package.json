@@ -98,6 +98,7 @@
 		"@types/webpack-stream": "3.2.10",
 		"@types/websocket": "0.0.40",
 		"@types/ws": "6.0.1",
+		"@types/xmlbuilder": "11.0.1",
 		"@typescript-eslint/parser": "1.11.0",
 		"animejs": "3.0.1",
 		"apexcharts": "3.8.0",
@@ -257,6 +258,7 @@
 		"webpack-cli": "3.3.5",
 		"websocket": "1.0.29",
 		"ws": "7.1.0",
-		"xev": "2.0.1"
+		"xev": "2.0.1",
+		"xmlbuilder": "13.0.2"
 	}
 }

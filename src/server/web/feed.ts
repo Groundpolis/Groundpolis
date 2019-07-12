@@ -5,10 +5,7 @@ import { getOriginalUrl } from '../../misc/get-drive-file-url';
 import { transform } from '../../misc/cafy-id';
 import getNoteHtml from '../../remote/activitypub/misc/get-note-html';
 import parseAcct from '../../misc/acct/parse';
-
-//const jsonfeedToAtom = require('jsonfeed-to-atom');
-//const jsonfeedToRSS = require('jsonfeed-to-rss');
-const builder = require('xmlbuilder');
+import xmlbuilder = require('xmlbuilder');
 const jsonfeedToAtomObject = require('jsonfeed-to-atom/jsonfeed-to-atom-object');
 const jsonfeedToRSSObject = require('jsonfeed-to-rss/jsonfeed-to-rss-object');
 
@@ -103,6 +100,7 @@ export async function getJSONFeed(acct: string, untilId?: string) {
 		title: `${name} (${fullacct})`,
 		home_page_url: url,
 		feed_url: `${url}.json`,
+		next_url: notes.length > 0 ? `${url}.json?until_id=${notes[notes.length - 1]._id}` : undefined,
 		description: user.description || '',
 		icon: avatar,
 		author: {
@@ -139,8 +137,18 @@ export async function getAtomFeed(acct: string, untilId?: string): Promise<strin
 	if (!json) return null;
 
 	const atom = jsonfeedToAtomObject(json, {
-		feedURLFn: (feedURL: string) => feedURL.replace(/\.json\b/, '.atom')
+		feedURLFn: (feedURL: string) => feedURL.replace(/\.json$/, '.atom')
 	});
+
+	// replace link next
+	if (atom.feed && atom.feed.link) {
+		for (const link of atom.feed.link) {
+			if (link['@rel'] === 'next') {
+				link['@type'] = 'application/atom+xml';
+				link['@href'] = link['@href'].replace(/\.xml\?/, '.atom?');
+			}
+		}
+	}
 
 	return objectToXml(atom);
 }
@@ -150,13 +158,13 @@ export async function getRSSFeed(acct: string, untilId?: string): Promise<string
 	if (!json) return null;
 
 	const rss = jsonfeedToRSSObject(json, {
-		feedURLFn: (feedURL: string) => feedURL.replace(/\.json\b/, '.rss')
+		feedURLFn: (feedURL: string) => feedURL.replace(/\.json$/, '.rss')
 	});
 
 	return objectToXml(rss);
 }
 
 function objectToXml(obj: {}): string {
-	const xml = builder.create(obj, { encoding: 'utf-8' });
+	const xml = xmlbuilder.create(obj, { encoding: 'utf-8' });
 	return xml.end({ pretty: true });
 }
