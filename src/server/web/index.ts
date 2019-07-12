@@ -128,7 +128,7 @@ router.get('/@:user.json', async ctx => {
 
 	if (feed) {
 		ctx.set('Content-Type', 'application/json; charset=utf-8');
-		ctx.body = feed;
+		ctx.body = JSON.stringify(feed, null, 2);
 	} else {
 		ctx.status = 404;
 	}
