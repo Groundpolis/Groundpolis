@@ -1,14 +1,17 @@
 import config from '../../config';
 import Note from '../../models/note';
-import { IUser } from '../../models/user';
+import User from '../../models/user';
 import { getOriginalUrl } from '../../misc/get-drive-file-url';
 import { transform } from '../../misc/cafy-id';
 import getNoteHtml from '../../remote/activitypub/misc/get-note-html';
+import parseAcct from '../../misc/acct/parse';
+
+const jsonfeedToAtom = require('jsonfeed-to-atom');
+const jsonfeedToRSS = require('jsonfeed-to-rss');
 
 //#region JSON feed models
 export interface IFeed {
 	version: 'https://jsonfeed.org/version/1';
-	id?: string;	// 本当は存在しない
 	title: string;
 	home_page_url?: string;
 	feed_url?: string;
@@ -16,24 +19,24 @@ export interface IFeed {
 	user_comment?: string;
 	next_url?: string;
 	icon?: string;
-	author?: IAuthor;
+	author?: IFeedAuthor;
 	expired?: boolean;
-	items?: IItem[];
-	hubs?: IHub[];
+	items?: IFeedItem[];
+	hubs?: IFeedHub[];
 }
 
-export interface IAuthor {
+export interface IFeedAuthor {
 	name?: string;
 	url?: string;
 	avatar?: string;
 }
 
-export interface IHub {
+export interface IFeedHub {
 	type: string;
 	url: string;
 }
 
-export interface IItem {
+export interface IFeedItem {
 	id: string;
 	url?: string;
 	external_url ?: string;
@@ -43,14 +46,14 @@ export interface IItem {
 	summary?: string;
 	image?: string;
 	banner_image?: string;
-	date_published?: Date;
-	date_modified?: Date;
-	author?: IAuthor;
+	date_published?: string;
+	date_modified?: string;
+	author?: IFeedAuthor;
 	tags?: string[];
-	attachments?: IAttachments[];
+	attachments?: IFeedAttachment[];
 }
 
-export interface IAttachments {
+export interface IFeedAttachment {
 	url: string;
 	mime_type: string;
 	title?: string;
@@ -59,7 +62,14 @@ export interface IAttachments {
 }
 //#endregion JSON feed models
 
-export async function getJSONFeed(user: IUser, untilId?: string) {
+export async function getJSONFeed(acct: string, untilId?: string) {
+	const { username, host } = parseAcct(acct);
+	const user = await User.findOne({
+		usernameLower: username.toLowerCase(),
+		host
+	});
+	if (user == null) return null;
+
 	const query = {
 		userId: user._id,
 		renoteId: null,
@@ -82,12 +92,12 @@ export async function getJSONFeed(user: IUser, untilId?: string) {
 
 	const url = `${config.url}/@${user.username}`;
 	const name = user.name || user.username;
-	const acct = `@${user.username}@${config.host}`;
+	const fullacct = `@${user.username}@${config.host}`;
 	const avatar = user.avatarUrl ? user.avatarUrl : undefined;
 
 	const feed = {
 		version: 'https://jsonfeed.org/version/1',
-		title: `${name} (${acct})`,
+		title: `${name} (${fullacct})`,
 		home_page_url: url,
 		feed_url: `${url}.json`,
 		description: user.description || '',
@@ -112,11 +122,31 @@ export async function getJSONFeed(user: IUser, untilId?: string) {
 			content_html: note.text != null ? getNoteHtml(note) : '',
 			summary: note.cw != null ? note.cw : undefined,
 			image: file ? getOriginalUrl(file) : undefined,
-			date_published: note.createdAt
-		} as IItem;
+			date_published: note.createdAt ? note.createdAt.toISOString() : undefined
+		} as IFeedItem;
 
 		feed.items.push(item);
 	}
 
 	return feed;
+}
+
+export async function getAtomFeed(acct: string, untilId?: string): Promise<string> {
+	const feed = await getJSONFeed(acct, untilId);
+	if (!feed) return null;
+
+	const atom = jsonfeedToAtom(feed, {
+		feedURLFn: (feedURL: string) => feedURL.replace(/\.json\b/, '.atom')
+	});
+	return atom;
+}
+
+export async function getRSSFeed(acct: string, untilId?: string): Promise<string> {
+	const feed = await getJSONFeed(acct, untilId);
+	if (!feed) return null;
+
+	const rss = jsonfeedToRSS(feed, {
+		feedURLFn: (feedURL: string) => feedURL.replace(/\.json\b/, '.rss')
+	});
+	return rss;
 }
