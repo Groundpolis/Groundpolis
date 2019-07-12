@@ -172,7 +172,8 @@ export async function getJSONFeed(acct: string, untilId?: string): Promise<IFeed
 			content_text: note.text != null ? note.text : undefined,
 			summary: note.cw != null ? note.cw : undefined,
 			image: image ? getDriveFileUrl(image) : undefined,
-			date_published: note.createdAt ? note.createdAt.toISOString() : undefined
+			date_published: note.createdAt ? note.createdAt.toISOString() : undefined,
+			tags: (note.tags && note.tags.length > 0) ? note.tags : undefined,
 		} as IFeedItem;
 
 		if (note._files) {
