@@ -6,8 +6,11 @@ import { transform } from '../../misc/cafy-id';
 import getNoteHtml from '../../remote/activitypub/misc/get-note-html';
 import parseAcct from '../../misc/acct/parse';
 
-const jsonfeedToAtom = require('jsonfeed-to-atom');
-const jsonfeedToRSS = require('jsonfeed-to-rss');
+//const jsonfeedToAtom = require('jsonfeed-to-atom');
+//const jsonfeedToRSS = require('jsonfeed-to-rss');
+const builder = require('xmlbuilder');
+const jsonfeedToAtomObject = require('jsonfeed-to-atom/jsonfeed-to-atom-object');
+const jsonfeedToRSSObject = require('jsonfeed-to-rss/jsonfeed-to-rss-object');
 
 //#region JSON feed models
 export interface IFeed {
@@ -132,21 +135,28 @@ export async function getJSONFeed(acct: string, untilId?: string) {
 }
 
 export async function getAtomFeed(acct: string, untilId?: string): Promise<string> {
-	const feed = await getJSONFeed(acct, untilId);
-	if (!feed) return null;
+	const json = await getJSONFeed(acct, untilId);
+	if (!json) return null;
 
-	const atom = jsonfeedToAtom(feed, {
+	const atom = jsonfeedToAtomObject(json, {
 		feedURLFn: (feedURL: string) => feedURL.replace(/\.json\b/, '.atom')
 	});
-	return atom;
+
+	return objectToXml(atom);
 }
 
 export async function getRSSFeed(acct: string, untilId?: string): Promise<string> {
-	const feed = await getJSONFeed(acct, untilId);
-	if (!feed) return null;
+	const json = await getJSONFeed(acct, untilId);
+	if (!json) return null;
 
-	const rss = jsonfeedToRSS(feed, {
+	const rss = jsonfeedToRSSObject(json, {
 		feedURLFn: (feedURL: string) => feedURL.replace(/\.json\b/, '.rss')
 	});
-	return rss;
+
+	return objectToXml(rss);
+}
+
+function objectToXml(obj: {}): string {
+	const xml = builder.create(obj, { encoding: 'utf-8' });
+	return xml.end({ pretty: true });
 }
