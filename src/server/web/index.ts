@@ -12,7 +12,7 @@ import * as views from 'koa-views';
 import { ObjectID } from 'mongodb';
 
 import docs from './docs';
-import packFeed from './feed';
+
 import User from '../../models/user';
 import parseAcct from '../../misc/acct/parse';
 import config from '../../config';
@@ -22,6 +22,7 @@ import fetchMeta from '../../misc/fetch-meta';
 import Emoji from '../../models/emoji';
 import * as pkg from '../../../package.json';
 import { genOpenapiSpec } from '../api/openapi/gen-spec';
+import { getJSONFeed } from './feed';
 
 const client = `${__dirname}/../../client/`;
 
@@ -98,23 +99,23 @@ router.get('/api.json', async ctx => {
 	ctx.body = genOpenapiSpec();
 });
 
-const getFeed = async (acct: string) => {
+const getFeed = async (acct: string, untilId?: string) => {
 	const { username, host } = parseAcct(acct);
 	const user = await User.findOne({
 		usernameLower: username.toLowerCase(),
 		host
 	});
 
-	return user && await packFeed(user);
+	return user && await getJSONFeed(user, untilId);
 };
 
 // Atom
 router.get('/@:user.atom', async ctx => {
-	const feed = await getFeed(ctx.params.user);
+	const feed = await getFeed(ctx.params.user, ctx.query.until_id);
 
 	if (feed) {
 		ctx.set('Content-Type', 'application/atom+xml; charset=utf-8');
-		ctx.body = feed.atom1();
+		//ctx.body = feed.atom1();
 	} else {
 		ctx.status = 404;
 	}
@@ -122,11 +123,11 @@ router.get('/@:user.atom', async ctx => {
 
 // RSS
 router.get('/@:user.rss', async ctx => {
-	const feed = await getFeed(ctx.params.user);
+	const feed = await getFeed(ctx.params.user, ctx.query.until_id);
 
 	if (feed) {
 		ctx.set('Content-Type', 'application/rss+xml; charset=utf-8');
-		ctx.body = feed.rss2();
+		//ctx.body = feed.rss2();
 	} else {
 		ctx.status = 404;
 	}
@@ -134,11 +135,11 @@ router.get('/@:user.rss', async ctx => {
 
 // JSON
 router.get('/@:user.json', async ctx => {
-	const feed = await getFeed(ctx.params.user);
+	const feed = await getFeed(ctx.params.user, ctx.query.until_id);
 
 	if (feed) {
 		ctx.set('Content-Type', 'application/json; charset=utf-8');
-		ctx.body = feed.json1();
+		ctx.body = feed;
 	} else {
 		ctx.status = 404;
 	}
