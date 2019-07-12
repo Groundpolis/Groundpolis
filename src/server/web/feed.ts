@@ -6,7 +6,6 @@ import { transform } from '../../misc/cafy-id';
 import getNoteHtml from '../../remote/activitypub/misc/get-note-html';
 import parseAcct from '../../misc/acct/parse';
 import xmlbuilder = require('xmlbuilder');
-const jsonfeedToAtomObject = require('jsonfeed-to-atom/jsonfeed-to-atom-object');
 const jsonfeedToRSSObject = require('jsonfeed-to-rss/jsonfeed-to-rss-object');
 
 //#region JSON Feed models
@@ -62,7 +61,59 @@ export interface IFeedAttachment {
 }
 //#endregion
 
-export async function getJSONFeed(acct: string, untilId?: string) {
+//#region Atom Feed models
+export interface IAtom {
+	feed: {
+		'@xmlns': 'http://www.w3.org/2005/Atom';
+		title: string;
+		id: string;
+		updated: string;
+		link?: IAtomLink[];
+		author?: IFeedAuthor;
+		generator?: {
+			'@uri'?: string;
+			'@version'?: string,
+			'#text'?: string,
+		};
+		icon?: string;
+		rights?: string;
+		description?: string;
+		entry?: IAtomEntry[];
+	};
+}
+
+export interface IAtomLink {
+	'@rel': 'self' | 'next' | 'alternate' | 'related' | 'enclosure';
+	'@href': string;
+	'@type'?: string;
+	'@length'?: number;
+}
+
+export interface IAtomEntry {
+	id: string;
+	title: string;
+	updated: string;
+	published?: string;
+	author?: IFeedAuthor;
+	content?: {
+		'@type': 'html' | 'text';
+		'#cdata'?: string;
+		'#text'?: string;
+	}[];
+	link?: IAtomLink[];
+	summary?: string;
+	category?: {
+		'@term': string;
+	}[];
+}
+//#endregion
+
+/**
+ * Generate JSON Feed object
+ * @param acct @username@host
+ * @param untilId UntileId
+ */
+export async function getJSONFeed(acct: string, untilId?: string): Promise<IFeed> {
 	const { username, host } = parseAcct(acct);
 	const user = await User.findOne({
 		usernameLower: username.toLowerCase(),
@@ -71,12 +122,10 @@ export async function getJSONFeed(acct: string, untilId?: string) {
 	if (user == null) return null;
 
 	const query = {
+		deletedAt: null,
 		userId: user._id,
 		renoteId: null,
-		$or: [
-			{ visibility: 'public' },
-			{ visibility: 'home' }
-		]
+		visibility: { $in: ['public', 'home'] }
 	} as any;
 
 	if (untilId) {
@@ -118,8 +167,9 @@ export async function getJSONFeed(acct: string, untilId?: string) {
 		const item = {
 			id: noteUrl,
 			url: noteUrl,
-			title: `New note by ${name}`,
+			title: `New post by ${name}`,
 			content_html: note.text != null ? getNoteHtml(note) : '',
+			content_text: note.text != null ? note.text : undefined,
 			summary: note.cw != null ? note.cw : undefined,
 			image: image ? getDriveFileUrl(image) : undefined,
 			date_published: note.createdAt ? note.createdAt.toISOString() : undefined
@@ -142,27 +192,146 @@ export async function getJSONFeed(acct: string, untilId?: string) {
 	return feed;
 }
 
+/**
+ * Generate Atom Feed XML
+ * @param acct @username@host
+ * @param untilId UntileId
+ */
 export async function getAtomFeed(acct: string, untilId?: string): Promise<string> {
 	const json = await getJSONFeed(acct, untilId);
 	if (!json) return null;
 
-	const atom = jsonfeedToAtomObject(json, {
-		feedURLFn: (feedURL: string) => feedURL.replace(/\.json$/, '.atom')
-	});
+	const atom = {
+		feed: {
+			'@xmlns': 'http://www.w3.org/2005/Atom',
+			title: json.title,
+			id: json.feed_url,
+			updated: new Date().toISOString(),
+			author: json.author,
+			generator: {
+				'#text': 'Misskey'
+			},
+			description: json.description,
+			link: [],
+			entry: [],
+		}
+	} as IAtom;
 
-	// replace link next
-	if (atom.feed && atom.feed.link) {
-		for (const link of atom.feed.link) {
-			if (link['@rel'] === 'next') {
-				link['@type'] = 'application/atom+xml';
-				link['@href'] = link['@href'].replace(/\.xml\?/, '.atom?');
+	// link - self / alts
+	if (json.feed_url) {
+		atom.feed.link.push({
+			'@rel': 'self',
+			'@type': 'application/atom+xml',
+			'@href': json.feed_url.replace(/\.json$/, '.atom')
+		});
+
+		atom.feed.link.push({
+			'@rel': 'alternate',
+			'@type': 'application/json',
+			'@href': json.feed_url
+		});
+
+		atom.feed.link.push({
+			'@rel': 'alternate',
+			'@type': 'application/rss+xml',
+			'@href': json.feed_url.replace(/\.json$/, '.rss')
+		});
+	}
+
+	// link - html
+	if (json.home_page_url) {
+		atom.feed.link.push({
+			'@rel': 'alternate',
+			'@type': 'text/html',
+			'@href': json.home_page_url
+		});
+	}
+
+	// link - next
+	if (json.next_url) {
+		atom.feed.link.push({
+			'@rel': 'next',
+			'@type': 'text/html',
+			'@href': json.next_url.replace(/\.json\?/, '.atom?')
+		});
+	}
+
+	// items
+	if (json.items) {
+		for (const item of json.items) {
+			const entry = {
+				id: item.id,
+				title: item.title,
+				published: item.date_published,
+				updated: item.date_published,
+				author: item.author,
+				summary: item.summary,
+				content: [],
+				link: [],
+			} as IAtomEntry;
+
+			// item - content - html
+			if (item.content_html) {
+				entry.content.push({
+					'@type': 'html',
+					'#cdata': item.content_html
+				});
 			}
+
+			// item - content - text
+			if (item.content_text) {
+				entry.content.push({
+					'@type': 'text',
+					'#text': item.content_text
+				});
+			}
+
+			// item - link - pages
+			if (item.url) {
+				entry.link.push({
+					'@rel': 'alternate',
+					'@type': 'text/html',
+					'@href': item.url
+				});
+			}
+
+			if (item.external_url) {
+				entry.link.push({
+					'@rel': item.url ? 'related' : 'alternate',
+					'@type': 'text/html',
+					'@href': item.url
+				});
+			}
+
+			// item - link - attachments
+			if (item.attachments) {
+				for (const attach of item.attachments) {
+					entry.link.push({
+						'@rel': 'enclosure',
+						'@href': attach.url,
+						'@type': attach.mime_type,
+						'@length': attach.size_in_bytes ? attach.size_in_bytes : undefined
+					});
+				}
+			}
+
+			// item - category
+			if (item.tags) {
+				entry.category = item.tags.map(tag => ({ '@term': tag }));
+			}
+
+			atom.feed.entry.push(entry);
 		}
 	}
 
 	return objectToXml(atom);
 }
 
+/**
+ * Generate RSS Feed XML
+ * @param acct @username@host
+ * @param untilId UntileId
+ */
 export async function getRSSFeed(acct: string, untilId?: string): Promise<string> {
 	const json = await getJSONFeed(acct, untilId);
 	if (!json) return null;
@@ -174,6 +343,10 @@ export async function getRSSFeed(acct: string, untilId?: string): Promise<string
 	return objectToXml(rss);
 }
 
+/**
+ * Convert to XML
+ * @param obj source object
+ */
 function objectToXml(obj: {}): string {
 	const xml = xmlbuilder.create(obj, { encoding: 'utf-8' });
 	return xml.end({ pretty: true });
