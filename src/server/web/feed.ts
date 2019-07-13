@@ -125,6 +125,7 @@ export async function getJSONFeed(acct: string, untilId?: string): Promise<IFeed
 		deletedAt: null,
 		userId: user._id,
 		renoteId: null,
+		text: { $ne: null },
 		visibility: { $in: ['public', 'home'] }
 	} as any;
 
@@ -150,7 +151,7 @@ export async function getJSONFeed(acct: string, untilId?: string): Promise<IFeed
 		home_page_url: url,
 		feed_url: `${url}.json`,
 		next_url: notes.length > 0 ? `${url}.json?until_id=${notes[notes.length - 1]._id}` : undefined,
-		description: user.description || '',
+		description: user.description,
 		icon: avatar,
 		author: {
 			name,
@@ -168,7 +169,7 @@ export async function getJSONFeed(acct: string, untilId?: string): Promise<IFeed
 			id: noteUrl,
 			url: noteUrl,
 			title: `New post by ${name}`,
-			content_html: note.text != null ? getNoteHtml(note) : '',
+			content_html: note.text != null ? getNoteHtml(note) : undefined,
 			content_text: note.text != null ? note.text : undefined,
 			summary: note.cw != null ? note.cw : undefined,
 			image: image ? getDriveFileUrl(image) : undefined,
@@ -280,7 +281,8 @@ export async function getAtomFeed(acct: string, untilId?: string): Promise<strin
 			}
 
 			// item - content - text
-			if (item.content_text) {
+			// Atomはcontentを2つ以上入れてはいけない
+			if (item.content_text && !item.content_html) {
 				entry.content.push({
 					'@type': 'text',
 					'#text': item.content_text
