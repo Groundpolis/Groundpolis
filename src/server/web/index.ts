@@ -12,7 +12,6 @@ import * as views from 'koa-views';
 import { ObjectID } from 'mongodb';
 
 import docs from './docs';
-import { getJSONFeed, getAtomFeed, getRSSFeed } from './feed';
 import User from '../../models/user';
 import parseAcct from '../../misc/acct/parse';
 import config from '../../config';
@@ -22,6 +21,9 @@ import fetchMeta from '../../misc/fetch-meta';
 import Emoji from '../../models/emoji';
 import * as pkg from '../../../package.json';
 import { genOpenapiSpec } from '../api/openapi/gen-spec';
+import { getAtomFeed } from './feed/atom';
+import { getRSSFeed } from './feed/rss';
+import { getJSONFeed } from './feed/json';
 
 const client = `${__dirname}/../../client/`;
 
