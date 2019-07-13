@@ -177,7 +177,7 @@ export async function getJSONFeed(acct: string, untilId?: string): Promise<IFeed
 			tags: (note.tags && note.tags.length > 0) ? note.tags : undefined,
 		} as IFeedItem;
 
-		if (note._files) {
+		if (note._files && note._files.length > 0) {
 			item.attachments = note._files.map(file => {
 				return {
 					url: getDriveFileUrl(file),
