@@ -65,7 +65,7 @@ const sort: any = {
 
 export default define(meta, async (ps, me) => {
 	const q = {
-		tags: ps.tag,
+		tags: ps.tag.toLowerCase(),
 		$and: []
 	} as any;
 
