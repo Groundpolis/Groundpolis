@@ -11,7 +11,6 @@
 	:title="image.name"
 	@click.prevent="onClick"
 >
-	<div v-if="image.type === 'image/gif'">GIF</div>
 </a>
 </template>
 
@@ -77,20 +76,6 @@ export default Vue.extend({
 	background-position center
 	background-size contain
 	background-repeat no-repeat
-
-	> div
-		background-color var(--text)
-		border-radius 6px
-		color var(--secondary)
-		display inline-block
-		font-size 14px
-		font-weight bold
-		left 12px
-		opacity .5
-		padding 0 6px
-		text-align center
-		top 12px
-		pointer-events none
 
 .qjewsnkgzzxlxtzncydssfbgjibiehcy
 	display flex
