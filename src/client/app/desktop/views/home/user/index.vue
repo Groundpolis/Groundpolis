@@ -6,6 +6,9 @@
 	<div class="is-remote" v-if="user.host != null" :class="{ shadow: $store.state.device.useShadow, round: $store.state.device.roundedCorners }">
 		<fa icon="exclamation-triangle"/> {{ $t('@.is-remote-user') }}<a :href="user.url || user.uri" rel="nofollow noopener" target="_blank">{{ $t('@.view-on-remote') }}</a>
 	</div>
+	<div class="no-federation" v-if="user.noFederation" :class="{ shadow: $store.state.device.useShadow, round: $store.state.device.roundedCorners }">
+		<fa icon="exclamation-triangle"/> {{ $t('@.user-no-federation') }}
+	</div>
 	<div class="main">
 		<x-header class="header" :user="user"/>
 		<router-view :user="user"></router-view>
@@ -65,6 +68,7 @@ export default Vue.extend({
 
 	> .is-suspended
 	> .is-remote
+	> .no-federation
 		margin-bottom 16px
 		padding 14px 16px
 		font-size 14px
@@ -79,7 +83,7 @@ export default Vue.extend({
 			color var(--suspendedInfoFg)
 			background var(--suspendedInfoBg)
 
-		&.is-remote
+		&.is-remote, &.no-federation
 			color var(--remoteInfoFg)
 			background var(--remoteInfoBg)
 

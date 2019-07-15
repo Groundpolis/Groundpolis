@@ -121,7 +121,10 @@ export default Vue.extend({
 					}
 				}
 			} catch (e) {
-				console.error(e);
+				this.$root.dialog({
+					type: 'error',
+					text: e.message
+				});
 			} finally {
 				this.wait = false;
 			}

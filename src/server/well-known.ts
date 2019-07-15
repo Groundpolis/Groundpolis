@@ -57,12 +57,18 @@ router.get(webFingerPath, async ctx => {
 
 	const fromId = (_id: mongo.ObjectID): Record<string, any> => ({
 			_id,
+			isDeleted: { $ne: true },
+			isSuspended: { $ne: true },
+			noFederation: { $ne: true },
 			host: null
 		});
 
 	const fromAcct = (acct: Acct): Record<string, any> | number =>
 		!acct.host || acct.host === config.host.toLowerCase() ? {
 			usernameLower: acct.username,
+			isDeleted: { $ne: true },
+			isSuspended: { $ne: true },
+			noFederation: { $ne: true },
 			host: null
 		} : 422;
 
