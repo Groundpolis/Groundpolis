@@ -53,7 +53,7 @@ export interface IAtomEntry {
  * @param acct @username@host
  * @param untilId UntileId
  */
-export async function getAtomFeed(acct: string, untilId?: string): Promise<string> {
+export async function getAtomFeed(acct: string, untilId?: string) {
 	const json = await getJSONFeed(acct, untilId);
 	if (!json) return null;
 
@@ -68,10 +68,11 @@ export async function getAtomFeed(acct: string, untilId?: string): Promise<strin
 				'#text': 'Misskey'
 			},
 			description: json.description,
-			link: [],
-			entry: [],
 		}
 	} as IAtom;
+
+	root.feed.link = [];
+	root.feed.entry = [];
 
 	// link - self / alts
 	if (json.feed_url) {
@@ -107,7 +108,7 @@ export async function getAtomFeed(acct: string, untilId?: string): Promise<strin
 	if (json.next_url) {
 		root.feed.link.push({
 			'@rel': 'next',
-			'@type': 'text/html',
+			'@type': 'application/atom+xml',
 			'@href': json.next_url.replace(/\.json\?/, '.atom?')
 		});
 	}
@@ -122,11 +123,11 @@ export async function getAtomFeed(acct: string, untilId?: string): Promise<strin
 				updated: item.date_published,
 				author: item.author,
 				summary: item.summary,
-				content: [],
-				link: [],
 			} as IAtomEntry;
 
 			// item - content - html
+			entry.content = [];
+
 			if (item.content_html) {
 				entry.content.push({
 					'@type': 'html',
@@ -143,6 +144,8 @@ export async function getAtomFeed(acct: string, untilId?: string): Promise<strin
 				});
 			}
 
+			entry.link = [];
+
 			// item - link - pages
 			if (item.url) {
 				entry.link.push({
@@ -156,7 +159,7 @@ export async function getAtomFeed(acct: string, untilId?: string): Promise<strin
 				entry.link.push({
 					'@rel': item.url ? 'related' : 'alternate',
 					'@type': 'text/html',
-					'@href': item.url
+					'@href': item.external_url
 				});
 			}
 

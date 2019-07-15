@@ -111,7 +111,7 @@ export interface IAtomEntry {
  * @param acct @username@host
  * @param untilId UntileId
  */
-export async function getJSONFeed(acct: string, untilId?: string): Promise<IFeed> {
+export async function getJSONFeed(acct: string, untilId?: string) {
 	const { username, host } = parseAcct(acct);
 	const user = await User.findOne({
 		usernameLower: username.toLowerCase(),
@@ -120,11 +120,10 @@ export async function getJSONFeed(acct: string, untilId?: string): Promise<IFeed
 	if (user == null) return null;
 
 	const query = {
-		deletedAt: null,
 		userId: user._id,
-		renoteId: null,
+		deletedAt: null,
+		visibility: { $in: ['public', 'home'] },
 		text: { $ne: null },
-		visibility: { $in: ['public', 'home'] }
 	} as any;
 
 	if (untilId) {
@@ -156,8 +155,9 @@ export async function getJSONFeed(acct: string, untilId?: string): Promise<IFeed
 			url,
 			avatar: avatar
 		},
-		items: []
 	} as IFeed;
+
+	feed.items = [];
 
 	for (const note of notes) {
 		const noteUrl = `${config.url}/notes/${note._id}`;

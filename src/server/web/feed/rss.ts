@@ -54,7 +54,7 @@ export interface IRSSItem {
  * @param acct @username@host
  * @param untilId UntileId
  */
-export async function getRSSFeed(acct: string, untilId?: string): Promise<string> {
+export async function getRSSFeed(acct: string, untilId?: string) {
 	const json = await getJSONFeed(acct, untilId);
 	if (!json) return null;
 
@@ -80,17 +80,18 @@ export async function getRSSFeed(acct: string, untilId?: string): Promise<string
 					link: json.home_page_url,
 					title: json.title
 				},
-				item: []
 			}
 		}
 	} as IRSS;
 
 	if (json.items) {
+		root.rss.channel.item = [];
+
 		for (const item of json.items) {
 			const entry = {
 				title: item.title,
 				link: item.url,
-				'dc:creator': item.author ? item.author.name : json.author.name,
+				'dc:creator': item.author ? item.author.name : json.author ? json.author.name : undefined,
 				description: item.content_text,
 				'content:encoded': {
 					'#cdata': item.content_html
@@ -107,7 +108,7 @@ export async function getRSSFeed(acct: string, untilId?: string): Promise<string
 					return {
 						'@url': attach.url,
 						'@type': attach.mime_type,
-						'@length': attach.size_in_bytes ? attach.size_in_bytes : undefined,
+						'@length': attach.size_in_bytes ? attach.size_in_bytes : 0,
 					};
 				});
 			}
