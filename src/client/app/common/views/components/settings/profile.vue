@@ -66,6 +66,7 @@
 			<ui-switch v-model="isLocked" @change="save(false)">{{ $t('is-locked') }}</ui-switch>
 			<ui-switch v-model="carefulBot" :disabled="isLocked" @change="save(false)">{{ $t('careful-bot') }}</ui-switch>
 			<ui-switch v-model="autoAcceptFollowed" :disabled="!isLocked && !carefulBot" @change="save(false)">{{ $t('auto-accept-followed') }}</ui-switch>
+			<ui-switch v-model="noFederation" @change="save(false)">{{ $t('no-federation') }}</ui-switch>
 		</div>
 	</section>
 
@@ -138,6 +139,7 @@ export default Vue.extend({
 			isLocked: false,
 			carefulBot: false,
 			autoAcceptFollowed: false,
+			noFederation: false,
 			saving: false,
 			avatarUploading: false,
 			bannerUploading: false,
@@ -178,6 +180,7 @@ export default Vue.extend({
 		this.isLocked = this.$store.state.i.isLocked;
 		this.carefulBot = this.$store.state.i.carefulBot;
 		this.autoAcceptFollowed = this.$store.state.i.autoAcceptFollowed;
+		this.noFederation = this.$store.state.i.noFederation;
 	},
 
 	methods: {
@@ -241,6 +244,7 @@ export default Vue.extend({
 				isBot: !!this.isBot,
 				isLocked: !!this.isLocked,
 				carefulBot: !!this.carefulBot,
+				noFederation: !!this.noFederation;
 				autoAcceptFollowed: !!this.autoAcceptFollowed
 			}).then(i => {
 				this.saving = false;

@@ -88,6 +88,8 @@ type IUserBase = {
 	 */
 	autoAcceptFollowed: boolean;
 
+	noFederation?: boolean;
+
 	/**
 	 * このアカウントに届いているフォローリクエストの数
 	 */

@@ -18,7 +18,7 @@ export async function publishToFollowers(userId: mongo.ObjectID) {
 	const queue: string[] = [];
 
 	// フォロワーがリモートユーザーかつ投稿者がローカルユーザーならUpdateを配信
-	if (isLocalUser(user)) {
+	if (isLocalUser(user) && !user.noFederation) {
 		for (const following of followers) {
 			const follower = following._follower;
 

@@ -1,7 +1,7 @@
 import $ from 'cafy';
 import ID, { transform } from '../../../../misc/cafy-id';
 import * as ms from 'ms';
-import { pack } from '../../../../models/user';
+import { pack, isRemoteUser } from '../../../../models/user';
 import Following from '../../../../models/following';
 import create from '../../../../services/following/create';
 import define from '../../define';
@@ -68,6 +68,12 @@ export const meta = {
 			code: 'BLOCKED',
 			id: 'c4ab57cc-4e41-45e9-bfd9-584f61e35ce0'
 		},
+
+		noFederation: {
+			message: 'noFederation.',
+			code: 'NO_FEDERATION',
+			id: '32850d5a-3269-4ef2-8c5d-f08f71884df6'
+		},
 	}
 };
 
@@ -84,6 +90,11 @@ export default define(meta, async (ps, user) => {
 		if (e.id === '15348ddd-432d-49c2-8a5a-8069753becff') throw new ApiError(meta.errors.noSuchUser);
 		throw e;
 	});
+
+	// no federation
+	if (user.noFederation && isRemoteUser(followee)) {
+		throw new ApiError(meta.errors.noFederation);
+	}
 
 	// Check if already following
 	const exist = await Following.findOne({

@@ -86,7 +86,7 @@ export default async (user: IUser, note: INote, reaction: string) => {
 
 	//#region 配信
 	// リアクターがローカルユーザーかつリアクション対象がリモートユーザーの投稿なら配送
-	if (isLocalUser(user) && isRemoteUser(note._user)) {
+	if (isLocalUser(user) && isRemoteUser(note._user) && !user.noFederation) {
 		const content = renderActivity(renderLike(user, note, reaction));
 		deliver(user, content, note._user.inbox);
 	}

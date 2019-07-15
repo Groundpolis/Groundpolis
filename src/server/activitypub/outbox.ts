@@ -43,6 +43,9 @@ export default async (ctx: Router.IRouterContext) => {
 	// Verify user
 	const user = await User.findOne({
 		_id: userId,
+		isDeleted: { $ne: true },
+		isSuspended: { $ne: true },
+		noFederation: { $ne: true },
 		host: null
 	});
 

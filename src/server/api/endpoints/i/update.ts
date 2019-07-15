@@ -99,6 +99,13 @@ export const meta = {
 			}
 		},
 
+		noFederation: {
+			validator: $.optional.bool,
+			desc: {
+				'ja-JP': 'noFederation'
+			}
+		},
+
 		isBot: {
 			validator: $.optional.bool,
 			desc: {
@@ -171,6 +178,7 @@ export default define(meta, async (ps, user, app) => {
 	if (typeof ps.isBot == 'boolean') updates.isBot = ps.isBot;
 	if (typeof ps.carefulBot == 'boolean') updates.carefulBot = ps.carefulBot;
 	if (typeof ps.autoAcceptFollowed == 'boolean') updates.autoAcceptFollowed = ps.autoAcceptFollowed;
+	if (typeof ps.noFederation == 'boolean') updates.noFederation = ps.noFederation;
 	if (typeof ps.isCat == 'boolean') updates.isCat = ps.isCat;
 	if (typeof ps.autoWatch == 'boolean') updates['settings.autoWatch'] = ps.autoWatch;
 	if (typeof ps.alwaysMarkNsfw == 'boolean') updates['settings.alwaysMarkNsfw'] = ps.alwaysMarkNsfw;
