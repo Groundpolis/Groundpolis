@@ -738,6 +738,9 @@ common/views/components/profile-editor.vue:
   danger-zone: "危険な設定"
   delete-account: "アカウントを削除"
   account-deleted: "アカウントが削除されました。データが消えるまで時間がかかる場合があります。"
+  fields: "Fields"
+  field-name: "Label"
+  field-value: "Content"
 
 common/views/components/user-list-editor.vue:
   users: "ユーザー"

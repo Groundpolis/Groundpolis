@@ -19,12 +19,23 @@ export default async (user: ILocalUser) => {
 	]);
 
 	const attachment: {
-		type: string,
+		type: 'PropertyValue',
 		name: string,
 		value: string,
-		verified_at?: string,
 		identifier?: IIdentifier
 	}[] = [];
+
+	if (user.fields) {
+		for (const field of user.fields) {
+			attachment.push({
+				type: 'PropertyValue',
+				name: field.name,
+				value: (field.value != null && field.value.match(/^https?:/))
+					? `<a href="${new URL(field.value).href}" rel="me nofollow noopener" target="_blank">`
+					: field.value
+			});
+		}
+	}
 
 	if (user.twitter) {
 		attachment.push({

@@ -126,6 +126,13 @@ export const meta = {
 				'ja-JP': 'アップロードするメディアをデフォルトで「閲覧注意」として設定するか'
 			}
 		},
+
+		fields: {
+			validator: $.optional.arr($.object()).range(1, 4),
+			desc: {
+				'ja-JP': 'fields'
+			}
+		},
 	},
 
 	errors: {
@@ -234,6 +241,14 @@ export default define(meta, async (ps, user, app) => {
 				}
 			}
 		}
+	}
+
+	if (ps.fields) {
+		updates.fields = ps.fields
+			.filter(x => typeof x.name === 'string' && x.name !== '' && typeof x.value === 'string' && x.value !== '')
+			.map(x => {
+				return { name: x.name, value: x.value };
+			});
 	}
 
 	//#region emojis/tags
