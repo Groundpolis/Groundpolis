@@ -327,8 +327,9 @@ export default Vue.extend({
 				if (canceled) return;
 
 				this.saving = true;
+				this.noFederation = true;
 				this.$root.api('i/update', {
-					noFederation: true
+					noFederation: this.noFederation
 				}).then(i => {
 					this.saving = false;
 					this.$root.dialog({
@@ -341,8 +342,9 @@ export default Vue.extend({
 
 		async enableFederation() {
 			this.saving = true;
+			this.noFederation = false;
 			this.$root.api('i/update', {
-				noFederation: false
+				noFederation: this.noFederation
 			}).then(i => {
 				this.saving = false;
 				this.$root.dialog({
