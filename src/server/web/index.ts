@@ -12,7 +12,7 @@ import * as views from 'koa-views';
 import { ObjectID } from 'mongodb';
 
 import docs from './docs';
-import User from '../../models/user';
+import User, { ILocalUser } from '../../models/user';
 import parseAcct from '../../misc/acct/parse';
 import config from '../../config';
 import Note, { pack as packNote } from '../../models/note';
@@ -143,12 +143,20 @@ router.get('/@:user', async (ctx, next) => {
 	const user = await User.findOne({
 		usernameLower: username.toLowerCase(),
 		host
-	});
+	}) as ILocalUser;
 
 	if (user != null) {
 		const meta = await fetchMeta();
+
+		const me = user.fields
+			? user.fields
+				.filter(filed => filed.value != null && filed.value.match(/^https?:/))
+				.map(field => field.value)
+			: [];
+
 		await ctx.render('user', {
 			user,
+			me,
 			instanceName: meta.name
 		});
 		ctx.set('Cache-Control', 'public, max-age=180');
