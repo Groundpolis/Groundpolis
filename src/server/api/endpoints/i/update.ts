@@ -12,7 +12,7 @@ import extractEmojis from '../../../../misc/extract-emojis';
 import extractHashtags from '../../../../misc/extract-hashtags';
 import { updateHashtag } from '../../../../services/update-hashtag';
 import { ApiError } from '../../error';
-import { doPostSuspend } from '../../../../services/suspend-user';
+import { sendDeleteActivity } from '../../../../services/suspend-user';
 import { doPostUnsuspend } from '../../../../services/unsuspend-user';
 
 export const meta = {
@@ -305,7 +305,7 @@ export default define(meta, async (ps, user, app) => {
 
 	if (typeof updates.noFederation !== 'undefined') {
 		if (updates.noFederation) {
-			doPostSuspend(user);
+			sendDeleteActivity(user);
 		} else {
 			doPostUnsuspend(user);
 		}
