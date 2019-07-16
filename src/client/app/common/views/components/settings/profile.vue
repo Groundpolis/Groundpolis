@@ -66,7 +66,6 @@
 			<ui-switch v-model="isLocked" @change="save(false)">{{ $t('is-locked') }}</ui-switch>
 			<ui-switch v-model="carefulBot" :disabled="isLocked" @change="save(false)">{{ $t('careful-bot') }}</ui-switch>
 			<ui-switch v-model="autoAcceptFollowed" :disabled="!isLocked && !carefulBot" @change="save(false)">{{ $t('auto-accept-followed') }}</ui-switch>
-			<ui-switch v-model="noFederation" @change="save(false)">{{ $t('no-federation') }}</ui-switch>
 		</div>
 	</section>
 
@@ -101,9 +100,11 @@
 		</div>
 	</section>
 
-	<section v-if="isAdvanced">
+	<section>
 		<details>
 			<summary>{{ $t('danger-zone') }}</summary>
+			<ui-button v-if="!noFederation" @click="disableFederation()">{{ $t('disable-federation') }}</ui-button>
+			<ui-button v-if="noFederation" @click="enableFederation()">{{ $t('enable-federation') }}</ui-button>
 		</details>
 	</section>
 </ui-card>
@@ -244,7 +245,6 @@ export default Vue.extend({
 				isBot: !!this.isBot,
 				isLocked: !!this.isLocked,
 				carefulBot: !!this.carefulBot,
-				noFederation: !!this.noFederation;
 				autoAcceptFollowed: !!this.autoAcceptFollowed
 			}).then(i => {
 				this.saving = false;
@@ -314,6 +314,40 @@ export default Vue.extend({
 						type: 'error',
 						text: e.message
 					});
+				});
+			});
+		},
+
+		async disableFederation() {
+			this.$root.dialog({
+				type: 'warning',
+				text: this.$t('disable-federation-confirm'),
+				showCancelButton: true
+			}).then(({ canceled }) => {
+				if (canceled) return;
+
+				this.saving = true;
+				this.$root.api('i/update', {
+					noFederation: true
+				}).then(i => {
+					this.saving = false;
+					this.$root.dialog({
+						type: 'success',
+						text: 'Saved'
+					});
+				});
+			});
+		},
+
+		async enableFederation() {
+			this.saving = true;
+			this.$root.api('i/update', {
+				noFederation: false
+			}).then(i => {
+				this.saving = false;
+				this.$root.dialog({
+					type: 'success',
+					text: 'Saved'
 				});
 			});
 		},

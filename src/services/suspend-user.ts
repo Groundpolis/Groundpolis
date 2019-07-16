@@ -2,10 +2,16 @@ import renderDelete from '../remote/activitypub/renderer/delete';
 import { renderActivity } from '../remote/activitypub/renderer';
 import { deliver } from '../queue';
 import config from '../config';
-import { IUser, isLocalUser } from '../models/user';
+import User, { IUser, isLocalUser } from '../models/user';
 import Following from '../models/following';
+import deleteFollowing from '../services/following/delete';
 
 export async function doPostSuspend(user: IUser) {
+	await sendDeleteActivity(user).catch(() => {});
+	await unFollowAll(user).catch(() => {});
+}
+
+export async function sendDeleteActivity(user: IUser) {
 	if (isLocalUser(user)) {
 		// 知り得る全SharedInboxにDelete配信
 		const content = renderActivity(renderDelete(`${config.url}/users/${user._id}`, user));
@@ -31,5 +37,23 @@ export async function doPostSuspend(user: IUser) {
 		for (const inbox of queue) {
 			deliver(user as any, content, inbox);
 		}
+	}
+}
+
+async function unFollowAll(follower: IUser) {
+	const followings = await Following.find({
+		followerId: follower._id
+	});
+
+	for (const following of followings) {
+		const followee = await User.findOne({
+			_id: following.followeeId
+		});
+
+		if (followee == null) {
+			continue;
+		}
+
+		await deleteFollowing(follower, followee, true);
 	}
 }

@@ -12,6 +12,8 @@ import extractEmojis from '../../../../misc/extract-emojis';
 import extractHashtags from '../../../../misc/extract-hashtags';
 import { updateHashtag } from '../../../../services/update-hashtag';
 import { ApiError } from '../../error';
+import { doPostSuspend } from '../../../../services/suspend-user';
+import { doPostUnsuspend } from '../../../../services/unsuspend-user';
 
 export const meta = {
 	desc: {
@@ -286,8 +288,16 @@ export default define(meta, async (ps, user, app) => {
 		acceptAllFollowRequests(user);
 	}
 
-	// フォロワーにUpdateを配信
-	publishToFollowers(user._id);
+	if (typeof updates.noFederation !== 'undefined') {
+		if (updates.noFederation) {
+			doPostSuspend(user);
+		} else {
+			doPostUnsuspend(user);
+		}
+	} else {
+		// フォロワーにUpdateを配信
+		publishToFollowers(user._id);
+	}
 
 	return iObj;
 });

@@ -684,6 +684,10 @@ common/views/components/profile-editor.vue:
   danger-zone: "Cautious options"
   delete-account: "Remove the account"
   account-deleted: "The account has been deleted. It may take some time until all of the data disappears."
+  disable-federation: "Disable federation"
+  enable-federation: "Enable federation"
+  disable-federation-confirm: "Do you want to disable federation? Follow relationship is also removed."
+
 common/views/components/user-list-editor.vue:
   users: "User"
   rename: "Rename list"
