@@ -98,7 +98,6 @@ export default define(meta, async (ps, me) => {
 		if (users.length < ps.limit && !ps.localOnly) {
 			users = await User
 				.find({
-						host: null,
 						usernameLower: ps.query.replace('@', '').toLowerCase(),
 						isSuspended: { $ne: true }
 					}, {
