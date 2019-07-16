@@ -120,9 +120,11 @@
 		</div>
 	</section>
 
-	<section v-if="isAdvanced">
+	<section>
 		<details>
 			<summary>{{ $t('danger-zone') }}</summary>
+			<ui-button v-if="!noFederation" @click="disableFederation()">{{ $t('disable-federation') }}</ui-button>
+			<ui-button v-if="noFederation" @click="enableFederation()">{{ $t('enable-federation') }}</ui-button>
 		</details>
 	</section>
 </ui-card>
@@ -158,6 +160,7 @@ export default Vue.extend({
 			isLocked: false,
 			carefulBot: false,
 			autoAcceptFollowed: false,
+			noFederation: false,
 			saving: false,
 			avatarUploading: false,
 			bannerUploading: false,
@@ -198,6 +201,7 @@ export default Vue.extend({
 		this.isLocked = this.$store.state.i.isLocked;
 		this.carefulBot = this.$store.state.i.carefulBot;
 		this.autoAcceptFollowed = this.$store.state.i.autoAcceptFollowed;
+		this.noFederation = this.$store.state.i.noFederation;
 
 		if (this.$store.state.i.fields) {
 			this.fieldName0 = this.$store.state.i.fields[0].name;
@@ -349,6 +353,42 @@ export default Vue.extend({
 						type: 'error',
 						text: e.message
 					});
+				});
+			});
+		},
+
+		async disableFederation() {
+			this.$root.dialog({
+				type: 'warning',
+				text: this.$t('disable-federation-confirm'),
+				showCancelButton: true
+			}).then(({ canceled }) => {
+				if (canceled) return;
+
+				this.saving = true;
+				this.noFederation = true;
+				this.$root.api('i/update', {
+					noFederation: this.noFederation
+				}).then(i => {
+					this.saving = false;
+					this.$root.dialog({
+						type: 'success',
+						text: 'Saved'
+					});
+				});
+			});
+		},
+
+		async enableFederation() {
+			this.saving = true;
+			this.noFederation = false;
+			this.$root.api('i/update', {
+				noFederation: this.noFederation
+			}).then(i => {
+				this.saving = false;
+				this.$root.dialog({
+					type: 'success',
+					text: 'Saved'
 				});
 			});
 		},

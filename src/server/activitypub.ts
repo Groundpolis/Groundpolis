@@ -4,7 +4,7 @@ import * as json from 'koa-json-body';
 import * as httpSignature from 'http-signature';
 
 import { renderActivity } from '../remote/activitypub/renderer';
-import Note from '../models/note';
+import Note, { INote } from '../models/note';
 import User, { isLocalUser, ILocalUser, IUser } from '../models/user';
 import Emoji from '../models/emoji';
 import renderNote from '../remote/activitypub/renderer/note';
@@ -60,6 +60,16 @@ export function setResponseType(ctx: Router.IRouterContext) {
 router.post('/inbox', json(), inbox);
 router.post('/users/:user/inbox', json(), inbox);
 
+const isNoteUserAvailable = async (note: INote) => {
+	const user = await User.findOne({
+		_id: note.userId,
+		isDeleted: { $ne: true },
+		isSuspended: { $ne: true },
+		noFederation: { $ne: true },
+	});
+	return user != null;
+};
+
 // note
 router.get('/notes/:note', async (ctx, next) => {
 	if (!isActivityPubReq(ctx)) return await next();
@@ -71,11 +81,12 @@ router.get('/notes/:note', async (ctx, next) => {
 
 	const note = await Note.findOne({
 		_id: new ObjectID(ctx.params.note),
+		deletedAt: { $exists: false },
 		visibility: { $in: ['public', 'home'] },
 		localOnly: { $ne: true }
 	});
 
-	if (note === null) {
+	if (note == null || !await isNoteUserAvailable(note)) {
 		ctx.status = 404;
 		return;
 	}
@@ -104,12 +115,13 @@ router.get('/notes/:note/activity', async ctx => {
 
 	const note = await Note.findOne({
 		_id: new ObjectID(ctx.params.note),
+		deletedAt: { $exists: false },
 		'_user.host': null,
 		visibility: { $in: ['public', 'home'] },
 		localOnly: { $ne: true }
 	});
 
-	if (note === null) {
+	if (note == null || !await isNoteUserAvailable(note)) {
 		ctx.status = 404;
 		return;
 	}
@@ -128,6 +140,7 @@ router.get('/questions/:question', async (ctx, next) => {
 
 	const poll = await Note.findOne({
 		_id: new ObjectID(ctx.params.question),
+		deletedAt: { $exists: false },
 		'_user.host': null,
 		visibility: { $in: ['public', 'home'] },
 		localOnly: { $ne: true },
@@ -137,13 +150,13 @@ router.get('/questions/:question', async (ctx, next) => {
 		},
 	});
 
-	if (poll === null) {
+	if (poll == null || !await isNoteUserAvailable(poll)) {
 		ctx.status = 404;
 		return;
 	}
 
 	const user = await User.findOne({
-			_id: poll.userId
+		_id: poll.userId
 	});
 
 	ctx.body = renderActivity(await renderQuestion(user as ILocalUser, poll));
@@ -173,6 +186,9 @@ router.get('/users/:user/publickey', async ctx => {
 
 	const user = await User.findOne({
 		_id: userId,
+		isDeleted: { $ne: true },
+		isSuspended: { $ne: true },
+		noFederation: { $ne: true },
 		host: null
 	});
 
@@ -214,6 +230,9 @@ router.get('/users/:user', async (ctx, next) => {
 
 	const user = await User.findOne({
 		_id: userId,
+		isDeleted: { $ne: true },
+		isSuspended: { $ne: true },
+		noFederation: { $ne: true },
 		host: null
 	});
 
@@ -225,6 +244,9 @@ router.get('/@:user', async (ctx, next) => {
 
 	const user = await User.findOne({
 		usernameLower: ctx.params.user.toLowerCase(),
+		isDeleted: { $ne: true },
+		isSuspended: { $ne: true },
+		noFederation: { $ne: true },
 		host: null
 	});
 

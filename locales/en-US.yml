@@ -240,6 +240,7 @@ common:
   reload: "Reload"
   do-not-use-in-production: "This is a development build. Do not use in production."
   user-suspended: "This user has been suspended."
+  user-no-federation: "This user is not federated."
   is-remote-user: "The information about this user may not be entirely complete."
   is-remote-post: "These post contents are mirrored."
   view-on-remote: "For completion, view it remotely."
@@ -657,6 +658,7 @@ common/views/components/profile-editor.vue:
   is-locked: "Follower requests require approval"
   careful-bot: "Follower requests from bots require approval"
   auto-accept-followed: "Automatically approve follows from the people you follow"
+  no-federation: "Disable federation"
   advanced: "Other"
   privacy: "Privacy"
   save: "Save"
@@ -682,6 +684,10 @@ common/views/components/profile-editor.vue:
   danger-zone: "Cautious options"
   delete-account: "Remove the account"
   account-deleted: "The account has been deleted. It may take some time until all of the data disappears."
+  disable-federation: "Disable federation"
+  enable-federation: "Enable federation"
+  disable-federation-confirm: "Do you want to disable federation? Follow relationship is also removed."
+
 common/views/components/user-list-editor.vue:
   users: "User"
   rename: "Rename list"

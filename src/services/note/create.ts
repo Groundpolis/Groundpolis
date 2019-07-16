@@ -313,7 +313,7 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 
 	createMentionedEvents(mentionedUsers, note, nm);
 
-	const noteActivity = await renderNoteOrRenoteActivity(data, note);
+	const noteActivity = await renderNoteOrRenoteActivity(data, note, user);
 
 	if (isLocalUser(user)) {
 		deliverNoteToMentionedRemoteUsers(mentionedUsers, user, noteActivity);
@@ -385,8 +385,9 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 	index(note);
 });
 
-async function renderNoteOrRenoteActivity(data: Option, note: INote) {
+async function renderNoteOrRenoteActivity(data: Option, note: INote, user: IUser) {
 	if (data.localOnly) return null;
+	if (user.noFederation) return null;
 
 	const content = data.renote && data.text == null && data.poll == null && (data.files == null || data.files.length == 0)
 		? renderAnnounce(data.renote.uri ? data.renote.uri : `${config.url}/notes/${data.renote._id}`, note)

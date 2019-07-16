@@ -253,6 +253,7 @@ common:
 
   do-not-use-in-production: "これは開発ビルドです。本番環境で使用しないでください。"
   user-suspended: "このユーザーは凍結されています。"
+  user-no-federation: "このユーザーは連合していません。"
   is-remote-user: "このユーザー情報は不正確な可能性があります。"
   is-remote-post: "この投稿情報はコピーです。"
   view-on-remote: "正確な情報を見る"
@@ -713,6 +714,7 @@ common/views/components/profile-editor.vue:
   is-locked: "フォローを承認制にする"
   careful-bot: "Botからのフォローだけ承認制にする"
   auto-accept-followed: "フォローしているユーザーからのフォローを自動承認する"
+  no-federation: "連合を無効にする"
   advanced: "その他"
   privacy: "プライバシー"
   save: "保存"
@@ -741,6 +743,9 @@ common/views/components/profile-editor.vue:
   fields: "Fields"
   field-name: "Label"
   field-value: "Content"
+  disable-federation: "連合を無効にする"
+  enable-federation: "連合を有効にする"
+  disable-federation-confirm: "連合を無効にしますか？フォロー関係も解除されます"
 
 common/views/components/user-list-editor.vue:
   users: "ユーザー"
