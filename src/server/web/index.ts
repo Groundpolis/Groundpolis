@@ -159,7 +159,7 @@ router.get('/@:user', async (ctx, next) => {
 			me,
 			instanceName: meta.name
 		});
-		ctx.set('Cache-Control', 'public, max-age=180');
+		ctx.set('Cache-Control', 'public, max-age=60');
 	} else {
 		// リモートユーザーなので
 		await next();
