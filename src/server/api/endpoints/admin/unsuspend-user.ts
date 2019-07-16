@@ -2,6 +2,7 @@ import $ from 'cafy';
 import ID, { transform } from '../../../../misc/cafy-id';
 import define from '../../define';
 import User from '../../../../models/user';
+import { doPostUnsuspend } from '../../../../services/unsuspend-user';
 
 export const meta = {
 	desc: {
@@ -43,5 +44,5 @@ export default define(meta, async (ps) => {
 		}
 	});
 
-	return;
+	doPostUnsuspend(user);
 });
