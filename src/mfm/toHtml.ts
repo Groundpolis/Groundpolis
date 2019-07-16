@@ -150,19 +150,9 @@ export function toHtml(tokens: MfmForest, mentionedRemoteUsers: INote['mentioned
 		mention(token) {
 			const a = doc.createElement('a');
 			const { username, host, acct } = token.node.props;
-			switch (host) {
-				case 'github.com':
-					a.href = `https://github.com/${username}`;
-					break;
-				case 'twitter.com':
-					a.href = `https://twitter.com/${username}`;
-					break;
-				default:
-					const remoteUserInfo = mentionedRemoteUsers.find(remoteUser => remoteUser.username === username && remoteUser.host === host);
-					a.href = remoteUserInfo ? remoteUserInfo.uri : `${config.url}/${acct}`;
-					a.className = 'mention';
-					break;
-			}
+			const remoteUserInfo = mentionedRemoteUsers.find(remoteUser => remoteUser.username === username && remoteUser.host === host);
+			a.href = remoteUserInfo ? remoteUserInfo.uri : `${config.url}/${acct}`;
+			a.className = 'mention';
 			a.textContent = acct;
 			return a;
 		},
