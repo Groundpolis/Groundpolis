@@ -95,24 +95,44 @@ export default define(meta, async (ps, me) => {
 			users = users.concat(otherUsers);
 		}
 	} else if (isUsername) {
-		users = await User
-			.find({
-				host: null,
-				usernameLower: new RegExp('^' + escapeRegexp(ps.query.replace('@', '').toLowerCase())),
-				isSuspended: { $ne: true }
-			}, {
-				limit: ps.limit,
-				skip: ps.offset
-			});
+		if (users.length < ps.limit && !ps.localOnly) {
+			users = await User
+				.find({
+						host: null,
+						usernameLower: ps.query.replace('@', '').toLowerCase(),
+						isSuspended: { $ne: true }
+					}, {
+						limit: ps.limit - users.length,
+						skip: ps.offset,
+						sort: { updatedAt: -1 }
+					});
+		}
+
+		const ids = users.map(user => user._id);
+
+		if (users.length < ps.limit) {
+			users = await User
+				.find({
+					_id: { $nin: ids },
+					host: null,
+					usernameLower: new RegExp('^' + escapeRegexp(ps.query.replace('@', '').toLowerCase())),
+					isSuspended: { $ne: true }
+				}, {
+					limit: ps.limit - users.length,
+					skip: ps.offset
+				});
+		}
 
 		if (users.length < ps.limit && !ps.localOnly) {
 			const otherUsers = await User
 				.find({
+					_id: { $nin: ids },
 					host: { $ne: null },
 					usernameLower: new RegExp('^' + escapeRegexp(ps.query.replace('@', '').toLowerCase())),
 					isSuspended: { $ne: true }
 				}, {
-					limit: ps.limit - users.length
+					limit: ps.limit - users.length,
+					skip: ps.offset
 				});
 
 			users = users.concat(otherUsers);
