@@ -4,6 +4,7 @@ import define from '../../define';
 import User, { IUser } from '../../../../models/user';
 import Following from '../../../../models/following';
 import deleteFollowing from '../../../../services/following/delete';
+import { doPostSuspend } from '../../../../services/suspend-user';
 
 export const meta = {
 	desc: {
@@ -55,7 +56,7 @@ export default define(meta, async (ps) => {
 
 	unFollowAll(user);
 
-	return;
+	doPostSuspend(user);
 });
 
 async function unFollowAll(follower: IUser) {
