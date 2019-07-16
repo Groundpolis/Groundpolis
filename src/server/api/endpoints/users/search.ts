@@ -103,14 +103,14 @@ export default define(meta, async (ps, me) => {
 					}, {
 						limit: ps.limit - users.length,
 						skip: ps.offset,
-						sort: { updatedAt: -1 }
+						sort: { updatedAt: -1 },
 					});
 		}
 
 		const ids = users.map(user => user._id);
 
 		if (users.length < ps.limit) {
-			users = await User
+			const otherUsers = await User
 				.find({
 					_id: { $nin: ids },
 					host: null,
@@ -120,7 +120,9 @@ export default define(meta, async (ps, me) => {
 					limit: ps.limit - users.length,
 					skip: ps.offset
 				});
-		}
+
+				users = users.concat(otherUsers);
+			}
 
 		if (users.length < ps.limit && !ps.localOnly) {
 			const otherUsers = await User
