@@ -2,6 +2,8 @@ import $ from 'cafy';
 import User, { pack } from '../../../../models/user';
 import define from '../../define';
 import { fallback } from '../../../../prelude/symbol';
+import * as escapeRegexp from 'escape-regexp';
+import { toDbHost } from '../../../../misc/convert-host';
 
 export const meta = {
 	tags: ['admin'],
@@ -51,6 +53,14 @@ export const meta = {
 				'remote',
 			]),
 			default: 'local'
+		},
+
+		username: {
+			validator: $.optional.str
+		},
+
+		hostname: {
+			validator: $.optional.str
 		}
 	}
 };
@@ -93,6 +103,14 @@ export default define(meta, async (ps, me) => {
 		ps.origin == 'remote' ? { host: { $ne: null } } :
 		{}
 	);
+
+	if (ps.username) {
+		q.usernameLower = new RegExp('^' + escapeRegexp(ps.username.toLowerCase()));
+	}
+
+	if (ps.hostname) {
+		q.host = new RegExp(escapeRegexp(toDbHost(ps.hostname)));
+	}
 
 	const users = await User
 		.find(q, {
