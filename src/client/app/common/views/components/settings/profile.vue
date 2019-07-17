@@ -161,6 +161,14 @@ export default Vue.extend({
 			carefulBot: false,
 			autoAcceptFollowed: false,
 			noFederation: false,
+			fieldName0 : null,
+			fieldValue0 : null,
+			fieldName1 : null,
+			fieldValue1 : null,
+			fieldName2 : null,
+			fieldValue2 : null,
+			fieldName3 : null,
+			fieldValue3 : null,
 			saving: false,
 			avatarUploading: false,
 			bannerUploading: false,
@@ -204,14 +212,17 @@ export default Vue.extend({
 		this.noFederation = this.$store.state.i.noFederation;
 
 		if (this.$store.state.i.fields) {
-			this.fieldName0 = this.$store.state.i.fields[0].name;
-			this.fieldValue0 = this.$store.state.i.fields[0].value;
-			this.fieldName1 = this.$store.state.i.fields[1].name;
-			this.fieldValue1 = this.$store.state.i.fields[1].value;
-			this.fieldName2 = this.$store.state.i.fields[2].name;
-			this.fieldValue2 = this.$store.state.i.fields[2].value;
-			this.fieldName3 = this.$store.state.i.fields[3].name;
-			this.fieldValue3 = this.$store.state.i.fields[3].value;
+			const fetchName = (i: number) => this.$store.state.i.fields[i] ? this.$store.state.i.fields[i].name : null;
+			const fetchValue = (i: number) => this.$store.state.i.fields[i] ? this.$store.state.i.fields[i].value : null;
+
+			this.fieldName0 = fetchName(0);
+			this.fieldValue0 = fetchValue(0);
+			this.fieldName1 = fetchName(1);
+			this.fieldValue1 = fetchValue(1);
+			this.fieldName2 = fetchName(2);
+			this.fieldValue3 = fetchValue(2);
+			this.fieldName3 = fetchName(3);
+			this.fieldValue3 = fetchValue(3);
 		}
 	},
 
