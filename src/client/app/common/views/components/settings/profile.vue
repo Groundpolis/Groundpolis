@@ -46,22 +46,22 @@
 			</ui-input>
 
 			<div class="fields">
-				<header>{{ $t('fields') }}</header>
+				<header>{{ $t('profile-metadata') }}</header>
 				<ui-horizon-group>
-					<ui-input v-model="fieldName0">{{ $t('field-name') }}</ui-input>
-					<ui-input v-model="fieldValue0">{{ $t('field-value') }}</ui-input>
+					<ui-input v-model="fieldName0">{{ $t('metadata-label') }}</ui-input>
+					<ui-input v-model="fieldValue0">{{ $t('metadata-content') }}</ui-input>
 				</ui-horizon-group>
 				<ui-horizon-group>
-					<ui-input v-model="fieldName1">{{ $t('field-name') }}</ui-input>
-					<ui-input v-model="fieldValue1">{{ $t('field-value') }}</ui-input>
+					<ui-input v-model="fieldName1">{{ $t('metadata-label') }}</ui-input>
+					<ui-input v-model="fieldValue1">{{ $t('metadata-content') }}</ui-input>
 				</ui-horizon-group>
 				<ui-horizon-group>
-					<ui-input v-model="fieldName2">{{ $t('field-name') }}</ui-input>
-					<ui-input v-model="fieldValue2">{{ $t('field-value') }}</ui-input>
+					<ui-input v-model="fieldName2">{{ $t('metadata-label') }}</ui-input>
+					<ui-input v-model="fieldValue2">{{ $t('metadata-content') }}</ui-input>
 				</ui-horizon-group>
 				<ui-horizon-group>
-					<ui-input v-model="fieldName3">{{ $t('field-name') }}</ui-input>
-					<ui-input v-model="fieldValue3">{{ $t('field-value') }}</ui-input>
+					<ui-input v-model="fieldName3">{{ $t('metadata-label') }}</ui-input>
+					<ui-input v-model="fieldValue3">{{ $t('metadata-content') }}</ui-input>
 				</ui-horizon-group>
 			</div>
 
