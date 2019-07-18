@@ -1,5 +1,5 @@
 <template>
-<mk-window class="mk-post-form-window" ref="window" is-modal @closed="onWindowClosed" :animation="animation">
+<mk-window class="mk-post-form-window" ref="window" is-modal @closed="onWindowClosed" :animation="animation" width="640px">
 	<template #header>
 		<span class="mk-post-form-window--header">
 			<span class="icon" v-if="geo"><fa icon="map-marker-alt"/></span>

@@ -898,6 +898,7 @@ desktop/views/components/post-form.vue:
   hide-contents: "Hide contents"
   reply-placeholder: "Reply to this post..."
   quote-placeholder: "Quote this Post..."
+  preview: "Preview"
   submit: "Post"
   reply: "Reply"
   renote: "Repost"

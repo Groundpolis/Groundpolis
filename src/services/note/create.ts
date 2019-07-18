@@ -111,6 +111,7 @@ type Option = {
 	questionUri?: string;
 	uri?: string;
 	app?: IApp;
+	preview?: boolean;
 };
 
 export default async (user: IUser, data: Option, silent = false) => new Promise<INote>(async (res, rej) => {
@@ -230,6 +231,8 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 	const note = await insertNote(user, data, tags, emojis, mentionedUsers);
 
 	res(note);
+
+	if (data.preview) return;
 
 	if (note == null) {
 		return;
@@ -521,6 +524,13 @@ async function insertNote(user: IUser, data: Option, tags: string[], emojis: str
 			username: u.username,
 			host: u.host
 		}));
+	}
+
+	if (data.preview) {
+		return Object.assign(insert, {
+			_id: '1',
+			preview: true
+		}) as INote;
 	}
 
 	// 投稿を作成
