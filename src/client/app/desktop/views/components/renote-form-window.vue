@@ -1,5 +1,5 @@
 <template>
-<mk-window ref="window" is-modal @closed="onWindowClosed" :animation="animation">
+<mk-window ref="window" is-modal @closed="onWindowClosed" :animation="animation" width="640px">
 	<template #header :class="$style.header"><fa icon="retweet"/>{{ $t('title') }}</template>
 	<mk-renote-form ref="form" :note="note" @posted="onPosted" @canceled="onCanceled" v-hotkey.global="keymap"/>
 </mk-window>
