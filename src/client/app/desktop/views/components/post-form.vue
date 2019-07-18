@@ -63,7 +63,12 @@
 		<input ref="file" type="file" multiple="multiple" tabindex="-1" @change="onChangeFile"/>
 		<div class="dropzone" v-if="draghover"></div>
 	</div>
-	<mk-note class="preview" v-if="note" :note="note" :key="note.id" :preview="true" />
+	<div v-if="preview" class="preview">
+		<button class="close" @click="preview = null">
+			<fa icon="times"/>
+		</button>
+		<mk-note class="note" :note="preview" :key="preview.id" :preview="true" />
+	</div>
 </div>
 </template>
 
@@ -118,7 +123,7 @@ export default Vue.extend({
 	data() {
 		return {
 			posting: false,
-			note: null,
+			preview: null,
 			text: '',
 			files: [],
 			uploadings: [],
@@ -481,10 +486,11 @@ export default Vue.extend({
 				geo: null
 			}).then(data => {
 				if (preview) {
-					this.note = data.createdNote;
-					this.note.id = Math.random();
+					this.preview = data.createdNote;
+					this.preview.id = Math.random();
 					return;
 				}
+				this.preview = null;
 				this.clear();
 				this.deleteDraft();
 				this.$emit('posted');
@@ -608,7 +614,7 @@ export default Vue.extend({
 				margin 0
 				max-width 100%
 				min-width 100%
-				min-height 100px
+				min-height 88px
 
 				&:hover
 					& + * + *
@@ -788,5 +794,15 @@ export default Vue.extend({
 		pointer-events none
 
 .preview
-	border-top solid var(--lineWidth) var(--faceDivider)
+	> .close
+		position absolute
+		top 0
+		right 0
+		z-index 1000
+		padding 4px 8px
+		color var(--primaryAlpha04)
+
+	> .note
+		border-top solid var(--lineWidth) var(--faceDivider)
+		background var(--desktopPostFormBg)
 </style>
