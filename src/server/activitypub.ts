@@ -15,7 +15,6 @@ import Outbox, { packActivity } from './activitypub/outbox';
 import Followers from './activitypub/followers';
 import Following from './activitypub/following';
 import Featured from './activitypub/featured';
-import renderQuestion from '../remote/activitypub/renderer/question';
 import { inbox as processInbox } from '../queue';
 import { isSelfHost } from '../misc/convert-host';
 
@@ -128,38 +127,6 @@ router.get('/notes/:note/activity', async ctx => {
 
 	ctx.body = renderActivity(await packActivity(note));
 	ctx.set('Cache-Control', 'public, max-age=180');
-	setResponseType(ctx);
-});
-
-// question
-router.get('/questions/:question', async (ctx, next) => {
-	if (!ObjectID.isValid(ctx.params.question)) {
-		ctx.status = 404;
-		return;
-	}
-
-	const poll = await Note.findOne({
-		_id: new ObjectID(ctx.params.question),
-		deletedAt: { $exists: false },
-		'_user.host': null,
-		visibility: { $in: ['public', 'home'] },
-		localOnly: { $ne: true },
-		poll: {
-			$exists: true,
-			$ne: null
-		},
-	});
-
-	if (poll == null || !await isNoteUserAvailable(poll)) {
-		ctx.status = 404;
-		return;
-	}
-
-	const user = await User.findOne({
-		_id: poll.userId
-	});
-
-	ctx.body = renderActivity(await renderQuestion(user as ILocalUser, poll));
 	setResponseType(ctx);
 });
 
