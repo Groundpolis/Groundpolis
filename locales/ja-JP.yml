@@ -764,6 +764,7 @@ common/views/components/user-lists.vue:
   list-name: "リスト名"
 
 common/views/widgets/broadcast.vue:
+  title: "お知らせ"
   fetching: "確認中"
   no-broadcasts: "お知らせはありません"
   have-a-nice-day: "良い一日を！"
