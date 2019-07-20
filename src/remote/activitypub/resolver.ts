@@ -85,7 +85,7 @@ export default class Resolver {
 
 async function updateInstanceSystem(url: string, obj: any) {
 	const system = detectSystem(obj);
-	console.log(`detectSystem.resolver: ${system} ${url}`);
+
 	if (system != null) {
 		registerOrFetchInstanceDoc(extractDbHost(url)).then(i => {
 			Instance.update({ _id: i._id }, {
