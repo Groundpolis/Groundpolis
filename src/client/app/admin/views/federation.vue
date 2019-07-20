@@ -54,7 +54,7 @@
 					<span>{{ $t('latest-request-received-at') }}</span>
 					<template #prefix><fa :icon="faInbox"/></template>
 				</ui-input>
-				<ui-input :value="instance.system | date" type="text" readonly>
+				<ui-input :value="instance.system" type="text" readonly>
 					<span>{{ $t('system') }}</span>
 					<template #prefix><fa :icon="faInbox"/></template>
 				</ui-input>
