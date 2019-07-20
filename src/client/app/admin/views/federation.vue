@@ -54,6 +54,10 @@
 					<span>{{ $t('latest-request-received-at') }}</span>
 					<template #prefix><fa :icon="faInbox"/></template>
 				</ui-input>
+				<ui-input :value="instance.system | date" type="text" readonly>
+					<span>{{ $t('system') }}</span>
+					<template #prefix><fa :icon="faInbox"/></template>
+				</ui-input>
 				<ui-switch v-model="instance.isBlocked" @change="updateInstance()">{{ $t('block') }}</ui-switch>
 				<ui-switch v-model="instance.isMarkedAsClosed" @change="updateInstance()">{{ $t('marked-as-closed') }}</ui-switch>
 				<details>
@@ -123,6 +127,7 @@
 			<div class="instances">
 				<header>
 					<span>{{ $t('host') }}</span>
+					<span>{{ $t('system') }}</span>
 					<span>{{ $t('notes') }}</span>
 					<span>{{ $t('users') }}</span>
 					<span>{{ $t('following') }}</span>
@@ -131,6 +136,7 @@
 				</header>
 				<div v-for="instance in instances" :style="{ opacity: instance.isNotResponding ? 0.5 : 1 }">
 					<a @click.prevent="showInstance(instance.host)" rel="nofollow noopener" target="_blank" :href="`https://${instance.host}`" :style="{ textDecoration: instance.isMarkedAsClosed ? 'line-through' : 'none' }">{{ instance.host }}</a>
+					<span>{{ instance.system }}</span>
 					<span>{{ instance.notesCount | number }}</span>
 					<span>{{ instance.usersCount | number }}</span>
 					<span>{{ instance.followingCount | number }}</span>

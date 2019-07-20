@@ -1,6 +1,10 @@
 import * as request from 'request-promise-native';
 import { IObject } from './type';
 import config from '../../config';
+import { registerOrFetchInstanceDoc } from '../../services/register-or-fetch-instance-doc';
+import { extractDbHost } from '../../misc/convert-host';
+import Instance from '../../models/instance';
+import { detectSystem } from './misc/detect-system';
 
 export default class Resolver {
 	private history: Set<string>;
@@ -73,6 +77,22 @@ export default class Resolver {
 			throw new Error('invalid response');
 		}
 
+		updateInstanceSystem(value, object);
+
 		return object;
+	}
+}
+
+async function updateInstanceSystem(url: string, obj: any) {
+	const system = detectSystem(obj);
+
+	if (system != null) {
+		registerOrFetchInstanceDoc(extractDbHost(url)).then(i => {
+			Instance.update({ _id: i._id }, {
+				$set: {
+					system,
+				}
+			});
+		});
 	}
 }
