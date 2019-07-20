@@ -122,6 +122,7 @@ export default async (job: Bull.Job): Promise<void> => {
 		} as any;
 
 		const system = detectSystem(activity);
+		console.log(`detectSystem.inbox: ${system} ${user.host}`);
 		if (system != null) set.system = system;
 
 		Instance.update({ _id: i._id }, {
