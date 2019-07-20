@@ -13,6 +13,7 @@ import Instance from '../../models/instance';
 import instanceChart from '../../services/chart/instance';
 import { IActivity, getApId } from '../../remote/activitypub/type';
 import { toDbHost } from '../../misc/convert-host';
+import { detectSystem } from '../../remote/activitypub/misc/detect-system';
 
 const logger = new Logger('inbox');
 
@@ -114,12 +115,17 @@ export default async (job: Bull.Job): Promise<void> => {
 
 	// Update stats
 	registerOrFetchInstanceDoc(user.host).then(i => {
+		const set = {
+			latestRequestReceivedAt: new Date(),
+			lastCommunicatedAt: new Date(),
+			isNotResponding: false
+		} as any;
+
+		const system = detectSystem(activity);
+		if (system != null) set.system = system;
+
 		Instance.update({ _id: i._id }, {
-			$set: {
-				latestRequestReceivedAt: new Date(),
-				lastCommunicatedAt: new Date(),
-				isNotResponding: false
-			}
+			$set: set
 		});
 
 		instanceChart.requestReceived(i.host);
