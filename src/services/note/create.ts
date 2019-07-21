@@ -525,10 +525,9 @@ async function insertNote(user: IUser, data: Option, tags: string[], emojis: str
 	}
 
 	if (data.preview) {
-		return Object.assign(insert, {
-			_id: '1',
+		return Object.assign({
 			preview: true
-		}) as INote;
+		}, insert) as INote;
 	}
 
 	// 投稿を作成

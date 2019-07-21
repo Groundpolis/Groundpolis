@@ -343,6 +343,7 @@ export default Vue.extend({
 		},
 
 		clear() {
+			this.preview = null;
 			this.text = '';
 			this.files = [];
 			this.poll = false;
@@ -487,10 +488,8 @@ export default Vue.extend({
 			}).then(data => {
 				if (preview) {
 					this.preview = data.createdNote;
-					this.preview.id = Math.random();
 					return;
 				}
-				this.preview = null;
 				this.clear();
 				this.deleteDraft();
 				this.$emit('posted');
