@@ -2,6 +2,7 @@
 !/.config/example.yml
 !/.config/mongo_initdb_example.js
 /.vscode
+!/.vscode/extensions.json
 /node_modules
 /build
 /built
