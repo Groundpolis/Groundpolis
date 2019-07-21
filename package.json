@@ -5,7 +5,7 @@
 	"codename": "nighthike",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/syuilo/misskey.git"
+		"url": "https://github.com/mei23/misskey.git"
 	},
 	"main": "./index.js",
 	"private": true,

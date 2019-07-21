@@ -21,7 +21,7 @@ export default Vue.extend({
 		return {
 			aboutUrl: `/docs/${lang}/about`,
 			repositoryUrl: 'https://github.com/mei23/misskey/tree/mei-love',
-			feedbackUrl: 'https://github.com/syuilo/misskey/issues/new'
+			feedbackUrl: 'https://github.com/mei23/misskey/issues/new'
 		}
 	}
 });
