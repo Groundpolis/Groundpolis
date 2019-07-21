@@ -60,7 +60,7 @@
 		<input ref="file" type="file" multiple="multiple" tabindex="-1" @change="onChangeFile"/>
 		<div class="dropzone" v-if="draghover"></div>
 	</div>
-	<details v-if="preview" class="preview" open="true">
+	<details v-if="preview" class="preview" ref="preview" :open="$store.state.device.showPostPreview" @toggle="togglePreview">
 		<summary>{{ $t('preview') }}</summary>
 		<mk-note class="note" :note="preview" :key="preview.id" :compact="true" :preview="true" />
 	</details>
@@ -464,6 +464,10 @@ export default Vue.extend({
 			vm.$once('chosen', (emoji: string) => {
 				insertTextAtCursor(this.$refs.text, emoji + String.fromCharCode(0x200B));
 			});
+		},
+
+		togglePreview() {
+			this.$store.commit('device/set', { key: 'showPostPreview', value: this.$refs.preview.open });
 		},
 
 		doPreview() {
