@@ -14,6 +14,7 @@ export function detectSystem(x: IAnyObject) {
 	if (strs.some(s => s.match('schemas/litepub'))) return 'Pleroma';
 	if (Object.keys(obj).includes('focalPoint')) return 'Mastodon';
 	if (Object.keys(obj).includes('commentsEnabled')) return 'PeerTube';
+	if (Object.keys(obj).includes('diaspora')) return 'Friendica';
 	if (Object.keys(obj).includes('toot')) return 'Mastodon';
 	if (Object.keys(obj).includes('Hashtag')) return 'Misskey';
 
