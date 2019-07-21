@@ -44,9 +44,6 @@
 				<x-visibility-icon :v="visibility" :localOnly="localOnly"/>
 			</button>
 			<div class="text-count" :class="{ over: trimmedLength(text) > maxNoteTextLength }">{{ maxNoteTextLength - trimmedLength(text) }}</div>
-			<ui-button inline :wait="posting" class="submit" :disabled="!canPost" @click="post(null, true)">
-				{{ posting ? $t('posting') : $t('preview') }}<mk-ellipsis v-if="posting"/>
-			</ui-button>
 			<ui-button v-if="tertiaryNoteVisibility != null && tertiaryNoteVisibility != 'none'" inline :wait="posting" class="tertiary" :disabled="!canPost" @click="post(tertiaryNoteVisibility)" title="Tertiary Post">
 				<mk-ellipsis v-if="posting"/>
 				<x-visibility-icon v-else :v="tertiaryNoteVisibility"/>
@@ -63,12 +60,10 @@
 		<input ref="file" type="file" multiple="multiple" tabindex="-1" @change="onChangeFile"/>
 		<div class="dropzone" v-if="draghover"></div>
 	</div>
-	<div v-if="preview" class="preview">
-		<button class="close" @click="preview = null">
-			<fa icon="times"/>
-		</button>
+	<details v-if="preview" class="preview" open="true">
+		<summary>{{ $t('preview') }}</summary>
 		<mk-note class="note" :note="preview" :key="preview.id" :preview="true" />
-	</div>
+	</details>
 </div>
 </template>
 
@@ -118,6 +113,21 @@ export default Vue.extend({
 			required: false,
 			default: false
 		}
+	},
+
+	watch: {
+		text() {
+			this.doPreview();
+		},
+		files() {
+			this.doPreview();
+		},
+		visibility() {
+			this.doPreview();
+		},
+		localOnly() {
+			this.doPreview();
+		},
 	},
 
 	data() {
@@ -454,6 +464,24 @@ export default Vue.extend({
 			vm.$once('chosen', (emoji: string) => {
 				insertTextAtCursor(this.$refs.text, emoji + String.fromCharCode(0x200B));
 			});
+		},
+
+		doPreview() {
+			this.preview = this.canPost ? {
+				id: `${Math.random()}`,
+				createdAt: new Date().toISOString(),
+				userId: this.$store.state.i.id,
+				user: this.$store.state.i,
+				text: this.text == '' ? undefined : this.text,
+				visibility: this.visibility,
+				localOnly: this.localOnly,
+				fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
+				files: this.files || [],
+				replyId: this.reply ? this.reply.id : undefined,
+				reply: this.reply,
+				renoteId: this.renote ? this.renote.id : this.quoteId ? this.quoteId : undefined,
+				renote: this.renote,
+			} : null;
 		},
 
 		post(v: any, preview: boolean) {
@@ -793,15 +821,13 @@ export default Vue.extend({
 		pointer-events none
 
 .preview
-	> .close
-		position absolute
-		top 0
-		right 0
-		z-index 1000
-		padding 4px 8px
-		color var(--primaryAlpha04)
+	background var(--desktopPostFormBg)
+
+	> summary
+		padding 0px 16px 16px 20px
+		font-size 14px
+		color var(--text)
 
 	> .note
 		border-top solid var(--lineWidth) var(--faceDivider)
-		background var(--desktopPostFormBg)
 </style>
