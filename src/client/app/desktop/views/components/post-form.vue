@@ -62,7 +62,7 @@
 	</div>
 	<details v-if="preview" class="preview" open="true">
 		<summary>{{ $t('preview') }}</summary>
-		<mk-note class="note" :note="preview" :key="preview.id" :preview="true" />
+		<mk-note class="note" :note="preview" :key="preview.id" :compact="true" :preview="true" />
 	</details>
 </div>
 </template>
