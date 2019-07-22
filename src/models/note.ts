@@ -14,6 +14,7 @@ import Emoji from './emoji';
 import packEmojis from '../misc/pack-emojis';
 import { dbLogger } from '../db/logger';
 import { unique, concat } from '../prelude/array';
+import { nyaize } from '../misc/nyaize';
 
 const Note = db.get<INote>('notes');
 Note.createIndex('uri', { sparse: true, unique: true });
@@ -419,14 +420,7 @@ export const pack = async (
 	}
 
 	if (_note.user.isCat && _note.text) {
-		_note.text = (_note.text
-			// ja-JP
-			.replace(/な/g, 'にゃ').replace(/ナ/g, 'ニャ').replace(/ﾅ/g, 'ﾆｬ')
-			// ko-KR
-			.replace(/[나-낳]/g, (match: string) => String.fromCharCode(
-				match.codePointAt(0)  + '냐'.charCodeAt(0) - '나'.charCodeAt(0)
-			))
-		);
+		_note.text = nyaize(_note.text);
 	}
 
 	if (!opts.skipHide) {

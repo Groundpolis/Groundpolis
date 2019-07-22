@@ -81,6 +81,7 @@ import { toASCII } from 'punycode';
 import extractMentions from '../../../../../misc/extract-mentions';
 import XPostFormAttaches from '../../../common/views/components/post-form-attaches.vue';
 import XVisibilityIcon from '../../../common/views/components/visibility-icon.vue';
+import { nyaize } from '../../../../../misc/nyaize';
 
 export default Vue.extend({
 	i18n: i18n('desktop/views/components/post-form.vue'),
@@ -476,7 +477,7 @@ export default Vue.extend({
 				createdAt: new Date().toISOString(),
 				userId: this.$store.state.i.id,
 				user: this.$store.state.i,
-				text: this.text == '' ? undefined : this.text,
+				text: this.text === '' ? undefined : this.$store.state.i.isCat ? nyaize(this.text) : this.text,
 				visibility: this.visibility,
 				localOnly: this.localOnly,
 				fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
