@@ -110,6 +110,12 @@ export function toHtml(tokens: MfmForest, mentionedRemoteUsers: INote['mentioned
 			return el;
 		},
 
+		marquee(token) {
+			const el = doc.createElement('div');
+			appendChildren(token.children, el);
+			return el;
+		},
+
 		emoji(token) {
 			return doc.createTextNode(token.node.props.emoji ? token.node.props.emoji : `:${token.node.props.name}:`);
 		},
