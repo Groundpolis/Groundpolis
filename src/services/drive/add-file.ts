@@ -3,7 +3,6 @@ import * as fs from 'fs';
 
 import * as mongodb from 'mongodb';
 import * as crypto from 'crypto';
-import * as Minio from 'minio';
 import * as uuid from 'uuid';
 import * as sharp from 'sharp';
 
@@ -27,6 +26,8 @@ import { contentDisposition } from '../../misc/content-disposition';
 import { detectMine } from '../../misc/detect-mine';
 import { DriveConfig } from '../../config/types';
 import { getDriveConfig } from '../../misc/get-drive-config';
+import * as S3 from 'aws-sdk/clients/s3';
+import { getS3 } from './s3';
 
 const logger = driveLogger.createSubLogger('register', 'yellow');
 
@@ -209,16 +210,21 @@ export async function generateAlts(path: string, type: string, generateWeb: bool
  * Upload to ObjectStorage
  */
 async function upload(key: string, stream: fs.ReadStream | Buffer, type: string, filename: string, drive: DriveConfig) {
-	const minio = new Minio.Client(drive.config);
+	const params = {
+		Bucket: drive.bucket,
+		Key: key,
+		Body: stream,
+		ContentType: type,
+		CacheControl: 'max-age=31536000, immutable',
+	} as S3.PutObjectRequest;
 
-	const metadata = {
-		'Content-Type': type,
-		'Cache-Control': 'max-age=31536000, immutable'
-	} as Minio.ItemBucketMetadata;
+	if (filename) params.ContentDisposition = contentDisposition('inline', filename);
 
-	if (filename) metadata['Content-Disposition'] = contentDisposition('inline', filename);
+	const s3 = getS3(drive);
 
-	await minio.putObject(drive.bucket, key, stream, null, metadata);
+	const upload = s3.upload(params);
+
+	await upload.promise();
 }
 
 /**

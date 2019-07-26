@@ -1,4 +1,3 @@
-import * as Minio from 'minio';
 import DriveFile, { DriveFileChunk, IDriveFile } from '../../models/drive-file';
 import DriveFileThumbnail, { DriveFileThumbnailChunk } from '../../models/drive-file-thumbnail';
 import driveChart from '../../services/chart/drive';
@@ -8,28 +7,38 @@ import DriveFileWebpublic, { DriveFileWebpublicChunk } from '../../models/drive-
 import Instance from '../../models/instance';
 import { isRemoteUser } from '../../models/user';
 import { getDriveConfig } from '../../misc/get-drive-config';
+import { getS3 } from './s3';
 
 export default async function(file: IDriveFile, isExpired = false) {
 	const drive = getDriveConfig(file.metadata && file.metadata.uri != null);
 
 	if (file.metadata.storage == 'minio') {
-		const minio = new Minio.Client(drive.config);
+		const s3 = getS3(drive);
 
 		// 後方互換性のため、file.metadata.storageProps.key があるかどうかチェックしています。
 		// 将来的には const obj = file.metadata.storageProps.key; とします。
 		const obj = file.metadata.storageProps.key ? file.metadata.storageProps.key : `${drive.prefix}/${file.metadata.storageProps.id}`;
-		await minio.removeObject(drive.bucket, obj);
+		await s3.deleteObject({
+			Bucket: drive.bucket,
+			Key: obj
+		}).promise();
 
 		if (file.metadata.thumbnailUrl) {
 			// 後方互換性のため、file.metadata.storageProps.thumbnailKey があるかどうかチェックしています。
 			// 将来的には const thumbnailObj = file.metadata.storageProps.thumbnailKey; とします。
 			const thumbnailObj = file.metadata.storageProps.thumbnailKey ? file.metadata.storageProps.thumbnailKey : `${drive.prefix}/${file.metadata.storageProps.id}-thumbnail`;
-			await minio.removeObject(drive.bucket, thumbnailObj);
+			await s3.deleteObject({
+				Bucket: drive.bucket,
+				Key: thumbnailObj
+			}).promise();
 		}
 
 		if (file.metadata.webpublicUrl) {
 			const webpublicObj = file.metadata.storageProps.webpublicKey ? file.metadata.storageProps.webpublicKey : `${drive.prefix}/${file.metadata.storageProps.id}-original`;
-			await minio.removeObject(drive.bucket, webpublicObj);
+			await s3.deleteObject({
+				Bucket: drive.bucket,
+				Key: webpublicObj
+			}).promise();
 		}
 	}
 

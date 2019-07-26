@@ -51,7 +51,17 @@ export type DriveConfig = {
 	bucket?: string;
 	prefix?: string;
 	baseUrl?: string;
-	config?: any;
+	config?: {
+		endPoint: string;
+		port?: number;
+		useSSL?: boolean;
+		accessKey: string;
+		secretKey: string;
+		region?: string;
+		transport?: string;
+		sessionToken?: string;
+		partSize?: number;
+	};
 };
 
 /**
