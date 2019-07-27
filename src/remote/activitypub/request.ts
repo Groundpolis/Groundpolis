@@ -2,7 +2,7 @@ import * as https from 'https';
 import { sign } from 'http-signature';
 import { URL } from 'url';
 import * as crypto from 'crypto';
-const cache = require('lookup-dns-cache');
+import * as cache from 'lookup-dns-cache';
 
 import config from '../../config';
 import { ILocalUser } from '../../models/user';
@@ -17,10 +17,7 @@ export const logger = apLogger.createSubLogger('deliver');
 const agent = config.proxy
 	? new httpsProxyAgent(config.proxy)
 	: new https.Agent({
-			lookup:
-				config.outgoingAddressFamily === 'ipv6' ? lookup6 :
-				config.outgoingAddressFamily === 'dual' ? cache.lookup :
-				lookup4
+			lookup: cache.lookup,
 		});
 
 export default async (user: ILocalUser, url: string, object: any) => {
@@ -103,11 +100,3 @@ export default async (user: ILocalUser, url: string, object: any) => {
 	});
 	//#endregion
 };
-
-async function lookup4(domain: string, options: {}, callback: Function) {
-	return cache.lookup(domain, Object.assign(options, { family: 4 }), callback);
-}
-
-async function lookup6(domain: string, options: {}, callback: Function) {
-	return cache.lookup(domain, Object.assign(options, { family: 6 }), callback);
-}
