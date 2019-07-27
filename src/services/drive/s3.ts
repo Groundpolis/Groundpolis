@@ -1,11 +1,14 @@
 import * as S3 from 'aws-sdk/clients/s3';
-import * as https from 'https';
 import { DriveConfig } from '../../config/types';
 import config from '../../config';
+import * as httpsProxyAgent from 'https-proxy-agent';
+import * as agentkeepalive from 'agentkeepalive';
 
-const httpsAgent = new https.Agent({
-	keepAlive: true
-});
+const httpsAgent = config.proxy
+	? new httpsProxyAgent(config.proxy)
+	: new agentkeepalive.HttpsAgent({
+			freeSocketTimeout: 30 * 1000
+		});
 
 export function getS3(drive: DriveConfig) {
 	const conf = {
@@ -17,10 +20,6 @@ export function getS3(drive: DriveConfig) {
 		httpOptions: {
 		}
 	} as S3.ClientConfiguration;
-
-	if (config.proxy) {
-		conf.httpOptions.proxy = config.proxy;
-	}
 
 	if (drive.config.useSSL) {
 		conf.httpOptions.agent = httpsAgent;
