@@ -88,7 +88,12 @@ export default Vue.extend({
 					icon: ['far', 'trash-alt'],
 					text: this.$t('delete'),
 					action: this.del
-				}]
+				},
+				this.note.userId == this.$store.state.i.id ? {
+					icon: ['fal', 'undo-alt'],
+					text: this.$t('delete-and-edit'),
+					action: this.deleteAndEdit
+				} : undefined]
 				: []
 			)]
 			.filter(x => x !== undefined)
@@ -167,6 +172,25 @@ export default Vue.extend({
 					noteId: this.note.id
 				}).then(() => {
 					this.destroyDom();
+				});
+			});
+		},
+
+		deleteAndEdit() {
+			this.$root.dialog({
+				type: 'warning',
+				text: this.$t('delete-and-edit-confirm'),
+				showCancelButton: true
+			}).then(({ canceled }) => {
+				if (canceled) return;
+				this.$root.api('notes/delete', {
+					noteId: this.note.id
+				}).then(() => {
+					this.destroyDom();
+				});
+				this.$post({
+					initialNote: this.note,
+					reply: this.note.reply,
 				});
 			});
 		},

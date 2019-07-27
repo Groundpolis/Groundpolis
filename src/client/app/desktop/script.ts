@@ -63,7 +63,10 @@ init(async (launch, os) => {
 					const vm = this.$root.new(PostFormWindow, {
 						reply: o.reply,
 						mention: o.mention,
-						animation: o.animation == null ? true : o.animation
+						animation: o.animation == null ? true : o.animation,
+						initialText: o.initialText,
+						instant: o.instant,
+						initialNote: o.initialNote
 					});
 					if (o.cb) vm.$once('closed', o.cb);
 				}

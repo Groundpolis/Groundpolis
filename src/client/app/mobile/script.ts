@@ -58,7 +58,10 @@ init((launch, os) => {
 				const vm = this.$root.new(PostForm, {
 					reply: o.reply,
 					mention: o.mention,
-					renote: o.renote
+					renote: o.renote,
+					initialText: o.initialText,
+					instant: o.instant,
+					initialNote: o.initialNote,
 				});
 
 				vm.$once('cancel', recover);
