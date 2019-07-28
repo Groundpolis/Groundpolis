@@ -242,32 +242,39 @@ export default Vue.extend({
 		this.focus();
 
 		this.$nextTick(() => {
-			this.focus();
-		});
-
-		if (this.initialNote) {
-			// 削除して編集
-			const init = this.initialNote;
-			this.text = init.text ? init.text : '';
-			this.files = init.files;
-			this.cw = init.cw;
-			this.useCw = init.cw != null;
-			if (init.poll) {
-				this.poll = true;
-				this.$nextTick(() => {
-					(this.$refs.poll as any).set({
-						choices: init.poll.choices.map(c => c.text),
-						multiple: init.poll.multiple
+			if (this.initialNote) {
+				// 削除して編集
+				const init = this.initialNote;
+				this.text =
+					this.normalizedText(this.initialText) ||
+					this.normalizedText(this.text) ||
+					this.normalizedText(init.text) || '';
+				this.files = init.files;
+				this.cw = init.cw;
+				this.useCw = init.cw != null;
+				if (init.poll) {
+					this.poll = true;
+					this.$nextTick(() => {
+						(this.$refs.poll as any).set({
+							choices: init.poll.choices.map(c => c.text),
+							multiple: init.poll.multiple
+						});
 					});
-				});
+				}
+				this.visibility = init.visibility;
+				this.localOnly = init.localOnly;
+				this.quoteId = init.renote ? init.renote.id : null;
 			}
-			this.visibility = init.visibility;
-			this.localOnly = init.localOnly;
-			this.quoteId = init.renote ? init.renote.id : null;
-		}
+			
+			this.$nextTick(this.focus);
+		});
 	},
 
 	methods: {
+		normalizedText(maybeText?: string | null) {
+			return typeof maybeText === 'string' && this.trimmedLength(maybeText) ? maybeText : null;
+		},
+
 		trimmedLength(text: string) {
 			return length(text.trim());
 		},
