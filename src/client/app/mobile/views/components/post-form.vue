@@ -96,6 +96,10 @@ export default Vue.extend({
 			type: String,
 			required: false
 		},
+		initialNote: {
+			type: Object,
+			required: false
+		},
 		instant: {
 			type: Boolean,
 			required: false,
@@ -240,6 +244,27 @@ export default Vue.extend({
 		this.$nextTick(() => {
 			this.focus();
 		});
+
+		if (this.initialNote) {
+			// 削除して編集
+			const init = this.initialNote;
+			this.text = init.text ? init.text : '';
+			this.files = init.files;
+			this.cw = init.cw;
+			this.useCw = init.cw != null;
+			if (init.poll) {
+				this.poll = true;
+				this.$nextTick(() => {
+					(this.$refs.poll as any).set({
+						choices: init.poll.choices.map(c => c.text),
+						multiple: init.poll.multiple
+					});
+				});
+			}
+			this.visibility = init.visibility;
+			this.localOnly = init.localOnly;
+			this.quoteId = init.renote ? init.renote.id : null;
+		}
 	},
 
 	methods: {
