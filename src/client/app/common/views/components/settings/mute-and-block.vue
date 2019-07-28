@@ -6,10 +6,13 @@
 		<header>{{ $t('mute') }}</header>
 		<ui-info v-if="!muteFetching && mute.length == 0">{{ $t('no-muted-users') }}</ui-info>
 		<div class="users" v-if="mute.length != 0">
-			<div v-for="user in mute" :key="user.id">
+			<div class="user" v-for="user in mute" :key="user.id">
 				<router-link class="name" :to="user | userPage" v-user-preview="user.id">
 					<b><mk-user-name :user="user"/></b> @{{ user | acct }}
 				</router-link>
+				<span @click="unmute(user)">
+					<fa icon="times"/>
+				</span>
 			</div>
 		</div>
 	</section>
@@ -18,10 +21,13 @@
 		<header>{{ $t('block') }}</header>
 		<ui-info v-if="!blockFetching && block.length == 0">{{ $t('no-blocked-users') }}</ui-info>
 		<div class="users" v-if="block.length != 0">
-			<div v-for="user in block" :key="user.id">
+			<div class="user" v-for="user in block" :key="user.id">
 				<router-link class="name" :to="user | userPage" v-user-preview="user.id">
 					<b><mk-user-name :user="user"/></b> @{{ user | acct }}
 				</router-link>
+				<span @click="unblock(user)">
+					<fa icon="times"/>
+				</span>
 			</div>
 		</div>
 	</section>
@@ -63,21 +69,69 @@ export default Vue.extend({
 	mounted() {
 		this.mutedWords = this._mutedWords.map(words => words.join(' ')).join('\n');
 
-		this.$root.api('mute/list').then(mute => {
-			this.mute = mute.map(x => x.mutee);
-			this.muteFetching = false;
-		});
-
-		this.$root.api('blocking/list').then(blocking => {
-			this.block = blocking.map(x => x.blockee);
-			this.blockFetching = false;
-		});
+		this.updateMute();
+		this.updateBlock();
 	},
 
 	methods: {
 		save() {
 			this._mutedWords = this.mutedWords.split('\n').map(line => line.split(' ').filter(x => x != ''));
+		},
+		unmute(user) {
+			this.$root.dialog({
+				type: 'warning',
+				text: this.$t('unmute-confirm'),
+				showCancelButton: true
+			}).then(({ canceled }) => {
+				if (canceled) return;
+				this.$root.api('mute/delete', {
+					userId: user.id
+				});
+				this.updateMute();
+			});
+		},
+		unblock(user) {
+			this.$root.dialog({
+				type: 'warning',
+				text: this.$t('unblock-confirm'),
+				showCancelButton: true
+			}).then(({ canceled }) => {
+				if (canceled) return;
+				this.$root.api('blocking/delete', {
+					userId: user.id
+				});
+				this.updateMute();
+			});
+		},
+		updateMute() {
+			this.muteFetching = true;
+			this.$root.api('mute/list').then(mute => {
+				this.mute = mute.map(x => x.mutee);
+				this.muteFetching = false;
+			});
+		},
+		updateBlock() {
+			this.blockFetching = true;
+			this.$root.api('blocking/list').then(blocking => {
+				this.block = blocking.map(x => x.blockee);
+				this.blockFetching = false;
+			});
 		}
 	}
 });
 </script>
+
+<style lang="stylus" scoped>
+	.users
+		.user
+			display flex
+			align-items center
+			justify-content flex-end
+			span
+				margin-left auto
+				cursor pointer
+			span:hover
+				text-decoration underline
+
+</style>
+
