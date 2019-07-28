@@ -70,7 +70,7 @@ export const mfmLanguage = P.createLanguage({
 	marquee: r => {
 		return P((input, i) => {
 			const text = input.substr(i);
-			const match = text.match(/^<marquee(\s[a-z]+?)?>(.+?)<\/marquee>/i);
+			const match = text.match(/^<marquee(\s[a-z-]+?)?>(.+?)<\/marquee>/i);
 			if (!match) return P.makeFailure(i, 'not a marquee');
 			return P.makeSuccess(i + match[0].length, {
 				content: match[2], attr: match[1] ? match[1].trim() : null

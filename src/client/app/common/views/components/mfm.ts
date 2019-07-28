@@ -358,14 +358,35 @@ export default Vue.component('misskey-flavored-markdown', {
 				}
 
 				case 'marquee': {
-					//const MkGoogle = () => import('./google.vue').then(m => m.default);
 					if (this.$store.state.settings.disableAnimatedMfm) {
 						return genEl(token.children);
 					}
 
-					return [createElement('div', { class: 'marquee' }, [
-						createElement('div', { class: 'marquee-inner' }, genEl(token.children)),
-					])];
+					let behavior = 'scroll';
+					let direction = 'left';
+					let scrollamount = '5';
+
+					if (token.node.props.attr === 'reverse') {
+						direction = 'right';
+					} else if (token.node.props.attr === 'alternate') {
+						behavior = 'alternate';
+						scrollamount = '10';
+					} else if (token.node.props.attr === 'slide') {
+						behavior = 'slide';
+					} else if (token.node.props.attr === 'reverse-slide') {
+						direction = 'right';
+						behavior = 'slide';
+					}
+
+					return [createElement('marquee', {
+							attrs: {
+								behavior,
+								direction,
+								scrolldelay: '60',
+								scrollamount,
+							}
+						}, genEl(token.children)),
+					];
 				}
 
 				default: {
