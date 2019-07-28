@@ -222,6 +222,7 @@ export default Vue.extend({
 		},
 
 		addWidget() {
+			if (this.widgetAdderSelected == null) return;
 			this.$store.dispatch('settings/addHomeWidget', {
 				name: this.widgetAdderSelected,
 				id: uuid(),

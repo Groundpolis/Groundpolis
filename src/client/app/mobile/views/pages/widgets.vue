@@ -115,6 +115,7 @@ export default Vue.extend({
 		},
 
 		addWidget() {
+			if (this.widgetAdderSelected == null) return;
 			this.$store.dispatch('settings/addMobileHomeWidget', {
 				name: this.widgetAdderSelected,
 				id: uuid(),
