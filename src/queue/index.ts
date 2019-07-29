@@ -10,6 +10,7 @@ import processInbox from './processors/inbox';
 import processDb from './processors/db';
 import { queueLogger } from './logger';
 import { IDriveFile } from '../models/drive-file';
+import { INote } from '../models/note';
 
 function initializeQueue(name: string) {
 	return new Queue(name, config.redis != null ? {
@@ -96,6 +97,16 @@ export function createDeleteDriveFilesJob(user: ILocalUser) {
 	return dbQueue.add('deleteDriveFiles', {
 		user: user
 	}, {
+		removeOnComplete: true,
+		removeOnFail: true
+	});
+}
+
+export function createDeleteNoteJob(note: INote, delay: number) {
+	return dbQueue.add('deleteNote', {
+		noteId: note._id
+	}, {
+		delay,
 		removeOnComplete: true,
 		removeOnFail: true
 	});

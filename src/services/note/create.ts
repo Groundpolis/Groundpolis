@@ -3,7 +3,7 @@ import Note, { pack, INote, IChoice } from '../../models/note';
 import User, { isLocalUser, IUser, isRemoteUser, IRemoteUser, ILocalUser } from '../../models/user';
 import { publishMainStream, publishHomeTimelineStream, publishLocalTimelineStream, publishHybridTimelineStream, publishGlobalTimelineStream, publishUserListStream, publishHashtagStream, publishNoteStream } from '../stream';
 import Following from '../../models/following';
-import { deliver } from '../../queue';
+import { deliver, createDeleteNoteJob } from '../../queue';
 import renderNote from '../../remote/activitypub/renderer/note';
 import renderCreate from '../../remote/activitypub/renderer/create';
 import renderAnnounce from '../../remote/activitypub/renderer/announce';
@@ -236,6 +236,10 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 		return;
 	}
 
+	if (isLocalUser(user)) {
+		queueDelete(note, tags);
+	}
+
 	// 統計を更新
 	notesChart.update(note, true);
 	perUserNotesChart.update(user, note, true);
@@ -385,6 +389,19 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 	// Register to search database
 	index(note);
 });
+
+async function queueDelete(note: INote, tags: string[]) {
+	for (const tag of tags) {
+		const m = tag.match(/^exp(\d{1,5})([smh])$/);
+		if (!m) continue;
+
+		let delay = 1000 * Number(m[1]) * (m[2] === 'm' ? 60 : m[2] === 'h' ? 3600 : 1);
+		if (delay > 86400) delay = 86400;
+
+		await createDeleteNoteJob(note, delay);
+		break;
+	}
+}
 
 async function renderNoteOrRenoteActivity(data: Option, note: INote, user: IUser) {
 	if (data.localOnly) return null;

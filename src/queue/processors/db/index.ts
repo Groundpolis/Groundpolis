@@ -1,6 +1,7 @@
 import * as Bull from 'bull';
 import { deleteNotes } from './delete-notes';
 import { deleteDriveFiles } from './delete-drive-files';
+import { deleteNote } from './delete-note';
 import { exportNotes } from './export-notes';
 import { exportFollowing } from './export-following';
 import { exportMute } from './export-mute';
@@ -12,6 +13,7 @@ import { importUserLists } from './import-user-lists';
 const jobs = {
 	deleteNotes,
 	deleteDriveFiles,
+	deleteNote,
 	exportNotes,
 	exportFollowing,
 	exportMute,
