@@ -18,6 +18,7 @@
 				<a v-for="tag in recentHashtags.slice(0, 5)" @click="addTag(tag)" :title="$t('click-to-tagging')">#{{ tag }}</a>
 			</div>
 			<div class="local-only" v-if="localOnly == true">{{ $t('local-only-message') }}</div>
+			<div class="local-only-remote" v-if="isUnreachable">ローカルのみでリモートリプライしてもとどきません</div>
 			<input v-show="useCw" ref="cw" v-model="cw" :placeholder="$t('annotations')" v-autocomplete="{ model: 'cw' }">
 			<div class="textarea">
 				<textarea :class="{ with: (files.length != 0 || poll) }"
@@ -196,6 +197,11 @@ export default Vue.extend({
 				: this.reply
 					? this.$t('reply')
 					: this.$t('submit');
+		},
+
+		isUnreachable(): boolean {
+			const toRemote = this.reply && this.reply.user.host != null;
+			return this.localOnly && toRemote;
 		},
 
 		canPost(): boolean {
@@ -745,7 +751,7 @@ export default Vue.extend({
 				margin-right 8px
 				white-space nowrap
 
-		> .local-only
+		> .local-only, .local-only-remote
 			margin 0 0 8px 0
 			color var(--primary)
 
