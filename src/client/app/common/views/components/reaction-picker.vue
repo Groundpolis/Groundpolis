@@ -135,8 +135,9 @@ export default Vue.extend({
 
 		reactText() {
 			if (!this.text) return;
-			if (this.text.match(emojiRegex)) {
-				localStorage.setItem('recentReaction', this.text);
+			const m = this.text.match(emojiRegex);
+			if (m) {
+				localStorage.setItem('recentReaction', m[1]);
 			}
 			this.react(this.text);
 		},
