@@ -396,6 +396,7 @@ async function queueDelete(note: INote, tags: string[]) {
 		if (!m) continue;
 
 		let delay = 1000 * Number(m[1]) * (m[2] === 'm' ? 60 : m[2] === 'h' ? 3600 : 1);
+		if (delay < 5) delay = 5;
 		if (delay > 86400) delay = 86400;
 
 		await createDeleteNoteJob(note, delay);
