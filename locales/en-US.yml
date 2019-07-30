@@ -197,6 +197,8 @@ common:
     sound: "Sound"
     enable-sounds: "Enable sounds"
     enable-sounds-desc: "Play a sound when you receive a post/message. This setting is stored in the browser."
+    enable-speech: "Enable speech"
+    enable-speech-desc: "Speech when a post arrives. This setting is stored in the browser."
     volume: "Volume"
     test: "Test"
     update: "Misskey Update"
