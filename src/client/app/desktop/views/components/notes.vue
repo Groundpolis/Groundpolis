@@ -189,11 +189,14 @@ export default Vue.extend({
 				const name = getSpeechName(note);
 				const nameUttr = new SpeechSynthesisUtterance(name);
 				nameUttr.pitch = 2;
-				speechSynthesis.speak(nameUttr);
 
 				const text = getSpeechText(note);
 				const textUttr = new SpeechSynthesisUtterance(text);
-				speechSynthesis.speak(textUttr);
+
+				if (getSpeechText) {
+					speechSynthesis.speak(nameUttr);
+					speechSynthesis.speak(textUttr);
+				}
 			}
 		},
 
