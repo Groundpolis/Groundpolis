@@ -1,5 +1,16 @@
+import { emojiRegex } from './emoji-regex';
+
 export const getSpeechName = (note: any): string => {
-	if (note.user.name) return `${note.user.name} さん`;
+	if (note.user.name) {
+		let name = note.user.name;
+		name = name.replace(new RegExp(emojiRegex.source, 'g'), '@');
+		name = name.replace(/:\w+:/g, '@');
+		name = name.replace(/＠/g, '@');
+		name = name.replace(/^@+/, '');
+		name = name.replace(/@.*/, '');
+		return `${name} さん`;
+	}
+
 	if (note.user.username) return `${note.user.username} さん`;
 	return '';
 };

@@ -116,7 +116,7 @@ async function fetchAny(uri: string) {
 	}
 
 	if (isNote(object)) {
-		const note = await createNote(object.id, null, true);
+		const note = await createNote(object.id, null, false);
 		return {
 			type: 'Note',
 			object: await packNote(note, null, { detail: true })
