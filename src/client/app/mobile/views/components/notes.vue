@@ -202,7 +202,7 @@ export default Vue.extend({
 				this.queue.push(note);
 			}
 
-			if (this.$store.state.device.enableSpeech && (note.cw || note.text)) {
+			if (this.$store.state.device.enableSpeech && (note.cw || note.text) && !silent) {
 				const text = getNoteSummary(note)
 				const uttr = new SpeechSynthesisUtterance(text);
 				speechSynthesis.speak(uttr);
