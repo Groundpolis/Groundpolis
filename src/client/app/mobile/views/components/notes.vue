@@ -41,7 +41,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import i18n from '../../../i18n';
-import shouldMuteNote from '../../../common/scripts/should-mute-note';
+import { shouldMuteNote } from '../../../common/scripts/should-mute-note';
 import { getSpeechName, getSpeechText } from '../../../../../misc/get-note-speech';
 
 const displayLimit = 30;

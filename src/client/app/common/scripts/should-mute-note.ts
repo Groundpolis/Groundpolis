@@ -1,6 +1,6 @@
 import { INote } from '../../../../models/note';
 
-export default function(me, settings, note) {
+export function shouldMuteNote(me, settings, note) {
 	const isMyNote = me && (note.userId == me.id);
 	const isPureRenote = note.renoteId != null && note.text == null && note.fileIds.length == 0 && note.poll == null;
 
