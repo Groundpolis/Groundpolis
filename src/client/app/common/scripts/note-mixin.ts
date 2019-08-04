@@ -3,6 +3,7 @@ import { sum, unique } from '../../../../prelude/array';
 import { shouldMuteNote } from './should-mute-note';
 import MkNoteMenu from '../views/components/note-menu.vue';
 import MkReactionPicker from '../views/components/reaction-picker.vue';
+import i18n from '../../i18n';
 
 function focus(el, fn) {
 	const target = fn(el);
@@ -20,6 +21,8 @@ type Opts = {
 };
 
 export default (opts: Opts = {}) => ({
+	i18n: i18n(),
+
 	data() {
 		return {
 			showContent: false,
@@ -176,8 +179,16 @@ export default (opts: Opts = {}) => ({
 		},
 
 		del() {
-			this.$root.api('notes/delete', {
-				noteId: this.appearNote.id
+			this.$root.dialog({
+				type: 'warning',
+				text: this.$t('@.delete-confirm'),
+				showCancelButton: true
+			}).then(({ canceled }) => {
+				if (canceled) return;
+
+				this.$root.api('notes/delete', {
+					noteId: this.appearNote.id
+				});
 			});
 		},
 
