@@ -65,6 +65,9 @@
 				<ui-input v-model="searchHost" type="text" spellcheck="false" @input="fetchUsers(true)" :disabled="origin === 'local'">
 					<span>{{ $t('host') }}</span>
 				</ui-input>
+				<ui-input v-model="searchDescription" type="text" spellcheck="false" @input="fetchUsers(true)">
+					<span>{{ $t('description') }}</span>
+				</ui-input>
 			</ui-horizon-group>
 			<sequential-entrance animation="entranceFromTop" delay="25">
 				<x-user v-for="user in users" :key="user.id" :user='user' :click="showUserOnClick"/>
@@ -101,6 +104,7 @@ export default Vue.extend({
 			origin: 'local',
 			searchUsername: '',
 			searchHost: '',
+			searchDescription: '',
 			limit: 10,
 			offset: 0,
 			users: [],
@@ -374,7 +378,8 @@ export default Vue.extend({
 				offset: this.offset,
 				limit: this.limit + 1,
 				username: this.searchUsername,
-				hostname: this.searchHost
+				hostname: this.searchHost,
+				description: this.searchDescription
 			}).then(users => {
 				if (users.length == this.limit + 1) {
 					users.pop();

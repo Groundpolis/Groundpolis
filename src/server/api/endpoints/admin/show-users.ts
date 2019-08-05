@@ -61,6 +61,10 @@ export const meta = {
 
 		hostname: {
 			validator: $.optional.str
+		},
+
+		description: {
+			validator: $.optional.str
 		}
 	}
 };
@@ -110,6 +114,10 @@ export default define(meta, async (ps, me) => {
 
 	if (ps.hostname) {
 		q.host = new RegExp(escapeRegexp(toDbHost(ps.hostname)));
+	}
+
+	if (ps.description) {
+		q.description = new RegExp(escapeRegexp(ps.description), 'i');
 	}
 
 	const users = await User
