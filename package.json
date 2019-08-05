@@ -1,7 +1,7 @@
 {
 	"name": "misskey",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "10.102.4-20190801044326",
+	"version": "10.102.4-20190806032640",
 	"codename": "nighthike",
 	"repository": {
 		"type": "git",
