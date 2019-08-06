@@ -30,7 +30,7 @@
 					@click="chosen(`:${emoji.name}:`)"
 					:key="emoji.name"
 				>
-					<img :src="emoji.url"/>
+					<img :src="$store.state.device.disableShowingAnimatedImages ? getStaticImageUrl(emoji.url) : emoji.url"/>
 				</button>
 			</div>
 			
@@ -41,7 +41,7 @@
 					@click="chosen(`:${emoji.name}:`)"
 					:key="emoji.name"
 				>
-					<img :src="emoji.url"/>
+					<img :src="$store.state.device.disableShowingAnimatedImages ? getStaticImageUrl(emoji.url) : emoji.url"/>
 				</button>
 			</div>
 		</template>
@@ -53,6 +53,7 @@
 import Vue from 'vue';
 import i18n from '../../../i18n';
 import { lib } from 'emojilib';
+import { getStaticImageUrl } from '../../../common/scripts/get-static-image-url';
 import { faAsterisk, faLeaf, faUtensils, faFutbol, faCity, faDice } from '@fortawesome/free-solid-svg-icons';
 import { faHeart, faFlag } from '@fortawesome/free-regular-svg-icons';
 
@@ -70,6 +71,7 @@ export default Vue.extend({
 	data() {
 		return {
 			lib,
+			getStaticImageUrl,
 			customEmojis: [],
 			remoteEmojis: [],
 			categories: [{
