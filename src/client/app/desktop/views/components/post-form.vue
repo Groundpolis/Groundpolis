@@ -563,6 +563,13 @@ export default Vue.extend({
 					this.preview = data.createdNote;
 					return;
 				}
+
+				if (this.initialNote && this.initialNote._edit) {
+					this.$root.api('notes/delete', {
+						noteId: this.initialNote.id
+					});
+				}
+
 				this.clear();
 				this.deleteDraft();
 				this.$emit('posted');

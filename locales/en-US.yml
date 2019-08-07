@@ -488,6 +488,8 @@ common/views/components/note-menu.vue:
   unpin: "Unpin"
   delete: "Delete"
   delete-confirm: "Are you sure you want to delete this post?"
+  edit: "Edit"
+  edit-confirm: "Are you sure you want to edit this post? You will lose all reactions, renotes and replies to it."
   delete-and-edit: "Delete and edit"
   delete-and-edit-confirm: "Are you sure you want to delete this post for editing? The reactions and renotes are also deleted."
   remote: "Show original note"

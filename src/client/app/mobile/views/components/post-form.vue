@@ -406,6 +406,12 @@ export default Vue.extend({
 				localOnly,
 				viaMobile: viaMobile
 			}).then(data => {
+				if (this.initialNote && this.initialNote._edit) {
+					this.$root.api('notes/delete', {
+						noteId: this.initialNote.id
+					});
+				}
+
 				this.$emit('posted');
 			}).catch(err => {
 				this.posting = false;
