@@ -291,7 +291,6 @@ export async function extractEmojis(tags: IObject | IObject[], host_: string) {
 				if ((tag.updated != null && exists.updatedAt == null)
 					|| (tag.id != null && exists.uri == null)
 					|| (exists.url != tag.icon.url)
-					|| (exists.updatedAt != null && Date.now() - exists.updatedAt.getTime() > 7 * 86400 * 1000)
 					|| (tag.updated != null && exists.updatedAt != null && new Date(tag.updated) > exists.updatedAt)) {
 						logger.info(`update emoji host=${host}, name=${name}`);
 						return await Emoji.findOneAndUpdate({
