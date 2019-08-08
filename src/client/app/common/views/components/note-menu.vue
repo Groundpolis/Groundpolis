@@ -90,7 +90,7 @@ export default Vue.extend({
 					action: this.del
 				},
 				this.note.userId == this.$store.state.i.id ? {
-					icon: ['fal', 'undo-alt'],
+					icon: ['fa', 'undo-alt'],
 					text: this.$t('delete-and-edit'),
 					action: this.deleteAndEdit
 				} : undefined]
