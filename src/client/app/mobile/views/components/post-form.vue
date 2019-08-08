@@ -265,7 +265,7 @@ export default Vue.extend({
 				this.localOnly = init.localOnly;
 				this.quoteId = init.renote ? init.renote.id : null;
 			}
-			
+
 			this.$nextTick(this.focus);
 		});
 	},
