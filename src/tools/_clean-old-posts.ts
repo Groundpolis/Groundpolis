@@ -5,7 +5,7 @@ import Favorite from '../models/favorite';
 import { concat } from '../prelude/array';
 
 async function main() {
-	const id = new ObjectID('f00000000000000000000000');
+	const id = new ObjectID('700000000000000000000000');
 
 	// favs
 	const favs = await Favorite.find({
