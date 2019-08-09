@@ -37,7 +37,7 @@ async function main() {
 			(user.pinnedNoteIds || [])
 		]);
 
-		const result = await Note.remove({
+		const notes = await Note.find({
 			$and: [
 				{
 					userId: user._id
@@ -67,19 +67,21 @@ async function main() {
 					replyId: null,
 				},
 				{
-					renoteId: null,
+					renoteId: { $ne: null },
 				},
 			],
 		});
 
-		console.log(`  deleted count:${result.deletedCount}`);
-
-		/*
 		for (const note of notes) {
-			//console.log(JSON.stringify(note, null, 2));
 			console.log(`${note._id}`);
+			await Note.update({ _id: note.renoteId }, {
+				$inc: {
+					renoteCount: -1
+				}
+			});
+
+			await Note.remove({ _id: note._id });
 		}
-		*/
 	}
 }
 
