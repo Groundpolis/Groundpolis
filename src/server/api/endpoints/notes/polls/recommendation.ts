@@ -1,3 +1,4 @@
+import * as mongo from 'mongodb';
 import $ from 'cafy';
 import Vote from '../../../../../models/poll-vote';
 import Note, { pack } from '../../../../../models/note';
@@ -28,7 +29,7 @@ export const meta = {
 };
 
 export default define(meta, async (ps, user) => {
-	// Get votes
+	// voted
 	const votes = await Vote.find({
 		userId: user._id
 	}, {
@@ -40,16 +41,19 @@ export default define(meta, async (ps, user) => {
 
 	const nin = votes && votes.length != 0 ? votes.map(v => v.noteId) : [];
 
+	const nonVoted = await Vote.distinct('noteId', {
+		noteId: { $nin: nin },
+		createdAt: { $gte: new Date(Date.now() - (1000 * 86400 * 180)) }
+	}) as any as mongo.ObjectID[];
+
 	// 隠すユーザーを取得
 	const hideUserIds = await getHideUserIds(user);
 
 	const notes = await Note.find({
-		'_user.host': null,
 		_id: {
-			$nin: nin
+			$in: nonVoted
 		},
 		userId: {
-			$ne: user._id,
 			$nin: hideUserIds
 		},
 		visibility: 'public',
