@@ -9,8 +9,8 @@
 	<!-- トランジションを有効にするとなぜかメモリリークする -->
 	<component :is="!$store.state.device.reduceMotion ? 'transition-group' : 'div'" name="mk-notifications" class="transition notifications" tag="div">
 		<template v-for="(notification, i) in _notifications">
-			<x-notification class="notification" :notification="notification" :key="notification.id"/>
-			<p class="date" v-if="i != notifications.length - 1 && notification._date != _notifications[i + 1]._date" :key="notification.id + '-time'">
+			<x-notification v-if="notification" class="notification" :notification="notification" :key="notification.id"/>
+			<p class="date" v-if="i != notifications.length - 1 && notification && _notifications[i + 1] && notification._date != _notifications[i + 1]._date" :key="notification.id + '-time'">
 				<span><fa icon="angle-up"/>{{ notification._datetext }}</span>
 				<span><fa icon="angle-down"/>{{ _notifications[i + 1]._datetext }}</span>
 			</p>
@@ -53,6 +53,7 @@ export default Vue.extend({
 	computed: {
 		_notifications(): any[] {
 			return (this.notifications as any).map(notification => {
+				if (notification == null) return null;
 				const date = new Date(notification.createdAt).getDate();
 				const month = new Date(notification.createdAt).getMonth() + 1;
 				notification._date = date;
@@ -104,9 +105,11 @@ export default Vue.extend({
 
 			const max = 20;
 
+			const last = this.notifications.filter(x => x).pop();
+
 			this.$root.api('i/notifications', {
 				limit: max + 1,
-				untilId: this.notifications[this.notifications.length - 1].id
+				untilId: last.id
 			}).then(notifications => {
 				if (notifications.length == max + 1) {
 					this.moreNotifications = true;
