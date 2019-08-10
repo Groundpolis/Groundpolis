@@ -18,7 +18,7 @@
 		</div>
 	</div>
 
-	<div class="notification renote" v-if="notification.type == 'renote'">
+	<div class="notification renote" v-if="notification.type == 'renote' && notification.note">
 		<mk-avatar class="avatar" :user="notification.user"/>
 		<div>
 			<header>
@@ -28,7 +28,7 @@
 				</router-link>
 				<mk-time :time="notification.createdAt"/>
 			</header>
-			<router-link class="note-ref" :to="notification.note | notePage" :title="getNoteSummary(notification.note.renote)">
+			<router-link v-if="notification.note.renote" class="note-ref" :to="notification.note | notePage" :title="getNoteSummary(notification.note.renote)">
 				<fa icon="quote-left"/>
 					<mfm :text="getNoteSummary(notification.note.renote)" :plain="true" :nowrap="true" :custom-emojis="notification.note.renote.emojis"/>
 				<fa icon="quote-right"/>
