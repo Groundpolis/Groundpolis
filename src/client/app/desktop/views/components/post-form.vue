@@ -83,6 +83,7 @@ import extractMentions from '../../../../../misc/extract-mentions';
 import XPostFormAttaches from '../../../common/views/components/post-form-attaches.vue';
 import XVisibilityIcon from '../../../common/views/components/visibility-icon.vue';
 import { nyaize } from '../../../../../misc/nyaize';
+import * as config from '../../../config';
 
 export default Vue.extend({
 	i18n: i18n('desktop/views/components/post-form.vue'),
@@ -525,7 +526,7 @@ export default Vue.extend({
 					return {
 						name: `${m2[1]}@${m2[2]}`,
 						host: m2[2],
-						url: `/files/${m2[1]}@${m2[2]}/${Math.floor(Date.now() / 1000 / 3600)}.png`
+						url: `${config.url}/files/${m2[1]}@${m2[2]}/${Math.floor(Date.now() / 1000 / 3600)}.png`
 					}
 				});
 				const emojis = concat([localEmojis, remoteEmojis]);
