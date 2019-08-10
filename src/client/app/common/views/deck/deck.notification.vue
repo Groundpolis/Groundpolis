@@ -4,8 +4,8 @@
 		<mk-avatar class="avatar" :user="notification.user"/>
 		<div>
 			<header>
-				<mk-reaction-icon :reaction="notification.reaction"/>
-				<router-link :to="notification.user | userPage">
+				<mk-reaction-icon :reaction="notification.reaction" class="icon"/>
+				<router-link :to="notification.user | userPage" class="name">
 					<mk-user-name :user="notification.user"/>
 				</router-link>
 				<mk-time :time="notification.createdAt"/>
@@ -18,17 +18,17 @@
 		</div>
 	</div>
 
-	<div class="notification renote" v-if="notification.type == 'renote' && notification.note">
+	<div class="notification renote" v-if="notification.type == 'renote'">
 		<mk-avatar class="avatar" :user="notification.user"/>
 		<div>
 			<header>
-				<fa icon="retweet"/>
-				<router-link :to="notification.user | userPage">
+				<fa icon="retweet" class="icon"/>
+				<router-link :to="notification.user | userPage" class="name">
 					<mk-user-name :user="notification.user"/>
 				</router-link>
 				<mk-time :time="notification.createdAt"/>
 			</header>
-			<router-link v-if="notification.note.renote" class="note-ref" :to="notification.note | notePage" :title="getNoteSummary(notification.note.renote)">
+			<router-link class="note-ref" :to="notification.note | notePage" :title="getNoteSummary(notification.note.renote)">
 				<fa icon="quote-left"/>
 					<mfm :text="getNoteSummary(notification.note.renote)" :plain="true" :nowrap="true" :custom-emojis="notification.note.renote.emojis"/>
 				<fa icon="quote-right"/>
@@ -40,8 +40,8 @@
 		<mk-avatar class="avatar" :user="notification.user"/>
 		<div>
 			<header>
-				<fa icon="user-plus"/>
-				<router-link :to="notification.user | userPage">
+				<fa icon="user-plus" class="icon"/>
+				<router-link :to="notification.user | userPage" class="name">
 					<mk-user-name :user="notification.user"/>
 				</router-link>
 				<mk-time :time="notification.createdAt"/>
@@ -53,22 +53,22 @@
 		<mk-avatar class="avatar" :user="notification.user"/>
 		<div>
 			<header>
-				<fa icon="user-clock"/>
+				<fa icon="user-clock" class="icon"/>
 				<router-link :to="notification.user | userPage">
-					<mk-user-name :user="notification.user"/>
+					<mk-user-name :user="notification.user" class="name"/>
 				</router-link>
 				<mk-time :time="notification.createdAt"/>
 			</header>
 		</div>
 	</div>
 
-	<div class="notification poll_vote" v-if="notification.type == 'poll_vote'">
+	<div class="notification pollVote" v-if="notification.type == 'pollVote'">
 		<mk-avatar class="avatar" :user="notification.user"/>
 		<div>
 			<header>
-				<fa icon="chart-pie"/>
+				<fa icon="chart-pie" class="icon"/>
 				<router-link :to="notification.user | userPage">
-					<mk-user-name :user="notification.user"/>
+					<mk-user-name :user="notification.user" class="name"/>
 				</router-link>
 				<mk-time :time="notification.createdAt"/>
 			</header>
@@ -84,9 +84,9 @@
 		<mk-avatar class="avatar" :user="notification.user"/>
 		<div>
 			<header>
-				<fa :icon="faLightbulb"/>
+				<fa :icon="faLightbulb" class="icon"/>
 				<router-link :to="notification.user | userPage">
-					<mk-user-name :user="notification.user"/>
+					<mk-user-name :user="notification.user" class="name"/>
 				</router-link>
 				<mk-time :time="notification.createdAt"/>
 			</header>
@@ -97,15 +97,15 @@
 	</div>
 
 	<template v-if="notification.type == 'quote'">
-		<mk-note :note="notification.note" @update:note="onNoteUpdated"/>
+		<mk-note :note="notification.note"/>
 	</template>
 
 	<template v-if="notification.type == 'reply'">
-		<mk-note :note="notification.note" @update:note="onNoteUpdated"/>
+		<mk-note :note="notification.note"/>
 	</template>
 
 	<template v-if="notification.type == 'mention'">
-		<mk-note :note="notification.note" @update:note="onNoteUpdated"/>
+		<mk-note :note="notification.note"/>
 	</template>
 </div>
 </template>
@@ -123,17 +123,6 @@ export default Vue.extend({
 			faLightbulb,
 		};
 	},
-	methods: {
-		onNoteUpdated(note) {
-			switch (this.notification.type) {
-				case 'quote':
-				case 'reply':
-				case 'mention':
-					Vue.set(this.notification, 'note', note);
-					break;
-			}
-		}
-	}
 });
 </script>
 
@@ -166,8 +155,12 @@ export default Vue.extend({
 				align-items baseline
 				white-space nowrap
 
-				[data-icon], .mk-reaction-icon
+				> .icon
 					margin-right 4px
+
+				> .name
+					overflow hidden
+					text-overflow ellipsis
 
 				> .mk-time
 					margin-left auto
