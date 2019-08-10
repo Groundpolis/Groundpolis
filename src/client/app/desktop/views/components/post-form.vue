@@ -76,7 +76,7 @@ import getFace from '../../../common/scripts/get-face';
 import MkVisibilityChooser from '../../../common/views/components/visibility-chooser.vue';
 import { parse } from '../../../../../mfm/parse';
 import { host } from '../../../config';
-import { erase, unique } from '../../../../../prelude/array';
+import { erase, unique, concat } from '../../../../../prelude/array';
 import { length } from 'stringz';
 import { toASCII } from 'punycode';
 import extractMentions from '../../../../../misc/extract-mentions';
@@ -512,21 +512,41 @@ export default Vue.extend({
 		},
 
 		doPreview() {
-			this.preview = this.canPost ? {
-				id: `${Math.random()}`,
-				createdAt: new Date().toISOString(),
-				userId: this.$store.state.i.id,
-				user: this.$store.state.i,
-				text: this.text === '' ? undefined : this.$store.state.i.isCat ? nyaize(this.text) : this.text,
-				visibility: this.visibility,
-				localOnly: this.localOnly,
-				fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
-				files: this.files || [],
-				replyId: this.reply ? this.reply.id : undefined,
-				reply: this.reply,
-				renoteId: this.renote ? this.renote.id : this.quoteId ? this.quoteId : undefined,
-				renote: this.renote,
-			} : null;
+			if (!this.canPost) {
+				this.preview = null;
+				return;
+			}
+
+			this.$root.getMeta().then(meta => {
+				const localEmojis = (meta && meta.emojis) ? meta.emojis : [];
+				const ms = this.text.match(/:[\w-]+@[\w.-]+:/g) || [];
+				const remoteEmojis = ms.map(m => {
+					const m2 = m.match(/:(.*)@(.*):/);
+					return {
+						name: `${m2[1]}@${m2[2]}`,
+						host: m2[2],
+						url: `/files/${m2[1]}@${m2[2]}/${Math.floor(Date.now() / 1000 / 3600)}.png`
+					}
+				});
+				const emojis = concat([localEmojis, remoteEmojis]);
+
+				this.preview = {
+					id: `${Math.random()}`,
+					createdAt: new Date().toISOString(),
+					userId: this.$store.state.i.id,
+					user: this.$store.state.i,
+					text: this.text === '' ? undefined : this.$store.state.i.isCat ? nyaize(this.text) : this.text,
+					visibility: this.visibility,
+					localOnly: this.localOnly,
+					fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
+					files: this.files || [],
+					replyId: this.reply ? this.reply.id : undefined,
+					reply: this.reply,
+					renoteId: this.renote ? this.renote.id : this.quoteId ? this.quoteId : undefined,
+					renote: this.renote,
+					emojis,
+				};
+			});
 		},
 
 		post(v: any, preview: boolean) {
