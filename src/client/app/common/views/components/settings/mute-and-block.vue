@@ -8,7 +8,7 @@
 		<div class="users" v-if="mute.length != 0">
 			<div class="user" v-for="user in mute" :key="user.id">
 				<router-link class="name" :to="user | userPage" v-user-preview="user.id">
-					<b><mk-user-name :user="user"/></b> @{{ user | acct }}
+					<b><mk-user-name :user="user" :nowrap="false"/></b> @{{ user | acct }}
 				</router-link>
 				<span @click="unmute(user)">
 					<fa icon="times"/>
@@ -23,7 +23,7 @@
 		<div class="users" v-if="block.length != 0">
 			<div class="user" v-for="user in block" :key="user.id">
 				<router-link class="name" :to="user | userPage" v-user-preview="user.id">
-					<b><mk-user-name :user="user"/></b> @{{ user | acct }}
+					<b><mk-user-name :user="user" :nowrap="false"/></b> @{{ user | acct }}
 				</router-link>
 				<span @click="unblock(user)">
 					<fa icon="times"/>
@@ -125,15 +125,22 @@ export default Vue.extend({
 
 <style lang="stylus" scoped>
 	.users
-		.user
+		> .user
 			display flex
 			align-items center
 			justify-content flex-end
-			span
+
+			&:hover
+				background-color var(--primary)
+
+			> a
+				color var(--faceText)
+				padding 6px
+				overflow auto
+
+			> span
 				margin-left auto
 				cursor pointer
-			span:hover
-				text-decoration underline
-
+				padding 6px
 </style>
 
