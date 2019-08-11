@@ -86,8 +86,9 @@ export default Vue.extend({
 				if (canceled) return;
 				this.$root.api('mute/delete', {
 					userId: user.id
+				}).then(() => {
+					this.updateMute();
 				});
-				this.updateMute();
 			});
 		},
 		unblock(user) {
@@ -99,8 +100,9 @@ export default Vue.extend({
 				if (canceled) return;
 				this.$root.api('blocking/delete', {
 					userId: user.id
+				}).then(() => {
+					this.updateBlock();
 				});
-				this.updateMute();
 			});
 		},
 		updateMute() {
