@@ -177,6 +177,10 @@ export default Vue.extend({
 					display inline-block
 					margin-right 3px
 
+		&.reaction
+			> div > header
+				align-items normal
+
 		&.renote
 			> div > header [data-icon]
 				color #77B255
