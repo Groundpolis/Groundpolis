@@ -23,6 +23,8 @@ const isProduction = process.env.NODE_ENV == 'production';
 
 const constants = require('./src/const.json');
 
+const mods = fs.existsSync('./src/mods.json') ? require('./src/mods.json') : {};
+
 const locales = require('./locales');
 const meta = require('./package.json');
 const codename = meta.codename;
@@ -124,7 +126,8 @@ module.exports = {
 			_VERSION_: JSON.stringify(meta.version),
 			_CODENAME_: JSON.stringify(codename),
 			_LANGS_: JSON.stringify(Object.entries(locales).map(([k, v]: [string, any]) => [k, v && v.meta && v.meta.lang])),
-			_ENV_: JSON.stringify(process.env.NODE_ENV)
+			_ENV_: JSON.stringify(process.env.NODE_ENV),
+			_MODS_: JSON.stringify(mods)
 		}),
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')

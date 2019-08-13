@@ -6,6 +6,7 @@ import MiOS from './mios';
 import { erase } from '../../prelude/array';
 import getNoteSummary from '../../misc/get-note-summary';
 import getNotificationSummary from '../../misc/get-notification-summary';
+import { mods } from './config';
 
 const defaultSettings = {
 	home: null,
@@ -43,7 +44,7 @@ const defaultSettings = {
 	}
 };
 
-const defaultDeviceSettings = {
+const defaultDeviceSettings = Object.assign({
 	deck: null,
 	deckMode: false,
 	deckColumnAlign: 'center',
@@ -51,8 +52,8 @@ const defaultDeviceSettings = {
 	useShadow: false,
 	roundedCorners: true,
 	reduceMotion: false,
-	darkmode: true,
-	darkTheme: 'promo',
+	darkmode: false,
+	darkTheme: 'dark',
 	lightTheme: 'light',
 	lineWidth: 1,
 	fontSize: 0,
@@ -77,7 +78,7 @@ const defaultDeviceSettings = {
 	expandUsersPhotos: true,
 	expandUsersActivity: true,
 	showPostPreview: true,
-};
+}, mods.defaultDeviceSettings || {});
 
 export default (os: MiOS) => new Vuex.Store({
 	plugins: [createPersistedState({
