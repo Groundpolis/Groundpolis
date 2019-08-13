@@ -122,7 +122,7 @@ module.exports = {
 			clear: false
 		}),
 		new webpack.DefinePlugin({
-			_COPYRIGHT_: JSON.stringify(constants.copyright),
+			_CONSTANTS_: JSON.stringify(constants),
 			_VERSION_: JSON.stringify(meta.version),
 			_CODENAME_: JSON.stringify(codename),
 			_LANGS_: JSON.stringify(Object.entries(locales).map(([k, v]: [string, any]) => [k, v && v.meta && v.meta.lang])),

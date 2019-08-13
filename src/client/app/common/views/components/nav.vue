@@ -13,15 +13,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import i18n from '../../../i18n';
-import { lang } from '../../../config';
+import { lang, constants } from '../../../config';
 
 export default Vue.extend({
 	i18n: i18n('common/views/components/nav.vue'),
 	data() {
 		return {
 			aboutUrl: `/docs/${lang}/about`,
-			repositoryUrl: 'https://github.com/mei23/misskey/tree/mei-love',
-			feedbackUrl: 'https://github.com/mei23/misskey/issues/new'
+			repositoryUrl: constants.repositoryUrl,
+			feedbackUrl: constants.feedbackUrl,
 		}
 	}
 });

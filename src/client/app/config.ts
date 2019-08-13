@@ -1,5 +1,9 @@
 declare const _LANGS_: string[];
-declare const _COPYRIGHT_: string;
+declare const _CONSTANTS_: {
+	copyright: string
+	repositoryUrl: string;
+	feedbackUrl: string;
+};
 declare const _VERSION_: string;
 declare const _CODENAME_: string;
 declare const _ENV_: string;
@@ -17,7 +21,7 @@ export const wsUrl = url.replace('http://', 'ws://').replace('https://', 'wss://
 export const lang = localStorage.getItem('lang') || window.lang; // windowは後方互換性のため
 export const langs = _LANGS_;
 export const locale = JSON.parse(localStorage.getItem('locale'));
-export const copyright = _COPYRIGHT_;
+export const constants = _CONSTANTS_;
 export const version = _VERSION_;
 export const codename = _CODENAME_;
 export const env = _ENV_;

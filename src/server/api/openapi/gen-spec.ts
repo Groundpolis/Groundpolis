@@ -5,6 +5,7 @@ import { errors as basicErrors } from './errors';
 import { schemas } from './schemas';
 import { description } from './description';
 import { convertOpenApiSchema } from '../../../misc/schema';
+import { repositoryUrl } from '../../../const.json';
 
 export function genOpenapiSpec(lang = 'ja-JP') {
 	const spec = {
@@ -19,7 +20,7 @@ export function genOpenapiSpec(lang = 'ja-JP') {
 
 		externalDocs: {
 			description: 'Repository',
-			url: 'https://github.com/mei23/misskey/tree/mei-love'
+			url: repositoryUrl
 		},
 
 		servers: [{
@@ -118,7 +119,7 @@ export function genOpenapiSpec(lang = 'ja-JP') {
 			description: desc,
 			externalDocs: {
 				description: 'Source code',
-				url: `https://github.com/mei23/misskey/tree/mei-love/src/server/api/endpoints/${endpoint.name}.ts`
+				url: `${repositoryUrl}/src/server/api/endpoints/${endpoint.name}.ts`
 			},
 			...(endpoint.meta.tags ? {
 				tags: endpoint.meta.tags

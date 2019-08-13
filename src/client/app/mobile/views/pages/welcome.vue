@@ -74,7 +74,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import i18n from '../../../i18n';
-import { copyright, host } from '../../../config';
+import { constants, host } from '../../../config';
 import { concat } from '../../../../../prelude/array';
 import { toUnicode } from 'punycode';
 
@@ -83,7 +83,7 @@ export default Vue.extend({
 	data() {
 		return {
 			meta: null,
-			copyright,
+			copyright: constants.copyright,
 			stats: null,
 			banner: null,
 			host: toUnicode(host),

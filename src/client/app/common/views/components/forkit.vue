@@ -10,10 +10,11 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { constants } from '../../../config';
 export default Vue.extend({
 	data() {
 		return {
-			repositoryUrl: 'https://github.com/mei23/misskey'
+			repositoryUrl: constants.repositoryUrl
 		};
 	}
 });
