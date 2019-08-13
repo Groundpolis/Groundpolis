@@ -23,7 +23,7 @@ const isProduction = process.env.NODE_ENV == 'production';
 
 const constants = require('./src/const.json');
 
-const mods = fs.existsSync('./src/mods.json') ? require('./src/mods.json') : {};
+const mods = fs.existsSync('./mods.json') ? require('./mods.json') : {};
 
 const locales = require('./locales');
 const meta = require('./package.json');

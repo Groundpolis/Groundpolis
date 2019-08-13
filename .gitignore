@@ -20,4 +20,4 @@ api-docs.json
 *.code-workspace
 .DS_Store
 /files
-mods.json
+/mods.json
