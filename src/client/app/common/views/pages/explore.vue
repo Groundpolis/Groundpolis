@@ -150,7 +150,6 @@ export default Vue.extend({
 	},
 
 	mounted() {
-		console.log('mounted x');
 		document.title = this.$root.instanceName;
 	},
 });
