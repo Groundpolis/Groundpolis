@@ -119,7 +119,6 @@ export default Vue.extend({
 	},
 
 	mounted() {
-		document.title = this.$root.instanceName;
 		document.documentElement.style.overflow = 'hidden';
 	},
 
