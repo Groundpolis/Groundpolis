@@ -39,6 +39,9 @@ export default Vue.extend({
 			return Vue.filter('userName')(this.$store.state.i);
 		},
 	},
+	mounted() {
+		document.title = this.$root.instanceName;
+	},
 	methods: {
 		signout() {
 			this.$root.signout();

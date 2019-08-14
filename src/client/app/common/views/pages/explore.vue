@@ -147,7 +147,12 @@ export default Vue.extend({
 		this.$root.getMeta().then(meta => {
 			this.meta = meta;
 		});
-	}
+	},
+
+	mounted() {
+		console.log('mounted x');
+		document.title = this.$root.instanceName;
+	},
 });
 </script>
 
