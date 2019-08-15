@@ -84,6 +84,7 @@ import XCpuMemory from "./dashboard.cpu-memory.vue";
 import XQueue from "./dashboard.queue-charts.vue";
 import XCharts from "./dashboard.charts.vue";
 import { faDatabase } from '@fortawesome/free-solid-svg-icons';
+import { setIntervalPromise } from '../../../../misc/set-interval-promise';
 
 export default Vue.extend({
 	i18n: i18n('admin/views/dashboard.vue'),
@@ -96,6 +97,7 @@ export default Vue.extend({
 
 	data() {
 		return {
+			alive: true,
 			stats: null,
 			connection: null,
 			meta: null,
@@ -108,7 +110,7 @@ export default Vue.extend({
 		this.connection = this.$root.stream.useSharedConnection('serverStats');
 
 		this.updateStats();
-		this.clock = setInterval(this.updateStats, 60 * 1000);
+		setIntervalPromise(this.updateStats, 60 * 1000, true, () => this.alive);
 
 		this.$root.getMeta().then(meta => {
 			this.meta = meta;
@@ -117,7 +119,7 @@ export default Vue.extend({
 
 	beforeDestroy() {
 		this.connection.dispose();
-		clearInterval(this.clock);
+		this.alive = false;
 	},
 
 	methods: {
@@ -125,8 +127,8 @@ export default Vue.extend({
 			this.$refs.charts.setSrc(src);
 		},
 
-		updateStats() {
-			this.$root.api('stats', {}, true).then(stats => {
+		updateStats(): Promise<void> {
+			return this.$root.api('stats', {}, true).then(stats => {
 				this.stats = stats;
 			});
 		}
