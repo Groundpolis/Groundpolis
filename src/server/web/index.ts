@@ -157,7 +157,8 @@ router.get('/@:user', async (ctx, next) => {
 		await ctx.render('user', {
 			user,
 			me,
-			instanceName: meta.name
+			instanceName: meta.name,
+			icon: meta.iconUrl
 		});
 		ctx.set('Cache-Control', 'public, max-age=60');
 	} else {
@@ -213,7 +214,8 @@ router.get('/notes/:note', async ctx => {
 				note: _note,
 				summary: getNoteSummary(_note),
 				imageUrl,
-				instanceName: meta.name
+				instanceName: meta.name,
+				icon: meta.iconUrl
 			});
 
 			if (['public', 'home'].includes(note.visibility)) {
