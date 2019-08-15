@@ -131,5 +131,5 @@ autoAdmin: true
 # IP address family used for outgoing request (ipv4, ipv6 or dual)
 #outgoingAddressFamily: ipv4
 
-# deliverJobConcurrency: 32
-# inboxJobConcurrency: 8
+# deliverJobConcurrency: 128
+# inboxJobConcurrency: 16
