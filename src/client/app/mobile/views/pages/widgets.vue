@@ -15,7 +15,6 @@
 					<option value="rss">{{ $t('@.widgets.rss') }}</option>
 					<option value="slideshow">{{ $t('@.widgets.slideshow') }}</option>
 					<option value="hashtags">{{ $t('@.widgets.hashtags') }}</option>
-					<option value="posts-monitor">{{ $t('@.widgets.posts-monitor') }}</option>
 					<option value="version">{{ $t('@.widgets.version') }}</option>
 					<option value="server">{{ $t('@.widgets.server') }}</option>
 					<option value="queue">{{ $t('@.widgets.queue') }}</option>

@@ -13,7 +13,6 @@ import Xev from 'xev';
 
 import Logger from './services/logger';
 import serverStats from './daemons/server-stats';
-import notesStats from './daemons/notes-stats';
 import queueStats from './daemons/queue-stats';
 import loadConfig from './config/load';
 import { Config } from './config/types';
@@ -48,7 +47,6 @@ function main() {
 
 		if (program.daemons) {
 			serverStats();
-			notesStats();
 			queueStats();
 		}
 	}
