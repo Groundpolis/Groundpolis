@@ -220,7 +220,7 @@ export default Vue.extend({
 			this.fieldName1 = fetchName(1);
 			this.fieldValue1 = fetchValue(1);
 			this.fieldName2 = fetchName(2);
-			this.fieldValue3 = fetchValue(2);
+			this.fieldValue2 = fetchValue(2);
 			this.fieldName3 = fetchName(3);
 			this.fieldValue3 = fetchValue(3);
 		}
