@@ -13,6 +13,8 @@ import FollowRequest from './follow-request';
 import fetchMeta from '../misc/fetch-meta';
 import packEmojis from '../misc/pack-emojis';
 import { dbLogger } from '../db/logger';
+import DriveFile from './drive-file';
+import getDriveFileUrl from '../misc/get-drive-file-url';
 
 const User = db.get<IUser>('users');
 
@@ -355,9 +357,9 @@ export const pack = (
 		delete _user.publicKey;
 	}
 
-	if (_user.avatarUrl == null) {
-		_user.avatarUrl = `${config.driveUrl}/default-avatar.jpg`;
-	}
+	_user.avatarUrl = DriveFile.findOne({
+		_id: _user.avatarId
+	}).then(file => getDriveFileUrl(file, true) || `${config.driveUrl}/default-avatar.jpg`);
 
 	if (!meId || !meId.equals(_user.id) || !opts.detail) {
 		delete _user.avatarId;

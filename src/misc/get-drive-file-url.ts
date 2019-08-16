@@ -4,7 +4,7 @@ import config from '../config';
 export default function(file: IDriveFile, thumbnail = false): string {
 	if (file == null) return null;
 
-	const isImage = file.contentType && file.contentType.startsWith('image/');
+	const isImage = file.contentType && ['image/png', 'image/apng', 'image/gif', 'image/jpeg', 'image/webp', 'image/svg+xml'].includes(file.contentType);
 
 	if (file.metadata.withoutChunks && file.metadata.isRemote) {
 		if (thumbnail) {
