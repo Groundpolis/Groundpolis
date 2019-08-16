@@ -276,7 +276,7 @@ export const pack = (
 		username: true,
 		host: true,
 		avatarColor: true,
-		avatarUrl: true,
+		avatarId: true,
 		emojis: true,
 		isCat: true,
 		isBot: true,
