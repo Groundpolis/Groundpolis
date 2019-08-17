@@ -198,7 +198,7 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 	}
 
 	// MongoDBのインデックス対象は128文字以上にできない
-	tags = tags.filter(tag => tag.length <= 100);
+	tags = tags.filter(tag => tag.length <= 100).splice(0, 64);
 
 	const normalizeAsciiHost = (host: string) => {
 		if (host == null) return null;

@@ -138,7 +138,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 
 	const { fields, services } = analyzeAttachments(person.attachment);
 
-	const tags = extractHashtags(person.tag).map(tag => tag.toLowerCase());
+	const tags = extractHashtags(person.tag).map(tag => tag.toLowerCase()).splice(0, 64);
 
 	const isBot = object.type == 'Service';
 
@@ -332,7 +332,7 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: IApP
 
 	const { fields, services } = analyzeAttachments(person.attachment);
 
-	const tags = extractHashtags(person.tag).map(tag => tag.toLowerCase());
+	const tags = extractHashtags(person.tag).map(tag => tag.toLowerCase()).splice(0, 64);
 
 	const updates = {
 		lastFetchedAt: new Date(),
