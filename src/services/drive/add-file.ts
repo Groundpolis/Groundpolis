@@ -171,11 +171,11 @@ export async function generateAlts(path: string, type: string, generateWeb: bool
 		logger.info(`creating web image`);
 
 		if (['image/jpeg'].includes(type)) {
-			webpublic = await ConvertToJpeg(path, 2048, 2048);
+			webpublic = await ConvertToJpeg(path, 8192, 8192);
 		} else if (['image/webp'].includes(type)) {
-			webpublic = await ConvertToWebp(path, 2048, 2048);
+			webpublic = await ConvertToWebp(path, 8192, 8192);
 		} else if (['image/png'].includes(type)) {
-			webpublic = await ConvertToPng(path, 2048, 2048);
+			webpublic = await ConvertToPng(path, 8192, 8192);
 		} else {
 			logger.info(`web image not created (not an image)`);
 		}
