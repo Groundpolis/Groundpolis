@@ -22,7 +22,7 @@ import { extractHashtags } from './tag';
 import Following from '../../../models/following';
 import { apLogger } from '../logger';
 import { INote } from '../../../models/note';
-import { updateHashtag } from '../../../services/update-hashtag';
+import { updateUsertags } from '../../../services/update-hashtag';
 import FollowRequest from '../../../models/follow-request';
 import { toArray, toSingle } from '../../../prelude/array';
 const logger = apLogger;
@@ -208,8 +208,7 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 	//#endregion
 
 	// ハッシュタグ更新
-	for (const tag of tags) updateHashtag(user, tag, true, true);
-	for (const tag of (user.tags || []).filter(x => !tags.includes(x))) updateHashtag(user, tag, true, false);
+	updateUsertags(user, tags);
 
 	//#region アイコンとヘッダー画像をフェッチ
 	const [avatar, banner] = (await Promise.all<IDriveFile>([
@@ -379,8 +378,7 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: IApP
 	});
 
 	// ハッシュタグ更新
-	for (const tag of tags) updateHashtag(exist, tag, true, true);
-	for (const tag of (exist.tags || []).filter(x => !tags.includes(x))) updateHashtag(exist, tag, true, false);
+	updateUsertags(exist, tags);
 
 	// 該当ユーザーが既にフォロワーになっていた場合はFollowingもアップデートする
 	await Following.update({

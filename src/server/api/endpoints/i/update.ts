@@ -10,7 +10,7 @@ import getDriveFileUrl from '../../../../misc/get-drive-file-url';
 import { parse, parsePlain } from '../../../../mfm/parse';
 import extractEmojis from '../../../../misc/extract-emojis';
 import extractHashtags from '../../../../misc/extract-hashtags';
-import { updateHashtag } from '../../../../services/update-hashtag';
+import { updateUsertags } from '../../../../services/update-hashtag';
 import { ApiError } from '../../error';
 import { sendDeleteActivity } from '../../../../services/suspend-user';
 import { doPostUnsuspend } from '../../../../services/unsuspend-user';
@@ -281,8 +281,7 @@ export default define(meta, async (ps, user, app) => {
 		updates.tags = tags;
 
 		// ハッシュタグ更新
-		for (const tag of tags) updateHashtag(user, tag, true, true);
-		for (const tag of (user.tags || []).filter(x => !tags.includes(x))) updateHashtag(user, tag, true, false);
+		updateUsertags(user, tags);
 	}
 	//#endregion
 

@@ -2,6 +2,22 @@ import { IUser, isLocalUser, isRemoteUser } from '../models/user';
 import Hashtag from '../models/hashtag';
 import hashtagChart from './chart/hashtag';
 
+export async function updateHashtags(user: IUser, tags: string[]) {
+	for (const tag of tags) {
+		await updateHashtag(user, tag);
+	}
+}
+
+export async function updateUsertags(user: IUser, tags: string[]) {
+	for (const tag of tags) {
+		await updateHashtag(user, tag, true, true);
+	}
+
+	for (const tag of (user.tags || []).filter(x => !tags.includes(x))) {
+		await updateHashtag(user, tag, true, false);
+	}
+}
+
 export async function updateHashtag(user: IUser, tag: string, isUserAttached = false, inc = true) {
 	tag = tag.toLowerCase();
 
