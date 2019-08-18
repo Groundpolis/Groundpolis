@@ -56,19 +56,19 @@ class NotificationManager {
 		// 自分自身へは通知しない
 		if (this.notifier._id.equals(notifiee)) return;
 
-		const exist = this.queue.find(x => x.target.equals(notifiee) && x.reason == 'mention');
+		const exist = this.queue.find(x => x.target.equals(notifiee) && x.reason == 'reply');
 
 		if (exist) {
-			// 「メンションされているかつ返信されている」場合は、メンションとしての通知ではなく返信としての通知にする
-			if (reason == 'reply') {
-				exist.reason = reason;
+			// すでにreplyされている場合は後続のreply, mentionはスキップ
+			if (reason == 'mention' || reason == 'reply') {
+				return;
 			}
-		} else {
-			this.queue.push({
-				reason: reason,
-				target: notifiee
-			});
 		}
+
+		this.queue.push({
+			reason: reason,
+			target: notifiee
+		});
 	}
 
 	public async deliver() {
@@ -316,13 +316,7 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 	const nm = new NotificationManager(user, note);
 	const nmRelatedPromises = [];
 
-	createMentionedEvents(mentionedUsers, note, nm);
-
 	const noteActivity = await renderNoteOrRenoteActivity(data, note, user);
-
-	if (isLocalUser(user)) {
-		deliverNoteToMentionedRemoteUsers(mentionedUsers, user, noteActivity);
-	}
 
 	// Extended notification
 	if (note.visibility === 'public' || note.visibility === 'home') {
@@ -344,6 +338,13 @@ export default async (user: IUser, data: Option, silent = false) => new Promise<
 			nm.push(data.reply.userId, 'reply');
 			publishMainStream(data.reply.userId, 'reply', noteObj);
 		}
+	}
+
+	// mention
+	createMentionedEvents(mentionedUsers, note, nm);
+
+	if (isLocalUser(user)) {
+		deliverNoteToMentionedRemoteUsers(mentionedUsers, user, noteActivity);
 	}
 
 	// If it is renote
