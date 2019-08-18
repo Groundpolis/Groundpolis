@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 import * as mongodb from 'mongodb';
 import * as crypto from 'crypto';
-import * as uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import * as sharp from 'sharp';
 
 import DriveFile, { IMetadata, getDriveFileBucket, IDriveFile } from '../../models/drive-file';
@@ -67,7 +67,7 @@ async function save(path: string, name: string, type: string, hash: string, size
 			|| `${ drive.config.useSSL ? 'https' : 'http' }://${ drive.config.endPoint }${ drive.config.port ? `:${drive.config.port}` : '' }/${ drive.bucket }`;
 
 		// for original
-		const key = `${drive.prefix}/${uuid.v4()}${ext}`;
+		const key = `${drive.prefix}/${uuid()}${ext}`;
 		const url = `${ baseUrl }/${ key }`;
 
 		// for alts
@@ -84,7 +84,7 @@ async function save(path: string, name: string, type: string, hash: string, size
 		];
 
 		if (alts.webpublic) {
-			webpublicKey = `${drive.prefix}/${uuid.v4()}.${alts.webpublic.ext}`;
+			webpublicKey = `${drive.prefix}/${uuid()}.${alts.webpublic.ext}`;
 			webpublicUrl = `${ baseUrl }/${ webpublicKey }`;
 
 			logger.info(`uploading webpublic: ${webpublicKey}`);
@@ -92,7 +92,7 @@ async function save(path: string, name: string, type: string, hash: string, size
 		}
 
 		if (alts.thumbnail) {
-			thumbnailKey = `${drive.prefix}/${uuid.v4()}.${alts.thumbnail.ext}`;
+			thumbnailKey = `${drive.prefix}/${uuid()}.${alts.thumbnail.ext}`;
 			thumbnailUrl = `${ baseUrl }/${ thumbnailKey }`;
 
 			logger.info(`uploading thumbnail: ${thumbnailKey}`);
@@ -132,7 +132,7 @@ async function save(path: string, name: string, type: string, hash: string, size
 		const originalDst = await getDriveFileBucket();
 
 		// web用(Exif削除済み)がある場合はオリジナルにアクセス制限
-		if (alts.webpublic) metadata.accessKey = uuid.v4();
+		if (alts.webpublic) metadata.accessKey = uuid();
 
 		const originalFile = await storeOriginal(originalDst, name, path, type, metadata);
 
