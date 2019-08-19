@@ -37,19 +37,18 @@ export default define(meta, async (ps, user) => {
 	});
 
 	if (exists) {
+		const set = {
+			data: ps.room
+		} as any;
+
 		await Room.update({
 			userId: user._id,
 			floor: 0,
 		}, {
-			userId: user._id,
-			floor: 0,
-			data: ps.room
+			$set: set
 		});
 	} else {
 		await Room.insert({
-			userId: user._id,
-			floor: 0,
-		}, {
 			userId: user._id,
 			floor: 0,
 			data: ps.room
