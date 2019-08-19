@@ -21,3 +21,10 @@ api-docs.json
 .DS_Store
 /files
 /mods.json
+
+# blender backups
+*.blend1
+*.blend2
+*.blend3
+*.blend4
+*.blend5

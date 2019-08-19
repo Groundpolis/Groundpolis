@@ -42,6 +42,13 @@
 						<i><fa icon="angle-right"/></i>
 					</p>
 				</li>
+				<li>
+					<router-link :to="`/@${ $store.state.i.username }/room`">
+						<i><fa :icon="faDoorOpen" fixed-width/></i>
+						<span>{{ $t('room') }}</span>
+						<i><fa icon="angle-right"/></i>
+					</router-link>
+				</li>
 			</ul>
 			<ul>
 				<li>
@@ -94,15 +101,15 @@ import MkFollowRequestsWindow from './received-follow-requests-window.vue';
 // import MkSettingsWindow from './settings-window.vue';
 import MkDriveWindow from './drive-window.vue';
 import contains from '../../../common/scripts/contains';
-import { faHome, faColumns } from '@fortawesome/free-solid-svg-icons';
-import { faMoon, faSun } from '@fortawesome/free-regular-svg-icons';
+import { faHome, faColumns, faUsers, faDoorOpen } from '@fortawesome/free-solid-svg-icons';
+import { faMoon, faSun, faStickyNote } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
 	i18n: i18n('desktop/views/components/ui.header.account.vue'),
 	data() {
 		return {
 			isOpen: false,
-			faHome, faColumns, faMoon, faSun
+			faHome, faColumns, faMoon, faSun, faStickyNote, faUsers, faDoorOpen
 		};
 	},
 	computed: {

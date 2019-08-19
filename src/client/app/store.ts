@@ -78,6 +78,9 @@ const defaultDeviceSettings = Object.assign({
 	expandUsersPhotos: true,
 	expandUsersActivity: true,
 	showPostPreview: true,
+	enableMobileQuickNotificationView: false,
+	roomGraphicsQuality: 'medium',
+	roomUseOrthographicCamera: true,
 }, mods.defaultDeviceSettings || {});
 
 export default (os: MiOS) => new Vuex.Store({
