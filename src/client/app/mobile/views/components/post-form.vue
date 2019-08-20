@@ -592,10 +592,11 @@ export default Vue.extend({
 
 		> *
 			display inline-block
-			margin-right 8px
-			margin-bottom 2px
+			margin-right 6px
+			margin-bottom 6px
 			padding 3px
 			font-size 12px
+			line-height 16px
 			background #fff
 			color #000
 			opacity 0.5
