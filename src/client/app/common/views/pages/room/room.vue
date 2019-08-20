@@ -294,7 +294,7 @@ export default Vue.extend({
 		padding 16px
 		background var(--face)
 		color var(--text)
-		top 16px
-		left 16px
+		bottom 16px
+		right 16px
 		width 160px
 </style>
