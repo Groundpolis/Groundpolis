@@ -122,6 +122,7 @@ export default Vue.extend({
 			> .toggleSensitive
 				padding 4px
 				color var(--text)
+				opacity 0.7
 
 			> .sensitive
 				display flex
