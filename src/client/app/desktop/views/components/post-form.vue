@@ -14,8 +14,7 @@
 				<a @click="addVisibleUser">{{ $t('add-visible-user') }}</a>
 			</div>
 			<div class="hashtags" v-if="recentHashtags.length > 0 && $store.state.settings.suggestRecentHashtags">
-				<b>{{ $t('recent-tags') }}:</b>
-				<a v-for="tag in recentHashtags.slice(0, 5)" @click="addTag(tag)" :title="$t('click-to-tagging')">#{{ tag }}</a>
+				<a v-for="tag in recentHashtags.slice(0, 5)" @click="addTag(tag)" :key="tag" :title="$t('click-to-tagging')">#{{ tag }}</a>
 			</div>
 			<div class="local-only" v-if="localOnly == true">{{ $t('local-only-message') }}</div>
 			<div class="local-only-remote" v-if="isUnreachable">ローカルのみでリモートリプライしてもとどきません</div>
@@ -802,16 +801,25 @@ export default Vue.extend({
 
 		> .hashtags
 			margin 0 0 8px 0
+			padding 2px
 			overflow hidden
 			white-space nowrap
 			font-size 14px
 
-			> b
-				color var(--primary)
-
 			> *
 				margin-right 8px
+				padding 3px
+				font-size 12px
 				white-space nowrap
+				background #fff
+				color #000
+				opacity 0.5
+				border solid 1px #333
+				border-radius 3px
+				text-decoration none
+
+				&:hover
+					opacity 0.7
 
 		> .local-only, .local-only-remote
 			margin 0 0 8px 0

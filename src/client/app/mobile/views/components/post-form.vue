@@ -47,7 +47,7 @@
 		</div>
 	</div>
 	<div class="hashtags" v-if="recentHashtags.length > 0 && $store.state.settings.suggestRecentHashtags">
-		<a v-for="tag in recentHashtags.slice(0, 5)" @click="addTag(tag)">#{{ tag }}</a>
+		<a v-for="tag in recentHashtags.slice(0, 5)" :key="tag" @click="addTag(tag)">#{{ tag }}</a>
 	</div>
 </div>
 </template>
@@ -591,6 +591,19 @@ export default Vue.extend({
 		margin 8px
 
 		> *
+			display inline-block
 			margin-right 8px
+			margin-bottom 2px
+			padding 3px
+			font-size 12px
+			background #fff
+			color #000
+			opacity 0.5
+			border solid 1px #333
+			border-radius 3px
+			text-decoration none
+
+			&:hover
+				opacity 0.7
 
 </style>
