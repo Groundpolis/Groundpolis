@@ -21,13 +21,21 @@ export const meta = {
 				'en-US': 'Target user ID'
 			}
 		},
+		floor: {
+			validator: $.optional.num.int().min(-999).max(999),
+			default: 0,
+			desc: {
+				'ja-JP': '階数',
+				'en-US': 'Number of floors'
+			},
+		},
 	},
 };
 
 export default define(meta, async (ps, me) => {
 	const room = await Room.findOne({
 		userId: ps.userId,
-		floor: 0,
+		floor: ps.floor,
 	});
 
 	return await packRoom(room);

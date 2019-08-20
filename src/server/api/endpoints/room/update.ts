@@ -27,13 +27,21 @@ export const meta = {
 				carpetColor: $.str
 			})
 		},
+		floor: {
+			validator: $.optional.num.int().min(-999).max(999),
+			default: 0,
+			desc: {
+				'ja-JP': '階数',
+				'en-US': 'Number of floors'
+			},
+		},
 	},
 };
 
 export default define(meta, async (ps, user) => {
 	const exists = await Room.findOne({
 		userId: user._id,
-		floor: 0,
+		floor: ps.floor,
 	});
 
 	if (exists) {
@@ -43,14 +51,14 @@ export default define(meta, async (ps, user) => {
 
 		await Room.update({
 			userId: user._id,
-			floor: 0,
+			floor: ps.floor,
 		}, {
 			$set: set
 		});
 	} else {
 		await Room.insert({
 			userId: user._id,
-			floor: 0,
+			floor: ps.floor,
 			data: ps.room
 		});
 	}

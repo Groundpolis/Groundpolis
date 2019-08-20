@@ -46,6 +46,17 @@
 			<ui-button @click="clear()"><fa :icon="faBroom"/> {{ $t('clear') }}</ui-button>
 		</section>
 	</div>
+
+	<div class="nav">
+		<ui-button @click="goUp()"><fa :icon="faArrowUp"/></ui-button>
+		<ui-horizon-group>
+			<ui-input v-model="floor">
+				<template #suffix>F</template>
+			</ui-input>
+			<ui-button inline @click="goTo(Number(floor))" style="max-width: 48px"><fa :icon="faWalking"/></ui-button>
+		</ui-horizon-group>
+		<ui-button @click="goDown()"><fa :icon="faArrowDown"/></ui-button>
+	</div>
 </div>
 </template>
 
@@ -56,7 +67,7 @@ import { Room } from '../../../scripts/room/room';
 import parseAcct from '../../../../../../misc/acct/parse';
 import XPreview from './preview.vue';
 const storeItems = require('../../../scripts/room/furnitures.json5');
-import { faBoxOpen, faUndo, faArrowsAlt, faBan, faBroom } from '@fortawesome/free-solid-svg-icons';
+import { faBoxOpen, faUndo, faArrowsAlt, faBan, faBroom, faArrowUp, faArrowDown, faWalking } from '@fortawesome/free-solid-svg-icons';
 import { faSave, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { query as urlQuery } from '../../../../../../prelude/url';
 
@@ -87,7 +98,8 @@ export default Vue.extend({
 			isTranslateMode: false,
 			isRotateMode: false,
 			isMyRoom: false,
-			faBoxOpen, faSave, faTrashAlt, faUndo, faArrowsAlt, faBan, faBroom,
+			floor: this.$route.query.floor || 0,
+			faBoxOpen, faSave, faTrashAlt, faUndo, faArrowsAlt, faBan, faBroom, faArrowUp, faArrowDown, faWalking
 		};
 	},
 
@@ -99,7 +111,8 @@ export default Vue.extend({
 		this.isMyRoom = this.$store.getters.isSignedIn && this.$store.state.i.id === user.id;
 
 		const roomInfo = await this.$root.api('room/show', {
-			userId: user.id
+			userId: user.id,
+			floor: Number(this.floor),
 		});
 
 		this.roomType = roomInfo.roomType;
@@ -145,6 +158,23 @@ export default Vue.extend({
 			room.addFurniture(id);
 		},
 
+		goUp() {
+			this.goTo(Number(this.floor) + 1);
+		},
+
+		goDown() {
+			this.goTo(Number(this.floor) - 1);
+		},
+
+		goTo(f: number) {
+			const go = () => {
+				const ac = parseAcct(this.acct);
+				location.replace(`/@${ac.username}/room?floor=${f}`);
+			};
+
+			go();
+		},
+
 		remove() {
 			this.isTranslateMode = false;
 			this.isRotateMode = false;
@@ -153,7 +183,8 @@ export default Vue.extend({
 
 		save() {
 			this.$root.api('room/update', {
-				room: room.getRoomInfo()
+				room: room.getRoomInfo(),
+				floor: Number(this.floor),
 			});
 		},
 
@@ -256,5 +287,14 @@ export default Vue.extend({
 		top 16px
 		right 16px
 		width 256px
-	
+
+	> .nav
+		position fixed
+		z-index 1
+		padding 16px
+		background var(--face)
+		color var(--text)
+		top 16px
+		left 16px
+		width 160px
 </style>
