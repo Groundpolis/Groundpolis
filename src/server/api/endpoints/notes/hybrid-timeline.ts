@@ -292,6 +292,7 @@ export default define(meta, async (ps, user) => {
 			query['_files.metadata.isSensitive'] = {
 				$ne: true
 			};
+			query['cw'] = null;
 		}
 
 		if (ps.excludeSfw) {

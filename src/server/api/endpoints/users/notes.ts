@@ -243,6 +243,7 @@ export default define(meta, async (ps, me) => {
 			query['_files.metadata.isSensitive'] = {
 				$ne: true
 			};
+			query['cw'] = null;
 		}
 	}
 	//#endregion
