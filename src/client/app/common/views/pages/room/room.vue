@@ -105,6 +105,8 @@ export default Vue.extend({
 	},
 
 	async mounted() {
+		window.addEventListener('beforeunload', this.beforeunload);
+
 		const user = await this.$root.api('users/show', {
 			...parseAcct(this.acct)
 		});
@@ -139,7 +141,7 @@ export default Vue.extend({
 		});
 	},
 
-	beforeRouteLeave(to: any, from: any, next: Function) {
+	beforeRouteLeave(to, from, next) {
 		if (this.changed) {
 			this.$root.dialog({
 				type: 'warning',
@@ -159,9 +161,17 @@ export default Vue.extend({
 
 	beforeDestroy() {
 		room.destroy();
+		window.removeEventListener('beforeunload', this.beforeunload);
 	},
 
 	methods: {
+		beforeunload(e: BeforeUnloadEvent) {
+			if (this.changed) {
+				e.preventDefault();
+				e.returnValue = '';
+			}
+		},
+
 		async add() {
 			const { canceled, result: id } = await this.$root.dialog({
 				type: null,
@@ -191,22 +201,7 @@ export default Vue.extend({
 				const ac = parseAcct(this.acct);
 				location.replace(`/@${ac.username}/room?floor=${f}`);
 			};
-
-			if (this.changed) {
-				this.$root.dialog({
-					type: 'warning',
-					text: this.$t('leave-confirm'),
-					showCancelButton: true
-				}).then(({ canceled }) => {
-					if (canceled) {
-						return;
-					} else {
-						go();
-					}
-				});
-			} else {
-				go();
-			}
+			go();
 		},
 
 		remove() {
