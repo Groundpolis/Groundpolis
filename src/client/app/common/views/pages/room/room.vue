@@ -185,6 +185,16 @@ export default Vue.extend({
 			this.$root.api('room/update', {
 				room: room.getRoomInfo(),
 				floor: Number(this.floor),
+			}).then(() => {
+				this.$root.dialog({
+					type: 'success',
+					text: this.$t('saved')
+				});
+			}).catch((e: any) => {
+				this.$root.dialog({
+					type: 'error',
+					text: e.message
+				});
 			});
 		},
 
