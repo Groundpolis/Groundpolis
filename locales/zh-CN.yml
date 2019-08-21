@@ -880,7 +880,6 @@ desktop/views/components/post-form.vue:
   create-poll: "创建一个投票"
   text-remain: "还剩{}字"
   recent-tags: "最近"
-  local-only-message: "这篇文章只会在本地发表"
   click-to-tagging: "点击添加标签"
   visibility: "可见性"
   geolocation-alert: "您的设备不提供位置服务"

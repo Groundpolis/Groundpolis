@@ -796,7 +796,6 @@ desktop/views/components/post-form.vue:
   create-poll: "Créer un sondage"
   text-remain: "{} caractères restants"
   recent-tags: "Récent"
-  local-only-message: "Ce message sera publié uniquement sur le fil local"
   click-to-tagging: "Cliquer pour taguer"
   visibility: "Visibilité"
   geolocation-alert: "Votre appareil ne prend pas en charge les services de localisation"

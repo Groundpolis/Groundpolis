@@ -16,7 +16,6 @@
 			<div class="hashtags" v-if="recentHashtags.length > 0 && $store.state.settings.suggestRecentHashtags">
 				<a v-for="tag in recentHashtags.slice(0, 5)" @click="addTag(tag)" :key="tag" :title="$t('click-to-tagging')">#{{ tag }}</a>
 			</div>
-			<div class="local-only" v-if="localOnly == true">{{ $t('local-only-message') }}</div>
 			<div class="local-only-remote" v-if="isUnreachable">ローカルのみでリモートリプライしてもとどきません</div>
 			<input v-show="useCw" ref="cw" v-model="cw" :placeholder="$t('annotations')" v-autocomplete="{ model: 'cw' }">
 			<div class="textarea">
@@ -821,7 +820,7 @@ export default Vue.extend({
 				&:hover
 					opacity 0.7
 
-		> .local-only, .local-only-remote
+		> .local-only-remote
 			margin 0 0 8px 0
 			color var(--primary)
 

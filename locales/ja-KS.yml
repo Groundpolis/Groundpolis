@@ -694,7 +694,6 @@ desktop/views/components/post-form.vue:
   create-poll: "アンケートを作成"
   text-remain: "残り{}文字"
   recent-tags: "最近のタグ"
-  local-only-message: "この投稿はローカルだけ公開されるで"
   click-to-tagging: "クリックでタグ付け"
   visibility: "公開範囲"
   geolocation-alert: "あんさんのつことる端末は位置情報に対応しとらんみたいやわ、知らんけど。"

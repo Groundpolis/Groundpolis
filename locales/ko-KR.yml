@@ -881,7 +881,6 @@ desktop/views/components/post-form.vue:
   create-poll: "투표 만들기"
   text-remain: "{}문자 남음"
   recent-tags: "최근"
-  local-only-message: "이 글은 로컬에만 공개되어 있습니다"
   click-to-tagging: "클릭하여 태그 넣기"
   visibility: "공개설정"
   geolocation-alert: "사용하시는 장치가 위치정보 기능에 대응하지 않습니다"
