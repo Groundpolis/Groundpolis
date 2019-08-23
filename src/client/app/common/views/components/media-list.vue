@@ -7,7 +7,7 @@
 		<div :data-count="mediaList.filter(media => previewable(media)).length" ref="grid">
 			<template v-for="media in mediaList">
 				<mk-media-video :video="media" :key="media.id" v-if="media.type.startsWith('video')"/>
-				<x-image :image="media" :key="media.id" v-else-if="media.type.startsWith('image')" :raw="raw"/>
+				<x-image :image="media" :key="media.id" v-else-if="media.type.startsWith('image')" :hide="hide" :raw="raw"/>
 			</template>
 		</div>
 	</div>
@@ -27,6 +27,11 @@ export default Vue.extend({
 	props: {
 		mediaList: {
 			required: true
+		},
+		hide: {
+			type: Boolean,
+			required: false,
+			default: true
 		},
 		raw: {
 			default: false

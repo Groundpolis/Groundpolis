@@ -30,7 +30,7 @@
 						<a class="rp" v-if="appearNote.renote">RN:</a>
 					</div>
 					<div class="files" v-if="appearNote.files.length > 0">
-						<mk-media-list :media-list="appearNote.files"/>
+						<mk-media-list :hide="!$store.state.device.alwaysShowNsfw && appearNote.cw == null" :media-list="appearNote.files"/>
 					</div>
 					<mk-poll v-if="appearNote.poll" :note="appearNote" ref="pollViewer"/>
 					<a class="location" v-if="appearNote.geo" :href="`https://maps.google.com/maps?q=${appearNote.geo.coordinates[1]},${appearNote.geo.coordinates[0]}`" rel="noopener" target="_blank"><fa icon="map-marker-alt"/> 位置情報</a>
