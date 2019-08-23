@@ -43,11 +43,11 @@
 					</p>
 				</li>
 				<li>
-					<router-link :to="`/@${ $store.state.i.username }/room`">
+					<a :href="`/@${ $store.state.i.username }/room`">
 						<i><fa :icon="faDoorOpen" fixed-width/></i>
 						<span>{{ $t('room') }}</span>
 						<i><fa icon="angle-right"/></i>
-					</router-link>
+					</a>
 				</li>
 			</ul>
 			<ul>
