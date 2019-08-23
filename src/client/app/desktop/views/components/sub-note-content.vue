@@ -7,7 +7,7 @@
 		<mfm v-if="note.text" :text="note.text" :author="note.user" :i="$store.state.i" :custom-emojis="note.emojis"/>
 		<a class="rp" v-if="note.renoteId" :href="`/notes/${note.renoteId}`">RN: ...</a>
 	</div>
-	<details v-if="note.files.length > 0">
+	<details v-if="note.files.length > 0" :open="note.cw != null">
 		<summary>({{ this.$t('media-count').replace('{}', note.files.length) }})</summary>
 		<mk-media-list :media-list="note.files" :hide="!$store.state.device.alwaysShowNsfw && note.cw == null"/>
 	</details>
