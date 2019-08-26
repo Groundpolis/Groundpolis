@@ -7,10 +7,6 @@
 			<div class="sensitive" v-if="file.isSensitive">
 				<fa class="icon" :icon="faExclamationTriangle"/>
 			</div>
-			<button class="toggleSensitive" @click.stop="toggleSensitive(file)">
-				<fa v-if="!file.isSensitive" :icon="faEyeSlash"/>
-				<fa v-if="file.isSensitive" :icon="faEye"/>
-			</button>
 		</div>
 	</x-draggable>
 	<p class="remain">{{ 4 - files.length }}/4</p>
@@ -47,7 +43,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			faEye, faEyeSlash, faExclamationTriangle
+			faExclamationTriangle
 		};
 	},
 
@@ -96,7 +92,6 @@ export default Vue.extend({
 			width 64px
 			height 64px
 			margin 4px
-			margin-bottom 24px
 			cursor move
 
 			&:hover > .remove
@@ -118,10 +113,6 @@ export default Vue.extend({
 				height 16px
 				cursor pointer
 				z-index 1000
-
-			> .toggleSensitive
-				padding 4px
-				color var(--text)
 
 			> .sensitive
 				display flex
