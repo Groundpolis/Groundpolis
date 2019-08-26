@@ -38,7 +38,7 @@ export default Vue.extend({
 			});
 		},
 
-		upload(file: File, folder: any, name?: string, isSensitive = false) {
+		upload(file: File, folder: any, name?: string) {
 			if (folder && typeof folder == 'object') folder = folder.id;
 
 			const id = Math.random();
@@ -64,7 +64,6 @@ export default Vue.extend({
 					const data = new FormData();
 					data.append('i', this.$store.state.i.token);
 					data.append('force', 'true');
-					data.append('isSensitive', isSensitive ? 'true' : 'false');
 					data.append('file', file);
 
 					if (folder) data.append('folderId', folder);

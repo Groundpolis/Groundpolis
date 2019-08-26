@@ -389,7 +389,7 @@ export default Vue.extend({
 		},
 
 		upload(file: File, name?: string) {
-			(this.$refs.uploader as any).upload(file, null, name, this.useCw);
+			(this.$refs.uploader as any).upload(file, null, name);
 		},
 
 		onChangeUploadings(uploads) {
