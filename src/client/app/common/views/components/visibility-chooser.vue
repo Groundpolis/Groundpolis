@@ -211,7 +211,7 @@ export default Vue.extend({
 
 			&.active
 				color var(--primaryForeground)
-				background var(--primary)
+				background var(--primaryDarken5)
 
 			> *
 				user-select none
