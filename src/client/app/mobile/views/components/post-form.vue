@@ -215,6 +215,10 @@ export default Vue.extend({
 		this.secondaryNoteVisibility = this.$store.state.settings.secondaryNoteVisibility;
 		this.tertiaryNoteVisibility = this.$store.state.settings.tertiaryNoteVisibility;
 
+		if (this.reply && this.reply.localOnly) {
+			this.localOnly = true;
+		}
+
 		// 公開以外へのリプライ時は元の公開範囲を引き継ぐ
 		if (this.reply && ['home', 'followers', 'specified'].includes(this.reply.visibility)) {
 			this.visibility = this.reply.visibility;
@@ -344,7 +348,7 @@ export default Vue.extend({
 		setVisibility() {
 			const w = this.$root.new(MkVisibilityChooser, {
 				source: this.$refs.visibilityButton,
-				currentVisibility: this.visibility
+				currentVisibility: this.localOnly ? `local-${this.visibility}` : this.visibility
 			});
 			w.$once('chosen', v => {
 				this.applyVisibility(v);
