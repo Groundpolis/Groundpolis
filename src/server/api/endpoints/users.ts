@@ -96,7 +96,7 @@ const sort: any = { // < https://github.com/Microsoft/TypeScript/issues/1863
 };
 
 export default define(meta, async (ps, me) => {
-	const hideUserIds = await getHideUserIds(me);
+	const hideUserIds = await getHideUserIds(me, true);
 
 	const users = await User
 		.find({
