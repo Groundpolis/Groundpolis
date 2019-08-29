@@ -277,6 +277,7 @@ export const pack = (
 		host: true,
 		avatarColor: true,
 		avatarId: true,
+		bannerId: true,
 		emojis: true,
 		isCat: true,
 		isBot: true,
@@ -359,7 +360,11 @@ export const pack = (
 
 	_user.avatarUrl = DriveFile.findOne({
 		_id: _user.avatarId
-	}).then(file => getDriveFileUrl(file, true) || `${config.driveUrl}/default-avatar.jpg`);
+	}).then(file => getDriveFileUrl(file, true, true) || `${config.driveUrl}/default-avatar.jpg`);
+
+	_user.bannerUrl = DriveFile.findOne({
+		_id: _user.bannerId
+	}).then(file => getDriveFileUrl(file, false, true) || undefined);
 
 	if (!meId || !meId.equals(_user.id) || !opts.detail) {
 		delete _user.avatarId;
