@@ -137,6 +137,7 @@ init((launch, os) => {
 		]),
 			{ path: '/signup', name: 'signup', component: MkSignup },
 			{ path: '/i/settings', name: 'settings', component: () => import('./views/pages/settings.vue').then(m => m.default) },
+			{ path: '/i/settings/:page', redirect: '/i/settings' },
 			{ path: '/i/favorites', name: 'favorites', component: MkFavorites },
 			{ path: '/i/lists', name: 'user-lists', component: MkUserLists },
 			{ path: '/i/lists/:list', name: 'user-list', component: MkUserList },
