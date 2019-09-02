@@ -51,7 +51,7 @@ export const meta = {
 				'local',
 				'remote',
 			]),
-			default: 'local'
+			default: 'combined'
 		}
 	},
 

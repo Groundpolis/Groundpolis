@@ -102,10 +102,12 @@ export default Vue.extend({
 				limit: 10
 			}),
 			recentlyUpdatedUsersF: () => this.$root.api('users', {
+				origin: 'combined',
 				sort: '+updatedAt',
 				limit: 10
 			}),
 			recentlyRegisteredUsersF: () => this.$root.api('users', {
+				origin: 'combined',
 				sort: '+createdAt',
 				limit: 10
 			}),
