@@ -4,7 +4,6 @@
 	:class="{ reacted: note.myReaction == reaction }"
 	@click="toggleReaction(reaction)"
 	v-if="count > 0"
-	v-particle="!isMe"
 >
 	<mk-reaction-icon :reaction="reaction" ref="icon"/>
 	<span>{{ count }}</span>
@@ -36,11 +35,6 @@ export default Vue.extend({
 			default: true,
 		},
 	},
-	computed: {
-		isMe(): boolean {
-			return this.$store.getters.isSignedIn && this.$store.state.i.id === this.note.userId;
-		},
-	},
 	watch: {
 		count() {
 			this.anime();
@@ -48,7 +42,6 @@ export default Vue.extend({
 	},
 	methods: {
 		toggleReaction() {
-			if (this.isMe) return;
 			if (!this.canToggle) return;
 
 			const oldReaction = this.note.myReaction;

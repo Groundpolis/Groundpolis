@@ -1,5 +1,5 @@
 <template>
-<div class="mk-reactions-viewer" :class="{ isMe }">
+<div class="mk-reactions-viewer">
 	<x-reaction v-for="(count, reaction) in reactions" :reaction="reaction" :count="count" :note="note" :key="reaction"/>
 </div>
 </template>
@@ -22,9 +22,6 @@ export default Vue.extend({
 		reactions(): any {
 			return this.note.reactionCounts;
 		},
-		isMe(): boolean {
-			return this.$store.getters.isSignedIn && this.$store.state.i.id === this.note.userId;
-		},
 	},
 });
 </script>
@@ -35,11 +32,4 @@ export default Vue.extend({
 
 	&:empty
 		display none
-
-	&.isMe
-		> span
-			cursor default !important
-
-			&:hover
-				background var(--reactionViewerButtonBg) !important
 </style>
