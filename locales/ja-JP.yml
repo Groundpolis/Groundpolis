@@ -1700,6 +1700,7 @@ mobile/views/components/notifications.vue:
 
 mobile/views/components/post-form.vue:
   add-visible-user: "ユーザーを追加"
+  preview: "プレビュー"
   submit: "投稿"
   reply: "返信"
   renote: "Renote"

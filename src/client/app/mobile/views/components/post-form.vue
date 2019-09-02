@@ -45,6 +45,10 @@
 			</footer>
 			<input ref="file" class="file" type="file" multiple="multiple" @change="onChangeFile"/>
 		</div>
+		<details v-if="preview" class="preview" ref="preview" :open="$store.state.device.showPostPreview" @toggle="togglePreview">
+			<summary>{{ $t('preview') }}</summary>
+			<mk-note class="note" :note="preview" :key="preview.id" :compact="true" :preview="true" />
+		</details>
 	</div>
 	<div class="hashtags" v-if="recentHashtags.length > 0 && $store.state.settings.suggestRecentHashtags">
 		<a v-for="tag in recentHashtags.slice(0, 5)" :key="tag" @click="addTag(tag)">#{{ tag }}</a>
@@ -60,7 +64,7 @@ import MkVisibilityChooser from '../../../common/views/components/visibility-cho
 import getFace from '../../../common/scripts/get-face';
 import { parse } from '../../../../../mfm/parse';
 import { host } from '../../../config';
-import { erase, unique } from '../../../../../prelude/array';
+import { erase, unique, concat } from '../../../../../prelude/array';
 import { length } from 'stringz';
 import { toASCII } from 'punycode';
 import extractMentions from '../../../../../misc/extract-mentions';
@@ -107,9 +111,25 @@ export default Vue.extend({
 		}
 	},
 
+	watch: {
+		text() {
+			this.doPreview();
+		},
+		files() {
+			this.doPreview();
+		},
+		visibility() {
+			this.doPreview();
+		},
+		localOnly() {
+			this.doPreview();
+		},
+	},
+
 	data() {
 		return {
 			posting: false,
+			preview: null,
 			text: '',
 			uploadings: [],
 			files: [],
@@ -371,10 +391,53 @@ export default Vue.extend({
 		},
 
 		clear() {
+			this.preview = null;
 			this.text = '';
 			this.files = [];
 			this.poll = false;
 			this.$emit('change-attached-files');
+		},
+
+		togglePreview() {
+			this.$store.commit('device/set', { key: 'showPostPreview', value: this.$refs.preview.open });
+		},
+
+		doPreview() {
+			if (!this.canPost) {
+				this.preview = null;
+				return;
+			}
+
+			this.$root.getMeta().then(meta => {
+				const localEmojis = (meta && meta.emojis) ? meta.emojis : [];
+				const ms = this.text.match(/:[\w-]+@[\w.-]+:/g) || [];
+				const remoteEmojis = ms.map(m => {
+					const m2 = m.match(/:(.*)@(.*):/);
+					return {
+						name: `${m2[1]}@${m2[2]}`,
+						host: m2[2],
+						url: `${config.url}/files/${m2[1]}@${m2[2]}/${Math.floor(Date.now() / 1000 / 3600)}.png`
+					}
+				});
+				const emojis = concat([localEmojis, remoteEmojis]);
+
+				this.preview = {
+					id: `${Math.random()}`,
+					createdAt: new Date().toISOString(),
+					userId: this.$store.state.i.id,
+					user: this.$store.state.i,
+					text: this.text === '' ? undefined : this.$store.state.i.isCat ? nyaize(this.text.trim()) : this.text.trim(),
+					visibility: this.visibility,
+					localOnly: this.localOnly,
+					fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
+					files: this.files || [],
+					replyId: this.reply ? this.reply.id : undefined,
+					reply: this.reply,
+					renoteId: this.renote ? this.renote.id : this.quoteId ? this.quoteId : undefined,
+					renote: this.renote,
+					emojis,
+				};
+			});
 		},
 
 		post(v: any) {
@@ -590,6 +653,15 @@ export default Vue.extend({
 					margin-right auto
 					margin-left 8px
 					color var(--link)
+
+		> .preview
+			> summary
+				padding 12px
+				font-size 14px
+				color var(--text)
+
+			> .note
+				border-top solid var(--lineWidth) var(--faceDivider)
 
 	> .hashtags
 		margin 8px

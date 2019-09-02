@@ -1533,6 +1533,7 @@ mobile/views/components/notifications.vue:
   empty: "No notifications"
 mobile/views/components/post-form.vue:
   add-visible-user: "Add a user"
+  preview: "Preview"
   submit: "Post"
   reply: "Reply"
   renote: "Renote"
