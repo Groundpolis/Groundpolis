@@ -336,10 +336,12 @@ common/views/pages/explore.vue:
   recommended-users: "Recommended users"
   popular-users: "Popular users"
   recently-updated-users: "Recently active users"
-  recently-registered-users: "Users who joined recently"
+  recently-registered-users: "Recently registed users"
+  recently-found-users: "Recently found users"
   popular-tags: "Popular Tags"
   federated: "From the fediverse"
   explore: "Explore {host}"
+  explore-fediverse: "Explore fediverse"
   users-info: "Currently, {users} users are registered here"
 common/views/components/url-preview.vue:
   enable-player: "Enable playback"

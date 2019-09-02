@@ -1,15 +1,30 @@
 <template>
 <div>
-	<ui-container :show-header="false" v-if="meta && stats">
-		<div class="kpdsmpnk" :style="{ backgroundImage: meta.bannerUrl ? `url(${meta.bannerUrl})` : null }">
-			<div>
-				<router-link to="/explore" class="title">{{ $t('explore', { host: meta.name }) }}</router-link>
-				<span>{{ $t('users-info', { users: num(stats.originalUsersCount) }) }}</span>
-			</div>
-		</div>
-	</ui-container>
+	<div class="localfedi7" v-if="meta && stats && tag == null" :style="{ backgroundImage: meta.bannerUrl ? `url(${meta.bannerUrl})` : null }">
+		<header>{{ $t('explore', { host: meta.name }) }}</header>
+		<div>{{ $t('users-info', { users: num(stats.originalUsersCount) }) }}</div>
+	</div>
 
-	<ui-container :body-togglable="true" :expanded="tag == null" ref="tags">
+	<template v-if="tag == null">
+		<mk-user-list :make-promise="verifiedUsers" :expanded="false">
+			<fa :icon="faBookmark" fixed-width/>{{ $t('verified-users') }}
+		</mk-user-list>
+		<mk-user-list :make-promise="popularUsers" :expanded="false">
+			<fa :icon="faChartLine" fixed-width/>{{ $t('popular-users') }}
+		</mk-user-list>
+		<mk-user-list :make-promise="recentlyUpdatedUsers" :expanded="false">
+			<fa :icon="faCommentAlt" fixed-width/>{{ $t('recently-updated-users') }}
+		</mk-user-list>
+		<mk-user-list :make-promise="recentlyRegisteredUsers" :expanded="false">
+			<fa :icon="faPlus" fixed-width/>{{ $t('recently-registered-users') }}
+		</mk-user-list>
+	</template>
+
+	<div class="localfedi7" v-if="tag == null" :style="{ backgroundImage: `url(/assets/fedi.jpg)` }">
+		<header>{{ $t('explore-fediverse') }}</header>
+	</div>
+
+	<ui-container :body-togglable="true" :expanded="false" ref="tags">
 		<template #header><fa :icon="faHashtag" fixed-width/>{{ $t('popular-tags') }}</template>
 
 		<div class="vxjfqztj">
@@ -18,28 +33,19 @@
 		</div>
 	</ui-container>
 
-	<mk-user-list v-if="tag != null" :make-promise="tagUsers" :key="`${tag}-local`">
+	<mk-user-list v-if="tag != null" :make-promise="tagUsers" :key="`${tag}`">
 		<fa :icon="faHashtag" fixed-width/>{{ tag }}
-	</mk-user-list>
-	<mk-user-list v-if="tag != null" :make-promise="tagRemoteUsers" :key="`${tag}-remote`">
-		<fa :icon="faHashtag" fixed-width/>{{ tag }} ({{ $t('federated') }})
 	</mk-user-list>
 
 	<template v-if="tag == null">
-		<mk-user-list :make-promise="verifiedUsers">
-			<fa :icon="faBookmark" fixed-width/>{{ $t('verified-users') }}
-		</mk-user-list>
-		<mk-user-list :make-promise="popularUsers">
-			<fa :icon="faChartLine" fixed-width/>{{ $t('popular-users') }}
-		</mk-user-list>
-		<mk-user-list :make-promise="recommendedUsers">
+		<mk-user-list :make-promise="recommendedUsers" :expanded="false">
 			<fa icon="users" fixed-width/>{{ $t('recommended-users') }}
 		</mk-user-list>
-		<mk-user-list :make-promise="recentlyUpdatedUsers">
+		<mk-user-list :make-promise="recentlyUpdatedUsersF" :expanded="false">
 			<fa :icon="faCommentAlt" fixed-width/>{{ $t('recently-updated-users') }}
 		</mk-user-list>
-		<mk-user-list :make-promise="recentlyRegisteredUsers">
-			<fa :icon="faPlus" fixed-width/>{{ $t('recently-registered-users') }}
+		<mk-user-list :make-promise="recentlyRegisteredUsersF" :expanded="false">
+			<fa :icon="faPlus" fixed-width/>{{ $t('recently-found-users') }}
 		</mk-user-list>
 	</template>
 </div>
@@ -58,6 +64,12 @@ export default Vue.extend({
 		tag: {
 			type: String,
 			required: false
+		}
+	},
+
+	inject: {
+		inNakedDeckColumn: {
+			default: false
 		}
 	},
 
@@ -89,6 +101,15 @@ export default Vue.extend({
 				sort: '+createdAt',
 				limit: 10
 			}),
+			recentlyUpdatedUsersF: () => this.$root.api('users', {
+				sort: '+updatedAt',
+				limit: 10
+			}),
+			recentlyRegisteredUsersF: () => this.$root.api('users', {
+				state: 'alive',
+				sort: '+createdAt',
+				limit: 10
+			}),
 			tagsLocal: [],
 			tagsRemote: [],
 			stats: null,
@@ -103,17 +124,6 @@ export default Vue.extend({
 			return () => this.$root.api('hashtags/users', {
 				tag: this.tag,
 				state: 'alive',
-				origin: 'local',
-				sort: '+follower',
-				limit: 30
-			});
-		},
-
-		tagRemoteUsers(): () => Promise<any> {
-			return () => this.$root.api('hashtags/users', {
-				tag: this.tag,
-				state: 'alive',
-				origin: 'remote',
 				sort: '+follower',
 				limit: 30
 			});
@@ -156,6 +166,30 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
+.localfedi7
+	overflow hidden
+	background var(--face)
+	color #fff
+	text-shadow 0 0 8px #000
+	border-radius 6px
+	padding 16px
+	margin-top 16px
+	margin-bottom 16px
+	height 80px
+	background-position 50%
+	background-size cover
+
+	> header
+		font-size 20px
+		font-weight bold
+
+	> div
+		font-size 14px
+		opacity 0.8
+
+.localfedi7:first-child
+	margin-top 0
+
 .vxjfqztj
 	padding 16px
 
@@ -164,35 +198,5 @@ export default Vue.extend({
 
 		&.local
 			font-weight bold
-
-.kpdsmpnk
-	min-height 100px
-	padding 16px
-	background-position center
-	background-size cover
-
-	&:before
-		content ""
-		display block
-		position absolute
-		top 0
-		left 0
-		width 100%
-		height 100%
-		background rgba(0, 0, 0, 0.3)
-
-	> div
-		color #fff
-		text-shadow 0 0 8px #00
-
-		> .title
-			display block
-			font-size 20px
-			font-weight bold
-			color inherit
-
-		> span
-			font-size 14px
-			opacity 0.8
 
 </style>

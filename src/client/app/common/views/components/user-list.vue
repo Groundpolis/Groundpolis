@@ -1,5 +1,5 @@
 <template>
-<ui-container :body-togglable="true">
+<ui-container :body-togglable="true" :expanded="expanded">
 	<template #header><slot></slot></template>
 
 	<mk-error v-if="!fetching && !inited" @retry="init()"/>
@@ -47,6 +47,10 @@ export default Vue.extend({
 		showFollows: {
 			type: Boolean,
 			default: false
+		},
+		expanded: {
+			type: Boolean,
+			default: true
 		},
 	},
 
