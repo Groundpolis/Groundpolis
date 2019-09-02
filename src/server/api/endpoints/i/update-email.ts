@@ -78,7 +78,7 @@ export default define(meta, async (ps, user) => {
 				user: meta.smtpUser,
 				pass: meta.smtpPass
 			} : undefined
-		});
+		} as any);
 
 		const link = `${config.url}/verify-email/${code}`;
 
