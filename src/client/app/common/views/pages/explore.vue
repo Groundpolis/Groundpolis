@@ -123,8 +123,8 @@ export default Vue.extend({
 	computed: {
 		tagUsers(): () => Promise<any> {
 			return () => this.$root.api('hashtags/users', {
+				origin: 'combined',
 				tag: this.tag,
-				state: 'alive',
 				sort: '+follower',
 				limit: 30
 			});
