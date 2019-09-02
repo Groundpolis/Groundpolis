@@ -1,9 +1,9 @@
 <template>
 <div class="kedshtep" :class="{ naked, inNakedDeckColumn, shadow: $store.state.device.useShadow, round: $store.state.device.roundedCorners }">
-	<header v-if="showHeader">
+	<header v-if="showHeader" @click="toggleContent(!showBody)">
 		<div class="title"><slot name="header"></slot></div>
 		<slot name="func"></slot>
-		<button v-if="bodyTogglable" @click="toggleContent(!showBody)">
+		<button v-if="bodyTogglable">
 			<template v-if="showBody"><fa icon="angle-up"/></template>
 			<template v-else><fa icon="angle-down"/></template>
 		</button>
@@ -57,6 +57,7 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 .kedshtep
 	overflow hidden
+	cursor pointer
 
 	&:not(.inNakedDeckColumn)
 		background var(--face)
