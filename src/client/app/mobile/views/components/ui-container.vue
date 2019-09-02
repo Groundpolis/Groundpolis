@@ -47,6 +47,7 @@ export default Vue.extend({
 	},
 	methods: {
 		toggleContent(show: boolean) {
+			if (!this.bodyTogglable) return;
 			this.showBody = show;
 		}
 	}
