@@ -538,7 +538,7 @@ export default Vue.extend({
 					createdAt: new Date().toISOString(),
 					userId: this.$store.state.i.id,
 					user: this.$store.state.i,
-					text: this.text === '' ? undefined : this.$store.state.i.isCat ? nyaize(this.text) : this.text,
+					text: this.text === '' ? undefined : this.$store.state.i.isCat ? nyaize(this.text.trim()) : this.text.trim(),
 					visibility: this.visibility,
 					localOnly: this.localOnly,
 					fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
