@@ -106,7 +106,6 @@ export default Vue.extend({
 				limit: 10
 			}),
 			recentlyRegisteredUsersF: () => this.$root.api('users', {
-				state: 'alive',
 				sort: '+createdAt',
 				limit: 10
 			}),
