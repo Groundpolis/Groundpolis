@@ -41,9 +41,6 @@
 		<mk-user-list :make-promise="recommendedUsers" :expanded="false">
 			<fa icon="users" fixed-width/>{{ $t('recommended-users') }}
 		</mk-user-list>
-		<mk-user-list :make-promise="recentlyUpdatedUsersF" :expanded="false">
-			<fa :icon="faCommentAlt" fixed-width/>{{ $t('recently-updated-users') }}
-		</mk-user-list>
 		<mk-user-list :make-promise="recentlyRegisteredUsersF" :expanded="false">
 			<fa :icon="faPlus" fixed-width/>{{ $t('recently-found-users') }}
 		</mk-user-list>
