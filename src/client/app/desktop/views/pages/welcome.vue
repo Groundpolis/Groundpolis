@@ -396,9 +396,6 @@ export default Vue.extend({
 							> *
 								margin-right 16px
 
-					> .desc
-						max-width calc(100% - 150px)
-
 					> .sign
 						font-size 120%
 						margin-bottom 0
