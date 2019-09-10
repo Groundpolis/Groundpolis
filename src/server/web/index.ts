@@ -19,7 +19,6 @@ import Note, { pack as packNote } from '../../models/note';
 import getNoteSummary from '../../misc/get-note-summary';
 import fetchMeta from '../../misc/fetch-meta';
 import Emoji from '../../models/emoji';
-import * as pkg from '../../../package.json';
 import { genOpenapiSpec } from '../api/openapi/gen-spec';
 import { getAtomFeed } from './feed/atom';
 import { getRSSFeed } from './feed/rss';
@@ -240,7 +239,7 @@ router.get('/info', async ctx => {
 		}
 	});
 	await ctx.render('info', {
-		version: pkg.version,
+		version: config.version,
 		machine: os.hostname(),
 		os: os.platform(),
 		node: process.version,

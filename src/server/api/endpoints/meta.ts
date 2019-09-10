@@ -4,7 +4,6 @@ import config from '../../../config';
 import Emoji from '../../../models/emoji';
 import define from '../define';
 import fetchMeta from '../../../misc/fetch-meta';
-import * as pkg from '../../../../package.json';
 
 export const meta = {
 	stability: 'stable',
@@ -31,7 +30,7 @@ export const meta = {
 			version: {
 				type: 'string',
 				description: 'The version of Misskey of this instance.',
-				example: pkg.version
+				example: config.version
 			},
 			name: {
 				type: 'string',
@@ -90,7 +89,7 @@ export default define(meta, async (ps, me) => {
 	const response: any = {
 		maintainer: instance.maintainer,
 
-		version: pkg.version,
+		version: config.version,
 
 		name: instance.name,
 		uri: config.url,

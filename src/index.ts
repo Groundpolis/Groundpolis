@@ -17,7 +17,6 @@ import queueStats from './daemons/queue-stats';
 import loadConfig from './config/load';
 import { Config } from './config/types';
 import { lessThan } from './prelude/array';
-import * as pkg from '../package.json';
 import { program } from './argv';
 import { checkMongoDB } from './misc/check-mongodb';
 import { showMachineInfo } from './misc/show-machine-info';
@@ -56,10 +55,10 @@ function main() {
 	}
 }
 
-function greet() {
+function greet(config: Config) {
 	if (!program.quiet) {
 		//#region Misskey logo
-		const v = `v${pkg.version}`;
+		const v = `v${config.version}`;
 		console.log('  _____ _         _           ');
 		console.log(' |     |_|___ ___| |_ ___ _ _ ');
 		console.log(' | | | | |_ -|_ -| \'_| -_| | |');
@@ -75,20 +74,20 @@ function greet() {
 	}
 
 	bootLogger.info('Welcome to Misskey!');
-	bootLogger.info(`Misskey v${pkg.version}`, null, true);
+	bootLogger.info(`Misskey v${config.version}`, null, true);
 }
 
 /**
  * Init master process
  */
 async function masterMain() {
-	greet();
-
 	let config: Config;
 
 	try {
 		// initialize app
 		config = await init();
+
+		greet(config);
 
 		if (config.port == null) {
 			bootLogger.error('The port is not configured. Please configure port.', null, true);
@@ -125,11 +124,11 @@ async function workerMain() {
 }
 
 async function queueMain() {
-	greet();
-
 	try {
 		// initialize app
-		await init();
+		const config = await init();
+
+		greet(config);
 	} catch (e) {
 		bootLogger.error('Fatal error occurred during initialization', null, true);
 		process.exit(1);
