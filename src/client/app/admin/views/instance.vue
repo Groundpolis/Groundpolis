@@ -281,7 +281,7 @@ export default Vue.extend({
 				iconUrl: this.iconUrl,
 				name: this.name,
 				description: this.description,
-				langs: this.languages.split(' '),
+				langs: this.languages ? this.languages.split(' ') : [],
 				cacheRemoteFiles: this.cacheRemoteFiles,
 				localDriveCapacityMb: parseInt(this.localDriveCapacityMb, 10),
 				remoteDriveCapacityMb: parseInt(this.remoteDriveCapacityMb, 10),

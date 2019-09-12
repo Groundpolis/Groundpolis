@@ -29,7 +29,7 @@ export default Vue.extend({
 	methods: {
 		save() {
 			this.$root.api('admin/update-meta', {
-				hidedTags: this.hidedTags.split('\n')
+				hidedTags: this.hidedTags ? this.hidedTags.split('\n') : [],
 			}).then(() => {
 				//this.$root.os.apis.dialog({ text: `Saved` });
 			}).catch(e => {

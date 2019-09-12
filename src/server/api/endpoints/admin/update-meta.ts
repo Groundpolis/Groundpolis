@@ -374,7 +374,7 @@ export default define(meta, async (ps) => {
 	}
 
 	if (Array.isArray(ps.hidedTags)) {
-		set.hidedTags = ps.hidedTags;
+		set.hidedTags = ps.hidedTags.filter(Boolean);
 	}
 
 	if (ps.mascotImageUrl !== undefined) {
@@ -437,8 +437,8 @@ export default define(meta, async (ps) => {
 		set['maintainer.email'] = ps.maintainerEmail;
 	}
 
-	if (ps.langs !== undefined) {
-		set.langs = ps.langs;
+	if (Array.isArray(ps.langs)) {
+		set.langs = ps.langs.filter(Boolean);
 	}
 
 	if (ps.summalyProxy !== undefined) {
