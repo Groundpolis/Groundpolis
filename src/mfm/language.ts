@@ -186,10 +186,11 @@ export const mfmLanguage = P.createLanguage({
 	},
 	hashtag: () => P((input, i) => {
 		const text = input.substr(i);
-		const match = text.match(/^#([^\s\.,!\?'"#:\/\[\]]+)/i);
+		const match = text.match(/^#((?:#\ufe0f)?[^\s\.,!\?'"#:\/\[\]]+)/i);
 		if (!match) return P.makeFailure(i, 'not a hashtag');
 		let hashtag = match[1];
 		hashtag = removeOrphanedBrackets(hashtag);
+		if (hashtag.match(/^\ufe0f/)) return P.makeFailure(i, 'not a hashtag');
 		if (hashtag.match(/^[0-9]+$/)) return P.makeFailure(i, 'not a hashtag');
 		if (input[i - 1] != null && input[i - 1].match(/[a-z0-9]/i)) return P.makeFailure(i, 'not a hashtag');
 		if (hashtag.length > 50) return P.makeFailure(i, 'not a hashtag');
