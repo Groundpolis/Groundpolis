@@ -4,7 +4,7 @@ import createReaction from '../../../../../services/note/reaction/create';
 import define from '../../../define';
 import { getNote } from '../../../common/getters';
 import { ApiError } from '../../../error';
-const emojilib = require('emojilib');
+import { emojilist } from '../../../../../misc/emojilist';
 
 export const meta = {
 	stability: 'stable',
@@ -65,9 +65,8 @@ export default define(meta, async (ps, user) => {
 	});
 
 	if (ps.reaction === '-random') {
-		const list: string[] = Object.entries(emojilib.lib).filter((x: any) => x[1].category !== 'flags').map(y => y[0]);
-		const code = list[Math.floor(Math.random() * list.length)];
-		ps.reaction = emojilib.lib[code].char;
+		const index = Math.floor(Math.random() * emojilist.length);
+		ps.reaction = emojilist[index].char;
 	}
 
 	await createReaction(user, note, ps.reaction).catch(e => {

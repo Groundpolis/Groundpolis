@@ -14,12 +14,12 @@
 		<header class="category"><fa :icon="categories.find(x => x.isActive).icon" fixed-width/> {{ categories.find(x => x.isActive).text }}</header>
 		<template v-if="categories.find(x => x.isActive).name">
 			<div class="list">
-				<button v-for="emoji in Object.entries(lib).filter(([k, v]) => v.category === categories.find(x => x.isActive).name)"
-					:title="emoji[0]"
-					@click="chosen(emoji[1].char)"
-					:key="emoji[0]"
+				<button v-for="emoji in emojilist.filter(e => e.category === categories.find(x => x.isActive).name)"
+					:title="emoji.name"
+					@click="chosen(emoji.char)"
+					:key="emoji.name"
 				>
-					<mk-emoji :emoji="emoji[1].char"/>
+					<mk-emoji :emoji="emoji.char"/>
 				</button>
 			</div>
 		</template>
@@ -52,7 +52,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import i18n from '../../../i18n';
-import { lib } from 'emojilib';
+import { emojilist } from '../../../../../misc/emojilist';
 import { getStaticImageUrl } from '../../../common/scripts/get-static-image-url';
 import { faAsterisk, faLeaf, faUtensils, faFutbol, faCity, faDice } from '@fortawesome/free-solid-svg-icons';
 import { faHeart, faFlag } from '@fortawesome/free-regular-svg-icons';
@@ -70,7 +70,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			lib,
+			emojilist,
 			getStaticImageUrl,
 			customEmojis: [],
 			remoteEmojis: [],
