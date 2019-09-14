@@ -45,9 +45,9 @@
 			</footer>
 			<input ref="file" class="file" type="file" multiple="multiple" @change="onChangeFile"/>
 		</div>
-		<details v-if="preview" class="preview" ref="preview" :open="$store.state.device.showPostPreview" @toggle="togglePreview">
+		<details class="preview" ref="preview" :open="$store.state.device.showPostPreview" @toggle="togglePreview">
 			<summary>{{ $t('preview') }}</summary>
-			<mk-note class="note" :note="preview" :key="preview.id" :compact="true" :preview="true" />
+			<mk-note v-if="preview" class="note" :note="preview" :key="preview.id" :compact="true" :preview="true" />
 		</details>
 	</div>
 	<div class="hashtags" v-if="recentHashtags.length > 0 && $store.state.settings.suggestRecentHashtags">
@@ -400,10 +400,18 @@ export default Vue.extend({
 
 		togglePreview() {
 			this.$store.commit('device/set', { key: 'showPostPreview', value: this.$refs.preview.open });
+			if (this.$refs.preview.open) {
+				this.doPreview();
+			}
 		},
 
 		doPreview() {
 			if (!this.canPost) {
+				this.preview = null;
+				return;
+			}
+
+			if (!this.$store.state.device.showPostPreview) {
 				this.preview = null;
 				return;
 			}
