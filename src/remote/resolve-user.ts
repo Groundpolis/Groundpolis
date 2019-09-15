@@ -60,7 +60,7 @@ export default async (username: string, _host: string, option?: any, resync = fa
 				// validate uri
 				const uri = new URL(self.href);
 				if (uri.hostname !== hostAscii) {
-					throw new Error(`Invalied uri`);
+					throw new Error(`Invalid uri`);
 				}
 
 				await User.update({

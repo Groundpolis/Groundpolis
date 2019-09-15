@@ -33,7 +33,7 @@ function toNote(object: IObject, uri: string): IApNote {
 	}
 
 	if (!isNote(object)) {
-		throw new Error(`invalid Note: invalied object type ${object.type}`);
+		throw new Error(`invalid Note: invalid object type ${object.type}`);
 	}
 
 	if (object.id && extractApHost(object.id) !== expectHost) {
