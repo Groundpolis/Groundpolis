@@ -87,7 +87,7 @@ export default define(meta, async (ps, me) => {
 
 	// state
 	q.$and.push(
-		ps.state == 'available' ? { isSuspended: false } :
+		ps.state == 'available' ? { isSuspended: { $ne: true } } :
 		ps.state == 'admin' ? { isAdmin: true } :
 		ps.state == 'moderator' ? { isModerator: true } :
 		ps.state == 'adminOrModerator' ? {
