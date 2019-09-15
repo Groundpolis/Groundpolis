@@ -122,7 +122,7 @@ export default Vue.extend({
 
 	watch: {
 		text() {
-			this.doPreview();
+			this.triggerPreview();
 		},
 		files() {
 			this.doPreview();
@@ -139,6 +139,7 @@ export default Vue.extend({
 		return {
 			posting: false,
 			preview: null,
+			previewTimer: null,
 			text: '',
 			files: [],
 			uploadings: [],
@@ -512,6 +513,11 @@ export default Vue.extend({
 
 		togglePreview() {
 			this.$store.commit('device/set', { key: 'showPostPreview', value: this.$refs.preview.open });
+		},
+
+		triggerPreview() {
+			if (this.previewTimer) clearTimeout(this.previewTimer);
+			this.previewTimer = setTimeout(this.doPreview, 1000);
 		},
 
 		doPreview() {
