@@ -36,6 +36,7 @@ export const meta = {
 		state: {
 			validator: $.optional.str.or([
 				'all',
+				'available',
 				'admin',
 				'moderator',
 				'adminOrModerator',
@@ -86,6 +87,7 @@ export default define(meta, async (ps, me) => {
 
 	// state
 	q.$and.push(
+		ps.state == 'available' ? { isSuspended: false } :
 		ps.state == 'admin' ? { isAdmin: true } :
 		ps.state == 'moderator' ? { isModerator: true } :
 		ps.state == 'adminOrModerator' ? {

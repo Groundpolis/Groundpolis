@@ -45,6 +45,7 @@
 				<ui-select v-model="state">
 					<template #label>{{ $t('users.state.title') }}</template>
 					<option value="all">{{ $t('users.state.all') }}</option>
+					<option value="available">Available</option>
 					<option value="admin">{{ $t('users.state.admin') }}</option>
 					<option value="moderator">{{ $t('users.state.moderator') }}</option>
 					<option value="verified">{{ $t('users.state.verified') }}</option>
@@ -68,6 +69,7 @@
 				<ui-input v-model="searchDescription" type="text" spellcheck="false" @input="fetchUsers(true)">
 					<span>{{ $t('description') }}</span>
 				</ui-input>
+				<ui-button @click="fetchUsers(true)"><fa :icon="faSync"/></ui-button>
 			</ui-horizon-group>
 			<sequential-entrance animation="entranceFromTop" delay="25">
 				<x-user v-for="user in users" :key="user.id" :user='user' :click="showUserOnClick"/>
