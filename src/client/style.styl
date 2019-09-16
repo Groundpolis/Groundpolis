@@ -6,6 +6,12 @@
 		color #fff
 */
 
+@font-face {
+	font-family: ColorEmoji;
+	src: local('Noto Color Emoji'), local('Segoe UI Emoji');
+	unicode-range: U+203C, U+2409, U+2130-27FF, U+2900-2BFF, U+303D, U+3297, U+3299, U+1F000-1F9FF;
+}
+
 *
 	position relative
 	box-sizing border-box
@@ -18,7 +24,7 @@ html, body
 	padding 0
 	scroll-behavior smooth
 	text-size-adjust 100%
-	font-family Roboto, HelveticaNeue, Arial, sans-serif
+	font-family ColorEmoji, Roboto, HelveticaNeue, Arial, sans-serif
 
 html.changing-theme
 	&, *
