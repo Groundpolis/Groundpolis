@@ -21,7 +21,7 @@
 			<button title="Pick" class="emoji" @click="emoji" ref="emoji" v-if="!$root.isMobile">
 				<fa :icon="['far', 'laugh']"/>
 			</button>
-			<button title="ランダム" @click="react('-random')"><fa :icon="faRandom"/></button>
+			<button title="Random" @click="reactRandom()"><fa :icon="faRandom"/></button>
 			<button v-if="enableEmojiReaction && recentReaction != null" @click="react(recentReaction)" tabindex="11" v-particle><mk-reaction-icon :reaction="recentReaction"/></button>
 		</div>
 	</div>
@@ -34,6 +34,7 @@ import i18n from '../../../i18n';
 import anime from 'animejs';
 import { emojiRegex } from '../../../../../misc/emoji-regex';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
+import { emojilist } from '../../../../../misc/emojilist';
 
 export default Vue.extend({
 	i18n: i18n('common/views/components/reaction-picker.vue'),
@@ -146,6 +147,13 @@ export default Vue.extend({
 			if (!this.text) return;
 			if (!this.text.match(emojiRegex)) return;
 			this.reactText();
+		},
+
+		reactRandom() {
+			const list = emojilist.filter(x => x.category !== 'flags');
+			const index = Math.floor(Math.random() * list.length);
+			const char = list[index].char;
+			this.react(char);
 		},
 
 		async emoji() {

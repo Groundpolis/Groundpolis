@@ -55,7 +55,6 @@ gulp.task('build:copy', gulp.parallel('build:copy:views', 'build:copy:fonts', ()
 	gulp.src([
 		'./build/Release/crypto_key.node',
 		'./src/const.json',
-		'./src/emojilist.json',
 		'./src/server/web/views/**/*',
 		'./src/**/assets/**/*',
 		'!./src/client/app/**/assets/**/*'
