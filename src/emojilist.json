@@ -1443,7 +1443,6 @@
 	{ "category": "flags", "char": "🇮🇨", "name": "canary_islands", "keywords": ["canary", "islands", "flag", "nation", "country", "banner"] },
 	{ "category": "flags", "char": "🇰🇾", "name": "cayman_islands", "keywords": ["cayman", "islands", "flag", "nation", "country", "banner"] },
 	{ "category": "flags", "char": "🇨🇫", "name": "central_african_republic", "keywords": ["central", "african", "republic", "flag", "nation", "country", "banner"] },
-	{ "category": "flags", "char": "🇪🇦", "name": "ceuta_and_melilla", "keywords": ["flag", "nation", "country", "banner"] },
 	{ "category": "flags", "char": "🇹🇩", "name": "chad", "keywords": ["td", "flag", "nation", "country", "banner"] },
 	{ "category": "flags", "char": "🇨🇱", "name": "chile", "keywords": ["flag", "nation", "country", "banner"] },
 	{ "category": "flags", "char": "🇨🇳", "name": "cn", "keywords": ["china", "chinese", "prc", "flag", "country", "nation", "banner"] },
