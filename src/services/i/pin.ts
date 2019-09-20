@@ -32,7 +32,10 @@ export async function addPinned(user: IUser, noteId: mongo.ObjectID) {
 	//#region 現在ピン留め投稿している投稿が実際にデータベースに存在しているのかチェック
 	// データベースの欠損などで存在していない(または破損している)場合があるので。
 	// 存在していなかったらピン留め投稿から外す
-	const pinnedNotes = await packMany(pinnedNoteIds, null, { detail: true, removeError: true });
+	let pinnedNotes = await packMany(pinnedNoteIds, null, { detail: true, removeError: true });
+
+	// 削除済みもこのタイミングで消してしまう
+	pinnedNotes = pinnedNotes.filter(x => !x.deletedAt);
 
 	pinnedNoteIds = pinnedNoteIds.filter(id => pinnedNotes.some(n => id.equals(n.id)));
 	//#endregion
