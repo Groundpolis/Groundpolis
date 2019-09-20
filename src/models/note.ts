@@ -181,15 +181,17 @@ export const hideNote = async (packedNote: any, meId: mongo.ObjectID) => {
 	}
 };
 
-export const packMany = (
+export const packMany = async (
 	notes: (string | mongo.ObjectID | INote)[],
 	me?: string | mongo.ObjectID | IUser,
 	options?: {
 		detail?: boolean;
 		skipHide?: boolean;
+		removeError?: boolean;
 	}
 ) => {
-	return Promise.all(notes.map(n => pack(n, me, options)));
+	const items = await Promise.all(notes.map(n => pack(n, me, options)));
+	return (options && options.removeError) ? items.filter(x => x != null) : items;
 };
 
 /**

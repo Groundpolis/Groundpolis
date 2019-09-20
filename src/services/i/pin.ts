@@ -32,9 +32,9 @@ export async function addPinned(user: IUser, noteId: mongo.ObjectID) {
 	//#region 現在ピン留め投稿している投稿が実際にデータベースに存在しているのかチェック
 	// データベースの欠損などで存在していない(または破損している)場合があるので。
 	// 存在していなかったらピン留め投稿から外す
-	const pinnedNotes = await packMany(pinnedNoteIds, null, { detail: true });
+	const pinnedNotes = await packMany(pinnedNoteIds, null, { detail: true, removeError: true });
 
-	pinnedNoteIds = pinnedNoteIds.filter(id => pinnedNotes.some(n => n.id.toString() === id.toHexString()));
+	pinnedNoteIds = pinnedNoteIds.filter(id => pinnedNotes.some(n => id.equals(n.id)));
 	//#endregion
 
 	if (pinnedNoteIds.length >= 5) {

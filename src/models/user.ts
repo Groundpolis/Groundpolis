@@ -389,6 +389,7 @@ export const pack = (
 		if (_user.pinnedNoteIds) {
 			// Populate pinned notes
 			_user.pinnedNotes = packNoteMany(_user.pinnedNoteIds, meId, {
+				removeError: true,
 				detail: true
 			});
 		}
