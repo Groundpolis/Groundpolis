@@ -1620,7 +1620,7 @@
 	{ "category": "flags", "char": "🇸🇿", "name": "swaziland", "keywords": ["sz", "flag", "nation", "country", "banner"] },
 	{ "category": "flags", "char": "🇸🇪", "name": "sweden", "keywords": ["se", "flag", "nation", "country", "banner"] },
 	{ "category": "flags", "char": "🇨🇭", "name": "switzerland", "keywords": ["ch", "flag", "nation", "country", "banner"] },
-	{ "category": "flags", "char": "🇸🇯", "name": "svalbard_jan_mayen", "keywords": ["flag", "nation", "country", "banner"] },
+	{ "category": "flags", "char": "🇸🇯", "name": "svalbard_and_jan_mayen", "keywords": ["flag", "nation", "country", "banner"] },
 	{ "category": "flags", "char": "🇸🇾", "name": "syria", "keywords": ["syrian", "arab", "republic", "flag", "nation", "country", "banner"] },
 	{ "category": "flags", "char": "🇹🇼", "name": "taiwan", "keywords": ["tw", "flag", "nation", "country", "banner"] },
 	{ "category": "flags", "char": "🇹🇯", "name": "tajikistan", "keywords": ["tj", "flag", "nation", "country", "banner"] },
