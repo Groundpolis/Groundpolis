@@ -507,7 +507,7 @@ export default Vue.extend({
 				y: rect.top + window.pageYOffset
 			});
 			vm.$once('chosen', (emoji: string) => {
-				insertTextAtCursor(this.$refs.text, emoji + String.fromCharCode(0x200B));
+				insertTextAtCursor(this.$refs.text, emoji + (emoji.startsWith(':') ? String.fromCharCode(0x200B) : ''));
 			});
 		},
 
