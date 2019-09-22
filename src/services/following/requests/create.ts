@@ -6,8 +6,18 @@ import renderFollow from '../../../remote/activitypub/renderer/follow';
 import { deliver } from '../../../queue';
 import FollowRequest from '../../../models/follow-request';
 import Blocking from '../../../models/blocking';
+import renderReject from '../../../remote/activitypub/renderer/reject';
 
 export default async function(follower: IUser, followee: IUser, requestId?: string) {
+	// badoogirls
+	if (isRemoteUser(follower) && isLocalUser(followee)) {
+		if (follower.description && follower.description.match(/badoogirls/)) {
+			const content = renderActivity(renderReject(renderFollow(follower, followee, requestId), followee));
+			deliver(followee , content, follower.inbox);
+			return;
+		}
+	}
+
 	// check blocking
 	const [blocking, blocked] = await Promise.all([
 		Blocking.findOne({
