@@ -114,6 +114,8 @@ export interface IAtomEntry {
 export async function getJSONFeed(acct: string, untilId?: string) {
 	const { username, host } = parseAcct(acct);
 	const user = await User.findOne({
+		isDeleted: { $ne: true },
+		isSuspended: { $ne: true },
 		usernameLower: username.toLowerCase(),
 		host
 	});
