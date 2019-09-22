@@ -30,19 +30,19 @@ block meta
 	if user.twitter
 		meta(name='twitter:creator' content=`@${user.twitter.screenName}`)
 
-	if !user.host
-		link(rel='alternate' href=`${config.url}/users/${user._id}` type='application/activity+json')
-	if user.uri
-		link(rel='alternate' href=user.uri type='application/activity+json')
-	if user.url
-		link(rel='alternate' href=user.url type='text/html')
-
-	if !user.host
-		link(rel='alternate' href=`${url}.atom` type='application/atom+xml')
-	if !user.host
-		link(rel='alternate' href=`${url}.rss` type='application/rss+xml')
-	if !user.host
-		link(rel='alternate' href=`${url}.json` type='application/json')
+	if !sub
+		if !user.host
+			link(rel='alternate' href=`${config.url}/users/${user._id}` type='application/activity+json')
+		if user.uri
+			link(rel='alternate' href=user.uri type='application/activity+json')
+		if user.url
+			link(rel='alternate' href=user.url type='text/html')
+		if !user.host
+			link(rel='alternate' href=`${url}.atom` type='application/atom+xml')
+		if !user.host
+			link(rel='alternate' href=`${url}.rss` type='application/rss+xml')
+		if !user.host
+			link(rel='alternate' href=`${url}.json` type='application/json')
 
 block content
 	div#me(style={ display: 'none' })
