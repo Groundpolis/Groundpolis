@@ -61,7 +61,7 @@ export default define({
 
 
 	> h1
-		margin 0
+		margin 2px 0 8px 0
 		font-size 1em
 		font-weight bold
 		color var(--text)
