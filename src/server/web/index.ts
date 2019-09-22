@@ -140,6 +140,8 @@ router.get('/@:user.json', async ctx => {
 router.get(['/@:user', '/@:user/:sub'], async (ctx, next) => {
 	const { username, host } = parseAcct(ctx.params.user);
 	const user = await User.findOne({
+		isDeleted: { $ne: true },
+		isSuspended: { $ne: true },
 		usernameLower: username.toLowerCase(),
 		host
 	}) as ILocalUser;
@@ -163,6 +165,7 @@ router.get(['/@:user', '/@:user/:sub'], async (ctx, next) => {
 		ctx.set('Cache-Control', 'public, max-age=60');
 	} else {
 		// リモートユーザーなので
+		// サスペンドユーザーのogは出さないがAPI経由でモデレータが閲覧できるように
 		await next();
 	}
 });
@@ -176,6 +179,8 @@ router.get('/users/:user', async ctx => {
 	const userId = new ObjectID(ctx.params.user);
 
 	const user = await User.findOne({
+		isDeleted: { $ne: true },
+		isSuspended: { $ne: true },
 		_id: userId,
 		host: null
 	});
