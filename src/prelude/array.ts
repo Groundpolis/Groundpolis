@@ -120,6 +120,6 @@ export function toArray<T>(x: T | T[] | undefined): T[] {
 	return Array.isArray(x) ? x : x != null ? [x] : [];
 }
 
-export function toSingle<T>(x: T | T[] | undefined): T {
+export function toSingle<T>(x: T | T[] | undefined): T | undefined {
 	return Array.isArray(x) ? x[0] : x;
 }
