@@ -1,4 +1,4 @@
-import { IActivity, ICreate, IDelete, IUpdate, IFollow, IAccept, IReject, IAdd, IRemove, IAnnounce, ILike, IUndo, IBlock } from '../type';
+import { isCreate, isDelete, isUpdate, isFollow, isAccept, isReject, isAdd, isRemove, isAnnounce, isLike, isUndo, isBlock, isCollectionOrOrderedCollection, isCollection, IObject } from '../type';
 import { IRemoteUser } from '../../../models/user';
 import create from './create';
 import performDeleteActivity from './delete';
@@ -13,63 +13,49 @@ import add from './add';
 import remove from './remove';
 import block from './block';
 import { apLogger } from '../logger';
+import Resolver from '../resolver';
+import { toArray } from '../../../prelude/array';
 
-const self = async (actor: IRemoteUser, activity: IActivity): Promise<void> => {
+export async function performActivity(actor: IRemoteUser, activity: IObject) {
+	if (isCollectionOrOrderedCollection(activity)) {
+		const resolver = new Resolver();
+		for (const item of toArray(isCollection(activity) ? activity.items : activity.orderedItems)) {
+			const act = await resolver.resolve(item);
+			await performOneActivity(actor, act);
+		}
+	} else {
+		await performOneActivity(actor, activity);
+	}
+}
+
+export async function performOneActivity(actor: IRemoteUser, activity: IObject): Promise<void> {
 	if (actor.isSuspended) return;
 
-	switch (activity.type) {
-	case 'Create':
-		await create(actor, activity as ICreate);
-		break;
-
-	case 'Delete':
-		await performDeleteActivity(actor, activity as IDelete);
-		break;
-
-	case 'Update':
-		await performUpdateActivity(actor, activity as IUpdate);
-		break;
-
-	case 'Follow':
-		await follow(actor, activity as IFollow);
-		break;
-
-	case 'Accept':
-		await accept(actor, activity as IAccept);
-		break;
-
-	case 'Reject':
-		await reject(actor, activity as IReject);
-		break;
-
-	case 'Add':
-		await add(actor, activity as IAdd).catch(err => apLogger.error(err));
-		break;
-
-	case 'Remove':
-		await remove(actor, activity as IRemove).catch(err => apLogger.error(err));
-		break;
-
-	case 'Announce':
-		await announce(actor, activity as IAnnounce);
-		break;
-
-	case 'Like':
-		await like(actor, activity as ILike);
-		break;
-
-	case 'Undo':
-		await undo(actor, activity as IUndo);
-		break;
-
-	case 'Block':
-		await block(actor, activity as IBlock);
-		break;
-
-	default:
-		apLogger.warn(`unknown activity type: ${activity.type}`);
-		return null;
+	if (isCreate(activity)) {
+		await create(actor, activity);
+	} else if (isDelete(activity)) {
+		await performDeleteActivity(actor, activity);
+	} else if (isUpdate(activity)) {
+		await performUpdateActivity(actor, activity);
+	} else if (isFollow(activity)) {
+		await follow(actor, activity);
+	} else if (isAccept(activity)) {
+		await accept(actor, activity);
+	} else if (isReject(activity)) {
+		await reject(actor, activity);
+	} else if (isAdd(activity)) {
+		await add(actor, activity).catch(err => apLogger.error(err));
+	} else if (isRemove(activity)) {
+		await remove(actor, activity).catch(err => apLogger.error(err));
+	} else if (isAnnounce(activity)) {
+		await announce(actor, activity);
+	} else if (isLike(activity)) {
+		await like(actor, activity);
+	} else if (isUndo(activity)) {
+		await undo(actor, activity);
+	} else if (isBlock(activity)) {
+		await block(actor, activity);
+	} else {
+		apLogger.warn(`unknown activity type: ${(activity as any).type}`);
 	}
-};
-
-export default self;
+}
