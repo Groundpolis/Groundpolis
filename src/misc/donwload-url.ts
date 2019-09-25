@@ -31,7 +31,7 @@ export async function downloadUrl(url: string, path: string) {
 		const req = request({
 			url: requestUrl,
 			proxy: config.proxy,
-			timeout: 10 * 1000,
+			timeout: 30 * 1000,
 			forever: true,
 			headers: {
 				'User-Agent': config.userAgent
