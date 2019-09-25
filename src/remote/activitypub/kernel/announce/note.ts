@@ -1,7 +1,7 @@
 import Resolver from '../../resolver';
 import post from '../../../../services/note/create';
 import { IRemoteUser, IUser } from '../../../../models/user';
-import { IAnnounce, IApNote, getApId, getApIds } from '../../type';
+import { IAnnounce, IObject, getApId, getApIds } from '../../type';
 import { fetchNote, resolveNote } from '../../models/note';
 import { resolvePerson } from '../../models/person';
 import { apLogger } from '../../logger';
@@ -14,7 +14,7 @@ const logger = apLogger;
 /**
  * アナウンスアクティビティを捌きます
  */
-export default async function(resolver: Resolver, actor: IRemoteUser, activity: IAnnounce, note: IApNote): Promise<void> {
+export default async function(resolver: Resolver, actor: IRemoteUser, activity: IAnnounce, note: IObject): Promise<void> {
 	const uri = getApId(activity);
 
 	// アナウンサーが凍結されていたらスキップ

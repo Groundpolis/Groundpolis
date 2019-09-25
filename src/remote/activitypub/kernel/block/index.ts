@@ -1,16 +1,16 @@
 import * as mongo from 'mongodb';
 import User, { IRemoteUser } from '../../../../models/user';
 import config from '../../../../config';
-import { IBlock } from '../../type';
+import { IBlock, getApId } from '../../type';
 import block from '../../../../services/blocking/create';
 import { apLogger } from '../../logger';
 
 const logger = apLogger;
 
 export default async (actor: IRemoteUser, activity: IBlock): Promise<void> => {
-	const id = typeof activity.object == 'string' ? activity.object : activity.object.id;
+	const id = getApId(activity.object);
 
-	const uri = activity.id || activity;
+	const uri = getApId(activity);
 
 	logger.info(`Block: ${uri}`);
 
