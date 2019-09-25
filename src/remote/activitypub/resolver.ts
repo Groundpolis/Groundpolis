@@ -1,5 +1,5 @@
 import * as request from 'request-promise-native';
-import { IObject } from './type';
+import { IObject, isCollection, isOrderedCollection, isCollectionPage, isOrderedCollectionPage } from './type';
 import config from '../../config';
 import { registerOrFetchInstanceDoc } from '../../services/register-or-fetch-instance-doc';
 import { extractDbHost } from '../../misc/convert-host';
@@ -18,30 +18,19 @@ export default class Resolver {
 		return Array.from(this.history);
 	}
 
-	public async resolveCollection(value: any) {
+	public async resolveCollection(value: string | IObject) {
 		const collection = typeof value === 'string'
 			? await this.resolve(value)
 			: value;
 
-		switch (collection.type) {
-			case 'Collection':
-			case 'CollectionPage':
-				collection.objects = collection.items;
-				break;
-
-			case 'OrderedCollection':
-			case 'OrderedCollectionPage':
-				collection.objects = collection.orderedItems;
-				break;
-
-			default:
-				throw new Error(`unknown collection type: ${collection.type}`);
+		if (isCollection(collection) || isOrderedCollection(collection) || isCollectionPage(collection) || isOrderedCollectionPage(collection)) {
+			return collection;
+		} else {
+			throw new Error(`unknown collection type: ${collection.type}`);
 		}
-
-		return collection;
 	}
 
-	public async resolve(value: any): Promise<IObject> {
+	public async resolve(value: string | IObject): Promise<IObject> {
 		if (value == null) {
 			throw new Error('resolvee is null (or undefined)');
 		}

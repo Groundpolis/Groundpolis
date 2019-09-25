@@ -2,17 +2,19 @@ import { toArray, toSingle } from '../../prelude/array';
 
 export type obj = { [x: string]: any };
 
+export type ApObject = IObject | string | (IObject | string)[];
+
 export interface IObject {
 	'@context': string | obj | obj[];
 	type: string;
 	id?: string;
 	summary?: string;
 	published?: string;
-	cc?: IObject | string | (IObject | string)[];
-	to?: IObject | string | (IObject | string)[];
-	attributedTo: IObject | string | (IObject | string)[];
+	cc?: ApObject;
+	to?: ApObject;
+	attributedTo: ApObject;
 	attachment?: IObject | IObject[];
-	inReplyTo?: IObject | string | (IObject | string)[];
+	inReplyTo?: ApObject;
 	replies?: ICollection;
 	content: string;
 	name?: string;
@@ -28,7 +30,7 @@ export interface IObject {
 /**
  * Get array of ActivityStreams Objects id
  */
-export function getApIds(value: IObject | string | (IObject | string)[] | undefined): string[] {
+export function getApIds(value: ApObject | undefined): string[] {
 	if (value == null) return [];
 	const array = toArray(value);
 	return array.map(x => getApId(x));
@@ -37,7 +39,7 @@ export function getApIds(value: IObject | string | (IObject | string)[] | undefi
 /**
  * Get first ActivityStreams Object id
  */
-export function getOneApId(value: IObject | string | (IObject | string)[]): string {
+export function getOneApId(value: ApObject): string {
 	const firstOne = toSingle(value);
 	return getApId(firstOne);
 }
@@ -62,7 +64,7 @@ export interface IActivity extends IObject {
 export interface ICollection extends IObject {
 	type: 'Collection';
 	totalItems: number;
-	items?: IObject | string | IObject[] | string[];
+	items?: ApObject;
 	current?: ICollectionPage;
 	first?: ICollectionPage;
 	last?: ICollectionPage;
@@ -71,7 +73,7 @@ export interface ICollection extends IObject {
 export interface ICollectionPage extends IObject {
 	type: 'CollectionPage';
 	totalItems: number;
-	items?: IObject | string | IObject[] | string[];
+	items?: ApObject;
 	current?: ICollectionPage;
 	first?: ICollectionPage;
 	last?: ICollectionPage;	partOf: string;
@@ -82,7 +84,7 @@ export interface ICollectionPage extends IObject {
 export interface IOrderedCollection extends IObject {
 	type: 'OrderedCollection';
 	totalItems: number;
-	orderedItems?: IObject | string | IObject[] | string[];
+	orderedItems?: ApObject;
 	current?: IOrderedCollectionPage;
 	first?: IOrderedCollectionPage;
 	last?: IOrderedCollectionPage;
@@ -91,7 +93,7 @@ export interface IOrderedCollection extends IObject {
 export interface IOrderedCollectionPage extends IObject {
 	type: 'OrderedCollectionPage';
 	totalItems: number;
-	orderedItems?: IObject | string | IObject[] | string[];
+	orderedItems?: ApObject;
 	current?: IOrderedCollectionPage;
 	first?: IOrderedCollectionPage;
 	last?: IOrderedCollectionPage;
@@ -195,6 +197,12 @@ export const isCollection = (object: IObject): object is ICollection =>
 
 export const isOrderedCollection = (object: IObject): object is IOrderedCollection =>
 	object.type === 'OrderedCollection';
+
+export const isCollectionPage = (object: IObject): object is ICollectionPage =>
+	object.type === 'CollectionPage';
+
+export const isOrderedCollectionPage = (object: IObject): object is IOrderedCollectionPage =>
+	object.type === 'OrderedCollectionPage';
 
 export const isCollectionOrOrderedCollection = (object: IObject): object is ICollection | IOrderedCollection =>
 	isCollection(object) || isOrderedCollection(object);

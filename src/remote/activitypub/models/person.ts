@@ -484,8 +484,7 @@ export async function updateFeatured(userId: mongo.ObjectID) {
 
 	// Resolve to Object(may be Note) arrays
 	const unresolvedItems = isCollection(collection) ? collection.items : collection.orderedItems;
-	const items = await resolver.resolve(unresolvedItems);
-	if (!Array.isArray(items)) throw new Error(`Collection items is not an array`);
+	const items = await Promise.all(toArray(unresolvedItems).map(x => resolver.resolve(x)));
 
 	// Resolve and regist Notes
 	const limit = promiseLimit(2);
@@ -541,7 +540,7 @@ export async function fetchOutbox(userId: mongo.ObjectID, force = false) {
 	if (collection.orderedItems) {
 		unresolvedItems = collection.orderedItems;
 	} else if (collection.first) {
-		const page = await resolver.resolveCollection(collection.first);
+		const page = await resolver.resolveCollection(collection.first) as any;	// TODO: Activityのtypeをなおさないといけないので
 		unresolvedItems = page.orderedItems;
 	} else {
 		throw new Error('');
