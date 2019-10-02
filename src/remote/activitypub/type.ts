@@ -25,6 +25,8 @@ export interface IObject {
 	url?: string;
 	tag?: IObject | IObject[];
 	sensitive?: boolean;
+	movedTo?: ApObject;
+	alsoKnownAs?: ApObject;
 }
 
 /**

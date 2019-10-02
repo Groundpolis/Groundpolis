@@ -97,6 +97,9 @@ type IUserBase = {
 	 */
 	pendingReceivedFollowRequestsCount: number;
 
+	movedToUserId?: mongo.ObjectID;
+	alsoKnownAsUserIds?: mongo.ObjectID[];
+
 	host: string;
 };
 
@@ -316,6 +319,8 @@ export const pack = (
 	// Rename _id to id
 	_user.id = _user._id;
 	delete _user._id;
+
+	_user.movedToUser = _user.movedToUserId ? pack(_user.movedToUserId) : null;
 
 	delete _user.usernameLower;
 	delete _user.emailVerifyCode;

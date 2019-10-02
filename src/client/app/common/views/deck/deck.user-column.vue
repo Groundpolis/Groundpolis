@@ -20,6 +20,7 @@
 					<mk-user-name :user="user" :key="user.id" :nowrap="false"/>
 				</router-link>
 				<span class="acct">@{{ user | acct }} <fa v-if="user.isLocked == true" class="locked" icon="lock" fixed-width/></span>
+				<span class="moved" v-if="user.movedToUser != null">Moved to <router-link :to="user.movedToUser | userPage()"><mk-acct :user="user.movedToUser" :detail="true"/></router-link></span>
 				<span class="followed" v-if="user.isFollowed">{{ $t('follows-you') }}</span>
 			</div>
 		</header>
@@ -173,7 +174,7 @@ export default Vue.extend({
 				text-shadow 0 0 8px #000
 				color #fff
 
-			> .acct
+			> .acct, .moved
 				display block
 				font-size 14px
 				opacity 0.7

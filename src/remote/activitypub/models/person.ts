@@ -6,7 +6,7 @@ import config from '../../../config';
 import User, { validateUsername, isValidName, IUser, IRemoteUser, isRemoteUser } from '../../../models/user';
 import Resolver from '../resolver';
 import { resolveImage } from './image';
-import { isCollectionOrOrderedCollection, isCollection, isOrderedCollection, IObject, isPerson, IApPerson, isPropertyValue, IApPropertyValue } from '../type';
+import { isCollectionOrOrderedCollection, isCollection, isOrderedCollection, IObject, isPerson, IApPerson, isPropertyValue, IApPropertyValue, ApObject, getApIds } from '../type';
 import { IDriveFile } from '../../../models/drive-file';
 import Meta from '../../../models/meta';
 import { fromHtml } from '../../../mfm/fromHtml';
@@ -142,6 +142,9 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 
 	const isBot = object.type == 'Service';
 
+	const movedToUserId = await resolveAnotherUser(uri, person.movedTo);
+	const alsoKnownAsUserIds = await resolveAnotherUsers(uri, person.alsoKnownAs);
+
 	// Create user
 	let user: IRemoteUser;
 	try {
@@ -169,6 +172,8 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<IU
 			featured: person.featured,
 			endpoints: person.endpoints,
 			uri: person.id,
+			movedToUserId,
+			alsoKnownAsUserIds,
 			url: person.url,
 			fields,
 			...services,
@@ -334,6 +339,9 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: IApP
 
 	const tags = extractHashtags(person.tag).map(tag => tag.toLowerCase()).splice(0, 64);
 
+	const movedToUserId = await resolveAnotherUser(uri, person.movedTo);
+	const alsoKnownAsUserIds = await resolveAnotherUsers(uri, person.alsoKnownAs);
+
 	const updates = {
 		lastFetchedAt: new Date(),
 		inbox: person.inbox,
@@ -346,6 +354,8 @@ export async function updatePerson(uri: string, resolver?: Resolver, hint?: IApP
 		followingCount,
 		notesCount,
 		name: person.name,
+		movedToUserId,
+		alsoKnownAsUserIds,
 		url: person.url,
 		endpoints: person.endpoints,
 		fields,
@@ -565,4 +575,17 @@ export async function fetchOutbox(userId: mongo.ObjectID, force = false) {
 			// await resolveNote(activity.object, resolver);
 		}
 	}
+}
+
+async function resolveAnotherUser(selfUri: string, ids: ApObject | undefined) {
+	const users = await resolveAnotherUsers(selfUri, ids);
+	return users.length > 0 ? users[0] : undefined;
+}
+
+async function resolveAnotherUsers(selfUri: string, ids: ApObject | undefined) {
+	const users = await Promise.all(
+		getApIds(ids).map(uri => resolvePerson(uri).catch(() => null))
+	) as IRemoteUser[];
+
+	return users.filter(x => x != null && x.uri != selfUri).map(x => x._id);
 }

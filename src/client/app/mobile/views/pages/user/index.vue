@@ -20,6 +20,7 @@
 				<div class="title">
 					<h1><mk-user-name :user="user" :key="user.id" :nowrap="false"/></h1>
 					<span class="username"><mk-acct :user="user" :detail="true" :key="user.id"/></span>
+					<span class="moved" v-if="user.movedToUser != null">moved to <router-link :to="user.movedToUser | userPage()"><mk-acct :user="user.movedToUser" :detail="true"/></router-link></span>
 					<span class="followed" v-if="user.isFollowed">{{ $t('follows-you') }}</span>
 				</div>
 				<div class="description">
@@ -231,12 +232,15 @@ export default Vue.extend({
 					font-size 20px
 					color var(--mobileUserPageName)
 
-				> .username
+				> .username, .moved
 					display inline-block
 					line-height 20px
 					font-size 16px
 					font-weight bold
 					color var(--mobileUserPageAcct)
+
+				> .moved
+					margin-left 8px
 
 				> .followed
 					margin-left 8px
