@@ -78,7 +78,7 @@ export default Vue.extend({
 	position absolute
 	top 0
 	left 0
-	z-index 3000
+	z-index 30000
 	box-shadow 0 2px 12px 0 rgba(0, 0, 0, 0.3)
 
 </style>

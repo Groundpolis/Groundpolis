@@ -30,7 +30,12 @@
 			</div>
 			<div class="local-only" v-if="localOnly === true"><fa icon="heart"/> {{ $t('@.post-form.local-only-message') }}</div>
 			<input v-show="useCw" ref="cw" v-model="cw" :placeholder="$t('@.post-form.cw-placeholder')" v-autocomplete="{ model: 'cw' }">
-			<textarea v-model="text" ref="text" :disabled="posting" :placeholder="placeholder" v-autocomplete="{ model: 'text' }" @paste="onPaste"></textarea>
+			<div class="textarea">
+				<textarea v-model="text" ref="text" :disabled="posting" :placeholder="placeholder" v-autocomplete="{ model: 'text' }" @paste="onPaste"></textarea>
+				<button class="emoji" @click="emoji" ref="emoji">
+					<fa :icon="['far', 'laugh']"/>
+				</button>
+			</div>
 			<x-post-form-attaches class="attaches" :files="files"/>
 			<x-poll-editor v-if="poll" ref="poll" @destroyed="poll = false" @updated="onPollUpdate()"/>
 			<mk-uploader ref="uploader" @uploaded="attachMedia" @change="onChangeUploadings"/>
@@ -141,6 +146,31 @@ export default Vue.extend({
 			max-width 500px
 			margin 0 auto
 
+			>.textarea
+				> textarea
+					display block
+					padding 12px
+					margin 0
+					width 100%
+					font-size 16px
+					color var(--inputText)
+					background var(--mobilePostFormTextareaBg)
+					border none
+					border-radius 0
+					box-shadow 0 1px 0 0 var(--mobilePostFormDivider)
+					max-width 100%
+					min-width 100%
+					min-height 80px
+
+				> .emoji
+					position absolute
+					top 0
+					right 0
+					padding 10px
+					font-size 18px
+					color var(--text)
+					opacity 0.5
+
 			> .preview
 				padding 16px
 
@@ -188,7 +218,6 @@ export default Vue.extend({
 				z-index 1
 
 			> input
-			> textarea
 				display block
 				padding 12px
 				margin 0
@@ -202,11 +231,6 @@ export default Vue.extend({
 
 				&:disabled
 					opacity 0.5
-
-			> textarea
-				max-width 100%
-				min-width 100%
-				min-height 80px
 
 			> .mk-uploader
 				margin 8px 0 0 0
