@@ -85,6 +85,8 @@ export default Vue.extend({
 			display flex
 			justify-content center
 			align-items center
+			user-select none
+			cursor pointer
 			&.active
 				border-bottom: 3px solid var(--primary);
 

@@ -8,8 +8,8 @@
 		></div>
 	</transition>
 	<transition name="nav">
-		<div class="body" :class="{ notifications: showNotifications }" v-show="isOpen">
-			<div class="nav" v-show="!showNotifications">
+		<div class="body" v-show="isOpen">
+			<div class="nav">
 				<router-link class="me" v-if="$store.getters.isSignedIn" :to="`/@${$store.state.i.username}`" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false">
 					<img class="avatar" :src="$store.state.i.avatarUrl" alt="avatar"/>
 					<p class="name"><mk-user-name :user="$store.state.i"/></p>
@@ -50,13 +50,6 @@
 				</div>
 				<p class="version">ver {{ version }} ({{ codename }})</p>
 			</div>
-			<div class="notifications" v-if="showNotifications">
-				<header>
-					<button @click="showNotifications = false"><fa icon="times"/></button>
-					<i v-if="hasUnreadNotification" class="circle"><fa icon="circle"/></i>
-				</header>
-				<mk-notifications/>
-			</div>
 		</div>
 	</transition>
 </div>
@@ -87,7 +80,6 @@ export default Vue.extend({
 			aboutUrl: `/docs/${lang}/about`,
 			announcements: [],
 			searching: false,
-			showNotifications: false,
 			version, codename,
 			faNewspaper, faHashtag, faMoon, faSun, faHome, faColumns, faStickyNote, faUsers, faBell,
 		};
@@ -100,12 +92,6 @@ export default Vue.extend({
 
 		hasUnreadMessagingMessage(): boolean {
 			return this.$store.getters.isSignedIn && this.$store.state.i.hasUnreadMessagingMessage;
-		}
-	},
-
-	watch: {
-		isOpen() {
-			this.showNotifications = false;
 		}
 	},
 
