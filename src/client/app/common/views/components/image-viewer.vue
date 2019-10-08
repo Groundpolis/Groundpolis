@@ -53,6 +53,7 @@ export default Vue.extend({
 		width 100%
 		height 100%
 		background rgba(#000, 0.7)
+		backdrop-filter blur(4px)
 
 	> img
 		position fixed
