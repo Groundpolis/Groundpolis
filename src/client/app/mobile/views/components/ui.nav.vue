@@ -10,45 +10,56 @@
 	<transition name="nav">
 		<div class="body" v-show="isOpen">
 			<div class="nav">
-				<router-link class="me" v-if="$store.getters.isSignedIn" :to="`/@${$store.state.i.username}`" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false">
-					<img class="avatar" :src="$store.state.i.avatarUrl" alt="avatar"/>
-					<p class="name"><mk-user-name :user="$store.state.i"/></p>
-					<p class="acct"><mk-acct :user="$store.state.i"/></p>
+				<div class="me" v-if="$store.getters.isSignedIn">
+					<router-link class="user-panel" :to="`/@${$store.state.i.username}`" @click.native="$parent.isDrawerOpening = false">
+						<img class="avatar" :src="$store.state.i.avatarUrl" alt="avatar"/>
+						<div class="name-acct">
+							<p class="name"><mk-user-name :user="$store.state.i"/></p>
+							<p class="acct"><mk-acct :user="$store.state.i"/></p>
+						</div>
+					</router-link>
 					<p class="ff">
-						<router-link :to="`/@${$store.state.i.username}/following`"><b>{{ $store.state.i.followingCount }}</b>{{ $t('followings') }}&ensp;</router-link>
-						<router-link :to="`/@${$store.state.i.username}/followers`"><b>{{ $store.state.i.followersCount }}</b>{{ $t('followers') }}</router-link>
+						<router-link :to="`/@${$store.state.i.username}/following`" @click.native="$parent.isDrawerOpening = false"><b>{{ $store.state.i.followingCount }}</b>{{ $t('followings') }}&ensp;</router-link>
+						<router-link :to="`/@${$store.state.i.username}/followers`" @click.native="$parent.isDrawerOpening = false"><b>{{ $store.state.i.followersCount }}</b>{{ $t('followers') }}</router-link>
 					</p>
-				</router-link>
-				<div class="links">
-					<ul>
-						<li><router-link to="/i/lists" :data-active="$route.name == 'user-lists'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa icon="list" fixed-width/></i>{{ $t('user-lists') }}<i><fa icon="angle-right"/></i></router-link></li>
-						<li><router-link to="/i/groups" :data-active="$route.name == 'user-groups'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa :icon="faUsers" fixed-width/></i>{{ $t('user-groups') }}<i><fa icon="angle-right"/></i></router-link></li>
-						<li><router-link to="/i/favorites" :data-active="$route.name == 'favorites'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa icon="star" fixed-width/></i>{{ $t('@.favorites') }}<i><fa icon="angle-right"/></i></router-link></li>
-					</ul>
-					<ul>
-						<li><router-link to="/i/drive" :data-active="$route.name == 'drive'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa icon="cloud" fixed-width/></i>{{ $t('@.drive') }}<i><fa icon="angle-right"/></i></router-link></li>
-						<li><router-link to="/i/widgets" :data-active="$route.name == 'widgets'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa :icon="['far', 'calendar-alt']" fixed-width/></i>{{ $t('widgets') }}<i><fa icon="angle-right"/></i></router-link></li>
-						<li><router-link to="/games/reversi" :data-active="$route.name == 'reversi'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa icon="gamepad" fixed-width/></i>{{ $t('game') }}<i v-if="hasGameInvitation" class="circle"><fa icon="circle"/></i><i><fa icon="angle-right"/></i></router-link></li>
-						<li><router-link to="/i/pages" :data-active="$route.name == 'pages'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa :icon="faStickyNote" fixed-width/></i>{{ $t('@.pages') }}<i><fa icon="angle-right"/></i></router-link></li>
-					</ul>
-					<ul>
-						<li><router-link to="/i/settings" :data-active="$route.name == 'settings'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa icon="cog" fixed-width/></i>{{ $t('@.settings') }}<i><fa icon="angle-right"/></i></router-link></li>
-						<li v-if="$store.getters.isSignedIn && ($store.state.i.isAdmin || $store.state.i.isModerator)"><a href="/admin" @click="$parent.isDrawerOpening = false" @touchstart="$parent.isDrawerOpening = false"><i><fa icon="terminal" fixed-width/></i><span>{{ $t('admin') }}</span><i><fa icon="angle-right"/></i></a></li>
-						<li><a :href="aboutUrl" target=”_blank” rel=”noopener” @click="$parent.isDrawerOpening = false" @touchstart="$parent.isDrawerOpening = false"><i><fa icon="question-circle" fixed-width/></i><span>{{ $t('about') }}</span><i><fa icon="angle-right"/></i></a></li>
-					</ul>
-					<ul>
-						<li @click="toggleDeckMode"><p><i><fa :icon="$store.state.device.inDeckMode ? faHome : faColumns" fixed-width/></i><span>{{ $store.state.device.inDeckMode ? $t('@.home') : $t('@.deck') }}</span></p></li>
-						<li @click="dark"><p><i><fa :icon="$store.state.device.darkmode ? faSun : faMoon" fixed-width/></i><span>{{ $store.state.device.darkmode ? $t('@.turn-off-darkmode') : $t('@.turn-on-darkmode') }}</span></p></li>
-					</ul>
+					<button class="toggle-user-switcher" @click="isUserSwitcher = !isUserSwitcher">
+						<fa :icon="isUserSwitcher ? faChevronUp : faChevronDown"/>
+					</button>
 				</div>
-				<div class="announcements" v-if="announcements && announcements.length > 0">
-					<article v-for="announcement in announcements" :key="announcement.id">
-						<span v-html="announcement.title" class="title"></span>
-						<div><mfm :text="announcement.text"/></div>
-						<img v-if="announcement.image" :src="announcement.image" alt="" style="display: block; max-height: 120px; max-width: 100%;"/>
-					</article>
+				<div v-if="!isUserSwitcher">
+					<div class="links">
+						<ul>
+							<li><router-link to="/i/lists" :data-active="$route.name == 'user-lists'" @click.native="$parent.isDrawerOpening = false"><i><fa icon="list" fixed-width/></i>{{ $t('user-lists') }}<i><fa icon="angle-right"/></i></router-link></li>
+							<li><router-link to="/i/groups" :data-active="$route.name == 'user-groups'" @click.native="$parent.isDrawerOpening = false"><i><fa :icon="faUsers" fixed-width/></i>{{ $t('user-groups') }}<i><fa icon="angle-right"/></i></router-link></li>
+							<li><router-link to="/i/favorites" :data-active="$route.name == 'favorites'" @click.native="$parent.isDrawerOpening = false"><i><fa icon="star" fixed-width/></i>{{ $t('@.favorites') }}<i><fa icon="angle-right"/></i></router-link></li>
+						</ul>
+						<ul>
+							<li><router-link to="/i/drive" :data-active="$route.name == 'drive'" @click.native="$parent.isDrawerOpening = false"><i><fa icon="cloud" fixed-width/></i>{{ $t('@.drive') }}<i><fa icon="angle-right"/></i></router-link></li>
+							<li><router-link to="/i/widgets" :data-active="$route.name == 'widgets'" @click.native="$parent.isDrawerOpening = false"><i><fa :icon="['far', 'calendar-alt']" fixed-width/></i>{{ $t('widgets') }}<i><fa icon="angle-right"/></i></router-link></li>
+							<li><router-link to="/games/reversi" :data-active="$route.name == 'reversi'" @click.native="$parent.isDrawerOpening = false"><i><fa icon="gamepad" fixed-width/></i>{{ $t('game') }}<i v-if="hasGameInvitation" class="circle"><fa icon="circle"/></i><i><fa icon="angle-right"/></i></router-link></li>
+							<li><router-link to="/i/pages" :data-active="$route.name == 'pages'" @click.native="$parent.isDrawerOpening = false"><i><fa :icon="faStickyNote" fixed-width/></i>{{ $t('@.pages') }}<i><fa icon="angle-right"/></i></router-link></li>
+						</ul>
+						<ul>
+							<li><router-link to="/i/settings" :data-active="$route.name == 'settings'" @click.native="$parent.isDrawerOpening = false"><i><fa icon="cog" fixed-width/></i>{{ $t('@.settings') }}<i><fa icon="angle-right"/></i></router-link></li>
+							<li v-if="$store.getters.isSignedIn && ($store.state.i.isAdmin || $store.state.i.isModerator)"><a href="/admin" @click="$parent.isDrawerOpening = false" @touchstart="$parent.isDrawerOpening = false"><i><fa icon="terminal" fixed-width/></i><span>{{ $t('admin') }}</span><i><fa icon="angle-right"/></i></a></li>
+							<li><a :href="aboutUrl" target=”_blank” rel=”noopener” @click="$parent.isDrawerOpening = false" @touchstart="$parent.isDrawerOpening = false"><i><fa icon="question-circle" fixed-width/></i><span>{{ $t('about') }}</span><i><fa icon="angle-right"/></i></a></li>
+						</ul>
+						<ul>
+							<li @click="toggleDeckMode"><p><i><fa :icon="$store.state.device.inDeckMode ? faHome : faColumns" fixed-width/></i><span>{{ $store.state.device.inDeckMode ? $t('@.home') : $t('@.deck') }}</span></p></li>
+							<li @click="dark"><p><i><fa :icon="$store.state.device.darkmode ? faSun : faMoon" fixed-width/></i><span>{{ $store.state.device.darkmode ? $t('@.turn-off-darkmode') : $t('@.turn-on-darkmode') }}</span></p></li>
+						</ul>
+					</div>
+					<div class="announcements" v-if="announcements && announcements.length > 0">
+						<article v-for="announcement in announcements" :key="announcement.id">
+							<span v-html="announcement.title" class="title"></span>
+							<div><mfm :text="announcement.text"/></div>
+							<img v-if="announcement.image" :src="announcement.image" alt="" style="display: block; max-height: 120px; max-width: 100%;"/>
+						</article>
+					</div>
+					<p class="version">ver {{ version }} ({{ codename }})</p>
 				</div>
-				<p class="version">ver {{ version }} ({{ codename }})</p>
+				<div v-else>
+				</div>
 			</div>
 		</div>
 	</transition>
@@ -59,7 +70,7 @@
 import Vue from 'vue';
 import i18n from '../../../i18n';
 import { lang } from '../../../config';
-import { faNewspaper, faHashtag, faHome, faColumns, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faNewspaper, faHashtag, faHome, faColumns, faUsers, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { faMoon, faSun, faStickyNote, faBell } from '@fortawesome/free-regular-svg-icons';
 import { search } from '../../../common/scripts/search';
 import { version, codename } from '../../../config';
@@ -80,8 +91,9 @@ export default Vue.extend({
 			aboutUrl: `/docs/${lang}/about`,
 			announcements: [],
 			searching: false,
+			isUserSwitcher: false,
 			version, codename,
-			faNewspaper, faHashtag, faMoon, faSun, faHome, faColumns, faStickyNote, faUsers, faBell,
+			faNewspaper, faHashtag, faMoon, faSun, faHome, faColumns, faStickyNote, faUsers, faBell, faChevronUp, faChevronDown
 		};
 	},
 
@@ -208,64 +220,84 @@ export default Vue.extend({
 					right 16px
 					font-size 12px
 					color var(--notificationIndicator)
-
+			
 		> .nav
+			position relative
 
 			> .me
 				display block
+				position fixed
+				background var(--face)
+				left 0
+				top 0
+				width 330px
+				height 150px
 				margin 0
 				padding 16px
-				text-decoration none
+				text-decoration none 
+				z-index 5
+			
+				&+div
+					margin-top 150px
+
+			.user-panel
+				display flex
+				flex-direction row
+				&:hover
+					text-decoration none
 
 				.avatar
 					display inline
 					max-width 64px
 					border-radius 32px
+					margin-right 16px
 					vertical-align middle
+					pointer-events none
 
-				.name
-					display block
-					margin 0 16px
-					position absolute
-					top -16px
-					left 80px
-					padding 0
-					width calc(100% - 112px)
-					color $color
-					font-weight bold
-					font-size 150%
-					line-height 96px
-					overflow hidden
-					text-overflow ellipsis
-					white-space nowrap
-	
-				.acct
-					display block
-					margin 0 16px
-					position absolute
-					top 16px
-					left 80px
-					padding 0
-					width calc(100% - 112px)
-					color $color
-					line-height 96px
-					overflow hidden
-					text-overflow ellipsis
-					white-space nowrap
-
-				.ff
-					display block
-					color var(--faceTextButtonActive)
-					overflow hidden
-					text-overflow ellipsis
-					white-space nowrap
-
-					b
+				.name-acct
+					.name
+						display block
+						padding 0
+						margin 0
+						color $color
+						font-weight bold
 						font-size 120%
+						overflow hidden
+						text-overflow ellipsis
+						white-space nowrap
+						pointer-events none
+						margin-top 8px
+						margin-bottom 4px
+		
+					.acct
+						display block
+						padding 0
+						margin 0
 						color $color
-						margin-right 4px
-					a
-						color $color
+						opacity 0.6
+						overflow hidden
+						text-overflow ellipsis
+						white-space nowrap
+						pointer-events none
+
+			.ff
+				display block
+				color var(--faceTextButtonActive)
+				overflow hidden
+				text-overflow ellipsis
+				white-space nowrap
+
+				b
+					font-size 120%
+					color $color
+					margin-right 4px
+				a
+					color $color
+		
+			.toggle-user-switcher
+				position absolute
+				right 16px
+				top 16px
 
 			ul
 				display block

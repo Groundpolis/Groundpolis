@@ -69,7 +69,7 @@ export default Vue.extend({
 		},
 
 		indicate(): boolean {
-			return this.hasUnreadNotification || this.hasUnreadMessagingMessage || this.hasGameInvitation;
+			return !!this.hasGameInvitation;
 		},
 
 		fabClicked() {
