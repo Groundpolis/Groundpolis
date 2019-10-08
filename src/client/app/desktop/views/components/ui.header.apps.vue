@@ -6,9 +6,9 @@
 			<div class="grid" v-if="isOpen">
 				<div class="item" v-for="(item, index) in items" :disabled="item.disabled" @click="launch(item.callback)" :key="index">
 					<fa-layer v-if="item.isCalendar" class="icon">
-						<fa :icon="item.icon" class="fa-fw"/>
-						<fa-text transform="shrink-13 up-1 left--2" style="font-weight:900" :value="month"/>
-						<fa-text transform="shrink-11 down-3 left--2" style="font-weight:900" :value="day"/>
+						<fa :icon="item.icon"/>
+						<fa-text transform="shrink-13 up-1" style="font-weight:900" :value="month"/>
+						<fa-text transform="shrink-11 down-3" style="font-weight:900" :value="day"/>
 					</fa-layer>
 					<fa v-else :icon="item.icon" class="icon fa-fw"/>
 					<div class="text">{{ item.text }}</div>
