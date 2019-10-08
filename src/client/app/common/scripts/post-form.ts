@@ -72,7 +72,8 @@ export default (opts) => ({
 			draghover: false,
 			quoteId: null,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
-			maxNoteTextLength: 1000
+			maxNoteTextLength: 1000,
+			preview: null,
 		};
 	},
 
