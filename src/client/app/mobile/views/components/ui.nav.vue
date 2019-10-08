@@ -10,31 +10,31 @@
 	<transition name="nav">
 		<div class="body" :class="{ notifications: showNotifications }" v-show="isOpen">
 			<div class="nav" v-show="!showNotifications">
-				<router-link class="me" v-if="$store.getters.isSignedIn" :to="`/@${$store.state.i.username}`">
+				<router-link class="me" v-if="$store.getters.isSignedIn" :to="`/@${$store.state.i.username}`" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false">
 					<img class="avatar" :src="$store.state.i.avatarUrl" alt="avatar"/>
 					<p class="name"><mk-user-name :user="$store.state.i"/></p>
 					<p class="acct"><mk-acct :user="$store.state.i"/></p>
 					<p class="ff">
-						<b>{{ $store.state.i.followingCount }}</b>{{ $t('followings') }}&ensp;
-						<b>{{ $store.state.i.followersCount }}</b>{{ $t('followers') }}
+						<router-link :to="`/@${$store.state.i.username}/following`"><b>{{ $store.state.i.followingCount }}</b>{{ $t('followings') }}&ensp;</router-link>
+						<router-link :to="`/@${$store.state.i.username}/followers`"><b>{{ $store.state.i.followersCount }}</b>{{ $t('followers') }}</router-link>
 					</p>
 				</router-link>
 				<div class="links">
 					<ul>
-						<li><router-link to="/i/lists" :data-active="$route.name == 'user-lists'"><i><fa icon="list" fixed-width/></i>{{ $t('user-lists') }}<i><fa icon="angle-right"/></i></router-link></li>
-						<li><router-link to="/i/groups" :data-active="$route.name == 'user-groups'"><i><fa :icon="faUsers" fixed-width/></i>{{ $t('user-groups') }}<i><fa icon="angle-right"/></i></router-link></li>
-						<li><router-link to="/i/favorites" :data-active="$route.name == 'favorites'"><i><fa icon="star" fixed-width/></i>{{ $t('@.favorites') }}<i><fa icon="angle-right"/></i></router-link></li>
+						<li><router-link to="/i/lists" :data-active="$route.name == 'user-lists'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa icon="list" fixed-width/></i>{{ $t('user-lists') }}<i><fa icon="angle-right"/></i></router-link></li>
+						<li><router-link to="/i/groups" :data-active="$route.name == 'user-groups'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa :icon="faUsers" fixed-width/></i>{{ $t('user-groups') }}<i><fa icon="angle-right"/></i></router-link></li>
+						<li><router-link to="/i/favorites" :data-active="$route.name == 'favorites'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa icon="star" fixed-width/></i>{{ $t('@.favorites') }}<i><fa icon="angle-right"/></i></router-link></li>
 					</ul>
 					<ul>
-						<li><router-link to="/i/drive" :data-active="$route.name == 'drive'"><i><fa icon="cloud" fixed-width/></i>{{ $t('@.drive') }}<i><fa icon="angle-right"/></i></router-link></li>
-						<li><router-link to="/i/widgets" :data-active="$route.name == 'widgets'"><i><fa :icon="['far', 'calendar-alt']" fixed-width/></i>{{ $t('widgets') }}<i><fa icon="angle-right"/></i></router-link></li>
-						<li><router-link to="/games/reversi" :data-active="$route.name == 'reversi'"><i><fa icon="gamepad" fixed-width/></i>{{ $t('game') }}<i v-if="hasGameInvitation" class="circle"><fa icon="circle"/></i><i><fa icon="angle-right"/></i></router-link></li>
-						<li><router-link to="/i/pages" :data-active="$route.name == 'pages'"><i><fa :icon="faStickyNote" fixed-width/></i>{{ $t('@.pages') }}<i><fa icon="angle-right"/></i></router-link></li>
+						<li><router-link to="/i/drive" :data-active="$route.name == 'drive'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa icon="cloud" fixed-width/></i>{{ $t('@.drive') }}<i><fa icon="angle-right"/></i></router-link></li>
+						<li><router-link to="/i/widgets" :data-active="$route.name == 'widgets'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa :icon="['far', 'calendar-alt']" fixed-width/></i>{{ $t('widgets') }}<i><fa icon="angle-right"/></i></router-link></li>
+						<li><router-link to="/games/reversi" :data-active="$route.name == 'reversi'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa icon="gamepad" fixed-width/></i>{{ $t('game') }}<i v-if="hasGameInvitation" class="circle"><fa icon="circle"/></i><i><fa icon="angle-right"/></i></router-link></li>
+						<li><router-link to="/i/pages" :data-active="$route.name == 'pages'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa :icon="faStickyNote" fixed-width/></i>{{ $t('@.pages') }}<i><fa icon="angle-right"/></i></router-link></li>
 					</ul>
 					<ul>
-						<li><router-link to="/i/settings" :data-active="$route.name == 'settings'"><i><fa icon="cog" fixed-width/></i>{{ $t('@.settings') }}<i><fa icon="angle-right"/></i></router-link></li>
-						<li v-if="$store.getters.isSignedIn && ($store.state.i.isAdmin || $store.state.i.isModerator)"><a href="/admin"><i><fa icon="terminal" fixed-width/></i><span>{{ $t('admin') }}</span><i><fa icon="angle-right"/></i></a></li>
-						<li><a :href="aboutUrl" target=”_blank” rel=”noopener”><i><fa icon="question-circle" fixed-width/></i><span>{{ $t('about') }}</span><i><fa icon="angle-right"/></i></a></li>
+						<li><router-link to="/i/settings" :data-active="$route.name == 'settings'" @click.native="$parent.isDrawerOpening = false" @touchstart.native="$parent.isDrawerOpening = false"><i><fa icon="cog" fixed-width/></i>{{ $t('@.settings') }}<i><fa icon="angle-right"/></i></router-link></li>
+						<li v-if="$store.getters.isSignedIn && ($store.state.i.isAdmin || $store.state.i.isModerator)"><a href="/admin" @click="$parent.isDrawerOpening = false" @touchstart="$parent.isDrawerOpening = false"><i><fa icon="terminal" fixed-width/></i><span>{{ $t('admin') }}</span><i><fa icon="angle-right"/></i></a></li>
+						<li><a :href="aboutUrl" target=”_blank” rel=”noopener” @click="$parent.isDrawerOpening = false" @touchstart="$parent.isDrawerOpening = false"><i><fa icon="question-circle" fixed-width/></i><span>{{ $t('about') }}</span><i><fa icon="angle-right"/></i></a></li>
 					</ul>
 					<ul>
 						<li @click="toggleDeckMode"><p><i><fa :icon="$store.state.device.inDeckMode ? faHome : faColumns" fixed-width/></i><span>{{ $store.state.device.inDeckMode ? $t('@.home') : $t('@.deck') }}</span></p></li>
@@ -278,6 +278,8 @@ export default Vue.extend({
 						font-size 120%
 						color $color
 						margin-right 4px
+					a
+						color $color
 
 			ul
 				display block
