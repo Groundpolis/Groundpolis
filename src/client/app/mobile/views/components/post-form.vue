@@ -28,6 +28,9 @@
 					<button @click="addVisibleUser">{{ $t('@.post-form.add-visible-user') }}</button>
 				</div>
 			</div>
+			<div class="hashtags" v-if="recentHashtags.length > 0 && $store.state.settings.suggestRecentHashtags">
+				<a v-for="tag in recentHashtags.slice(0, 5)" :key="tag" @click="addTag(tag)">#{{ tag }}</a>
+			</div>
 			<div class="local-only" v-if="localOnly === true"><fa icon="heart"/> {{ $t('@.post-form.local-only-message') }}</div>
 			<input v-show="useCw" ref="cw" v-model="cw" :placeholder="$t('@.post-form.cw-placeholder')" v-autocomplete="{ model: 'cw' }">
 			<div class="textarea">
@@ -55,9 +58,10 @@
 			</footer>
 			<input ref="file" class="file" type="file" multiple="multiple" @change="onChangeFile"/>
 		</div>
-	</div>
-	<div class="hashtags" v-if="recentHashtags.length > 0 && $store.state.settings.suggestRecentHashtags">
-		<a v-for="tag in recentHashtags.slice(0, 5)" :key="tag" @click="addTag(tag)">#{{ tag }}</a>
+		<details v-if="preview" class="preview" ref="preview" :open="$store.state.device.showPostPreview" @toggle="togglePreview">
+			<summary>{{ $t('@.post-form.preview') }}</summary>
+			<mk-note class="note" :note="preview" :key="preview.id" :compact="true" :preview="true" />
+		</details>
 	</div>
 </div>
 </template>
@@ -75,6 +79,21 @@ export default Vue.extend({
 			mobile: true
 		}),
 	],
+
+	watch: {
+		text() {
+			this.doPreview();
+		},
+		files() {
+			this.doPreview();
+		},
+		visibility() {
+			this.doPreview();
+		},
+		localOnly() {
+			this.doPreview();
+		},
+	},
 
 	methods: {
 		cancel() {
@@ -210,7 +229,7 @@ export default Vue.extend({
 							&:active
 								color var(--primaryDarken30)
 
-			> .local-only
+			.local-only
 				margin 0 0 8px 0
 				color var(--primary)
 
@@ -259,10 +278,22 @@ export default Vue.extend({
 					border-radius 0
 					box-shadow none
 
-	> .hashtags
+	.hashtags
 		margin 8px
 
 		> *
 			margin-right 8px
+
+
+.preview
+	background var(--desktopPostFormBg)
+
+	> summary
+		padding 0px 16px 16px 20px
+		font-size 14px
+		color var(--text)
+
+	> .note
+		border-top solid var(--lineWidth) var(--faceDivider)
 
 </style>
