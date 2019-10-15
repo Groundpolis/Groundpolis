@@ -59,7 +59,6 @@
 import Vue from 'vue';
 import i18n from '../../../i18n';
 import { gcd } from '../../../../../prelude/math';
-import { appendQuery } from '../../../../../prelude/url';
 import XFileThumbnail from '../../../common/views/components/drive-file-thumbnail.vue';
 
 export default Vue.extend({
@@ -93,7 +92,7 @@ export default Vue.extend({
 		},
 
 		dlUrl(): string {
-			return appendQuery(this.file.url, 'download');
+			return this.file.url;
 		}
 	},
 

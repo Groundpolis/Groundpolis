@@ -36,6 +36,8 @@ import Vue from 'vue';
 import i18n from '../../../i18n';
 import copyToClipboard from '../../../common/scripts/copy-to-clipboard';
 import { appendQuery } from '../../../../../prelude/url';
+import updateAvatar from '../../api/update-avatar';
+import updateBanner from '../../api/update-banner';
 import XFileThumbnail from '../../../common/views/components/drive-file-thumbnail.vue';
 
 export default Vue.extend({
@@ -85,7 +87,8 @@ export default Vue.extend({
 				action: this.copyUrl
 			}, {
 				type: 'link',
-				href: appendQuery(this.file.url, 'download'),
+				href: this.file.url,
+				target: '_blank',
 				text: this.$t('contextmenu.download'),
 				icon: 'download',
 				download: this.file.name
