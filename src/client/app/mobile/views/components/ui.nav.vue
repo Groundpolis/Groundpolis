@@ -254,6 +254,7 @@ export default Vue.extend({
 				.avatar
 					display inline
 					max-width 64px
+					max-height 64px
 					border-radius 32px
 					margin-right 16px
 					vertical-align middle
