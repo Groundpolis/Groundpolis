@@ -117,12 +117,12 @@
 				<ui-switch v-if="$root.isMobile" v-model="disableViaMobile">{{ $t('@._settings.disable-via-mobile') }}</ui-switch>
 			</section>
 
-			<section>
+			<!-- <section>
 				<header>{{ $t('@._settings.reactions') }}</header>
 				<ui-textarea v-model="reactions">
 					{{ $t('@._settings.reactions') }}<template #desc>{{ $t('@._settings.reactions-description') }}</template>
 				</ui-textarea>
-			</section>
+			</section> -->
 
 			<section>
 				<header>{{ $t('@._settings.timeline') }}</header>
