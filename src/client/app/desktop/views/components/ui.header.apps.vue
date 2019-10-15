@@ -68,37 +68,31 @@ export default Vue.extend({
 					callback: () => this.$root.new(MkGameWindow),
 					badge: () => this.hasGameInvitations
 				},
-				{
-					text: this.$t('mml'),
-					icon: faMusic,
-					badge: () => false,
-					disabled: true,
-				},
-				{
-					text: this.$t('bug-tracker'),
-					icon: faBug,
-					badge: () => false,
-					disabled: true,
-				},
-				{
-					text: this.$t('calendar'),
-					icon: faCalendar,
-					isCalendar: true,
-					badge: () => false,
-					disabled: true,
-				},
-				{
-					text: this.$t('wiki'),
-					icon: faBook,
-					badge: () => false,
-					disabled: true,
-				},
-				{
-					text: this.$t('premium'),
-					icon: faCrown,
-					badge: () => false,
-					disabled: true,
-				},
+				// {
+				// 	text: this.$t('mml'),
+				// 	icon: faMusic,
+				// 	badge: () => false,
+				// 	disabled: true,
+				// },
+				// {
+				// 	text: this.$t('bug-tracker'),
+				// 	icon: faBug,
+				// 	badge: () => false,
+				// 	disabled: true,
+				// },
+				// {
+				// 	text: this.$t('calendar'),
+				// 	icon: faCalendar,
+				// 	isCalendar: true,
+				// 	badge: () => false,
+				// 	disabled: true,
+				// },
+				// {
+				// 	text: this.$t('wiki'),
+				// 	icon: faBook,
+				// 	badge: () => false,
+				// 	disabled: true,
+				// },
 				{
 					text: this.$t('customize'),
 					icon: faSlidersH,
