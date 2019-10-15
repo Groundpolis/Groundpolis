@@ -626,6 +626,7 @@ common/views/components/user-menu.vue:
   unsuspend-confirm: "このユーザーをとうけつかいじょしますか？"
   update-remote-user: "リモートユーザーじょうほうのこうしん"
   remote-user-updated: "リモートユーザーじょうほうをこうしんしました"
+  go-to-the-room: "ルームにいく"
 
 common/views/components/poll.vue:
   vote-to: "「{}」にとうひょうする"
@@ -1408,6 +1409,7 @@ admin/views/instance.vue:
   cache-remote-files: "リモートのファイルをキャッシュする"
   cache-remote-files-desc: "このせっていをむこうにすると、リモートファイルをキャッシュせずちょくリンクするようになります。そのためサーバーのストレージをせつやくできますが、プライバシーせっていでちょくリンクをむこうにしているユーザーにはファイルがみえなくなったり、サムネイルがせいせいされないのでつうしんりょうがぞうかします。つうじょうはこのせっていをオンにしておくことをおすすめします。"
   local-drive-capacity-mb: "ローカルユーザーひとりあたりのドライブようりょう"
+  premium-drive-capacity-mb: "プレミアムユーザーひとりあたりのドライブようりょう"
   remote-drive-capacity-mb: "リモートユーザーひとりあたりのドライブようりょう"
   mb: "メガバイトたんい"
   recaptcha-config: "reCAPTCHAのせってい"

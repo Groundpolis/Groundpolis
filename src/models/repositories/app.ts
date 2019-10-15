@@ -28,6 +28,8 @@ export class AppRepository extends Repository<App> {
 		return {
 			id: app.id,
 			name: app.name,
+			description: app.description,
+			createdAt: app.createdAt.toISOString(),
 			callbackUrl: app.callbackUrl,
 			permission: app.permission,
 			...(opts.includeSecret ? { secret: app.secret } : {}),
@@ -49,18 +51,28 @@ export const packedAppSchema = {
 			type: 'string' as const,
 			optional: false as const, nullable: false as const,
 			format: 'id',
-			description: 'The unique identifier for this Note.',
+			description: 'The unique identifier for this app.',
 			example: 'xxxxxxxxxx',
 		},
 		name: {
 			type: 'string' as const,
 			optional: false as const, nullable: false as const,
-			description: 'アプリケーションの名前'
+			description: 'Name of this app'
+		},
+		description: {
+			type: 'string' as const,
+			optional: false as const, nullable: false as const,
+			description: 'Description of this app'
+		},
+		createdAt: {
+			type: 'string' as const,
+			optional: false as const, nullable: false as const,
+			description: 'The date that the app was created'
 		},
 		callbackUrl: {
 			type: 'string' as const,
 			optional: false as const, nullable: true as const,
-			description: 'コールバックするURL'
+			description: 'URL to callback'
 		},
 		permission: {
 			type: 'array' as const,

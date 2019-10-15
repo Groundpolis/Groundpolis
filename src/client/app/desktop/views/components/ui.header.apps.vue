@@ -5,8 +5,8 @@
 		<transition name="zoom-in-top">
 			<div class="grid" v-if="isOpen">
 				<div class="item" v-for="(item, index) in items" :disabled="item.disabled" @click="launch(item.callback)" :key="index">
-					<fa-layer v-if="!!isCalendar" class="icon">
-						<fa :icon="item.icon" class="fa-fw"/>
+					<fa-layer v-if="item.isCalendar" class="icon">
+						<fa :icon="item.icon"/>
 						<fa-text transform="shrink-13 up-1" style="font-weight:900" :value="month"/>
 						<fa-text transform="shrink-11 down-3" style="font-weight:900" :value="day"/>
 					</fa-layer>
@@ -68,37 +68,31 @@ export default Vue.extend({
 					callback: () => this.$root.new(MkGameWindow),
 					badge: () => this.hasGameInvitations
 				},
-				{
-					text: this.$t('mml'),
-					icon: faMusic,
-					badge: () => false,
-					disabled: true,
-				},
-				{
-					text: this.$t('bug-tracker'),
-					icon: faBug,
-					badge: () => false,
-					disabled: true,
-				},
-				{
-					text: this.$t('calendar'),
-					icon: faCalendar,
-					isCalendar: true,
-					badge: () => false,
-					disabled: true,
-				},
-				{
-					text: this.$t('wiki'),
-					icon: faBook,
-					badge: () => false,
-					disabled: true,
-				},
-				{
-					text: this.$t('premium'),
-					icon: faCrown,
-					badge: () => false,
-					disabled: true,
-				},
+				// {
+				// 	text: this.$t('mml'),
+				// 	icon: faMusic,
+				// 	badge: () => false,
+				// 	disabled: true,
+				// },
+				// {
+				// 	text: this.$t('bug-tracker'),
+				// 	icon: faBug,
+				// 	badge: () => false,
+				// 	disabled: true,
+				// },
+				// {
+				// 	text: this.$t('calendar'),
+				// 	icon: faCalendar,
+				// 	isCalendar: true,
+				// 	badge: () => false,
+				// 	disabled: true,
+				// },
+				// {
+				// 	text: this.$t('wiki'),
+				// 	icon: faBook,
+				// 	badge: () => false,
+				// 	disabled: true,
+				// },
 				{
 					text: this.$t('customize'),
 					icon: faSlidersH,

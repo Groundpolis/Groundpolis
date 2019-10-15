@@ -20,10 +20,6 @@
 		</span>
 	</template>
 
-	<template #func>
-		<button @click="fn"><fa icon="pencil-alt"/></button>
-	</template>
-
 	<main>
 		<div class="nav" v-if="showNav">
 			<div class="bg" @click="showNav = false"></div>
@@ -207,6 +203,7 @@ main
 			width 100%
 			height 100%
 			background rgba(#000, 0.5)
+			backdrop-filter blur(4px)
 
 		> .body
 			position fixed

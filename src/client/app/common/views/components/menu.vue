@@ -2,9 +2,9 @@
 <div class="onchrpzrvnoruiaenfcqvccjfuupzzwv" :class="{ isMobile: $root.isMobile }">
 	<div class="backdrop" ref="backdrop" @click="close"></div>
 	<div class="popover" :class="{ bubble }" ref="popover">
-		<template v-for="item, i in items">
-			<div v-if="item === null"></div>
-			<button v-if="item" @click="clicked(item.action)" :tabindex="i">
+		<template v-for="(item, i) in items">
+			<div v-if="item === null" :key="i"></div>
+			<button v-if="item" @click="clicked(item.action)" :tabindex="i" :key="i">
 				<fa v-if="item.icon" :icon="item.icon"/>{{ item.text }}
 			</button>
 		</template>
@@ -135,6 +135,7 @@ export default Vue.extend({
 		z-index 10000
 		width 100%
 		height 100%
+		backdrop-filter blur(4px)
 		background var(--modalBackdrop)
 		opacity 0
 

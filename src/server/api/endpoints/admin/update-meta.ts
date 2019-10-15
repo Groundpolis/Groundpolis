@@ -3,6 +3,7 @@ import define from '../../define';
 import { getConnection } from 'typeorm';
 import { Meta } from '../../../../models/entities/meta';
 import { insertModerationLog } from '../../../../services/insert-moderation-log';
+import { DB_MAX_NOTE_TEXT_LENGTH } from '../../../../misc/hard-limits';
 
 export const meta = {
 	desc: {
@@ -121,7 +122,7 @@ export const meta = {
 		},
 
 		maxNoteTextLength: {
-			validator: $.optional.num.min(0),
+			validator: $.optional.num.min(0).max(DB_MAX_NOTE_TEXT_LENGTH),
 			desc: {
 				'ja-JP': '投稿の最大文字数'
 			}
@@ -132,6 +133,14 @@ export const meta = {
 			desc: {
 				'ja-JP': 'ローカルユーザーひとりあたりのドライブ容量 (メガバイト単位)',
 				'en-US': 'Drive capacity of a local user (MB)'
+			}
+		},
+
+		premiumDriveCapacityMb: {
+			validator: $.optional.num.min(0),
+			desc: {
+				'ja-JP': 'プレミアムユーザーひとりあたりのドライブ容量 (メガバイト単位)',
+				'en-US': 'Drive capacity of a premium user (MB)'
 			}
 		},
 
@@ -467,6 +476,10 @@ export default define(meta, async (ps, me) => {
 
 	if (ps.localDriveCapacityMb !== undefined) {
 		set.localDriveCapacityMb = ps.localDriveCapacityMb;
+	}
+
+	if (ps.premiumDriveCapacityMb !== undefined) {
+		set.premiumDriveCapacityMb = ps.premiumDriveCapacityMb;
 	}
 
 	if (ps.remoteDriveCapacityMb !== undefined) {

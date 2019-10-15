@@ -624,6 +624,7 @@ common/views/components/user-menu.vue:
   unsuspend-confirm: "このユーザーを凍結解除する？"
   update-remote-user: "リモートユーザー情報の更新"
   remote-user-updated: "リモートユーザー情報を更新したよ"
+  go-to-the-room: "ルームに遊びに行く"
 
 common/views/components/poll.vue:
   vote-to: "「{}」に投票する"
@@ -1404,6 +1405,7 @@ admin/views/instance.vue:
   cache-remote-files: "リモートのファイルをキャッシュする"
   cache-remote-files-desc: "この設定を無効にすると、リモートファイルをキャッシュせず直リンクするようになるよ。そのためサーバーのストレージを節約できるんだけど、プライバシー設定で直リンクを無効にしてるユーザーにはファイルが見えなくなったり、サムネイルが生成されないので通信量が増加するよ。通常はこの設定をオンにしておくことをおすすめするよ。"
   local-drive-capacity-mb: "ローカルユーザーひとりあたりのドライブ容量"
+  premium-drive-capacity-mb: "プレミアムユーザーひとりあたりのドライブ容量"
   remote-drive-capacity-mb: "リモートユーザーひとりあたりのドライブ容量"
   mb: "メガバイト単位"
   recaptcha-config: "reCAPTCHAの設定"

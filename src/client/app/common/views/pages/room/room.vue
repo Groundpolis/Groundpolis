@@ -44,6 +44,7 @@
 		<section>
 			<ui-button :primary="changed" @click="save()"><fa :icon="faSave"/> {{ $t('save') }}</ui-button>
 			<ui-button @click="clear()"><fa :icon="faBroom"/> {{ $t('clear') }}</ui-button>
+			<ui-button @click="$router.push('/')"><fa icon="arrow-left"/> {{ $t('@.back-to-top') }}</ui-button>
 		</section>
 	</div>
 </div>

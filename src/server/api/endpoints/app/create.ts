@@ -12,7 +12,7 @@ export const meta = {
 
 	desc: {
 		'ja-JP': 'アプリを作成します。',
-		'en-US': 'Create a application.'
+		'en-US': 'Create an application.'
 	},
 
 	params: {

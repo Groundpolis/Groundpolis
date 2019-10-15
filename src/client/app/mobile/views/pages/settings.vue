@@ -1,18 +1,11 @@
 <template>
-<mk-ui>
+<mk-ui :displayFab="false">
 	<template #header><span style="margin-right:4px;"><fa icon="cog"/></span>{{ $t('@.settings') }}</template>
 	<main>
-		<div class="signed-in-as" :class="{ shadow: $store.state.device.useShadow, round: $store.state.device.roundedCorners }">
-			<mfm :text="$t('signed-in-as').replace('{}', name)" :plain="true" :custom-emojis="$store.state.i.emojis"/>
-		</div>
 
 		<x-settings/>
 
 		<div class="signout" :class="{ shadow: $store.state.device.useShadow, round: $store.state.device.roundedCorners }" @click="signout">{{ $t('@.signout') }}</div>
-
-		<footer>
-			<small>ver {{ version }} ({{ codename }})</small>
-		</footer>
 	</main>
 </mk-ui>
 </template>

@@ -28,16 +28,24 @@
 					<button @click="addVisibleUser">{{ $t('@.post-form.add-visible-user') }}</button>
 				</div>
 			</div>
+			<div class="hashtags" v-if="recentHashtags.length > 0 && $store.state.settings.suggestRecentHashtags">
+				<a v-for="tag in recentHashtags.slice(0, 5)" :key="tag" @click="addTag(tag)">#{{ tag }}</a>
+			</div>
 			<div class="local-only" v-if="localOnly === true"><fa icon="heart"/> {{ $t('@.post-form.local-only-message') }}</div>
 			<input v-show="useCw" ref="cw" v-model="cw" :placeholder="$t('@.post-form.cw-placeholder')" v-autocomplete="{ model: 'cw' }">
-			<textarea v-model="text" ref="text" :disabled="posting" :placeholder="placeholder" v-autocomplete="{ model: 'text' }" @paste="onPaste"></textarea>
+			<div class="textarea">
+				<textarea v-model="text" ref="text" :disabled="posting" :placeholder="placeholder" v-autocomplete="{ model: 'text' }" @paste="onPaste"></textarea>
+				<button class="emoji" @click="emoji" ref="emoji">
+					<fa :icon="['far', 'laugh']"/>
+				</button>
+			</div>
 			<x-post-form-attaches class="attaches" :files="files"/>
 			<x-poll-editor v-if="poll" ref="poll" @destroyed="poll = false" @updated="onPollUpdate()"/>
 			<mk-uploader ref="uploader" @uploaded="attachMedia" @change="onChangeUploadings"/>
 			<footer>
 				<button class="upload" @click="chooseFile"><fa icon="upload"/></button>
 				<button class="drive" @click="chooseFileFromDrive"><fa icon="cloud"/></button>
-				<button class="kao" @click="kao"><fa :icon="['far', 'fish']"/></button>
+				<button class="kao" @click="kao"><fa :icon="['fas', 'fish']"/></button>
 				<button class="poll" @click="poll = true"><fa icon="chart-pie"/></button>
 				<button class="poll" @click="useCw = !useCw"><fa :icon="useCw ? ['fas', 'eye'] : ['far', 'eye-slash']"/></button>
 				<button class="visibility" @click="setVisibility" ref="visibilityButton">
@@ -50,9 +58,10 @@
 			</footer>
 			<input ref="file" class="file" type="file" multiple="multiple" @change="onChangeFile"/>
 		</div>
-	</div>
-	<div class="hashtags" v-if="recentHashtags.length > 0 && $store.state.settings.suggestRecentHashtags">
-		<a v-for="tag in recentHashtags.slice(0, 5)" :key="tag" @click="addTag(tag)">#{{ tag }}</a>
+		<details v-if="preview" class="preview" ref="preview" :open="$store.state.device.showPostPreview" @toggle="togglePreview">
+			<summary>{{ $t('@.post-form.preview') }}</summary>
+			<mk-note class="note" :note="preview" :key="preview.id" :compact="true" :preview="true" />
+		</details>
 	</div>
 </div>
 </template>
@@ -70,6 +79,21 @@ export default Vue.extend({
 			mobile: true
 		}),
 	],
+
+	watch: {
+		text() {
+			this.doPreview();
+		},
+		files() {
+			this.doPreview();
+		},
+		visibility() {
+			this.doPreview();
+		},
+		localOnly() {
+			this.doPreview();
+		},
+	},
 
 	methods: {
 		cancel() {
@@ -141,6 +165,31 @@ export default Vue.extend({
 			max-width 500px
 			margin 0 auto
 
+			>.textarea
+				> textarea
+					display block
+					padding 12px
+					margin 0
+					width 100%
+					font-size 16px
+					color var(--inputText)
+					background var(--mobilePostFormTextareaBg)
+					border none
+					border-radius 0
+					box-shadow 0 1px 0 0 var(--mobilePostFormDivider)
+					max-width 100%
+					min-width 100%
+					min-height 80px
+
+				> .emoji
+					position absolute
+					top 0
+					right 0
+					padding 10px
+					font-size 18px
+					color var(--text)
+					opacity 0.5
+
 			> .preview
 				padding 16px
 
@@ -180,7 +229,7 @@ export default Vue.extend({
 							&:active
 								color var(--primaryDarken30)
 
-			> .local-only
+			.local-only
 				margin 0 0 8px 0
 				color var(--primary)
 
@@ -188,7 +237,6 @@ export default Vue.extend({
 				z-index 1
 
 			> input
-			> textarea
 				display block
 				padding 12px
 				margin 0
@@ -202,11 +250,6 @@ export default Vue.extend({
 
 				&:disabled
 					opacity 0.5
-
-			> textarea
-				max-width 100%
-				min-width 100%
-				min-height 80px
 
 			> .mk-uploader
 				margin 8px 0 0 0
@@ -235,10 +278,22 @@ export default Vue.extend({
 					border-radius 0
 					box-shadow none
 
-	> .hashtags
+	.hashtags
 		margin 8px
 
 		> *
 			margin-right 8px
+
+
+.preview
+	background var(--desktopPostFormBg)
+
+	> summary
+		padding 0px 16px 16px 20px
+		font-size 14px
+		color var(--text)
+
+	> .note
+		border-top solid var(--lineWidth) var(--faceDivider)
 
 </style>

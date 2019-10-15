@@ -2,8 +2,8 @@
 <div class="root">
 	<ui-info v-if="!fetching && apps.length == 0">{{ $t('no-apps') }}</ui-info>
 	<div class="apps" v-if="apps.length != 0">
-		<div v-for="app in apps">
-			<p><b>{{ app.name }}</b></p>
+		<div v-for="app in apps" :key="app.id">
+			<h1>{{ app.name }}</h1>
 			<p>{{ app.description }}</p>
 		</div>
 	</div>
@@ -26,7 +26,7 @@ export default Vue.extend({
 			this.apps = apps;
 			this.fetching = false;
 		});
-	}
+	},
 });
 </script>
 
@@ -34,6 +34,16 @@ export default Vue.extend({
 .root
 	> .apps
 		> div
-			padding 16px 0 0 0
-			border-bottom solid 1px #eee
+			padding 16px
+			margin 8px
+			border-radius 8px
+			background var(--bg)
+			> h1
+				margin-top 0
+				font-size 16px
+			> p
+				font-size 14px
+				text-indent 16px
+				opacity 0.6
+				margin-bottom 0
 </style>

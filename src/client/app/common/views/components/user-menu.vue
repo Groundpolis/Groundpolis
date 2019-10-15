@@ -7,7 +7,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import i18n from '../../../i18n';
-import { faExclamationCircle, faMicrophoneSlash, faSync } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle, faMicrophoneSlash, faSync, faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { faSnowflake } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
@@ -42,6 +42,14 @@ export default Vue.extend({
 				text: this.$t('report-abuse'),
 				action: this.reportAbuse
 			}]);
+		}
+
+		if (this.$store.getters.isSignedIn && this.user.host == null) {
+				menu = menu.concat({
+					icon: faDoorOpen,
+					text: this.$t('go-to-the-room'),
+					action: this.goToTheRoom,
+				});
 		}
 
 		if (this.$store.getters.isSignedIn && (this.$store.state.i.isAdmin || this.$store.state.i.isModerator)) {
@@ -182,6 +190,10 @@ export default Vue.extend({
 					text: e
 				});
 			});
+		},
+
+		goToTheRoom() {
+			this.$router.push(Vue.filter('userPage')(this.user, 'room'));
 		},
 
 		async toggleSilence() {

@@ -9,11 +9,11 @@
 		<div class="content">
 			<div class="hashtags" v-if="recentHashtags.length > 0 && $store.state.settings.suggestRecentHashtags">
 				<b>{{ $t('@.post-form.recent-tags') }}:</b>
-				<a v-for="tag in recentHashtags.slice(0, 5)" @click="addTag(tag)" :title="$t('@.post-form.click-to-tagging')">#{{ tag }}</a>
+				<a v-for="tag in recentHashtags.slice(0, 5)" :key="tag" @click="addTag(tag)" :title="$t('@.post-form.click-to-tagging')">#{{ tag }}</a>
 			</div>
 			<div class="with-quote" v-if="quoteId">{{ $t('@.post-form.quote-attached') }} <a @click="quoteId = null">[x]</a></div>
 			<div v-if="visibility === 'specified'" class="visibleUsers">
-				<span v-for="u in visibleUsers">
+				<span v-for="u in visibleUsers" :key="u.id">
 					<mk-user-name :user="u"/><a @click="removeVisibleUser(u)">[x]</a>
 				</span>
 				<a @click="addVisibleUser">{{ $t('@.post-form.add-visible-user') }}</a>
@@ -36,7 +36,7 @@
 		<mk-uploader ref="uploader" @uploaded="attachMedia" @change="onChangeUploadings"/>
 		<button class="upload" :title="$t('@.post-form.attach-media-from-local')" @click="chooseFile"><fa icon="upload"/></button>
 		<button class="drive" :title="$t('@.post-form.attach-media-from-drive')" @click="chooseFileFromDrive"><fa icon="cloud"/></button>
-		<button class="kao" :title="$t('@.post-form.insert-a-kao')" @click="kao"><fa :icon="['far', 'fish']"/></button>
+		<button class="kao" :title="$t('@.post-form.insert-a-kao')" @click="kao"><fa :icon="['fas', 'fish']"/></button>
 		<button class="poll" :title="$t('@.post-form.create-poll')" @click="poll = !poll"><fa icon="chart-pie"/></button>
 		<button class="cw" :title="$t('@.post-form.hide-contents')" @click="useCw = !useCw"><fa :icon="useCw ? ['fas', 'eye'] : ['far', 'eye-slash']"/></button>
 		<p class="text-count" :class="{ over: trimmedLength(text) > maxNoteTextLength }">{{ maxNoteTextLength - trimmedLength(text) }}</p>

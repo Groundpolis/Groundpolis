@@ -3,6 +3,7 @@
 	<x-header v-if="!$store.state.device.inDeckMode">
 		<template #func><slot name="func"></slot></template>
 		<slot name="header"></slot>
+		<button class="back" v-if="displayBack" @click="$router.back()"><fa icon="arrow-left"/></button>
 	</x-header>
 	<x-nav :is-open="isDrawerOpening"/>
 	<div class="content">
@@ -10,7 +11,8 @@
 	</div>
 	<mk-stream-indicator v-if="$store.getters.isSignedIn"/>
 	<button class="nav button" v-if="$store.state.device.inDeckMode" @click="isDrawerOpening = !isDrawerOpening"><fa icon="bars"/><i v-if="indicate"><fa icon="circle"/></i></button>
-	<button class="post button" v-if="$store.state.device.inDeckMode" @click="$post()"><fa icon="pencil-alt"/></button>
+	<button class="post button" ref="fab" v-if="displayFab" @click="fabClicked"><fa :icon="fabIcon"/></button>
+	<x-footer v-if="!$store.state.device.inDeckMode"/>
 </div>
 </template>
 
@@ -18,15 +20,36 @@
 import Vue from 'vue';
 import MkNotify from './notify.vue';
 import XHeader from './ui.header.vue';
+import XFooter from './ui.footer.vue';
 import XNav from './ui.nav.vue';
 
 export default Vue.extend({
 	components: {
 		XHeader,
+		XFooter,
 		XNav
 	},
 
-	props: ['title'],
+	props: {
+		title: {
+			type: String,
+		},
+		fabClickedAction: {
+			type: Function
+		},
+		fabIcon: {
+			type: String,
+			default: 'pencil-alt'
+		},
+		displayFab: {
+			type: Boolean,
+			default: true
+		},
+		displayBack: {
+			type: Boolean,
+			default: false
+		}
+	},
 
 	data() {
 		return {
@@ -46,7 +69,11 @@ export default Vue.extend({
 		},
 
 		indicate(): boolean {
-			return this.hasUnreadNotification || this.hasUnreadMessagingMessage || this.hasGameInvitation;
+			return !!this.hasGameInvitation;
+		},
+
+		fabClicked() {
+			return this.fabClickedAction || this.$post;
 		}
 	},
 
@@ -100,7 +127,9 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 .mk-ui
 	&:not(.deck)
-		padding-top 48px
+		padding 48px 0 64px 0
+		.button
+			bottom: 64px
 
 	> .button
 		position fixed
@@ -133,4 +162,11 @@ export default Vue.extend({
 			background var(--primary)
 			color var(--primaryForeground)
 
+.back {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	font-size: 18px;
+}
 </style>

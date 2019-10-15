@@ -12,6 +12,7 @@ import init from '../init';
 
 import MkIndex from './views/pages/index.vue';
 import MkSignup from './views/pages/signup.vue';
+import MkExplore from './views/pages/explore.vue';
 import MkSelectDrive from './views/pages/selectdrive.vue';
 import MkDrive from './views/pages/drive.vue';
 import MkNotifications from './views/pages/notifications.vue';
@@ -30,6 +31,8 @@ import PostFormDialog from './views/components/post-form-dialog.vue';
 
 import FileChooser from './views/components/drive-file-chooser.vue';
 import FolderChooser from './views/components/drive-folder-chooser.vue';
+
+import updateUserImage from './api/update-user-image';
 
 /**
  * init
@@ -95,7 +98,15 @@ init((launch, os) => {
 
 			$notify(message) {
 				alert(message);
-			}
+			},
+
+			$updateAvatar(file) {
+				return updateUserImage(this, 'avatar')(file);
+			},
+
+			$updateBanner(file) {
+				return updateUserImage(this, 'banner')(file);
+			},
 		}
 	});
 
@@ -162,7 +173,7 @@ init((launch, os) => {
 			{ path: '/search', component: MkSearch },
 			{ path: '/tags/:tag', component: MkTag },
 			{ path: '/featured', name: 'featured', component: UI, props: route => ({ component: () => import('../common/views/pages/featured.vue').then(m => m.default), platform: 'mobile' }) },
-			{ path: '/explore', name: 'explore', component: UI, props: route => ({ component: () => import('../common/views/pages/explore.vue').then(m => m.default) }) },
+			{ path: '/explore', name: 'explore', component: MkExplore},
 			{ path: '/explore/tags/:tag', name: 'explore-tag', component: UI, props: route => ({ component: () => import('../common/views/pages/explore.vue').then(m => m.default), tag: route.params.tag }) },
 			{ path: '/share', component: MkShare },
 			{ path: '/games/reversi/:game?', name: 'reversi', component: MkReversi },
