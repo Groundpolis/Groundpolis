@@ -101,12 +101,12 @@ init((launch, os) => {
 			},
 
 			$updateAvatar(file) {
-				return updateUserImage(this, 'avatar')(file)
+				return updateUserImage(this, 'avatar')(file);
 			},
 
 			$updateBanner(file) {
-				return updateUserImage(this, 'banner')(file)
-			}
+				return updateUserImage(this, 'banner')(file);
+			},
 		}
 	});
 

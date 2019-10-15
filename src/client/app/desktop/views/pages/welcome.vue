@@ -42,7 +42,7 @@
 			<div class="announcements block">
 				<header><fa icon="broadcast-tower"/> {{ $t('announcements') }}</header>
 				<div v-if="announcements && announcements.length > 0">
-					<div v-for="announcement in announcements">
+					<div v-for="announcement in announcements" :key="announcement.title">
 						<h1 v-html="announcement.title"></h1>
 						<mfm :text="announcement.text"/>
 						<img v-if="announcement.image" :src="announcement.image" alt="" style="display: block; max-height: 130px; max-width: 100%;"/>
