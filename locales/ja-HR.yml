@@ -626,6 +626,7 @@ common/views/components/user-menu.vue:
   unsuspend-confirm: "このユーザーをとうけつかいじょしますか？"
   update-remote-user: "リモートユーザーじょうほうのこうしん"
   remote-user-updated: "リモートユーザーじょうほうをこうしんしました"
+  go-to-the-room: "ルームにいく"
 
 common/views/components/poll.vue:
   vote-to: "「{}」にとうひょうする"

@@ -617,6 +617,8 @@ common/views/components/user-menu.vue:
   unverified: "The account is now being unverified"
   update-remote-user: "Update information about remote user"
   remote-user-updated: "The information regarding the remote user has been updated."
+  go-to-the-room: "Go to this user's room"
+
 common/views/components/poll.vue:
   vote-to: "Vote for '{}'"
   vote-count: "{} votes"

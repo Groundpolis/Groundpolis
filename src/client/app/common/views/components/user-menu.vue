@@ -47,7 +47,7 @@ export default Vue.extend({
 		if (this.$store.getters.isSignedIn && this.user.host == null) {
 				menu = menu.concat({
 					icon: faDoorOpen,
-					text: this.$t("go-to-the-room"),
+					text: this.$t('go-to-the-room'),
 					action: this.goToTheRoom,
 				});
 		}
