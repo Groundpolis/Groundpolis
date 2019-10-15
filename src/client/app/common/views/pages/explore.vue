@@ -1,13 +1,16 @@
 <template>
 <div>
 	<div class="localfedi7" v-if="meta && stats && tag == null" :style="{ backgroundImage: meta.bannerUrl ? `url(${meta.bannerUrl})` : null }">
-		<header>{{ $t('explore', { host: meta.name }) }}</header>
+		<header>{{ $t('explore', { host: meta.name || 'Groundpolis' }) }}</header>
 		<div>{{ $t('users-info', { users: num(stats.originalUsersCount) }) }}</div>
 	</div>
 
 	<template v-if="tag == null">
 		<mk-user-list :pagination="pinnedUsers" :expanded="false">
 			<fa :icon="faBookmark" fixed-width/>{{ $t('pinned-users') }}
+		</mk-user-list>
+		<mk-user-list :pagination="verifiedUsers" :expanded="false">
+			<fa :icon="faCertificate" fixed-width/>{{ $t('verified-users') }}
 		</mk-user-list>
 		<mk-user-list :pagination="popularUsers" :expanded="false">
 			<fa :icon="faChartLine" fixed-width/>{{ $t('popular-users') }}
@@ -37,13 +40,6 @@
 		<fa :icon="faHashtag" fixed-width/>{{ tag }}
 	</mk-user-list>
 	<template v-if="tag == null">
-		<mk-user-list :pagination="pinnedUsers">
-			<fa :icon="faBookmark" fixed-width/>{{ $t('pinned-users') }}
-		</mk-user-list>
-		<mk-user-list :pagination="verifiedUsers">
-			<fa :icon="faCertificate" fixed-width/>{{ $t('verified-users') }}
-		</mk-user-list>
-		<mk-user-list :pagination="popularUsers">
 		<mk-user-list :pagination="popularUsersF" :expanded="false">
 			<fa :icon="faChartLine" fixed-width/>{{ $t('popular-users') }}
 		</mk-user-list>
