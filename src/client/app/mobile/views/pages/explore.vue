@@ -4,9 +4,8 @@
 
 	<main>
 		<form class="exploreheaderaaa" @submit.prevent="onSubmit">
-			<ui-input style="margin: 8px" v-model="q" type="search" :placeholder="$t('@.search')" v-autocomplete="{ model: 'q' }">
-				<template #prefix><fa icon="search"/></template>
-			</ui-input>
+			<i><fa icon="search"/></i>
+			<input v-model="q" type="search" :placeholder="$t('@.search')" v-autocomplete="{ model: 'q' }"/>
 			<ul class="tab">
 				<li class="item" :class="{ active: mode == 'explore' }" @click="mode = 'explore'">
 					{{ $t('@.explore') }}
@@ -89,5 +88,40 @@ export default Vue.extend({
 			cursor pointer
 			&.active
 				border-bottom: 3px solid var(--primary);
+
+	> i
+		display block
+		position absolute
+		top 16px
+		left 4px
+		width 48px
+		text-align center
+		line-height 48px
+		color var(--desktopHeaderFg)
+		pointer-events none
+
+	> input
+		user-select text
+		cursor auto
+		margin 8px 0 0 0
+		padding 6px 18px 6px 36px
+		width 100%
+		height 48px
+		font-size 1em
+		background var(--desktopHeaderSearchBg)
+		outline none
+		border none
+		border-radius 24px
+		transition color 0.5s ease, border 0.5s ease
+		color var(--desktopHeaderSearchFg)
+
+		&::placeholder
+			color var(--desktopHeaderFg)
+
+		&:hover
+			background var(--desktopHeaderSearchHoverBg)
+
+		&:focus
+			box-shadow 0 0 0 2px var(--primaryAlpha05) !important
 
 </style>
