@@ -8,7 +8,7 @@
 					<fa :icon="$store.getters.isSignedIn ? 'home' : 'arrow-left'"/>
 				</router-link>
 				<router-link :class="{ active: $route.name == 'explore' }" to="/explore">
-					<fa icon="hashtag"/>
+					<fa icon="search"/>
 				</router-link>
 				<router-link :class="{ active: $route.name == 'notifications' }" to="/i/notifications">
 					<fa :icon="['far', 'bell']"/>

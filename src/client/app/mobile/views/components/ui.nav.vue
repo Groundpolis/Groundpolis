@@ -59,6 +59,9 @@
 					<p class="version">ver {{ version }} ({{ codename }})</p>
 				</div>
 				<div v-else>
+					<ui-info>
+						coming soon
+					</ui-info>
 				</div>
 			</div>
 		</div>
@@ -236,6 +239,7 @@ export default Vue.extend({
 				padding 16px
 				text-decoration none 
 				z-index 5
+				border-bottom solid var(--lineWidth) var(--faceDivider)
 			
 				&+div
 					margin-top 150px
