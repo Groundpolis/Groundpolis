@@ -3,7 +3,7 @@ import * as promiseLimit from 'promise-limit';
 import config from '../../../config';
 import Resolver from '../resolver';
 import { resolveImage } from './image';
-import { isCollectionOrOrderedCollection, isCollection, IPerson } from '../type';
+import { isCollectionOrOrderedCollection, isCollection, IPerson, getApId } from '../type';
 import { DriveFile } from '../../../models/entities/drive-file';
 import { fromHtml } from '../../../mfm/fromHtml';
 import { resolveNote, extractEmojis } from './note';
@@ -150,13 +150,13 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<Us
 				createdAt: new Date(),
 				lastFetchedAt: new Date(),
 				name: person.name,
-				isLocked: person.manuallyApprovesFollowers,
+				isLocked: !!person.manuallyApprovesFollowers,
 				username: person.preferredUsername,
-				usernameLower: person.preferredUsername.toLowerCase(),
+				usernameLower: person.preferredUsername!.toLowerCase(),
 				host,
 				inbox: person.inbox,
 				sharedInbox: person.sharedInbox || (person.endpoints ? person.endpoints.sharedInbox : undefined),
-				featured: person.featured,
+				featured: person.featured ? getApId(person.featured) : undefined,
 				uri: person.id,
 				tags,
 				isBot,
@@ -319,7 +319,7 @@ export async function updatePerson(uri: string, resolver?: Resolver | null, hint
 		tags,
 		isBot: object.type == 'Service',
 		isCat: (person as any).isCat === true,
-		isLocked: person.manuallyApprovesFollowers,
+		isLocked: !!person.manuallyApprovesFollowers,
 	} as Partial<User>;
 
 	if (avatar) {

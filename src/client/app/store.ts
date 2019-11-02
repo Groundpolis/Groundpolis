@@ -88,6 +88,8 @@ const defaultDeviceSettings = {
 	enableMobileQuickNotificationView: false,
 	roomGraphicsQuality: 'medium',
 	roomUseOrthographicCamera: true,
+	activeEmojiCategoryName: undefined,
+	recentEmojis: [],
 };
 
 export default (os: MiOS) => new Vuex.Store({

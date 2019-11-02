@@ -229,6 +229,7 @@ export class Note {
 
 export type IMentionedRemoteUsers = {
 	uri: string;
+	url?: string;
 	username: string;
 	host: string;
 }[];
