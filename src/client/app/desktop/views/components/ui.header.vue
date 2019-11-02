@@ -106,7 +106,6 @@ export default Vue.extend({
 			width 100%
 			height 48px
 			background var(--desktopHeaderBg)
-			backdrop-filter blur(4px)
 
 		> .main
 			z-index 1001

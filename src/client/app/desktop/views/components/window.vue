@@ -466,7 +466,6 @@ export default Vue.extend({
 		background rgba(#000, 0.7)
 		opacity 0
 		pointer-events none
-		backdrop-filter blur(4px)
 
 	> .main
 		display block

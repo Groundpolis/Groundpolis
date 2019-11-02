@@ -95,7 +95,6 @@ export default Vue.extend({
 		background-size cover
 		background-position center
 		background-attachment fixed
-		backdrop-filter blur(4px)
 
 	> .content.sidebar.left
 		padding-left 68px

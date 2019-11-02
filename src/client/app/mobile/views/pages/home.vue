@@ -203,7 +203,6 @@ main
 			width 100%
 			height 100%
 			background rgba(#000, 0.5)
-			backdrop-filter blur(4px)
 
 		> .body
 			position fixed

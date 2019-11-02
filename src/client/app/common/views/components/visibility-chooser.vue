@@ -168,7 +168,6 @@ export default Vue.extend({
 		width 100%
 		height 100%
 		background var(--modalBackdrop)
-		backdrop-filter blur(4px)
 		opacity 0
 
 	> .popover

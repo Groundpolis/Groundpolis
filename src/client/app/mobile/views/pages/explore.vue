@@ -68,7 +68,6 @@ export default Vue.extend({
 	right 0
 	padding 8px 8px 0 8px
 	background var(--desktopNotificationBg)
-	backdrop-filter blur(2px)
 	color var(--mobileHeaderFg)
 	border-bottom 1px solid rgba(0,0,0,.1)
 	border-top 1px solid rgba(0,0,0,.1)
