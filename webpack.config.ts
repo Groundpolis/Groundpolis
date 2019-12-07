@@ -4,7 +4,7 @@
 
 import * as fs from 'fs';
 import * as webpack from 'webpack';
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 const { VueLoaderPlugin } = require('vue-loader');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
@@ -130,7 +130,7 @@ module.exports = {
 			'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
 		}),
 		new WebpackOnBuildPlugin((stats: any) => {
-			fs.writeFileSync('./built/client/meta.json', JSON.stringify({ version: meta.version }), 'utf-8');
+			fs.writeFileSync('./built/meta.json', JSON.stringify({ version: meta.version }), 'utf-8');
 
 			fs.mkdirSync('./built/client/assets/locales', { recursive: true });
 

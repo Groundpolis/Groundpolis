@@ -1,6 +1,6 @@
 import * as cluster from 'cluster';
 import * as os from 'os';
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import * as dateformat from 'dateformat';
 import { program } from '../argv';
 import { getRepository } from 'typeorm';
@@ -103,7 +103,7 @@ export default class Logger {
 					worker: worker.toString(),
 					domain: [this.domain].concat(subDomains).map(d => d.name),
 					level: level,
-					message: message,
+					message: message.substr(0, 1000), // 1024を超えるとログが挿入できずエラーになり無限ループする
 					data: data,
 				} as Log);
 			}

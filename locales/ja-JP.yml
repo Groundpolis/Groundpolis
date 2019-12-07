@@ -327,6 +327,7 @@ common:
     sync: "同期"
     save: "保存"
     saved: "保存しました"
+    preview: "プレビュー"
     home-profile: "クラシックモードのプロファイル"
     deck-profile: "デッキモードのプロファイル"
     room: "ルーム"

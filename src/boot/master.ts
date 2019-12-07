@@ -1,6 +1,6 @@
 import * as os from 'os';
 import * as cluster from 'cluster';
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import * as portscanner from 'portscanner';
 import * as isRoot from 'is-root';
 
@@ -8,10 +8,10 @@ import Logger from '../services/logger';
 import loadConfig from '../config/load';
 import { Config } from '../config/types';
 import { lessThan } from '../prelude/array';
-import * as pkg from '../../package.json';
 import { program } from '../argv';
 import { showMachineInfo } from '../misc/show-machine-info';
 import { initDb } from '../db/postgre';
+import * as meta from '../meta.json';
 
 const logger = new Logger('core', 'cyan');
 const bootLogger = logger.createSubLogger('boot', 'magenta', false);
@@ -19,7 +19,7 @@ const bootLogger = logger.createSubLogger('boot', 'magenta', false);
 function greet() {
 	if (!program.quiet) {
 		//#region Groundpolis logo
-		const v = `v${pkg.version}`;
+		const v = `v${meta.version}`;
 		// tslint:disable:quotemark
 		console.log("   ___                      _           _ _    ");
 		console.log("  / __|_ _ ___ _  _ _ _  __| |_ __  ___| (_)___");
@@ -39,18 +39,18 @@ function greet() {
 	}
 
 	bootLogger.info('Welcome to Groundpolis!');
-	bootLogger.info(`Groundpolis v${pkg.version}`, null, true);
+	bootLogger.info(`Groundpolis v${meta.version}`, null, true);
 }
 
 /**
  * Init master process
  */
 export async function masterMain() {
-	greet();
-
 	let config!: Config;
 
 	try {
+		greet();
+
 		// initialize app
 		config = await init();
 
