@@ -9,3 +9,10 @@ else
 	npm i
 	NODE_ENV=production npm run build
 fi
+
+test
+
+if [ $? -eq 0 ]; then
+	rm built.zip
+	zip -r built.zip ./built
+fi
