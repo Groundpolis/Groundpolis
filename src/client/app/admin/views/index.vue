@@ -14,10 +14,10 @@
 			<img svg-inline src="../assets/header-icon.svg"/>
 		</div>
 		<div class="me">
-			<img class="avatar" :src="$store.state.i.avatarUrl" alt="avatar"/>
-			<p class="name"><mk-user-name :user="$store.state.i"/></p>
+			<img class="avatar" :src="i.avatarUrl" alt="avatar"/>
+			<p class="name"><mk-user-name :user="i"/></p>
 		</div>
-		<ul>
+		<ul v-if="isModerator">
 			<li><router-link to="/dashboard" active-class="active"><fa icon="home" fixed-width/>{{ $t('dashboard') }}</router-link></li>
 			<li><router-link to="/instance" active-class="active"><fa icon="cog" fixed-width/>{{ $t('instance') }}</router-link></li>
 			<li><router-link to="/queue" active-class="active"><fa :icon="faTasks" fixed-width/>{{ $t('queue') }}</router-link></li>
@@ -40,18 +40,24 @@
 	</nav>
 	<main>
 		<div class="page">
-			<div v-if="page == 'dashboard'"><x-dashboard/></div>
-			<div v-if="page == 'instance'"><x-instance/></div>
-			<div v-if="page == 'queue'"><x-queue/></div>
-			<div v-if="page == 'logs'"><x-logs/></div>
-			<div v-if="page == 'db'"><x-db/></div>
-			<div v-if="page == 'moderators'"><x-moderators/></div>
-			<div v-if="page == 'users'"><x-users/></div>
-			<div v-if="page == 'emoji'"><x-emoji/></div>
-			<div v-if="page == 'announcements'"><x-announcements/></div>
-			<div v-if="page == 'drive'"><x-drive/></div>
-			<div v-if="page == 'federation'"><x-federation/></div>
-			<div v-if="page == 'abuse'"><x-abuse/></div>
+			<template v-if="isModerator">
+				<div v-if="page == 'dashboard'"><x-dashboard/></div>
+				<div v-if="page == 'instance'"><x-instance/></div>
+				<div v-if="page == 'queue'"><x-queue/></div>
+				<div v-if="page == 'logs'"><x-logs/></div>
+				<div v-if="page == 'db'"><x-db/></div>
+				<div v-if="page == 'moderators'"><x-moderators/></div>
+				<div v-if="page == 'users'"><x-users/></div>
+				<div v-if="page == 'emoji'"><x-emoji/></div>
+				<div v-if="page == 'announcements'"><x-announcements/></div>
+				<div v-if="page == 'drive'"><x-drive/></div>
+				<div v-if="page == 'federation'"><x-federation/></div>
+				<div v-if="page == 'abuse'"><x-abuse/></div>
+			</template>
+			<template v-else>
+				<h1>Permission denied!</h1>
+				<p>You can't access this page because you aren't either an administrator and a moderator.</p>
+			</template>
 		</div>
 	</main>
 </div>
@@ -118,6 +124,12 @@ export default Vue.extend({
 	computed: {
 		page() {
 			return this.$route.params.page;
+		},
+		i() {
+			return this.$store.state.i;
+		},
+		isModerator() {
+			return this.i.isAdmin || this.i.isModerator;
 		}
 	}
 });
@@ -226,7 +238,6 @@ export default Vue.extend({
 		> .version
 			margin 0 16px 16px 16px
 			padding-top 16px
-			border-top solid 1px #555
 			text-align center
 
 			> small
@@ -285,6 +296,7 @@ export default Vue.extend({
 
 		> .page
 			max-width 1150px
+			color var(--text)
 
 			@media (min-width 500px)
 				padding 16px
