@@ -50,15 +50,6 @@
 				<ui-switch v-model="enableMobileQuickNotificationView">{{ $t('@._settings.enable-quick-notification-view') }}</ui-switch>
 			</section>
 			<section>
-				<header>Instance Ticker</header>
-				<p><small>Powered by <a href="https://wee.jp/">#InstanceTicker</a></small></p>
-				<ui-select v-model="tickerMode">
-					<option value="0">{{ $t('@._settings.instance-ticker-0') }}</option>
-					<option value="1">{{ $t('@._settings.instance-ticker-1') }}</option>
-					<option value="2">{{ $t('@._settings.instance-ticker-2') }}</option>
-				</ui-select>
-			</section>
-			<section>
 				<header>{{ $t('@._settings.line-width') }}</header>
 				<ui-radio v-model="lineWidth" :value="0.5">{{ $t('@._settings.line-width-thin') }}</ui-radio>
 				<ui-radio v-model="lineWidth" :value="1">{{ $t('@._settings.line-width-normal') }}</ui-radio>
@@ -246,6 +237,14 @@
 
 		<x-language/>
 		<x-app-type/>
+
+		<ui-card>
+			<template #title><fa icon="skull"/> {{ $t('@._settings.f--king-features') }}</template>
+			<section>
+				<ui-info warn>{{ $t('@._settings.f--king-features-warn') }}</ui-info>
+				<ui-switch v-model="enableJei">{{ $t('@._settings.enable-jei') }}</ui-switch>
+			</section>
+		</ui-card>
 	</template>
 
 	<template v-if="page == null || page == 'notification'">
@@ -463,6 +462,11 @@ export default Vue.extend({
 		enableSpeech: {
 			get() { return this.$store.state.device.enableSpeech; },
 			set(value) { this.$store.commit('device/set', { key: 'enableSpeech', value }); }
+		},
+
+		enableJei: {
+			get() { return this.$store.state.device.enableJei; },
+			set(value) { this.$store.commit('device/set', { key: 'enableJei', value }); }
 		},
 
 		soundVolume: {
