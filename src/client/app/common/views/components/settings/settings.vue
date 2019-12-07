@@ -394,7 +394,6 @@ export default Vue.extend({
 			pastedFileName : this.$store.state.settings.pastedFileName,
 			latestVersion: undefined,
 			checkingForUpdate: false,
-			tickerMode: localStorage.getItem('tickerMode') || '0',
 			visibilities: [
 				'public',
 				'home',
@@ -407,11 +406,6 @@ export default Vue.extend({
 			],
 			faSave
 		};
-	},
-	watch: {
-		tickerMode(val) {
-			localStorage.setItem('tickerMode', val);
-		},
 	},
 	computed: {
 		useOsDefaultEmojis: {
