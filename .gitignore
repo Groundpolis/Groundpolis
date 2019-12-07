@@ -37,3 +37,5 @@ ormconfig.json
 *.blend3
 *.blend4
 *.blend5
+
+built.zip
