@@ -212,6 +212,11 @@ export class Meta {
 	})
 	public enableServiceWorker: boolean;
 
+	@Column('boolean', {
+		default: false,
+	})
+	public hideServerInformation: boolean;
+
 	@Column('varchar', {
 		length: 128,
 		nullable: true

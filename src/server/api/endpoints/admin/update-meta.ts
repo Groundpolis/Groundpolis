@@ -334,6 +334,13 @@ export const meta = {
 			}
 		},
 
+		hideServerInformation: {
+			validator: $.optional.bool,
+			desc: {
+				'ja-jp': 'サーバー情報を隠すかどうか'
+			}
+		},
+
 		swPublicKey: {
 			validator: $.optional.nullable.str,
 			desc: {
@@ -592,6 +599,10 @@ export default define(meta, async (ps, me) => {
 
 	if (ps.enableServiceWorker !== undefined) {
 		set.enableServiceWorker = ps.enableServiceWorker;
+	}
+
+	if (ps.hideServerInformation !== undefined) {
+		set.hideServerInformation = ps.hideServerInformation;
 	}
 
 	if (ps.swPublicKey !== undefined) {

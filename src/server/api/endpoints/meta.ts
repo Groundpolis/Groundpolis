@@ -89,6 +89,11 @@ export const meta = {
 				optional: false as const, nullable: false as const,
 				description: 'Whether enabled emoji reaction.',
 			},
+			hideServerInformation: {
+				type: 'boolean' as const,
+				optional: false as const, nullable: false as const,
+				description: 'Whether server information is hidden.',
+			},
 		}
 	}
 };
@@ -110,6 +115,8 @@ export default define(meta, async (ps, me) => {
 		}
 	});
 
+	const hide = instance.hideServerInformation;
+
 	const response: any = {
 		maintainerName: instance.maintainerName,
 		maintainerEmail: instance.maintainerEmail,
@@ -125,13 +132,13 @@ export default define(meta, async (ps, me) => {
 		feedbackUrl: instance.feedbackUrl,
 
 		secure: config.https != null,
-		machine: os.hostname(),
-		os: os.platform(),
-		node: process.version,
-		psql: await getConnection().query('SHOW server_version').then(x => x[0].server_version),
-		redis: redis.server_info.redis_version,
+		machine: hide ? undefined : os.hostname(),
+		os: hide ? undefined : os.platform(),
+		node: hide ? undefined : process.version,
+		psql: hide ? undefined : await getConnection().query('SHOW server_version').then(x => x[0].server_version),
+		redis: hide ? undefined : redis.server_info.redis_version,
 
-		cpu: {
+		cpu: hide ? undefined : {
 			model: os.cpus()[0].model,
 			cores: os.cpus().length
 		},
@@ -167,6 +174,8 @@ export default define(meta, async (ps, me) => {
 		enableDiscordIntegration: instance.enableDiscordIntegration,
 
 		enableServiceWorker: instance.enableServiceWorker,
+
+		hideServerInformation: hide,
 	};
 
 	if (ps.detail) {

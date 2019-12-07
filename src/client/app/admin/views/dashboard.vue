@@ -2,9 +2,9 @@
 <div class="obdskegsannmntldydackcpzezagxqfy">
 	<header v-if="meta">
 		<p><b>Groundpolis</b><span>{{ meta.version }}</span></p>
-		<p><b>Machine</b><span>{{ meta.machine }}</span></p>
-		<p><b>OS</b><span>{{ meta.os }}</span></p>
-		<p><b>Node</b><span>{{ meta.node }}</span></p>
+		<p v-if="meta.machine"><b>Machine</b><span>{{ meta.machine }}</span></p>
+		<p v-if="meta.os"><b>OS</b><span>{{ meta.os }}</span></p>
+		<p v-if="meta.node"><b>Node</b><span>{{ meta.node }}</span></p>
 		<p>{{ $t('@.ai-chan-kawaii') }}</p>
 	</header>
 

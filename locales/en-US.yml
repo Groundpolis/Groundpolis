@@ -1405,6 +1405,7 @@ admin/views/instance.vue:
   vapid-publickey: "VAPID public key"
   vapid-privatekey: "VAPID private key"
   vapid-info: "If you want to enable ServiceWorker, you need to generate VAPID keys. Unless you have set your global node_modules location elsewhere, you need to run this as root:"
+  hide-server-information: "Hide server information"
 admin/views/charts.vue:
   title: "Chart"
   per-day: "per Day"

@@ -26,6 +26,7 @@
 		<section>
 			<ui-switch v-model="disableRegistration">{{ $t('disable-registration') }}</ui-switch>
 			<ui-button v-if="disableRegistration" @click="invite">{{ $t('invite') }}</ui-button>
+			<ui-switch v-model="hideServerInformation">{{ $t('hide-server-information') }}</ui-switch>
 		</section>
 		<section>
 			<ui-button @click="updateMeta"><fa :icon="faSave"/> {{ $t('save') }}</ui-button>
@@ -305,6 +306,7 @@ export default Vue.extend({
 			enableServiceWorker: false,
 			swPublicKey: null,
 			swPrivateKey: null,
+			hideServerInformation: false,
 			pinnedUsers: '',
 			hiddenTags: '',
 			useObjectStorage: false,
@@ -344,6 +346,7 @@ export default Vue.extend({
 			this.localDriveCapacityMb = meta.driveCapacityPerLocalUserMb;
 			this.premiumDriveCapacityMb = meta.driveCapacityPerPremiumUserMb;
 			this.remoteDriveCapacityMb = meta.driveCapacityPerRemoteUserMb;
+			this.hideServerInformation = meta.hideServerInformation;
 			this.maxNoteTextLength = meta.maxNoteTextLength;
 			this.enableRecaptcha = meta.enableRecaptcha;
 			this.recaptchaSiteKey = meta.recaptchaSiteKey;
@@ -489,6 +492,7 @@ export default Vue.extend({
 				smtpSecure: this.smtpSecure,
 				smtpHost: this.smtpHost,
 				smtpPort: parseInt(this.smtpPort, 10),
+				hideServerInformation: this.hideServerInformation,
 				smtpUser: this.smtpAuth ? this.smtpUser : '',
 				smtpPass: this.smtpAuth ? this.smtpPass : '',
 				enableServiceWorker: this.enableServiceWorker,

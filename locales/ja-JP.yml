@@ -1542,6 +1542,7 @@ admin/views/instance.vue:
   vapid-publickey: "VAPID公開鍵"
   vapid-privatekey: "VAPID秘密鍵"
   vapid-info: "ServiceWorkerを有効にする場合、VAPIDキーペアを生成する必要があります。シェルで次のようにします:"
+  hide-server-information: "サーバー情報を隠す"
 
 admin/views/charts.vue:
   title: "チャート"
