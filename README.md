@@ -1,9 +1,9 @@
-[![Groundpolis](/assets/title.svg)](https://social.xeltica.work/)
+![Groundpolis](/assets/title.svg)
 ================================================================
 
 **A forever evolving, sophisticated microblogging platform.**
 
-[Groundpolis](https://social.xeltica.work") は [Misskey](https://github.com/xeltica/groundpolis)をベースとしたマイクロブログサービスです。
+Groundpolis (通称グランポリス)は、 [Misskey](https://github.com/syuilo/misskey)をベースとしたマイクロブログです。
 
 オリジナル版との変更点
 --------
@@ -12,10 +12,15 @@
 
 ---
 
+最新情報
+--------
+最新情報を Groundpolis 公式アカウントで呟いています。
+- [Fedibird](https://fedibird.com/@Groundpolis)
+
 ### Copyright ###
 
-- Original Copyright (c) 2014-2019 syuilo
-- Forked Copyright (c) 2019 Xeltica
+- Original Copyright (c) 2014-2020 syuilo
+- Forked Copyright (c) 2020 Xeltica
 
 Groundpolis is open-source software licensed under the [GNU AGPLv3](LICENSE).
 
