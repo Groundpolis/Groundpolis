@@ -1,6 +1,9 @@
 ![Groundpolis](/assets/title.svg)
 ================================================================
 
+- 日本語
+- English (README.md)
+
 **進化し続ける、洗練されたマイクロブログプラットフォーム。**
 
 Groundpolis (通称グランポリス)は、 [Misskey](https://github.com/syuilo/misskey)をベースとしたマイクロブログです。
