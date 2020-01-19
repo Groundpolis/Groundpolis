@@ -1,18 +1,21 @@
 ![Groundpolis](/assets/title.svg)
 ================================================================
 
+- [日本語](README-ja.md)
+- English
+
 **A forever evolving, sophisticated microblogging platform.**
 
-Groundpolis (通称グランポリス)は、 [Misskey](https://github.com/syuilo/misskey)をベースとしたマイクロブログです。
+Groundpolis is a [Misskey](https://github.com/syuilo/misskey) based microblogging platform.
 
-オリジナル版との変更点
+Difference from original version
 --------
 
-[詳しくはこちら...](DIFFERENCE.md)
+[See more (Japanese)](DIFFERENCE.md)
 
-最新情報
+News
 --------
-最新情報を Groundpolis 公式アカウントで呟いています。
+Check the latest information on the official account.
 - [Fedibird](https://fedibird.com/@Groundpolis)
 
 ライセンス
