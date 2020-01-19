@@ -10,17 +10,13 @@ Groundpolis (通称グランポリス)は、 [Misskey](https://github.com/syuilo
 
 [詳しくはこちら...](DIFFERENCE.md)
 
----
-
 最新情報
 --------
 最新情報を Groundpolis 公式アカウントで呟いています。
 - [Fedibird](https://fedibird.com/@Groundpolis)
 
-### Copyright ###
-
-- Original Copyright (c) 2014-2020 syuilo
-- Forked Copyright (c) 2020 Xeltica
+ライセンス
+--------
 
 Groundpolis is open-source software licensed under the [GNU AGPLv3](LICENSE).
 
