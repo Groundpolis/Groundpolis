@@ -55,6 +55,8 @@ if (localStorage.getItem('kyoppie') === 'yuppie') {
 	location.reload(true);
 }
 
+window.history.scrollRestoration = 'manual';
+
 if (localStorage.getItem('theme') == null) {
 	applyTheme(lightTheme);
 }

@@ -77,7 +77,9 @@
 		<main ref="main">
 			<div class="content">
 				<transition name="page" mode="out-in">
-					<router-view></router-view>
+					<keep-alive :include="['index']">
+						<router-view></router-view>
+					</keep-alive>
 				</transition>
 			</div>
 			<div class="powerd-by" :class="{ visible: !$store.getters.isSignedIn }">
@@ -249,7 +251,7 @@ export default Vue.extend({
 
 	methods: {
 		back() {
-			window.history.back();
+			if (this.canBack) window.history.back();
 		},
 
 		post() {
@@ -812,7 +814,7 @@ export default Vue.extend({
 				> [data-icon] {
 					width: ($header-height - ($avatar-margin * 2));
 				}
-		
+
 				> [data-icon],
 				> .avatar {
 					margin-right: $avatar-margin;

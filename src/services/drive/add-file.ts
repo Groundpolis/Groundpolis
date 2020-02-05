@@ -336,7 +336,7 @@ export default async function(
 	}
 
 	if (info.avgColor) {
-		properties['avgColor'] = `rgb(${info.avgColor.join(',')}`;
+		properties['avgColor'] = `rgb(${info.avgColor.join(',')})`;
 	}
 
 	const profile = user ? await UserProfiles.findOne(user.id) : null;
