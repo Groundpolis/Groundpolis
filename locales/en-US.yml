@@ -1854,7 +1854,7 @@ deck:
   widgets: "Widgets"
   home: "Home"
   local: "Local"
-  hybrid: "Social"
+  hybrid: "Home + Local"
   hashtag: "Hashtag"
   global: "Global"
   mentions: "Mentions"
