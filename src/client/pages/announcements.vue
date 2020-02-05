@@ -7,7 +7,7 @@
 		<section class="_card announcement" v-for="(announcement, i) in items" :key="announcement.id" :data-index="i">
 			<div class="_title"><span v-if="$store.getters.isSignedIn && !announcement.isRead">🆕 </span>{{ announcement.title }}</div>
 			<div class="_content">
-				<mfm :text="announcement.text"/>
+				<mfm :text="announcement.text" :once="false"/>
 				<img v-if="announcement.imageUrl" :src="announcement.imageUrl" alt=""/>
 			</div>
 			<div class="_footer" v-if="$store.getters.isSignedIn && !announcement.isRead">
