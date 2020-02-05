@@ -23,6 +23,7 @@
 				<div class="actions" v-if="$store.getters.isSignedIn">
 					<button @click="menu" class="menu _button" ref="menu"><fa :icon="faEllipsisH"/></button>
 					<mk-follow-button v-if="$store.state.i.id != user.id" :user="user" :inline="true" :transparent="false" :full="true" class="koudoku"/>
+					<button v-else @click="editProfile" class="edit-profile _button">{{ $t('editProfile') }}</button>
 				</div>
 			</div>
 			<mk-avatar class="avatar" :user="user" :disable-preview="true"/>
@@ -211,6 +212,10 @@ export default Vue.extend({
 			const pos = -(top / z);
 			banner.style.backgroundPosition = `center calc(50% - ${pos}px)`;
 		},
+
+		editProfile() {
+			this.$router.push('/my/settings');
+		},
 	}
 });
 </script>
@@ -297,6 +302,20 @@ export default Vue.extend({
 				> .koudoku {
 					margin-left: 4px;
 					vertical-align: bottom;
+				}
+
+				> .edit-profile {
+					position: relative;
+					display: inline-block;
+					font-weight: bold;
+					color: var(--accent);
+					background: transparent;
+					border: solid 1px var(--accent);
+					padding: 0 16px;
+					height: 31px;
+					font-size: 16px;
+					border-radius: 32px;
+					background: transparent;
 				}
 			}
 
