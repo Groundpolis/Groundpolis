@@ -41,7 +41,7 @@ export default function load() {
 	mixin.driveUrl = `${mixin.scheme}://${mixin.host}/files`;
 	mixin.userAgent = `Groundpolis/${meta.version} (${config.url})`;
 
-	if (config.autoAdmin == null) config.autoAdmin = false;
+	if (!config.redis.prefix) config.redis.prefix = mixin.host;
 
 	return Object.assign(config, mixin);
 }

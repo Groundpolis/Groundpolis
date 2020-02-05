@@ -13,16 +13,9 @@ export const meta = {
 	tags: ['admin'],
 
 	requireCredential: true,
-	requireModerator: true,
+	requireAdmin: true,
 
 	params: {
-		announcements: {
-			validator: $.optional.nullable.arr($.obj()),
-			desc: {
-				'ja-JP': 'お知らせ'
-			}
-		},
-
 		disableRegistration: {
 			validator: $.optional.nullable.bool,
 			desc: {
@@ -41,13 +34,6 @@ export const meta = {
 			validator: $.optional.nullable.bool,
 			desc: {
 				'ja-JP': 'グローバルタイムラインを無効にするか否か'
-			}
-		},
-
-		enableEmojiReaction: {
-			validator: $.optional.nullable.bool,
-			desc: {
-				'ja-JP': '絵文字リアクションを有効にするか否か'
 			}
 		},
 
@@ -156,6 +142,13 @@ export const meta = {
 			validator: $.optional.bool,
 			desc: {
 				'ja-JP': 'リモートのファイルをキャッシュするか否か'
+			}
+		},
+
+		proxyRemoteFiles: {
+			validator: $.optional.bool,
+			desc: {
+				'ja-JP': 'ローカルにないリモートのファイルをプロキシするか否か'
 			}
 		},
 
@@ -355,7 +348,7 @@ export const meta = {
 			}
 		},
 
-		ToSUrl: {
+		tosUrl: {
 			validator: $.optional.nullable.str,
 			desc: {
 				'ja-JP': '利用規約のURL'
@@ -421,10 +414,6 @@ export const meta = {
 export default define(meta, async (ps, me) => {
 	const set = {} as Partial<Meta>;
 
-	if (ps.announcements) {
-		set.announcements = ps.announcements;
-	}
-
 	if (typeof ps.disableRegistration === 'boolean') {
 		set.disableRegistration = ps.disableRegistration;
 	}
@@ -435,10 +424,6 @@ export default define(meta, async (ps, me) => {
 
 	if (typeof ps.disableGlobalTimeline === 'boolean') {
 		set.disableGlobalTimeline = ps.disableGlobalTimeline;
-	}
-
-	if (typeof ps.enableEmojiReaction === 'boolean') {
-		set.enableEmojiReaction = ps.enableEmojiReaction;
 	}
 
 	if (typeof ps.useStarForReactionFallback === 'boolean') {
@@ -495,6 +480,10 @@ export default define(meta, async (ps, me) => {
 
 	if (ps.cacheRemoteFiles !== undefined) {
 		set.cacheRemoteFiles = ps.cacheRemoteFiles;
+	}
+
+	if (ps.proxyRemoteFiles !== undefined) {
+		set.proxyRemoteFiles = ps.proxyRemoteFiles;
 	}
 
 	if (ps.enableRecaptcha !== undefined) {
@@ -613,8 +602,8 @@ export default define(meta, async (ps, me) => {
 		set.swPrivateKey = ps.swPrivateKey;
 	}
 
-	if (ps.ToSUrl !== undefined) {
-		set.ToSUrl = ps.ToSUrl;
+	if (ps.tosUrl !== undefined) {
+		set.ToSUrl = ps.tosUrl;
 	}
 
 	if (ps.repositoryUrl !== undefined) {
