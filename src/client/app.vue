@@ -26,9 +26,15 @@
 
 	<nav class="nav" ref="nav">
 		<div>
-			<button class="item _button account" @click="openAccountMenu" v-if="$store.getters.isSignedIn">
-				<mk-avatar :user="$store.state.i" class="avatar"/><mk-acct class="text" :user="$store.state.i"/>
-			</button>
+			<div class="item account" v-if="$store.getters.isSignedIn">
+				<router-link active-class="active" :to="`/@${ $store.state.i.username }`" exact>
+					<mk-avatar :user="$store.state.i" class="avatar"/>
+					<mk-user-name class="text" :user="$store.state.i" :nowrap="true"/>
+				</router-link>
+				<button class="_button more" @click="openAccountMenu">
+					<fa :icon="faEllipsisH" fixed-width/>
+				</button>
+			</div>
 			<router-link class="item" active-class="active" to="/" exact v-if="$store.getters.isSignedIn">
 				<fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>
 			</router-link>
@@ -58,12 +64,14 @@
 			</router-link>
 			<router-link class="item" active-class="active" to="/announcements">
 				<fa :icon="faBroadcastTower" fixed-width/><span class="text">{{ $t('announcements') }}</span>
-				<i v-if="$store.getters.isSignedIn && $store.state.i.hasUnreadAnnouncement"><fa :icon="faCircle"/></i>
+			</router-link>
+			<router-link class="item" active-class="active" to="/my/settings">
+				<fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
 			</router-link>
 			<button class="item _button" :class="{ active: $route.path === '/instance' || $route.path.startsWith('/instance/') }" v-if="$store.getters.isSignedIn && ($store.state.i.isAdmin || $store.state.i.isModerator)" @click="oepnInstanceMenu">
 				<fa :icon="faServer" fixed-width/><span class="text">{{ $t('instance') }}</span>
 			</button>
-			<button class="item _button" @click="search()">
+			<button class="item _button hide-on-pc" @click="search()">
 				<fa :icon="faSearch" fixed-width/><span class="text">{{ $t('search') }}</span>
 			</button>
 			<button class="item _button" @click="more">
@@ -328,6 +336,11 @@ export default Vue.extend({
 					to: '/my/drive',
 					icon: faCloud,
 				}, {
+					type: 'link',
+					text: this.$t('settings'),
+					to: '/my/settings',
+					icon: faCog,
+				}, {
 					text: this.$t('more'),
 					icon: faEllipsisH,
 					action: () => this.more(ev),
@@ -335,6 +348,9 @@ export default Vue.extend({
 				}, null, {
 					type: 'user',
 					user: this.$store.state.i,
+					action: () => this.$router.push(`/@${this.$store.state.i.username}`),
+				}, {
+					text: this.$t('switchAccount'),
 					action: () => this.openAccountMenu(ev),
 				}],
 				direction: 'up',
@@ -356,16 +372,6 @@ export default Vue.extend({
 
 			this.$root.menu({
 				items: [...[{
-					type: 'link',
-					text: this.$t('profile'),
-					to: `/@${ this.$store.state.i.username }`,
-					avatar: this.$store.state.i,
-				}, {
-					type: 'link',
-					text: this.$t('settings'),
-					to: '/my/settings',
-					icon: faCog,
-				}, null, {
 					type: 'item',
 					text: this.$t('addAcount'),
 					icon: faPlus,
@@ -755,6 +761,8 @@ export default Vue.extend({
 		width: $nav-width;
 		box-sizing: border-box;
 
+		position: relative;
+
 		@media (max-width: $nav-icon-only-threshold) {
 			flex: 0 0 $nav-icon-only-width;
 			width: $nav-icon-only-width;
@@ -811,19 +819,32 @@ export default Vue.extend({
 					}
 				}
 
+
+				&.account {
+					display: flex;
+					flex-direction: row;
+					a.active {
+						color: var(--navActive);
+					}
+
+					.more {
+						margin-left: auto;
+					}
+
+					[data-icon],
+					.avatar {
+						margin-right: $avatar-margin;
+					}
+
+					.avatar {
+						width: $avatar-size;
+						height: $avatar-size;
+						vertical-align: middle;
+					}
+				}
+
 				> [data-icon] {
 					width: ($header-height - ($avatar-margin * 2));
-				}
-
-				> [data-icon],
-				> .avatar {
-					margin-right: $avatar-margin;
-				}
-
-				> .avatar {
-					width: $avatar-size;
-					height: $avatar-size;
-					vertical-align: middle;
 				}
 
 				> i {
@@ -850,17 +871,25 @@ export default Vue.extend({
 					font-size: $ui-font-size * 1.2;
 					line-height: 3.7rem;
 
-					> [data-icon],
-					> .avatar {
-						margin-right: 0;
-					}
-
 					> i {
 						left: 10px;
 					}
 
-					> .text {
+					.text {
 						display: none;
+					}
+
+					&.account {
+						flex-direction: column;
+
+						[data-icon],
+						.avatar {
+							margin-right: 0;
+						}
+
+						> .more {
+							margin-left: 0;
+						}
 					}
 				}
 			}
@@ -1106,6 +1135,16 @@ export default Vue.extend({
 		@media (max-width: 500px) {
 			width: 290px;
 			height: 310px;
+		}
+	}
+
+	.hide-on-pc {
+		display: none !important;
+	}
+
+	@media (max-width: $nav-icon-only-threshold) {
+		.hide-on-pc {
+			display: inherit !important;
 		}
 	}
 }
