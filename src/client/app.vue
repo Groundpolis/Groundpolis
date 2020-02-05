@@ -82,7 +82,7 @@
 			</div>
 			<div class="powerd-by" :class="{ visible: !$store.getters.isSignedIn }">
 				<b><router-link to="/">{{ host }}</router-link></b>
-				<small>Powered by <a href="https://github.com/syuilo/misskey" target="_blank">Misskey</a></small>
+				<small>Powered by <a href="https://github.com/groundpolis/groundpolis" target="_blank">Groundpolis</a></small>
 			</div>
 		</main>
 

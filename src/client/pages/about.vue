@@ -17,7 +17,7 @@
 			<div><b>{{ $t('notes') }}</b><span>{{ stats.originalNotesCount | number }}</span></div>
 		</div>
 		<div class="_content table">
-			<div><b>Misskey</b><span>v{{ version }}</span></div>
+			<div><b>Groundpolis </b><span>v{{ version }}</span></div>
 		</div>
 	</section>
 
@@ -27,39 +27,11 @@
 			<div style="margin-bottom: 1em;">{{ $t('aboutMisskeyText') }}</div>
 			<div>{{ $t('misskeyMembers') }}</div>
 			<span class="members">
-				<a href="https://github.com/syuilo" target="_blank">@syuilo</a>
-				<a href="https://github.com/AyaMorisawa" target="_blank">@AyaMorisawa</a>
-				<a href="https://github.com/mei23" target="_blank">@mei23</a>
-				<a href="https://github.com/acid-chicken" target="_blank">@acid-chicken</a>
-				<a href="https://github.com/tamaina" target="_blank">@tamaina</a>
-				<a href="https://github.com/rinsuki" target="_blank">@rinsuki</a>
+				<a href="https://github.com/Groundpolis" target="_blank">Groundpolis HQ</a>
+				<a href="https://github.com/Xeltica" target="_blank">@Xeltica</a>
 			</span>
 			<div style="margin-top: 1em;">{{ $t('misskeySource') }}</div>
-			<a href="https://github.com/syuilo/misskey" target="_blank" style="color: var(--link);">https://github.com/syuilo/misskey</a>
-			<div style="margin-top: 1em;">{{ $t('misskeyDonate') }}</div>
-			<a href="https://www.patreon.com/syuilo" target="_blank" style="color: var(--link);">https://www.patreon.com/syuilo</a>
-		</div>
-		<div class="_content">
-			<span><mfm text="<motion>❤</motion>"/> {{ $t('patrons') }}</span>
-			<ul>
-				<li>Gargron</li>
-				<li>Satsuki Yanagi</li>
-				<li>noellabo</li>
-				<li>naga_rus</li>
-				<li>Melilot</li>
-				<li>AureoleArk</li>
-				<li>Peter G.</li>
-				<li>motcha</li>
-				<li>Atsuko Tominaga</li>
-				<li>dansup</li>
-				<li>Nokotaro Takeda</li>
-				<li>YUKIMOCHI</li>
-				<li>nanami kan</li>
-				<li>Hekovic</li>
-				<li>wara</li>
-				<li>Takashi Shibuya</li>
-				<li>Noizeman</li>
-			</ul>
+			<a href="https://github.com/Groundpolis/Groundpolis" target="_blank" style="color: var(--link);">https://github.com/Groundpolis/Groundpolis</a>
 		</div>
 	</section>
 </div>
