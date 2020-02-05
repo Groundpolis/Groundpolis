@@ -214,7 +214,7 @@ export default Vue.extend({
 		},
 
 		editProfile() {
-			this.$router.push('/my/settings');
+			this.$router.push('/my/settings/profile');
 		},
 	}
 });

@@ -1,29 +1,27 @@
 <template>
 <div class="mk-settings-page">
-	<portal to="icon"><fa :icon="faCog"/></portal>
+	<portal to="icon"><fa :icon="faUser"/></portal>
 	<portal to="title">{{ $t('settings') }}</portal>
 
-	<x-profile-setting/>
 	<x-privacy-setting/>
-	<x-reaction-setting/>
+	<x-reaction-setting v-if="isSignedIn"/>
 	<x-theme/>
-	<x-import-export/>
-	<x-drive/>
-	<x-general/>
-	<x-mute-block/>
-	<x-security/>
-	<x-2fa/>
-	<x-integration/>
+	<x-import-export v-if="isSignedIn"/>
+	<x-drive v-if="isSignedIn"/>
+	<x-general v-if="isSignedIn"/>
+	<x-mute-block v-if="isSignedIn"/>
+	<x-security v-if="isSignedIn"/>
+	<x-2fa v-if="isSignedIn"/>
+	<x-integration v-if="isSignedIn"/>
 
-	<mk-button @click="cacheClear()" primary class="cacheClear">{{ $t('cacheClear') }}</mk-button>
-	<mk-button @click="$root.signout()" primary class="logout">{{ $t('logout') }}</mk-button>
+	<mk-button v-if="isSignedIn" @click="cacheClear()" primary class="cacheClear">{{ $t('cacheClear') }}</mk-button>
+	<mk-button v-if="isSignedIn" @click="$root.signout()" primary class="logout">{{ $t('logout') }}</mk-button>
 </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import XProfileSetting from './profile.vue';
 import XPrivacySetting from './privacy.vue';
 import XImportExport from './import-export.vue';
 import XDrive from './drive.vue';
@@ -43,8 +41,13 @@ export default Vue.extend({
 		};
 	},
 
+	computed: {
+		isSignedIn() {
+			return this.$store.getters.isSignedIn;
+		}
+	},
+
 	components: {
-		XProfileSetting,
 		XPrivacySetting,
 		XImportExport,
 		XDrive,
