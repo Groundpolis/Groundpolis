@@ -7,7 +7,7 @@ import Vuex from 'vuex';
 import VueMeta from 'vue-meta';
 import PortalVue from 'portal-vue';
 import VAnimateCss from 'v-animate-css';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome';
 
 import i18n from './i18n';
 import VueHotkey from './scripts/hotkey';
@@ -26,6 +26,7 @@ Vue.use(VueMeta);
 Vue.use(PortalVue);
 Vue.use(VAnimateCss);
 Vue.component('fa', FontAwesomeIcon);
+Vue.component('fa-layers', FontAwesomeLayers);
 
 require('./directives');
 require('./components');

@@ -4,6 +4,7 @@
 	<div class="vrcsvlkm">
 		<mk-button @click="resetPassword()" primary>{{ $t('resetPassword') }}</mk-button>
 		<mk-switch v-if="$store.state.i.isAdmin" @change="toggleModerator()" v-model="moderator">{{ $t('moderator') }}</mk-switch>
+		<mk-switch v-if="$store.state.i.isAdmin" @change="toggleVerified()" v-model="verified">{{ $t('verified') }}</mk-switch>
 		<mk-switch @change="toggleSilence()" v-model="silenced">{{ $t('silence') }}</mk-switch>
 		<mk-switch @change="toggleSuspend()" v-model="suspended">{{ $t('suspend') }}</mk-switch>
 	</div>
@@ -38,6 +39,7 @@ export default Vue.extend({
 			moderator: this.user.isModerator,
 			silenced: this.user.isSilenced,
 			suspended: this.user.isSuspended,
+			verified: this.user.isVerified,
 		};
 	},
 
@@ -74,7 +76,7 @@ export default Vue.extend({
 			if (confirm.canceled) {
 				this.silenced = !this.silenced;
 			} else {
-				this.$root.api(this.silenced ? 'admin/silence-user' : 'admin/unsilence-user', { userId: this.user.id });
+				this.$root.api(this.silenced ? 'admin/verify-user' : 'admin/unsilence-user', { userId: this.user.id });
 			}
 		},
 
@@ -93,6 +95,10 @@ export default Vue.extend({
 
 		async toggleModerator() {
 			this.$root.api(this.moderator ? 'admin/moderators/add' : 'admin/moderators/remove', { userId: this.user.id });
+		},
+
+		async toggleVerified() {
+			this.$root.api(this.verified ? 'admin/verify-user' : 'admin/unverify-user', { userId: this.user.id });
 		}
 	}
 });

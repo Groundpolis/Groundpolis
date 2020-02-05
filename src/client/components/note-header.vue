@@ -7,6 +7,12 @@
 	<span class="username"><mk-acct :user="note.user"/></span>
 	<span class="admin" v-if="note.user.isAdmin"><fa :icon="faBookmark"/></span>
 	<span class="moderator" v-if="!note.user.isAdmin && note.user.isModerator"><fa :icon="farBookmark"/></span>
+	<span class="verified" v-if="note.user.isVerified">
+		<fa-layers>
+			<fa :icon="faCertificate"/>
+			<fa :icon="faCheck" transform="shrink-6" size="xs" :style="{ color: 'var(--panel)' }"/>
+		</fa-layers>
+	</span>
 	<div class="info">
 		<span class="mobile" v-if="note.viaMobile"><fa :icon="faMobileAlt"/></span>
 		<router-link class="created-at" :to="note | notePage">
@@ -23,7 +29,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faCertificate, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
@@ -36,7 +42,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark
+			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faCertificate, faCheck
 		};
 	}
 });
