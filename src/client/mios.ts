@@ -14,11 +14,11 @@ let pending = 0;
 //#endregion
 
 /**
- * Misskey Operating System
+ * Groundpolis Operating System
  */
 export default class MiOS extends EventEmitter {
 	/**
-	 * Misskeyの /meta で取得できるメタ情報
+	 * Groundpolis の /meta で取得できるメタ情報
 	 */
 	private meta: {
 		data: { [x: string]: any };
@@ -231,7 +231,7 @@ export default class MiOS extends EventEmitter {
 			});
 
 			// トークンが再生成されたとき
-			// このままではMisskeyが利用できないので強制的にサインアウトさせる
+			// このままでは Groundpolis が利用できないので強制的にサインアウトさせる
 			main.on('myTokenRegenerated', () => {
 				alert(locale['common']['my-token-regenerated']);
 				this.signout();

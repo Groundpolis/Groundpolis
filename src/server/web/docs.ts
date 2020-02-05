@@ -47,7 +47,7 @@ async function genVars(lang: string): Promise<{ [key: string]: any }> {
 
 	vars['config'] = config;
 
-	vars['copyright'] = '(c) Misskey';
+	vars['copyright'] = '(C) Groundpolis HQ';
 
 	vars['license'] = licenseHtml;
 

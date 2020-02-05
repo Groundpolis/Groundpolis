@@ -4,5 +4,5 @@ export function getInstanceName() {
 		return siteName.content;
 	}
 
-	return 'Misskey';
+	return 'Groundpolis';
 }

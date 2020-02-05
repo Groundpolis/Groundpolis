@@ -1,6 +1,6 @@
 <template>
 <form class="mk-setup" @submit.prevent="submit()">
-	<h1>Welcome to Misskey!</h1>
+	<h1>Welcome to Groundpolis!</h1>
 	<div>
 		<p>{{ $t('intro') }}</p>
 		<mk-input v-model="username" pattern="^[a-zA-Z0-9_]{1,20}$" spellcheck="false" required>

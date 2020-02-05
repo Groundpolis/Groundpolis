@@ -359,7 +359,7 @@ export const packedUserSchema = {
 		host: {
 			type: 'string' as const,
 			nullable: true as const, optional: false as const,
-			example: 'misskey.example.com'
+			example: 'groundpolis.example.com'
 		},
 		description: {
 			type: 'string' as const,

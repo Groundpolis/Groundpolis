@@ -4,7 +4,7 @@
 	<portal to="title">{{ $t('explore') }}</portal>
 
 	<div class="localfedi7 _panel" v-if="meta && stats && tag == null" :style="{ backgroundImage: meta.bannerUrl ? `url(${meta.bannerUrl})` : null }">
-		<header><span>{{ $t('explore', { host: meta.name || 'Misskey' }) }}</span></header>
+		<header><span>{{ $t('explore', { host: meta.name || 'Groundpolis' }) }}</span></header>
 		<div><span>{{ $t('exploreUsersCount', { count: num(stats.originalUsersCount) }) }}</span></div>
 	</div>
 

@@ -27,7 +27,6 @@
 			<div style="margin-bottom: 1em;">{{ $t('aboutMisskeyText') }}</div>
 			<div>{{ $t('misskeyMembers') }}</div>
 			<span class="members">
-				<a href="https://github.com/Groundpolis" target="_blank">Groundpolis HQ</a>
 				<a href="https://github.com/Xeltica" target="_blank">@Xeltica</a>
 			</span>
 			<div style="margin-top: 1em;">{{ $t('misskeySource') }}</div>

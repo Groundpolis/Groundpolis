@@ -26,7 +26,7 @@ export const meta = {
 		disableLocalTimeline: {
 			validator: $.optional.nullable.bool,
 			desc: {
-				'ja-JP': 'ローカルタイムライン(とソーシャルタイムライン)を無効にするか否か'
+				'ja-JP': 'ローカルタイムライン(とホーム + ローカルタイムライン)を無効にするか否か'
 			}
 		},
 

@@ -12,7 +12,7 @@ import { activeUsersChart } from '../../../../services/chart';
 
 export const meta = {
 	desc: {
-		'ja-JP': 'ソーシャルタイムラインを取得します。'
+		'ja-JP': 'ホーム + ローカルタイムラインを取得します。'
 	},
 
 	tags: ['notes'],
