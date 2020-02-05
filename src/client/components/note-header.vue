@@ -9,7 +9,7 @@
 	<span class="moderator" v-if="!note.user.isAdmin && note.user.isModerator"><fa :icon="farBookmark"/></span>
 	<span class="verified" v-if="note.user.isVerified">
 		<fa-layers>
-			<fa :icon="faCertificate"/>
+			<fa :icon="faCertificate" :style="{ color: 'var(--accent)' }"/>
 			<fa :icon="faCheck" transform="shrink-6" size="xs" :style="{ color: 'var(--panel)' }"/>
 		</fa-layers>
 	</span>
