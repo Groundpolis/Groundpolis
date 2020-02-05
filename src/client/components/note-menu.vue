@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faStar, faLink, faThumbtack, faExternalLinkSquareAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faLink, faThumbtack, faExternalLinkSquareAlt, faEdit, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import i18n from '../i18n';
 import { url } from '../config';
@@ -73,7 +73,7 @@ export default Vue.extend({
 						null,
 						{
 							icon: faEdit,
-							text: this.$t('delete-and-edit'),
+							text: this.$t('revert-to-draft'),
 							action: this.delAndEdit
 						},
 						{
@@ -155,14 +155,27 @@ export default Vue.extend({
 		delAndEdit() {
 			this.$root.dialog({
 				type: 'warning',
-				text: this.$t('noteDeleteAndEditConfirm'),
+				text: this.$t('noteRevertConfirm'),
 				showCancelButton: true
 			}).then(({ canceled }) => {
 				if (canceled) return;
 				this.$root.dialog({
 					text: 'WIP'
 				});
-			};
+			});
+		},
+
+		undoRenote() {
+			this.$root.dialog({
+				type: 'warning',
+				text: this.$t('undoRenoteConfirm'),
+				showCancelButton: true
+			}).then(({ canceled }) => {
+				if (canceled) return;
+				this.$root.dialog({
+					text: 'WIP'
+				});
+			});
 		},
 
 		del() {
