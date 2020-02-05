@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faStar, faLink, faThumbtack, faExternalLinkSquareAlt } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faLink, faThumbtack, faExternalLinkSquareAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import i18n from '../i18n';
 import { url } from '../config';
@@ -70,12 +70,18 @@ export default Vue.extend({
 					action: () => this.togglePin(true)
 				} : undefined,
 				...(this.note.userId == this.$store.state.i.id ? [
-					null,
-					{
-						icon: faTrashAlt,
-						text: this.$t('delete'),
-						action: this.del
-					}]
+						null,
+						{
+							icon: faEdit,
+							text: this.$t('delete-and-edit'),
+							action: this.delAndEdit
+						},
+						{
+							icon: faTrashAlt,
+							text: this.$t('delete'),
+							action: this.del
+						}
+					]
 					: []
 				)]
 				.filter(x => x !== undefined);
@@ -144,6 +150,19 @@ export default Vue.extend({
 					});
 				}
 			});
+		},
+
+		delAndEdit() {
+			this.$root.dialog({
+				type: 'warning',
+				text: this.$t('noteDeleteAndEditConfirm'),
+				showCancelButton: true
+			}).then(({ canceled }) => {
+				if (canceled) return;
+				this.$root.dialog({
+					text: 'WIP'
+				});
+			};
 		},
 
 		del() {
