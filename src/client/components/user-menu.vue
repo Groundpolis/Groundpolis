@@ -65,16 +65,6 @@ export default Vue.extend({
 			}
 		}
 
-		if (this.$store.getters.isSignedIn && this.$store.state.i.id === this.user.id) {
-			menu = menu.concat([null, {
-				icon: faPencilAlt,
-				text: this.$t('editProfile'),
-				action: () => {
-					this.$router.push('/my/settings');
-				}
-			}]);
-		}
-
 		return {
 			items: menu
 		};
