@@ -1,5 +1,5 @@
 <template>
-<mfm-core v-bind="$attrs" class="havbbuyv" :class="{ nowrap: $attrs['nowrap'] }" v-once/>
+	<mfm-core v-bind="$attrs" class="havbbuyv" :class="{ nowrap: $attrs['nowrap'] }"/>
 </template>
 
 <script lang="ts">
@@ -9,6 +9,11 @@ import MfmCore from './mfm';
 export default Vue.extend({
 	components: {
 		MfmCore
+	},
+	props: {
+		once: {
+			default: true,
+		}
 	}
 });
 </script>
