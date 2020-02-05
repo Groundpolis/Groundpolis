@@ -53,26 +53,37 @@
 			</div>
 			<footer v-if="appearNote.deletedAt == null" class="footer">
 				<x-reactions-viewer :note="appearNote" ref="reactionsViewer"/>
-				<button @click="reply()" class="button _button">
-					<template v-if="appearNote.reply"><fa :icon="faReplyAll"/></template>
-					<template v-else><fa :icon="faReply"/></template>
-					<p class="count" v-if="appearNote.repliesCount > 0">{{ appearNote.repliesCount }}</p>
-				</button>
-				<button v-if="['public', 'home'].includes(appearNote.visibility)" @click="renote()" class="button _button" ref="renoteButton">
-					<fa :icon="faRetweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
-				</button>
-				<button v-else class="button _button">
-					<fa :icon="faBan"/>
-				</button>
-				<button v-if="!isMyNote && appearNote.myReaction == null" class="button _button" @click="react()" ref="reactButton">
-					<fa :icon="faPlus"/>
-				</button>
-				<button v-if="!isMyNote && appearNote.myReaction != null" class="button _button reacted" @click="undoReact(appearNote)" ref="reactButton">
-					<fa :icon="faMinus"/>
-				</button>
-				<button class="button _button" @click="menu()" ref="menuButton">
-					<fa :icon="faEllipsisH"/>
-				</button>
+				<template v-if="$store.getters.isSignedIn">
+					<button @click="reply()" class="button _button">
+						<template v-if="appearNote.reply"><fa :icon="faReplyAll"/></template>
+						<template v-else><fa :icon="faReply"/></template>
+						<p class="count" v-if="appearNote.repliesCount > 0">{{ appearNote.repliesCount }}</p>
+					</button>
+					<button v-if="['public', 'home'].includes(appearNote.visibility)" @click="renote()" class="button _button" ref="renoteButton">
+						<fa :icon="faRetweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
+					</button>
+					<button v-else class="button _button">
+						<fa :icon="faBan"/>
+					</button>
+					<button v-if="!isMyNote && appearNote.myReaction == null" class="button _button" @click="react()" ref="reactButton">
+						<fa :icon="faPlus"/>
+					</button>
+					<button v-if="!isMyNote && appearNote.myReaction != null" class="button _button reacted" @click="undoReact(appearNote)" ref="reactButton">
+						<fa :icon="faMinus"/>
+					</button>
+					<button class="button _button" @click="menu()" ref="menuButton">
+						<fa :icon="faEllipsisH"/>
+					</button>
+				</template>
+				<template v-else>
+					<button class="button _button" @click="copyContent()">
+						<fa :icon="faCopy"/>
+					</button>
+					<button class="button _button" @click="copyLink()">
+						<fa :icon="faLink"/>
+					</button>
+				</template>
+				
 			</footer>
 			<div class="deleted" v-if="appearNote.deletedAt != null">{{ $t('deleted') }}</div>
 		</div>
@@ -83,7 +94,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
 import i18n from '../i18n';
@@ -99,6 +110,8 @@ import MkNoteMenu from './note-menu.vue';
 import MkReactionPicker from './reaction-picker.vue';
 import MkRenotePicker from './renote-picker.vue';
 import pleaseLogin from '../scripts/please-login';
+import { url } from '../config';
+import copyToClipboard from '../scripts/copy-to-clipboard';
 
 function focus(el, fn) {
 	const target = fn(el);
@@ -150,7 +163,7 @@ export default Vue.extend({
 			showContent: false,
 			hideThisNote: false,
 			openingMenu: false,
-			faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan
+			faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faTimes,
 		};
 	},
 
@@ -471,7 +484,23 @@ export default Vue.extend({
 
 		focusAfter() {
 			focus(this.$el, e => e.nextElementSibling);
-		}
+		},
+
+		copyContent() {
+			copyToClipboard(this.note.text);
+			this.$root.dialog({
+				type: 'success',
+				iconOnly: true, autoClose: true
+			});
+		},
+
+		copyLink() {
+			copyToClipboard(`${url}/notes/${this.note.id}`);
+			this.$root.dialog({
+				type: 'success',
+				iconOnly: true, autoClose: true
+			});
+		},
 	}
 });
 </script>
