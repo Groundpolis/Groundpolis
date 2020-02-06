@@ -375,6 +375,7 @@ switchAccount: "アカウントを切り替える"
 no-photos: "まだ画像はありません"
 revert-to-draft: "下書きに戻す"
 undo-renote: "このリノートを解除"
+cacheClear: "キャッシュをクリア"
 
 
 _2fa:
