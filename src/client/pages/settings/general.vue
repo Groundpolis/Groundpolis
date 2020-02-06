@@ -10,14 +10,22 @@
 		<mk-button primary :disabled="$store.state.settings.wallpaper == null" @click="delWallpaper()">{{ $t('removeWallpaper') }}</mk-button>
 	</div>
 	<div class="_content">
+		<mk-switch v-model="autoReload">
+			{{ $t('autoReloadWhenDisconnected') }}
+		</mk-switch>
 		<mk-switch v-model="$store.state.i.autoWatch" @change="onChangeAutoWatch">
-			{{ $t('auto-watch') }}<template #desc>{{ $t('auto-watch-desc') }}</template>
+			{{ $t('autoNoteWatch') }}<template #desc>{{ $t('auto-watch-desc') }}</template>
 		</mk-switch>
 	</div>
 	<div class="_content">
 		<mk-button @click="readAllNotifications">{{ $t('mark-as-read-all-notifications') }}</mk-button>
 		<mk-button @click="readAllUnreadNotes">{{ $t('mark-as-read-all-unread-notes') }}</mk-button>
 		<mk-button @click="readAllMessagingMessages">{{ $t('mark-as-read-all-talk-messages') }}</mk-button>
+	</div>
+	<div class="_content">
+		<mk-switch v-model="reduceAnimation">
+			{{ $t('reduceUiAnimation') }}
+		</mk-switch>
 	</div>
 </section>
 </template>
@@ -51,6 +59,16 @@ export default Vue.extend({
 		wallpaper: {
 			get() { return this.$store.state.settings.wallpaper; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'wallpaper', value }); }
+		},
+
+		autoReload: {
+			get() { return this.$store.state.device.autoReload; },
+			set(value) { this.$store.commit('device/set', { key: 'autoReload', value }); }
+		},
+
+		reduceAnimation: {
+			get() { return !this.$store.state.device.animation; },
+			set(value) { this.$store.commit('device/set', { key: 'animation', value: !value }); }
 		},
 	},
 

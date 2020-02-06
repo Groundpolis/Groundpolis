@@ -2,10 +2,10 @@
 <div class="mk-app" v-hotkey.global="keymap">
 	<header class="header">
 		<div class="title" ref="title">
-			<transition name="header" mode="out-in" appear>
+			<transition :name="$store.state.device.animation ? 'header' : ''" mode="out-in" appear>
 				<button class="_button back" v-if="canBack" @click="back()"><fa :icon="faChevronLeft"/></button>
 			</transition>
-			<transition name="header" mode="out-in" appear>
+			<transition :name="$store.state.device.animation ? 'header' : ''" mode="out-in" appear>
 				<div class="body" :key="pageKey">
 					<div class="default">
 						<portal-target name="avatar" slim/>
@@ -84,7 +84,7 @@
 	<div class="contents">
 		<main ref="main">
 			<div class="content">
-				<transition name="page" mode="out-in">
+				<transition :name="$store.state.device.animation ? 'page' : ''" mode="out-in" @enter="onTransition">
 					<keep-alive :include="['index']">
 						<router-view></router-view>
 					</keep-alive>
@@ -108,9 +108,9 @@
 							class="sortable"
 							@sort="onWidgetSort"
 						>
-							<div v-for="widget in widgets" class="customize-container" :key="widget.id">
+							<div v-for="widget in widgets" class="customize-container _panel" :key="widget.id">
 								<header>
-									<span class="handle"><fa :icon="faBars"/></span>{{ widget.name }}<button class="remove" @click="removeWidget(widget)"><fa :icon="faTimes"/></button>
+									<span class="handle"><fa :icon="faBars"/></span>{{ $t('_widgets.' + widget.name) }}<button class="remove _button" @click="removeWidget(widget)"><fa :icon="faTimes"/></button>
 								</header>
 								<div @click="widgetFunc(widget.id)">
 									<component :is="`mkw-${widget.name}`" :widget="widget" :ref="widget.id" :is-customize-mode="true"/>
@@ -187,6 +187,7 @@ export default Vue.extend({
 			return {
 				'p': this.post,
 				'n': this.post,
+				'h|/': this.help
 			};
 		},
 
@@ -230,6 +231,10 @@ export default Vue.extend({
 
 		this.$root.stream.on('_disconnected_', () => {
 			if (!this.disconnectedDialog) {
+				if (this.$store.state.device.autoReload) {
+					location.reload();
+					return;
+				}
 				this.disconnectedDialog = this.$root.dialog({
 					type: 'warning',
 					showCancelButton: true,
@@ -258,8 +263,16 @@ export default Vue.extend({
 	},
 
 	methods: {
+		help() {
+			this.$router.push('/docs/keyboard-shortcut');
+		},
+		
 		back() {
 			if (this.canBack) window.history.back();
+		},
+
+		onTransition() {
+			if (window._scroll) window._scroll();
 		},
 
 		post() {
@@ -578,12 +591,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-@keyframes blink {
-	0% { opacity: 1; }
-	30% { opacity: 1; }
-	90% { opacity: 0; }
-}
-
 .header-enter-active, .header-leave-active {
 	transition: opacity 0.5s, transform 0.5s !important;
 }
@@ -996,10 +1003,10 @@ export default Vue.extend({
 					> header {
 						position: relative;
 						line-height: 32px;
-						background: #eee;
 
 						> .handle {
 							padding: 0 8px;
+							cursor: move;
 						}
 
 						> .remove {

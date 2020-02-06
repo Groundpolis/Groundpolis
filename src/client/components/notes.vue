@@ -5,7 +5,7 @@
 	<mk-error v-if="error" @retry="init()"/>
 
 	<x-list ref="notes" class="notes" :items="notes" v-slot="{ item: note, i }">
-		<x-note :note="note" :detail="detail" :key="note.id" :data-index="i"/>
+		<x-note :note="note" :detail="detail" :key="note.id"/>
 	</x-list>
 
 	<footer v-if="more">
@@ -36,19 +36,6 @@ export default Vue.extend({
 
 	mixins: [
 		paging({
-			onPrepend: (self, note) => {
-				// タブが非表示なら通知
-				if (document.hidden) {
-					if ('Notification' in window && Notification.permission === 'granted') {
-						new Notification(getUserName(note.user), {
-							body: getNoteSummary(note),
-							icon: note.user.avatarUrl,
-							tag: 'newNote'
-						});
-					}
-				}
-			},
-
 			before: (self) => {
 				self.$emit('before');
 			},

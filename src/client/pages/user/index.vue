@@ -4,7 +4,7 @@
 	<portal to="avatar" v-if="user"><mk-avatar class="avatar" :user="user" :disable-preview="true"/></portal>
 	
 	<div class="remote-caution _panel" v-if="user.host != null"><fa :icon="faExclamationTriangle" style="margin-right: 8px;"/>{{ $t('remoteUserCaution') }}<a :href="user.url" rel="nofollow noopener" target="_blank">{{ $t('showOnRemote') }}</a></div>
-	<transition name="zoom" mode="out-in" appear>
+	<transition :name="$store.state.device.animation ? 'zoom' : ''" mode="out-in" appear>
 		<div class="profile _panel" :key="user.id">
 			<div class="banner-container" :style="style">
 				<div class="banner" ref="banner" :style="style"></div>
@@ -84,7 +84,7 @@
 	<router-view :user="user"></router-view>
 	<template v-if="$route.name == 'user'">
 		<sequential-entrance class="pins">
-			<x-note v-for="(note, i) in user.pinnedNotes" class="note" :note="note" :key="note.id" :data-index="i" :detail="true" :pinned="true"/>
+			<x-note v-for="(note, i) in user.pinnedNotes" class="note" :note="note" :key="note.id" :detail="true" :pinned="true"/>
 		</sequential-entrance>
 		<mk-container :body-togglable="true" class="content">
 			<template #header><fa :icon="faImage"/>{{ $t('images') }}</template>
@@ -274,10 +274,11 @@ export default Vue.extend({
 				position: absolute;
 				top: 12px;
 				left: 12px;
-				padding: 4px 6px;
+				padding: 4px 8px;
 				color: #fff;
 				background: rgba(0, 0, 0, 0.7);
-				font-size: 12px;
+				font-size: 0.7em;
+				border-radius: 6px;
 			}
 
 			> .actions {

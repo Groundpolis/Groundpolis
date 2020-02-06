@@ -6,6 +6,8 @@ Vue.use(VueRouter);
 
 const page = (path: string) => () => import(`./pages/${path}.vue`).then(m => m.default);
 
+let indexScrollPos = 0;
+
 export const router = new VueRouter({
 	mode: 'history',
 	routes: [
@@ -19,6 +21,7 @@ export const router = new VueRouter({
 		{ path: '/announcements', component: page('announcements') },
 		{ path: '/about', component: page('about') },
 		{ path: '/featured', component: page('featured') },
+		{ path: '/docs/:doc', component: page('doc'), props: true },
 		{ path: '/explore', component: page('explore') },
 		{ path: '/explore/tags/:tag', props: true, component: page('explore') },
 		{ path: '/search', component: page('search') },
@@ -51,19 +54,25 @@ export const router = new VueRouter({
 		{ path: '/tags/:tag', component: page('tag') },
 		{ path: '/auth/:token', component: page('auth') },
 		{ path: '/authorize-follow', component: page('follow') },
-		/*{ path: '*', component: MkNotFound }*/
+		{ path: '/share', component: page('share') },
+		{ path: '*', component: page('not-found') }
 	],
 	// なんかHacky
 	// 通常の使い方をすると scroll メソッドの behavior を設定できないため、自前で window.scroll するようにする
 	// setTimeout しないと、アニメーション(トランジション)の関係でうまく動かない
-	scrollBehavior(to, from, savedPosition) {
-		setTimeout(() => {
-			if (savedPosition) {
-				window.scroll({ top: savedPosition.y, behavior: 'instant' });
+	scrollBehavior(to) {
+		window._scroll = () => { // さらにHacky
+			if (to.name === 'index') {
+				window.scroll({ top: indexScrollPos, behavior: 'instant' });
 			} else {
 				window.scroll({ top: 0, behavior: 'instant' });
 			}
-		}, 600);
-		return;
+		};
+	}
+});
+
+router.afterEach((to, from) => {
+	if (from.name === 'index') {
+		indexScrollPos = window.scrollY;
 	}
 });

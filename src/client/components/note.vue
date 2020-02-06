@@ -288,8 +288,14 @@ export default Vue.extend({
 	methods: {
 		capture(withHandler = false) {
 			if (this.$store.getters.isSignedIn) {
-				this.connection.send('sn', { id: this.appearNote.id });
-				if (withHandler) this.connection.on('noteUpdated', this.onStreamNoteUpdated);
+				if (document.body.contains(this.$el)) {
+					this.connection.send('sn', { id: this.appearNote.id });
+					if (withHandler) this.connection.on('noteUpdated', this.onStreamNoteUpdated);
+				} else {
+					this.$once('hook:activated', () => {
+						this.capture(withHandler);
+					});
+				}
 			}
 		},
 
@@ -471,7 +477,7 @@ export default Vue.extend({
 		},
 
 		showRenoteMenu(ev) {
-			if (!this.isMyNote) return;
+			if (!this.$store.getters.isSignedIn || (this.$store.state.i.id !== this.note.userId)) return;
 			this.$root.menu({
 				items: [{
 					text: this.$t('unrenote'),

@@ -22,12 +22,14 @@ const defaultDeviceSettings = {
 	loadRawImages: false,
 	alwaysShowNsfw: false,
 	useOsDefaultEmojis: false,
+	autoReload: false,
 	accounts: [],
 	recentEmojis: [],
 	visibility: 'public',
 	localOnly: false,
 	themes: [],
 	theme: 'light',
+	animation: true,
 };
 
 export default (os: MiOS) => new Vuex.Store({
