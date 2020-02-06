@@ -3,7 +3,7 @@
 	<portal to="icon"><fa :icon="faUser"/></portal>
 	<portal to="title">{{ $t('settings') }}</portal>
 
-	<x-privacy-setting/>
+	<x-privacy-setting v-if="isSignedIn"/>
 	<x-reaction-setting v-if="isSignedIn"/>
 	<x-theme/>
 	<x-import-export v-if="isSignedIn"/>
