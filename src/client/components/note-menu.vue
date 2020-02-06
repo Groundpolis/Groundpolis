@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faStar, faLink, faThumbtack, faExternalLinkSquareAlt, faEdit, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faLink, faThumbtack, faExternalLinkSquareAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import i18n from '../i18n';
 import { url } from '../config';
