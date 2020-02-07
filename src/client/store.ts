@@ -14,7 +14,13 @@ const defaultSettings = {
 	wallpaper: null,
 	memo: null,
 	reactions: ['👍', '❤️', '😆', '🤔', '😮', '🎉', '💢', '😥', '😇', '🍮'],
-	widgets: []
+	widgets: [],
+	iconType: 'circle' as 'circle' | 'square' | 'rounded' | 'droplet',
+	useVisibilitySwitch: false,
+	homeNoteVisibility: 'default',
+	localNoteVisibility: 'default',
+	hybridNoteVisibility: 'default',
+	globalNoteVisibility: 'default',
 };
 
 const defaultDeviceSettings = {
@@ -22,6 +28,7 @@ const defaultDeviceSettings = {
 	loadRawImages: false,
 	alwaysShowNsfw: false,
 	useOsDefaultEmojis: false,
+	showFixedPostForm: false,
 	autoReload: false,
 	accounts: [],
 	recentEmojis: [],
@@ -30,6 +37,14 @@ const defaultDeviceSettings = {
 	themes: [],
 	theme: 'light',
 	animation: true,
+	enableSounds: true,
+	enableSoundsInTimeline: false,
+	enableSoundsInNotifications: true,
+	soundVolume: 0.5,
+	mediaVolume: 0.5,
+	postStyle: 'standard',
+	mobileNotificationPosition: 'bottom',
+	showPostPreview: true,
 };
 
 export default (os: MiOS) => new Vuex.Store({
