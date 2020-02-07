@@ -391,6 +391,7 @@ userInterface: "ユーザーインターフェース"
 showBrowserNotification: "ブラウザ通知を表示する"
 showToast: "通知トーストを表示する"
 iconShape: "アイコンの形状"
+happyBirthday: "お誕生日おめでとうございます！"
 
 _iconShape:
   circle: "円形"

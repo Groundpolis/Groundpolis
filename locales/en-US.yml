@@ -363,6 +363,7 @@ showBrowserNotification: "Show browser notifications"
 showToast: "Show toast"
 iconShape: "Icon shape"
 userInterface: "User Interface"
+happyBirthday: "Happy birthday!"
 
 _iconShape:
   circle: "Circle"

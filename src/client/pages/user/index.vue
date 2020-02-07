@@ -56,7 +56,7 @@
 				</dl>
 				<dl class="field" v-if="user.birthday">
 					<dt class="name"><fa :icon="faBirthdayCake" fixed-width/> {{ $t('birthday') }}</dt>
-					<dd class="value">{{ user.birthday.replace('-', '/').replace('-', '/') }} ({{ $t('yearsOld', { age }) }})</dd>
+					<dd class="value">{{ birthdayString }} ({{ $t('yearsOld', { age }) }})</dd>
 				</dl>
 				<dl class="field">
 					<dt class="name"><fa :icon="faCalendarAlt" fixed-width/> {{ $t('registeredDate') }}</dt>
@@ -126,6 +126,7 @@ import MkFollowButton from '../../components/follow-button.vue';
 import MkContainer from '../../components/ui/container.vue';
 import Progress from '../../scripts/loading';
 import parseAcct from '../../../misc/acct/parse';
+import { isBirthday } from '../../../misc/birthday';
 
 export default Vue.extend({
 	components: {
@@ -162,6 +163,17 @@ export default Vue.extend({
 
 		age(): number {
 			return age(this.user.birthday);
+		},
+
+		birthdayString() {
+			if (!this.user.birthday)
+				return null;
+			const b = this.user.birthday.split('-');
+			if (isBirthday(Number(b[1]), Number(b[2]))) {
+				return this.$t('happyBirthday');
+			} else {
+				return this.user.birthday.replace(/-/g, '/');
+			}
 		}
 	},
 
