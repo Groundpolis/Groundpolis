@@ -382,6 +382,10 @@ reduceUiAnimation: "UIのアニメーションを減らす"
 share: "共有"
 notFound: "見つかりません"
 notFoundDescription: "指定されたURLに該当するページはありませんでした。"
+blocksYou: "ブロックされています"
+blockedByYou: "ブロック中"
+blocksEach: "相互ブロック"
+showFixedPostForm: "タイムライン上部に投稿フォームを表示する"
 
 _2fa:
   registerDevice: "デバイスを登録"

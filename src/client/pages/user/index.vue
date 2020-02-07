@@ -19,11 +19,15 @@
 						<span v-if="user.isBot" :title="$t('isBot')"><fa :icon="faRobot"/></span>
 					</div>
 				</div>
+				<span class="blocked" v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && user.isBlocking || user.isBlocked">
+					{{ $t(user.isBlocking && user.isBlocked ? 'blocksEach' : user.isBlocked ? 'blocksYou' : 'blockedByYou') }}
+				</span>
 				<span class="followed" v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && user.isFollowed">{{ $t('followsYou') }}</span>
 				<div class="actions" v-if="$store.getters.isSignedIn">
 					<button @click="menu" class="menu _button" ref="menu"><fa :icon="faEllipsisH"/></button>
-					<mk-follow-button v-if="$store.state.i.id != user.id" :user="user" :inline="true" :transparent="false" :full="true" class="koudoku"/>
-					<button v-else @click="editProfile" class="edit-profile _button">{{ $t('editProfile') }}</button>
+					<mk-follow-button v-if="$store.state.i.id != user.id && !user.isBlocking && !user.isBlocked" :user="user" :inline="true" :transparent="false" :full="true" class="koudoku"/>
+					<button v-else-if="$store.state.i.id == user.id" @click="editProfile" class="edit-profile _button">{{ $t('editProfile') }}</button>
+					<button v-else-if="user.isBlocking" @click="unblock" class="_button unblock">{{ $t('unblock') }}</button>
 				</div>
 			</div>
 			<mk-avatar class="avatar" :user="user" :disable-preview="true"/>
@@ -216,6 +220,34 @@ export default Vue.extend({
 		editProfile() {
 			this.$router.push('/my/settings/profile');
 		},
+
+		async unblock() {
+			if (!await this.getConfirmed(this.$t('unblockConfirm')) return;
+
+			this.$root.api('blocking/delete', { userId: this.user.id }).then(() => {
+				this.user.isBlocking = !this.user.isBlocking;
+				this.$root.dialog({
+					type: 'success',
+					iconOnly: true, autoClose: true
+				});
+			}, e => {
+				this.$root.dialog({
+					type: 'error',
+					text: e
+				});
+			});
+		},
+
+		async getConfirmed(text: string): Promise<Boolean> {
+			const confirm = await this.$root.dialog({
+				type: 'warning',
+				showCancelButton: true,
+				title: 'confirm',
+				text,
+			});
+
+			return !confirm.canceled;
+		},
 	}
 });
 </script>
@@ -281,6 +313,17 @@ export default Vue.extend({
 				border-radius: 6px;
 			}
 
+			> .blocked {
+				position: absolute;
+				top: 12px;
+				left: 12px;
+				padding: 4px 8px;
+				color: #fff;
+				background: #f44336;
+				font-size: 0.7em;
+				border-radius: 6px;
+			}
+
 			> .actions {
 				position: absolute;
 				top: 12px;
@@ -317,6 +360,19 @@ export default Vue.extend({
 					font-size: 16px;
 					border-radius: 32px;
 					background: transparent;
+				}
+
+				> .unblock {
+					position: relative;
+					display: inline-block;
+					font-weight: bold;
+					color: white;
+					background: rgba(#f44336, 0.7);
+					border: solid 1px #f44336;
+					padding: 0 16px;
+					height: 31px;
+					font-size: 16px;
+					border-radius: 32px;
 				}
 			}
 
