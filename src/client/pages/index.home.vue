@@ -30,6 +30,10 @@
 			<mk-button class="ok" @click="read(currentAnnouncement)" primary><fa :icon="faCheck"/> {{ $t('gotIt') }}</mk-button>
 		</div>
 	</section>
+	
+	<div style="position: relative" v-if="$store.state.device.showFixedPostForm">
+		<x-post-form class="post-form" fixed />
+	</div>
 	<x-timeline ref="tl" :key="src === 'list' ? `list:${list.id}` : src === 'antenna' ? `antenna:${antenna.id}` : src" :src="src" :list="list" :antenna="antenna" @before="before()" @after="after()"/>
 </div>
 </template>
@@ -41,6 +45,7 @@ import { faComments } from '@fortawesome/free-regular-svg-icons';
 import Progress from '../scripts/loading';
 import XTimeline from '../components/timeline.vue';
 import MkButton from '../components/ui/button.vue';
+import XPostForm from '../components/post-form.vue';
 
 export default Vue.extend({
 	metaInfo() {
@@ -52,6 +57,7 @@ export default Vue.extend({
 	components: {
 		XTimeline,
 		MkButton,
+		XPostForm,
 	},
 
 	props: {
@@ -238,6 +244,10 @@ export default Vue.extend({
 			margin-left: auto;
 		}
 	}
+}
+
+.post-form {
+	margin-bottom: 8px;
 }
 
 ._kjvfvyph_ {

@@ -2,12 +2,12 @@
 <section class="_card">
 	<div class="_title"><fa :icon="faCog"/> {{ $t('general') }}</div>
 	<div class="_content">
-		<mk-input type="file" @change="onWallpaperChange" style="margin-top: 0;">
-			<span>{{ $t('wallpaper') }}</span>
-			<template #icon><fa :icon="faImage"/></template>
-			<template #desc v-if="wallpaperUploading">{{ $t('uploading') }}<mk-ellipsis/></template>
-		</mk-input>
-		<mk-button primary :disabled="$store.state.settings.wallpaper == null" @click="delWallpaper()">{{ $t('removeWallpaper') }}</mk-button>
+		<mk-switch v-model="reduceAnimation">
+			{{ $t('reduceUiAnimation') }}
+		</mk-switch>
+		<mk-switch v-model="showFixedPostForm">
+			{{ $t('showFixedPostForm') }}
+		</mk-switch>
 	</div>
 	<div class="_content">
 		<mk-switch v-model="autoReload">
@@ -18,14 +18,17 @@
 		</mk-switch>
 	</div>
 	<div class="_content">
+		<mk-input type="file" @change="onWallpaperChange" style="margin-top: 0;">
+			<span>{{ $t('wallpaper') }}</span>
+			<template #icon><fa :icon="faImage"/></template>
+			<template #desc v-if="wallpaperUploading">{{ $t('uploading') }}<mk-ellipsis/></template>
+		</mk-input>
+		<mk-button primary :disabled="$store.state.settings.wallpaper == null" @click="delWallpaper()">{{ $t('removeWallpaper') }}</mk-button>
+	</div>
+	<div class="_content">
 		<mk-button @click="readAllNotifications">{{ $t('mark-as-read-all-notifications') }}</mk-button>
 		<mk-button @click="readAllUnreadNotes">{{ $t('mark-as-read-all-unread-notes') }}</mk-button>
 		<mk-button @click="readAllMessagingMessages">{{ $t('mark-as-read-all-talk-messages') }}</mk-button>
-	</div>
-	<div class="_content">
-		<mk-switch v-model="reduceAnimation">
-			{{ $t('reduceUiAnimation') }}
-		</mk-switch>
 	</div>
 </section>
 </template>
@@ -69,6 +72,11 @@ export default Vue.extend({
 		reduceAnimation: {
 			get() { return !this.$store.state.device.animation; },
 			set(value) { this.$store.commit('device/set', { key: 'animation', value: !value }); }
+		},
+
+		showFixedPostForm: {
+			get() { return this.$store.state.device.showFixedPostForm; },
+			set(value) { this.$store.commit('device/set', { key: 'showFixedPostForm', value: value }); }
 		},
 	},
 
