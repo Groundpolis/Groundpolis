@@ -24,6 +24,10 @@
 				<fa v-if="note.visibility == 'home'" :icon="faHome"/>
 				<fa v-if="note.visibility == 'followers'" :icon="faUnlock"/>
 				<fa v-if="note.visibility == 'specified'" :icon="faEnvelope"/>
+				<fa v-if="note.visibility == 'users'" :icon="faUsers"/>
+			</span>
+			<span class="visibility" v-if="note.localOnly">
+				<fa :icon="faHeart"/>
 			</span>
 		</div>
 	</div>
@@ -94,7 +98,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faTimes, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faTimes, faTrashAlt, faUsers, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
 import i18n from '../i18n';
@@ -163,7 +167,7 @@ export default Vue.extend({
 			showContent: false,
 			hideThisNote: false,
 			openingMenu: false,
-			faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faTimes,
+			faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faTimes, faUsers, faHeart
 		};
 	},
 

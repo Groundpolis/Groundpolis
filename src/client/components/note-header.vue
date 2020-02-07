@@ -22,6 +22,10 @@
 			<fa v-if="note.visibility == 'home'" :icon="faHome"/>
 			<fa v-if="note.visibility == 'followers'" :icon="faUnlock"/>
 			<fa v-if="note.visibility == 'specified'" :icon="faEnvelope"/>
+			<fa v-if="note.visibility == 'users'" :icon="faUsers"/>
+		</span>
+		<span class="visibility" v-if="note.localOnly">
+			<fa :icon="faHeart"/>
 		</span>
 	</div>
 </header>
@@ -29,7 +33,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faCertificate, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faCertificate, faCheck, faUsers, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
@@ -42,7 +46,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faCertificate, faCheck
+			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faCertificate, faCheck, faUsers, faHeart
 		};
 	}
 });

@@ -29,13 +29,20 @@
 				<span>{{ $t('_visibility.specifiedDescription') }}</span>
 			</div>
 		</button>
+		<button class="_button" @click="choose('users')" :class="{ active: v == 'users' }" data-index="5" key="users">
+			<div><fa :icon="faUsers"/></div>
+			<div>
+				<span>{{ $t('_visibility.users') }}</span>
+				<span>{{ $t('_visibility.usersDescription') }}</span>
+			</div>
+		</button>
 	</sequential-entrance>
 </x-popup>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { faGlobe, faUnlock, faHome } from '@fortawesome/free-solid-svg-icons';
+import { faGlobe, faUnlock, faHome, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import i18n from '../i18n';
 import XPopup from './popup.vue';
@@ -57,7 +64,7 @@ export default Vue.extend({
 	data() {
 		return {
 			v: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.device.visibility : (this.currentVisibility || this.$store.state.settings.defaultNoteVisibility),
-			faGlobe, faUnlock, faEnvelope, faHome
+			faGlobe, faUnlock, faEnvelope, faHome, faUsers
 		}
 	},
 	methods: {

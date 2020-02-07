@@ -14,6 +14,7 @@
 				<span v-if="visibility === 'home'"><fa :icon="faHome"/></span>
 				<span v-if="visibility === 'followers'"><fa :icon="faUnlock"/></span>
 				<span v-if="visibility === 'specified'"><fa :icon="faEnvelope"/></span>
+				<span v-if="visibility === 'users'"><fa :icon="faUsers"/></span>
 			</button>
 			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">{{ submitText }}</button>
 		</div>
@@ -43,7 +44,7 @@
 			<button class="_button" @click="useCw = !useCw" :class="{ active: useCw }"><fa :icon="faEyeSlash"/></button>
 			<button class="_button" @click="insertMention"><fa :icon="faAt"/></button>
 			<button class="_button" @click="insertEmoji"><fa :icon="faLaughSquint"/></button>
-			<button class="_button" v-if="visibility !== 'specified'" @click="localOnly = !localOnly" :class="{ active: localOnly }"><fa :icon="faBiohazard"/></button>
+			<button class="_button" v-if="visibility !== 'specified' && visibility !== 'users'" @click="localOnly = !localOnly" :class="{ active: localOnly }"><fa :icon="faHeart"/></button>
 		</footer>
 		<input ref="file" class="file _button" type="file" multiple="multiple" @change="onChangeFile"/>
 	</div>
@@ -52,7 +53,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faTimes, faUpload, faChartPie, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faBiohazard } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faUpload, faChartPie, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash, faLaughSquint } from '@fortawesome/free-regular-svg-icons';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
@@ -135,7 +136,7 @@ export default Vue.extend({
 			draghover: false,
 			quoteId: null,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
-			faTimes, faUpload, faChartPie, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faBiohazard
+			faTimes, faUpload, faChartPie, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers
 		};
 	},
 
@@ -403,7 +404,7 @@ export default Vue.extend({
 		},
 
 		applyVisibility(v: string) {
-			if (!['public', 'home', 'followers', 'specified'].includes(v)) v = 'public'; // v11互換性のため
+			if (!['public', 'home', 'followers', 'specified', 'users'].includes(v)) v = 'public'; // v11互換性のため
 			this.visibility = v;
 		},
 

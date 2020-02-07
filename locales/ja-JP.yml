@@ -510,6 +510,8 @@ _visibility:
   followersDescription: "自分のフォロワーのみに公開"
   specified: "ダイレクト"
   specifiedDescription: "指定したユーザーのみに公開"
+  users: "ログインユーザー"
+  usersDescription: "ログイン中のユーザーにのみ公開"
 
 _postForm:
   replyPlaceholder: "このノートに返信..."
