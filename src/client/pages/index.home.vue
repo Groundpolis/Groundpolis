@@ -132,10 +132,13 @@ export default Vue.extend({
 				this.antenna = this.$store.state.device.tl.arg;
 			}
 		}
+	},
+
+	activated() {
 		this.$root.api('announcements', { limit: 100, withUnreads: true }).then((a: any) => {
 			this.announcements = a
 		});
-	},
+	}
 
 	methods: {
 		before() {
