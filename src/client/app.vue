@@ -153,6 +153,7 @@ import { host } from './config';
 import { search } from './scripts/search';
 import contains from './scripts/contains';
 import MkToast from './components/toast.vue';
+import composeNotification from './scripts/compose-notification';
 
 export default Vue.extend({
 	i18n,
@@ -178,6 +179,7 @@ export default Vue.extend({
 			enableWidgets: window.innerWidth >= 1100,
 			canBack: false,
 			disconnectedDialog: null as Promise<void> | null,
+			viewVisibility: 'visible' as VisibilityState,
 			faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer
 		};
 	},
@@ -228,6 +230,14 @@ export default Vue.extend({
 				}]);
 			}
 		}
+
+		Notification.requestPermission();
+
+		this.viewVisibility = document.visibilityState
+
+		document.addEventListener('visibilitychange', () => {
+			this.viewVisibility = document.visibilityState
+		})
 
 		this.$root.stream.on('_disconnected_', () => {
 			if (!this.disconnectedDialog) {
@@ -514,9 +524,9 @@ export default Vue.extend({
 			});
 		},
 
-		async switchAccount(account) {
-			const token = this.$store.state.device.accounts.find(x => x.id === account.id).token;
-			this.$root.api('i', {}, token).then(i => {
+		async switchAccount(account: any) {
+			const token = this.$store.state.device.accounts.find((x: any) => x.id === account.id).token;
+			this.$root.api('i', {}, token).then((i: any) => {
 				this.$store.dispatch('switchAccount', {
 					...i,
 					token: token
@@ -525,15 +535,28 @@ export default Vue.extend({
 			});
 		},
 
-		onNotification(notification) {
-			// TODO: ユーザーが画面を見てないと思われるとき(ブラウザやタブがアクティブじゃないなど)は送信しない
-			this.$root.stream.send('readNotification', {
-				id: notification.id
-			});
+		onNotification(notification: any) {
+			if (this.viewVisibility === 'visible') {
+				this.$root.stream.send('readNotification', { id: notification.id });
 
-			this.$root.new(MkToast, {
-				notification
-			});
+				if (this.$store.state.device.showToast) {
+					this.$root.new(MkToast, { notification });
+				}
+			} else if (this.$store.state.device.showBrowserNotification) {
+				const { title, body, icon, url } = composeNotification('notification', notification);
+				const n = new Notification(title, {
+					body: body,
+					icon: icon,
+					data: url ? { url } : { }
+				});
+				n.addEventListener('click', () => {
+					this.$root.stream.send('readNotification', { id: notification.id });
+
+					if (url) {
+						location.href = url;
+					}
+				})
+			}
 		},
 
 		onMousedown(e) {

@@ -29,6 +29,8 @@ const defaultDeviceSettings = {
 	alwaysShowNsfw: false,
 	useOsDefaultEmojis: false,
 	showFixedPostForm: false,
+	showBrowserNotification: false,
+	showToast: false,
 	autoReload: false,
 	accounts: [],
 	recentEmojis: [],

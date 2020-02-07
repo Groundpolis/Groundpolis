@@ -17,6 +17,15 @@
 			{{ $t('autoNoteWatch') }}<template #desc>{{ $t('auto-watch-desc') }}</template>
 		</mk-switch>
 	</div>
+		<div class="_title"> {{ $t('notifications') }}</div>
+		<div class="_content">
+			<mk-switch v-model="showBrowserNotification">
+				{{ $t('showBrowserNotification') }}
+			</mk-switch>
+			<mk-switch v-model="showToast">
+				{{ $t('showToast') }}
+			</mk-switch>
+		</div>
 	<div class="_content">
 		<mk-input type="file" @change="onWallpaperChange" style="margin-top: 0;">
 			<span>{{ $t('wallpaper') }}</span>
@@ -77,6 +86,16 @@ export default Vue.extend({
 		showFixedPostForm: {
 			get() { return this.$store.state.device.showFixedPostForm; },
 			set(value) { this.$store.commit('device/set', { key: 'showFixedPostForm', value: value }); }
+		},
+
+		showBrowserNotification: {
+			get() { return this.$store.state.device.showBrowserNotification; },
+			set(value) { this.$store.commit('device/set', { key: 'showBrowserNotification', value: value }); }
+		},
+
+		showToast: {
+			get() { return this.$store.state.device.showToast; },
+			set(value) { this.$store.commit('device/set', { key: 'showToast', value: value }); }
 		},
 	},
 

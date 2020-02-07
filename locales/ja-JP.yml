@@ -387,6 +387,8 @@ blockedByYou: "ブロック中"
 blocksEach: "相互ブロック"
 showFixedPostForm: "タイムライン上部に投稿フォームを表示する"
 gender: "性別"
+showBrowserNotification: "ブラウザ通知を表示する"
+showToast: "通知トーストを表示する"
 
 _gender:
   not-known: "設定しない"

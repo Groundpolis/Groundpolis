@@ -65,6 +65,14 @@ self.addEventListener('push', ev => {
 		return self.registration.showNotification(n.title, {
 			body: n.body,
 			icon: n.icon,
+			data: { url: n.url }
 		});
 	}));
 });
+
+self.addEventListener('notificationclick', event => {
+	event.notification.close();
+  
+	// Web Push 通知が指定した URL に遷移する
+	event.waitUntil(self.clients.openWindow(event.notification.data.url));
+  });

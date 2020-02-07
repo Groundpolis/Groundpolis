@@ -359,6 +359,8 @@ blockedByYou: "Blocking"
 blocksEach: "Blocking each other"
 showFixedPostForm: "Show post form at the top of the timeline"
 gender: "Gender"
+showToast: "Show toast"
+iconShape: "Icon shape"
 _gender:
   not-known: "Unset"
   male: "Male"
