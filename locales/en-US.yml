@@ -358,6 +358,12 @@ blocksYou: "Blocked"
 blockedByYou: "Blocking"
 blocksEach: "Blocking each other"
 showFixedPostForm: "Show post form at the top of the timeline"
+gender: "Gender"
+_gender:
+  not-known: "Unset"
+  male: "Male"
+  female: "Female"
+  not-applicable: "Not Applicable"
 _2fa:
   registerDevice: "Register a new device"
   step1: "First, install an authentication app (such as {a} or {b}) on your device."

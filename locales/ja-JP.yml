@@ -386,6 +386,13 @@ blocksYou: "ブロックされています"
 blockedByYou: "ブロック中"
 blocksEach: "相互ブロック"
 showFixedPostForm: "タイムライン上部に投稿フォームを表示する"
+gender: "性別"
+
+_gender:
+  not-known: "設定しない"
+  male: "男性"
+  female: "女性"
+  not-applicable: "その他"
 
 _2fa:
   registerDevice: "デバイスを登録"

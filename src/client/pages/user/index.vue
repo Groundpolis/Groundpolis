@@ -46,6 +46,10 @@
 				<p v-else class="empty">{{ $t('noAccountDescription') }}</p>
 			</div>
 			<div class="fields system">
+				<dl class="field" v-if="user.sex !== 'not-known'">
+					<dt class="name"><fa :icon="getGenderIcon(user.sex)" fixed-width/> {{ $t('gender') }}</dt>
+					<dd class="value">{{ $t(`_gender.${user.sex}`) }}</dd>
+				</dl>
 				<dl class="field" v-if="user.location">
 					<dt class="name"><fa :icon="faMapMarker" fixed-width/> {{ $t('location') }}</dt>
 					<dd class="value">{{ user.location }}</dd>
@@ -112,7 +116,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faEllipsisH, faRobot, faLock, faBookmark, faExclamationTriangle, faChartBar, faImage, faBirthdayCake, faMapMarker } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisH, faRobot, faLock, faBookmark, faExclamationTriangle, faChartBar, faImage, faBirthdayCake, faMapMarker, faMars, faVenus, faGenderless } from '@fortawesome/free-solid-svg-icons';
 import { faCalendarAlt, faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import * as age from 's-age';
 import XUserTimeline from './index.timeline.vue';
@@ -220,6 +224,17 @@ export default Vue.extend({
 		editProfile() {
 			this.$router.push('/my/settings/profile');
 		},
+
+		getGenderIcon(gender: string) {
+			switch (gender) {
+				case 'male':
+					return faMars;
+				case 'female':
+					return faVenus;
+				default:
+					return faGenderless;
+			}
+		}
 
 		async unblock() {
 			if (!await this.getConfirmed(this.$t('unblockConfirm')) return;

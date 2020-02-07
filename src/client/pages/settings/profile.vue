@@ -24,6 +24,11 @@
 			<template #prefix><fa :icon="faBirthdayCake"/></template>
 		</mk-input>
 
+		<mk-select v-model="gender" :placeholder="$t('gender')">
+			<template #label>{{ $t('gender') }}</template>
+			<option v-for="v in ['not-known', 'male', 'female', 'not-applicable']" :value="v">{{ $t(`_gender.${v}`) }}</option>
+		</mk-select>
+
 		<details class="fields">
 			<summary>{{ $t('_profile.metadata') }}</summary>
 			<div class="row">
@@ -61,6 +66,7 @@ import MkButton from '../../components/ui/button.vue';
 import MkInput from '../../components/ui/input.vue';
 import MkTextarea from '../../components/ui/textarea.vue';
 import MkSwitch from '../../components/ui/switch.vue';
+import MkSelect from '../../components/ui/select.vue';
 import i18n from '../../i18n';
 import { host } from '../../config';
 import { selectFile } from '../../scripts/select-file';
@@ -73,6 +79,7 @@ export default Vue.extend({
 		MkInput,
 		MkTextarea,
 		MkSwitch,
+		MkSelect,
 	},
 	
 	data() {
@@ -95,6 +102,7 @@ export default Vue.extend({
 			isBot: false,
 			isCat: false,
 			saving: false,
+			gender: 'not-known'
 			faSave, faUnlockAlt, faCogs, faUser, faMapMarkerAlt, faBirthdayCake
 		}
 	},
@@ -108,6 +116,7 @@ export default Vue.extend({
 		this.bannerId = this.$store.state.i.bannerId;
 		this.isBot = this.$store.state.i.isBot;
 		this.isCat = this.$store.state.i.isCat;
+		this.gender = this.$store.state.i.sex;
 
 		this.fieldName0 = this.$store.state.i.fields[0] ? this.$store.state.i.fields[0].name : null;
 		this.fieldValue0 = this.$store.state.i.fields[0] ? this.$store.state.i.fields[0].value : null;
@@ -154,6 +163,7 @@ export default Vue.extend({
 				fields,
 				isBot: !!this.isBot,
 				isCat: !!this.isCat,
+				sex: this.gender,
 			}).then(i => {
 				this.saving = false;
 				this.$store.state.i.avatarId = i.avatarId;
