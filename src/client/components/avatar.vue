@@ -1,15 +1,15 @@
 <template>
-<span class="eiwwqkts" :class="{ cat }" :title="user | acct" v-if="disableLink && !disablePreview" v-user-preview="user.id" @click="onClick">
-	<span class="inner" :style="icon"></span>
+<span class="`eiwwqkts`" :class="[{ cat }, $store.state.device.iconShape]" :title="user | acct" v-if="disableLink && !disablePreview" v-user-preview="user.id" @click="onClick">
+	<span class="inner" :class="$store.state.device.iconShape" :style="icon"></span>
 </span>
-<span class="eiwwqkts" :class="{ cat }" :title="user | acct" v-else-if="disableLink && disablePreview" @click="onClick">
-	<span class="inner" :style="icon"></span>
+<span class="eiwwqkts" :class="[{ cat }, $store.state.device.iconShape]" :title="user | acct" v-else-if="disableLink && disablePreview" @click="onClick">
+	<span class="inner" :class="$store.state.device.iconShape" :style="icon"></span>
 </span>
-<router-link class="eiwwqkts" :class="{ cat }" :to="user | userPage" :title="user | acct" :target="target" v-else-if="!disableLink && !disablePreview" v-user-preview="user.id">
-	<span class="inner" :style="icon"></span>
+<router-link class="eiwwqkts" :class="[{ cat }, $store.state.device.iconShape]" :to="user | userPage" :title="user | acct" :target="target" v-else-if="!disableLink && !disablePreview" v-user-preview="user.id">
+	<span class="inner" :class="$store.state.device.iconShape" :style="icon"></span>
 </router-link>
-<router-link class="eiwwqkts" :class="{ cat }" :to="user | userPage" :title="user | acct" :target="target" v-else-if="!disableLink && disablePreview">
-	<span class="inner" :style="icon"></span>
+<router-link class="eiwwqkts" :class="[{ cat }, $store.state.device.iconShape]" :to="user | userPage" :title="user | acct" :target="target" v-else-if="!disableLink && disablePreview">
+	<span class="inner" :class="$store.state.device.iconShape" :style="icon"></span>
 </router-link>
 </template>
 
@@ -76,7 +76,6 @@ export default Vue.extend({
 	display: inline-block;
 	vertical-align: bottom;
 	flex-shrink: 0;
-	border-radius: 100%;
 	line-height: 16px;
 
 	&.cat {
@@ -109,8 +108,23 @@ export default Vue.extend({
 		position: absolute;
 		right: 0;
 		top: 0;
-		border-radius: 100%;
 		z-index: 1;
 	}
+}
+
+.circle {
+	border-radius: 100%;
+}
+
+.square {
+	border-radius: 0;
+}
+
+.rounded {
+	border-radius: 12%;
+}
+
+.droplet {
+	border-radius: 50% 50% 0 50%;
 }
 </style>

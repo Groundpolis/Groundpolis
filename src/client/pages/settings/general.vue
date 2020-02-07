@@ -1,22 +1,22 @@
 <template>
-<section class="_card">
-	<div class="_title"><fa :icon="faCog"/> {{ $t('general') }}</div>
-	<div class="_content">
-		<mk-switch v-model="reduceAnimation">
-			{{ $t('reduceUiAnimation') }}
-		</mk-switch>
-		<mk-switch v-model="showFixedPostForm">
-			{{ $t('showFixedPostForm') }}
-		</mk-switch>
-	</div>
-	<div class="_content">
-		<mk-switch v-model="autoReload">
-			{{ $t('autoReloadWhenDisconnected') }}
-		</mk-switch>
-		<mk-switch v-model="$store.state.i.autoWatch" @change="onChangeAutoWatch">
-			{{ $t('autoNoteWatch') }}<template #desc>{{ $t('auto-watch-desc') }}</template>
-		</mk-switch>
-	</div>
+	<section class="_card">
+		<div class="_title"><fa :icon="faTv"/> {{ $t('userInterface') }}</div>
+		<div class="_content">
+			<mk-switch v-model="reduceAnimation">
+				{{ $t('reduceUiAnimation') }}
+			</mk-switch>
+			<mk-switch v-model="showFixedPostForm">
+				{{ $t('showFixedPostForm') }}
+			</mk-switch>
+		</div>
+		<div class="_content">
+			<mk-switch v-model="autoReload">
+				{{ $t('autoReloadWhenDisconnected') }}
+			</mk-switch>
+			<mk-switch v-model="$store.state.i.autoWatch" @change="onChangeAutoWatch">
+				{{ $t('autoNoteWatch') }}<template #desc>{{ $t('auto-watch-desc') }}</template>
+			</mk-switch>
+		</div>
 		<div class="_title"> {{ $t('notifications') }}</div>
 		<div class="_content">
 			<mk-switch v-model="showBrowserNotification">
@@ -26,25 +26,44 @@
 				{{ $t('showToast') }}
 			</mk-switch>
 		</div>
-	<div class="_content">
-		<mk-input type="file" @change="onWallpaperChange" style="margin-top: 0;">
-			<span>{{ $t('wallpaper') }}</span>
-			<template #icon><fa :icon="faImage"/></template>
-			<template #desc v-if="wallpaperUploading">{{ $t('uploading') }}<mk-ellipsis/></template>
-		</mk-input>
-		<mk-button primary :disabled="$store.state.settings.wallpaper == null" @click="delWallpaper()">{{ $t('removeWallpaper') }}</mk-button>
-	</div>
-	<div class="_content">
-		<mk-button @click="readAllNotifications">{{ $t('mark-as-read-all-notifications') }}</mk-button>
-		<mk-button @click="readAllUnreadNotes">{{ $t('mark-as-read-all-unread-notes') }}</mk-button>
-		<mk-button @click="readAllMessagingMessages">{{ $t('mark-as-read-all-talk-messages') }}</mk-button>
-	</div>
-</section>
+		<div class="_title"> {{ $t('iconShape') }}</div>
+		<div class="_content">
+			<mk-switch v-model="iconShapeCircle">
+				<div class="icon-shape circle"/>
+				{{ $t('_iconShape.circle') }}
+			</mk-switch>
+			<mk-switch v-model="iconShapeSquare">
+				<div class="icon-shape square"/>
+				{{ $t('_iconShape.square') }}
+			</mk-switch>
+			<mk-switch v-model="iconShapeRounded">
+				<div class="icon-shape rounded"/>
+				{{ $t('_iconShape.rounded') }}
+			</mk-switch>
+			<mk-switch v-model="iconShapeDroplet">
+				<div class="icon-shape droplet"/>
+				{{ $t('_iconShape.droplet') }}
+			</mk-switch>
+		</div>
+		<div class="_content">
+			<mk-input type="file" @change="onWallpaperChange" style="margin-top: 0;">
+				<span>{{ $t('wallpaper') }}</span>
+				<template #icon><fa :icon="faImage"/></template>
+				<template #desc v-if="wallpaperUploading">{{ $t('uploading') }}<mk-ellipsis/></template>
+			</mk-input>
+			<mk-button primary :disabled="$store.state.settings.wallpaper == null" @click="delWallpaper()">{{ $t('removeWallpaper') }}</mk-button>
+		</div>
+		<div class="_content">
+			<mk-button @click="readAllNotifications">{{ $t('mark-as-read-all-notifications') }}</mk-button>
+			<mk-button @click="readAllUnreadNotes">{{ $t('mark-as-read-all-unread-notes') }}</mk-button>
+			<mk-button @click="readAllMessagingMessages">{{ $t('mark-as-read-all-talk-messages') }}</mk-button>
+		</div>
+	</section>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { faImage, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faTv } from '@fortawesome/free-solid-svg-icons';
 import MkInput from '../../components/ui/input.vue';
 import MkButton from '../../components/ui/button.vue';
 import MkSwitch from '../../components/ui/switch.vue';
@@ -63,7 +82,7 @@ export default Vue.extend({
 	data() {
 		return {
 			wallpaperUploading: false,
-			faImage, faCog
+			faImage, faTv
 		}
 	},
 
@@ -96,6 +115,26 @@ export default Vue.extend({
 		showToast: {
 			get() { return this.$store.state.device.showToast; },
 			set(value) { this.$store.commit('device/set', { key: 'showToast', value: value }); }
+		},
+
+		iconShapeCircle: {
+			get() { return this.$store.state.device.iconShape === 'circle'; },
+			set(value) { this.$store.commit('device/set', { key: 'iconShape', value: 'circle' }); }
+		},
+
+		iconShapeSquare: {
+			get() { return this.$store.state.device.iconShape === 'square'; },
+			set(value) { this.$store.commit('device/set', { key: 'iconShape', value: 'square' }); }
+		},
+
+		iconShapeRounded: {
+			get() { return this.$store.state.device.iconShape === 'rounded'; },
+			set(value) { this.$store.commit('device/set', { key: 'iconShape', value: 'rounded' }); }
+		},
+
+		iconShapeDroplet: {
+			get() { return this.$store.state.device.iconShape === 'droplet'; },
+			set(value) { this.$store.commit('device/set', { key: 'iconShape', value: 'droplet' }); }
 		},
 	},
 
@@ -151,3 +190,25 @@ export default Vue.extend({
 	}
 });
 </script>
+
+<style lang="scss" scoped>
+	.icon-shape {
+		display: inline-block;
+		width: 1em;
+		height: 1em;
+		background: var(--fg);
+		margin-right: 8px;
+
+		&.circle {
+			border-radius: 0.5em;
+		}
+
+		&.rounded {
+			border-radius: 0.25em;
+		}
+
+		&.droplet {
+			border-radius: 0.5em 0.5em 0 0.5em;
+		}
+	}
+</style>

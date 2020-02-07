@@ -31,6 +31,7 @@ const defaultDeviceSettings = {
 	showFixedPostForm: false,
 	showBrowserNotification: false,
 	showToast: false,
+	iconShape: 'circle',
 	autoReload: false,
 	accounts: [],
 	recentEmojis: [],

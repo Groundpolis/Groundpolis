@@ -387,8 +387,16 @@ blockedByYou: "ブロック中"
 blocksEach: "相互ブロック"
 showFixedPostForm: "タイムライン上部に投稿フォームを表示する"
 gender: "性別"
+userInterface: "ユーザーインターフェース"
 showBrowserNotification: "ブラウザ通知を表示する"
 showToast: "通知トーストを表示する"
+iconShape: "アイコンの形状"
+
+_iconShape:
+  circle: "円形"
+  square: "正方形"
+  rounded: "角丸"
+  droplet: "しずく"
 
 _gender:
   not-known: "設定しない"
