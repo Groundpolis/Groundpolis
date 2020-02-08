@@ -91,7 +91,6 @@ export default Vue.extend({
 		> ._content {
 			> .members {
 				> a {
-					color: var(--link);
 					margin-right: 0.5em;
 				}
 			}

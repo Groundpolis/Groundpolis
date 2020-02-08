@@ -24,7 +24,16 @@
 		</div>
 	</header>
 
-	<nav class="nav" ref="nav">
+	<transition name="nav-back">
+		<div class="nav-back"
+			v-if="showNav"
+			@click="showNav = false"
+			@touchstart="showNav = false"
+		></div>
+	</transition>
+
+	<transition name="nav">
+		<nav class="nav" ref="nav" v-show="showNav">
 		<div>
 			<div class="item account" v-if="$store.getters.isSignedIn">
 				<router-link active-class="active" :to="`/@${ $store.state.i.username }`" exact>
@@ -79,7 +88,8 @@
 				<i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadMentions || $store.state.i.hasUnreadSpecifiedNotes)"><fa :icon="faCircle"/></i>
 			</button>
 		</div>
-	</nav>
+		</nav>
+	</transition>
 
 	<div class="contents">
 		<main ref="main">
@@ -129,7 +139,7 @@
 	</div>
 
 	<div class="buttons">
-		<button v-if="$store.getters.isSignedIn" class="button nav _button" @click="showNav" ref="navButton"><fa :icon="faBars"/><i v-if="$store.state.i.hasUnreadSpecifiedNotes || $store.state.i.pendingReceivedFollowRequestsCount || $store.state.i.hasUnreadMessagingMessage || $store.state.i.hasUnreadAnnouncement"><fa :icon="faCircle"/></i></button>
+		<button v-if="$store.getters.isSignedIn" class="button nav _button" @click="showNav = true" ref="navButton"><fa :icon="faBars"/><i v-if="$store.state.i.hasUnreadSpecifiedNotes || $store.state.i.pendingReceivedFollowRequestsCount || $store.state.i.hasUnreadMessagingMessage || $store.state.i.hasUnreadAnnouncement"><fa :icon="faCircle"/></i></button>
 		<button v-if="$store.getters.isSignedIn" class="button home _button" :disabled="$route.path === '/'" @click="$router.push('/')"><fa :icon="faHome"/></button>
 		<button v-if="$store.getters.isSignedIn" class="button notifications _button" @click="notificationsOpen = !notificationsOpen" ref="notificationButton2"><fa :icon="notificationsOpen ? faTimes : faBell"/><i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i></button>
 		<button v-if="$store.getters.isSignedIn" class="button post _buttonPrimary" @click="post()"><fa :icon="faPencilAlt"/></button>
@@ -145,7 +155,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faGamepad, faServer, faFileAlt, faSatellite, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faGamepad, faServer, faFileAlt, faSatellite, faInfoCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { v4 as uuid } from 'uuid';
 import i18n from './i18n';
@@ -168,6 +178,7 @@ export default Vue.extend({
 		return {
 			host: host,
 			pageKey: 0,
+			showNav: false,
 			searching: false,
 			notificationsOpen: false,
 			accounts: [],
@@ -260,12 +271,15 @@ export default Vue.extend({
 		});
 
 		setInterval(() => {
+			if (this.showNav) return; // TODO: トランジション中も false になるので、これだけでは不十分
 			this.$refs.title.style.left = (this.$refs.main.getBoundingClientRect().left - this.$refs.nav.offsetWidth) + 'px';
 		}, 1000);
 
 		// https://stackoverflow.com/questions/33891709/when-flexbox-items-wrap-in-column-mode-container-does-not-grow-its-width
 		if (this.enableWidgets) {
 			setInterval(() => {
+				if (!this.$refs.widgetsEditButton) return;
+
 				const width = this.$refs.widgetsEditButton.offsetLeft + 300;
 				this.$refs.widgets.style.width = width + 'px';
 			}, 1000);
@@ -276,7 +290,7 @@ export default Vue.extend({
 		help() {
 			this.$router.push('/docs/keyboard-shortcut');
 		},
-		
+
 		back() {
 			if (this.canBack) window.history.back();
 		},
@@ -313,75 +327,6 @@ export default Vue.extend({
 					this.searchQuery = '';
 				});
 			}
-		},
-
-		showNav(ev) {
-			this.$root.menu({
-				items: [{
-					text: this.$t('search'),
-					icon: faSearch,
-					action: this.search,
-				}, null, this.$store.state.i.isAdmin || this.$store.state.i.isModerator ? {
-					text: this.$t('instance'),
-					icon: faServer,
-					action: () => this.oepnInstanceMenu(ev),
-				} : undefined, {
-					type: 'link',
-					text: this.$t('announcements'),
-					to: '/announcements',
-					icon: faBroadcastTower,
-					indicate: this.$store.state.i.hasUnreadAnnouncement,
-				}, {
-					type: 'link',
-					text: this.$t('featured'),
-					to: '/featured',
-					icon: faFireAlt,
-				}, {
-					type: 'link',
-					text: this.$t('explore'),
-					to: '/explore',
-					icon: faHashtag,
-				}, {
-					type: 'link',
-					text: this.$t('messaging'),
-					to: '/my/messaging',
-					icon: faComments,
-					indicate: this.$store.state.i.hasUnreadMessagingMessage,
-				}, this.$store.state.i.isLocked ? {
-					type: 'link',
-					text: this.$t('followRequests'),
-					to: '/my/follow-requests',
-					icon: faUserClock,
-					indicate: this.$store.state.i.pendingReceivedFollowRequestsCount > 0,
-				} : undefined, {
-					type: 'link',
-					text: this.$t('drive'),
-					to: '/my/drive',
-					icon: faCloud,
-				}, {
-					type: 'link',
-					text: this.$t('settings'),
-					to: '/my/settings',
-					icon: faCog,
-				}, {
-					text: this.$t('more'),
-					icon: faEllipsisH,
-					action: () => this.more(ev),
-					indicate: this.$store.state.i.hasUnreadMentions || this.$store.state.i.hasUnreadSpecifiedNotes
-				}, null, {
-					type: 'user',
-					user: this.$store.state.i,
-					action: () => this.$router.push(`/@${this.$store.state.i.username}`),
-				}, {
-					text: this.$t('switchAccount'),
-					action: () => this.openAccountMenu(ev),
-				}],
-				direction: 'up',
-				align: 'left',
-				fixed: true,
-				width: 200,
-				source: ev.currentTarget || ev.target,
-			});
 		},
 
 		async openAccountMenu(ev) {
@@ -471,6 +416,11 @@ export default Vue.extend({
 					icon: faListUl,
 				}, {
 					type: 'link',
+					text: this.$t('groups'),
+					to: '/my/groups',
+					icon: faUsers,
+				}, {
+					type: 'link',
 					text: this.$t('antennas'),
 					to: '/my/antennas',
 					icon: faSatellite,
@@ -502,6 +452,11 @@ export default Vue.extend({
 					to: '/games',
 					icon: faGamepad,
 				}, null] : []), {
+					type: 'link',
+					text: this.$t('help'),
+					to: '/docs',
+					icon: faQuestionCircle,
+				}, {
 					type: 'link',
 					text: this.$t('about'),
 					to: '/about',
@@ -636,6 +591,28 @@ export default Vue.extend({
 .page-leave-to {
 	opacity: 0;
 	transform: translateY(32px);
+}
+
+.nav-enter-active,
+.nav-leave-active {
+	opacity: 1;
+	transform: translateX(0);
+	transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.nav-enter,
+.nav-leave-active {
+	opacity: 0;
+	transform: translateX(-240px);
+}
+
+.nav-back-enter-active,
+.nav-back-leave-active {
+	opacity: 1;
+	transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.nav-back-enter,
+.nav-back-leave-active {
+	opacity: 0;
 }
 
 .mk-app {
@@ -783,6 +760,16 @@ export default Vue.extend({
 		}
 	}
 
+	> .nav-back {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 1001;
+		width: 100%;
+		height: 100%;
+		background: var(--modalBg);
+	}
+
 	> .nav {
 		$avatar-size: 32px;
 		$avatar-margin: ($header-height - $avatar-size) / 2;
@@ -799,7 +786,14 @@ export default Vue.extend({
 		}
 
 		@media (max-width: $nav-hide-threshold) {
-			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 1001;
+		}
+
+		@media (min-width: $nav-hide-threshold + 1px) {
+			display: block !important;
 		}
 
 		> div {
@@ -809,13 +803,24 @@ export default Vue.extend({
 			z-index: 1001;
 			width: $nav-width;
 			height: 100vh;
-			padding-top: 16px;
+			padding: 16px 0;
 			box-sizing: border-box;
+			overflow: auto;
 			background: var(--navBg);
 			border-right: solid 1px var(--divider);
 
-			@media (max-width: $nav-icon-only-threshold) {
+			> .divider {
+				margin: 16px 0;
+				border-top: solid 1px var(--divider);
+			}
+
+			@media (max-width: $nav-icon-only-threshold) and (min-width: $nav-hide-threshold + 1px) {
 				width: $nav-icon-only-width;
+				padding: 8px 0;
+
+				> .divider {
+					margin: 8px 0;
+				}
 			}
 
 			> .item {
@@ -823,7 +828,6 @@ export default Vue.extend({
 				display: block;
 				padding-left: 32px;
 				font-size: $ui-font-size;
-				font-weight: bold;
 				line-height: 3.2rem;
 				text-overflow: ellipsis;
 				overflow: hidden;
@@ -833,22 +837,9 @@ export default Vue.extend({
 				box-sizing: border-box;
 				color: var(--navFg);
 
-				&:not(.active) {
-					opacity: 0.85;
-
-					&:hover {
-						opacity: 1;
-
-						> [data-icon] {
-							opacity: 1;
-						}
-					}
-
-					> [data-icon] {
-						opacity: 0.85;
-					}
+				> [data-icon] {
+					width: ($header-height - ($avatar-margin * 2));
 				}
-
 
 				&.account {
 					display: flex;
@@ -894,7 +885,7 @@ export default Vue.extend({
 					color: var(--navActive);
 				}
 
-				@media (max-width: $nav-icon-only-threshold) {
+				@media (max-width: $nav-icon-only-threshold) and (min-width: $nav-hide-threshold + 1px) {
 					padding-left: 0;
 					width: 100%;
 					text-align: center;
@@ -921,6 +912,13 @@ export default Vue.extend({
 							margin-left: 0;
 						}
 					}
+				}
+			}
+
+			@media (max-width: $nav-hide-threshold) {
+				> .index,
+				> .notifications {
+					display: none;
 				}
 			}
 		}

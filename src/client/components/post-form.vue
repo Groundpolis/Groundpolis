@@ -16,7 +16,7 @@
 				<span v-if="visibility === 'specified'"><fa :icon="faEnvelope"/></span>
 				<span v-if="visibility === 'users'"><fa :icon="faUsers"/></span>
 			</button>
-			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">{{ submitText }}</button>
+			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">{{ submitText }}<fa :icon="reply ? faReply : renote ? faQuoteRight : faPaperPlane"/></button>
 		</div>
 	</header>
 	<div class="form" :class="{ fixed }">
@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faTimes, faUpload, faChartPie, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faChartPie, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash, faLaughSquint } from '@fortawesome/free-regular-svg-icons';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
@@ -136,7 +136,7 @@ export default Vue.extend({
 			draghover: false,
 			quoteId: null,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
-			faTimes, faUpload, faChartPie, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers
+			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faChartPie, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers
 		};
 	},
 
@@ -169,10 +169,10 @@ export default Vue.extend({
 
 		submitText(): string {
 			return this.renote
-				? this.$t('renote')
+				? this.$t('quote')
 				: this.reply
 					? this.$t('reply')
-					: this.$t('post');
+					: this.$t('note');
 		},
 
 		canPost(): boolean {
@@ -223,7 +223,7 @@ export default Vue.extend({
 		// デフォルト公開範囲
 		this.applyVisibility(this.$store.state.settings.rememberNoteVisibility ? this.$store.state.device.visibility : this.$store.state.settings.defaultNoteVisibility);
 
-		this.localOnly = this.$store.state.settings.rememberNoteVisibility ? this.$store.state.device.localOnly : false;
+		this.localOnly = this.$store.state.settings.rememberNoteVisibility ? this.$store.state.device.localOnly : this.$store.state.settings.defaultNoteLocalOnly;
 
 		// 公開以外へのリプライ時は元の公開範囲を引き継ぐ
 		if (this.reply && ['home', 'followers', 'specified'].includes(this.reply.visibility)) {
@@ -404,8 +404,7 @@ export default Vue.extend({
 		},
 
 		applyVisibility(v: string) {
-			if (!['public', 'home', 'followers', 'specified', 'users'].includes(v)) v = 'public'; // v11互換性のため
-			this.visibility = v;
+			this.visibility = ['public', 'home', 'followers', 'specified', 'users'].includes(v) ? v : 'public'; // v11互換性のため
 		},
 
 		addVisibleUser() {
@@ -628,8 +627,9 @@ export default Vue.extend({
 
 			> .submit {
 				margin: 16px 16px 16px 0;
-				padding: 0 16px;
+				padding: 0 12px;
 				line-height: 34px;
+				font-weight: bold;
 				vertical-align: bottom;
 				border-radius: 4px;
 
@@ -639,6 +639,10 @@ export default Vue.extend({
 
 				&:disabled {
 					opacity: 0.7;
+				}
+
+				> [data-icon] {
+					margin-left: 6px;
 				}
 			}
 		}

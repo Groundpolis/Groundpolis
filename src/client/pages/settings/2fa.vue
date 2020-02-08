@@ -4,8 +4,7 @@
 	<div class="_content">
 		<p v-if="!data && !$store.state.i.twoFactorEnabled"><mk-button @click="register">{{ $t('_2fa.registerDevice') }}</mk-button></p>
 		<template v-if="$store.state.i.twoFactorEnabled">
-			<h2 class="heading">{{ $t('totp-header') }}</h2>
-			<p>{{ $t('already-registered') }}</p>
+			<p>{{ $t('_2fa.alreadyRegistered') }}</p>
 			<mk-button @click="unregister">{{ $t('unregister') }}</mk-button>
 
 			<template v-if="supportsCredentials">
@@ -24,7 +23,7 @@
 				<mk-switch v-model="usePasswordLessLogin" @change="updatePasswordLessLogin" v-if="$store.state.i.securityKeysList.length > 0">{{ $t('passwordLessLogin') }}</mk-switch>
 
 				<mk-info warn v-if="registration && registration.error">{{ $t('something-went-wrong') }} {{ registration.error }}</mk-info>
-				<mk-button v-if="!registration || registration.error" @click="addSecurityKey">{{ $t('register') }}</mk-button>
+				<mk-button v-if="!registration || registration.error" @click="addSecurityKey">{{ $t('_2fa.registerKey') }}</mk-button>
 
 				<ol v-if="registration && !registration.error">
 					<li v-if="registration.stage >= 0">
@@ -47,8 +46,8 @@
 			<ol style="margin: 0; padding: 0 0 0 1em;">
 				<li>
 					<i18n path="_2fa.step1" tag="span">
-						<a href="https://authy.com/" rel="noopener" target="_blank" place="a" style="color: var(--link);">Authy</a>
-						<a href="https://support.google.com/accounts/answer/1066447" rel="noopener" target="_blank" place="b" style="color: var(--link);">Google Authenticator</a>
+						<a href="https://authy.com/" rel="noopener" target="_blank" place="a" class="_link">Authy</a>
+						<a href="https://support.google.com/accounts/answer/1066447" rel="noopener" target="_blank" place="b" class="_link">Google Authenticator</a>
 					</i18n>
 				</li>
 				<li>{{ $t('_2fa.step2') }}<br><img :src="data.qr"></li>

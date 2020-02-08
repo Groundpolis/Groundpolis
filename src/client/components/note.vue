@@ -98,7 +98,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faTimes, faTrashAlt, faUsers, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faTimes, faTrashAlt, faUsers, faHeart, faQuoteRight } from '@fortawesome/free-solid-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
 import i18n from '../i18n';
@@ -112,7 +112,6 @@ import XPoll from './poll.vue';
 import XUrlPreview from './url-preview.vue';
 import MkNoteMenu from './note-menu.vue';
 import MkReactionPicker from './reaction-picker.vue';
-import MkRenotePicker from './renote-picker.vue';
 import pleaseLogin from '../scripts/please-login';
 import { url } from '../config';
 import copyToClipboard from '../scripts/copy-to-clipboard';
@@ -396,10 +395,26 @@ export default Vue.extend({
 		renote() {
 			pleaseLogin(this.$root);
 			this.blur();
-			this.$root.new(MkRenotePicker, {
+			this.$root.menu({
+				items: [{
+					text: this.$t('renote'),
+					icon: faRetweet,
+					action: () => {
+						(this as any).$root.api('notes/create', {
+							renoteId: this.appearNote.id
+						});
+					}
+				}, {
+					text: this.$t('quote'),
+					icon: faQuoteRight,
+					action: () => {
+						this.$root.post({
+							renote: this.appearNote,
+						});
+					}
+				}]
 				source: this.$refs.renoteButton,
-				note: this.appearNote,
-			}).$once('closed', this.focus);
+			}).then(this.focus);
 		},
 
 		renoteDirectly() {
