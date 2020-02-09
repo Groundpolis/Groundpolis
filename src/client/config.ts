@@ -3,7 +3,7 @@ declare const _VERSION_: string;
 declare const _ENV_: string;
 
 const address = new URL(location.href);
-const siteName = document ? document.querySelector('meta[property="og:site_name"]') as HTMLMetaElement : null;
+const siteName = typeof document !== 'undefined' ? document.querySelector('meta[property="og:site_name"]') as HTMLMetaElement : null;
 
 export const host = address.host;
 export const hostname = address.hostname;
