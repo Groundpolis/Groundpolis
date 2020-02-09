@@ -472,9 +472,14 @@ export default Vue.extend({
 		async addAcount() {
 			this.$root.new(await import('./components/signin-dialog.vue').then(m => m.default)).$once('login', res => {
 				this.$store.dispatch('addAcount', res);
-				this.$root.dialog({
-					type: 'success',
-					iconOnly: true, autoClose: true
+				const token = res.i;
+
+				this.$root.api('i', {}, token).then((i: any) => {
+					this.$store.dispatch('switchAccount', {
+						...i,
+						token: token
+					});
+					location.reload();
 				});
 			});
 		},
