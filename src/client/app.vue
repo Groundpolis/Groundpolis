@@ -472,20 +472,16 @@ export default Vue.extend({
 		async addAcount() {
 			this.$root.new(await import('./components/signin-dialog.vue').then(m => m.default)).$once('login', res => {
 				this.$store.dispatch('addAcount', res);
-				const token = res.i;
-
-				this.$root.api('i', {}, token).then((i: any) => {
-					this.$store.dispatch('switchAccount', {
-						...i,
-						token: token
-					});
-					location.reload();
-				});
+				this.switchAccountWithToken(res.i);
 			});
 		},
 
 		async switchAccount(account: any) {
 			const token = this.$store.state.device.accounts.find((x: any) => x.id === account.id).token;
+			this.switchAccountWithToken(token);
+		},
+
+		switchAccountWithToken(token: string) {
 			this.$root.api('i', {}, token).then((i: any) => {
 				this.$store.dispatch('switchAccount', {
 					...i,
