@@ -410,6 +410,7 @@ transfer: "譲渡"
 useSticker: "スタンプを使用する"
 useStickerDesc: "絵文字1つだけの投稿を大きなサイズで表示します。"
 makeCustomEmojisBigger: "カスタム絵文字を大きく表示する"
+createAccount: "アカウントを作成する"
 
 _iconShape:
   circle: "円形"

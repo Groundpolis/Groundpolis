@@ -389,6 +389,7 @@ transfer: "Transfer"
 useSticker: "Use Sticker"
 useStickerDesc: "Displays a post with an emoji in large size."
 makeCustomEmojisBigger: "Make custom emojis bigger"
+createAccount: "Create Account"
 
 _iconShape:
   circle: "Circle"

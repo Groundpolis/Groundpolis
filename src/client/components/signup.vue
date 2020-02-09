@@ -86,6 +86,14 @@ export default Vue.extend({
 		}
 	},
 
+	props: {
+		autoSet: {
+			type: Boolean,
+			required: false,
+			default: false,
+		}
+	},
+
 	computed: {
 		shouldShowProfileUrl(): boolean {
 			return (this.username != '' &&
@@ -99,6 +107,13 @@ export default Vue.extend({
 		this.$root.getMeta().then(meta => {
 			this.meta = meta;
 		});
+
+		if (this.autoSet) {
+			this.$once('signup', res => {
+				localStorage.setItem('i', res.i);
+				location.reload();
+			});
+		}
 	},
 
 	mounted() {
@@ -170,8 +185,7 @@ export default Vue.extend({
 					username: this.username,
 					password: this.password
 				}).then(res => {
-					localStorage.setItem('i', res.i);
-					location.href = '/';
+					this.$emit('signup', res);
 				});
 			}).catch(() => {
 				this.submitting = false;
