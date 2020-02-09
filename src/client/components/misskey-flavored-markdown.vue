@@ -1,5 +1,5 @@
 <template>
-	<mfm-core v-bind="$attrs" class="havbbuyv" :class="{ nowrap: $attrs['nowrap'] }"/>
+	<mfm-core v-bind="$attrs" class="havbbuyv" :class="{ nowrap: $attrs['nowrap'], sticker: $store.state.device.useSticker }"/>
 </template>
 
 <script lang="ts">
@@ -27,6 +27,11 @@ export default Vue.extend({
 		word-wrap: normal; // https://codeday.me/jp/qa/20190424/690106.html
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+
+	&:not(.nowrap).sticker ::v-deep > .mk-emoji:only-child {
+		font-size: 4em;
 	}
 
 	::v-deep .quote {

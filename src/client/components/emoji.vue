@@ -1,5 +1,5 @@
 <template>
-<img v-if="customEmoji" class="mk-emoji custom" :class="{ normal, noStyle }" :src="url" :alt="alt" :title="alt"/>
+<img v-if="customEmoji" class="mk-emoji" :class="{ normal, noStyle, custom: $store.state.device.makeCustomEmojisBigger }" :src="url" :alt="alt" :title="alt"/>
 <img v-else-if="char && !useOsDefaultEmojis" class="mk-emoji" :src="url" :alt="alt" :title="alt"/>
 <span v-else-if="char && useOsDefaultEmojis">{{ char }}</span>
 <span v-else>:{{ name }}:</span>

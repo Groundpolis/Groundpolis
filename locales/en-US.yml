@@ -386,6 +386,9 @@ invites: "Invite"
 groupName: "Group name"
 members: "Members"
 transfer: "Transfer"
+useSticker: "Use Sticker"
+useStickerDesc: "Displays a post with an emoji in large size."
+makeCustomEmojisBigger: "Make custom emojis bigger"
 
 _iconShape:
   circle: "Circle"

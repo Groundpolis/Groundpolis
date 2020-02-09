@@ -3,12 +3,12 @@
 	<portal to="icon"><fa :icon="faUser"/></portal>
 	<portal to="title">{{ $t('settings') }}</portal>
 
+	<x-general v-if="isSignedIn"/>
 	<x-privacy-setting v-if="isSignedIn"/>
 	<x-reaction-setting v-if="isSignedIn"/>
 	<x-theme/>
 	<x-import-export v-if="isSignedIn"/>
 	<x-drive v-if="isSignedIn"/>
-	<x-general v-if="isSignedIn"/>
 	<x-mute-block v-if="isSignedIn"/>
 	<x-security v-if="isSignedIn"/>
 	<x-2fa v-if="isSignedIn"/>

@@ -8,6 +8,12 @@
 			<mk-switch v-model="showFixedPostForm">
 				{{ $t('showFixedPostForm') }}
 			</mk-switch>
+			<mk-switch v-model="useSticker">
+				{{ $t('useSticker') }}
+			</mk-switch>
+			<mk-switch v-model="makeCustomEmojisBigger">
+				{{ $t('makeCustomEmojisBigger') }}
+			</mk-switch>
 		</div>
 		<div class="_content">
 			<mk-switch v-model="autoReload">
@@ -115,6 +121,16 @@ export default Vue.extend({
 		showToast: {
 			get() { return this.$store.state.device.showToast; },
 			set(value) { this.$store.commit('device/set', { key: 'showToast', value: value }); }
+		},
+
+		makeCustomEmojisBigger: {
+			get() { return this.$store.state.device.makeCustomEmojisBigger; },
+			set(value) { this.$store.commit('device/set', { key: 'makeCustomEmojisBigger', value: value }); }
+		},
+
+		useSticker: {
+			get() { return this.$store.state.device.useSticker; },
+			set(value) { this.$store.commit('device/set', { key: 'useSticker', value: value }); }
 		},
 
 		iconShapeCircle: {
