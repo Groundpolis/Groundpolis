@@ -19,7 +19,7 @@
 			</router-link>
 		</i18n>
 		<div class="info">
-			<button class="_button time" @click="showRenoteMenu"><mk-time :time="note.createdAt"/></button>
+			<button class="_button time" @click="showRenoteMenu()" ref="renoteTime"><mk-time :time="note.createdAt"/></button>
 			<span class="visibility" v-if="note.visibility != 'public'">
 				<fa v-if="note.visibility == 'home'" :icon="faHome"/>
 				<fa v-if="note.visibility == 'followers'" :icon="faUnlock"/>
@@ -98,7 +98,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faTimes, faTrashAlt, faUsers, faHeart, faQuoteRight } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faLink, faTimes, faUsers, faHeart, faQuoteRight } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
 import i18n from '../i18n';
@@ -110,22 +111,11 @@ import XMediaList from './media-list.vue';
 import XCwButton from './cw-button.vue';
 import XPoll from './poll.vue';
 import XUrlPreview from './url-preview.vue';
-import MkNoteMenu from './note-menu.vue';
 import MkReactionPicker from './reaction-picker.vue';
 import pleaseLogin from '../scripts/please-login';
+import { focusPrev, focusNext } from '../scripts/focus';
 import { url } from '../config';
 import copyToClipboard from '../scripts/copy-to-clipboard';
-
-function focus(el, fn) {
-	const target = fn(el);
-	if (target) {
-		if (target.hasAttribute('tabindex')) {
-			target.focus();
-		} else {
-			focus(target, fn);
-		}
-	}
-}
 
 export default Vue.extend({
 	i18n,
@@ -291,14 +281,8 @@ export default Vue.extend({
 	methods: {
 		capture(withHandler = false) {
 			if (this.$store.getters.isSignedIn) {
-				if (document.body.contains(this.$el)) {
-					this.connection.send('sn', { id: this.appearNote.id });
-					if (withHandler) this.connection.on('noteUpdated', this.onStreamNoteUpdated);
-				} else {
-					this.$once('hook:activated', () => {
-						this.capture(withHandler);
-					});
-				}
+				this.connection.send(document.body.contains(this.$el) ? 'sn' : 's', { id: this.appearNote.id });
+				if (withHandler) this.connection.on('noteUpdated', this.onStreamNoteUpdated);
 			}
 		},
 
@@ -392,7 +376,7 @@ export default Vue.extend({
 			});
 		},
 
-		renote() {
+		renote(viaKeyboard = false) {
 			pleaseLogin(this.$root);
 			this.blur();
 			this.$root.menu({
@@ -414,6 +398,7 @@ export default Vue.extend({
 					}
 				}]
 				source: this.$refs.renoteButton,
+				viaKeyboard
 			}).then(this.focus);
 		},
 
@@ -482,20 +467,114 @@ export default Vue.extend({
 			});
 		},
 
-		menu(viaKeyboard = false) {
-			if (this.openingMenu) return;
-			this.openingMenu = true;
-			const w = this.$root.new(MkNoteMenu, {
-				source: this.$refs.menuButton,
-				note: this.appearNote,
-				animation: !viaKeyboard
-			}).$once('closed', () => {
-				this.openingMenu = false;
-				this.focus();
+		toggleFavorite(favorite: boolean) {
+			this.$root.api(favorite ? 'notes/favorites/create' : 'notes/favorites/delete', {
+				noteId: this.appearNote.id
+			}).then(() => {
+				this.$root.dialog({
+					type: 'success',
+					iconOnly: true, autoClose: true
+				});
 			});
 		},
 
-		showRenoteMenu(ev) {
+		toggleWatch(watch: boolean) {
+			this.$root.api(watch ? 'notes/watching/create' : 'notes/watching/delete', {
+				noteId: this.appearNote.id
+			}).then(() => {
+				this.$root.dialog({
+					type: 'success',
+					iconOnly: true, autoClose: true
+				});
+			});
+		},
+
+		async menu(viaKeyboard = false) {
+			let menu;
+			if (this.$store.getters.isSignedIn) {
+				const state = await this.$root.api('notes/state', {
+					noteId: this.appearNote.id
+				});
+				menu = [{
+					icon: faCopy,
+					text: this.$t('copyContent'),
+					action: this.copyContent
+				}, {
+					icon: faLink,
+					text: this.$t('copyLink'),
+					action: this.copyLink
+				}, this.appearNote.uri ? {
+					icon: faExternalLinkSquareAlt,
+					text: this.$t('showOnRemote'),
+					action: () => {
+						window.open(this.appearNote.uri, '_blank');
+					}
+				} : undefined,
+				null,
+				state.isFavorited ? {
+					icon: faStar,
+					text: this.$t('unfavorite'),
+					action: () => this.toggleFavorite(false)
+				} : {
+					icon: faStar,
+					text: this.$t('favorite'),
+					action: () => this.toggleFavorite(true)
+				},
+				this.appearNote.userId != this.$store.state.i.id ? state.isWatching ? {
+					icon: faEyeSlash,
+					text: this.$t('unwatch'),
+					action: () => this.toggleWatch(false)
+				} : {
+					icon: faEye,
+					text: this.$t('watch'),
+					action: () => this.toggleWatch(true)
+				} : undefined,
+				this.appearNote.userId == this.$store.state.i.id ? (this.$store.state.i.pinnedNoteIds || []).includes(this.appearNote.id) ? {
+					icon: faThumbtack,
+					text: this.$t('unpin'),
+					action: () => this.togglePin(false)
+				} : {
+					icon: faThumbtack,
+					text: this.$t('pin'),
+					action: () => this.togglePin(true)
+				} : undefined,
+				...(this.appearNote.userId == this.$store.state.i.id ? [
+					null,
+					{
+						icon: faTrashAlt,
+						text: this.$t('delete'),
+						action: this.del
+					}]
+					: []
+				)]
+				.filter(x => x !== undefined);
+			} else {
+				menu = [{
+					icon: faCopy,
+					text: this.$t('copyContent'),
+					action: this.copyContent
+				}, {
+					icon: faLink,
+					text: this.$t('copyLink'),
+					action: this.copyLink
+				}, this.appearNote.uri ? {
+					icon: faExternalLinkSquareAlt,
+					text: this.$t('showOnRemote'),
+					action: () => {
+						window.open(this.appearNote.uri, '_blank');
+					}
+				} : undefined]
+				.filter(x => x !== undefined);
+			}
+
+			this.$root.menu({
+				items: menu,
+				source: this.$refs.menuButton,
+				viaKeyboard
+			}).then(this.focus);
+		},
+
+		showRenoteMenu(viaKeyboard = false) {
 			if (!this.$store.getters.isSignedIn || (this.$store.state.i.id !== this.note.userId)) return;
 			this.$root.menu({
 				items: [{
@@ -508,12 +587,47 @@ export default Vue.extend({
 						Vue.set(this.note, 'deletedAt', new Date());
 					}
 				}],
-				source: ev.currentTarget || ev.target,
+				source: this.$refs.renoteTime,
+				viaKeyboard: viaKeyboard
 			});
 		},
 
 		toggleShowContent() {
 			this.showContent = !this.showContent;
+		},
+
+		copyContent() {
+			copyToClipboard(this.appearNote.text);
+			this.$root.dialog({
+				type: 'success',
+				iconOnly: true, autoClose: true
+			});
+		},
+
+		copyLink() {
+			copyToClipboard(`${url}/notes/${this.appearNote.id}`);
+			this.$root.dialog({
+				type: 'success',
+				iconOnly: true, autoClose: true
+			});
+		},
+
+		togglePin(pin: boolean) {
+			this.$root.api(pin ? 'i/pin' : 'i/unpin', {
+				noteId: this.appearNote.id
+			}).then(() => {
+				this.$root.dialog({
+					type: 'success',
+					iconOnly: true, autoClose: true
+				});
+			}).catch(e => {
+				if (e.id === '72dab508-c64d-498f-8740-a8eec1ba385a') {
+					this.$root.dialog({
+						type: 'error',
+						text: this.$t('pinLimitExceeded')
+					});
+				}
+			});
 		},
 
 		focus() {
@@ -525,11 +639,11 @@ export default Vue.extend({
 		},
 
 		focusBefore() {
-			focus(this.$el, e => e.previousElementSibling);
+			focusPrev(this.$el);
 		},
 
 		focusAfter() {
-			focus(this.$el, e => e.nextElementSibling);
+			focusNext(this.$el);
 		},
 
 		copyContent() {

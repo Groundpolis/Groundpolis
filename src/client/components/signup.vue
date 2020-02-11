@@ -79,7 +79,6 @@ export default Vue.extend({
 			usernameState: null,
 			passwordStrength: '',
 			passwordRetypeState: null,
-			meta: {},
 			submitting: false,
 			ToSAgreement: false,
 			faLock, faExclamationTriangle, faSpinner, faCheck
@@ -95,6 +94,10 @@ export default Vue.extend({
 	},
 
 	computed: {
+		meta() {
+			return this.$store.state.instance.meta;
+		},
+		
 		shouldShowProfileUrl(): boolean {
 			return (this.username != '' &&
 				this.usernameState != 'invalid-format' &&
@@ -104,10 +107,6 @@ export default Vue.extend({
 	},
 
 	created() {
-		this.$root.getMeta().then(meta => {
-			this.meta = meta;
-		});
-
 		if (this.autoSet) {
 			this.$once('signup', res => {
 				localStorage.setItem('i', res.i);

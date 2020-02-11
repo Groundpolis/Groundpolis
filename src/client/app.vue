@@ -18,8 +18,12 @@
 			</transition>
 		</div>
 		<div class="sub">
-			<fa :icon="faSearch"/>
-			<input type="search" class="search" :placeholder="$t('search')" v-model="searchQuery" v-autocomplete="{ model: 'searchQuery' }" :disabled="searchWait" @keypress="searchKeypress"/>
+			<button v-if="widgetsEditMode" class="_button edit active" @click="widgetsEditMode = false"><fa :icon="faGripVertical"/></button>
+			<button v-else class="_button edit" @click="widgetsEditMode = true"><fa :icon="faGripVertical"/></button>
+			<div class="search">
+				<fa :icon="faSearch"/>
+				<input type="search" :placeholder="$t('search')" v-model="searchQuery" v-autocomplete="{ model: 'searchQuery' }" :disabled="searchWait" @keypress="searchKeypress"/>
+			</div>
 			<button v-if="$store.getters.isSignedIn" class="post _buttonPrimary" @click="post()"><fa :icon="faPencilAlt"/></button>
 		</div>
 	</header>
@@ -91,7 +95,7 @@
 		</nav>
 	</transition>
 
-	<div class="contents">
+	<div class="contents" ref="contents">
 		<main ref="main">
 			<div class="content">
 				<transition :name="$store.state.device.animation ? 'page' : ''" mode="out-in" @enter="onTransition">
@@ -131,8 +135,6 @@
 					<template v-else>
 						<component class="widget" v-for="widget in widgets" :is="`mkw-${widget.name}`" :key="widget.id" :ref="widget.id" :widget="widget"/>
 					</template>
-					<button ref="widgetsEditButton" v-if="widgetsEditMode" class="_button edit" @click="widgetsEditMode = false">{{ $t('exitEdit') }}</button>
-					<button ref="widgetsEditButton" v-else class="_button edit" @click="widgetsEditMode = true">{{ $t('editWidgets') }}</button>
 				</template>
 			</div>
 		</div>
@@ -155,8 +157,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faGamepad, faServer, faFileAlt, faSatellite, faInfoCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faGamepad, faServer, faFileAlt, faSatellite, faInfoCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
+import { ResizeObserver } from '@juggle/resize-observer';
 import { v4 as uuid } from 'uuid';
 import i18n from './i18n';
 import { host } from './config';
@@ -191,7 +194,7 @@ export default Vue.extend({
 			canBack: false,
 			disconnectedDialog: null as Promise<void> | null,
 			viewVisibility: 'visible' as VisibilityState,
-			faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer
+			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer
 		};
 	},
 
@@ -200,12 +203,13 @@ export default Vue.extend({
 			return {
 				'p': this.post,
 				'n': this.post,
+				's': this.search,
 				'h|/': this.help
 			};
 		},
 
 		widgets(): any[] {
-			return this.$store.state.settings.widgets;
+			return this.$store.state.deviceUser.widgets;
 		}
 	},
 
@@ -213,6 +217,7 @@ export default Vue.extend({
 		$route(to, from) {
 			this.pageKey++;
 			this.notificationsOpen = false;
+			this.showNav = false;
 			this.canBack = (window.history.length > 0 && !['index'].includes(to.name));
 		},
 
@@ -235,9 +240,15 @@ export default Vue.extend({
 			this.connection.on('notification', this.onNotification);
 
 			if (this.widgets.length === 0) {
-				this.$store.dispatch('settings/setWidgets', [{
-					name: 'notifications',
+				this.$store.commit('deviceUser/setWidgets', [{
+					name: 'calendar',
 					id: 'a', data: {}
+				}, {
+					name: 'notifications',
+					id: 'b', data: {}
+				}, {
+					name: 'trends',
+					id: 'c', data: {}
 				}]);
 			}
 		}
@@ -269,21 +280,34 @@ export default Vue.extend({
 				});
 			}
 		});
+	},
 
-		setInterval(() => {
-			if (this.showNav) return; // TODO: トランジション中も false になるので、これだけでは不十分
-			this.$refs.title.style.left = (this.$refs.main.getBoundingClientRect().left - this.$refs.nav.offsetWidth) + 'px';
-		}, 1000);
-
+	mounted() {
 		// https://stackoverflow.com/questions/33891709/when-flexbox-items-wrap-in-column-mode-container-does-not-grow-its-width
 		if (this.enableWidgets) {
-			setInterval(() => {
-				if (!this.$refs.widgetsEditButton) return;
+			const adjustWidgetsWidth = () => {
+				const lastChild = this.$refs.widgets.children[this.$refs.widgets.children.length - 1];
+				if (lastChild == null) return;
 
-				const width = this.$refs.widgetsEditButton.offsetLeft + 300;
+				const width = lastChild.offsetLeft + 300;
 				this.$refs.widgets.style.width = width + 'px';
-			}, 1000);
+			};
+			setInterval(adjustWidgetsWidth, 1000);
 		}
+
+		const adjustTitlePosition = () => {
+			this.$refs.title.style.left = (this.$refs.main.getBoundingClientRect().left - this.$refs.nav.offsetWidth) + 'px';
+		};
+
+		adjustTitlePosition();
+
+		const ro = new ResizeObserver((entries, observer) => {
+			adjustTitlePosition();
+		});
+		
+		ro.observe(this.$refs.contents);
+
+		window.addEventListener('resize', adjustTitlePosition);
 	},
 
 	methods: {
@@ -498,8 +522,9 @@ export default Vue.extend({
 				this.$store.dispatch('switchAccount', {
 					...i,
 					token: token
+				}).then(() => {
+					location.reload();
 				});
-				location.reload();
 			});
 		},
 
@@ -559,7 +584,7 @@ export default Vue.extend({
 				items: widgets.map(widget => ({
 					text: this.$t('_widgets.' + widget),
 					action: () => {
-						this.$store.dispatch('settings/addWidget', {
+						this.$store.commit('deviceUser/addWidget', {
 							name: widget,
 							id: uuid(),
 							data: {}
@@ -571,11 +596,11 @@ export default Vue.extend({
 		},
 
 		removeWidget(widget) {
-			this.$store.dispatch('settings/removeWidget', widget);
+			this.$store.commit('deviceUser/removeWidget', widget);
 		},
 
 		saveHome() {
-			this.$store.dispatch('settings/setWidgets', this.widgets);
+			this.$store.commit('deviceUser/setWidgets', this.widgets);
 		}
 	}
 });
@@ -727,6 +752,8 @@ export default Vue.extend({
 		> .sub {
 			$post-button-size: 42px;
 			$post-button-margin: (($header-height - $post-button-size) / 2);
+			display: flex;
+			align-items: center;
 			position: absolute;
 			top: 0;
 			right: 16px;
@@ -736,37 +763,49 @@ export default Vue.extend({
 				display: none;
 			}
 
-			> [data-icon] {
-				position: absolute;
-				top: 0;
-				left: 16px;
-				height: $header-height;
-				pointer-events: none;
-				font-size: 16px;
+			> .edit {
+				padding: 16px;
+
+				&.active {
+					color: var(--accent);
+				}
 			}
 
 			> .search {
-				$margin: 8px;
-				width: calc(100% - #{$post-button-size + $post-button-margin + $margin});
-				box-sizing: border-box;
-				margin-right: $margin;
-				padding: 0 12px 0 42px;
-				font-size: 1rem;
-				line-height: 38px;
-				border: none;
-				border-radius: 38px;
-				color: var(--fg);
-				background: var(--bg);
+				position: relative;
 
-				&:focus {
-					outline: none;
+				> input {
+					$margin: 8px;
+					width: 200px;
+					box-sizing: border-box;
+					margin-right: $margin;
+					padding: 0 12px 0 42px;
+					font-size: 1rem;
+					line-height: 38px;
+					border: none;
+					border-radius: 38px;
+					color: var(--fg);
+					background: var(--bg);
+
+					&:focus {
+						outline: none;
+					}
+				}
+
+				> [data-icon] {
+					position: absolute;
+					top: 0;
+					left: 16px;
+					height: 100%;
+					pointer-events: none;
+					font-size: 16px;
 				}
 			}
 
 			> .post {
 				width: $post-button-size;
 				height: $post-button-size;
-				margin: $post-button-margin 0 $post-button-margin $post-button-margin;
+				margin-left: $post-button-margin;
 				border-radius: 100%;
 				font-size: 16px;
 			}
@@ -832,7 +871,8 @@ export default Vue.extend({
 				padding: 8px 0;
 
 				> .divider {
-					margin: 8px 0;
+					margin: 8px auto;
+					width: calc(100% - 32px);
 				}
 			}
 
@@ -1021,12 +1061,6 @@ export default Vue.extend({
 				}
 
 				> .add {
-					margin: 0 auto;
-				}
-
-				> .edit {
-					display: block;
-					font-size: 0.9em;
 					margin: 0 auto;
 				}
 

@@ -13,7 +13,9 @@
 			<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
 		</button>
 	</portal>
-	<section class="_card announcements" v-if="$store.getters.isSignedIn && announcements.length > 0">
+
+	<x-tutorial class="tutorial" v-if="$store.state.settings.tutorial != -1"/>
+	<section class="_card announcements" v-else-if="$store.getters.isSignedIn && announcements.length > 0">
 		<div class="_title">{{ currentAnnouncement.title }}</div>
 		<div class="_content">
 			<mfm :text="currentAnnouncement.text"/>
@@ -46,6 +48,7 @@ import Progress from '../scripts/loading';
 import XTimeline from '../components/timeline.vue';
 import MkButton from '../components/ui/button.vue';
 import XPostForm from '../components/post-form.vue';
+import XTutorial from './index.home.tutorial.vue';
 
 export default Vue.extend({
 	metaInfo() {
@@ -58,6 +61,7 @@ export default Vue.extend({
 		XTimeline,
 		MkButton,
 		XPostForm,
+		XTutorial,
 	},
 
 	props: {
@@ -116,21 +120,11 @@ export default Vue.extend({
 	},
 
 	created() {
-		this.$root.getMeta().then((meta: Record<string, any>) => {
-			if (!(
-				this.enableGlobalTimeline = !meta.disableGlobalTimeline || this.$store.state.i.isModerator || this.$store.state.i.isAdmin
-			) && this.src === 'global') this.src = 'local';
-			if (!(
-				this.enableLocalTimeline = !meta.disableLocalTimeline || this.$store.state.i.isModerator || this.$store.state.i.isAdmin
-			) && ['local', 'social'].includes(this.src)) this.src = 'home';
-		});
-		if (this.$store.state.device.tl) {
-			this.src = this.$store.state.device.tl.src;
-			if (this.src === 'list') {
-				this.list = this.$store.state.device.tl.arg;
-			} else if (this.src === 'antenna') {
-				this.antenna = this.$store.state.device.tl.arg;
-			}
+		this.src = this.$store.state.deviceUser.tl.src;
+		if (this.src === 'list') {
+			this.list = this.$store.state.deviceUser.tl.arg;
+		} else if (this.src === 'antenna') {
+			this.antenna = this.$store.state.deviceUser.tl.arg;
 		}
 	},
 
@@ -203,7 +197,7 @@ export default Vue.extend({
 		},
 
 		saveSrc() {
-			this.$store.commit('device/setTl', {
+			this.$store.commit('deviceUser/setTl', {
 				src: this.src,
 				arg: this.src == 'list' ? this.list : this.antenna
 			});
@@ -224,7 +218,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 
 .announcements {
-	margin-bottom: 8px;
+	margin-bottom: var(--margin);
 
 	> .navigation {
 		display: flex;
@@ -250,7 +244,13 @@ export default Vue.extend({
 }
 
 .post-form {
-	margin-bottom: 8px;
+	margin-bottom: var(--margin);
+}
+
+.mk-home {
+	> .tutorial {
+		margin-bottom: var(--margin);
+	}
 }
 
 ._kjvfvyph_ {
