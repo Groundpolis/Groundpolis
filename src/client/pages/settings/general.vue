@@ -17,6 +17,10 @@
 			<mk-switch v-model="disableAnimatedMfm">
 				{{ $t('disableAnimatedMfm') }}
 			</mk-switch>
+			<mk-switch v-model="useOsNativeEmojis">
+				{{ $t('useOsNativeEmojis') }}
+				<template #desc><mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
+			</mk-switch>
 		</div>
 		<div class="_content">
 			<mk-switch v-model="autoReload">
@@ -52,10 +56,6 @@
 			<mk-switch v-model="iconShapeDroplet">
 				<div class="icon-shape droplet"/>
 				{{ $t('_iconShape.droplet') }}
-			</mk-switch>
-			<mk-switch v-model="useOsNativeEmojis">
-				{{ $t('useOsNativeEmojis') }}
-				<template #desc><mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
 			</mk-switch>
 		</div>
 		<div class="_content">

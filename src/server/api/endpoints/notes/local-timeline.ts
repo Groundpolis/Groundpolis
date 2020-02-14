@@ -94,7 +94,7 @@ export default define(meta, async (ps, user) => {
 	//#region Construct query
 	const query = makePaginationQuery(Notes.createQueryBuilder('note'),
 			ps.sinceId, ps.untilId, ps.sinceDate, ps.untilDate)
-		.andWhere(`(${cond} AND (note.userHost IS NULL)`)
+		.andWhere(`(${cond}) AND (note.userHost IS NULL)`)
 		.andWhere(new Brackets(qb => { qb
 			.where(`note.replyId IS NULL`) // 返信ではない
 			.orWhere('note.replyUserId = :meId', { meId: user.id }) // 返信だけど自分のノートへの返信

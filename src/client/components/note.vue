@@ -87,8 +87,7 @@
 						<fa :icon="faLink"/>
 					</button>
 				</template>
-				
-			</footer>
+</footer>
 			<div class="deleted" v-if="appearNote.deletedAt != null">{{ $t('deleted') }}</div>
 		</div>
 	</article>
@@ -98,7 +97,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faLink, faTimes, faUsers, faHeart, faQuoteRight } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faLink, faTimes, faUsers, faHeart, faQuoteRight, faStar } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
@@ -396,7 +395,7 @@ export default Vue.extend({
 							renote: this.appearNote,
 						});
 					}
-				}]
+				}],
 				source: this.$refs.renoteButton,
 				viaKeyboard
 			}).then(this.focus);
