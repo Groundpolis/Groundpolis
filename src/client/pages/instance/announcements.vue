@@ -4,8 +4,8 @@
 	<portal to="title">{{ $t('announcements') }}</portal>
 	<mk-button @click="add()" primary style="margin: 0 auto 16px auto;"><fa :icon="faPlus"/> {{ $t('add') }}</mk-button>
 	<section class="_card announcements">
-		<div class="_content announcement" v-for="announcement in announcements" :key="announcement.id">
-			<mk-input v-model="announcement.title" style="margin-top: 8px;">
+		<div class="_content announcement" v-for="announcement in announcements">
+			<mk-input v-model="announcement.title">
 				<span>{{ $t('title') }}</span>
 			</mk-input>
 			<mk-textarea v-model="announcement.text">

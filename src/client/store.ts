@@ -38,7 +38,7 @@ const defaultDeviceSettings = {
 	lang: null,
 	loadRawImages: false,
 	alwaysShowNsfw: false,
-	useOsDefaultEmojis: false,
+	useOsNativeEmojis: false,
 	showFixedPostForm: false,
 	showBrowserNotification: false,
 	showToast: false,
@@ -59,6 +59,7 @@ const defaultDeviceSettings = {
 	postStyle: 'standard',
 	mobileNotificationPosition: 'bottom',
 	showPostPreview: true,
+	animatedMfm: true,
 	userData: {},
 };
 

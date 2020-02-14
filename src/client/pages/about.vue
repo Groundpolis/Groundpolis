@@ -6,7 +6,7 @@
 	<section class="_card info" v-if="meta">
 		<div class="_title"><fa :icon="faInfoCircle"/> {{ $t('instanceInfo') }}</div>
 		<div class="_content" v-if="meta.description">
-			<div>{{ meta.description }}</div>
+			<div v-html="meta.description"></div>
 		</div>
 		<div class="_content table">
 			<div><b>{{ $t('administrator') }}</b><span>{{ meta.maintainerName }}</span></div>
@@ -18,19 +18,6 @@
 		</div>
 		<div class="_content table">
 			<div><b>Groundpolis </b><span>v{{ version }}</span></div>
-		</div>
-	</section>
-
-	<section class="_card aboutMisskey">
-		<div class="_title"><fa :icon="faInfoCircle"/> {{ $t('aboutMisskey') }}</div>
-		<div class="_content">
-			<div style="margin-bottom: 1em;">{{ $t('aboutMisskeyText') }}</div>
-			<div>{{ $t('misskeyMembers') }}</div>
-			<span class="members">
-				<a href="https://github.com/Xeltica" target="_blank">@Xeltica</a>
-			</span>
-			<div style="margin-top: 1em;">{{ $t('misskeySource') }}</div>
-			<a href="https://github.com/Groundpolis/Groundpolis" target="_blank" style="color: var(--link);">https://github.com/Groundpolis/Groundpolis</a>
 		</div>
 	</section>
 </div>
@@ -83,16 +70,6 @@ export default Vue.extend({
 
 				> * {
 					flex: 1;
-				}
-			}
-		}
-	}
-
-	> .aboutMisskey {
-		> ._content {
-			> .members {
-				> a {
-					margin-right: 0.5em;
 				}
 			}
 		}

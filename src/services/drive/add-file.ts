@@ -8,7 +8,7 @@ import { fetchMeta } from '../../misc/fetch-meta';
 import { getDriveCapacity } from '../../misc/get-drive-capacity';
 import { GenerateVideoThumbnail } from './generate-video-thumbnail';
 import { driveLogger } from './logger';
-import { IImage, convertToJpeg, convertToWebp, convertToPng } from './image-processor';
+import { IImage, convertToJpeg, convertToWebp, convertToPng, convertToPngOrJpeg } from './image-processor';
 import { contentDisposition } from '../../misc/content-disposition';
 import { getFileInfo } from '../../misc/get-file-info';
 import { DriveFiles, DriveFolders, Users, Instances, UserProfiles } from '../../models';
@@ -175,7 +175,7 @@ export async function generateAlts(path: string, type: string, generateWeb: bool
 		if (['image/jpeg', 'image/webp'].includes(type)) {
 			thumbnail = await convertToJpeg(path, 498, 280);
 		} else if (['image/png'].includes(type)) {
-			thumbnail = await convertToPng(path, 498, 280);
+			thumbnail = await convertToPngOrJpeg(path, 498, 280);
 		} else if (type.startsWith('video/')) {
 			try {
 				thumbnail = await GenerateVideoThumbnail(path);
