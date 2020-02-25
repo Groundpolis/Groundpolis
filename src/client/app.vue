@@ -25,6 +25,7 @@
 				<input type="search" :placeholder="$t('search')" v-model="searchQuery" v-autocomplete="{ model: 'searchQuery' }" :disabled="searchWait" @keypress="searchKeypress"/>
 			</div>
 			<button v-if="$store.getters.isSignedIn" class="post _buttonPrimary" @click="post()"><fa :icon="faPencilAlt"/></button>
+			<x-clock v-if="isDesktop" class="clock"/>
 		</div>
 	</header>
 
@@ -47,6 +48,9 @@
 				<button class="_button more" @click="openAccountMenu">
 					<fa :icon="faEllipsisH" fixed-width/>
 				</button>
+				<router-link class="item" active-class="active" to="/preferences">
+					<fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
+				</router-link>
 			</div>
 			<router-link class="item" active-class="active" to="/" exact v-if="$store.getters.isSignedIn">
 				<fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>
@@ -95,7 +99,7 @@
 		</nav>
 	</transition>
 
-	<div class="contents" ref="contents">
+	<div class="contents" ref="contents" :class="{ wallpaper }">
 		<main ref="main">
 			<div class="content">
 				<transition :name="$store.state.device.animation ? 'page' : ''" mode="out-in" @enter="onTransition">
@@ -112,7 +116,7 @@
 
 		<div class="widgets">
 			<div ref="widgets" :class="{ edit: widgetsEditMode }">
-				<template v-if="enableWidgets && $store.getters.isSignedIn">
+				<template v-if="isDesktop && $store.getters.isSignedIn">
 					<template v-if="widgetsEditMode">
 						<mk-button primary @click="addWidget" class="add"><fa :icon="faPlus"/></mk-button>
 						<x-draggable
@@ -141,9 +145,11 @@
 	</div>
 
 	<div class="buttons">
-		<button v-if="$store.getters.isSignedIn" class="button nav _button" @click="showNav = true" ref="navButton"><fa :icon="faBars"/><i v-if="$store.state.i.hasUnreadSpecifiedNotes || $store.state.i.pendingReceivedFollowRequestsCount || $store.state.i.hasUnreadMessagingMessage || $store.state.i.hasUnreadAnnouncement"><fa :icon="faCircle"/></i></button>
-		<button v-if="$store.getters.isSignedIn" class="button home _button" :disabled="$route.path === '/'" @click="$router.push('/')"><fa :icon="faHome"/></button>
-		<button v-if="$store.getters.isSignedIn" class="button notifications _button" @click="notificationsOpen = !notificationsOpen" ref="notificationButton2"><fa :icon="notificationsOpen ? faTimes : faBell"/><i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i></button>
+		<button class="button nav _button" @click="showNav = true" ref="navButton"><fa :icon="faBars"/><i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadSpecifiedNotes || $store.state.i.hasPendingReceivedFollowRequest || $store.state.i.hasUnreadMessagingMessage || $store.state.i.hasUnreadAnnouncement)"><fa :icon="faCircle"/></i></button>
+		<button v-if="$route.name === 'index'" class="button home _button" @click="top()"><fa :icon="faHome"/></button>
+		<button v-else class="button home _button" @click="$router.push('/')"><fa :icon="faHome"/></button>
+		<button v-if="$store.getters.isSignedIn && $store.state.device.useNotificationsPopup" class="button notifications _button" @click="notificationsOpen = !notificationsOpen" ref="notificationButton2"><fa :icon="notificationsOpen ? faTimes : faBell"/><i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i></button>
+		<button v-if="$store.getters.isSignedIn && !$store.state.device.useNotificationsPopup" class="button notifications _button" @click="$router.push('/my/notifications')" ref="notificationButton2"><fa :icon="faBell"/><i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i></button>
 		<button v-if="$store.getters.isSignedIn" class="button post _buttonPrimary" @click="post()"><fa :icon="faPencilAlt"/></button>
 	</div>
 
@@ -152,6 +158,8 @@
 	<transition name="zoom-in-top">
 		<x-notifications v-if="notificationsOpen" class="notifications" ref="notifications"/>
 	</transition>
+
+	<stream-indicator v-if="$store.getters.isSignedIn"/>
 </div>
 </template>
 
@@ -168,10 +176,13 @@ import contains from './scripts/contains';
 import MkToast from './components/toast.vue';
 import composeNotification from './scripts/compose-notification';
 
+const DESKTOP_THRESHOLD = 1100;
+
 export default Vue.extend({
 	i18n,
 
 	components: {
+		XClock: () => import('./components/header-clock.vue').then(m => m.default),
 		XNotifications: () => import('./components/notifications.vue').then(m => m.default),
 		MkButton: () => import('./components/ui/button.vue').then(m => m.default),
 		XDraggable: () => import('vuedraggable'),
@@ -190,10 +201,11 @@ export default Vue.extend({
 			searchQuery: '',
 			searchWait: false,
 			widgetsEditMode: false,
-			enableWidgets: window.innerWidth >= 1100,
+			isDesktop: window.innerWidth >= DESKTOP_THRESHOLD,
 			canBack: false,
 			disconnectedDialog: null as Promise<void> | null,
 			viewVisibility: 'visible' as VisibilityState,
+			wallpaper: localStorage.getItem('wallpaper') != null,
 			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer
 		};
 	},
@@ -231,6 +243,10 @@ export default Vue.extend({
 					el.removeEventListener('mousedown', this.onMousedown);
 				}
 			}
+		},
+
+		isDesktop() {
+			if (this.isDesktop) this.adjustWidgetsWidth();
 		}
 	},
 
@@ -253,52 +269,10 @@ export default Vue.extend({
 				}]);
 			}
 		}
-
-		Notification.requestPermission();
-
-		this.viewVisibility = document.visibilityState
-
-		document.addEventListener('visibilitychange', () => {
-			this.viewVisibility = document.visibilityState
-		})
-
-		this.$root.stream.on('_disconnected_', () => {
-			if (this.disconnectedDialog) return;
-			if (this.$store.state.device.autoReload) {
-				location.reload();
-				return;
-			}
-
-			setTimeout(() => {
-				if (this.$root.stream.state !== 'reconnecting') return;
-
-				this.disconnectedDialog = this.$root.dialog({
-					type: 'warning',
-					showCancelButton: true,
-					title: this.$t('disconnectedFromServer'),
-					text: this.$t('reloadConfirm'),
-				}).then(({ canceled }) => {
-					if (!canceled) {
-						location.reload();
-					}
-					this.disconnectedDialog = null;
-				});
-			}, 150)
-		});
 	},
 
 	mounted() {
-		// https://stackoverflow.com/questions/33891709/when-flexbox-items-wrap-in-column-mode-container-does-not-grow-its-width
-		if (this.enableWidgets) {
-			const adjustWidgetsWidth = () => {
-				const lastChild = this.$refs.widgets.children[this.$refs.widgets.children.length - 1];
-				if (lastChild == null) return;
-
-				const width = lastChild.offsetLeft + 300 + 16;
-				this.$refs.widgets.style.width = width + 'px';
-			};
-			setInterval(adjustWidgetsWidth, 1000);
-		}
+		if (this.isDesktop) this.adjustWidgetsWidth();
 
 		const adjustTitlePosition = () => {
 			this.$refs.title.style.left = (this.$refs.main.getBoundingClientRect().left - this.$refs.nav.offsetWidth) + 'px';
@@ -312,10 +286,33 @@ export default Vue.extend({
 
 		ro.observe(this.$refs.contents);
 
-		window.addEventListener('resize', adjustTitlePosition);
+		window.addEventListener('resize', adjustTitlePosition, { passive: true });
+
+		if (!this.isDesktop) {
+			window.addEventListener('resize', () => {
+				if (window.innerWidth >= DESKTOP_THRESHOLD) this.isDesktop = true;
+			}, { passive: true });
+		}
 	},
 
 	methods: {
+		adjustWidgetsWidth() {
+			// https://stackoverflow.com/questions/33891709/when-flexbox-items-wrap-in-column-mode-container-does-not-grow-its-width
+			const adjust = () => {
+				const lastChild = this.$refs.widgets.children[this.$refs.widgets.children.length - 1];
+				if (lastChild == null) return;
+
+				const width = lastChild.offsetLeft + 300 + 16;
+				this.$refs.widgets.style.width = width + 'px';
+			};
+			setInterval(adjust, 1000);
+			setTimeout(adjust, 100);
+		},
+
+		top() {
+			window.scroll({ top: 0, behavior: 'smooth' });
+		},
+
 		help() {
 			this.$router.push('/docs/keyboard-shortcut');
 		},
@@ -390,9 +387,14 @@ export default Vue.extend({
 			this.$root.menu({
 				items: [{
 					type: 'link',
-					text: this.$t('statistics'),
-					to: '/instance/stats',
-					icon: faChartBar,
+					text: this.$t('dashboard'),
+					to: '/instance',
+					icon: faTachometerAlt,
+				}, null, {
+					type: 'link',
+					text: this.$t('settings'),
+					to: '/instance/settings',
+					icon: faCog,
 				}, {
 					type: 'link',
 					text: this.$t('customEmojis'),
@@ -410,11 +412,6 @@ export default Vue.extend({
 					icon: faCloud,
 				}, {
 					type: 'link',
-					text: this.$t('monitor'),
-					to: '/instance/monitor',
-					icon: faTachometerAlt,
-				}, {
-					type: 'link',
 					text: this.$t('jobQueue'),
 					to: '/instance/queue',
 					icon: faExchangeAlt,
@@ -428,11 +425,6 @@ export default Vue.extend({
 					text: this.$t('announcements'),
 					to: '/instance/announcements',
 					icon: faBroadcastTower,
-				}, null, {
-					type: 'link',
-					text: this.$t('general'),
-					to: '/instance',
-					icon: faCog,
 				}],
 				align: 'left',
 				fixed: true,
@@ -539,7 +531,7 @@ export default Vue.extend({
 				type: 'waiting',
 				iconOnly: true
 			});
-			
+
 			this.$root.api('i', {}, token).then((i: any) => {
 				this.$store.dispatch('switchAccount', {
 					...i,
@@ -571,6 +563,7 @@ export default Vue.extend({
 						location.href = url;
 					}
 				})
+				this.$root.sound('notification');
 			}
 		},
 
@@ -600,7 +593,9 @@ export default Vue.extend({
 				'calendar',
 				'rss',
 				'trends',
-				'clock'
+				'clock',
+				'activity',
+				'photos',
 			];
 
 			this.$root.menu({
@@ -630,30 +625,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.header-enter-active, .header-leave-active {
-	transition: opacity 0.5s, transform 0.5s !important;
-}
-.header-enter {
-	opacity: 0;
-	transform: scale(0.9);
-}
-.header-leave-to {
-	opacity: 0;
-	transform: scale(0.9);
-}
-
-.page-enter-active, .page-leave-active {
-	transition: opacity 0.5s, transform 0.5s !important;
-}
-.page-enter {
-	opacity: 0;
-	transform: translateY(-32px);
-}
-.page-leave-to {
-	opacity: 0;
-	transform: translateY(32px);
-}
-
 .nav-enter-active,
 .nav-leave-active {
 	opacity: 1;
@@ -798,7 +769,7 @@ export default Vue.extend({
 				position: relative;
 
 				> input {
-					width: 210px;
+					width: 220px;
 					box-sizing: border-box;
 					margin-right: 8px;
 					padding: 0 12px 0 42px;
@@ -830,6 +801,10 @@ export default Vue.extend({
 				margin-left: $post-button-margin;
 				border-radius: 100%;
 				font-size: 16px;
+			}
+
+			> .clock {
+				margin-left: 8px;
 			}
 		}
 	}
@@ -878,6 +853,7 @@ export default Vue.extend({
 			width: $nav-width;
 			height: 100vh;
 			padding: 16px 0;
+			padding-bottom: calc(3.7rem + 24px);
 			box-sizing: border-box;
 			overflow: auto;
 			background: var(--navBg);
@@ -891,6 +867,7 @@ export default Vue.extend({
 			@media (max-width: $nav-icon-only-threshold) and (min-width: $nav-hide-threshold + 1px) {
 				width: $nav-icon-only-width;
 				padding: 8px 0;
+				padding-bottom: calc(3.7rem + 24px);
 
 				> .divider {
 					margin: 8px auto;
@@ -954,10 +931,22 @@ export default Vue.extend({
 
 				&:hover {
 					text-decoration: none;
+					color: var(--navHoverFg);
 				}
 
 				&.active {
 					color: var(--navActive);
+				}
+
+				&:last-child {
+					position: fixed;
+					bottom: 0;
+					width: inherit;
+					padding-top: 8px;
+					padding-bottom: 8px;
+					background: var(--navBg);
+					border-top: solid 1px var(--divider);
+					border-right: solid 1px var(--divider);
 				}
 
 				@media (max-width: $nav-icon-only-threshold) and (min-width: $nav-hide-threshold + 1px) {
@@ -1003,6 +992,10 @@ export default Vue.extend({
 		display: flex;
 		margin: 0 auto;
 		min-width: 0;
+
+		&.wallpaper {
+			background: var(--wallpaperOverlay);
+		}
 
 		> main {
 			width: $main-width;
@@ -1200,7 +1193,7 @@ export default Vue.extend({
 					position: absolute;
 					top: 0;
 					left: 0;
-					color: var(--accent);
+					color: var(--indicator);
 					font-size: 16px;
 					animation: blink 1s infinite;
 				}
@@ -1214,15 +1207,17 @@ export default Vue.extend({
 		left: 0;
 		right: 0;
 		margin: 0 auto;
+		padding: 8px 8px 0 8px;
 		z-index: 10001;
 		width: 350px;
 		height: 400px;
+		box-sizing: border-box;
 		background: var(--vocsgcxy);
 		-webkit-backdrop-filter: blur(12px);
 		backdrop-filter: blur(12px);
 		border-radius: 6px;
 		box-shadow: 0 3px 12px rgba(27, 31, 35, 0.15);
-		overflow: hidden;
+		overflow: auto;
 
 		@media (max-width: 800px) {
 			width: 320px;

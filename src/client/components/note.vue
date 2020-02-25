@@ -9,7 +9,9 @@
 >
 	<x-sub v-for="note in conversation" :key="note.id" :note="note"/>
 	<x-sub :note="appearNote.reply" class="reply-to" v-if="appearNote.reply"/>
-	<div class="pinned" v-if="pinned"><fa :icon="faThumbtack"/> {{ $t('pinnedNote') }}</div>
+	<div class="info" v-if="pinned"><fa :icon="faThumbtack"/> {{ $t('pinnedNote') }}</div>
+	<div class="info" v-if="appearNote._prId_"><fa :icon="faBullhorn"/> {{ $t('promotion') }}<button class="_textButton hide" @click="readPromo()">{{ $t('hideThisNote') }} <fa :icon="faTimes"/></button></div>
+	<div class="info" v-if="appearNote._featuredId_"><fa :icon="faBolt"/> {{ $t('featured') }}</div>
 	<div class="renote" v-if="isRenote">
 		<mk-avatar class="avatar" :user="note.user"/>
 		<fa :icon="faRetweet"/>
@@ -63,7 +65,7 @@
 						<template v-else><fa :icon="faReply"/></template>
 						<p class="count" v-if="appearNote.repliesCount > 0">{{ appearNote.repliesCount }}</p>
 					</button>
-					<button v-if="['public', 'home'].includes(appearNote.visibility)" @click="renote()" class="button _button" ref="renoteButton">
+					<button v-if="canRenote" @click="renote()" class="button _button" ref="renoteButton">
 						<fa :icon="faRetweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
 					</button>
 					<button v-else class="button _button">
@@ -87,7 +89,7 @@
 						<fa :icon="faLink"/>
 					</button>
 				</template>
-</footer>
+			</footer>
 			<div class="deleted" v-if="appearNote.deletedAt != null">{{ $t('deleted') }}</div>
 		</div>
 	</article>
@@ -97,7 +99,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faLink, faTimes, faUsers, faHeart, faQuoteRight, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faLink, faTimes, faUsers, faHeart, faQuoteRight } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
@@ -155,7 +157,7 @@ export default Vue.extend({
 			showContent: false,
 			hideThisNote: false,
 			openingMenu: false,
-			faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faTimes, faUsers, faHeart
+			faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faTimes, faUsers, faHeart
 		};
 	},
 
@@ -205,14 +207,14 @@ export default Vue.extend({
 			return this.$store.getters.isSignedIn && (this.$store.state.i.id === this.appearNote.userId);
 		},
 
+		canRenote(): boolean {
+			return ['public', 'home'].includes(this.appearNote.visibility) || this.isMyNote;
+		},
+
 		reactionsCount(): number {
 			return this.appearNote.reactions
 				? sum(Object.values(this.appearNote.reactions))
 				: 0;
-		},
-
-		title(): string {
-			return '';
 		},
 
 		urls(): string[] {
@@ -278,6 +280,13 @@ export default Vue.extend({
 	},
 
 	methods: {
+		readPromo() {
+			(this as any).$root.api('promo/read', {
+				noteId: this.appearNote.id
+			});
+			this.hideThisNote = true;
+		},
+
 		capture(withHandler = false) {
 			if (this.$store.getters.isSignedIn) {
 				this.connection.send(document.body.contains(this.$el) ? 'sn' : 's', { id: this.appearNote.id });
@@ -398,7 +407,7 @@ export default Vue.extend({
 				}],
 				source: this.$refs.renoteButton,
 				viaKeyboard
-			}).then(this.focus);
+			});
 		},
 
 		renoteDirectly() {
@@ -495,6 +504,11 @@ export default Vue.extend({
 					noteId: this.appearNote.id
 				});
 				menu = [{
+					type: 'link',
+					icon: faInfoCircle,
+					text: this.$t('details'),
+					to: '/notes/' + this.appearNote.id
+				}, null, {
 					icon: faCopy,
 					text: this.$t('copyContent'),
 					action: this.copyContent
@@ -537,6 +551,15 @@ export default Vue.extend({
 					text: this.$t('pin'),
 					action: () => this.togglePin(true)
 				} : undefined,
+				...(this.$store.state.i.isModerator || this.$store.state.i.isAdmin ? [
+					null,
+					{
+						icon: faBullhorn,
+						text: this.$t('promote'),
+						action: this.promote
+					}]
+					: []
+				),
 				...(this.appearNote.userId == this.$store.state.i.id ? [
 					null,
 					{
@@ -626,6 +649,30 @@ export default Vue.extend({
 						text: this.$t('pinLimitExceeded')
 					});
 				}
+			});
+		},
+
+		async promote() {
+			const { canceled, result: days } = await this.$root.dialog({
+				title: this.$t('numberOfDays'),
+				input: { type: 'number' }
+			});
+
+			if (canceled) return;
+
+			this.$root.api('admin/promo/create', {
+				noteId: this.appearNote.id,
+				expiresAt: Date.now() + (86400000 * days)
+			}).then(() => {
+				this.$root.dialog({
+					type: 'success',
+					iconOnly: true, autoClose: true
+				});
+			}).catch(e => {
+				this.$root.dialog({
+					type: 'error',
+					text: e
+				});
 			});
 		},
 
@@ -741,7 +788,9 @@ export default Vue.extend({
 		border-radius: 0 0 var(--radius) var(--radius);
 	}
 
-	> .pinned {
+	> .info {
+		display: flex;
+		align-items: center;
 		padding: 16px 32px 8px 32px;
 		line-height: 24px;
 		font-size: 90%;
@@ -755,9 +804,14 @@ export default Vue.extend({
 		> [data-icon] {
 			margin-right: 4px;
 		}
+
+		> .hide {
+			margin-left: auto;
+			color: inherit;
+		}
 	}
 
-	> .pinned + .article {
+	> .info + .article {
 		padding-top: 8px;
 	}
 

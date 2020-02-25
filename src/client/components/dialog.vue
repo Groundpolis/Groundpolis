@@ -1,9 +1,9 @@
 <template>
 <div class="mk-dialog" :class="{ iconOnly }">
-	<transition name="bg-fade" appear>
+	<transition :name="$store.state.device.animation ? 'bg-fade' : ''" appear>
 		<div class="bg" ref="bg" @click="onBgClick" v-if="show"></div>
 	</transition>
-	<transition name="dialog" appear @after-leave="() => { destroyDom(); }">
+	<transition :name="$store.state.device.animation ? 'dialog' : ''" appear @after-leave="() => { destroyDom(); }">
 		<div class="main" ref="main" v-if="show">
 			<template v-if="type == 'signin'">
 				<mk-signin/>
@@ -55,6 +55,7 @@ import { faTimesCircle, faQuestionCircle } from '@fortawesome/free-regular-svg-i
 import MkButton from './ui/button.vue';
 import MkInput from './ui/input.vue';
 import MkSelect from './ui/select.vue';
+import MkSignin from './signin.vue';
 import parseAcct from '../../misc/acct/parse';
 import i18n from '../i18n';
 
@@ -65,6 +66,7 @@ export default Vue.extend({
 		MkButton,
 		MkInput,
 		MkSelect,
+		MkSignin,
 	},
 
 	props: {

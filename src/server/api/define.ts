@@ -5,6 +5,7 @@ import { ApiError } from './error';
 import { App } from '../../models/entities/app';
 import { SchemaType } from '../../misc/schema';
 
+// TODO: defaultが設定されている場合はその型も考慮する
 type Params<T extends IEndpointMeta> = {
 	[P in keyof T['params']]: NonNullable<T['params']>[P]['transform'] extends Function
 		? ReturnType<NonNullable<T['params']>[P]['transform']>
@@ -14,12 +15,12 @@ type Params<T extends IEndpointMeta> = {
 export type Response = Record<string, any> | void;
 
 type executor<T extends IEndpointMeta> =
-	(params: Params<T>, user: ILocalUser, app: App, file?: any, cleanup?: Function) =>
+	(params: Params<T>, user: T['requireCredential'] extends true ? ILocalUser : ILocalUser | null, app: App, file?: any, cleanup?: Function) =>
 		Promise<T['res'] extends undefined ? Response : SchemaType<NonNullable<T['res']>>>;
 
 export default function <T extends IEndpointMeta>(meta: T, cb: executor<T>)
-		: (params: any, user: ILocalUser, app: App, file?: any) => Promise<any> {
-	return (params: any, user: ILocalUser, app: App, file?: any) => {
+		: (params: any, user: T['requireCredential'] extends true ? ILocalUser : ILocalUser | null, app: App, file?: any) => Promise<any> {
+	return (params: any, user: T['requireCredential'] extends true ? ILocalUser : ILocalUser | null, app: App, file?: any) => {
 		function cleanup() {
 			fs.unlink(file.path, () => {});
 		}

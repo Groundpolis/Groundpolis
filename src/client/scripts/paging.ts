@@ -1,32 +1,7 @@
 import Vue from 'vue';
+import { getScrollPosition, onScrollTop } from './scroll';
 
-function getScrollContainer(el: Element | null): Element | null {
-	if (el == null || el.tagName === 'BODY') return null;
-	const style = window.getComputedStyle(el);
-	if (style.getPropertyValue('overflow') === 'auto') {
-		return el;
-	} else {
-		return getScrollContainer(el.parentElement);
-	}
-}
-
-function getScrollPosition(el: Element | null): number {
-	const container = getScrollContainer(el);
-	return container == null ? window.scrollY : container.scrollTop;
-}
-
-function onScrollTop(el, cb) {
-	const container = getScrollContainer(el) || window;
-	const onScroll = ev => {
-		if (!document.body.contains(el)) return;
-		const pos = getScrollPosition(el);
-		if (pos === 0) {
-			cb();
-			container.removeEventListener('scroll', onscroll);
-		}
-	};
-	container.addEventListener('scroll', onScroll, { passive: true });
-}
+const SECOND_FETCH_LIMIT = 30;
 
 export default (opts) => ({
 	data() {
@@ -56,6 +31,10 @@ export default (opts) => ({
 	watch: {
 		pagination() {
 			this.init();
+		},
+
+		queue() {
+			this.$emit('queue', this.queue.length);
 		}
 	},
 
@@ -83,24 +62,25 @@ export default (opts) => ({
 		},
 
 		async init() {
+			this.queue = [];
 			this.fetching = true;
 			if (opts.before) opts.before(this);
 			let params = typeof this.pagination.params === 'function' ? this.pagination.params(true) : this.pagination.params;
 			if (params && params.then) params = await params;
 			const endpoint = typeof this.pagination.endpoint === 'function' ? this.pagination.endpoint() : this.pagination.endpoint;
 			await this.$root.api(endpoint, {
+				...params,
 				limit: this.pagination.noPaging ? (this.pagination.limit || 10) : (this.pagination.limit || 10) + 1,
-				...params
-			}).then(x => {
-				if (!this.pagination.noPaging && (x.length === (this.pagination.limit || 10) + 1)) {
-					x.pop();
-					this.items = x;
+			}).then(items => {
+				if (!this.pagination.noPaging && (items.length > (this.pagination.limit || 10))) {
+					items.pop();
+					this.items = this.pagination.reversed ? [...items].reverse() : items;
 					this.more = true;
 				} else {
-					this.items = x;
+					this.items = this.pagination.reversed ? [...items].reverse() : items;
 					this.more = false;
 				}
-				this.offset = x.length;
+				this.offset = items.length;
 				this.inited = true;
 				this.fetching = false;
 				if (opts.after) opts.after(this, null);
@@ -118,23 +98,25 @@ export default (opts) => ({
 			if (params && params.then) params = await params;
 			const endpoint = typeof this.pagination.endpoint === 'function' ? this.pagination.endpoint() : this.pagination.endpoint;
 			await this.$root.api(endpoint, {
-				limit: (this.pagination.limit || 10) + 1,
+				...params,
+				limit: SECOND_FETCH_LIMIT + 1,
 				...(this.pagination.offsetMode ? {
 					offset: this.offset,
+				} : this.pagination.reversed ? {
+					sinceId: this.items[0].id,
 				} : {
 					untilId: this.items[this.items.length - 1].id,
 				}),
-				...params
-			}).then(x => {
-				if (x.length === (this.pagination.limit || 10) + 1) {
-					x.pop();
-					this.items = this.items.concat(x);
+			}).then(items => {
+				if (items.length > SECOND_FETCH_LIMIT) {
+					items.pop();
+					this.items = this.pagination.reversed ? [...items].reverse().concat(this.items) : this.items.concat(items);
 					this.more = true;
 				} else {
-					this.items = this.items.concat(x);
+					this.items = this.pagination.reversed ? [...items].reverse().concat(this.items) : this.items.concat(items);
 					this.more = false;
 				}
-				this.offset += x.length;
+				this.offset += items.length;
 				this.moreFetching = false;
 			}, e => {
 				this.moreFetching = false;

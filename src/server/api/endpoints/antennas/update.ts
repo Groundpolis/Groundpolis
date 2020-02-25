@@ -7,7 +7,7 @@ import { Antennas, UserLists, UserGroupJoinings } from '../../../../models';
 export const meta = {
 	tags: ['antennas'],
 
-	requireCredential: true,
+	requireCredential: true as const,
 
 	kind: 'write:account',
 
@@ -33,6 +33,10 @@ export const meta = {
 		},
 
 		keywords: {
+			validator: $.arr($.arr($.str))
+		},
+
+		excludeKeywords: {
 			validator: $.arr($.arr($.str))
 		},
 
@@ -118,6 +122,7 @@ export default define(meta, async (ps, user) => {
 		userListId: userList ? userList.id : null,
 		userGroupJoiningId: userGroupJoining ? userGroupJoining.id : null,
 		keywords: ps.keywords,
+		excludeKeywords: ps.excludeKeywords,
 		users: ps.users,
 		caseSensitive: ps.caseSensitive,
 		withReplies: ps.withReplies,

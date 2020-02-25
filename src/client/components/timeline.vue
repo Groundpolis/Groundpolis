@@ -1,5 +1,5 @@
 <template>
-<x-notes ref="tl" :pagination="pagination" @before="$emit('before')" @after="e => $emit('after', e)"/>
+<x-notes ref="tl" :pagination="pagination" @before="$emit('before')" @after="e => $emit('after', e)" @queue="$emit('queue', $event)"/>
 </template>
 
 <script lang="ts">
@@ -21,6 +21,11 @@ export default Vue.extend({
 		},
 		antenna: {
 			required: false
+		},
+		sound: {
+			type: Boolean,
+			required: false,
+			default: false,
 		}
 	},
 
@@ -46,6 +51,10 @@ export default Vue.extend({
 
 		const prepend = note => {
 			(this.$refs.tl as any).prepend(note);
+
+			if (this.sound) {
+				this.$root.sound(note.userId === this.$store.state.i.id ? 'noteMy' : 'note');
+			}
 		};
 
 		const onUserAdded = () => {

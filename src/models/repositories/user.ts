@@ -125,6 +125,14 @@ export class UserRepository extends Repository<User> {
 		return count > 0;
 	}
 
+	public async getHasPendingReceivedFollowRequest(userId: User['id']): Promise<boolean> {
+		const count = await FollowRequests.count({
+			followeeId: userId
+		});
+
+		return count > 0;
+	}
+
 	public async pack(
 		src: User['id'] | User,
 		me?: User['id'] | User | null | undefined,
@@ -222,6 +230,7 @@ export class UserRepository extends Repository<User> {
 				avatarId: user.avatarId,
 				bannerId: user.bannerId,
 				autoWatch: profile!.autoWatch,
+				injectFeaturedNote: profile!.injectFeaturedNote,
 				alwaysMarkNsfw: profile!.alwaysMarkNsfw,
 				carefulBot: profile!.carefulBot,
 				autoAcceptFollowed: profile!.autoAcceptFollowed,
@@ -229,9 +238,7 @@ export class UserRepository extends Repository<User> {
 				hasUnreadAntenna: this.getHasUnreadAntenna(user.id),
 				hasUnreadMessagingMessage: this.getHasUnreadMessagingMessage(user.id),
 				hasUnreadNotification: this.getHasUnreadNotification(user.id),
-				pendingReceivedFollowRequestsCount: FollowRequests.count({
-					followeeId: user.id
-				}),
+				hasPendingReceivedFollowRequest: this.getHasPendingReceivedFollowRequest(user.id),
 				integrations: profile!.integrations,
 			} : {}),
 

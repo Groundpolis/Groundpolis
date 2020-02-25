@@ -2,7 +2,7 @@ import { emojiRegex } from './emoji-regex';
 import { fetchMeta } from './fetch-meta';
 import { Emojis } from '../models';
 
-const legacy10: Record<string, string> = {
+const legacies: Record<string, string> = {
 	'like':     '👍',
 	'love':     '❤', // ここに記述する場合は異体字セレクタを入れない
 	'laugh':    '😆',
@@ -13,6 +13,7 @@ const legacy10: Record<string, string> = {
 	'confused': '😥',
 	'rip':      '😇',
 	'pudding':  '🍮',
+	'star':     '⭐',
 };
 
 export async function getFallbackReaction(): Promise<string> {
@@ -20,11 +21,33 @@ export async function getFallbackReaction(): Promise<string> {
 	return meta.useStarForReactionFallback ? '⭐' : '👍';
 }
 
+export function convertLegacyReactions(reactions: Record<string, number>) {
+	const _reactions = {} as Record<string, number>;
+
+	for (const reaction of Object.keys(reactions)) {
+		if (Object.keys(legacies).includes(reaction)) {
+			if (_reactions[legacies[reaction]]) {
+				_reactions[legacies[reaction]] += reactions[reaction];
+			} else {
+				_reactions[legacies[reaction]] = reactions[reaction];
+			}
+		} else {
+			if (_reactions[reaction]) {
+				_reactions[reaction] += reactions[reaction];
+			} else {
+				_reactions[reaction] = reactions[reaction];
+			}
+		}
+	}
+
+	return _reactions;
+}
+
 export async function toDbReaction(reaction?: string | null): Promise<string> {
 	if (reaction == null) return await getFallbackReaction();
 
 	// 文字列タイプのリアクションを絵文字に変換
-	if (Object.keys(legacy10).includes(reaction)) return legacy10[reaction];
+	if (Object.keys(legacies).includes(reaction)) return legacies[reaction];
 
 	// Unicode絵文字
 	const match = emojiRegex.exec(reaction);
@@ -50,6 +73,6 @@ export async function toDbReaction(reaction?: string | null): Promise<string> {
 }
 
 export function convertLegacyReaction(reaction: string): string {
-	if (Object.keys(legacy10).includes(reaction)) return legacy10[reaction];
+	if (Object.keys(legacies).includes(reaction)) return legacies[reaction];
 	return reaction;
 }

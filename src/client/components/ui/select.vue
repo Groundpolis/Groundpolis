@@ -56,7 +56,7 @@ export default Vue.extend({
 			}
 		},
 		filled(): boolean {
-			return this.v != '' && this.v != null;
+			return true;
 		}
 	},
 	mounted() {
@@ -81,6 +81,10 @@ export default Vue.extend({
 		margin-top: 8px;
 	}
 
+	&:not(.inline):last-child {
+		margin-bottom: 8px;
+	}
+
 	> .icon {
 		position: absolute;
 		top: 0;
@@ -96,6 +100,7 @@ export default Vue.extend({
 
 	> .input {
 		display: flex;
+		position: relative;
 
 		&:before {
 			content: '';
@@ -147,7 +152,7 @@ export default Vue.extend({
 			font-weight: normal;
 			font-size: 16px;
 			height: 32px;
-			background: var(--panel);
+			background: none;
 			border: none;
 			border-radius: 0;
 			outline: none;

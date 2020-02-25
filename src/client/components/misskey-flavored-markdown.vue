@@ -47,6 +47,10 @@ export default Vue.extend({
 		font-size: 0.8em;
 	}
 
+	::v-deep > code {
+		word-break: break-all;
+	}
+
 	::v-deep .title {
 		text-align: center;
 		border-bottom: solid 1px var(--divider);

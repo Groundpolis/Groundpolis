@@ -21,15 +21,13 @@ setInterval(() => {
 }, 3000);
 
 export const meta = {
-	stability: 'stable',
-
 	desc: {
 		'ja-JP': '投稿します。'
 	},
 
 	tags: ['notes'],
 
-	requireCredential: true,
+	requireCredential: true as const,
 
 	limit: {
 		duration: ms('1hour'),

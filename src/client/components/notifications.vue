@@ -1,19 +1,18 @@
 <template>
-<div class="mk-notifications">
-	<div class="contents">
-		<x-list class="notifications" :items="items" v-slot="{ item: notification, i }">
-			<x-notification :notification="notification" :with-time="true" :full="true" class="notification" :key="notification.id"/>
-		</x-list>
+<div class="mk-notifications" :class="{ page }">
+	<x-list class="notifications" :items="items" v-slot="{ item: notification }">
+		<x-note v-if="['reply', 'quote', 'mention'].includes(notification.type)" :note="notification.note" :key="notification.id"/>
+		<x-notification v-else :notification="notification" :with-time="true" :full="true" class="notification" :class="{ _panel: page }" :key="notification.id"/>
+	</x-list>
 
-		<button class="more _button" v-if="more" @click="fetchMore" :disabled="moreFetching">
-			<template v-if="!moreFetching">{{ $t('loadMore') }}</template>
-			<template v-if="moreFetching"><fa :icon="faSpinner" pulse fixed-width/></template>
-		</button>
+	<button class="more _button" v-if="more" @click="fetchMore" :disabled="moreFetching">
+		<template v-if="!moreFetching">{{ $t('loadMore') }}</template>
+		<template v-if="moreFetching"><fa :icon="faSpinner" pulse fixed-width/></template>
+	</button>
 
-		<p class="empty" v-if="empty">{{ $t('noNotifications') }}</p>
+	<p class="empty" v-if="empty">{{ $t('noNotifications') }}</p>
 
-		<mk-error v-if="error" @retry="init()"/>
-	</div>
+	<mk-error v-if="error" @retry="init()"/>
 </div>
 </template>
 
@@ -24,6 +23,7 @@ import i18n from '../i18n';
 import paging from '../scripts/paging';
 import XNotification from './notification.vue';
 import XList from './date-separated-list.vue';
+import XNote from './note.vue';
 
 export default Vue.extend({
 	i18n,
@@ -31,6 +31,7 @@ export default Vue.extend({
 	components: {
 		XNotification,
 		XList,
+		XNote,
 	},
 
 	mixins: [
@@ -42,7 +43,7 @@ export default Vue.extend({
 			type: String,
 			required: false
 		},
-		wide: {
+		page: {
 			type: Boolean,
 			required: false,
 			default: false
@@ -93,11 +94,15 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .mk-notifications {
-	> .contents {
-		overflow: auto;
-		height: 100%;
-		padding: 8px 8px 0 8px;
+	&.page {
+		> .notifications {
+			> ::v-deep * {
+				margin-bottom: var(--margin);
+			}
+		}
+	}
 
+	&:not(.page) {
 		> .notifications {
 			> ::v-deep * {
 				margin-bottom: 8px;
@@ -109,28 +114,28 @@ export default Vue.extend({
 				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 			}
 		}
+	}
 
-		> .more {
-			display: block;
-			width: 100%;
-			padding: 16px;
+	> .more {
+		display: block;
+		width: 100%;
+		padding: 16px;
 
-			> [data-icon] {
-				margin-right: 4px;
-			}
+		> [data-icon] {
+			margin-right: 4px;
 		}
+	}
 
-		> .empty {
-			margin: 0;
-			padding: 16px;
-			text-align: center;
-			color: var(--fg);
-		}
+	> .empty {
+		margin: 0;
+		padding: 16px;
+		text-align: center;
+		color: var(--fg);
+	}
 
-		> .placeholder {
-			padding: 32px;
-			opacity: 0.3;
-		}
+	> .placeholder {
+		padding: 32px;
+		opacity: 0.3;
 	}
 }
 </style>

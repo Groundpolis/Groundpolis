@@ -7,6 +7,9 @@ import { generateVisibilityQuery } from '../../common/generate-visibility-query'
 import { generateMuteQuery } from '../../common/generate-mute-query';
 import { activeUsersChart } from '../../../../services/chart';
 import { Brackets } from 'typeorm';
+import { generateRepliesQuery } from '../../common/generate-replies-query';
+import { injectPromo } from '../../common/inject-promo';
+import { injectFeatured } from '../../common/inject-featured';
 
 export const meta = {
 	desc: {
@@ -16,7 +19,7 @@ export const meta = {
 
 	tags: ['notes'],
 
-	requireCredential: true,
+	requireCredential: true as const,
 
 	params: {
 		limit: {
@@ -110,21 +113,10 @@ export default define(meta, async (ps, user) => {
 			.where(`note.userId IN (${ followingQuery.getQuery() })`)
 			.orWhere('note.userId = :meId', { meId: user.id });
 		}))
-		.andWhere(new Brackets(qb => { qb
-			.where(`note.replyId IS NULL`) // 返信ではない
-			.orWhere('note.replyUserId = :meId', { meId: user.id }) // 返信だけど自分のノートへの返信
-			.orWhere(new Brackets(qb => { qb // 返信だけど自分の行った返信
-				.where(`note.replyId IS NOT NULL`)
-				.andWhere('note.userId = :meId', { meId: user.id });
-			}))
-			.orWhere(new Brackets(qb => { qb // 返信だけど投稿者自身への返信
-				.where(`note.replyId IS NOT NULL`)
-				.andWhere('note.replyUserId = note.userId', { meId: user.id });
-			}));
-		}))
 		.leftJoinAndSelect('note.user', 'user')
 		.setParameters(followingQuery.getParameters());
 
+	generateRepliesQuery(query, user);
 	generateVisibilityQuery(query, user);
 	generateMuteQuery(query, user);
 
@@ -164,6 +156,9 @@ export default define(meta, async (ps, user) => {
 	//#endregion
 
 	const timeline = await query.take(ps.limit!).getMany();
+
+	await injectPromo(timeline, user);
+	await injectFeatured(timeline, user);
 
 	process.nextTick(() => {
 		if (user) {

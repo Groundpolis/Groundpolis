@@ -131,6 +131,7 @@ export default Vue.extend({
 		box-sizing: border-box;
 		white-space: nowrap;
 		font-size: 0.9em;
+		line-height: 20px;
 		text-align: center;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -175,7 +176,7 @@ export default Vue.extend({
 			position: absolute;
 			top: 5px;
 			left: 13px;
-			color: var(--accent);
+			color: var(--indicator);
 			font-size: 12px;
 			animation: blink 1s infinite;
 		}

@@ -1,15 +1,15 @@
 <template>
-<sequential-entrance class="sqadhkmv" ref="list" :direction="direction" :reversed="reversed">
+<component :is="$store.state.device.animation ? 'transition-group' : 'div'" class="sqadhkmv" name="list" tag="div" appear :data-direction="direction" :data-reversed="reversed ? 'true' : 'false'">
 	<template v-for="(item, i) in items">
 		<slot :item="item" :i="i"></slot>
-		<div class="separator" :key="item.id + '_date'" v-if="i != items.length - 1 && new Date(item.createdAt).getDate() != new Date(items[i + 1].createdAt).getDate()">
+		<div class="separator" :key="item.id + '_date'" v-if="showDate(i, item)">
 			<p class="date">
 				<span><fa class="icon" :icon="faAngleUp"/>{{ getDateText(item.createdAt) }}</span>
 				<span>{{ getDateText(items[i + 1].createdAt) }}<fa class="icon" :icon="faAngleDown"/></span>
 			</p>
 		</div>
 	</template>
-</sequential-entrance>
+</component>
 </template>
 
 <script lang="ts">
@@ -27,7 +27,8 @@ export default Vue.extend({
 		},
 		direction: {
 			type: String,
-			required: false
+			required: false,
+			default: 'down'
 		},
 		reversed: {
 			type: Boolean,
@@ -52,12 +53,48 @@ export default Vue.extend({
 			});
 		},
 
+		showDate(i, item) {
+			return (
+				i != this.items.length - 1 &&
+				new Date(item.createdAt).getDate() != new Date(this.items[i + 1].createdAt).getDate() &&
+				!item._prId_ &&
+				!this.items[i + 1]._prId_ &&
+				!item._featuredId_ &&
+				!this.items[i + 1]._featuredId_);
+		},
+
 		focus() {
-			this.$refs.list.focus();
+			this.$slots.default[0].elm.focus();
 		}
 	}
 });
 </script>
+
+<style lang="scss">
+.sqadhkmv {
+	> .list-move {
+		transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+	}
+
+	> .list-enter-active {
+		transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+	}
+
+	&[data-direction="up"] {
+		> .list-enter {
+			opacity: 0;
+			transform: translateY(64px);
+		}
+	}
+
+	&[data-direction="down"] {
+		> .list-enter {
+			opacity: 0;
+			transform: translateY(-64px);
+		}
+	}
+}
+</style>
 
 <style lang="scss" scoped>
 .sqadhkmv {

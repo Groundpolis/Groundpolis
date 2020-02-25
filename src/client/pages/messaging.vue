@@ -32,7 +32,7 @@
 		</router-link>
 	</sequential-entrance>
 	<div class="no-history" v-if="!fetching && messages.length == 0">
-		<img src="https://xn--931a.moe/assets/info.png" alt="" class="_ghost"/>
+		<img src="https://xn--931a.moe/assets/info.png" class="_ghost"/>
 		<div>{{ $t('noHistory') }}</div>
 	</div>
 	<mk-loading v-if="fetching"/>
@@ -300,16 +300,6 @@ export default Vue.extend({
 	}
 
 	@media (max-width: 400px) {
-		> .search {
-			> .result {
-				> .users {
-					> li {
-						padding: 8px 16px;
-					}
-				}
-			}
-		}
-
 		> .history {
 			> .message {
 				&:not([data-is-me]):not([data-is-read]) {
@@ -321,7 +311,7 @@ export default Vue.extend({
 
 				> div {
 					padding: 16px;
-					font-size: 14px;
+					font-size: 0.9em;
 
 					> .avatar {
 						margin: 0 12px 0 0;

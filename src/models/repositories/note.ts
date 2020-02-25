@@ -6,7 +6,7 @@ import { Emojis, Users, PollVotes, DriveFiles, NoteReactions, Followings, Polls 
 import { ensure } from '../../prelude/ensure';
 import { SchemaType } from '../../misc/schema';
 import { awaitAll } from '../../prelude/await-all';
-import { convertLegacyReaction } from '../../misc/reaction-lib';
+import { convertLegacyReaction, convertLegacyReactions } from '../../misc/reaction-lib';
 
 export type PackedNote = SchemaType<typeof packedNoteSchema>;
 
@@ -192,7 +192,7 @@ export class NoteRepository extends Repository<Note> {
 			viaMobile: note.viaMobile || undefined,
 			renoteCount: note.renoteCount,
 			repliesCount: note.repliesCount,
-			reactions: note.reactions, // v12 TODO: convert legacy reaction
+			reactions: convertLegacyReactions(note.reactions),
 			tags: note.tags.length > 0 ? note.tags : undefined,
 			emojis: populateEmojis(note.emojis, host, Object.keys(note.reactions)),
 			fileIds: note.fileIds,
@@ -201,6 +201,8 @@ export class NoteRepository extends Repository<Note> {
 			renoteId: note.renoteId,
 			mentions: note.mentions.length > 0 ? note.mentions : undefined,
 			uri: note.uri || undefined,
+			_featuredId_: (note as any)._featuredId_ || undefined,
+			_prId_: (note as any)._prId_ || undefined,
 
 			...(opts.detail ? {
 				reply: note.replyId ? this.pack(note.replyId, meId, {
