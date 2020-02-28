@@ -1,5 +1,5 @@
 <template>
-<section class="rfqxtzch _card">
+<section class="_card">
 	<div class="_title"><fa :icon="faPalette"/> {{ $t('theme') }}</div>
 	<div class="_content">
 		<mk-select v-model="theme" :placeholder="$t('theme')">

@@ -370,7 +370,6 @@ notFoundDescription: "指定されたURLに該当するページはありませ�
 blocksYou: "ブロックされています"
 blockedByYou: "ブロック中"
 blocksEach: "相互ブロック"
-showFixedPostForm: "タイムライン上部に投稿フォームを表示する"
 gender: "性別"
 userInterface: "ユーザーインターフェース"
 showBrowserNotification: "ブラウザ通知を表示する"

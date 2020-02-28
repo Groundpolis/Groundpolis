@@ -48,9 +48,6 @@
 				<button class="_button more" @click="openAccountMenu">
 					<fa :icon="faEllipsisH" fixed-width/>
 				</button>
-				<router-link class="item" active-class="active" to="/preferences">
-					<fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
-				</router-link>
 			</div>
 			<router-link class="item" active-class="active" to="/" exact v-if="$store.getters.isSignedIn">
 				<fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>

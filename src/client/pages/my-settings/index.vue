@@ -1,9 +1,8 @@
 <template>
 <div>
 	<portal to="icon"><fa :icon="faCog"/></portal>
-	<portal to="title">{{ $t('accountSettings') }}</portal>
+	<portal to="title">{{ $t('settings') }}</portal>
 
-	<x-profile-setting/>
 	<x-privacy-setting/>
 	<x-reaction-setting/>
 
@@ -24,6 +23,10 @@
 		</div>
 	</section>
 
+	<x-theme/>
+	<x-sounds/>
+	<x-client-settings/>
+
 	<x-import-export/>
 	<x-drive/>
 	<x-mute-block/>
@@ -32,6 +35,7 @@
 	<x-integration/>
 	<x-api/>
 
+	<x-cache-clear/>
 	<mk-button @click="$root.signout()" primary style="margin: var(--margin) auto;">{{ $t('logout') }}</mk-button>
 </div>
 </template>
@@ -39,10 +43,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import XProfileSetting from './profile.vue';
+import XCacheClear from './cache-clear.vue';
+import XClientSettings from './client-settings.vue';
+import XSounds from './sounds.vue';
 import XPrivacySetting from './privacy.vue';
 import XImportExport from './import-export.vue';
 import XDrive from './drive.vue';
+import XTheme from './theme.vue';
 import XReactionSetting from './reaction.vue';
 import XMuteBlock from './mute-block.vue';
 import XSecurity from './security.vue';
@@ -60,7 +67,10 @@ export default Vue.extend({
 	},
 
 	components: {
-		XProfileSetting,
+		XClientSettings,
+		XCacheClear,
+		XTheme,
+		XSounds,
 		XPrivacySetting,
 		XImportExport,
 		XDrive,
