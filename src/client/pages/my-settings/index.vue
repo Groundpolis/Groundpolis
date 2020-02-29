@@ -25,6 +25,7 @@
 
 	<x-theme/>
 	<x-sounds/>
+	<x-gacha/>
 	<x-client-settings/>
 
 	<x-import-export/>
@@ -46,6 +47,7 @@ import { faCog } from '@fortawesome/free-solid-svg-icons';
 import XCacheClear from './cache-clear.vue';
 import XClientSettings from './client-settings.vue';
 import XSounds from './sounds.vue';
+import XGacha from './gacha.vue';
 import XPrivacySetting from './privacy.vue';
 import XImportExport from './import-export.vue';
 import XDrive from './drive.vue';
@@ -71,6 +73,7 @@ export default Vue.extend({
 		XCacheClear,
 		XTheme,
 		XSounds,
+		XGacha,
 		XPrivacySetting,
 		XImportExport,
 		XDrive,

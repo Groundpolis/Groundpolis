@@ -15,6 +15,15 @@ const defaultSettings = {
 	pastedFileName: 'yyyy-MM-dd HH-mm-ss [{{number}}]',
 	memo: null,
 	reactions: ['👍', '❤️', '😆', '🤔', '😮', '🎉', '💢', '😥', '😇', '🍮'],
+	faces: [
+		'(=^・・^=)',
+		'v(\'ω\')v',
+		'🐡( \'-\' 🐡 )ﾌｸﾞﾊﾟﾝﾁ!!!!',
+		'✌️(´･_･`)✌️',
+		'(｡>﹏<｡)',
+		'(Δ・x・Δ)',
+		'(ｺ｀・ﾍ・´ｹ)'
+	],
 	widgets: [],
 	iconType: 'circle' as 'circle' | 'square' | 'rounded' | 'droplet',
 	useVisibilitySwitch: false,
@@ -60,7 +69,6 @@ const defaultDeviceSettings = {
 	showPostPreview: true,
 	animatedMfm: true,
 	imageNewTab: false,
-	showFixedPostForm: false,
 	useNotificationsPopup: true,
 	sfxVolume: 0.3,
 	sfxNote: 'syuilo/down',
@@ -242,6 +250,14 @@ export default (os: MiOS) => new Vuex.Store({
 			namespaced: true,
 
 			state: defaultSettings,
+
+			getters: {
+				getRandomFace: ({ faces }) => () => {
+					const face = faces.length > 0 ? faces[Math.floor(Math.random() * faces.length)] : ''
+					console.log(Math.random())
+					return face
+				},
+			},
 
 			mutations: {
 				set(state, x: { key: string; value: any }) {
