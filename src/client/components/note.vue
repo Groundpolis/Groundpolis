@@ -99,7 +99,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faBolt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faLink, faTimes, faUsers, faHeart, faQuoteRight } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faBullhorn, faStar, faInfoCircle, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faLink, faTimes, faUsers, faHeart, faQuoteRight } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
