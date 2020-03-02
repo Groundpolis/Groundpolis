@@ -48,6 +48,12 @@
 			<button class="_button" v-if="visibility !== 'specified' && visibility !== 'users'" @click="localOnly = !localOnly" :class="{ active: localOnly }"><fa :icon="faHeart"/></button>
 		</footer>
 		<input ref="file" class="file _button" type="file" multiple="multiple" @change="onChangeFile"/>
+		<details v-if="text" class="preview" :open="isPreviewOpened" @toggle="isPreviewOpened = $event.target.open">
+			<summary>
+				プレビュー
+			</summary>
+			<x-note-preview :note="previewNote"/>
+		</details>
 	</div>
 </div>
 </template>
@@ -185,6 +191,24 @@ export default Vue.extend({
 
 		max(): number {
 			return this.$store.state.instance.meta ? this.$store.state.instance.meta.maxNoteTextLength : 1000;
+		},
+
+		previewNote() {
+			return {
+				id: '',
+				createdAt: new Date(),
+				text: this.text,
+				cw: this.useCw ? this.cw : undefined,
+				visibility: this.visibility,
+				user: this.$store.state.i,
+				files: [],
+
+			};
+		},
+
+		isPreviewOpened: {
+			get() { return this.$store.state.device.showPostPreview }
+			set(value) { this.$store.commit('device/set', { key: 'showPostPreview', value }); }
 		}
 	},
 
