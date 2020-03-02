@@ -32,7 +32,6 @@
 		</router-link>
 	</sequential-entrance>
 	<div class="no-history" v-if="!fetching && messages.length == 0">
-		<img src="https://xn--931a.moe/assets/info.png" class="_ghost"/>
 		<div>{{ $t('noHistory') }}</div>
 	</div>
 	<mk-loading v-if="fetching"/>

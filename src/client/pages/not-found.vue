@@ -5,7 +5,6 @@
 
 	<section class="_card">
 		<div class="_content">
-			<img src="https://xn--931a.moe/assets/not-found.png" class="_ghost"/>
 			<div>{{ $t('notFoundDescription') }}</div>
 		</div>
 	</section>

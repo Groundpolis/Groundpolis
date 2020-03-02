@@ -1,6 +1,5 @@
 <template>
 <div class="mjndxjcg _panel">
-	<img src="https://xn--931a.moe/assets/error.png" class="_ghost"/>
 	<p><fa :icon="faExclamationTriangle"/> {{ $t('error') }}</p>
 	<mk-button @click="() => $emit('retry')" class="button">{{ $t('retry') }}</mk-button>
 </div>
