@@ -56,25 +56,27 @@
 			<router-link class="item" active-class="active" to="/" exact v-else>
 				<fa :icon="faHome" fixed-width/><span class="text">{{ $t('home') }}</span>
 			</router-link>
-			<button class="item _button notifications" @click="notificationsOpen = !notificationsOpen" ref="notificationButton" v-if="$store.state.device.useNotificationsPopup">
-				<fa :icon="faBell" fixed-width/><span class="text">{{ $t('notifications') }}</span>
-				<i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i>
-			</button>
-			<router-link class="item notifications" active-class="active" to="/my/notifications" ref="notificationButton" v-else>
-				<fa :icon="faBell" fixed-width/><span class="text">{{ $t('notifications') }}</span>
-				<i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i>
-			</router-link>
-			<router-link class="item" active-class="active" to="/my/messaging" v-if="$store.getters.isSignedIn">
-				<fa :icon="faComments" fixed-width/><span class="text">{{ $t('messaging') }}</span>
-				<i v-if="$store.state.i.hasUnreadMessagingMessage"><fa :icon="faCircle"/></i>
-			</router-link>
-			<router-link class="item" active-class="active" to="/my/drive" v-if="$store.getters.isSignedIn">
-				<fa :icon="faCloud" fixed-width/><span class="text">{{ $t('drive') }}</span>
-			</router-link>
-			<router-link class="item" active-class="active" to="/my/follow-requests" v-if="$store.getters.isSignedIn && $store.state.i.isLocked">
-				<fa :icon="faUserClock" fixed-width/><span class="text">{{ $t('followRequests') }}</span>
-				<i v-if="$store.state.i.pendingReceivedFollowRequestsCount"><fa :icon="faCircle"/></i>
-			</router-link>
+			<template v-if="$store.getters.isSignedIn">
+				<button class="item _button notifications" @click="notificationsOpen = !notificationsOpen" ref="notificationButton" v-if="$store.state.device.useNotificationsPopup">
+					<fa :icon="faBell" fixed-width/><span class="text">{{ $t('notifications') }}</span>
+					<i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i>
+				</button>
+				<router-link class="item notifications" active-class="active" to="/my/notifications" ref="notificationButton" v-else>
+					<fa :icon="faBell" fixed-width/><span class="text">{{ $t('notifications') }}</span>
+					<i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i>
+				</router-link>
+				<router-link class="item" active-class="active" to="/my/messaging">
+					<fa :icon="faComments" fixed-width/><span class="text">{{ $t('messaging') }}</span>
+					<i v-if="$store.state.i.hasUnreadMessagingMessage"><fa :icon="faCircle"/></i>
+				</router-link>
+				<router-link class="item" active-class="active" to="/my/drive">
+					<fa :icon="faCloud" fixed-width/><span class="text">{{ $t('drive') }}</span>
+				</router-link>
+				<router-link class="item" active-class="active" to="/my/follow-requests" v-if="$store.state.i.isLocked">
+					<fa :icon="faUserClock" fixed-width/><span class="text">{{ $t('followRequests') }}</span>
+					<i v-if="$store.state.i.pendingReceivedFollowRequestsCount"><fa :icon="faCircle"/></i>
+				</router-link>
+			</template>
 			<div class="divider"></div>
 			<router-link class="item" active-class="active" to="/featured">
 				<fa :icon="faFireAlt" fixed-width/><span class="text">{{ $t('featured') }}</span>
