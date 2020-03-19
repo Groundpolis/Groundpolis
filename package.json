@@ -264,7 +264,7 @@
 		"xev": "2.0.1"
 	},
 	"devDependencies": {
-		"@types/fluent-ffmpeg": "2.1.12",
+		"@types/fluent-ffmpeg": "2.1.14",
 		"cross-env": "6.0.3"
 	}
 }
