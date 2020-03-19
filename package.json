@@ -232,7 +232,7 @@
 		"ts-node": "8.7.0",
 		"tslint": "6.1.0",
 		"tslint-sonarts": "1.9.0",
-		"typeorm": "0.2.22",
+		"typeorm": "0.2.24",
 		"typescript": "3.8.3",
 		"ulid": "2.3.0",
 		"url-loader": "3.0.0",
