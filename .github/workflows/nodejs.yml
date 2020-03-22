@@ -1,15 +1,31 @@
 name: Node.js CI
-
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
 
 jobs:
   build_and_test:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [11.10.x, 12.x, 13.x]
+        node-version: [11.10.x, 12.x]
+
+    services:
+      postgres:
+        image: postgres:10-alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: test-misskey
+          POSTGRES_HOST_AUTH_METHOD: trust
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
 
     steps:
     - uses: actions/checkout@v2
@@ -20,3 +36,4 @@ jobs:
     - run: yarn install
     - run: cp .circleci/misskey/*.yml .config/
     - run: yarn build
+    - run: yarn test
