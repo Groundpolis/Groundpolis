@@ -42,10 +42,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import { faUser, faUsers, faComments, faPlus } from '@fortawesome/free-solid-svg-icons';
-import i18n from '../i18n';
-import getAcct from '../../misc/acct/render';
-import MkButton from '../components/ui/button.vue';
-import MkUserSelect from '../components/user-select.vue';
+import i18n from '../../i18n';
+import getAcct from '../../../misc/acct/render';
+import MkButton from '../../components/ui/button.vue';
+import MkUserSelect from '../../components/user-select.vue';
 
 export default Vue.extend({
 	i18n,
@@ -145,7 +145,7 @@ export default Vue.extend({
 			if (groups1.length === 0 && groups2.length === 0) {
 				this.$root.dialog({
 					type: 'warning',
-					title: this.$t('noGroups'),
+					title: this.$t('youHaveNoGroups'),
 					text: this.$t('joinOrCreateGroup'),
 				});
 				return;
