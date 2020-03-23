@@ -69,7 +69,7 @@
 		"@types/lolex": "5.1.0",
 		"@types/markdown-it": "0.0.9",
 		"@types/mocha": "7.0.2",
-		"@types/node": "13.9.2",
+		"@types/node": "13.9.3",
 		"@types/nodemailer": "6.4.0",
 		"@types/nprogress": "0.2.0",
 		"@types/oauth": "0.9.1",
