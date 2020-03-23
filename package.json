@@ -99,7 +99,7 @@
 		"@types/webpack-stream": "3.2.10",
 		"@types/websocket": "1.0.0",
 		"@types/ws": "7.2.3",
-		"@typescript-eslint/parser": "2.19.2",
+		"@typescript-eslint/parser": "2.24.0",
 		"agentkeepalive": "4.1.0",
 		"animejs": "3.1.0",
 		"apexcharts": "3.17.0",
