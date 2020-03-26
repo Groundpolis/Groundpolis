@@ -207,6 +207,7 @@ export default Vue.extend({
 			return {
 				'p': this.post,
 				'n': this.post,
+				'd': this.toggleDark,
 				's': this.search,
 				'h|/': this.help
 			};
@@ -310,6 +311,10 @@ export default Vue.extend({
 		post() {
 			this.$root.post();
 		},
+
+		toggleDark() {
+			this.$store.commit('device/set', { key: 'darkMode', value: !this.$store.state.device.darkMode });
+		}
 
 		search() {
 			if (this.searching) return;
