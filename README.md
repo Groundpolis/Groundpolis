@@ -18,7 +18,7 @@ News
 Check the latest information on the official account.
 - [Fedibird](https://fedibird.com/@Groundpolis)
 
-ライセンス
+License
 --------
 
 Groundpolis is open-source software licensed under the [GNU AGPLv3](LICENSE).

@@ -326,6 +326,7 @@ export default Vue.extend({
 					});
 				}
 				this.visibility = init.visibility;
+				this.localOnly = init.localOnly;
 				this.quoteId = init.renote ? init.renote.id : null;
 			}
 
@@ -616,7 +617,6 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .gafaadew {
 	background: var(--panel);
-	border-radius: var(--radius);
 
 	> header {
 		z-index: 1000;

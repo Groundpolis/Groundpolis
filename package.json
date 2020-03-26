@@ -4,7 +4,7 @@
 	"contributors": [
 		"syuilo <syuilotan@yahoo.co.jp>"
 	],
-	"version": "3.0.0-beta.7",
+	"version": "12.26.0-gp-3.0.0",
 	"codename": "reunion",
 	"repository": {
 		"type": "git",
@@ -27,7 +27,7 @@
 		"gulp": "gulp build",
 		"clean": "gulp clean",
 		"cleanall": "gulp cleanall",
-		"lint": "gulp lint",
+		"lint": "tslint 'src/**/*.ts'",
 		"test": "cross-env TS_NODE_FILES=true gulp test",
 		"format": "gulp format"
 	},

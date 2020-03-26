@@ -18,7 +18,8 @@ import PostFormDialog from './components/post-form-dialog.vue';
 import Dialog from './components/dialog.vue';
 import Menu from './components/menu.vue';
 import { router } from './router';
-import { applyTheme, lightTheme } from './theme';
+import { applyTheme, lightTheme, builtinThemes } from './theme';
+import { isDeviceDarkmode } from './scripts/is-device-darkmode';
 
 Vue.use(Vuex);
 Vue.use(VueHotkey);
@@ -82,14 +83,14 @@ if (lang == null) {
 
 // Detect the user agent
 const ua = navigator.userAgent.toLowerCase();
-let isMobile = /mobile|iphone|ipad|android/.test(ua);
+const isMobile = /mobile|iphone|ipad|android/.test(ua);
 
 // Get the <head> element
 const head = document.getElementsByTagName('head')[0];
 
 // If mobile, insert the viewport meta tag
 if (isMobile || window.innerWidth <= 1024) {
-	const viewport = document.getElementsByName("viewport").item(0);
+	const viewport = document.getElementsByName('viewport').item(0);
 	viewport.setAttribute('content',
 		`${viewport.getAttribute('content')},minimum-scale=1,maximum-scale=1,user-scalable=no`);
 	head.appendChild(viewport);
@@ -144,6 +145,24 @@ os.init(async () => {
 			location.reload();
 		}
 	}, false)
+
+	os.store.watch(state => state.device.darkMode, darkMode => {
+		// TODO: このファイルでbuiltinThemesを参照するとcode splittingが効かず、初回読み込み時に全てのテーマコードを読み込むことになってしまい無駄なので何とかする
+		const themes = builtinThemes.concat(os.store.state.device.themes);
+		applyTheme(themes.find(x => x.id === (darkMode ? os.store.state.device.darkTheme : os.store.state.device.lightTheme)));
+	});
+
+	//#region Sync dark mode
+	if (os.store.state.device.syncDeviceDarkMode) {
+		os.store.commit('device/set', { key: 'darkMode', value: isDeviceDarkmode() });
+	}
+
+	window.matchMedia('(prefers-color-scheme: dark)').addListener(mql => {
+		if (os.store.state.device.syncDeviceDarkMode) {
+			os.store.commit('device/set', { key: 'darkMode', value: mql.matches });
+		}
+	});
+	//#endregion
 
 	if ('Notification' in window && os.store.getters.isSignedIn) {
 		// 許可を得ていなかったらリクエスト

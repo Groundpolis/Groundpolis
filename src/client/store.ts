@@ -57,7 +57,10 @@ const defaultDeviceSettings = {
 	accounts: [],
 	recentEmojis: [],
 	themes: [],
-	theme: 'light',
+	darkTheme: '8c539dc1-0fab-4d47-9194-39c508e9bfe1',
+	lightTheme: '4eea646f-7afa-4645-83e9-83af0333cd37',
+	darkMode: false,
+	syncDeviceDarkMode: true,
 	animation: true,
 	enableSounds: true,
 	enableSoundsInTimeline: false,
@@ -69,7 +72,6 @@ const defaultDeviceSettings = {
 	showPostPreview: true,
 	animatedMfm: true,
 	imageNewTab: false,
-	useNotificationsPopup: true,
 	sfxVolume: 0.3,
 	sfxNote: 'syuilo/down',
 	sfxNoteMy: 'syuilo/up',
@@ -130,6 +132,7 @@ export default (os: MiOS) => new Vuex.Store({
 			ctx.commit('settings/init', {});
 			ctx.commit('deviceUser/init', {});
 			localStorage.removeItem('i');
+			document.cookie = `igi=; path=/`;
 		},
 
 		async switchAccount(ctx, i) {

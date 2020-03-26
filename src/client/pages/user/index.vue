@@ -32,7 +32,7 @@
 			</div>
 			<mk-avatar class="avatar" :user="user" :disable-preview="true"/>
 			<div class="title">
-				<mk-user-name :user="user" :nowrap="false" class="name"/>
+				<mk-user-name class="name" :user="user" :nowrap="true"/>
 				<div class="bottom">
 					<span class="username"><mk-acct :user="user" :detail="true" /></span>
 					<span v-if="user.isAdmin" :title="$t('isAdmin')" style="color: var(--badge);"><fa :icon="faBookmark"/></span>
@@ -63,37 +63,66 @@
 					<dd class="value">{{ new Date(user.createdAt).toLocaleString() }} (<mk-time :time="user.createdAt"/>)</dd>
 				</dl>
 			</div>
-			<div class="fields" v-if="user.fields.length > 0">
-				<dl class="field" v-for="(field, i) in user.fields" :key="i">
-					<dt class="name">
-						<mfm :text="field.name" :plain="true" :custom-emojis="user.emojis" :colored="false"/>
-					</dt>
-					<dd class="value">
-						<mfm :text="field.value" :author="user" :i="$store.state.i" :custom-emojis="user.emojis" :colored="false"/>
-					</dd>
-				</dl>
-			</div>
-			<div class="status" v-if="user.host === null">
-				<router-link :to="user | userPage()" :class="{ active: $route.name === 'user' }">
-					<b>{{ user.notesCount | number }}</b>
-					<span>{{ $t('notes') }}</span>
-				</router-link>
-				<router-link :to="user | userPage('following')" :class="{ active: $route.name === 'userFollowing' }">
-					<b>{{ user.followingCount | number }}</b>
-					<span>{{ $t('following') }}</span>
-				</router-link>
-				<router-link :to="user | userPage('followers')" :class="{ active: $route.name === 'userFollowers' }">
-					<b>{{ user.followersCount | number }}</b>
-					<span>{{ $t('followers') }}</span>
-				</router-link>
+		</div>
+		<mk-avatar class="avatar" :user="user" :disable-preview="true"/>
+		<div class="title">
+			<mk-user-name :user="user" :nowrap="false" class="name"/>
+			<div class="bottom">
+				<span class="username"><mk-acct :user="user" :detail="true" /></span>
+				<span v-if="user.isAdmin" :title="$t('isAdmin')" style="color: var(--badge);"><fa :icon="faBookmark"/></span>
+				<span v-if="!user.isAdmin && user.isModerator" :title="$t('isModerator')" style="color: var(--badge);"><fa :icon="farBookmark"/></span>
+				<span v-if="user.isLocked" :title="$t('isLocked')"><fa :icon="faLock"/></span>
+				<span v-if="user.isBot" :title="$t('isBot')"><fa :icon="faRobot"/></span>
 			</div>
 		</div>
-	</transition>
+		<div class="description">
+			<mfm v-if="user.description" :text="user.description" :is-note="false" :author="user" :i="$store.state.i" :custom-emojis="user.emojis"/>
+			<p v-else class="empty">{{ $t('noAccountDescription') }}</p>
+		</div>
+		<div class="fields system">
+			<dl class="field" v-if="user.location">
+				<dt class="name"><fa :icon="faMapMarker" fixed-width/> {{ $t('location') }}</dt>
+				<dd class="value">{{ user.location }}</dd>
+			</dl>
+			<dl class="field" v-if="user.birthday">
+				<dt class="name"><fa :icon="faBirthdayCake" fixed-width/> {{ $t('birthday') }}</dt>
+				<dd class="value">{{ user.birthday.replace('-', '/').replace('-', '/') }} ({{ $t('yearsOld', { age }) }})</dd>
+			</dl>
+			<dl class="field">
+				<dt class="name"><fa :icon="faCalendarAlt" fixed-width/> {{ $t('registeredDate') }}</dt>
+				<dd class="value">{{ new Date(user.createdAt).toLocaleString() }} (<mk-time :time="user.createdAt"/>)</dd>
+			</dl>
+		</div>
+		<div class="fields" v-if="user.fields.length > 0">
+			<dl class="field" v-for="(field, i) in user.fields" :key="i">
+				<dt class="name">
+					<mfm :text="field.name" :plain="true" :custom-emojis="user.emojis" :colored="false"/>
+				</dt>
+				<dd class="value">
+					<mfm :text="field.value" :author="user" :i="$store.state.i" :custom-emojis="user.emojis" :colored="false"/>
+				</dd>
+			</dl>
+		</div>
+		<div class="status">
+			<router-link :to="user | userPage()" :class="{ active: $route.name === 'user' }">
+				<b>{{ user.notesCount | number }}</b>
+				<span>{{ $t('notes') }}</span>
+			</router-link>
+			<router-link :to="user | userPage('following')" :class="{ active: $route.name === 'userFollowing' }">
+				<b>{{ user.followingCount | number }}</b>
+				<span>{{ $t('following') }}</span>
+			</router-link>
+			<router-link :to="user | userPage('followers')" :class="{ active: $route.name === 'userFollowers' }">
+				<b>{{ user.followersCount | number }}</b>
+				<span>{{ $t('followers') }}</span>
+			</router-link>
+		</div>
+	</div>
 	<router-view :user="user"></router-view>
 	<template v-if="$route.name == 'user'">
-		<sequential-entrance class="pins">
-			<x-note v-for="(note, i) in user.pinnedNotes" class="note" :note="note" :key="note.id" :detail="true" :pinned="true"/>
-		</sequential-entrance>
+		<div class="pins">
+			<x-note v-for="note in user.pinnedNotes" class="note" :note="note" :key="note.id" :detail="true" :pinned="true"/>
+		</div>
 		<mk-container :body-togglable="true" class="content">
 			<template #header><fa :icon="faImage"/>{{ $t('images') }}</template>
 			<div>
@@ -124,6 +153,7 @@ import XUserMenu from '../../components/user-menu.vue';
 import XNote from '../../components/note.vue';
 import MkFollowButton from '../../components/follow-button.vue';
 import MkContainer from '../../components/ui/container.vue';
+import MkRemoteCaution from '../../components/remote-caution.vue';
 import Progress from '../../scripts/loading';
 import parseAcct from '../../../misc/acct/parse';
 import { isBirthday } from '../../../misc/birthday';
@@ -134,6 +164,7 @@ export default Vue.extend({
 		XNote,
 		MkFollowButton,
 		MkContainer,
+		MkRemoteCaution,
 		XPhotos: () => import('./index.photos.vue').then(m => m.default),
 		XActivity: () => import('./index.activity.vue').then(m => m.default),
 	},
@@ -149,7 +180,7 @@ export default Vue.extend({
 			user: null,
 			error: null,
 			parallaxAnimationId: null,
-			faEllipsisH, faRobot, faLock, faBookmark, farBookmark, faExclamationTriangle, faChartBar, faImage, faBirthdayCake, faMapMarker, faCalendarAlt
+			faEllipsisH, faRobot, faLock, faBookmark, farBookmark, faChartBar, faImage, faBirthdayCake, faMapMarker, faCalendarAlt
 		};
 	},
 
@@ -281,17 +312,6 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .mk-user-page {
-	> .remote-caution {
-		font-size: 0.8em;
-		padding: 16px;
-		margin-bottom: var(--margin);
-
-		> a {
-			margin-left: 4px;
-			color: var(--accent);
-		}
-	}
-
 	> .profile {
 		position: relative;
 		margin-bottom: var(--margin);
