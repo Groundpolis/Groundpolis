@@ -6,6 +6,8 @@
 			{{ $t('autoReloadWhenDisconnected') }}
 		</mk-switch>
 	</div>
+	<x-theme/>
+
 	<div class="_content">
 		<mk-switch v-model="imageNewTab">{{ $t('openImageInNewTab') }}</mk-switch>
 		<mk-switch v-model="disableAnimatedMfm">{{ $t('disableAnimatedMfm') }}</mk-switch>
@@ -76,6 +78,7 @@ import { faTv } from '@fortawesome/free-solid-svg-icons';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkSelect from '../../components/ui/select.vue';
 import MkRadio from '../../components/ui/radio.vue';
+import XTheme from './theme.vue';
 import i18n from '../../i18n';
 import { langs } from '../../config';
 
@@ -92,6 +95,7 @@ export default Vue.extend({
 		MkSwitch,
 		MkSelect,
 		MkRadio,
+		XTheme
 	},
 
 	data() {

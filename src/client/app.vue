@@ -49,7 +49,6 @@
 					<fa :icon="faEllipsisH" fixed-width/>
 				</button>
 			</div>
-			<div class="divider"></div>
 			<router-link class="item" active-class="active" to="/" exact v-if="$store.getters.isSignedIn">
 				<fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>
 			</router-link>
@@ -57,11 +56,7 @@
 				<fa :icon="faHome" fixed-width/><span class="text">{{ $t('home') }}</span>
 			</router-link>
 			<template v-if="$store.getters.isSignedIn">
-				<button class="item _button notifications" @click="notificationsOpen = !notificationsOpen" ref="notificationButton" v-if="$store.state.device.useNotificationsPopup">
-					<fa :icon="faBell" fixed-width/><span class="text">{{ $t('notifications') }}</span>
-					<i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i>
-				</button>
-				<router-link class="item notifications" active-class="active" to="/my/notifications" ref="notificationButton" v-else>
+				<router-link class="item notifications" active-class="active" to="/my/notifications" ref="notificationButton">
 					<fa :icon="faBell" fixed-width/><span class="text">{{ $t('notifications') }}</span>
 					<i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i>
 				</router-link>
@@ -1200,47 +1195,5 @@ export default Vue.extend({
 			}
 		}
 	}
-<<<<<<< HEAD
-
-	> .notifications {
-		position: fixed;
-		top: 32px;
-		left: 0;
-		right: 0;
-		margin: 0 auto;
-		padding: 8px 8px 0 8px;
-		z-index: 10001;
-		width: 350px;
-		height: 400px;
-		box-sizing: border-box;
-		background: var(--vocsgcxy);
-		-webkit-backdrop-filter: blur(12px);
-		backdrop-filter: blur(12px);
-		border-radius: 6px;
-		box-shadow: 0 3px 12px rgba(27, 31, 35, 0.15);
-		overflow: auto;
-
-		@media (max-width: 800px) {
-			width: 320px;
-			height: 350px;
-		}
-
-		@media (max-width: 500px) {
-			width: 290px;
-			height: 310px;
-		}
-	}
-
-	.hide-on-pc {
-		display: none !important;
-	}
-
-	@media (max-width: $nav-icon-only-threshold) {
-		.hide-on-pc {
-			display: inherit !important;
-		}
-	}
-=======
->>>>>>> syuilo-develop
 }
 </style>

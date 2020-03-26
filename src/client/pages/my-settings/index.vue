@@ -23,7 +23,6 @@
 		</div>
 	</section>
 
-	<x-theme/>
 	<x-sounds/>
 	<x-gacha/>
 	<x-client-settings/>
@@ -51,7 +50,6 @@ import XGacha from './gacha.vue';
 import XPrivacySetting from './privacy.vue';
 import XImportExport from './import-export.vue';
 import XDrive from './drive.vue';
-import XTheme from './theme.vue';
 import XReactionSetting from './reaction.vue';
 import XMuteBlock from './mute-block.vue';
 import XSecurity from './security.vue';
@@ -71,7 +69,6 @@ export default Vue.extend({
 	components: {
 		XClientSettings,
 		XCacheClear,
-		XTheme,
 		XSounds,
 		XGacha,
 		XPrivacySetting,

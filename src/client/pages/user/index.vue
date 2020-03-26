@@ -3,34 +3,11 @@
 	<portal to="title" v-if="user"><mk-user-name :user="user" :nowrap="false" class="name"/></portal>
 	<portal to="avatar" v-if="user"><mk-avatar class="avatar" :user="user" :disable-preview="true"/></portal>
 	
-	<div class="remote-caution _panel" v-if="user.host != null"><fa :icon="faExclamationTriangle" style="margin-right: 8px;"/>{{ $t('remoteUserCaution') }}<a :href="user.url" rel="nofollow noopener" target="_blank">{{ $t('showOnRemote') }}</a></div>
-	<transition :name="$store.state.device.animation ? 'zoom' : ''" mode="out-in" appear>
-		<div class="profile _panel" :key="user.id">
-			<div class="banner-container" :style="style">
-				<div class="banner" ref="banner" :style="style"></div>
-				<div class="fade"></div>
-				<div class="title">
-					<mk-user-name class="name" :user="user" :nowrap="true"/>
-					<div class="bottom">
-						<span class="username"><mk-acct :user="user" :detail="true" /></span>
-						<span v-if="user.isAdmin" :title="$t('isAdmin')" style="color: var(--badge);"><fa :icon="faBookmark"/></span>
-						<span v-if="!user.isAdmin && user.isModerator" :title="$t('isModerator')" style="color: var(--badge);"><fa :icon="farBookmark"/></span>
-						<span v-if="user.isLocked" :title="$t('isLocked')"><fa :icon="faLock"/></span>
-						<span v-if="user.isBot" :title="$t('isBot')"><fa :icon="faRobot"/></span>
-					</div>
-				</div>
-				<span class="blocked" v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && user.isBlocking || user.isBlocked">
-					{{ $t(user.isBlocking && user.isBlocked ? 'blocksEach' : user.isBlocked ? 'blocksYou' : 'blockedByYou') }}
-				</span>
-				<span class="followed" v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && user.isFollowed">{{ $t('followsYou') }}</span>
-				<div class="actions" v-if="$store.getters.isSignedIn">
-					<button @click="menu" class="menu _button" ref="menu"><fa :icon="faEllipsisH"/></button>
-					<mk-follow-button v-if="$store.state.i.id != user.id && !user.isBlocking && !user.isBlocked" :user="user" :inline="true" :transparent="false" :full="true" class="koudoku"/>
-					<button v-else-if="$store.state.i.id == user.id" @click="editProfile" class="edit-profile _button">{{ $t('editProfile') }}</button>
-					<button v-else-if="user.isBlocking" @click="unblock" class="_button unblock">{{ $t('unblock') }}</button>
-				</div>
-			</div>
-			<mk-avatar class="avatar" :user="user" :disable-preview="true"/>
+	<mk-remote-caution v-if="user.host != null" :href="user.url" style="margin-bottom: var(--margin)"/>
+	<div class="profile _panel" :key="user.id">
+		<div class="banner-container" :style="style">
+			<div class="banner" ref="banner" :style="style"></div>
+			<div class="fade"></div>
 			<div class="title">
 				<mk-user-name class="name" :user="user" :nowrap="true"/>
 				<div class="bottom">
@@ -41,32 +18,20 @@
 					<span v-if="user.isBot" :title="$t('isBot')"><fa :icon="faRobot"/></span>
 				</div>
 			</div>
-			<div class="description">
-				<mfm v-if="user.description" :text="user.description" :is-note="false" :author="user" :i="$store.state.i" :custom-emojis="user.emojis"/>
-				<p v-else class="empty">{{ $t('noAccountDescription') }}</p>
-			</div>
-			<div class="fields system">
-				<dl class="field" v-if="user.sex !== 'not-known'">
-					<dt class="name"><fa :icon="getGenderIcon(user.sex)" fixed-width/> {{ $t('gender') }}</dt>
-					<dd class="value">{{ $t(`_gender.${user.sex}`) }}</dd>
-				</dl>
-				<dl class="field" v-if="user.location">
-					<dt class="name"><fa :icon="faMapMarker" fixed-width/> {{ $t('location') }}</dt>
-					<dd class="value">{{ user.location }}</dd>
-				</dl>
-				<dl class="field" v-if="user.birthday">
-					<dt class="name"><fa :icon="faBirthdayCake" fixed-width/> {{ $t('birthday') }}</dt>
-					<dd class="value">{{ birthdayString }} ({{ $t('yearsOld', { age }) }})</dd>
-				</dl>
-				<dl class="field">
-					<dt class="name"><fa :icon="faCalendarAlt" fixed-width/> {{ $t('registeredDate') }}</dt>
-					<dd class="value">{{ new Date(user.createdAt).toLocaleString() }} (<mk-time :time="user.createdAt"/>)</dd>
-				</dl>
+			<span class="blocked" v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && user.isBlocking || user.isBlocked">
+				{{ $t(user.isBlocking && user.isBlocked ? 'blocksEach' : user.isBlocked ? 'blocksYou' : 'blockedByYou') }}
+			</span>
+			<span class="followed" v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && user.isFollowed">{{ $t('followsYou') }}</span>
+			<div class="actions" v-if="$store.getters.isSignedIn">
+				<button @click="menu" class="menu _button" ref="menu"><fa :icon="faEllipsisH"/></button>
+				<mk-follow-button v-if="$store.state.i.id != user.id && !user.isBlocking && !user.isBlocked" :user="user" :inline="true" :transparent="false" :full="true" class="koudoku"/>
+				<button v-else-if="$store.state.i.id == user.id" @click="editProfile" class="edit-profile _button">{{ $t('editProfile') }}</button>
+				<button v-else-if="user.isBlocking" @click="unblock" class="_button unblock">{{ $t('unblock') }}</button>
 			</div>
 		</div>
 		<mk-avatar class="avatar" :user="user" :disable-preview="true"/>
 		<div class="title">
-			<mk-user-name :user="user" :nowrap="false" class="name"/>
+			<mk-user-name class="name" :user="user" :nowrap="true"/>
 			<div class="bottom">
 				<span class="username"><mk-acct :user="user" :detail="true" /></span>
 				<span v-if="user.isAdmin" :title="$t('isAdmin')" style="color: var(--badge);"><fa :icon="faBookmark"/></span>
@@ -80,13 +45,17 @@
 			<p v-else class="empty">{{ $t('noAccountDescription') }}</p>
 		</div>
 		<div class="fields system">
+			<dl class="field" v-if="user.sex !== 'not-known'">
+				<dt class="name"><fa :icon="getGenderIcon(user.sex)" fixed-width/> {{ $t('gender') }}</dt>
+				<dd class="value">{{ $t(`_gender.${user.sex}`) }}</dd>
+			</dl>
 			<dl class="field" v-if="user.location">
 				<dt class="name"><fa :icon="faMapMarker" fixed-width/> {{ $t('location') }}</dt>
 				<dd class="value">{{ user.location }}</dd>
 			</dl>
 			<dl class="field" v-if="user.birthday">
 				<dt class="name"><fa :icon="faBirthdayCake" fixed-width/> {{ $t('birthday') }}</dt>
-				<dd class="value">{{ user.birthday.replace('-', '/').replace('-', '/') }} ({{ $t('yearsOld', { age }) }})</dd>
+				<dd class="value">{{ birthdayString }} ({{ $t('yearsOld', { age }) }})</dd>
 			</dl>
 			<dl class="field">
 				<dt class="name"><fa :icon="faCalendarAlt" fixed-width/> {{ $t('registeredDate') }}</dt>
@@ -145,7 +114,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
+<<<<<<< HEAD
 import { faEllipsisH, faRobot, faLock, faBookmark, faExclamationTriangle, faChartBar, faImage, faBirthdayCake, faMapMarker, faMars, faVenus, faGenderless } from '@fortawesome/free-solid-svg-icons';
+=======
+import { faEllipsisH, faRobot, faLock, faBookmark, faChartBar, faImage, faBirthdayCake, faMapMarker } from '@fortawesome/free-solid-svg-icons';
+>>>>>>> syuilo-develop
 import { faCalendarAlt, faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import * as age from 's-age';
 import XUserTimeline from './index.timeline.vue';
