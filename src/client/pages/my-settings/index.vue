@@ -3,6 +3,10 @@
 	<portal to="icon"><fa :icon="faCog"/></portal>
 	<portal to="title">{{ $t('settings') }}</portal>
 
+	<router-link to="/my/settings/profile" class="_panel _buttonPrimary">
+		{{ $t('editProfile') }}
+	</router-link>
+
 	<x-privacy-setting/>
 	<x-reaction-setting/>
 
