@@ -23,7 +23,6 @@
 			{{ $t('useOsNativeEmojis') }}
 			<template #desc><mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
 		</mk-switch>
-		<mk-switch v-model="useNotificationsPopup">{{ $t('useNotificationsPopup') }}</mk-switch>
 	</div>
 
 	<div class="_content">
@@ -182,11 +181,6 @@ export default Vue.extend({
 			get() { return this.$store.state.device.iconShape },
 			set(value) { this.$store.state.device.iconShape = value },
 		}
-
-		useNotificationsPopup: {
-			get() { return this.$store.state.device.useNotificationsPopup; },
-			set(value) { this.$store.commit('device/set', { key: 'useNotificationsPopup', value }); }
-		},
 	},
 
 	watch: {

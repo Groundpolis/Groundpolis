@@ -62,6 +62,8 @@ const sounds = [
 	'aisha/2',
 	'aisha/3',
 	'noizenecio/kick_gaba',
+	'xeltica/coin',
+	'xeltica/gomadare'
 ];
 
 export default Vue.extend({
