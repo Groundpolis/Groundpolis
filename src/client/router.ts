@@ -12,8 +12,8 @@ export const router = new VueRouter({
 	mode: 'history',
 	routes: [
 		{ path: '/', name: 'index', component: MkIndex, props: { src: 'myself' } },
-		{ path: '/everyone', component: MkIndex, props: { src: 'everyone' } },
-		{ path: '/reacted', component: MkIndex, props: { src: 'reacted' } },
+		{ path: '/everyone', name: 'everyone', component: MkIndex, props: { src: 'everyone' } },
+		{ path: '/reacted', name: 'reacted', component: MkIndex, props: { src: 'reacted' } },
 		{ path: '/announcements', component: page('announcements') },
 		{ path: '/about', component: page('about') },
 		{ path: '/about-misskey', component: page('about-misskey') },

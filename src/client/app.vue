@@ -65,8 +65,12 @@
 					<fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
 					<i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadMentions || $store.state.i.hasUnreadSpecifiedNotes)"><fa :icon="faCircle"/></i>
 				</button>
-				<router-link class="item" active-class="active" to="/preferences">
+				<div class="divider"></div>
+				<router-link class="item" active-class="active" to="/my/settings">
 					<fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
+				</router-link>
+				<router-link class="item" active-class="active" to="/preferences">
+					<fa :icon="faSlidersH" fixed-width/><span class="text">{{ $t('customize') }}</span>
 				</router-link>
 			</div>
 		</nav>
@@ -83,7 +87,11 @@
 			</div>
 			<div class="powerd-by" :class="{ visible: !$store.getters.isSignedIn }">
 				<b><router-link to="/">{{ host }}</router-link></b>
-				<small>Powered by <a href="https://github.com/xeltica/hitorisskey" target="_blank">Hitorisskey</a></small>
+				<small>
+					<i18n path="powered-by">
+						<a href="https://github.com/xeltica/hitorisskey" class="_link" target="_blank">{{ $t('hitorisskey') }}</a>
+					</i18n>
+				</small>
 			</div>
 		</main>
 
@@ -119,8 +127,12 @@
 
 	<div class="buttons">
 		<button class="button nav _button" @click="showNav = true" ref="navButton"><fa :icon="faBars"/><i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadSpecifiedNotes || $store.state.i.hasPendingReceivedFollowRequest || $store.state.i.hasUnreadMessagingMessage || $store.state.i.hasUnreadAnnouncement)"><fa :icon="faCircle"/></i></button>
-		<button v-if="$route.name === 'index'" class="button home _button" @click="top()"><fa :icon="faHome"/></button>
-		<button v-else class="button home _button" @click="$router.push('/')"><fa :icon="faHome"/></button>
+		<button v-if="$route.name === 'index'" class="button home _button" @click="top()"><fa :icon="faUser"/></button>
+		<button v-else class="button home _button" @click="$router.push('/')"><fa :icon="faUser"/></button>
+		<button v-if="$route.name === 'everyone'" class="button home _button" @click="top()"><fa :icon="faUsers"/></button>
+		<button v-else class="button home _button" @click="$router.push('/everyone')"><fa :icon="faUsers"/></button>
+		<button v-if="$route.name === 'reacted'" class="button home _button" @click="top()"><fa :icon="faStar"/></button>
+		<button v-else class="button home _button" @click="$router.push('/reacted')"><fa :icon="faStar"/></button>
 	</div>
 
 
@@ -130,14 +142,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faGamepad, faServer, faFileAlt, faSatellite, faInfoCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faGripVertical, faChevronLeft, faSlidersH, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faGamepad, faServer, faFileAlt, faSatellite, faInfoCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { ResizeObserver } from '@juggle/resize-observer';
 import { v4 as uuid } from 'uuid';
 import i18n from './i18n';
 import { host, instanceName } from './config';
-import { search } from './scripts/search';
-import MkToast from './components/toast.vue';
 
 const DESKTOP_THRESHOLD = 1100;
 
@@ -165,7 +175,7 @@ export default Vue.extend({
 			isDesktop: window.innerWidth >= DESKTOP_THRESHOLD,
 			canBack: false,
 			wallpaper: localStorage.getItem('wallpaper') != null,
-			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer
+			faGripVertical, faChevronLeft, faSlidersH, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer
 		};
 	},
 
@@ -674,10 +684,6 @@ export default Vue.extend({
 					&:first-child {
 						margin-bottom: 8px;
 					}
-
-					&:last-child {
-						margin-top: 8px;
-					}
 				}
 			}
 
@@ -742,12 +748,6 @@ export default Vue.extend({
 					top: 0;
 					margin-bottom: 16px;
 					border-bottom: solid 1px var(--divider);
-				}
-
-				&:last-child {
-					bottom: 0;
-					margin-top: 16px;
-					border-top: solid 1px var(--divider);
 				}
 
 				@media (max-width: $nav-icon-only-threshold) and (min-width: $nav-hide-threshold + 1px) {

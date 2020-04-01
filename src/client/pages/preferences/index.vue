@@ -1,7 +1,7 @@
 <template>
 <div>
-	<portal to="icon"><fa :icon="faCog"/></portal>
-	<portal to="title">{{ $t('clinetSettings') }}</portal>
+	<portal to="icon"><fa :icon="faSlidersH"/></portal>
+	<portal to="title">{{ $t('customize') }}</portal>
 
 	<x-theme/>
 
@@ -28,7 +28,7 @@
 	</section>
 
 	<section class="_card">
-		<div class="_title"><fa :icon="faCog"/> {{ $t('accessibility') }}</div>
+		<div class="_title"><fa :icon="faSlidersH"/> {{ $t('accessibility') }}</div>
 		<div class="_content">
 			<mk-switch v-model="autoReload">
 				{{ $t('autoReloadWhenDisconnected') }}
@@ -65,7 +65,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faImage, faCog, faMusic, faPlay, faVolumeUp, faVolumeMute } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faSlidersH, faMusic, faPlay, faVolumeUp, faVolumeMute } from '@fortawesome/free-solid-svg-icons';
 import MkInput from '../../components/ui/input.vue';
 import MkButton from '../../components/ui/button.vue';
 import MkSwitch from '../../components/ui/switch.vue';
@@ -118,7 +118,7 @@ export default Vue.extend({
 			lang: localStorage.getItem('lang'),
 			fontSize: localStorage.getItem('fontSize'),
 			sounds,
-			faImage, faCog, faMusic, faPlay, faVolumeUp, faVolumeMute
+			faImage, faSlidersH, faMusic, faPlay, faVolumeUp, faVolumeMute
 		}
 	},
 
