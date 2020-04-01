@@ -74,12 +74,10 @@ class Autocomplete {
 		const caretPos = this.textarea.selectionStart;
 		const text = this.text.substr(0, caretPos).split('\n').pop();
 
-		const mentionIndex = text.lastIndexOf('@');
 		const hashtagIndex = text.lastIndexOf('#');
 		const emojiIndex = text.lastIndexOf(':');
 
 		const max = Math.max(
-			mentionIndex,
 			hashtagIndex,
 			emojiIndex);
 
@@ -88,22 +86,10 @@ class Autocomplete {
 			return;
 		}
 
-		const isMention = mentionIndex != -1;
 		const isHashtag = hashtagIndex != -1;
 		const isEmoji = emojiIndex != -1;
 
 		let opened = false;
-
-		if (isMention) {
-			const username = text.substr(mentionIndex + 1);
-			if (username != '' && username.match(/^[a-zA-Z0-9_]+$/)) {
-				this.open('user', username);
-				opened = true;
-			} else if (username === '') {
-				this.open('user', null);
-				opened = true;
-			}
-		}
 
 		if (isHashtag && !opened) {
 			const hashtag = text.substr(hashtagIndex + 1);

@@ -78,7 +78,6 @@ export const mfmLanguage = P.createLanguage({
 		r.flip,
 		r.inlineCode,
 		r.mathInline,
-		r.mention,
 		r.hashtag,
 		r.url,
 		r.link,
@@ -126,19 +125,6 @@ export const mfmLanguage = P.createLanguage({
 	inlineCode: () => P.regexp(/`([^´\n]+?)`/, 1).map(x => createLeaf('inlineCode', { code: x })),
 	mathBlock: r => r.startOfLine.then(P.regexp(/\\\[([\s\S]+?)\\\]/, 1).map(x => createLeaf('mathBlock', { formula: x.trim() }))),
 	mathInline: () => P.regexp(/\\\((.+?)\\\)/, 1).map(x => createLeaf('mathInline', { formula: x })),
-	mention: () => {
-		return P((input, i) => {
-			const text = input.substr(i);
-			const match = text.match(/^@\w([\w-]*\w)?(?:@[\w.\-]+\w)?/);
-			if (!match) return P.makeFailure(i, 'not a mention');
-			if (input[i - 1] != null && input[i - 1].match(/[a-z0-9]/i)) return P.makeFailure(i, 'not a mention');
-			return P.makeSuccess(i + match[0].length, match[0]);
-		}).map(x => {
-			const { username, host } = parseAcct(x.substr(1));
-			const canonical = host != null ? `@${username}@${toUnicode(host)}` : x;
-			return createLeaf('mention', { canonical, username, host, acct: x });
-		});
-	},
 	hashtag: () => P((input, i) => {
 		const text = input.substr(i);
 		const match = text.match(/^#([^\s.,!?'"#:\/\[\]【】]+)/i);

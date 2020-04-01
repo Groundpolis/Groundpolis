@@ -3,7 +3,6 @@ import { MfmForest } from '../../mfm/types';
 import { parse, parsePlain } from '../../mfm/parse';
 import MkUrl from './url.vue';
 import MkLink from './link.vue';
-import MkMention from './mention.vue';
 import { concat } from '../../prelude/array';
 import MkFormula from './formula.vue';
 import MkCode from './code.vue';
@@ -165,16 +164,6 @@ export default Vue.component('misskey-flavored-markdown', {
 							rel: 'nofollow noopener',
 						},
 					}, genEl(token.children))];
-				}
-
-				case 'mention': {
-					return [createElement(MkMention, {
-						key: Math.random(),
-						props: {
-							host: (token.node.props.host == null && this.author && this.author.host != null ? this.author.host : token.node.props.host) || host,
-							username: token.node.props.username
-						}
-					})];
 				}
 
 				case 'hashtag': {
