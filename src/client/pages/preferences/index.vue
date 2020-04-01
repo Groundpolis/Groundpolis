@@ -3,8 +3,6 @@
 	<portal to="icon"><fa :icon="faCog"/></portal>
 	<portal to="title">{{ $t('clinetSettings') }}</portal>
 
-	<router-link v-if="$store.getters.isSignedIn" class="_panel _buttonPrimary" to="/my/settings" style="margin-bottom: var(--margin);">{{ $t('accountSettings') }}</router-link>
-
 	<x-theme/>
 
 	<section class="_card">
@@ -26,26 +24,6 @@
 				<option v-for="sound in sounds" :value="sound" :key="sound">{{ sound || $t('none') }}</option>
 				<template #text><button class="_textButton" @click="listen(sfxNoteMy)" v-if="sfxNoteMy"><fa :icon="faPlay"/> {{ $t('listen') }}</button></template>
 			</mk-select>
-			<mk-select v-model="sfxNotification">
-				<template #label>{{ $t('_sfx.notification') }}</template>
-				<option v-for="sound in sounds" :value="sound" :key="sound">{{ sound || $t('none') }}</option>
-				<template #text><button class="_textButton" @click="listen(sfxNotification)" v-if="sfxNotification"><fa :icon="faPlay"/> {{ $t('listen') }}</button></template>
-			</mk-select>
-			<mk-select v-model="sfxChat">
-				<template #label>{{ $t('_sfx.chat') }}</template>
-				<option v-for="sound in sounds" :value="sound" :key="sound">{{ sound || $t('none') }}</option>
-				<template #text><button class="_textButton" @click="listen(sfxChat)" v-if="sfxChat"><fa :icon="faPlay"/> {{ $t('listen') }}</button></template>
-			</mk-select>
-			<mk-select v-model="sfxChatBg">
-				<template #label>{{ $t('_sfx.chatBg') }}</template>
-				<option v-for="sound in sounds" :value="sound" :key="sound">{{ sound || $t('none') }}</option>
-				<template #text><button class="_textButton" @click="listen(sfxChatBg)" v-if="sfxChatBg"><fa :icon="faPlay"/> {{ $t('listen') }}</button></template>
-			</mk-select>
-			<mk-select v-model="sfxAntenna">
-				<template #label>{{ $t('_sfx.antenna') }}</template>
-				<option v-for="sound in sounds" :value="sound" :key="sound">{{ sound || $t('none') }}</option>
-				<template #text><button class="_textButton" @click="listen(sfxAntenna)" v-if="sfxAntenna"><fa :icon="faPlay"/> {{ $t('listen') }}</button></template>
-			</mk-select>
 		</div>
 	</section>
 
@@ -64,7 +42,6 @@
 				{{ $t('useOsNativeEmojis') }}
 				<template #desc><mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
 			</mk-switch>
-			<mk-switch v-model="showFixedPostForm">{{ $t('showFixedPostForm') }}</mk-switch>
 		</div>
 		<div class="_content">
 			<mk-select v-model="lang">

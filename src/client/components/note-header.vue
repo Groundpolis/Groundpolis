@@ -1,22 +1,9 @@
 <template>
 <header class="kkwtjztg">
-	<router-link class="name" :to="note.user | userPage" v-user-preview="note.user.id">
-		<mk-user-name :user="note.user"/>
-	</router-link>
-	<span class="is-bot" v-if="note.user.isBot">bot</span>
-	<span class="username"><mk-acct :user="note.user"/></span>
-	<span class="admin" v-if="note.user.isAdmin"><fa :icon="faBookmark"/></span>
-	<span class="moderator" v-if="!note.user.isAdmin && note.user.isModerator"><fa :icon="farBookmark"/></span>
+	<router-link :to="note | notePage" class="username">ID: {{ note.id }}</router-link>
+	<span class="is-myself" v-if="note.user.id === $store.state.i.id">{{ $t('you') }}</span>
 	<div class="info">
-		<span class="mobile" v-if="note.viaMobile"><fa :icon="faMobileAlt"/></span>
-		<router-link class="created-at" :to="note | notePage">
-			<mk-time :time="note.createdAt"/>
-		</router-link>
-		<span class="visibility" v-if="note.visibility != 'public'">
-			<fa v-if="note.visibility == 'home'" :icon="faHome"/>
-			<fa v-if="note.visibility == 'followers'" :icon="faUnlock"/>
-			<fa v-if="note.visibility == 'specified'" :icon="faEnvelope"/>
-		</span>
+		<mk-time :time="note.createdAt"/>
 	</div>
 </header>
 </template>
@@ -47,6 +34,7 @@ export default Vue.extend({
 	display: flex;
 	align-items: baseline;
 	white-space: nowrap;
+	margin-bottom: 12px;
 
 	> .name {
 		display: block;
@@ -64,7 +52,7 @@ export default Vue.extend({
 		}
 	}
 
-	> .is-bot {
+	> .is-myself {
 		flex-shrink: 0;
 		align-self: center;
 		margin: 0 .5em 0 0;

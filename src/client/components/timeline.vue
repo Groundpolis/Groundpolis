@@ -73,16 +73,7 @@ export default Vue.extend({
 
 		let endpoint;
 
-		if (this.src == 'antenna') {
-			endpoint = 'antennas/notes';
-			this.query = {
-				antennaId: this.antenna.id
-			};
-			this.connection = this.$root.stream.connectToChannel('antenna', {
-				antennaId: this.antenna.id
-			});
-			this.connection.on('note', prepend);
-		} else if (this.src == 'home') {
+		if (this.src == 'myself') {
 			endpoint = 'notes/timeline';
 			this.connection = this.$root.stream.useSharedConnection('homeTimeline');
 			this.connection.on('note', prepend);
@@ -90,29 +81,10 @@ export default Vue.extend({
 			this.connection2 = this.$root.stream.useSharedConnection('main');
 			this.connection2.on('follow', onChangeFollowing);
 			this.connection2.on('unfollow', onChangeFollowing);
-		} else if (this.src == 'local') {
+		} else if (this.src == 'everyone') {
 			endpoint = 'notes/local-timeline';
 			this.connection = this.$root.stream.useSharedConnection('localTimeline');
 			this.connection.on('note', prepend);
-		} else if (this.src == 'social') {
-			endpoint = 'notes/hybrid-timeline';
-			this.connection = this.$root.stream.useSharedConnection('hybridTimeline');
-			this.connection.on('note', prepend);
-		} else if (this.src == 'global') {
-			endpoint = 'notes/global-timeline';
-			this.connection = this.$root.stream.useSharedConnection('globalTimeline');
-			this.connection.on('note', prepend);
-		} else if (this.src == 'list') {
-			endpoint = 'notes/user-list-timeline';
-			this.query = {
-				listId: this.list.id
-			};
-			this.connection = this.$root.stream.connectToChannel('userList', {
-				listId: this.list.id
-			});
-			this.connection.on('note', prepend);
-			this.connection.on('userAdded', onUserAdded);
-			this.connection.on('userRemoved', onUserRemoved);
 		}
 
 		this.pagination = {

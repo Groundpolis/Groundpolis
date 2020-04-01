@@ -20,11 +20,6 @@
 		<div class="sub">
 			<button v-if="widgetsEditMode" class="_button edit active" @click="widgetsEditMode = false"><fa :icon="faGripVertical"/></button>
 			<button v-else class="_button edit" @click="widgetsEditMode = true"><fa :icon="faGripVertical"/></button>
-			<div class="search">
-				<fa :icon="faSearch"/>
-				<input type="search" :placeholder="$t('search')" v-model="searchQuery" v-autocomplete="{ model: 'searchQuery' }" :disabled="searchWait" @keypress="searchKeypress"/>
-			</div>
-			<button v-if="$store.getters.isSignedIn" class="post _buttonPrimary" @click="post()"><fa :icon="faPencilAlt"/></button>
 			<x-clock v-if="isDesktop" class="clock"/>
 		</div>
 	</header>
@@ -40,47 +35,29 @@
 	<transition name="nav">
 		<nav class="nav" ref="nav" v-show="showNav">
 			<div>
-				<button class="item _button account" @click="openAccountMenu" v-if="$store.getters.isSignedIn">
-					<mk-avatar :user="$store.state.i" class="avatar"/><mk-acct class="text" :user="$store.state.i"/>
+				<button class="item _button" @click="top()">
+					<span class="text">Hitorisskey</span>
 				</button>
-				<button class="item _button index active" @click="top()" v-if="$route.name === 'index'">
-					<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
-				</button>
-				<router-link class="item index" active-class="active" to="/" exact v-else>
-					<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
+				<router-link class="item index" active-class="active" to="/" exact>
+					<fa :icon="$store.getters.isSignedIn ? faUser : faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('_timelines.myself') : $t('home') }}</span>
 				</router-link>
 				<template v-if="$store.getters.isSignedIn">
-					<router-link class="item notifications" active-class="active" to="/my/notifications" ref="notificationButton">
-						<fa :icon="faBell" fixed-width/><span class="text">{{ $t('notifications') }}</span>
-						<i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i>
+					<router-link class="item index" active-class="active" to="/everyone" exact>
+						<fa :icon="faUsers" fixed-width/><span class="text">{{ $t('_timelines.everyone') }}</span>
 					</router-link>
-					<router-link class="item" active-class="active" to="/my/messaging">
-						<fa :icon="faComments" fixed-width/><span class="text">{{ $t('messaging') }}</span>
-						<i v-if="$store.state.i.hasUnreadMessagingMessage"><fa :icon="faCircle"/></i>
+					<router-link class="item index" active-class="active" to="/reacted" exact>
+						<fa :icon="faStar" fixed-width/><span class="text">{{ $t('_timelines.reacted') }}</span>
 					</router-link>
+				</template>
+				<!-- <template v-if="$store.getters.isSignedIn">
 					<router-link class="item" active-class="active" to="/my/drive">
 						<fa :icon="faCloud" fixed-width/><span class="text">{{ $t('drive') }}</span>
 					</router-link>
-					<router-link class="item" active-class="active" to="/my/follow-requests" v-if="$store.state.i.isLocked">
-						<fa :icon="faUserClock" fixed-width/><span class="text">{{ $t('followRequests') }}</span>
-						<i v-if="$store.state.i.hasPendingReceivedFollowRequest"><fa :icon="faCircle"/></i>
-					</router-link>
-				</template>
-				<div class="divider"></div>
-				<router-link class="item" active-class="active" to="/featured">
-					<fa :icon="faFireAlt" fixed-width/><span class="text">{{ $t('featured') }}</span>
-				</router-link>
-				<router-link class="item" active-class="active" to="/explore">
-					<fa :icon="faHashtag" fixed-width/><span class="text">{{ $t('explore') }}</span>
-				</router-link>
+				</template> -->
 				<router-link class="item" active-class="active" to="/announcements">
 					<fa :icon="faBroadcastTower" fixed-width/><span class="text">{{ $t('announcements') }}</span>
 					<i v-if="$store.getters.isSignedIn && $store.state.i.hasUnreadAnnouncement"><fa :icon="faCircle"/></i>
 				</router-link>
-				<button class="item _button" @click="search()">
-					<fa :icon="faSearch" fixed-width/><span class="text">{{ $t('search') }}</span>
-				</button>
-				<div class="divider"></div>
 				<button class="item _button" :class="{ active: $route.path === '/instance' || $route.path.startsWith('/instance/') }" v-if="$store.getters.isSignedIn && ($store.state.i.isAdmin || $store.state.i.isModerator)" @click="oepnInstanceMenu">
 					<fa :icon="faServer" fixed-width/><span class="text">{{ $t('instance') }}</span>
 				</button>
@@ -106,7 +83,7 @@
 			</div>
 			<div class="powerd-by" :class="{ visible: !$store.getters.isSignedIn }">
 				<b><router-link to="/">{{ host }}</router-link></b>
-				<small>Powered by <a href="https://github.com/syuilo/misskey" target="_blank">Misskey</a></small>
+				<small>Powered by <a href="https://github.com/xeltica/hitorisskey" target="_blank">Hitorisskey</a></small>
 			</div>
 		</main>
 
@@ -144,11 +121,8 @@
 		<button class="button nav _button" @click="showNav = true" ref="navButton"><fa :icon="faBars"/><i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadSpecifiedNotes || $store.state.i.hasPendingReceivedFollowRequest || $store.state.i.hasUnreadMessagingMessage || $store.state.i.hasUnreadAnnouncement)"><fa :icon="faCircle"/></i></button>
 		<button v-if="$route.name === 'index'" class="button home _button" @click="top()"><fa :icon="faHome"/></button>
 		<button v-else class="button home _button" @click="$router.push('/')"><fa :icon="faHome"/></button>
-		<button v-if="$store.getters.isSignedIn" class="button notifications _button" @click="$router.push('/my/notifications')" ref="notificationButton2"><fa :icon="faBell"/><i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i></button>
-		<button v-if="$store.getters.isSignedIn" class="button post _buttonPrimary" @click="post()"><fa :icon="faPencilAlt"/></button>
 	</div>
 
-	<button v-if="$store.getters.isSignedIn" class="post _buttonPrimary" @click="post()"><fa :icon="faPencilAlt"/></button>
 
 	<stream-indicator v-if="$store.getters.isSignedIn"/>
 </div>
@@ -198,9 +172,6 @@ export default Vue.extend({
 	computed: {
 		keymap(): any {
 			return {
-				'p': this.post,
-				'n': this.post,
-				's': this.search,
 				'h|/': this.help
 			};
 		},
@@ -231,12 +202,6 @@ export default Vue.extend({
 				this.$store.commit('deviceUser/setWidgets', [{
 					name: 'calendar',
 					id: 'a', data: {}
-				}, {
-					name: 'notifications',
-					id: 'b', data: {}
-				}, {
-					name: 'trends',
-					id: 'c', data: {}
 				}]);
 			}
 		}
@@ -303,78 +268,6 @@ export default Vue.extend({
 			this.$root.post();
 		},
 
-		search() {
-			if (this.searching) return;
-
-			this.$root.dialog({
-				title: this.$t('search'),
-				input: true
-			}).then(async ({ canceled, result: query }) => {
-				if (canceled || query == null || query == '') return;
-
-				this.searching = true;
-				search(this, query).finally(() => {
-					this.searching = false;
-				});
-			});
-		},
-
-		searchKeypress(e) {
-			if (e.keyCode == 13) {
-				this.searchWait = true;
-				search(this, this.searchQuery).finally(() => {
-					this.searchWait = false;
-					this.searchQuery = '';
-				});
-			}
-		},
-
-		async openAccountMenu(ev) {
-			const accounts = (await this.$root.api('users/show', { userIds: this.$store.state.device.accounts.map(x => x.id) })).filter(x => x.id !== this.$store.state.i.id);
-
-			const accountItems = accounts.map(account => ({
-				type: 'user',
-				user: account,
-				action: () => { this.switchAccount(account); }
-			}));
-
-			this.$root.menu({
-				items: [...[{
-					type: 'link',
-					text: this.$t('profile'),
-					to: `/@${ this.$store.state.i.username }`,
-					avatar: this.$store.state.i,
-				}, {
-					type: 'link',
-					text: this.$t('accountSettings'),
-					to: '/my/settings',
-					icon: faCog,
-				}, null, ...accountItems, {
-					icon: faPlus,
-					text: this.$t('addAcount'),
-					action: () => {
-						this.$root.menu({
-							items: [{
-								text: this.$t('existingAcount'),
-								action: () => { this.addAcount(); },
-							}, {
-								text: this.$t('createAccount'),
-								action: () => { this.createAccount(); },
-							}],
-							align: 'left',
-							fixed: true,
-							width: 240,
-							source: ev.currentTarget || ev.target,
-						});
-					},
-				}]],
-				align: 'left',
-				fixed: true,
-				width: 240,
-				source: ev.currentTarget || ev.target,
-			});
-		},
-
 		oepnInstanceMenu(ev) {
 			this.$root.menu({
 				items: [{
@@ -427,49 +320,7 @@ export default Vue.extend({
 
 		more(ev) {
 			this.$root.menu({
-				items: [...(this.$store.getters.isSignedIn ? [{
-					type: 'link',
-					text: this.$t('lists'),
-					to: '/my/lists',
-					icon: faListUl,
-				}, {
-					type: 'link',
-					text: this.$t('groups'),
-					to: '/my/groups',
-					icon: faUsers,
-				}, {
-					type: 'link',
-					text: this.$t('antennas'),
-					to: '/my/antennas',
-					icon: faSatellite,
-				}, {
-					type: 'link',
-					text: this.$t('mentions'),
-					to: '/my/mentions',
-					icon: faAt,
-					indicate: this.$store.state.i.hasUnreadMentions
-				}, {
-					type: 'link',
-					text: this.$t('directNotes'),
-					to: '/my/messages',
-					icon: faEnvelope,
-					indicate: this.$store.state.i.hasUnreadSpecifiedNotes
-				}, {
-					type: 'link',
-					text: this.$t('favorites'),
-					to: '/my/favorites',
-					icon: faStar,
-				}, {
-					type: 'link',
-					text: this.$t('pages'),
-					to: '/my/pages',
-					icon: faFileAlt,
-				}, {
-					type: 'link',
-					text: this.$t('games'),
-					to: '/games',
-					icon: faGamepad,
-				}, null] : []), {
+				items: [{
 					type: 'link',
 					text: this.$t('help'),
 					to: '/docs',
@@ -530,21 +381,6 @@ export default Vue.extend({
 			});
 		},
 
-		onNotification(notification) {
-			// TODO: ユーザーが画面を見てないと思われるとき(ブラウザやタブがアクティブじゃないなど)は送信しない
-			if (true) {
-				this.$root.stream.send('readNotification', {
-					id: notification.id
-				});
-
-				this.$root.new(MkToast, {
-					notification
-				});
-			}
-
-			this.$root.sound('notification');
-		},
-
 		widgetFunc(id) {
 			const w = this.$refs[id][0];
 			if (w.func) w.func();
@@ -557,11 +393,8 @@ export default Vue.extend({
 		addWidget(ev) {
 			const widgets = [
 				'memo',
-				'notifications',
-				'timeline',
 				'calendar',
 				'rss',
-				'trends',
 				'clock',
 				'activity',
 				'photos',

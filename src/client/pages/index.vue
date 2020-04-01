@@ -1,5 +1,5 @@
 <template>
-<component :is="$store.getters.isSignedIn ? 'home' : 'welcome'" :show-title="showTitle"></component>
+<component :is="$store.getters.isSignedIn ? 'home' : 'welcome'" :show-title="showTitle" :src="src"></component>
 </template>
 
 <script lang="ts">
@@ -7,12 +7,14 @@ import Vue from 'vue';
 import Home from './index.home.vue';
 
 export default Vue.extend({
-	name: 'index',
+	name: 'Index',
 
 	components: {
 		Home,
 		Welcome: () => import('./index.welcome.vue').then(m => m.default),
 	},
+
+	props: [ 'src' ],
 
 	data() {
 		return {

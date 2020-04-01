@@ -3,30 +3,6 @@
 	<portal to="icon"><fa :icon="faCog"/></portal>
 	<portal to="title">{{ $t('accountSettings') }}</portal>
 
-	<x-profile-setting/>
-	<x-privacy-setting/>
-	<x-reaction-setting/>
-
-	<section class="_card">
-		<div class="_title"><fa :icon="faCog"/> {{ $t('general') }}</div>
-		<div class="_content">
-			<mk-switch v-model="$store.state.i.autoWatch" @change="onChangeAutoWatch">
-				{{ $t('autoNoteWatch') }}<template #desc>{{ $t('autoNoteWatchDescription') }}</template>
-			</mk-switch>
-			<mk-switch v-model="$store.state.i.injectFeaturedNote" @change="onChangeInjectFeaturedNote">
-				{{ $t('showFeaturedNotesInTimeline') }}
-			</mk-switch>
-		</div>
-		<div class="_content">
-			<mk-button @click="readAllNotifications">{{ $t('markAsReadAllNotifications') }}</mk-button>
-			<mk-button @click="readAllUnreadNotes">{{ $t('markAsReadAllUnreadNotes') }}</mk-button>
-			<mk-button @click="readAllMessagingMessages">{{ $t('markAsReadAllTalkMessages') }}</mk-button>
-		</div>
-	</section>
-
-	<x-import-export/>
-	<x-drive/>
-	<x-mute-block/>
 	<x-security/>
 	<x-2fa/>
 	<x-integration/>
