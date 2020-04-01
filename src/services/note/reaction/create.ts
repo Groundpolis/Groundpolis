@@ -15,9 +15,8 @@ import { createNotification } from '../../create-notification';
 import deleteReaction from './delete';
 
 export default async (user: User, note: Note, reaction?: string) => {
-	// Myself
-	if (note.userId === user.id) {
-		throw new IdentifiableError('2d8e7297-1873-4c00-8404-792c68d7bef0', 'cannot react to my note');
+	if (!reaction || !['👍', '❤️', '😆', '😇', '😮', '🎉', '👏', '🍣'].includes(reaction)) {
+		reaction = '👍'
 	}
 
 	reaction = await toDbReaction(reaction);

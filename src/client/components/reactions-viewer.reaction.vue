@@ -16,7 +16,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import XDetails from './reactions-viewer.details.vue';
 import XReactionIcon from './reaction-icon.vue';
 
 export default Vue.extend({
@@ -58,14 +57,13 @@ export default Vue.extend({
 			return this.$store.getters.isSignedIn && this.$store.state.i.id === this.note.userId;
 		},
 	},
-	mounted() {
-		if (!this.isInitial) this.anime();
-	},
 	watch: {
 		count(newCount, oldCount) {
 			if (oldCount < newCount) this.anime();
-			if (this.details != null) this.openDetails();
 		},
+	},
+	mounted() {
+		if (!this.isInitial) this.anime();
 	},
 	methods: {
 		toggleReaction() {
@@ -89,42 +87,6 @@ export default Vue.extend({
 					noteId: this.note.id,
 					reaction: this.reaction
 				});
-			}
-		},
-		onMouseover() {
-			this.isHovering = true;
-			this.detailsTimeoutId = setTimeout(this.openDetails, 300);
-		},
-		onMouseleave() {
-			this.isHovering = false;
-			clearTimeout(this.detailsTimeoutId);
-			this.closeDetails();
-		},
-		openDetails() {
-			if (this.$root.isMobile) return;
-			this.$root.api('notes/reactions', {
-				noteId: this.note.id,
-				type: this.reaction,
-				limit: 11
-			}).then((reactions: any[]) => {
-				const users = reactions
-					.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-					.map(x => x.user);
-
-				this.closeDetails();
-				if (!this.isHovering) return;
-				this.details = this.$root.new(XDetails, {
-					reaction: this.reaction,
-					users,
-					count: this.count,
-					source: this.$refs.reaction
-				});
-			});
-		},
-		closeDetails() {
-			if (this.details != null) {
-				this.details.close();
-				this.details = null;
 			}
 		},
 		anime() {

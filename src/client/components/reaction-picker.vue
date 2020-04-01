@@ -1,10 +1,10 @@
 <template>
 <x-popup :source="source" ref="popup" @closed="() => { $emit('closed'); destroyDom(); }" v-hotkey.global="keymap">
 	<div class="rdfaahpb">
+		<h1>{{ $t('enterEmoji') }}</h1>
 		<div class="buttons" ref="buttons" :class="{ showFocus }">
 			<button class="_button" v-for="(reaction, i) in rs" :key="reaction" @click="react(reaction)" :tabindex="i + 1" :title="reaction" v-particle><x-reaction-icon :reaction="reaction"/></button>
 		</div>
-		<input class="text" v-model="text" :placeholder="$t('enterEmoji')" @keyup.enter="reactText" @input="tryReactText" v-autocomplete="{ model: 'text' }">
 	</div>
 </x-popup>
 </template>
@@ -42,7 +42,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			rs: this.reactions || this.$store.state.settings.reactions,
+			rs: [ '👍', '❤️', '😆', '😇', '😮', '🎉', '👏', '🍣' ],
 			text: null,
 			focus: null
 		};
@@ -126,15 +126,29 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .rdfaahpb {
+	> h1 {
+		width: 172px;
+		padding: 8px 8px 0 8px;
+		font-weight: bold;
+		margin: 0;
+		box-sizing: border-box;
+		text-align: center;
+		font-size: 16px;
+		background: transparent;
+		color: var(--fg);
+		cursor: none;
+		pointer-events: none;
+	}
+
 	> .buttons {
 		padding: 6px 6px 0 6px;
-		width: 212px;
+		width: 172px;
 		box-sizing: border-box;
 		text-align: center;
 
 		@media (max-width: 1025px) {
 			padding: 8px 8px 0 8px;
-			width: 256px;
+			width: 208px;
 		}
 
 		&.showFocus {
@@ -184,7 +198,7 @@ export default Vue.extend({
 	}
 
 	> .text {
-		width: 208px;
+		width: 172px;
 		padding: 8px;
 		margin: 0 0 6px 0;
 		box-sizing: border-box;
@@ -196,7 +210,7 @@ export default Vue.extend({
 		color: var(--fg);
 
 		@media (max-width: 1025px) {
-			width: 256px;
+			width: 208px;
 			margin: 4px 0 8px 0;
 		}
 	}
