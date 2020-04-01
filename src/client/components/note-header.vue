@@ -1,7 +1,7 @@
 <template>
 <header class="kkwtjztg">
 	<router-link :to="note | notePage" class="username">ID: {{ note.id }}</router-link>
-	<span class="is-myself" v-if="note.user.id === $store.state.i.id">{{ $t('you') }}</span>
+	<span class="is-myself" v-if="note.isMyNote">{{ $t('you') }}</span>
 	<div class="info">
 		<mk-time :time="note.createdAt"/>
 	</div>

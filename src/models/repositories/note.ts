@@ -1,7 +1,7 @@
 import { EntityRepository, Repository, In } from 'typeorm';
 import { Note } from '../entities/note';
 import { User } from '../entities/user';
-import { Emojis, Users, PollVotes, DriveFiles, NoteReactions, Followings, Polls } from '..';
+import { Emojis, Users, DriveFiles, NoteReactions, Followings } from '..';
 import { ensure } from '../../prelude/ensure';
 import { SchemaType } from '../../misc/schema';
 import { awaitAll } from '../../prelude/await-all';
@@ -20,57 +20,11 @@ export class NoteRepository extends Repository<Note> {
 	private async hideNote(packedNote: PackedNote, meId: User['id'] | null) {
 		let hide = false;
 
-		// visibility が specified かつ自分が指定されていなかったら非表示
-		if (packedNote.visibility === 'specified') {
-			if (meId == null) {
-				hide = true;
-			} else if (meId === packedNote.userId) {
-				hide = false;
-			} else {
-				// 指定されているかどうか
-				const specified = packedNote.visibleUserIds!.some((id: any) => meId === id);
-
-				if (specified) {
-					hide = false;
-				} else {
-					hide = true;
-				}
-			}
-		}
-
-		// visibility が followers かつ自分が投稿者のフォロワーでなかったら非表示
-		if (packedNote.visibility == 'followers') {
-			if (meId == null) {
-				hide = true;
-			} else if (meId === packedNote.userId) {
-				hide = false;
-			} else if (packedNote.reply && (meId === (packedNote.reply as PackedNote).userId)) {
-				// 自分の投稿に対するリプライ
-				hide = false;
-			} else if (packedNote.mentions && packedNote.mentions.some(id => meId === id)) {
-				// 自分へのメンション
-				hide = false;
-			} else {
-				// フォロワーかどうか
-				const following = await Followings.findOne({
-					followeeId: packedNote.userId,
-					followerId: meId
-				});
-
-				if (following == null) {
-					hide = true;
-				} else {
-					hide = false;
-				}
-			}
-		}
-
 		if (hide) {
 			packedNote.visibleUserIds = undefined;
 			packedNote.fileIds = [];
 			packedNote.files = [];
 			packedNote.text = null;
-			packedNote.poll = undefined;
 			packedNote.cw = null;
 			packedNote.isHidden = true;
 		}
@@ -92,42 +46,6 @@ export class NoteRepository extends Repository<Note> {
 		const meId = me ? typeof me === 'string' ? me : me.id : null;
 		const note = typeof src === 'object' ? src : await this.findOne(src).then(ensure);
 		const host = note.userHost;
-
-		async function populatePoll() {
-			const poll = await Polls.findOne(note.id).then(ensure);
-			const choices = poll.choices.map(c => ({
-				text: c,
-				votes: poll.votes[poll.choices.indexOf(c)],
-				isVoted: false
-			}));
-
-			if (poll.multiple) {
-				const votes = await PollVotes.find({
-					userId: meId!,
-					noteId: note.id
-				});
-
-				const myChoices = votes.map(v => v.choice);
-				for (const myChoice of myChoices) {
-					choices[myChoice].isVoted = true;
-				}
-			} else {
-				const vote = await PollVotes.findOne({
-					userId: meId!,
-					noteId: note.id
-				});
-
-				if (vote) {
-					choices[vote.choice].isVoted = true;
-				}
-			}
-
-			return {
-				multiple: poll.multiple,
-				expiresAt: poll.expiresAt,
-				choices
-			};
-		}
 
 		async function populateEmojis(emojiNames: string[], noteUserHost: string | null, reactionNames: string[]) {
 			const where = [] as {}[];
@@ -169,58 +87,82 @@ export class NoteRepository extends Repository<Note> {
 			return undefined;
 		}
 
+		function populateVirtualUser() {
+			return {
+				id: 'VIRTUAL_ANONYMOUS_USER',
+				name: null,
+				username: 'anonymous',
+				host: null,
+				avatarUrl: null,
+				avatarColor: null,
+				isAdmin: false,
+				isModerator: false,
+				isBot: false,
+				isCat: false,
+				emojis: [],
+				url: null,
+				createdAt: '1970-01-01T00:00:00.000Z',
+				updatedAt: '1970-01-01T00:00:00.000Z',
+				bannerUrl: null,
+				bannerColor: null,
+				isLocked: false,
+				isSilenced: false,
+				isSuspended: false,
+				description: null,
+				location: null,
+				birthday: null,
+				fields: [],
+				followersCount: 0,
+				followingCount: 0,
+				notesCount: 0,
+				pinnedNoteIds: [],
+				pinnedNotes: [],
+				pinnedPageId: null,
+				pinnedPage: null,
+				twoFactorEnabled: false,
+				usePasswordLessLogin: false,
+				securityKeys: false,
+				isFollowing: false,
+				isFollowed: false,
+				hasPendingFollowRequestFromYou: false,
+				hasPendingFollowRequestToYou: false,
+				isBlocking: false,
+				isBlocked: false,
+				isMuted: false
+			};
+		}
+
 		let text = note.text;
 
 		if (note.name && note.uri) {
 			text = `【${note.name}】\n${(note.text || '').trim()}\n${note.uri}`;
 		}
 
+		const user = populateVirtualUser();
+
 		const packed = await awaitAll({
 			id: note.id,
 			createdAt: note.createdAt.toISOString(),
-			userId: note.userId,
-			user: Users.pack(note.user || note.userId, meId),
+			userId: user.id,
+			user,
 			text: text,
 			cw: note.cw,
-			visibility: note.visibility,
-			localOnly: note.localOnly || undefined,
-			visibleUserIds: note.visibility === 'specified' ? note.visibleUserIds : undefined,
 			viaMobile: note.viaMobile || undefined,
-			renoteCount: note.renoteCount,
 			repliesCount: note.repliesCount,
 			reactions: convertLegacyReactions(note.reactions),
 			tags: note.tags.length > 0 ? note.tags : undefined,
 			emojis: populateEmojis(note.emojis, host, Object.keys(note.reactions)),
 			fileIds: note.fileIds,
 			files: DriveFiles.packMany(note.fileIds),
-			replyId: note.replyId,
-			renoteId: note.renoteId,
-			mentions: note.mentions.length > 0 ? note.mentions : undefined,
 			uri: note.uri || undefined,
-			_featuredId_: (note as any)._featuredId_ || undefined,
-			_prId_: (note as any)._prId_ || undefined,
 
 			...(opts.detail ? {
-				reply: note.replyId ? this.pack(note.replyId, meId, {
-					detail: false
-				}) : undefined,
-
-				renote: note.renoteId ? this.pack(note.renoteId, meId, {
-					detail: true
-				}) : undefined,
-
-				poll: note.hasPoll ? populatePoll() : undefined,
-
 				...(meId ? {
-					myReaction: populateMyReaction()
+					myReaction: populateMyReaction(),
+					isMyNote: meId === note.user.id,
 				} : {})
 			} : {})
 		});
-
-		if (packed.user.isCat && packed.text) {
-			const tokens = packed.text ? parse(packed.text) : [];
-			packed.text = toString(tokens, { doNyaize: true });
-		}
 
 		if (!opts.skipHide) {
 			await this.hideNote(packed, meId);
@@ -276,28 +218,6 @@ export const packedNoteSchema = {
 			ref: 'User',
 			optional: false as const, nullable: false as const,
 		},
-		replyId: {
-			type: 'string' as const,
-			optional: true as const, nullable: true as const,
-			format: 'id',
-			example: 'xxxxxxxxxx',
-		},
-		renoteId: {
-			type: 'string' as const,
-			optional: true as const, nullable: true as const,
-			format: 'id',
-			example: 'xxxxxxxxxx',
-		},
-		reply: {
-			type: 'object' as const,
-			optional: true as const, nullable: true as const,
-			ref: 'Note'
-		},
-		renote: {
-			type: 'object' as const,
-			optional: true as const, nullable: true as const,
-			ref: 'Note'
-		},
 		viaMobile: {
 			type: 'boolean' as const,
 			optional: true as const, nullable: false as const,
@@ -309,15 +229,6 @@ export const packedNoteSchema = {
 		visibility: {
 			type: 'string' as const,
 			optional: false as const, nullable: false as const,
-		},
-		mentions: {
-			type: 'array' as const,
-			optional: true as const, nullable: false as const,
-			items: {
-				type: 'string' as const,
-				optional: false as const, nullable: false as const,
-				format: 'id'
-			}
 		},
 		visibleUserIds: {
 			type: 'array' as const,
@@ -353,10 +264,6 @@ export const packedNoteSchema = {
 				type: 'string' as const,
 				optional: false as const, nullable: false as const,
 			}
-		},
-		poll: {
-			type: 'object' as const,
-			optional: true as const, nullable: true as const,
 		},
 
 	},
