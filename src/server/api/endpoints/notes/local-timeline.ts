@@ -74,24 +74,9 @@ export const meta = {
 			ref: 'Note',
 		}
 	},
-
-	errors: {
-		ltlDisabled: {
-			message: 'Local timeline has been disabled.',
-			code: 'LTL_DISABLED',
-			id: '45a6eb02-7695-4393-b023-dd3be9aaaefd'
-		},
-	}
 };
 
 export default define(meta, async (ps, user) => {
-	const m = await fetchMeta();
-	if (m.disableLocalTimeline) {
-		if (user == null || (!user.isAdmin && !user.isModerator)) {
-			throw new ApiError(meta.errors.ltlDisabled);
-		}
-	}
-
 	//#region Construct query
 	const query = makePaginationQuery(Notes.createQueryBuilder('note'),
 			ps.sinceId, ps.untilId, ps.sinceDate, ps.untilDate)

@@ -37,21 +37,6 @@ export const meta = {
 	kind: 'write:notes',
 
 	params: {
-		visibility: {
-			validator: $.optional.str.or(['public', 'home', 'followers', 'specified']),
-			default: 'public',
-			desc: {
-				'ja-JP': '投稿の公開範囲'
-			}
-		},
-
-		visibleUserIds: {
-			validator: $.optional.arr($.type(ID)).unique().min(0),
-			desc: {
-				'ja-JP': '(投稿の公開範囲が specified の場合)投稿を閲覧できるユーザー'
-			}
-		},
-
 		text: {
 			validator: $.optional.nullable.str.pipe(text =>
 				text.trim() != ''
@@ -76,14 +61,6 @@ export const meta = {
 			default: false,
 			desc: {
 				'ja-JP': 'モバイルデバイスからの投稿か否か。'
-			}
-		},
-
-		localOnly: {
-			validator: $.optional.bool,
-			default: false,
-			desc: {
-				'ja-JP': 'ローカルのみに投稿か否か。'
 			}
 		},
 
@@ -125,36 +102,6 @@ export const meta = {
 				'ja-JP': '添付するファイル (このパラメータは廃止予定です。代わりに fileIds を使ってください。)'
 			}
 		},
-
-		replyId: {
-			validator: $.optional.type(ID),
-			desc: {
-				'ja-JP': '返信対象'
-			}
-		},
-
-		renoteId: {
-			validator: $.optional.type(ID),
-			desc: {
-				'ja-JP': 'Renote対象'
-			}
-		},
-
-		poll: {
-			validator: $.optional.obj({
-				choices: $.arr($.str)
-					.unique()
-					.range(2, 10)
-					.each(c => c.length > 0 && c.length < 50),
-				multiple: $.optional.bool,
-				expiresAt: $.optional.nullable.num.int(),
-				expiredAfter: $.optional.nullable.num.int().min(1)
-			}).strict(),
-			desc: {
-				'ja-JP': 'アンケート'
-			},
-			ref: 'poll'
-		}
 	},
 
 	res: {
@@ -210,12 +157,6 @@ export const meta = {
 };
 
 export default define(meta, async (ps, user) => {
-	let visibleUsers: User[] = [];
-	if (ps.visibleUserIds) {
-		visibleUsers = (await Promise.all(ps.visibleUserIds.map(id => Users.findOne(id))))
-			.filter(x => x != null) as User[];
-	}
-
 	let files: DriveFile[] = [];
 	const fileIds = ps.fileIds != null ? ps.fileIds : ps.mediaIds != null ? ps.mediaIds : null;
 	if (fileIds != null) {
@@ -227,44 +168,8 @@ export default define(meta, async (ps, user) => {
 		))).filter(file => file != null) as DriveFile[];
 	}
 
-	let renote: Note | undefined;
-	if (ps.renoteId != null) {
-		// Fetch renote to note
-		renote = await Notes.findOne(ps.renoteId);
-
-		if (renote == null) {
-			throw new ApiError(meta.errors.noSuchRenoteTarget);
-		} else if (renote.renoteId && !renote.text && !renote.fileIds) {
-			throw new ApiError(meta.errors.cannotReRenote);
-		}
-	}
-
-	let reply: Note | undefined;
-	if (ps.replyId != null) {
-		// Fetch reply
-		reply = await Notes.findOne(ps.replyId);
-
-		if (reply == null) {
-			throw new ApiError(meta.errors.noSuchReplyTarget);
-		}
-
-		// 返信対象が引用でないRenoteだったらエラー
-		if (reply.renoteId && !reply.text && !reply.fileIds) {
-			throw new ApiError(meta.errors.cannotReplyToPureRenote);
-		}
-	}
-
-	if (ps.poll) {
-		if (typeof ps.poll.expiresAt === 'number') {
-			if (ps.poll.expiresAt < Date.now())
-				throw new ApiError(meta.errors.cannotCreateAlreadyExpiredPoll);
-		} else if (typeof ps.poll.expiredAfter === 'number') {
-			ps.poll.expiresAt = Date.now() + ps.poll.expiredAfter;
-		}
-	}
-
-	// テキストが無いかつ添付ファイルが無いかつRenoteも無いかつ投票も無かったらエラー
-	if (!(ps.text || files.length || renote || ps.poll)) {
+	// テキストが無いかつ添付ファイルが無かったらエラー
+	if (!(ps.text || files.length)) {
 		throw new ApiError(meta.errors.contentRequired);
 	}
 
@@ -272,22 +177,9 @@ export default define(meta, async (ps, user) => {
 	const note = await create(user, {
 		createdAt: new Date(),
 		files: files,
-		poll: ps.poll ? {
-			choices: ps.poll.choices,
-			multiple: ps.poll.multiple || false,
-			expiresAt: ps.poll.expiresAt ? new Date(ps.poll.expiresAt) : null
-		} : undefined,
 		text: ps.text || undefined,
-		reply,
-		renote,
 		cw: ps.cw,
 		viaMobile: ps.viaMobile,
-		localOnly: ps.localOnly,
-		visibility: ps.visibility,
-		visibleUsers,
-		apMentions: ps.noExtractMentions ? [] : undefined,
-		apHashtags: ps.noExtractHashtags ? [] : undefined,
-		apEmojis: ps.noExtractEmojis ? [] : undefined,
 	});
 
 	return {
