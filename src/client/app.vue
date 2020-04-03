@@ -205,9 +205,6 @@ export default Vue.extend({
 
 	created() {
 		if (this.$store.getters.isSignedIn) {
-			this.connection = this.$root.stream.useSharedConnection('main');
-			this.connection.on('notification', this.onNotification);
-
 			if (this.widgets.length === 0) {
 				this.$store.commit('deviceUser/setWidgets', [{
 					name: 'calendar',

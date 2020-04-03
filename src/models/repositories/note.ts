@@ -147,6 +147,7 @@ export class NoteRepository extends Repository<Note> {
 			user,
 			text: text,
 			cw: note.cw,
+			visibility: 'public',
 			viaMobile: note.viaMobile || undefined,
 			repliesCount: note.repliesCount,
 			reactions: convertLegacyReactions(note.reactions),
@@ -155,11 +156,11 @@ export class NoteRepository extends Repository<Note> {
 			fileIds: note.fileIds,
 			files: DriveFiles.packMany(note.fileIds),
 			uri: note.uri || undefined,
+			isMyNote: meId === note.userId,
 
 			...(opts.detail ? {
 				...(meId ? {
 					myReaction: populateMyReaction(),
-					isMyNote: meId === note.user.id,
 				} : {})
 			} : {})
 		});
@@ -225,6 +226,10 @@ export const packedNoteSchema = {
 		isHidden: {
 			type: 'boolean' as const,
 			optional: true as const, nullable: false as const,
+		},
+		isMyNote: {
+			type: 'boolean' as const,
+			optional: false as const, nullable: false as const,
 		},
 		visibility: {
 			type: 'string' as const,
