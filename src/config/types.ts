@@ -44,13 +44,6 @@ export type Source = {
 
 	outgoingAddressFamily?: 'ipv4' | 'ipv6' | 'dual';
 
-	deliverJobConcurrency?: number;
-	inboxJobConcurrency?: number;
-	deliverJobPerSec?: number;
-	inboxJobPerSec?: number;
-	deliverJobMaxAttempts?: number;
-	inboxJobMaxAttempts?: number;
-
 	syslog: {
 		host: string;
 		port: number;

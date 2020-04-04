@@ -15,7 +15,6 @@ import * as koaLogger from 'koa-logger';
 import * as requestStats from 'request-stats';
 import * as slow from 'koa-slow';
 
-import activityPub from './activitypub';
 import nodeinfo from './nodeinfo';
 import wellKnown from './well-known';
 import config from '../config';
@@ -70,7 +69,6 @@ app.use(mount('/proxy', require('./proxy')));
 const router = new Router();
 
 // Routing
-router.use(activityPub.routes());
 router.use(nodeinfo.routes());
 router.use(wellKnown.routes());
 

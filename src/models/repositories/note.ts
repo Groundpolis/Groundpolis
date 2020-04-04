@@ -1,13 +1,11 @@
 import { EntityRepository, Repository, In } from 'typeorm';
 import { Note } from '../entities/note';
 import { User } from '../entities/user';
-import { Emojis, Users, DriveFiles, NoteReactions, Followings } from '..';
+import { Emojis, DriveFiles, NoteReactions } from '..';
 import { ensure } from '../../prelude/ensure';
 import { SchemaType } from '../../misc/schema';
 import { awaitAll } from '../../prelude/await-all';
 import { convertLegacyReaction, convertLegacyReactions } from '../../misc/reaction-lib';
-import { toString } from '../../mfm/toString';
-import { parse } from '../../mfm/parse';
 
 export type PackedNote = SchemaType<typeof packedNoteSchema>;
 

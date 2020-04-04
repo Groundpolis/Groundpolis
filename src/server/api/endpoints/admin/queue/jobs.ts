@@ -1,6 +1,6 @@
 import $ from 'cafy';
 import define from '../../../define';
-import { deliverQueue, inboxQueue, dbQueue, objectStorageQueue } from '../../../../../queue';
+import { dbQueue, objectStorageQueue } from '../../../../../queue';
 
 export const meta = {
 	tags: ['admin'],
@@ -10,7 +10,7 @@ export const meta = {
 
 	params: {
 		domain: {
-			validator: $.str.or(['deliver', 'inbox', 'db', 'objectStorage']),
+			validator: $.str.or(['db', 'objectStorage']),
 		},
 
 		state: {
@@ -26,8 +26,6 @@ export const meta = {
 
 export default define(meta, async (ps) => {
 	const queue =
-		ps.domain === 'deliver' ? deliverQueue :
-		ps.domain === 'inbox' ? inboxQueue :
 		ps.domain === 'db' ? dbQueue :
 		ps.domain === 'objectStorage' ? objectStorageQueue :
 		null as never;

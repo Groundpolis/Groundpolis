@@ -1,17 +1,13 @@
 import * as Queue from 'bull';
-import * as httpSignature from 'http-signature';
 
 import config from '../config';
 import { ILocalUser } from '../models/entities/user';
 import { program } from '../argv';
 
-import processDeliver from './processors/deliver';
-import processInbox from './processors/inbox';
 import processDb from './processors/db';
 import procesObjectStorage from './processors/object-storage';
 import { queueLogger } from './logger';
 import { DriveFile } from '../models/entities/drive-file';
-import { getJobInfo } from './get-job-info';
 
 function initializeQueue(name: string, limitPerSec = -1) {
 	return new Queue(name, {
@@ -37,31 +33,11 @@ function renderError(e: Error): any {
 	};
 }
 
-export const deliverQueue = initializeQueue('deliver', config.deliverJobPerSec || 128);
-export const inboxQueue = initializeQueue('inbox', config.inboxJobPerSec || 16);
 export const dbQueue = initializeQueue('db');
 export const objectStorageQueue = initializeQueue('objectStorage');
 
-const deliverLogger = queueLogger.createSubLogger('deliver');
-const inboxLogger = queueLogger.createSubLogger('inbox');
 const dbLogger = queueLogger.createSubLogger('db');
 const objectStorageLogger = queueLogger.createSubLogger('objectStorage');
-
-deliverQueue
-	.on('waiting', (jobId) => deliverLogger.debug(`waiting id=${jobId}`))
-	.on('active', (job) => deliverLogger.debug(`active ${getJobInfo(job, true)} to=${job.data.to}`))
-	.on('completed', (job, result) => deliverLogger.debug(`completed(${result}) ${getJobInfo(job, true)} to=${job.data.to}`))
-	.on('failed', (job, err) => deliverLogger.warn(`failed(${err}) ${getJobInfo(job)} to=${job.data.to}`))
-	.on('error', (job: any, err: Error) => deliverLogger.error(`error ${err}`, { job, e: renderError(err) }))
-	.on('stalled', (job) => deliverLogger.warn(`stalled ${getJobInfo(job)} to=${job.data.to}`));
-
-inboxQueue
-	.on('waiting', (jobId) => inboxLogger.debug(`waiting id=${jobId}`))
-	.on('active', (job) => inboxLogger.debug(`active ${getJobInfo(job, true)}`))
-	.on('completed', (job, result) => inboxLogger.debug(`completed(${result}) ${getJobInfo(job, true)}`))
-	.on('failed', (job, err) => inboxLogger.warn(`failed(${err}) ${getJobInfo(job)} activity=${job.data.activity ? job.data.activity.id : 'none'}`, { job, e: renderError(err) }))
-	.on('error', (job: any, err: Error) => inboxLogger.error(`error ${err}`, { job, e: renderError(err) }))
-	.on('stalled', (job) => inboxLogger.warn(`stalled ${getJobInfo(job)} activity=${job.data.activity ? job.data.activity.id : 'none'}`));
 
 dbQueue
 	.on('waiting', (jobId) => dbLogger.debug(`waiting id=${jobId}`))
@@ -78,43 +54,6 @@ objectStorageQueue
 	.on('failed', (job, err) => objectStorageLogger.warn(`failed(${err}) id=${job.id}`, { job, e: renderError(err) }))
 	.on('error', (job: any, err: Error) => objectStorageLogger.error(`error ${err}`, { job, e: renderError(err) }))
 	.on('stalled', (job) => objectStorageLogger.warn(`stalled id=${job.id}`));
-
-export function deliver(user: ILocalUser, content: any, to: any) {
-	if (content == null) return null;
-
-	const data = {
-		user,
-		content,
-		to
-	};
-
-	return deliverQueue.add(data, {
-		attempts: config.deliverJobMaxAttempts || 12,
-		backoff: {
-			type: 'exponential',
-			delay: 60 * 1000
-		},
-		removeOnComplete: true,
-		removeOnFail: true
-	});
-}
-
-export function inbox(activity: any, signature: httpSignature.IParsedSignature) {
-	const data = {
-		activity: activity,
-		signature
-	};
-
-	return inboxQueue.add(data, {
-		attempts: config.inboxJobMaxAttempts || 8,
-		backoff: {
-			type: 'exponential',
-			delay: 60 * 1000
-		},
-		removeOnComplete: true,
-		removeOnFail: true
-	});
-}
 
 export function createDeleteDriveFilesJob(user: ILocalUser) {
 	return dbQueue.add('deleteDriveFiles', {
@@ -208,21 +147,11 @@ export function createCleanRemoteFilesJob() {
 
 export default function() {
 	if (!program.onlyServer) {
-		deliverQueue.process(config.deliverJobConcurrency || 128, processDeliver);
-		inboxQueue.process(config.inboxJobConcurrency || 16, processInbox);
 		processDb(dbQueue);
 		procesObjectStorage(objectStorageQueue);
 	}
 }
 
 export function destroy() {
-	deliverQueue.once('cleaned', (jobs, status) => {
-		deliverLogger.succ(`Cleaned ${jobs.length} ${status} jobs`);
-	});
-	deliverQueue.clean(0, 'delayed');
-
-	inboxQueue.once('cleaned', (jobs, status) => {
-		inboxLogger.succ(`Cleaned ${jobs.length} ${status} jobs`);
-	});
-	inboxQueue.clean(0, 'delayed');
+	// nop
 }
