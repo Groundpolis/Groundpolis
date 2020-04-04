@@ -117,7 +117,7 @@ export default Vue.extend({
 	computed: {
 		keymap(): any {
 			return {
-				'e|a|plus': () => this.react(true),
+				'r|e|a|plus': () => this.react(true),
 				'delete|ctrl+d': this.del,
 				'up|k|shift+tab': this.focusBefore,
 				'down|j|tab': this.focusAfter,

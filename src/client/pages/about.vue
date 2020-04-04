@@ -13,7 +13,7 @@
 			<div><b></b><span>{{ meta.maintainerEmail }}</span></div>
 		</div>
 		<div class="_content table">
-			<div><b>Misskey</b><span>v{{ version }}</span></div>
+			<div><b>Hitorisskey</b><span>v{{ version }}</span></div>
 		</div>
 	</section>
 

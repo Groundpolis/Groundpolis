@@ -4,7 +4,6 @@
 		<div class="_panel">
 			<div>
 				<b><fa :icon="faUser"/>{{ $t('users') }}</b>
-				<small>{{ $t('local') }}</small>
 			</div>
 			<div>
 				<dl class="total">
@@ -23,28 +22,7 @@
 		</div>
 		<div class="_panel">
 			<div>
-				<b><fa :icon="faUser"/>{{ $t('users') }}</b>
-				<small>{{ $t('remote') }}</small>
-			</div>
-			<div>
-				<dl class="total">
-					<dt>{{ $t('total') }}</dt>
-					<dd>{{ (info.usersCount - info.originalUsersCount) | number }}</dd>
-				</dl>
-				<dl class="diff" :class="{ inc: usersRemoteDoD > 0 }">
-					<dt>{{ $t('dayOverDayChanges') }}</dt>
-					<dd>{{ usersRemoteDoD | number }}</dd>
-				</dl>
-				<dl class="diff" :class="{ inc: usersRemoteWoW > 0 }">
-					<dt>{{ $t('weekOverWeekChanges') }}</dt>
-					<dd>{{ usersRemoteWoW | number }}</dd>
-				</dl>
-			</div>
-		</div>
-		<div class="_panel">
-			<div>
 				<b><fa :icon="faPencilAlt"/>{{ $t('notes') }}</b>
-				<small>{{ $t('local') }}</small>
 			</div>
 			<div>
 				<dl class="total">
@@ -58,26 +36,6 @@
 				<dl class="diff" :class="{ inc: notesLocalWoW > 0 }">
 					<dt>{{ $t('weekOverWeekChanges') }}</dt>
 					<dd>{{ notesLocalWoW | number }}</dd>
-				</dl>
-			</div>
-		</div>
-		<div class="_panel">
-			<div>
-				<b><fa :icon="faPencilAlt"/>{{ $t('notes') }}</b>
-				<small>{{ $t('remote') }}</small>
-			</div>
-			<div>
-				<dl class="total">
-					<dt>{{ $t('total') }}</dt>
-					<dd>{{ (info.notesCount - info.originalNotesCount) | number }}</dd>
-				</dl>
-				<dl class="diff" :class="{ inc: notesRemoteDoD > 0 }">
-					<dt>{{ $t('dayOverDayChanges') }}</dt>
-					<dd>{{ notesRemoteDoD | number }}</dd>
-				</dl>
-				<dl class="diff" :class="{ inc: notesRemoteWoW > 0 }">
-					<dt>{{ $t('weekOverWeekChanges') }}</dt>
-					<dd>{{ notesRemoteWoW | number }}</dd>
 				</dl>
 			</div>
 		</div>

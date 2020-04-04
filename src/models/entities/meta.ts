@@ -280,14 +280,14 @@ export class Meta {
 
 	@Column('varchar', {
 		length: 512,
-		default: 'https://github.com/syuilo/misskey',
+		default: 'https://github.com/xeltica/hitorisskey',
 		nullable: false
 	})
 	public repositoryUrl: string;
 
 	@Column('varchar', {
 		length: 512,
-		default: 'https://github.com/syuilo/misskey/issues/new',
+		default: 'https://github.com/xeltica/hitorisskey/issues/new',
 		nullable: true
 	})
 	public feedbackUrl: string | null;

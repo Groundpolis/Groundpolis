@@ -11,7 +11,7 @@ export const meta = {
 
 	requireCredential: true as const,
 
-	kind: 'write:account',
+	kind: 'write:account'
 
 	params: {
 		announcementId: {
