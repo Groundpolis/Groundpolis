@@ -267,6 +267,6 @@
 	},
 	"devDependencies": {
 		"@types/fluent-ffmpeg": "2.1.14",
-		"cross-env": "6.0.3"
+		"cross-env": "7.0.2"
 	}
 }
