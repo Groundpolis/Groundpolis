@@ -44,7 +44,7 @@
 		"@koa/router": "8.0.8",
 		"@syuilo/aiscript": "0.0.2",
 		"@types/bcryptjs": "2.4.2",
-		"@types/bull": "3.12.1",
+		"@types/bull": "3.12.2",
 		"@types/cbor": "5.0.0",
 		"@types/dateformat": "3.0.1",
 		"@types/double-ended-queue": "2.1.1",
