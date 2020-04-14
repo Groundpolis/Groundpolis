@@ -139,13 +139,16 @@
   dependencies:
     type-detect "4.0.8"
 
-"@syuilo/aiscript@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@syuilo/aiscript/-/aiscript-0.0.2.tgz#1aeb0999e817c525525b6425401cf499bdd7e0bc"
-  integrity sha512-0bIhG+PzJUB2ny8kOR9JypDfITgrBZhED5Kfj0KTtS3CKJAa3Klp8FWew5a6xL75fndduAf3caxHWf8X5QkWmg==
+"@syuilo/aiscript@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@syuilo/aiscript/-/aiscript-0.2.0.tgz#dcb489bca13f6d965ac86034a45fd46514b1487a"
+  integrity sha512-N9fYchn3zjtniG9fNmZ81PwYZFdulk+RSBcjDZWBgHsFJQc1wxOCr9hZux/vSXrZ/ZWEzK0loNz1dorl2jJLeA==
   dependencies:
+    "@types/seedrandom" "2.4.28"
     autobind-decorator "2.4.0"
     chalk "4.0.0"
+    seedrandom "3.0.5"
+    uuid "7.0.3"
 
 "@tokenizer/token@^0.1.0", "@tokenizer/token@^0.1.1":
   version "0.1.1"
