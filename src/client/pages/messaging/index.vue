@@ -31,7 +31,7 @@
 			</div>
 		</router-link>
 	</div>
-	<div class="no-history" v-if="!fetching && messages.length == 0">
+	<div class="_fullinfo" v-if="!fetching && messages.length == 0">
 		<div>{{ $t('noHistory') }}</div>
 	</div>
 	<mk-loading v-if="fetching"/>
@@ -283,18 +283,6 @@ export default Vue.extend({
 					}
 				}
 			}
-		}
-	}
-
-	> .no-history {
-		padding: 32px;
-		text-align: center;
-
-		> img {
-			vertical-align: bottom;
-			height: 128px;
-			margin-bottom: 16px;
-			border-radius: 16px;
 		}
 	}
 

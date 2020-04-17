@@ -37,7 +37,7 @@
 		<mk-avatar class="avatar" :user="appearNote.user"/>
 		<div class="main">
 			<x-note-header class="header" :note="appearNote" :mini="true"/>
-			<div class="body" v-if="appearNote.deletedAt == null">
+			<div class="body" v-if="appearNote.deletedAt == null" ref="noteBody">
 				<p v-if="appearNote.cw != null" class="cw">
 				<mfm v-if="appearNote.cw != ''" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis" />
 					<x-cw-button v-model="showContent" :note="appearNote"/>
@@ -50,7 +50,7 @@
 						<a class="rp" v-if="appearNote.renote != null">RN:</a>
 					</div>
 					<div class="files" v-if="appearNote.files.length > 0">
-						<x-media-list :media-list="appearNote.files"/>
+						<x-media-list :media-list="appearNote.files" :parent-element="noteBody"/>
 					</div>
 					<x-poll v-if="appearNote.poll" :note="appearNote" ref="pollViewer"/>
 					<mk-url-preview v-for="url in urls" :url="url" :key="url" :compact="true" class="url-preview"/>
@@ -156,6 +156,7 @@ export default Vue.extend({
 			replies: [],
 			showContent: false,
 			hideThisNote: false,
+			noteBody: this.$refs.noteBody,
 			faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart
 		};
 	},
@@ -268,6 +269,8 @@ export default Vue.extend({
 		if (this.$store.getters.isSignedIn) {
 			this.connection.on('_connected_', this.onStreamConnected);
 		}
+
+		this.noteBody = this.$refs.noteBody
 	},
 
 	beforeDestroy() {
@@ -314,6 +317,14 @@ export default Vue.extend({
 			switch (type) {
 				case 'reacted': {
 					const reaction = body.reaction;
+
+					if (body.emoji) {
+						const emojis = this.appearNote.emojis || [];
+						if (!emojis.includes(body.emoji)) {
+							emojis.push(body.emoji);
+							Vue.set(this.appearNote, 'emojis', emojis);
+						}
+					}
 
 					if (this.appearNote.reactions == null) {
 						Vue.set(this.appearNote, 'reactions', {});
@@ -531,11 +542,11 @@ export default Vue.extend({
 					icon: faLink,
 					text: this.$t('copyLink'),
 					action: this.copyLink
-				}, this.appearNote.uri ? {
+				}, (this.appearNote.url || this.appearNote.uri) ? {
 					icon: faExternalLinkSquareAlt,
 					text: this.$t('showOnRemote'),
 					action: () => {
-						window.open(this.appearNote.uri, '_blank');
+						window.open(this.appearNote.url || this.appearNote.uri, '_blank');
 					}
 				} : undefined,
 				null,
@@ -575,13 +586,13 @@ export default Vue.extend({
 					}]
 					: []
 				),
-				...(this.appearNote.userId == this.$store.state.i.id ? [
+				...(this.appearNote.userId == this.$store.state.i.id || this.$store.state.i.isModerator || this.$store.state.i.isAdmin ? [
 					null,
-					{
+					this.appearNote.userId == this.$store.state.i.id ? {
 						icon: faEdit,
 						text: this.$t('deleteAndEdit'),
 						action: this.delEdit
-					},
+					} : undefined,
 					{
 						icon: faTrashAlt,
 						text: this.$t('delete'),
@@ -599,11 +610,11 @@ export default Vue.extend({
 					icon: faLink,
 					text: this.$t('copyLink'),
 					action: this.copyLink
-				}, this.appearNote.uri ? {
+				}, (this.appearNote.url || this.appearNote.uri) ? {
 					icon: faExternalLinkSquareAlt,
 					text: this.$t('showOnRemote'),
 					action: () => {
-						window.open(this.appearNote.uri, '_blank');
+						window.open(this.appearNote.url || this.appearNote.uri, '_blank');
 					}
 				} : undefined]
 				.filter(x => x !== undefined);

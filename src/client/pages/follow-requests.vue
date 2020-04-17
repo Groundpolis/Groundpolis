@@ -5,7 +5,7 @@
 
 	<mk-pagination :pagination="pagination" class="mk-follow-requests" ref="list">
 		<template #empty>
-			<div class="tkdrhpxr">
+			<div class="_fullinfo">
 				<div>{{ $t('noFollowRequests') }}</div>
 			</div>
 		</template>
@@ -74,18 +74,6 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .mk-follow-requests {
-	.tkdrhpxr {
-		padding: 32px;
-		text-align: center;
-
-		> img {
-			vertical-align: bottom;
-			height: 128px;
-			margin-bottom: 16px;
-			border-radius: 16px;
-		}
-	}
-
 	> .user {
 		display: flex;
 		padding: 16px;

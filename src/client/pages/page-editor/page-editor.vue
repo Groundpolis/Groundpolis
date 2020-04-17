@@ -46,7 +46,7 @@
 				</div>
 			</template>
 
-			<x-blocks class="content" v-model="content" :ai-script="aiScript"/>
+			<x-blocks class="content" v-model="content" :aoi-script="aoiScript"/>
 
 			<mk-button @click="add()" v-if="!readonly"><fa :icon="faPlus"/></mk-button>
 		</section>
@@ -62,7 +62,7 @@
 					@input="v => updateVariable(v)"
 					@remove="() => removeVariable(variable)"
 					:key="variable.name"
-					:ai-script="aiScript"
+					:aoi-script="aoiScript"
 					:name="variable.name"
 					:title="variable.name"
 					:draggable="true"
@@ -73,11 +73,10 @@
 		</div>
 	</mk-container>
 
-	<mk-container :body-togglable="true" :expanded="false">
-		<template #header><fa :icon="faCode"/> {{ $t('_pages.inspector') }}</template>
-		<div style="padding:0 32px 32px 32px;">
-			<mk-textarea :value="JSON.stringify(content, null, 2)" readonly tall>{{ $t('_pages.content') }}</mk-textarea>
-			<mk-textarea :value="JSON.stringify(variables, null, 2)" readonly tall>{{ $t('_pages.variables') }}</mk-textarea>
+	<mk-container :body-togglable="true" :expanded="true">
+		<template #header><fa :icon="faCode"/> {{ $t('script') }}</template>
+		<div>
+			<prism-editor v-model="script" :line-numbers="false" language="js"/>
 		</div>
 	</mk-container>
 </div>
@@ -86,6 +85,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import * as XDraggable from 'vuedraggable';
+import "prismjs";
+import 'prismjs/themes/prism-okaidia.css';
+import PrismEditor from 'vue-prism-editor';
 import { faICursor, faPlus, faMagic, faCog, faCode, faExternalLinkSquareAlt } from '@fortawesome/free-solid-svg-icons';
 import { faSave, faStickyNote, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { v4 as uuid } from 'uuid';
@@ -98,16 +100,17 @@ import MkButton from '../../components/ui/button.vue';
 import MkSelect from '../../components/ui/select.vue';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkInput from '../../components/ui/input.vue';
-import { blockDefs } from '../../scripts/aiscript/index';
-import { ASTypeChecker } from '../../scripts/aiscript/type-checker';
+import { blockDefs } from '../../scripts/aoiscript/index';
+import { ASTypeChecker } from '../../scripts/aoiscript/type-checker';
 import { url } from '../../config';
 import { collectPageVars } from '../../scripts/collect-page-vars';
+import { selectDriveFile } from '../../scripts/select-drive-file';
 
 export default Vue.extend({
 	i18n,
 
 	components: {
-		XDraggable, XVariable, XBlocks, MkTextarea, MkContainer, MkButton, MkSelect, MkSwitch, MkInput
+		XDraggable, XVariable, XBlocks, MkTextarea, MkContainer, MkButton, MkSelect, MkSwitch, MkInput, PrismEditor
 	},
 
 	props: {
@@ -142,7 +145,8 @@ export default Vue.extend({
 			alignCenter: false,
 			hideTitleWhenPinned: false,
 			variables: [],
-			aiScript: null,
+			aoiScript: null,
+			script: '',
 			showOptions: false,
 			url,
 			faPlus, faICursor, faSave, faStickyNote, faMagic, faCog, faTrashAlt, faExternalLinkSquareAlt, faCode
@@ -162,14 +166,14 @@ export default Vue.extend({
 	},
 
 	async created() {
-		this.aiScript = new ASTypeChecker();
+		this.aoiScript = new ASTypeChecker();
 
 		this.$watch('variables', () => {
-			this.aiScript.variables = this.variables;
+			this.aoiScript.variables = this.variables;
 		}, { deep: true });
 
 		this.$watch('content', () => {
-			this.aiScript.pageVars = collectPageVars(this.content);
+			this.aoiScript.pageVars = collectPageVars(this.content);
 		}, { deep: true });
 
 		if (this.initPageId) {
@@ -192,6 +196,7 @@ export default Vue.extend({
 			this.currentName = this.page.name;
 			this.summary = this.page.summary;
 			this.font = this.page.font;
+			this.script = this.page.script;
 			this.hideTitleWhenPinned = this.page.hideTitleWhenPinned;
 			this.alignCenter = this.page.alignCenter;
 			this.content = this.page.content;
@@ -222,6 +227,7 @@ export default Vue.extend({
 				name: this.name.trim(),
 				summary: this.summary,
 				font: this.font,
+				script: this.script,
 				hideTitleWhenPinned: this.hideTitleWhenPinned,
 				alignCenter: this.alignCenter,
 				content: this.content,
@@ -316,7 +322,7 @@ export default Vue.extend({
 
 			name = name.trim();
 
-			if (this.aiScript.isUsedName(name)) {
+			if (this.aoiScript.isUsedName(name)) {
 				this.$root.dialog({
 					type: 'error',
 					text: this.$t('_pages.variableNameIsAlreadyUsed')
@@ -345,6 +351,7 @@ export default Vue.extend({
 					{ value: 'text', text: this.$t('_pages.blocks.text') },
 					{ value: 'image', text: this.$t('_pages.blocks.image') },
 					{ value: 'textarea', text: this.$t('_pages.blocks.textarea') },
+					{ value: 'canvas', text: this.$t('_pages.blocks.canvas') },
 				]
 			}, {
 				label: this.$t('_pages.inputBlocks'),
@@ -405,9 +412,7 @@ export default Vue.extend({
 		},
 
 		setEyeCatchingImage() {
-			this.$chooseDriveFile({
-				multiple: false
-			}).then(file => {
+			selectDriveFile(this.$root, false).then(file => {
 				this.eyeCatchingImageId = file.id;
 			});
 		},
@@ -424,8 +429,6 @@ export default Vue.extend({
 	margin-bottom: var(--margin);
 
 	> header {
-		background: var(--faceHeader);
-
 		> .title {
 			z-index: 1;
 			margin: 0;
@@ -433,8 +436,7 @@ export default Vue.extend({
 			line-height: 42px;
 			font-size: 0.9em;
 			font-weight: bold;
-			color: var(--faceHeaderText);
-			box-shadow: 0 var(--lineWidth) rgba(#000, 0.07);
+			box-shadow: 0 1px rgba(#000, 0.07);
 
 			> [data-icon] {
 				margin-right: 6px;

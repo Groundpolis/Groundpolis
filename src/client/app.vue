@@ -160,7 +160,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faGamepad, faServer, faFileAlt, faSatellite, faInfoCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faTerminal, faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faGamepad, faServer, faFileAlt, faSatellite, faInfoCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { ResizeObserver } from '@juggle/resize-observer';
 import { v4 as uuid } from 'uuid';
@@ -323,7 +323,7 @@ export default Vue.extend({
 				title: this.$t('search'),
 				input: true
 			}).then(async ({ canceled, result: query }) => {
-				if (canceled || query == null || query == '') return;
+				if (canceled || query == null || query === '') return;
 
 				this.searching = true;
 				search(this, query).finally(() => {
@@ -333,7 +333,7 @@ export default Vue.extend({
 		},
 
 		searchKeypress(e) {
-			if (e.keyCode == 13) {
+			if (e.keyCode === 13) {
 				this.searchWait = true;
 				search(this, this.searchQuery).finally(() => {
 					this.searchWait = false;
@@ -465,6 +465,11 @@ export default Vue.extend({
 					to: '/games',
 					icon: faGamepad,
 				}, null] : []), {
+					type: 'link',
+					text: this.$t('scratchpad'),
+					to: '/scratchpad',
+					icon: faTerminal,
+				}, null, {
 					type: 'link',
 					text: this.$t('help'),
 					to: '/docs',
@@ -1009,6 +1014,10 @@ export default Vue.extend({
 
 					&:not(.naked) {
 						background: var(--pageBg);
+					}
+
+					&.naked {
+						background: var(--bg);
 					}
 				}
 			}

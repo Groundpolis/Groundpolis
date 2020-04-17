@@ -33,7 +33,7 @@ export const mfmLanguage = P.createLanguage({
 		r.marquee
 	),
 	startOfLine: () => P((input, i) => {
-		if (i == 0 || input[i] == '\n' || input[i - 1] == '\n') {
+		if (i === 0 || input[i] === '\n' || input[i - 1] === '\n') {
 			return P.makeSuccess(i, null);
 		} else {
 			return P.makeFailure(i, 'not newline');
@@ -52,7 +52,7 @@ export const mfmLanguage = P.createLanguage({
 		if (!text.match(/^>[\s\S]+?/)) return P.makeFailure(i, 'not a quote');
 		const quote = takeWhile(line => line.startsWith('>'), text.split('\n'));
 		const qInner = quote.join('\n').replace(/^>/gm, '').replace(/^ /gm, '');
-		if (qInner == '') return P.makeFailure(i, 'not a quote');
+		if (qInner === '') return P.makeFailure(i, 'not a quote');
 		const contents = r.root.tryParse(qInner);
 		return P.makeSuccess(i + quote.join('\n').length + 1, createTree('quote', contents, {}));
 	})),

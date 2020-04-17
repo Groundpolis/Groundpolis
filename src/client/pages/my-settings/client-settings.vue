@@ -23,6 +23,7 @@
 			{{ $t('useOsNativeEmojis') }}
 			<template #desc><mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
 		</mk-switch>
+		<mk-switch v-model="disablePagesScript">{{ $t('disablePagesScript') }}</mk-switch>
 	</div>
 
 	<div class="_content">

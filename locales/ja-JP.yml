@@ -268,6 +268,7 @@ watch: "ウォッチ"
 unwatch: "ウォッチ解除"
 accept: "許可"
 reject: "拒否"
+normal: "正常"
 instanceName: "インスタンス名"
 instanceDescription: "インスタンスの紹介"
 maintainerName: "管理者の名前"
@@ -342,6 +343,7 @@ notesAndReplies: "投稿と返信"
 withFiles: "ファイル付き"
 silence: "サイレンス"
 silenceConfirm: "サイレンスしますか？"
+unsilence: "サイレンス解除"
 unsilenceConfirm: "サイレンス解除しますか？"
 popularUsers: "人気のユーザー"
 recentlyUpdatedUsers: "最近投稿したユーザー"
@@ -494,6 +496,8 @@ objectStorageRegion: "Region"
 objectStorageRegionDesc: "'xx-east-1'のようなregionを指定してください。使用サービスにregionの概念がない場合は、空または'us-east-1'にしてください。"
 objectStorageUseSSL: "SSLを使用する"
 objectStorageUseSSLDesc: "API接続にhttpsを使用しない場合はオフにしてください"
+objectStorageUseProxy: "Proxyを利用する"
+objectStorageUseProxyDesc: "API接続にproxyを利用しない場合はオフにしてください"
 serverLogs: "サーバーログ"
 deleteAll: "全て削除"
 showFixedPostForm: "タイムライン上部に投稿フォームを表示する"
@@ -508,6 +512,26 @@ unableToProcess: "操作を完了できません"
 recentUsed: "最近使用"
 install: "インストール"
 uninstall: "アンインストール"
+installedApps: "インストールされたアプリ"
+nothing: "ありません"
+installedDate: "インストール日時"
+lastUsedDate: "最終使用日時"
+state: "状態"
+sort: "ソート"
+ascendingOrder: "昇順"
+descendingOrder: "降順"
+scratchpad: "スクラッチパッド"
+scratchpadDescription: "スクラッチパッドは、AiScriptの実験環境を提供します。Misskeyと対話するコードの記述、実行、結果の確認ができます。"
+output: "出力"
+script: "スクリプト"
+disablePagesScript: "Pagesのスクリプトを無効にする"
+updateRemoteUser: "リモートユーザー情報の更新"
+deleteAllFiles: "すべてのファイルを削除"
+deleteAllFilesConfirm: "すべてのファイルを削除しますか？"
+removeAllFollowing: "フォローを全解除"
+removeAllFollowingDescription: "{host}からのフォローをすべて解除します。そのインスタンスがもう存在しなくなった場合などに実行してください。"
+userSuspended: "このユーザーは凍結されています。"
+userSilenced: "このユーザーはサイレンスされています。"
 
 _theme:
   explore: "テーマを探す"
@@ -620,7 +644,11 @@ _permissions:
 
 _auth:
   shareAccess: "「{name}」がアカウントにアクセスすることを許可しますか？"
+  shareAccessAsk: "アカウントへのアクセスを許可しますか？"
   permissionAsk: "このアプリは次の権限を要求しています"
+  pleaseGoBack: "アプリケーションに戻ってやっていってください"
+  callback: "アプリケーションに戻っています"
+  denied: "アクセスを拒否しました"
 
 _antennaSources:
   all: "全てのノート"
@@ -773,15 +801,15 @@ _charts:
 _instanceCharts:
   requests: "リクエスト"
   users: "ユーザーの増減"
-  usersTotal: "ユーザーの積算"
+  usersTotal: "ユーザーの累積"
   notes: "ノートの増減"
-  notesTotal: "ノートの積算"
+  notesTotal: "ノートの累積"
   ff: "フォロー/フォロワーの増減"
-  ffTotal: "フォロー/フォロワーの積算"
+  ffTotal: "フォロー/フォロワーの累積"
   cacheSize: "キャッシュサイズの増減"
-  cacheSizeTotal: "キャッシュサイズの積算"
+  cacheSizeTotal: "キャッシュサイズの累積"
   files: "ファイル数の増減"
-  filesTotal: "ファイル数の積算"
+  filesTotal: "ファイル数の累積"
 
 _timelines:
   home: "ホーム"
@@ -859,6 +887,12 @@ _pages:
       text: "タイトル"
       default: "デフォルト値"
 
+    canvas: "キャンバス"
+    _canvas:
+      id: "キャンバスID"
+      width: "幅"
+      height: "高さ"
+
     switch: "スイッチ"
     _switch:
       name: "変数名"
@@ -886,6 +920,9 @@ _pages:
           message: "押したときに表示するメッセージ"
           variable: "送信する変数"
           no-variable: "なし"
+        callAiScript: "AiScript呼び出し"
+        _callAiScript:
+          functionName: "関数名"
 
     radioButton: "選択肢"
     _radioButton:
@@ -1048,6 +1085,7 @@ _pages:
       _splitStrByLine:
         arg1: "テキスト"
       ref: "変数"
+      aiScriptVar: "AiScript変数"
       fn: "関数"
       _fn:
         slots: "スロット"

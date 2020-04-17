@@ -19,8 +19,9 @@ export interface IObject {
 	endTime?: Date;
 	icon?: any;
 	image?: any;
-	url?: string;
-	tag?: any[];
+	url?: ApObject;
+	href?: string;
+	tag?: IObject | IObject[];
 	sensitive?: boolean;
 }
 
@@ -48,6 +49,17 @@ export function getApId(value: string | IObject): string {
 	if (typeof value === 'string') return value;
 	if (typeof value.id === 'string') return value.id;
 	throw new Error(`cannot detemine id`);
+}
+
+export function getOneApHrefNullable(value: ApObject | undefined): string | undefined {
+	const firstOne = Array.isArray(value) ? value[0] : value;
+	return getApHrefNullable(firstOne);
+}
+
+export function getApHrefNullable(value: string | IObject | undefined): string | undefined {
+	if (typeof value === 'string') return value;
+	if (typeof value?.href === 'string') return value.href;
+	return undefined;
 }
 
 export interface IActivity extends IObject {
@@ -129,6 +141,45 @@ export const isOrderedCollection = (object: IObject): object is IOrderedCollecti
 
 export const isCollectionOrOrderedCollection = (object: IObject): object is ICollection | IOrderedCollection =>
 	isCollection(object) || isOrderedCollection(object);
+
+export interface IApPropertyValue extends IObject {
+	type: 'PropertyValue';
+	identifier: IApPropertyValue;
+	name: string;
+	value: string;
+}
+
+export const isPropertyValue = (object: IObject): object is IApPropertyValue =>
+	object &&
+	object.type === 'PropertyValue' &&
+	typeof object.name === 'string' &&
+	typeof (object as any).value === 'string';
+
+export interface IApMention extends IObject {
+	type: 'Mention';
+	href: string;
+}
+
+export const isMention = (object: IObject): object is IApMention=>
+	object.type === 'Mention' &&
+	typeof object.href === 'string';
+
+export interface IApHashtag extends IObject {
+	type: 'Hashtag';
+	name: string;
+}
+
+export const isHashtag = (object: IObject): object is IApHashtag =>
+	object.type === 'Hashtag' &&
+	typeof object.name === 'string';
+
+export interface IApEmoji extends IObject {
+	type: 'Emoji';
+	updated: Date;
+}
+
+export const isEmoji = (object: IObject): object is IApEmoji =>
+	object.type === 'Emoji' && !Array.isArray(object.icon) && object.icon.url != null;
 
 export interface ICreate extends IActivity {
 	type: 'Create';

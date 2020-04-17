@@ -40,7 +40,9 @@
 	<x-api/>
 
 	<x-cache-clear/>
-	<mk-button @click="$root.signout()" primary style="margin: var(--margin) auto;">{{ $t('logout') }}</mk-button>
+	<router-link class="_panel _buttonPrimary" to="/my/apps" style="margin: var(--margin) auto;">{{ $t('installedApps') }}</router-link>
+
+	<button class="_panel _buttonPrimary" @click="$root.signout()" style="margin: var(--margin) auto;">{{ $t('logout') }}</button>
 </div>
 </template>
 
