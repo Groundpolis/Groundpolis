@@ -128,6 +128,11 @@ export default Vue.extend({
 			set(value) { this.$store.commit('device/set', { key: 'useOsNativeEmojis', value }); }
 		},
 
+		disablePagesScript: {
+			get() { return this.$store.state.device.disablePagesScript; },
+			set(value) { this.$store.commit('device/set', { key: 'disablePagesScript', value }); }
+		},
+
 		imageNewTab: {
 			get() { return this.$store.state.device.imageNewTab; },
 			set(value) { this.$store.commit('device/set', { key: 'imageNewTab', value }); }

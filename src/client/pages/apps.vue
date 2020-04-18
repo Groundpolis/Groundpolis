@@ -6,7 +6,6 @@
 	<mk-pagination :pagination="pagination" class="bfomjevm" ref="list">
 		<template #empty>
 			<div class="_fullinfo">
-				<img src="https://xn--931a.moe/assets/info.jpg" class="_ghost"/>
 				<div>{{ $t('nothing') }}</div>
 			</div>
 		</template>

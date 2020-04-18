@@ -49,11 +49,12 @@
 					<fa :icon="faEllipsisH" fixed-width/>
 				</button>
 			</div>
-			<router-link class="item" active-class="active" to="/" exact v-if="$store.getters.isSignedIn">
-				<fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>
-			</router-link>
-			<router-link class="item" active-class="active" to="/" exact v-else>
-				<fa :icon="faHome" fixed-width/><span class="text">{{ $t('home') }}</span>
+			
+			<button class="item _button index active" @click="top()" v-if="$route.name === 'index'">
+				<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
+			</button>
+			<router-link class="item index" active-class="active" to="/" exact v-else>
+				<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
 			</router-link>
 			<template v-if="$store.getters.isSignedIn">
 				<router-link class="item notifications" active-class="active" to="/my/notifications" ref="notificationButton">
