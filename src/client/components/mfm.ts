@@ -143,8 +143,6 @@ export default Vue.component('misskey-flavored-markdown', {
 					}, genEl(token.children));
 				}
 
-
-
 				case 'xspin': {
 					const direction =
 						token.node.props.attr == 'left' ? 'reverse' :
@@ -197,6 +195,14 @@ export default Vue.component('misskey-flavored-markdown', {
 							style: 'display: inline-block; transform: scaleY(-1);'
 						},
 					}, genEl(token.children));
+				}
+
+				case 'sup': {
+					return (createElement as any)('sup', genEl(token.children));
+				}
+
+				case 'sub': {
+					return (createElement as any)('sub', genEl(token.children));
 				}
 
 				case 'marquee': {
