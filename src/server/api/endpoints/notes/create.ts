@@ -21,15 +21,13 @@ setInterval(() => {
 }, 3000);
 
 export const meta = {
-	stability: 'stable',
-
 	desc: {
 		'ja-JP': '投稿します。'
 	},
 
 	tags: ['notes'],
 
-	requireCredential: true,
+	requireCredential: true as const,
 
 	limit: {
 		duration: ms('1hour'),
@@ -111,23 +109,6 @@ export const meta = {
 			desc: {
 				'ja-JP': '本文からカスタム絵文字を展開しないか否か。'
 			}
-		},
-
-		geo: {
-			validator: $.optional.nullable.obj({
-				coordinates: $.arr().length(2)
-					.item(0, $.num.range(-180, 180))
-					.item(1, $.num.range(-90, 90)),
-				altitude: $.nullable.num,
-				accuracy: $.nullable.num,
-				altitudeAccuracy: $.nullable.num,
-				heading: $.nullable.num.range(0, 360),
-				speed: $.nullable.num
-			}).strict(),
-			desc: {
-				'ja-JP': '位置情報'
-			},
-			ref: 'geo'
 		},
 
 		fileIds: {
@@ -228,7 +209,7 @@ export const meta = {
 	}
 };
 
-export default define(meta, async (ps, user, app) => {
+export default define(meta, async (ps, user) => {
 	let visibleUsers: User[] = [];
 	if (ps.visibleUserIds) {
 		visibleUsers = (await Promise.all(ps.visibleUserIds.map(id => Users.findOne(id))))
@@ -300,7 +281,6 @@ export default define(meta, async (ps, user, app) => {
 		reply,
 		renote,
 		cw: ps.cw,
-		app,
 		viaMobile: ps.viaMobile,
 		localOnly: ps.localOnly,
 		visibility: ps.visibility,
@@ -308,7 +288,6 @@ export default define(meta, async (ps, user, app) => {
 		apMentions: ps.noExtractMentions ? [] : undefined,
 		apHashtags: ps.noExtractHashtags ? [] : undefined,
 		apEmojis: ps.noExtractEmojis ? [] : undefined,
-		geo: ps.geo
 	});
 
 	return {

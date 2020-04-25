@@ -6,7 +6,7 @@ import { toPuny } from '../../../../../misc/convert-host';
 export const meta = {
 	tags: ['admin'],
 
-	requireCredential: true,
+	requireCredential: true as const,
 	requireModerator: true,
 
 	params: {
@@ -14,7 +14,7 @@ export const meta = {
 			validator: $.str
 		},
 
-		isClosed: {
+		isSuspended: {
 			validator: $.bool
 		},
 	}
@@ -28,6 +28,6 @@ export default define(meta, async (ps, me) => {
 	}
 
 	Instances.update({ host: toPuny(ps.host) }, {
-		isMarkedAsClosed: ps.isClosed
+		isSuspended: ps.isSuspended
 	});
 });

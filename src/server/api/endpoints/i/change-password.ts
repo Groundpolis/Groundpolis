@@ -5,7 +5,7 @@ import { UserProfiles } from '../../../../models';
 import { ensure } from '../../../../prelude/ensure';
 
 export const meta = {
-	requireCredential: true,
+	requireCredential: true as const,
 
 	secure: true,
 
@@ -34,7 +34,7 @@ export default define(meta, async (ps, user) => {
 	const salt = await bcrypt.genSalt(8);
 	const hash = await bcrypt.hash(ps.newPassword, salt);
 
-	await UserProfiles.update({ userId: user.id }, {
+	await UserProfiles.update(user.id, {
 		password: hash
 	});
 });

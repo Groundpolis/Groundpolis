@@ -45,10 +45,22 @@ export async function insertFollowingDoc(followee: User, follower: User) {
 		}
 	});
 
-	await FollowRequests.delete({
+	const req = await FollowRequests.findOne({
 		followeeId: followee.id,
 		followerId: follower.id
 	});
+
+	if (req) {
+		await FollowRequests.delete({
+			followeeId: followee.id,
+			followerId: follower.id
+		});
+
+		// 通知を作成
+		createNotification(follower.id, 'followRequestAccepted', {
+			notifierId: followee.id,
+		});
+	}
 
 	if (alreadyFollowed) return;
 
@@ -85,7 +97,9 @@ export async function insertFollowingDoc(followee: User, follower: User) {
 		Users.pack(follower, followee).then(packed => publishMainStream(followee.id, 'followed', packed)),
 
 		// 通知を作成
-		createNotification(followee.id, follower.id, 'follow');
+		createNotification(followee.id, 'follow', {
+			notifierId: follower.id
+		});
 	}
 }
 

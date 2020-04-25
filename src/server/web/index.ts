@@ -3,14 +3,16 @@
  */
 
 import * as os from 'os';
+import * as fs from 'fs';
 import ms = require('ms');
 import * as Koa from 'koa';
 import * as Router from '@koa/router';
 import * as send from 'koa-send';
 import * as favicon from 'koa-favicon';
 import * as views from 'koa-views';
+import * as glob from 'glob';
+import * as MarkdownIt from 'markdown-it';
 
-import docs from './docs';
 import packFeed from './feed';
 import { fetchMeta } from '../../misc/fetch-meta';
 import { genOpenapiSpec } from '../api/openapi/gen-spec';
@@ -21,6 +23,11 @@ import getNoteSummary from '../../misc/get-note-summary';
 import { ensure } from '../../prelude/ensure';
 import { getConnection } from 'typeorm';
 import redis from '../../db/redis';
+import locales = require('../../../locales');
+
+const markdown = MarkdownIt({
+	html: true
+});
 
 const env = process.env.NODE_ENV;
 
@@ -37,12 +44,13 @@ const setCache = (ctx: Koa.ParameterizedContext, onProduction: string) => {
 app.use(views(__dirname + '/views', {
 	extension: 'pug',
 	options: {
+		version: config.version,
 		config
 	}
 }));
 
 // Serve favicon
-app.use(favicon(`${client}/assets/favicon.ico`));
+app.use(favicon(`${__dirname}/../../../assets/favicon.png`));
 
 // Common request handler
 app.use(async (ctx, next) => {
@@ -92,7 +100,6 @@ router.get('/robots.txt', async ctx => {
 //#endregion
 
 // Docs
-router.use('/docs', docs.routes());
 router.get('/api-doc', async ctx => {
 	await send(ctx as any, '/assets/redoc.html', {
 		root: client
@@ -106,11 +113,49 @@ router.get('/api.json', async ctx => {
 	ctx.body = genOpenapiSpec();
 });
 
+router.get('/docs.json', async ctx => {
+	const lang = ctx.query.lang;
+	if (!Object.keys(locales).includes(lang)) {
+		ctx.body = [];
+		return;
+	}
+	const paths = glob.sync(__dirname + `/../../../src/docs/*.${lang}.md`);
+	const docs: { path: string; title: string; }[] = [];
+	for (const path of paths) {
+		const md = fs.readFileSync(path, { encoding: 'utf8' });
+		const parsed = markdown.parse(md, {});
+		if (parsed.length === 0) return;
+
+		const buf = [...parsed];
+		const headingTokens = [];
+
+		// もっとも上にある見出しを抽出する
+		while (buf[0].type !== 'heading_open') {
+			buf.shift();
+		}
+		buf.shift();
+		while (buf[0].type as string !== 'heading_close') {
+			const token = buf.shift();
+			if (token) {
+				headingTokens.push(token);
+			}
+		}
+
+		docs.push({
+			path: path.split('/').pop()!.split('.')[0],
+			title: markdown.renderer.render(headingTokens, {}, {})
+		});
+	}
+
+	ctx.body = docs;
+});
+
 const getFeed = async (acct: string) => {
 	const { username, host } = parseAcct(acct);
 	const user = await Users.findOne({
 		usernameLower: username.toLowerCase(),
-		host
+		host,
+		isSuspended: false
 	});
 
 	return user && await packFeed(user);
@@ -158,7 +203,8 @@ router.get(['/@:user', '/@:user/:sub'], async (ctx, next) => {
 	const { username, host } = parseAcct(ctx.params.user);
 	const user = await Users.findOne({
 		usernameLower: username.toLowerCase(),
-		host
+		host,
+		isSuspended: false
 	});
 
 	if (user != null) {
@@ -179,6 +225,7 @@ router.get(['/@:user', '/@:user/:sub'], async (ctx, next) => {
 		setCache(ctx, 'public, max-age=30');
 	} else {
 		// リモートユーザーなので
+		// モデレータがAPI経由で参照可能にするために404にはしない
 		await next();
 	}
 });
@@ -186,7 +233,8 @@ router.get(['/@:user', '/@:user/:sub'], async (ctx, next) => {
 router.get('/users/:user', async ctx => {
 	const user = await Users.findOne({
 		id: ctx.params.user,
-		host: null
+		host: null,
+		isSuspended: false
 	});
 
 	if (user == null) {
@@ -287,6 +335,10 @@ const override = (source: string, target: string, depth: number = 0) =>
 
 router.get('/othello', async ctx => ctx.redirect(override(ctx.URL.pathname, 'games/reversi', 1)));
 router.get('/reversi', async ctx => ctx.redirect(override(ctx.URL.pathname, 'games')));
+
+router.get('/flush', async ctx => {
+	await ctx.render('flush');
+});
 
 // Render base html for all requests
 router.get('*', async ctx => {

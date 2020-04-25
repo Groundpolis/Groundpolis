@@ -27,15 +27,15 @@ export type Source = {
 	elasticsearch: {
 		host: string;
 		port: number;
-		pass: string;
-		index?: string;
 		ssl?: boolean;
+		user?: string;
+		pass?: string;
+		index?: string;
 	};
-
-	autoAdmin?: boolean;
 
 	proxy?: string;
 	proxySmtp?: string;
+	proxyBypassHosts?: string[];
 
 	accesslog?: string;
 
@@ -47,11 +47,17 @@ export type Source = {
 
 	deliverJobConcurrency?: number;
 	inboxJobConcurrency?: number;
+	deliverJobPerSec?: number;
+	inboxJobPerSec?: number;
+	deliverJobMaxAttempts?: number;
+	inboxJobMaxAttempts?: number;
 
 	syslog: {
 		host: string;
 		port: number;
 	};
+
+	mediaProxy?: string;
 };
 
 /**

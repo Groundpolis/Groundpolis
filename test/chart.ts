@@ -2,14 +2,10 @@
  * Tests of chart engine
  *
  * How to run the tests:
- * > npx mocha test/chart.ts --require ts-node/register
+ * > npx cross-env TS_NODE_FILES=true TS_NODE_TRANSPILE_ONLY=true npx mocha test/chart.ts --require ts-node/register
  *
  * To specify test:
- * > npx mocha test/chart.ts --require ts-node/register -g 'test name'
- *
- * If the tests not start, try set following enviroment variables:
- * TS_NODE_FILES=true and TS_NODE_TRANSPILE_ONLY=true
- * for more details, please see: https://github.com/TypeStrong/ts-node/issues/754
+ * > npx cross-env TS_NODE_FILES=true TS_NODE_TRANSPILE_ONLY=true npx mocha test/chart.ts --require ts-node/register -g 'test name'
  */
 
 process.env.NODE_ENV = 'test';
@@ -17,14 +13,18 @@ process.env.NODE_ENV = 'test';
 import * as assert from 'assert';
 import * as lolex from 'lolex';
 import { async } from './utils';
-import { getConnection, createConnection } from 'typeorm';
-const config = require('../built/config').default;
-const Chart = require('../built/services/chart/core').default;
-const _TestChart = require('../built/services/chart/charts/schemas/test');
-const _TestGroupedChart = require('../built/services/chart/charts/schemas/test-grouped');
-const _TestUniqueChart = require('../built/services/chart/charts/schemas/test-unique');
+import TestChart from '../src/services/chart/charts/classes/test';
+import TestGroupedChart from '../src/services/chart/charts/classes/test-grouped';
+import TestUniqueChart from '../src/services/chart/charts/classes/test-unique';
+import * as _TestChart from '../src/services/chart/charts/schemas/test';
+import * as _TestGroupedChart from '../src/services/chart/charts/schemas/test-grouped';
+import * as _TestUniqueChart from '../src/services/chart/charts/schemas/test-unique';
+import { Connection, getConnection, createConnection } from 'typeorm';
+import config from '../src/config';
+import Chart from '../src/services/chart/core';
+import { initDb } from '../src/db/postgre';
 
-function initDb() {
+function initChartDb() {
 	try {
 		const conn = getConnection();
 		return Promise.resolve(conn);
@@ -48,46 +48,46 @@ function initDb() {
 }
 
 describe('Chart', () => {
-	let testChart: any;
-	let testGroupedChart: any;
-	let testUniqueChart: any;
-	let connection: any;
+	let testChart: TestChart;
+	let testGroupedChart: TestGroupedChart;
+	let testUniqueChart: TestUniqueChart;
 	let clock: lolex.InstalledClock<lolex.Clock>;
+	let connection: Connection;
 
 	before(done => {
-		initDb().then(c => {
+		initChartDb().then(c => {
 			connection = c;
 			done();
 		});
 	});
 
+	after(async(async () => {
+		await connection.close();
+		await initDb(true, undefined, true);
+	}));
+
 	beforeEach(done => {
-		const TestChart = require('../built/services/chart/charts/classes/test').default;
 		testChart = new TestChart();
-
-		const TestGroupedChart = require('../built/services/chart/charts/classes/test-grouped').default;
 		testGroupedChart = new TestGroupedChart();
-
-		const TestUniqueChart = require('../built/services/chart/charts/classes/test-unique').default;
 		testUniqueChart = new TestUniqueChart();
 
 		clock = lolex.install({
 			now: new Date('2000-01-01 00:00:00')
 		});
-
-		connection.synchronize().then(done);
+		done();
 	});
 
-	afterEach(done => {
+	afterEach(async(async () => {
 		clock.uninstall();
-		connection.dropDatabase().then(done);
-	});
+		await connection.dropDatabase();
+		await connection.synchronize();
+	}));
 
 	it('Can updates', async(async () => {
 		await testChart.increment();
 
-		const chartHours = await testChart.getChart('hour', 3);
-		const chartDays = await testChart.getChart('day', 3);
+		const chartHours = await testChart.getChart('hour', 3, null);
+		const chartDays = await testChart.getChart('day', 3, null);
 
 		assert.deepStrictEqual(chartHours, {
 			foo: {
@@ -109,8 +109,8 @@ describe('Chart', () => {
 	it('Can updates (dec)', async(async () => {
 		await testChart.decrement();
 
-		const chartHours = await testChart.getChart('hour', 3);
-		const chartDays = await testChart.getChart('day', 3);
+		const chartHours = await testChart.getChart('hour', 3, null);
+		const chartDays = await testChart.getChart('day', 3, null);
 
 		assert.deepStrictEqual(chartHours, {
 			foo: {
@@ -130,8 +130,8 @@ describe('Chart', () => {
 	}));
 
 	it('Empty chart', async(async () => {
-		const chartHours = await testChart.getChart('hour', 3);
-		const chartDays = await testChart.getChart('day', 3);
+		const chartHours = await testChart.getChart('hour', 3, null);
+		const chartDays = await testChart.getChart('day', 3, null);
 
 		assert.deepStrictEqual(chartHours, {
 			foo: {
@@ -155,8 +155,8 @@ describe('Chart', () => {
 		await testChart.increment();
 		await testChart.increment();
 
-		const chartHours = await testChart.getChart('hour', 3);
-		const chartDays = await testChart.getChart('day', 3);
+		const chartHours = await testChart.getChart('hour', 3, null);
+		const chartDays = await testChart.getChart('day', 3, null);
 
 		assert.deepStrictEqual(chartHours, {
 			foo: {
@@ -182,8 +182,8 @@ describe('Chart', () => {
 
 		await testChart.increment();
 
-		const chartHours = await testChart.getChart('hour', 3);
-		const chartDays = await testChart.getChart('day', 3);
+		const chartHours = await testChart.getChart('hour', 3, null);
+		const chartDays = await testChart.getChart('day', 3, null);
 
 		assert.deepStrictEqual(chartHours, {
 			foo: {
@@ -209,8 +209,8 @@ describe('Chart', () => {
 
 		await testChart.increment();
 
-		const chartHours = await testChart.getChart('hour', 3);
-		const chartDays = await testChart.getChart('day', 3);
+		const chartHours = await testChart.getChart('hour', 3, null);
+		const chartDays = await testChart.getChart('day', 3, null);
 
 		assert.deepStrictEqual(chartHours, {
 			foo: {
@@ -235,8 +235,8 @@ describe('Chart', () => {
 
 		clock.tick('05:00:00');
 
-		const chartHours = await testChart.getChart('hour', 3);
-		const chartDays = await testChart.getChart('day', 3);
+		const chartHours = await testChart.getChart('hour', 3, null);
+		const chartDays = await testChart.getChart('day', 3, null);
 
 		assert.deepStrictEqual(chartHours, {
 			foo: {
@@ -262,8 +262,8 @@ describe('Chart', () => {
 		clock.tick('05:00:00');
 		await testChart.increment();
 
-		const chartHours = await testChart.getChart('hour', 3);
-		const chartDays = await testChart.getChart('day', 3);
+		const chartHours = await testChart.getChart('hour', 3, null);
+		const chartDays = await testChart.getChart('day', 3, null);
 
 		assert.deepStrictEqual(chartHours, {
 			foo: {
@@ -282,14 +282,70 @@ describe('Chart', () => {
 		});
 	}));
 
+	it('Can specify offset', async(async () => {
+		await testChart.increment();
+
+		clock.tick('01:00:00');
+
+		await testChart.increment();
+
+		const chartHours = await testChart.getChart('hour', 3, new Date(Date.UTC(2000, 0, 1, 0, 0, 0)));
+		const chartDays = await testChart.getChart('day', 3, new Date(Date.UTC(2000, 0, 1, 0, 0, 0)));
+
+		assert.deepStrictEqual(chartHours, {
+			foo: {
+				dec: [0, 0, 0],
+				inc: [1, 0, 0],
+				total: [1, 0, 0]
+			},
+		});
+
+		assert.deepStrictEqual(chartDays, {
+			foo: {
+				dec: [0, 0, 0],
+				inc: [2, 0, 0],
+				total: [2, 0, 0]
+			},
+		});
+	}));
+
+	it('Can specify offset (floor time)', async(async () => {
+		clock.tick('00:30:00');
+
+		await testChart.increment();
+
+		clock.tick('01:30:00');
+
+		await testChart.increment();
+
+		const chartHours = await testChart.getChart('hour', 3, new Date(Date.UTC(2000, 0, 1, 0, 0, 0)));
+		const chartDays = await testChart.getChart('day', 3, new Date(Date.UTC(2000, 0, 1, 0, 0, 0)));
+
+		assert.deepStrictEqual(chartHours, {
+			foo: {
+				dec: [0, 0, 0],
+				inc: [1, 0, 0],
+				total: [1, 0, 0]
+			},
+		});
+
+		assert.deepStrictEqual(chartDays, {
+			foo: {
+				dec: [0, 0, 0],
+				inc: [2, 0, 0],
+				total: [2, 0, 0]
+			},
+		});
+	}));
+
 	describe('Grouped', () => {
 		it('Can updates', async(async () => {
 			await testGroupedChart.increment('alice');
 
-			const aliceChartHours = await testGroupedChart.getChart('hour', 3, 'alice');
-			const aliceChartDays = await testGroupedChart.getChart('day', 3, 'alice');
-			const bobChartHours = await testGroupedChart.getChart('hour', 3, 'bob');
-			const bobChartDays = await testGroupedChart.getChart('day', 3, 'bob');
+			const aliceChartHours = await testGroupedChart.getChart('hour', 3, null, 'alice');
+			const aliceChartDays = await testGroupedChart.getChart('day', 3, null, 'alice');
+			const bobChartHours = await testGroupedChart.getChart('hour', 3, null, 'bob');
+			const bobChartDays = await testGroupedChart.getChart('day', 3, null, 'bob');
 
 			assert.deepStrictEqual(aliceChartHours, {
 				foo: {
@@ -331,8 +387,8 @@ describe('Chart', () => {
 			await testUniqueChart.uniqueIncrement('alice');
 			await testUniqueChart.uniqueIncrement('bob');
 
-			const chartHours = await testUniqueChart.getChart('hour', 3);
-			const chartDays = await testUniqueChart.getChart('day', 3);
+			const chartHours = await testUniqueChart.getChart('hour', 3, null);
+			const chartDays = await testUniqueChart.getChart('day', 3, null);
 
 			assert.deepStrictEqual(chartHours, {
 				foo: [2, 0, 0],
@@ -350,8 +406,8 @@ describe('Chart', () => {
 
 			await testChart.resync();
 
-			const chartHours = await testChart.getChart('hour', 3);
-			const chartDays = await testChart.getChart('day', 3);
+			const chartHours = await testChart.getChart('hour', 3, null);
+			const chartDays = await testChart.getChart('day', 3, null);
 
 			assert.deepStrictEqual(chartHours, {
 				foo: {
@@ -379,8 +435,8 @@ describe('Chart', () => {
 
 			await testChart.resync();
 
-			const chartHours = await testChart.getChart('hour', 3);
-			const chartDays = await testChart.getChart('day', 3);
+			const chartHours = await testChart.getChart('hour', 3, null);
+			const chartDays = await testChart.getChart('day', 3, null);
 
 			assert.deepStrictEqual(chartHours, {
 				foo: {

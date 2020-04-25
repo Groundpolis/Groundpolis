@@ -65,7 +65,7 @@ export class PageRepository extends Repository<Page> {
 			createdAt: page.createdAt.toISOString(),
 			updatedAt: page.updatedAt.toISOString(),
 			userId: page.userId,
-			user: Users.pack(page.user || page.userId),
+			user: Users.pack(page.user || page.userId, me), // { detail: true } すると無限ループするので注意
 			content: page.content,
 			variables: page.variables,
 			title: page.title,
@@ -74,6 +74,7 @@ export class PageRepository extends Repository<Page> {
 			hideTitleWhenPinned: page.hideTitleWhenPinned,
 			alignCenter: page.alignCenter,
 			font: page.font,
+			script: page.script,
 			eyeCatchingImageId: page.eyeCatchingImageId,
 			eyeCatchingImage: page.eyeCatchingImageId ? await DriveFiles.pack(page.eyeCatchingImageId) : null,
 			attachedFiles: DriveFiles.packMany(await Promise.all(attachedFiles)),

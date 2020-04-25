@@ -4,6 +4,7 @@ import { getConnection } from 'typeorm';
 import { Meta } from '../../../../models/entities/meta';
 import { insertModerationLog } from '../../../../services/insert-moderation-log';
 import { DB_MAX_NOTE_TEXT_LENGTH } from '../../../../misc/hard-limits';
+import { ID } from '../../../../misc/cafy-id';
 
 export const meta = {
 	desc: {
@@ -12,17 +13,10 @@ export const meta = {
 
 	tags: ['admin'],
 
-	requireCredential: true,
-	requireModerator: true,
+	requireCredential: true as const,
+	requireAdmin: true,
 
 	params: {
-		announcements: {
-			validator: $.optional.nullable.arr($.obj()),
-			desc: {
-				'ja-JP': 'お知らせ'
-			}
-		},
-
 		disableRegistration: {
 			validator: $.optional.nullable.bool,
 			desc: {
@@ -33,7 +27,7 @@ export const meta = {
 		disableLocalTimeline: {
 			validator: $.optional.nullable.bool,
 			desc: {
-				'ja-JP': 'ローカルタイムライン(とソーシャルタイムライン)を無効にするか否か'
+				'ja-JP': 'ローカルタイムライン(とホーム + ローカルタイムライン)を無効にするか否か'
 			}
 		},
 
@@ -41,13 +35,6 @@ export const meta = {
 			validator: $.optional.nullable.bool,
 			desc: {
 				'ja-JP': 'グローバルタイムラインを無効にするか否か'
-			}
-		},
-
-		enableEmojiReaction: {
-			validator: $.optional.nullable.bool,
-			desc: {
-				'ja-JP': '絵文字リアクションを有効にするか否か'
 			}
 		},
 
@@ -159,6 +146,13 @@ export const meta = {
 			}
 		},
 
+		proxyRemoteFiles: {
+			validator: $.optional.bool,
+			desc: {
+				'ja-JP': 'ローカルにないリモートのファイルをプロキシするか否か'
+			}
+		},
+
 		enableRecaptcha: {
 			validator: $.optional.bool,
 			desc: {
@@ -180,10 +174,10 @@ export const meta = {
 			}
 		},
 
-		proxyAccount: {
-			validator: $.optional.nullable.str,
+		proxyAccountId: {
+			validator: $.optional.nullable.type(ID),
 			desc: {
-				'ja-JP': 'プロキシアカウントのユーザー名'
+				'ja-JP': 'プロキシアカウントのID'
 			}
 		},
 
@@ -355,7 +349,7 @@ export const meta = {
 			}
 		},
 
-		ToSUrl: {
+		tosUrl: {
 			validator: $.optional.nullable.str,
 			desc: {
 				'ja-JP': '利用規約のURL'
@@ -415,15 +409,15 @@ export const meta = {
 		objectStorageUseSSL: {
 			validator: $.optional.bool
 		},
+
+		objectStorageUseProxy: {
+			validator: $.optional.bool
+		}
 	}
 };
 
 export default define(meta, async (ps, me) => {
 	const set = {} as Partial<Meta>;
-
-	if (ps.announcements) {
-		set.announcements = ps.announcements;
-	}
 
 	if (typeof ps.disableRegistration === 'boolean') {
 		set.disableRegistration = ps.disableRegistration;
@@ -435,10 +429,6 @@ export default define(meta, async (ps, me) => {
 
 	if (typeof ps.disableGlobalTimeline === 'boolean') {
 		set.disableGlobalTimeline = ps.disableGlobalTimeline;
-	}
-
-	if (typeof ps.enableEmojiReaction === 'boolean') {
-		set.enableEmojiReaction = ps.enableEmojiReaction;
 	}
 
 	if (typeof ps.useStarForReactionFallback === 'boolean') {
@@ -497,6 +487,10 @@ export default define(meta, async (ps, me) => {
 		set.cacheRemoteFiles = ps.cacheRemoteFiles;
 	}
 
+	if (ps.proxyRemoteFiles !== undefined) {
+		set.proxyRemoteFiles = ps.proxyRemoteFiles;
+	}
+
 	if (ps.enableRecaptcha !== undefined) {
 		set.enableRecaptcha = ps.enableRecaptcha;
 	}
@@ -509,8 +503,8 @@ export default define(meta, async (ps, me) => {
 		set.recaptchaSecretKey = ps.recaptchaSecretKey;
 	}
 
-	if (ps.proxyAccount !== undefined) {
-		set.proxyAccount = ps.proxyAccount;
+	if (ps.proxyAccountId !== undefined) {
+		set.proxyAccountId = ps.proxyAccountId;
 	}
 
 	if (ps.maintainerName !== undefined) {
@@ -613,8 +607,8 @@ export default define(meta, async (ps, me) => {
 		set.swPrivateKey = ps.swPrivateKey;
 	}
 
-	if (ps.ToSUrl !== undefined) {
-		set.ToSUrl = ps.ToSUrl;
+	if (ps.tosUrl !== undefined) {
+		set.ToSUrl = ps.tosUrl;
 	}
 
 	if (ps.repositoryUrl !== undefined) {
@@ -663,6 +657,10 @@ export default define(meta, async (ps, me) => {
 
 	if (ps.objectStorageUseSSL !== undefined) {
 		set.objectStorageUseSSL = ps.objectStorageUseSSL;
+	}
+
+	if (ps.objectStorageUseProxy !== undefined) {
+		set.objectStorageUseProxy = ps.objectStorageUseProxy;
 	}
 
 	await getConnection().transaction(async transactionalEntityManager => {

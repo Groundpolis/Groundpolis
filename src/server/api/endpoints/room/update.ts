@@ -4,7 +4,9 @@ import define from '../../define';
 import { Users, UserProfiles } from '../../../../models';
 
 export const meta = {
-	requireCredential: true,
+	tags: ['room'],
+
+	requireCredential: true as const,
 
 	params: {
 		room: {
@@ -32,7 +34,7 @@ export const meta = {
 };
 
 export default define(meta, async (ps, user) => {
-	await UserProfiles.update({ userId: user.id }, {
+	await UserProfiles.update(user.id, {
 		room: ps.room as any
 	});
 

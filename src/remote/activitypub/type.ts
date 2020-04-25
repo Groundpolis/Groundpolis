@@ -19,8 +19,9 @@ export interface IObject {
 	endTime?: Date;
 	icon?: any;
 	image?: any;
-	url?: string;
-	tag?: any[];
+	url?: ApObject;
+	href?: string;
+	tag?: IObject | IObject[];
 	sensitive?: boolean;
 }
 
@@ -50,6 +51,17 @@ export function getApId(value: string | IObject): string {
 	throw new Error(`cannot detemine id`);
 }
 
+export function getOneApHrefNullable(value: ApObject | undefined): string | undefined {
+	const firstOne = Array.isArray(value) ? value[0] : value;
+	return getApHrefNullable(firstOne);
+}
+
+export function getApHrefNullable(value: string | IObject | undefined): string | undefined {
+	if (typeof value === 'string') return value;
+	if (typeof value?.href === 'string') return value.href;
+	return undefined;
+}
+
 export interface IActivity extends IObject {
 	//type: 'Activity';
 	actor: IObject | string;
@@ -69,12 +81,13 @@ export interface IOrderedCollection extends IObject {
 	orderedItems: ApObject;
 }
 
-export const validPost = ['Note', 'Question', 'Article', 'Audio', 'Document', 'Image', 'Page', 'Video'];
+export const validPost = ['Note', 'Question', 'Article', 'Audio', 'Document', 'Image', 'Page', 'Video', 'Event'];
 
-export interface INote extends IObject {
-	type: 'Note' | 'Question' | 'Article' | 'Audio' | 'Document' | 'Image' | 'Page' | 'Video';
+export interface IPost extends IObject {
+	type: 'Note' | 'Question' | 'Article' | 'Audio' | 'Document' | 'Image' | 'Page' | 'Video' | 'Event';
 	_misskey_content?: string;
 	_misskey_quote?: string;
+	quoteUrl?: string;
 	_misskey_talk: boolean;
 }
 
@@ -82,6 +95,7 @@ export interface IQuestion extends IObject {
 	type: 'Note' | 'Question';
 	_misskey_content?: string;
 	_misskey_quote?: string;
+	quoteUrl?: string;
 	oneOf?: IQuestionChoice[];
 	anyOf?: IQuestionChoice[];
 	endTime?: Date;
@@ -97,7 +111,7 @@ interface IQuestionChoice {
 	_misskey_votes?: number;
 }
 
-export const validActor = ['Person', 'Service'];
+export const validActor = ['Person', 'Service', 'Group', 'Organization'];
 
 export interface IPerson extends IObject {
 	type: 'Person';
@@ -128,6 +142,45 @@ export const isOrderedCollection = (object: IObject): object is IOrderedCollecti
 export const isCollectionOrOrderedCollection = (object: IObject): object is ICollection | IOrderedCollection =>
 	isCollection(object) || isOrderedCollection(object);
 
+export interface IApPropertyValue extends IObject {
+	type: 'PropertyValue';
+	identifier: IApPropertyValue;
+	name: string;
+	value: string;
+}
+
+export const isPropertyValue = (object: IObject): object is IApPropertyValue =>
+	object &&
+	object.type === 'PropertyValue' &&
+	typeof object.name === 'string' &&
+	typeof (object as any).value === 'string';
+
+export interface IApMention extends IObject {
+	type: 'Mention';
+	href: string;
+}
+
+export const isMention = (object: IObject): object is IApMention=>
+	object.type === 'Mention' &&
+	typeof object.href === 'string';
+
+export interface IApHashtag extends IObject {
+	type: 'Hashtag';
+	name: string;
+}
+
+export const isHashtag = (object: IObject): object is IApHashtag =>
+	object.type === 'Hashtag' &&
+	typeof object.name === 'string';
+
+export interface IApEmoji extends IObject {
+	type: 'Emoji';
+	updated: Date;
+}
+
+export const isEmoji = (object: IObject): object is IApEmoji =>
+	object.type === 'Emoji' && !Array.isArray(object.icon) && object.icon.url != null;
+
 export interface ICreate extends IActivity {
 	type: 'Create';
 }
@@ -138,6 +191,10 @@ export interface IDelete extends IActivity {
 
 export interface IUpdate extends IActivity {
 	type: 'Update';
+}
+
+export interface IRead extends IActivity {
+	type: 'Read';
 }
 
 export interface IUndo extends IActivity {
@@ -165,7 +222,7 @@ export interface IRemove extends IActivity {
 }
 
 export interface ILike extends IActivity {
-	type: 'Like';
+	type: 'Like' | 'EmojiReaction' | 'EmojiReact';
 	_misskey_reaction?: string;
 }
 
@@ -180,12 +237,13 @@ export interface IBlock extends IActivity {
 export const isCreate = (object: IObject): object is ICreate => object.type === 'Create';
 export const isDelete = (object: IObject): object is IDelete => object.type === 'Delete';
 export const isUpdate = (object: IObject): object is IUpdate => object.type === 'Update';
+export const isRead = (object: IObject): object is IRead => object.type === 'Read';
 export const isUndo = (object: IObject): object is IUndo => object.type === 'Undo';
 export const isFollow = (object: IObject): object is IFollow => object.type === 'Follow';
 export const isAccept = (object: IObject): object is IAccept => object.type === 'Accept';
 export const isReject = (object: IObject): object is IReject => object.type === 'Reject';
 export const isAdd = (object: IObject): object is IAdd => object.type === 'Add';
 export const isRemove = (object: IObject): object is IRemove => object.type === 'Remove';
-export const isLike = (object: IObject): object is ILike => object.type === 'Like';
+export const isLike = (object: IObject): object is ILike => object.type === 'Like' || object.type === 'EmojiReaction' || object.type === 'EmojiReact';
 export const isAnnounce = (object: IObject): object is IAnnounce => object.type === 'Announce';
 export const isBlock = (object: IObject): object is IBlock => object.type === 'Block';

@@ -26,7 +26,7 @@ import { UserList } from '../models/entities/user-list';
 import { UserListJoining } from '../models/entities/user-list-joining';
 import { UserGroup } from '../models/entities/user-group';
 import { UserGroupJoining } from '../models/entities/user-group-joining';
-import { UserGroupInvite } from '../models/entities/user-group-invite';
+import { UserGroupInvitation } from '../models/entities/user-group-invitation';
 import { Hashtag } from '../models/entities/hashtag';
 import { NoteFavorite } from '../models/entities/note-favorite';
 import { AbuseUserReport } from '../models/entities/abuse-user-report';
@@ -49,6 +49,15 @@ import { Page } from '../models/entities/page';
 import { PageLike } from '../models/entities/page-like';
 import { ModerationLog } from '../models/entities/moderation-log';
 import { UsedUsername } from '../models/entities/used-username';
+import { Announcement } from '../models/entities/announcement';
+import { AnnouncementRead } from '../models/entities/announcement-read';
+import { Clip } from '../models/entities/clip';
+import { ClipNote } from '../models/entities/clip-note';
+import { Antenna } from '../models/entities/antenna';
+import { AntennaNote } from '../models/entities/antenna-note';
+import { PromoNote } from '../models/entities/promo-note';
+import { PromoRead } from '../models/entities/promo-read';
+import { program } from '../argv';
 
 const sqlLogger = dbLogger.createSubLogger('sql', 'white', false);
 
@@ -60,7 +69,9 @@ class MyCustomLogger implements Logger {
 	}
 
 	public logQuery(query: string, parameters?: any[]) {
-		sqlLogger.info(this.highlight(query));
+		if (program.verbose) {
+			sqlLogger.info(this.highlight(query));
+		}
 	}
 
 	public logQueryError(error: string, query: string, parameters?: any[]) {
@@ -85,6 +96,8 @@ class MyCustomLogger implements Logger {
 }
 
 export const entities = [
+	Announcement,
+	AnnouncementRead,
 	Meta,
 	Instance,
 	App,
@@ -98,7 +111,7 @@ export const entities = [
 	UserListJoining,
 	UserGroup,
 	UserGroupJoining,
-	UserGroupInvite,
+	UserGroupInvitation,
 	UserNotePining,
 	UserSecurityKey,
 	UsedUsername,
@@ -128,16 +141,26 @@ export const entities = [
 	MessagingMessage,
 	Signin,
 	ModerationLog,
+	Clip,
+	ClipNote,
+	Antenna,
+	AntennaNote,
+	PromoNote,
+	PromoRead,
 	ReversiGame,
 	ReversiMatching,
 	...charts as any
 ];
 
-export function initDb(justBorrow = false, sync = false, log = false) {
-	try {
-		const conn = getConnection();
-		return Promise.resolve(conn);
-	} catch (e) {}
+export function initDb(justBorrow = false, sync = false, forceRecreate = false) {
+	if (!forceRecreate) {
+		try {
+			const conn = getConnection();
+			return Promise.resolve(conn);
+		} catch (e) {}
+	}
+
+	const log = process.env.NODE_ENV != 'production';
 
 	return createConnection({
 		type: 'postgres',
@@ -155,7 +178,7 @@ export function initDb(justBorrow = false, sync = false, log = false) {
 				host: config.redis.host,
 				port: config.redis.port,
 				password: config.redis.pass,
-				prefix: config.redis.prefix,
+				prefix: `${config.redis.prefix}:query:`,
 				db: config.redis.db || 0
 			}
 		} : false,

@@ -11,6 +11,7 @@ import { Note } from '../../models/entities/note';
 import { Notes, Users, Instances } from '../../models';
 import { notesChart, perUserNotesChart, instanceChart } from '../chart';
 import { deliverToFollowers } from '../../remote/activitypub/deliver-manager';
+import { countSameRenotes } from '../../misc/count-same-renotes';
 
 /**
  * 投稿を削除します。
@@ -20,12 +21,8 @@ import { deliverToFollowers } from '../../remote/activitypub/deliver-manager';
 export default async function(user: User, note: Note, quiet = false) {
 	const deletedAt = new Date();
 
-	await Notes.delete({
-		id: note.id,
-		userId: user.id
-	});
-
-	if (note.renoteId) {
+	// この投稿を除く指定したユーザーによる指定したノートのリノートが存在しないとき
+	if (note.renoteId && (await countSameRenotes(user.id, note.renoteId, note.id)) === 0) {
 		Notes.decrement({ id: note.renoteId }, 'renoteCount', 1);
 		Notes.decrement({ id: note.renoteId }, 'score', 1);
 	}
@@ -39,6 +36,7 @@ export default async function(user: User, note: Note, quiet = false) {
 		if (Users.isLocalUser(user)) {
 			let renote: Note | undefined;
 
+			// if deletd note is renote
 			if (note.renoteId && note.text == null && !note.hasPoll && (note.fileIds == null || note.fileIds.length == 0)) {
 				renote = await Notes.findOne({
 					id: note.renoteId
@@ -50,6 +48,15 @@ export default async function(user: User, note: Note, quiet = false) {
 				: renderDelete(renderTombstone(`${config.url}/notes/${note.id}`), user));
 
 			deliverToFollowers(user, content);
+		}
+
+		// also deliever delete activity to cascaded notes
+		const cascadingNotes = (await findCascadingNotes(note)).filter(note => !note.localOnly); // filter out local-only notes
+		for (const cascadingNote of cascadingNotes) {
+			if (!cascadingNote.user) continue;
+			if (!Users.isLocalUser(cascadingNote.user)) continue;
+			const content = renderActivity(renderDelete(renderTombstone(`${config.url}/notes/${cascadingNote.id}`), cascadingNote.user));
+			deliverToFollowers(cascadingNote.user, content);
 		}
 		//#endregion
 
@@ -64,4 +71,27 @@ export default async function(user: User, note: Note, quiet = false) {
 			});
 		}
 	}
+
+	await Notes.delete({
+		id: note.id,
+		userId: user.id
+	});
+}
+
+async function findCascadingNotes(note: Note) {
+	const cascadingNotes: Note[] = [];
+
+	const recursive = async (noteId: string) => {
+		const query = Notes.createQueryBuilder('note')
+			.where('note.replyId = :noteId', { noteId })
+			.leftJoinAndSelect('note.user', 'user');
+		const replies = await query.getMany();
+		for (const reply of replies) {
+			cascadingNotes.push(reply);
+			await recursive(reply.id);
+		}
+	};
+	await recursive(note.id);
+
+	return cascadingNotes.filter(note => note.userHost === null); // filter out non-local users
 }

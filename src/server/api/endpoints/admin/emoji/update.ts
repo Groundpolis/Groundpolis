@@ -1,6 +1,5 @@
 import $ from 'cafy';
 import define from '../../../define';
-import { detectUrlMine } from '../../../../../misc/detect-url-mine';
 import { ID } from '../../../../../misc/cafy-id';
 import { Emojis } from '../../../../../models';
 import { getConnection } from 'typeorm';
@@ -13,7 +12,7 @@ export const meta = {
 
 	tags: ['admin'],
 
-	requireCredential: true,
+	requireCredential: true as const,
 	requireModerator: true,
 
 	params: {
@@ -27,10 +26,6 @@ export const meta = {
 
 		category: {
 			validator: $.optional.str
-		},
-
-		url: {
-			validator: $.str
 		},
 
 		aliases: {
@@ -52,15 +47,11 @@ export default define(meta, async (ps) => {
 
 	if (emoji == null) throw new ApiError(meta.errors.noSuchEmoji);
 
-	const type = await detectUrlMine(ps.url);
-
 	await Emojis.update(emoji.id, {
 		updatedAt: new Date(),
 		name: ps.name,
 		category: ps.category,
 		aliases: ps.aliases,
-		url: ps.url,
-		type,
 	});
 
 	await getConnection().queryResultCache!.remove(['meta_emojis']);

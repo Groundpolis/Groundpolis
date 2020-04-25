@@ -4,6 +4,8 @@ import { Note } from '../models/entities/note';
 import { UserList } from '../models/entities/user-list';
 import { ReversiGame } from '../models/entities/games/reversi/game';
 import { UserGroup } from '../models/entities/user-group';
+import config from '../config';
+import { Antenna } from '../models/entities/antenna';
 
 class Publisher {
 	private publish = (channel: string, type: string | null, value?: any): void => {
@@ -11,10 +13,14 @@ class Publisher {
 			{ type: type, body: null } :
 			{ type: type, body: value };
 
-		redis.publish('misskey', JSON.stringify({
+		redis.publish(config.host, JSON.stringify({
 			channel: channel,
 			message: message
 		}));
+	}
+
+	public publishBroadcastStream = (type: string, value?: any): void => {
+		this.publish('broadcast', type, typeof value === 'undefined' ? null : value);
 	}
 
 	public publishMainStream = (userId: User['id'], type: string, value?: any): void => {
@@ -34,6 +40,10 @@ class Publisher {
 
 	public publishUserListStream = (listId: UserList['id'], type: string, value?: any): void => {
 		this.publish(`userListStream:${listId}`, type, typeof value === 'undefined' ? null : value);
+	}
+
+	public publishAntennaStream = (antennaId: Antenna['id'], type: string, value?: any): void => {
+		this.publish(`antennaStream:${antennaId}`, type, typeof value === 'undefined' ? null : value);
 	}
 
 	public publishMessagingStream = (userId: User['id'], otherpartyId: User['id'], type: string, value?: any): void => {
@@ -60,10 +70,6 @@ class Publisher {
 		this.publish('notesStream', null, note);
 	}
 
-	public publishApLogStream = (log: any): void => {
-		this.publish('apLog', null, log);
-	}
-
 	public publishAdminStream = (userId: User['id'], type: string, value?: any): void => {
 		this.publish(`adminStream:${userId}`, type, typeof value === 'undefined' ? null : value);
 	}
@@ -73,15 +79,16 @@ const publisher = new Publisher();
 
 export default publisher;
 
+export const publishBroadcastStream = publisher.publishBroadcastStream;
 export const publishMainStream = publisher.publishMainStream;
 export const publishDriveStream = publisher.publishDriveStream;
 export const publishNoteStream = publisher.publishNoteStream;
 export const publishNotesStream = publisher.publishNotesStream;
 export const publishUserListStream = publisher.publishUserListStream;
+export const publishAntennaStream = publisher.publishAntennaStream;
 export const publishMessagingStream = publisher.publishMessagingStream;
 export const publishGroupMessagingStream = publisher.publishGroupMessagingStream;
 export const publishMessagingIndexStream = publisher.publishMessagingIndexStream;
 export const publishReversiStream = publisher.publishReversiStream;
 export const publishReversiGameStream = publisher.publishReversiGameStream;
-export const publishApLogStream = publisher.publishApLogStream;
 export const publishAdminStream = publisher.publishAdminStream;

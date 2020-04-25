@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { User } from './user';
+import { id } from '../id';
 
 @Entity()
 export class Meta {
@@ -34,11 +36,6 @@ export class Meta {
 	})
 	public maintainerEmail: string | null;
 
-	@Column('jsonb', {
-		default: [],
-	})
-	public announcements: Record<string, any>[];
-
 	@Column('boolean', {
 		default: false,
 	})
@@ -53,11 +50,6 @@ export class Meta {
 		default: false,
 	})
 	public disableGlobalTimeline: boolean;
-
-	@Column('boolean', {
-		default: true,
-	})
-	public enableEmojiReaction: boolean;
 
 	@Column('boolean', {
 		default: false,
@@ -115,11 +107,22 @@ export class Meta {
 	})
 	public cacheRemoteFiles: boolean;
 
-	@Column('varchar', {
-		length: 128,
-		nullable: true
+	@Column('boolean', {
+		default: false,
 	})
-	public proxyAccount: string | null;
+	public proxyRemoteFiles: boolean;
+
+	@Column({
+		...id(),
+		nullable: true,
+	})
+	public proxyAccountId: User['id'] | null;
+
+	@ManyToOne(type => User, {
+		onDelete: 'SET NULL'
+	})
+	@JoinColumn()
+	public proxyAccount: User | null;
 
 	@Column('boolean', {
 		default: false,
@@ -356,4 +359,9 @@ export class Meta {
 		default: true,
 	})
 	public objectStorageUseSSL: boolean;
+
+	@Column('boolean', {
+		default: true,
+	})
+	public objectStorageUseProxy: boolean;
 }

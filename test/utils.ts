@@ -1,7 +1,8 @@
 import * as fs from 'fs';
 import * as WebSocket from 'ws';
-const fetch = require('node-fetch');
-import * as req from 'request';
+import fetch from 'node-fetch';
+const FormData = require('form-data');
+import * as childProcess from 'child_process';
 
 export const async = (fn: Function) => (done: Function) => {
 	fn().then(() => {
@@ -17,8 +18,11 @@ export const request = async (endpoint: string, params: any, me?: any): Promise<
 	} : {};
 
 	try {
-		const res = await fetch('http://localhost:80/api' + endpoint, {
+		const res = await fetch('http://localhost:8080/api' + endpoint, {
 			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
 			body: JSON.stringify(Object.assign(auth, params))
 		});
 
@@ -63,22 +67,27 @@ export const react = async (user: any, note: any, reaction: string): Promise<any
 	}, user);
 };
 
-export const uploadFile = (user: any, path?: string): Promise<any> => new Promise((ok, rej) => {
-	req.post({
-		url: 'http://localhost:80/api/drive/files/create',
-		formData: {
-			i: user.token,
-			file: fs.createReadStream(path || __dirname + '/resources/Lenna.png')
-		},
-		json: true
-	}, (err, httpResponse, body) => {
-		ok(body);
-	});
-});
+export const uploadFile = (user: any, path?: string): Promise<any> => {
+		const formData = new FormData();
+		formData.append('i', user.token);
+		formData.append('file', fs.createReadStream(path || __dirname + '/resources/Lenna.png'));
+
+		return fetch('http://localhost:8080/api/drive/files/create', {
+			method: 'post',
+			body: formData,
+			timeout: 30 * 1000,
+		}).then(res => {
+			if (!res.ok) {
+				throw `${res.status} ${res.statusText}`;
+			} else {
+				return res.json();
+			}
+		});
+};
 
 export function connectStream(user: any, channel: string, listener: (message: Record<string, any>) => any, params?: any): Promise<WebSocket> {
 	return new Promise((res, rej) => {
-		const ws = new WebSocket(`ws://localhost/streaming?i=${user.token}`);
+		const ws = new WebSocket(`ws://localhost:8080/streaming?i=${user.token}`);
 
 		ws.on('open', () => {
 			ws.on('message', data => {
@@ -101,4 +110,17 @@ export function connectStream(user: any, channel: string, listener: (message: Re
 			}));
 		});
 	});
+}
+
+export function launchServer(callbackSpawnedProcess: (p: childProcess.ChildProcess) => void, moreProcess: () => Promise<void> = async () => {}) {
+	return (done: (err?: Error) => any) => {
+		const p = childProcess.spawn('node', [__dirname + '/../index.js'], {
+			stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
+			env: { NODE_ENV: 'test', PATH: process.env.PATH }
+		});
+		callbackSpawnedProcess(p);
+		p.on('message', message => {
+			if (message === 'ok') moreProcess().then(() => done()).catch(e => done(e));
+		});
+	};
 }

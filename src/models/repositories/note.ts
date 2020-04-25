@@ -1,12 +1,15 @@
 import { EntityRepository, Repository, In } from 'typeorm';
 import { Note } from '../entities/note';
 import { User } from '../entities/user';
-import { unique, concat } from '../../prelude/array';
-import { nyaize } from '../../misc/nyaize';
-import { Emojis, Users, Apps, PollVotes, DriveFiles, NoteReactions, Followings, Polls } from '..';
+import { Emojis, Users, PollVotes, DriveFiles, NoteReactions, Followings, Polls } from '..';
 import { ensure } from '../../prelude/ensure';
 import { SchemaType } from '../../misc/schema';
 import { awaitAll } from '../../prelude/await-all';
+import { convertLegacyReaction, convertLegacyReactions, decodeReaction } from '../../misc/reaction-lib';
+import { toString } from '../../mfm/toString';
+import { parse } from '../../mfm/parse';
+import { Emoji } from '../entities/emoji';
+import { concat } from '../../prelude/array';
 
 export type PackedNote = SchemaType<typeof packedNoteSchema>;
 
@@ -38,7 +41,7 @@ export class NoteRepository extends Repository<Note> {
 		}
 
 		// visibility が followers かつ自分が投稿者のフォロワーでなかったら非表示
-		if (packedNote.visibility == 'followers') {
+		if (packedNote.visibility === 'followers') {
 			if (meId == null) {
 				hide = true;
 			} else if (meId === packedNote.userId) {
@@ -76,7 +79,6 @@ export class NoteRepository extends Repository<Note> {
 			packedNote.text = null;
 			packedNote.poll = undefined;
 			packedNote.cw = null;
-			packedNote.geo = undefined;
 			packedNote.isHidden = true;
 		}
 	}
@@ -134,6 +136,63 @@ export class NoteRepository extends Repository<Note> {
 			};
 		}
 
+		/**
+		 * 添付用emojisを解決する
+		 * @param emojiNames Note等に添付されたカスタム絵文字名 (:は含めない)
+		 * @param noteUserHost Noteのホスト
+		 * @param reactionNames Note等にリアクションされたカスタム絵文字名 (:は含めない)
+		 */
+		async function populateEmojis(emojiNames: string[], noteUserHost: string | null, reactionNames: string[]) {
+			let all = [] as {
+				name: string,
+				url: string
+			}[];
+
+			// カスタム絵文字
+			if (emojiNames?.length > 0) {
+				const tmp = await Emojis.find({
+					where: {
+						name: In(emojiNames),
+						host: noteUserHost
+					},
+					select: ['name', 'host', 'url']
+				}).then(emojis => emojis.map((emoji: Emoji) => {
+					return {
+						name: emoji.name,
+						url: emoji.url,
+					};
+				}));
+
+				all = concat([all, tmp]);
+			}
+
+			const customReactions = reactionNames?.map(x => decodeReaction(x)).filter(x => x.name);
+
+			if (customReactions?.length > 0) {
+				const where = [] as {}[];
+
+				for (const customReaction of customReactions) {
+					where.push({
+						name: customReaction.name,
+						host: customReaction.host
+					});
+				}
+
+				const tmp = await Emojis.find({
+					where,
+					select: ['name', 'host', 'url']
+				}).then(emojis => emojis.map((emoji: Emoji) => {
+					return {
+						name: `${emoji.name}@${emoji.host || '.'}`,	// @host付きでローカルは.
+						url: emoji.url,
+					};
+				}));
+				all = concat([all, tmp]);
+			}
+
+			return all;
+		}
+
 		async function populateMyReaction() {
 			const reaction = await NoteReactions.findOne({
 				userId: meId!,
@@ -141,7 +200,7 @@ export class NoteRepository extends Repository<Note> {
 			});
 
 			if (reaction) {
-				return reaction.reaction;
+				return convertLegacyReaction(reaction.reaction);
 			}
 
 			return undefined;
@@ -149,16 +208,13 @@ export class NoteRepository extends Repository<Note> {
 
 		let text = note.text;
 
-		if (note.name && note.uri) {
-			text = `【${note.name}】\n${(note.text || '').trim()}\n${note.uri}`;
+		if (note.name && (note.url || note.uri)) {
+			text = `【${note.name}】\n${(note.text || '').trim()}\n\n${note.url || note.uri}`;
 		}
-
-		const reactionEmojis = unique(concat([note.emojis, Object.keys(note.reactions)]));
 
 		const packed = await awaitAll({
 			id: note.id,
 			createdAt: note.createdAt.toISOString(),
-			app: note.appId ? Apps.pack(note.appId) : undefined,
 			userId: note.userId,
 			user: Users.pack(note.user || note.userId, meId),
 			text: text,
@@ -169,18 +225,18 @@ export class NoteRepository extends Repository<Note> {
 			viaMobile: note.viaMobile || undefined,
 			renoteCount: note.renoteCount,
 			repliesCount: note.repliesCount,
-			reactions: note.reactions,
+			reactions: convertLegacyReactions(note.reactions),
 			tags: note.tags.length > 0 ? note.tags : undefined,
-			emojis: reactionEmojis.length > 0 ? Emojis.find({
-				name: In(reactionEmojis),
-				host: host
-			}) : [],
+			emojis: populateEmojis(note.emojis, host, Object.keys(note.reactions)),
 			fileIds: note.fileIds,
 			files: DriveFiles.packMany(note.fileIds),
 			replyId: note.replyId,
 			renoteId: note.renoteId,
 			mentions: note.mentions.length > 0 ? note.mentions : undefined,
 			uri: note.uri || undefined,
+			url: note.url || undefined,
+			_featuredId_: (note as any)._featuredId_ || undefined,
+			_prId_: (note as any)._prId_ || undefined,
 
 			...(opts.detail ? {
 				reply: note.replyId ? this.pack(note.replyId, meId, {
@@ -200,7 +256,8 @@ export class NoteRepository extends Repository<Note> {
 		});
 
 		if (packed.user.isCat && packed.text) {
-			packed.text = nyaize(packed.text);
+			const tokens = packed.text ? parse(packed.text) : [];
+			packed.text = toString(tokens, { doNyaize: true });
 		}
 
 		if (!opts.skipHide) {
@@ -339,9 +396,6 @@ export const packedNoteSchema = {
 			type: 'object' as const,
 			optional: true as const, nullable: true as const,
 		},
-		geo: {
-			type: 'object' as const,
-			optional: true as const, nullable: true as const,
-		},
+
 	},
 };

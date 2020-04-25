@@ -1,16 +1,11 @@
 import $ from 'cafy';
-import * as os from 'os';
 import config from '../../../config';
 import define from '../define';
 import { fetchMeta } from '../../../misc/fetch-meta';
-import { Emojis } from '../../../models';
-import { getConnection } from 'typeorm';
-import redis from '../../../db/redis';
+import { Emojis, Users } from '../../../models';
 import { DB_MAX_NOTE_TEXT_LENGTH } from '../../../misc/hard-limits';
 
 export const meta = {
-	stability: 'stable',
-
 	desc: {
 		'ja-JP': 'インスタンス情報を取得します。',
 		'en-US': 'Get the information of this instance.'
@@ -18,7 +13,7 @@ export const meta = {
 
 	tags: ['meta'],
 
-	requireCredential: false,
+	requireCredential: false as const,
 
 	params: {
 		detail: {
@@ -83,16 +78,6 @@ export const meta = {
 				optional: false as const, nullable: false as const,
 				description: 'Whether disabled GTL.',
 			},
-			enableEmojiReaction: {
-				type: 'boolean' as const,
-				optional: false as const, nullable: false as const,
-				description: 'Whether enabled emoji reaction.',
-			},
-			hideServerInformation: {
-				type: 'boolean' as const,
-				optional: false as const, nullable: false as const,
-				description: 'Whether server information is hidden.',
-			},
 		}
 	}
 };
@@ -126,31 +111,20 @@ export default define(meta, async (ps, me) => {
 		uri: config.url,
 		description: instance.description,
 		langs: instance.langs,
-		ToSUrl: instance.ToSUrl,
+		tosUrl: instance.ToSUrl,
 		repositoryUrl: instance.repositoryUrl,
 		feedbackUrl: instance.feedbackUrl,
 
 		secure: config.https != null,
-		machine: hide ? undefined : os.hostname(),
-		os: hide ? undefined : os.platform(),
-		node: hide ? undefined : process.version,
-		psql: hide ? undefined : await getConnection().query('SHOW server_version').then(x => x[0].server_version),
-		redis: hide ? undefined : redis.server_info.redis_version,
 
-		cpu: hide ? undefined : {
-			model: os.cpus()[0].model,
-			cores: os.cpus().length
-		},
-
-		announcements: instance.announcements || [],
 		disableRegistration: instance.disableRegistration,
 		disableLocalTimeline: instance.disableLocalTimeline,
 		disableGlobalTimeline: instance.disableGlobalTimeline,
-		enableEmojiReaction: instance.enableEmojiReaction,
 		driveCapacityPerLocalUserMb: instance.localDriveCapacityMb,
 		driveCapacityPerPremiumUserMb: instance.premiumDriveCapacityMb,
 		driveCapacityPerRemoteUserMb: instance.remoteDriveCapacityMb,
 		cacheRemoteFiles: instance.cacheRemoteFiles,
+		proxyRemoteFiles: instance.proxyRemoteFiles,
 		enableRecaptcha: instance.enableRecaptcha,
 		recaptchaSiteKey: instance.recaptchaSiteKey,
 		swPublickey: instance.swPublicKey,
@@ -159,13 +133,10 @@ export default define(meta, async (ps, me) => {
 		errorImageUrl: instance.errorImageUrl,
 		iconUrl: instance.iconUrl,
 		maxNoteTextLength: Math.min(instance.maxNoteTextLength, DB_MAX_NOTE_TEXT_LENGTH),
-		emojis: emojis.map(e => ({
-			id: e.id,
-			aliases: e.aliases,
-			name: e.name,
-			category: e.category,
-			url: e.url,
-		})),
+		emojis: await Emojis.packMany(emojis),
+		requireSetup: (await Users.count({
+			host: null,
+		})) === 0,
 		enableEmail: instance.enableEmail,
 
 		enableTwitterIntegration: instance.enableTwitterIntegration,
@@ -189,16 +160,17 @@ export default define(meta, async (ps, me) => {
 			github: instance.enableGithubIntegration,
 			discord: instance.enableDiscordIntegration,
 			serviceWorker: instance.enableServiceWorker,
+			miauth: true,
 		};
 	}
 
-	if (me && (me.isAdmin || me.isModerator)) {
+	if (me && me.isAdmin) {
 		response.useStarForReactionFallback = instance.useStarForReactionFallback;
 		response.pinnedUsers = instance.pinnedUsers;
 		response.hiddenTags = instance.hiddenTags;
 		response.blockedHosts = instance.blockedHosts;
 		response.recaptchaSecretKey = instance.recaptchaSecretKey;
-		response.proxyAccount = instance.proxyAccount;
+		response.proxyAccountId = instance.proxyAccountId;
 		response.twitterConsumerKey = instance.twitterConsumerKey;
 		response.twitterConsumerSecret = instance.twitterConsumerSecret;
 		response.githubClientId = instance.githubClientId;
@@ -223,6 +195,7 @@ export default define(meta, async (ps, me) => {
 		response.objectStorageAccessKey = instance.objectStorageAccessKey;
 		response.objectStorageSecretKey = instance.objectStorageSecretKey;
 		response.objectStorageUseSSL = instance.objectStorageUseSSL;
+		response.objectStorageUseProxy = instance.objectStorageUseProxy;
 	}
 
 	return response;

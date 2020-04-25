@@ -23,15 +23,14 @@ function greet() {
 		// tslint:disable:quotemark
 		console.log("   ___                      _           _ _    ");
 		console.log("  / __|_ _ ___ _  _ _ _  __| |_ __  ___| (_)___");
-		console.log(" | (_ | '_/ _ \ || | ' \/ _` | '_ \/ _ \ | (_-<");
-		console.log("  \___|_| \___/\_,_|_||_\__,_| .__/\___/_|_/__/");
+		console.log(" | (_ | '_/ _ \\ || | ' \\/ _` | '_ \\/ _ \\ | (_-<");
+		console.log("  \\___|_| \\___/\\_,_|_||_\\__,_| .__/\\___/_|_/__/");
 		console.log("                             |_|               ");
 
-		console.log(' ' + chalk.gray(v) + ('                        |___|\n'.substr(v.length)));
+		console.log(chalk.gray(v));
 		//#endregion
 
-		console.log(' Groundpolis is maintained by @Xeltica.');
-		console.log(' Groundpolis is forked from Misskey maintained by @syuilo, @AyaMorisawa, @mei23, @acid-chicken, and @rinsuki.');
+		console.log(' Groundpolis is an open-source decentralized microblogging platform forked from Misskey.');
 		console.log(chalk.keyword('orange')(' If you like Misskey, please donate to support development. https://www.patreon.com/syuilo'));
 
 		console.log('');
@@ -81,7 +80,6 @@ export async function masterMain() {
 
 	if (!program.noDaemons) {
 		require('../daemons/server-stats').default();
-		require('../daemons/notes-stats').default();
 		require('../daemons/queue-stats').default();
 		require('../daemons/janitor').default();
 	}
@@ -104,7 +102,7 @@ async function isPortAvailable(port: number): Promise<boolean> {
 function showEnvironment(): void {
 	const env = process.env.NODE_ENV;
 	const logger = bootLogger.createSubLogger('env');
-	logger.info(typeof env == 'undefined' ? 'NODE_ENV is not set' : `NODE_ENV: ${env}`);
+	logger.info(typeof env === 'undefined' ? 'NODE_ENV is not set' : `NODE_ENV: ${env}`);
 
 	if (env !== 'production') {
 		logger.warn('The environment is not in production mode.');

@@ -5,7 +5,7 @@ import { UserProfiles } from '../../../../../models';
 import { ensure } from '../../../../../prelude/ensure';
 
 export const meta = {
-	requireCredential: true,
+	requireCredential: true as const,
 
 	secure: true,
 
@@ -35,7 +35,7 @@ export default define(meta, async (ps, user) => {
 		throw new Error('not verified');
 	}
 
-	await UserProfiles.update({ userId: user.id }, {
+	await UserProfiles.update(user.id, {
 		twoFactorSecret: profile.twoFactorTempSecret,
 		twoFactorEnabled: true
 	});

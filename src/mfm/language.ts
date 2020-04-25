@@ -33,7 +33,7 @@ export const mfmLanguage = P.createLanguage({
 		r.marquee
 	),
 	startOfLine: () => P((input, i) => {
-		if (i == 0 || input[i] == '\n' || input[i - 1] == '\n') {
+		if (i === 0 || input[i] === '\n' || input[i - 1] === '\n') {
 			return P.makeSuccess(i, null);
 		} else {
 			return P.makeFailure(i, 'not newline');
@@ -52,7 +52,7 @@ export const mfmLanguage = P.createLanguage({
 		if (!text.match(/^>[\s\S]+?/)) return P.makeFailure(i, 'not a quote');
 		const quote = takeWhile(line => line.startsWith('>'), text.split('\n'));
 		const qInner = quote.join('\n').replace(/^>/gm, '').replace(/^ /gm, '');
-		if (qInner == '') return P.makeFailure(i, 'not a quote');
+		if (qInner === '') return P.makeFailure(i, 'not a quote');
 		const contents = r.root.tryParse(qInner);
 		return P.makeSuccess(i + quote.join('\n').length + 1, createTree('quote', contents, {}));
 	})),
@@ -124,16 +124,6 @@ export const mfmLanguage = P.createLanguage({
 
 		return P.alt(xml, underscore).map(x => createTree('italic', r.inline.atLeast(1).tryParse(x), {}));
 	},
-	sup: r => {
-		const paren = P.regexp(/\(\(\(([\s\S]+?)\)\)\)/, 1);
-		const xml = P.regexp(/<sup>(.+?)<\/sup>/, 1);
-		return P.alt(paren, xml).map(x => createTree('sup', r.inline.atLeast(1).tryParse(x), {}));
-	},
-	sub: r => {
-		const paren = P.regexp(/\(\(\(([\s\S]+?)\)\)\)/, 1);
-		const xml = P.regexp(/<sub>(.+?)<\/sub>/, 1);
-		return P.alt(paren, xml).map(x => createTree('sub', r.inline.atLeast(1).tryParse(x), {}));
-	},
 	strike: r => P.regexp(/~~([^\n~]+?)~~/, 1).map(x => createTree('strike', r.inline.atLeast(1).tryParse(x), {})),
 	motion: r => {
 		const paren = P.regexp(/\(\(\(([\s\S]+?)\)\)\)/, 1);
@@ -172,6 +162,8 @@ export const mfmLanguage = P.createLanguage({
 	},
 	jump: r => P.regexp(/<jump>(.+?)<\/jump>/, 1).map(x => createTree('jump', r.inline.atLeast(1).tryParse(x), {})),
 	flip: r => P.regexp(/<flip>(.+?)<\/flip>/, 1).map(x => createTree('flip', r.inline.atLeast(1).tryParse(x), {})),
+	sup: r => P.regexp(/<sup>(.+?)<\/sup>/, 1).map(x => createTree('sup', r.inline.atLeast(1).tryParse(x), {})),
+	sub: r => P.regexp(/<sub>(.+?)<\/sub>/, 1).map(x => createTree('sub', r.inline.atLeast(1).tryParse(x), {})),
 	vflip: r => P.regexp(/<vflip>(.+?)<\/vflip>/, 1).map(x => createTree('vflip', r.inline.atLeast(1).tryParse(x), {})),
 	blink: r => P.regexp(/<blink>(.+?)<\/blink>/, 1).map(x => createTree('blink', r.inline.atLeast(1).tryParse(x), {})),
 	center: r => r.startOfLine.then(P.regexp(/<center>([\s\S]+?)<\/center>/, 1).map(x => createTree('center', r.inline.atLeast(1).tryParse(x), {}))),

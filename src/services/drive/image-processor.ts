@@ -1,5 +1,4 @@
 import * as sharp from 'sharp';
-import * as fs from 'fs';
 
 export type IImage = {
 	data: Buffer;
@@ -12,7 +11,11 @@ export type IImage = {
  *   with resize, remove metadata, resolve orientation, stop animation
  */
 export async function convertToJpeg(path: string, width: number, height: number): Promise<IImage> {
-	const data = await sharp(path)
+	return convertSharpToJpeg(await sharp(path), width, height);
+}
+
+export async function convertSharpToJpeg(sharp: sharp.Sharp, width: number, height: number): Promise<IImage> {
+	const data = await sharp
 		.resize(width, height, {
 			fit: 'inside',
 			withoutEnlargement: true
@@ -36,7 +39,11 @@ export async function convertToJpeg(path: string, width: number, height: number)
  *   with resize, remove metadata, resolve orientation, stop animation
  */
 export async function convertToWebp(path: string, width: number, height: number): Promise<IImage> {
-	const data = await sharp(path)
+	return convertSharpToWebp(await sharp(path), width, height);
+}
+
+export async function convertSharpToWebp(sharp: sharp.Sharp, width: number, height: number): Promise<IImage> {
+	const data = await sharp
 		.resize(width, height, {
 			fit: 'inside',
 			withoutEnlargement: true
@@ -59,7 +66,11 @@ export async function convertToWebp(path: string, width: number, height: number)
  *   with resize, remove metadata, resolve orientation, stop animation
  */
 export async function convertToPng(path: string, width: number, height: number): Promise<IImage> {
-	const data = await sharp(path)
+	return convertSharpToPng(await sharp(path), width, height);
+}
+
+export async function convertSharpToPng(sharp: sharp.Sharp, width: number, height: number): Promise<IImage> {
+	const data = await sharp
 		.resize(width, height, {
 			fit: 'inside',
 			withoutEnlargement: true
@@ -76,27 +87,21 @@ export async function convertToPng(path: string, width: number, height: number):
 }
 
 /**
- * Convert to GIF (Actually just NOP)
+ * Convert to PNG or JPEG
+ *   with resize, remove metadata, resolve orientation, stop animation
  */
-export async function convertToGif(path: string): Promise<IImage> {
-	const data = await fs.promises.readFile(path);
-
-	return {
-		data,
-		ext: 'gif',
-		type: 'image/gif'
-	};
+export async function convertToPngOrJpeg(path: string, width: number, height: number): Promise<IImage> {
+	return convertSharpToPngOrJpeg(await sharp(path), width, height);
 }
 
-/**
- * Convert to APNG (Actually just NOP)
- */
-export async function convertToApng(path: string): Promise<IImage> {
-	const data = await fs.promises.readFile(path);
+export async function convertSharpToPngOrJpeg(sharp: sharp.Sharp, width: number, height: number): Promise<IImage> {
+	const stats = await sharp.stats();
+	const metadata = await sharp.metadata();
 
-	return {
-		data,
-		ext: 'apng',
-		type: 'image/apng'
-	};
+	// 不透明で300x300pxの範囲を超えていればJPEG
+	if (stats.isOpaque && ((metadata.width && metadata.width >= 300) || (metadata.height && metadata!.height >= 300))) {
+		return await convertSharpToJpeg(sharp, width, height);
+	} else {
+		return await convertSharpToPng(sharp, width, height);
+	}
 }

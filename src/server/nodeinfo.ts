@@ -36,7 +36,7 @@ const nodeinfo2 = async () => {
 
 	return {
 		software: {
-			name: 'misskey',
+			name: 'groundpolis',
 			version: config.version,
 			repository: meta.repositoryUrl,
 		},
@@ -59,10 +59,9 @@ const nodeinfo2 = async () => {
 				email: meta.maintainerEmail
 			},
 			langs: meta.langs,
-			ToSUrl: meta.ToSUrl,
+			tosUrl: meta.ToSUrl,
 			repositoryUrl: meta.repositoryUrl,
 			feedbackUrl: meta.feedbackUrl,
-			announcements: meta.announcements,
 			disableRegistration: meta.disableRegistration,
 			disableLocalTimeline: meta.disableLocalTimeline,
 			disableGlobalTimeline: meta.disableGlobalTimeline,

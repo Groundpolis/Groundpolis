@@ -1,7 +1,7 @@
 import $ from 'cafy';
 import { EntityRepository, Repository, In, Not } from 'typeorm';
 import { User, ILocalUser, IRemoteUser } from '../entities/user';
-import { Emojis, Notes, NoteUnreads, FollowRequests, Notifications, MessagingMessages, UserNotePinings, Followings, Blockings, Mutings, UserProfiles, UserSecurityKeys, UserGroupJoinings, Pages } from '..';
+import { Emojis, Notes, NoteUnreads, FollowRequests, Notifications, MessagingMessages, UserNotePinings, Followings, Blockings, Mutings, UserProfiles, UserSecurityKeys, UserGroupJoinings, Pages, Announcements, AnnouncementReads, Antennas, AntennaNotes } from '..';
 import { ensure } from '../../prelude/ensure';
 import config from '../../config';
 import { SchemaType } from '../../misc/schema';
@@ -84,6 +84,55 @@ export class UserRepository extends Repository<User> {
 		return withUser || withGroups.some(x => x);
 	}
 
+	public async getHasUnreadAnnouncement(userId: User['id']): Promise<boolean> {
+		const reads = await AnnouncementReads.find({
+			userId: userId
+		});
+
+		const count = await Announcements.count(reads.length > 0 ? {
+			id: Not(In(reads.map(read => read.announcementId)))
+		} : {});
+
+		return count > 0;
+	}
+
+	public async getHasUnreadAntenna(userId: User['id']): Promise<boolean> {
+		const antennas = await Antennas.find({ userId });
+
+		const unread = antennas.length > 0 ? await AntennaNotes.findOne({
+			antennaId: In(antennas.map(x => x.id)),
+			read: false
+		}) : null;
+
+		return unread != null;
+	}
+
+	public async getHasUnreadNotification(userId: User['id']): Promise<boolean> {
+		const mute = await Mutings.find({
+			muterId: userId
+		});
+		const mutedUserIds = mute.map(m => m.muteeId);
+
+		const count = await Notifications.count({
+			where: {
+				notifieeId: userId,
+				...(mutedUserIds.length > 0 ? { notifierId: Not(In(mutedUserIds)) } : {}),
+				isRead: false
+			},
+			take: 1
+		});
+
+		return count > 0;
+	}
+
+	public async getHasPendingReceivedFollowRequest(userId: User['id']): Promise<boolean> {
+		const count = await FollowRequests.count({
+			followeeId: userId
+		});
+
+		return count > 0;
+	}
+
 	public async pack(
 		src: User['id'] | User,
 		me?: User['id'] | User | null | undefined,
@@ -118,6 +167,7 @@ export class UserRepository extends Repository<User> {
 			avatarUrl: user.avatarUrl ? user.avatarUrl : config.url + '/avatar/' + user.id,
 			avatarColor: user.avatarColor,
 			isAdmin: user.isAdmin || falsy,
+			isModerator: user.isModerator || falsy,
 			isBot: user.isBot || falsy,
 			isCat: user.isCat || falsy,
 			sex: user.sex,
@@ -174,39 +224,22 @@ export class UserRepository extends Repository<User> {
 						userId: user.id
 					}).then(result => result >= 1)
 					: false,
-				twitter: profile!.twitter ? {
-					id: profile!.twitterUserId,
-					screenName: profile!.twitterScreenName
-				} : null,
-				github: profile!.github ? {
-					id: profile!.githubId,
-					login: profile!.githubLogin
-				} : null,
-				discord: profile!.discord ? {
-					id: profile!.discordId,
-					username: profile!.discordUsername,
-					discriminator: profile!.discordDiscriminator
-				} : null,
 			} : {}),
 
 			...(opts.detail && meId === user.id ? {
 				avatarId: user.avatarId,
 				bannerId: user.bannerId,
 				autoWatch: profile!.autoWatch,
+				injectFeaturedNote: profile!.injectFeaturedNote,
 				alwaysMarkNsfw: profile!.alwaysMarkNsfw,
 				carefulBot: profile!.carefulBot,
 				autoAcceptFollowed: profile!.autoAcceptFollowed,
+				hasUnreadAnnouncement: this.getHasUnreadAnnouncement(user.id),
+				hasUnreadAntenna: this.getHasUnreadAntenna(user.id),
 				hasUnreadMessagingMessage: this.getHasUnreadMessagingMessage(user.id),
-				hasUnreadNotification: Notifications.count({
-					where: {
-						notifieeId: user.id,
-						isRead: false
-					},
-					take: 1
-				}).then(count => count > 0),
-				pendingReceivedFollowRequestsCount: FollowRequests.count({
-					followeeId: user.id
-				}),
+				hasUnreadNotification: this.getHasUnreadNotification(user.id),
+				hasPendingReceivedFollowRequest: this.getHasPendingReceivedFollowRequest(user.id),
+				integrations: profile!.integrations,
 			} : {}),
 
 			...(opts.includeSecrets ? {
@@ -321,7 +354,7 @@ export const packedUserSchema = {
 		host: {
 			type: 'string' as const,
 			nullable: true as const, optional: false as const,
-			example: 'misskey.example.com'
+			example: 'groundpolis.example.com'
 		},
 		description: {
 			type: 'string' as const,
