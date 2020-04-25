@@ -42,6 +42,10 @@ import { faDownload, faLink, faICursor, faTrashAlt } from '@fortawesome/free-sol
 export default Vue.extend({
 	i18n,
 
+	components: {
+		XFileThumbnail
+	},
+
 	props: {
 		file: {
 			type: Object,
@@ -52,10 +56,6 @@ export default Vue.extend({
 			required: false,
 			default: false,
 		}
-	},
-
-	components: {
-		XFileThumbnail
 	},
 
 	data() {
@@ -182,11 +182,11 @@ export default Vue.extend({
 		},
 
 		async deleteFile() {
-			const { canceled } = await this.$root.dialog({
+			const canceled = this.$store.state.device.showDriveFileDeleteConfirm && (await this.$root.dialog({
 				type: 'warning',
 				text: this.$t('driveFileDeleteConfirm', { name: this.file.name }),
 				showCancelButton: true
-			});
+			})).canceled;
 			if (canceled) return;
 
 			this.$root.api('drive/files/delete', {

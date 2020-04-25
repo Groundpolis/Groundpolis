@@ -79,6 +79,18 @@ const defaultDeviceSettings = {
 	sfxChat: 'syuilo/pope1',
 	sfxChatBg: 'syuilo/waon',
 	sfxAntenna: 'syuilo/triple',
+	showUnrenoteConfirm: true,
+	showNoteDeleteConfirm: true,
+	showDeleteAndEditConfirm: true,
+	showDriveFileDeleteConfirm: true,
+	showRenoteConfirm: false,
+	showNoteConfirm: false,
+	showFollowConfirm: false,
+	showUnfollowConfirm: true,
+	showBlockConfirm: true,
+	showUnblockConfirm: true,
+	showMuteConfirm: true,
+	showUnMuteConfirm: true,
 	userData: {},
 };
 

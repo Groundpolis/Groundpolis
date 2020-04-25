@@ -26,6 +26,22 @@
 		<mk-switch v-model="disablePagesScript">{{ $t('disablePagesScript') }}</mk-switch>
 	</div>
 
+	<div class="_title"><fa :icon="faQuestion"/> {{ $t('confirmDialogSetting') }}</div>
+	<div class="_content">
+		<mk-switch v-model="showRenoteConfirm">{{ $t('renote') }}</mk-switch>
+		<mk-switch v-model="showNoteConfirm">{{ $t('note') }}</mk-switch>
+		<mk-switch v-model="showUnrenoteConfirm">{{ $t('unrenote') }}</mk-switch>
+		<mk-switch v-model="showNoteDeleteConfirm">{{ $t('noteDelete') }}</mk-switch>
+		<mk-switch v-model="showDeleteAndEditConfirm">{{ $t('revert-to-draft') }}</mk-switch>
+		<mk-switch v-model="showDriveFileDeleteConfirm">{{ $t('driveFileDelete') }}</mk-switch>
+		<mk-switch v-model="showFollowConfirm">{{ $t('follow') }}</mk-switch>
+		<mk-switch v-model="showUnfollowConfirm">{{ $t('unfollow') }}</mk-switch>
+		<mk-switch v-model="showBlockConfirm">{{ $t('block') }}</mk-switch>
+		<mk-switch v-model="showUnblockConfirm">{{ $t('unblock') }}</mk-switch>
+		<mk-switch v-model="showMuteConfirm">{{ $t('mute') }}</mk-switch>
+		<mk-switch v-model="showUnMuteConfirm">{{ $t('unmute') }}</mk-switch>
+	</div>
+
 	<div class="_content">
 		<div>{{ $t('notifications') }}</div>
 		<mk-switch v-model="showBrowserNotification">
@@ -74,7 +90,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faTv } from '@fortawesome/free-solid-svg-icons';
+import { faTv, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkSelect from '../../components/ui/select.vue';
 import MkRadio from '../../components/ui/radio.vue';
@@ -103,7 +119,7 @@ export default Vue.extend({
 			langs,
 			lang: localStorage.getItem('lang'),
 			fontSize: localStorage.getItem('fontSize'),
-			faTv,
+			faTv, faQuestion
 		}
 	},
 
@@ -185,8 +201,69 @@ export default Vue.extend({
 
 		iconShape: {
 			get() { return this.$store.state.device.iconShape },
-			set(value) { this.$store.state.device.iconShape = value },
-		}
+			set(value) { this.$store.commit('device/set', { key: 'iconShape', value }); }
+		},
+
+		showUnrenoteConfirm: {
+			get() { return this.$store.state.device.showUnrenoteConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showUnrenoteConfirm', value }); }
+		},
+
+		showNoteDeleteConfirm: {
+			get() { return this.$store.state.device.showNoteDeleteConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showNoteDeleteConfirm', value }); }
+		},
+
+		showDeleteAndEditConfirm: {
+			get() { return this.$store.state.device.showDeleteAndEditConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showDeleteAndEditConfirm', value }); }
+		},
+
+		showDriveFileDeleteConfirm: {
+			get() { return this.$store.state.device.showDriveFileDeleteConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showDriveFileDeleteConfirm', value }); }
+		},
+
+		showRenoteConfirm: {
+			get() { return this.$store.state.device.showRenoteConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showRenoteConfirm', value }); }
+		},
+
+		showNoteConfirm: {
+			get() { return this.$store.state.device.showNoteConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showNoteConfirm', value }); }
+		},
+
+		showFollowConfirm: {
+			get() { return this.$store.state.device.showFollowConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showFollowConfirm', value }); }
+		},
+
+		showUnfollowConfirm: {
+			get() { return this.$store.state.device.showUnfollowConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showUnfollowConfirm', value }); }
+		},
+
+		showBlockConfirm: {
+			get() { return this.$store.state.device.showBlockConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showBlockConfirm', value }); }
+		},
+
+		showUnblockConfirm: {
+			get() { return this.$store.state.device.showUnblockConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showUnblockConfirm', value }); }
+		},
+
+		showMuteConfirm: {
+			get() { return this.$store.state.device.showMuteConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showMuteConfirm', value }); }
+		},
+
+		showUnMuteConfirm: {
+			get() { return this.$store.state.device.showUnMuteConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showUnMuteConfirm', value }); }
+		},
+
 	},
 
 	watch: {

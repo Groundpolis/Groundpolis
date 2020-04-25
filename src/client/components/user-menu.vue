@@ -153,6 +153,8 @@ export default Vue.extend({
 		},
 
 		async toggleMute() {
+			const opt = this.$store.state.device[this.user.isMuted ? 'showUnmuteConfirm' : 'showMuteConfirm']
+			if (opt && !await this.getConfirmed(this.user.isMuted ? this.$t('unmuteConfirm') : this.$t('muteConfirm'))) return;
 			this.$root.api(this.user.isMuted ? 'mute/delete' : 'mute/create', {
 				userId: this.user.id
 			}).then(() => {
@@ -170,7 +172,8 @@ export default Vue.extend({
 		},
 
 		async toggleBlock() {
-			if (!await this.getConfirmed(this.user.isBlocking ? this.$t('unblockConfirm') : this.$t('blockConfirm'))) return;
+			const opt = this.$store.state.device[this.user.isBlocking ? 'showUnblockConfirm' : 'showBlockConfirm']
+			if (opt && !await this.getConfirmed(this.user.isBlocking ? this.$t('unblockConfirm') : this.$t('blockConfirm'))) return;
 
 			this.$root.api(this.user.isBlocking ? 'blocking/delete' : 'blocking/create', {
 				userId: this.user.id

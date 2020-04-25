@@ -9,7 +9,8 @@
 		<template v-if="hasPendingFollowRequestFromYou && user.isLocked">
 			<span v-if="full">{{ $t('followRequestPending') }}</span><fa :icon="faHourglassHalf"/>
 		</template>
-		<template v-else-if="hasPendingFollowRequestFromYou && !user.isLocked"> <!-- つまりリモートフォローの場合。 -->
+		<template v-else-if="hasPendingFollowRequestFromYou && !user.isLocked">
+<!-- つまりリモートフォローの場合。 -->
 			<span v-if="full">{{ $t('processing') }}</span><fa :icon="faSpinner" pulse/>
 		</template>
 		<template v-else-if="isFollowing">
@@ -94,12 +95,11 @@ export default Vue.extend({
 
 			try {
 				if (this.isFollowing) {
-					const { canceled } = await this.$root.dialog({
+					const canceled = this.$store.state.device.showUnfollowConfirm && (await this.$root.dialog({
 						type: 'warning',
-						text: this.$t('unfollowConfirm', { name: this.user.name || this.user.username }),
+						text: this.$t('unfollowConfirm'),
 						showCancelButton: true
-					});
-
+					})).canceled;
 					if (canceled) return;
 
 					await this.$root.api('following/delete', {
@@ -111,11 +111,24 @@ export default Vue.extend({
 							userId: this.user.id
 						});
 					} else if (this.user.isLocked) {
+						const canceled = this.$store.state.device.showFollowConfirm && (await this.$root.dialog({
+							type: 'warning',
+							text: this.$t('followRequestConfirm'),
+							showCancelButton: true
+						})).canceled;
+						if (canceled) return;
+
 						await this.$root.api('following/create', {
 							userId: this.user.id
 						});
 						this.hasPendingFollowRequestFromYou = true;
 					} else {
+						const canceled = this.$store.state.device.showFollowConfirm && (await this.$root.dialog({
+							type: 'warning',
+							text: this.$t('followConfirm'),
+							showCancelButton: true
+						})).canceled;
+						if (canceled) return;
 						await this.$root.api('following/create', {
 							userId: this.user.id
 						});

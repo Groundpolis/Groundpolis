@@ -401,7 +401,14 @@ export default Vue.extend({
 				items: [{
 					text: this.$t('renote'),
 					icon: faRetweet,
-					action: () => {
+					action: async () => {
+						const canceled = this.$store.state.device.showRenoteConfirm && (await this.$root.dialog({
+							type: 'question',
+							text: this.$t('renoteConfirm'),
+							showCancelButton: true
+						})).canceled;
+						if (canceled) return;
+
 						(this as any).$root.api('notes/create', {
 							renoteId: this.appearNote.id
 						});
@@ -471,34 +478,33 @@ export default Vue.extend({
 			});
 		},
 
-		del() {
-			this.$root.dialog({
+		async del() {
+			const canceled = this.$store.state.device.showNoteDeleteConfirm && (await this.$root.dialog({
 				type: 'warning',
 				text: this.$t('noteDeleteConfirm'),
 				showCancelButton: true
-			}).then(({ canceled }) => {
-				if (canceled) return;
+			})).canceled;
+			if (canceled) return;
 
-				this.$root.api('notes/delete', {
-					noteId: this.appearNote.id
-				});
+			this.$root.api('notes/delete', {
+				noteId: this.appearNote.id
 			});
 		},
 
-		delEdit() {
-			this.$root.dialog({
+		async delEdit() {
+			const canceled = this.$store.state.device.showNoteDeleteConfirm && (await this.$root.dialog({
 				type: 'warning',
 				text: this.$t('deleteAndEditConfirm'),
 				showCancelButton: true
-			}).then(({ canceled }) => {
-				if (canceled) return;
+			})).canceled;
 
-				this.$root.api('notes/delete', {
-					noteId: this.appearNote.id
-				});
+			if (canceled) return;
 
-				this.$root.post({ initialNote: this.appearNote, renote: this.appearNote.renote, reply: this.appearNote.reply });
+			this.$root.api('notes/delete', {
+				noteId: this.appearNote.id
 			});
+
+			this.$root.post({ initialNote: this.appearNote, renote: this.appearNote.renote, reply: this.appearNote.reply });
 		},
 
 		toggleFavorite(favorite: boolean) {
@@ -633,7 +639,14 @@ export default Vue.extend({
 				items: [{
 					text: this.$t('unrenote'),
 					icon: faTrashAlt,
-					action: () => {
+					action: async () => {
+						const canceled = this.$store.state.device.showUnrenoteConfirm && (await this.$root.dialog({
+							type: 'warning',
+							text: this.$t('unrenoteConfirm'),
+							showCancelButton: true
+						})).canceled;
+						if (canceled) return;
+
 						this.$root.api('notes/delete', {
 							noteId: this.note.id
 						});

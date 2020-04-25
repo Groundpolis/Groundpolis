@@ -558,7 +558,14 @@ export default Vue.extend({
 			localStorage.setItem('drafts', JSON.stringify(data));
 		},
 
-		post() {
+		async post() {
+			const canceled = this.$store.state.device.showNoteConfirm && (await this.$root.dialog({
+				type: 'question',
+				text: this.$t('noteConfirm'),
+				showCancelButton: true
+			})).canceled;
+			if (canceled) return;
+
 			this.posting = true;
 			this.$root.api('notes/create', {
 				text: this.text == '' ? undefined : this.text,
