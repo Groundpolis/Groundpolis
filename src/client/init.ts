@@ -57,6 +57,7 @@ if (localStorage.getItem('kyoppie') === 'yuppie') {
 	location.reload(true);
 }
 
+
 window.history.scrollRestoration = 'manual';
 
 if (localStorage.getItem('theme') == null) {
@@ -148,6 +149,24 @@ os.init(async () => {
 			location.reload();
 		}
 	}, false)
+
+
+	const reactions = store.state.settings.reactions.map(r => {
+		switch (r) {
+			case 'like': return '👍';
+			case 'love': return '❤️';
+			case 'laugh': return '😆';
+			case 'hmm': return '🤔';
+			case 'surprise': return '😮';
+			case 'congrats': return '🎉';
+			case 'angry': return '💢';
+			case 'confused': return '😥';
+			case 'rip': return '😇';
+			case 'pudding': return '🍮';
+			default: return r;
+		}
+	});
+	store.dispatch('settings/set', { key: 'reactions', value: reactions });
 
 	store.watch(state => state.device.darkMode, darkMode => {
 		import('./theme').then(({ builtinThemes }) => {
