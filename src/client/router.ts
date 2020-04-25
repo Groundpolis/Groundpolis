@@ -50,6 +50,7 @@ export const router = new VueRouter({
 		{ path: '/my/apps', component: page('apps') },
 		{ path: '/preferences', component: page('preferences/index') },
 		{ path: '/scratchpad', component: page('scratchpad') },
+		{ path: '/games', component: page('under-construction') },
 		{ path: '/instance', component: page('instance/index') },
 		{ path: '/instance/emojis', component: page('instance/emojis') },
 		{ path: '/instance/users', component: page('instance/users') },
