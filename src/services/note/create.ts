@@ -134,6 +134,11 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 		data.visibility = 'followers';
 	}
 
+	// Renote対象がusersならusersにする
+	if (data.renote && data.renote.visibility === 'users') {
+		data.visibility = 'users';
+	}
+
 	// 返信対象がpublicではないならhomeにする
 	if (data.reply && data.reply.visibility !== 'public' && data.visibility === 'public') {
 		data.visibility = 'home';
