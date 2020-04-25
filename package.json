@@ -119,7 +119,7 @@
 		"commander": "4.1.1",
 		"content-disposition": "0.5.3",
 		"crc-32": "1.2.0",
-		"css-loader": "3.5.2",
+		"css-loader": "3.5.3",
 		"cssnano": "4.1.10",
 		"dateformat": "3.0.3",
 		"diskusage": "1.1.3",
