@@ -540,7 +540,7 @@ export default Vue.extend({
 				this.$root.stream.send('readNotification', { id: notification.id });
 
 				if (this.$store.state.device.showToast) {
-					this.$root.new(MkToast, { notification });
+					this.$root.new(await import('./components/toast.vue').then(m => m.default), { notification });
 				}
 			} else if (this.$store.state.device.showBrowserNotification) {
 				const { title, body, icon, url } = composeNotification('notification', notification);

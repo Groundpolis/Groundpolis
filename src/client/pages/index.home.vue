@@ -48,8 +48,6 @@ import Progress from '../scripts/loading';
 import XTimeline from '../components/timeline.vue';
 import MkButton from '../components/ui/button.vue';
 import XPostForm from '../components/post-form.vue';
-import XTutorial from './index.home.tutorial.vue';
-import XPostForm from '../components/post-form.vue';
 
 export default Vue.extend({
 	metaInfo() {
@@ -62,8 +60,7 @@ export default Vue.extend({
 		XTimeline,
 		MkButton,
 		XPostForm,
-		XTutorial,
-		XPostForm,
+		XTutorial: () => import('./index.home.tutorial.vue').then(m => m.default),
 	},
 
 	props: {

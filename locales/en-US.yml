@@ -242,6 +242,8 @@ drive: "Drive"
 fileName: "Filename"
 selectFile: "Select a file"
 selectFiles: "Select files"
+selectFolder: "Select a folder"
+selectFolders: "Select folders"
 renameFile: "Rename file"
 folderName: "Folder name"
 createFolder: "Create a folder"
@@ -794,6 +796,8 @@ _pages:
     post: "Compose a note"
     _post:
       text: "Content"
+      attachCanvasImage: "Post with Canvas as Image"
+      canvasId: "Canvas ID"
     textInput: "Text input"
     _textInput:
       name: "Variable name"

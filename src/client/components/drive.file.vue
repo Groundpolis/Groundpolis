@@ -51,6 +51,11 @@ export default Vue.extend({
 			type: Object,
 			required: true,
 		},
+		isSelected: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 		selectMode: {
 			type: Boolean,
 			required: false,
@@ -65,11 +70,9 @@ export default Vue.extend({
 	},
 
 	computed: {
+		// TODO: parentへの参照を無くす
 		browser(): any {
 			return this.$parent;
-		},
-		isSelected(): boolean {
-			return this.browser.selectedFiles.some(f => f.id == this.file.id);
 		},
 		title(): string {
 			return `${this.file.name}\n${this.file.type} ${Vue.filter('bytes')(this.file.size)}`;
@@ -79,7 +82,7 @@ export default Vue.extend({
 	methods: {
 		onClick(ev) {
 			if (this.selectMode) {
-				this.browser.chooseFile(this.file);
+				this.$emit('chosen', this.file);
 			} else {
 				this.$root.menu({
 					items: [{

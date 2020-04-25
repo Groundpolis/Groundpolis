@@ -4,11 +4,10 @@
 
 import * as fs from 'fs';
 import * as webpack from 'webpack';
-import * as chalk from 'chalk';
 const { VueLoaderPlugin } = require('vue-loader');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+import chalk from 'chalk'
 
 class WebpackOnBuildPlugin {
 	constructor(readonly callback: (stats: any) => void) {
@@ -137,7 +136,6 @@ module.exports = {
 	output: {
 		path: __dirname + '/built/client/assets',
 		filename: `[name].${meta.version}.js`,
-		chunkFilename: '[hash:5].[id].js',
 		publicPath: `/assets/`
 	},
 	resolve: {
@@ -151,13 +149,13 @@ module.exports = {
 	resolveLoader: {
 		modules: ['node_modules']
 	},
-	externals: {
-		moment: 'moment'
+	cache: {
+		type: 'filesystem',
+		
+		buildDependencies: {
+			config: [__filename]
+		}
 	},
-	optimization: {
-		minimizer: [new TerserPlugin()]
-	},
-	cache: true,
 	devtool: false, //'source-map',
 	mode: isProduction ? 'production' : 'development'
 };

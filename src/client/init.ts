@@ -150,7 +150,6 @@ os.init(async () => {
 		}
 	}, false)
 
-
 	const reactions = store.state.settings.reactions.map(r => {
 		switch (r) {
 			case 'like': return '👍';
