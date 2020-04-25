@@ -535,7 +535,7 @@ export default Vue.extend({
 			});
 		},
 
-		onNotification(notification: any) {
+		async onNotification(notification: any) {
 			if (this.viewVisibility === 'visible') {
 				this.$root.stream.send('readNotification', { id: notification.id });
 

@@ -5,9 +5,6 @@
 import * as fs from 'fs';
 import * as webpack from 'webpack';
 const { VueLoaderPlugin } = require('vue-loader');
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-import chalk from 'chalk'
 
 class WebpackOnBuildPlugin {
 	constructor(readonly callback: (stats: any) => void) {
@@ -118,11 +115,6 @@ module.exports = {
 		}]
 	},
 	plugins: [
-		new HardSourceWebpackPlugin(),
-		new ProgressBarPlugin({
-			format: chalk`  {cyan.bold がんばってます} {bold [}:bar{bold ]} {green.bold :percent} {gray (:current/:total)} :elapseds`,
-			clear: false
-		}),
 		new webpack.DefinePlugin({
 			_VERSION_: JSON.stringify(meta.version),
 			_LANGS_: JSON.stringify(Object.entries(locales).map(([k, v]: [string, any]) => [k, v._lang_])),
