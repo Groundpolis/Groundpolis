@@ -97,7 +97,7 @@ export default Vue.extend({
 				if (this.isFollowing) {
 					const canceled = this.$store.state.device.showUnfollowConfirm && (await this.$root.dialog({
 						type: 'warning',
-						text: this.$t('unfollowConfirm'),
+						text: this.$t('unfollowConfirm', { name: this.user.name || this.user.username }),
 						showCancelButton: true
 					})).canceled;
 					if (canceled) return;
@@ -113,7 +113,7 @@ export default Vue.extend({
 					} else if (this.user.isLocked) {
 						const canceled = this.$store.state.device.showFollowConfirm && (await this.$root.dialog({
 							type: 'warning',
-							text: this.$t('followRequestConfirm'),
+							text: this.$t('followRequestConfirm', { name: this.user.name || this.user.username }),
 							showCancelButton: true
 						})).canceled;
 						if (canceled) return;
@@ -125,7 +125,7 @@ export default Vue.extend({
 					} else {
 						const canceled = this.$store.state.device.showFollowConfirm && (await this.$root.dialog({
 							type: 'warning',
-							text: this.$t('followConfirm'),
+							text: this.$t('followConfirm', { name: this.user.name || this.user.username }),
 							showCancelButton: true
 						})).canceled;
 						if (canceled) return;
