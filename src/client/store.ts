@@ -2,6 +2,7 @@ import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import * as nestedProperty from 'nested-property';
 import { apiUrl } from './config';
+import defaultFaces from './scripts/default-faces';
 
 const defaultSettings = {
 	tutorial: 0,
@@ -14,15 +15,7 @@ const defaultSettings = {
 	pastedFileName: 'yyyy-MM-dd HH-mm-ss [{{number}}]',
 	memo: null,
 	reactions: ['👍', '❤️', '😆', '🤔', '😮', '🎉', '💢', '😥', '😇', '🍮'],
-	faces: [
-		'(=^・・^=)',
-		'v(\'ω\')v',
-		'🐡( \'-\' 🐡 )ﾌｸﾞﾊﾟﾝﾁ!!!!',
-		'✌️(´･_･`)✌️',
-		'(｡>﹏<｡)',
-		'(Δ・x・Δ)',
-		'(ｺ｀・ﾍ・´ｹ)'
-	],
+	faces: defaultFaces,
 	widgets: [],
 	iconType: 'circle' as 'circle' | 'square' | 'rounded' | 'droplet',
 	useVisibilitySwitch: false,
