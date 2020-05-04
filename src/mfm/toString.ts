@@ -22,6 +22,10 @@ export function toString(tokens: MfmForest | null, opts?: RestoreOptions): strin
 			return `***${appendChildren(token.children, opts)}***`;
 		},
 
+		bigger(token, opts) {
+			return `****${appendChildren(token.children, opts)}****`;
+		},
+
 		small(token, opts) {
 			return `<small>${appendChildren(token.children, opts)}</small>`;
 		},
@@ -42,12 +46,44 @@ export function toString(tokens: MfmForest | null, opts?: RestoreOptions): strin
 			return `<spin>${appendChildren(token.children, opts)}</spin>`;
 		},
 
+		xspin(token, opts) {
+			return `<xspin>${appendChildren(token.children, opts)}</xspin>`;
+		},
+
+		yspin(token, opts) {
+			return `<yspin>${appendChildren(token.children, opts)}</yspin>`;
+		},
+
+		blink(token, opts) {
+			return `<blink>${appendChildren(token.children, opts)}</blink>`;
+		},
+
+		marquee(token, opts) {
+			return `<marquee>${appendChildren(token.children, opts)}</marquee>`;
+		},
+
 		jump(token, opts) {
 			return `<jump>${appendChildren(token.children, opts)}</jump>`;
 		},
 
 		flip(token, opts) {
 			return `<flip>${appendChildren(token.children, opts)}</flip>`;
+		},
+
+		vflip(token, opts) {
+			return `<vflip>${appendChildren(token.children, opts)}</vflip>`;
+		},
+
+		sup(token, opts) {
+			return `<sup>${appendChildren(token.children, opts)}</sup>`;
+		},
+
+		sub(token, opts) {
+			return `<sub>${appendChildren(token.children, opts)}</sub>`;
+		},
+
+		right(token, opts) {
+			return `<right>${appendChildren(token.children, opts)}</right>`;
 		},
 
 		blockCode(token) {

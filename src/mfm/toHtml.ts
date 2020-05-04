@@ -30,6 +30,12 @@ export function toHtml(tokens: MfmForest | null, mentionedRemoteUsers: IMentione
 			return el;
 		},
 
+		bigger(token) {
+			const el = doc.createElement('strong');
+			appendChildren(token.children, el);
+			return el;
+		},
+
 		small(token) {
 			const el = doc.createElement('small');
 			appendChildren(token.children, el);
@@ -129,7 +135,7 @@ export function toHtml(tokens: MfmForest | null, mentionedRemoteUsers: IMentione
 		},
 
 		marquee(token) {
-			const el = doc.createElement('div');
+			const el = doc.createElement('marquee');
 			appendChildren(token.children, el);
 			return el;
 		},
