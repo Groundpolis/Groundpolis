@@ -30,6 +30,7 @@ const defaultSettings = {
 	localNoteVisibility: 'default',
 	hybridNoteVisibility: 'default',
 	globalNoteVisibility: 'default',
+	mutedWords: [],
 };
 
 const defaultDeviceUserSettings = {

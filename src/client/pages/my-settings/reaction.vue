@@ -40,22 +40,27 @@ export default Vue.extend({
 		}
 	},
 
-	watch: {
-		reactions() {
-			this.changed = true;
-		}
-	},
-
 	computed: {
 		splited(): any {
 			return this.reactions.match(emojiRegexWithCustom);
 		},
 	},
 
+	watch: {
+		reactions() {
+			this.changed = true;
+		}
+	},
+
 	methods: {
 		save() {
 			this.$store.dispatch('settings/set', { key: 'reactions', value: this.splited });
 			this.changed = false;
+
+			this.$root.dialog({
+				type: 'success',
+				iconOnly: true, autoClose: true
+			});
 		},
 
 		preview(ev) {

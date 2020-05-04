@@ -5,6 +5,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import XNotes from './notes.vue';
+import shouldMuteNote from '../scripts/should-mute-note';
 
 export default Vue.extend({
 	components: {
@@ -50,6 +51,7 @@ export default Vue.extend({
 		});
 
 		const prepend = note => {
+			if (shouldMuteNote(this.$store.state.i, this.$store.state.settings, note)) return;
 			const _note = JSON.parse(JSON.stringify(note));	// deepcopy
 			(this.$refs.tl as any).prepend(_note);
 
