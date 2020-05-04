@@ -10,6 +10,7 @@
 			<span class="acct">@{{ user | acct }}</span>
 			<span class="staff" v-if="user.isAdmin"><fa :icon="faBookmark"/></span>
 			<span class="staff" v-if="user.isModerator"><fa :icon="farBookmark"/></span>
+			<span class="staff" v-if="user.isVerified"><fa :icon="faCertificate"/></span>
 			<span class="punished" v-if="user.isSilenced"><fa :icon="faMicrophoneSlash"/></span>
 			<span class="punished" v-if="user.isSuspended"><fa :icon="faSnowflake"/></span>
 		</div>
@@ -18,9 +19,10 @@
 				<mk-switch v-if="user.host == null && $store.state.i.isAdmin && (this.moderator || !user.isAdmin)" @change="toggleModerator()" v-model="moderator">{{ $t('moderator') }}</mk-switch>
 				<mk-switch @change="toggleSilence()" v-model="silenced">{{ $t('silence') }}</mk-switch>
 				<mk-switch @change="toggleSuspend()" v-model="suspended">{{ $t('suspend') }}</mk-switch>
+				<mk-switch @change="toggleVerified()" v-model="verified">{{ $t('verify') }}</mk-switch>
 			</div>
 			<div style="flex: 1; padding-left: 1em;">
-				<mk-button @click="openProfile"><fa :icon="faExternalLinkSquareAlt"/> {{ $t('profile')}}</mk-button>
+				<mk-button @click="openProfile"><fa :icon="faExternalLinkSquareAlt"/> {{ $t('profile') }}</mk-button>
 				<mk-button v-if="user.host != null" @click="updateRemoteUser"><fa :icon="faSync"/> {{ $t('updateRemoteUser') }}</mk-button>
 				<mk-button @click="resetPassword"><fa :icon="faKey"/> {{ $t('resetPassword') }}</mk-button>
 				<mk-button @click="deleteAllFiles"><fa :icon="faTrashAlt"/> {{ $t('deleteAllFiles') }}</mk-button>
@@ -35,7 +37,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faTimes, faBookmark, faKey, faSync, faMicrophoneSlash, faExternalLinkSquareAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faBookmark, faKey, faSync, faMicrophoneSlash, faExternalLinkSquareAlt, faCertificate } from '@fortawesome/free-solid-svg-icons';
 import { faSnowflake, faTrashAlt, faBookmark as farBookmark  } from '@fortawesome/free-regular-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 import MkSwitch from '../../components/ui/switch.vue';
@@ -57,7 +59,8 @@ export default Vue.extend({
 			moderator: false,
 			silenced: false,
 			suspended: false,
-			faTimes, faBookmark, farBookmark, faKey, faSync, faMicrophoneSlash, faSnowflake, faTrashAlt, faExternalLinkSquareAlt
+			verified: false,
+			faTimes, faBookmark, farBookmark, faKey, faSync, faMicrophoneSlash, faSnowflake, faTrashAlt, faExternalLinkSquareAlt, faCertificate
 		};
 	},
 
@@ -77,6 +80,7 @@ export default Vue.extend({
 			this.moderator = this.info.isModerator;
 			this.silenced = this.info.isSilenced;
 			this.suspended = this.info.isSuspended;
+			this.verified = this.info.isVerified;
 			Progress.done();
 		},
 
@@ -153,6 +157,11 @@ export default Vue.extend({
 
 		async toggleModerator() {
 			await this.$root.api(this.moderator ? 'admin/moderators/add' : 'admin/moderators/remove', { userId: this.user.id });
+			await this.refreshUser();
+		},
+
+		async toggleVerified() {
+			await this.$root.api(this.verified ? 'admin/verify-user' : 'admin/unverify-user', { userId: this.user.id });
 			await this.refreshUser();
 		},
 
