@@ -1,7 +1,7 @@
 <template>
 <div class="mk-user-page" v-if="user">
 	<portal to="title" v-if="user"><mk-user-name :user="user" :nowrap="false" class="name"/></portal>
-	<portal to="avatar" v-if="user"><mk-avatar class="avatar" :user="user" :disable-preview="true"/></portal>
+	<portal to="avatar" v-if="user"><mk-avatar class="avatar" :user="user" :disable-link="true" :disable-preview="true" @click="onAvatarClicked"/></portal>
 
 	<mk-remote-caution v-if="user.host != null" :href="user.url" style="margin-bottom: var(--margin)"/>
 	<div class="punished _panel" v-if="user.isSuspended"><fa :icon="faExclamationTriangle" style="margin-right: 8px;"/> {{ $t('userSuspended') }}</div>
@@ -31,7 +31,7 @@
 				<button v-else-if="user.isBlocking" @click="unblock" class="_button unblock">{{ $t('unblock') }}</button>
 			</div>
 		</div>
-		<mk-avatar class="avatar" :user="user" :disable-preview="true"/>
+		<mk-avatar class="avatar" :user="user" :disable-link="true" :disable-preview="true" @click="onAvatarClicked"/>
 		<div class="title">
 			<mk-user-name class="name" :user="user" :nowrap="true"/>
 			<div class="bottom">
@@ -128,6 +128,7 @@ import MkRemoteCaution from '../../components/remote-caution.vue';
 import Progress from '../../scripts/loading';
 import parseAcct from '../../../misc/acct/parse';
 import { isBirthday } from '../../../misc/birthday';
+import ImageViewer from '../../components/image-viewer.vue';
 
 export default Vue.extend({
 	components: {
@@ -248,7 +249,20 @@ export default Vue.extend({
 				default:
 					return faGenderless;
 			}
-		}
+		},
+
+		onAvatarClicked () {
+			if (this.$store.state.device.imageNewTab) {
+				window.open(this.user!.avatarUrl, '_blank');
+			} else {
+				const viewer = this.$root.new(ImageViewer, {
+					image: { url: this.user!.avatarUrl }
+				});
+				this.$once('hook:beforeDestroy', () => {
+					viewer.close();
+				});
+			}
+		},
 
 		async unblock() {
 			if (!await this.getConfirmed(this.$t('unblockConfirm')) return;
