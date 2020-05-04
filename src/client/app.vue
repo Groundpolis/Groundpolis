@@ -1210,5 +1210,13 @@ export default Vue.extend({
 			}
 		}
 	}
+
+	.hide-on-pc {
+		display: none !important;
+
+		@media (max-width: $side-hide-threshold) {
+			display: inherit !important;
+		}
+	}
 }
 </style>
