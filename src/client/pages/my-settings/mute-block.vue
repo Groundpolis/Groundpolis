@@ -28,11 +28,9 @@
 		</mk-pagination>
 	</div>
 	<div class="_content">
-		<span>{{ $t('mutedWords') }}</span>
-
 		<mk-textarea v-model="mutedWordsString">
 			<span>{{ $t('mutedWords') }}</span>
-			<template #desc>{{ $t('_profile.mutedWordsDescription') }}</template>
+			<template #desc>{{ $t('mutedWordsDescription') }}</template>
 		</mk-textarea>
 		<mk-button @click="saveMutedWords()" primary inline :disabled="!changedMutedWords"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
 	</div>

@@ -544,6 +544,9 @@ renoteConfirm: "このノートをリノートしますか？"
 followRequestConfirm: "{name}にフォローを申請しますか？"
 muteConfirm: "ミュートしますか？"
 unmuteConfirm: "ミュート解除しますか？"
+mutedWords: "ミュートされたキーワード"
+mutedWordsDescription: "スペースで区切るとAND指定になり、改行で区切るとOR指定になります"
+
 
 _theme:
   explore: "テーマを探す"
