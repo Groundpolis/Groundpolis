@@ -101,16 +101,19 @@ export default Vue.extend({
 			> .time {
 				font-size: 9px;
 				margin-right: 8px;
+				opacity: 0.7;
 			}
 
 			> .user {
 				font-weight: bold;
 				margin-right: 8px;
+				opacity: 0.7;
 			}
 
 			> .read {
 				margin-left: 8px;
 				font-size: 9px;
+				opacity: 0.7;
 			}
 
 			> .text {
@@ -120,7 +123,6 @@ export default Vue.extend({
 				overflow-wrap: break-word;
 				word-break: break-word;
 				font-size: 1em;
-				color: rgba(#000, 0.8);
 
 				@media (max-width: 500px) {
 					padding: 8px 16px;
