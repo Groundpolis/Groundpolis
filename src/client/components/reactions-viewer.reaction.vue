@@ -9,7 +9,7 @@
 	ref="reaction"
 	v-particle
 >
-	<x-reaction-icon :reaction="reaction" :customEmojis="note.emojis" ref="icon"/>
+	<x-reaction-icon :reaction="reaction" :custom-emojis="note.emojis" ref="icon"/>
 	<span>{{ count }}</span>
 </button>
 </template>
@@ -40,6 +40,10 @@ export default Vue.extend({
 			type: Object,
 			required: true,
 		},
+		preview: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
@@ -56,17 +60,18 @@ export default Vue.extend({
 			return !this.reaction.match(/@\w/);
 		},
 	},
-	mounted() {
-		if (!this.isInitial) this.anime();
-	},
 	watch: {
 		count(newCount, oldCount) {
 			if (oldCount < newCount) this.anime();
 			if (this.details != null) this.openDetails();
 		},
 	},
+	mounted() {
+		if (!this.isInitial) this.anime();
+	},
 	methods: {
 		toggleReaction() {
+			if (this.preview) return;
 			if (this.isMe) return;
 			if (!this.canToggle) return;
 
@@ -90,10 +95,12 @@ export default Vue.extend({
 			}
 		},
 		onMouseover() {
+			if (this.preview) return;
 			this.isHovering = true;
 			this.detailsTimeoutId = setTimeout(this.openDetails, 300);
 		},
 		onMouseleave() {
+			if (this.preview) return;
 			this.isHovering = false;
 			clearTimeout(this.detailsTimeoutId);
 			this.closeDetails();

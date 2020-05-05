@@ -2,24 +2,27 @@
 <div
 	class="note _panel"
 	v-show="!isDeleted && !hideThisNote"
-	:tabindex="!isDeleted ? '-1' : null"
-	:class="{ renote: isRenote }"
+	:tabindex="!isPreviewOrDeleted ? '-1' : null"
+	:class="{ renote: isRenote, compact: isCompactMode }"
 	v-hotkey="keymap"
 	v-size="[{ max: 500 }, { max: 450 }, { max: 350 }, { max: 300 }]"
+	@mouseenter="isHovered = true"
+	@mouseleave="isHovered = false"
 >
 	<x-sub v-for="note in conversation" :key="note.id" :note="note"/>
-	<x-sub :note="appearNote.reply" class="reply-to" v-if="appearNote.reply"/>
+	<x-sub :note="appearNote.reply" class="reply-to" v-if="appearNote.reply && (!isCompactMode || detail)"/>
 	<div class="info" v-if="pinned"><fa :icon="faThumbtack"/> {{ $t('pinnedNote') }}</div>
 	<div class="info" v-if="appearNote._prId_"><fa :icon="faBullhorn"/> {{ $t('promotion') }}<button class="_textButton hide" @click="readPromo()">{{ $t('hideThisNote') }} <fa :icon="faTimes"/></button></div>
 	<div class="info" v-if="appearNote._featuredId_"><fa :icon="faBolt"/> {{ $t('featured') }}</div>
 	<div class="renote" v-if="isRenote">
 		<mk-avatar class="avatar" :user="note.user"/>
 		<fa :icon="faRetweet"/>
-		<i18n path="renotedBy" tag="span">
+		<i18n path="renotedBy" tag="span" v-if="!isCompactMode">
 			<router-link class="name" :to="note.user | userPage" v-user-preview="note.userId" place="user">
 				<mk-user-name :user="note.user"/>
 			</router-link>
 		</i18n>
+		<mk-user-name v-else :user="note.user"/>
 		<div class="info">
 			<button class="_button time" @click="showRenoteMenu()" ref="renoteTime"><mk-time :time="note.createdAt"/></button>
 			<span class="visibility" v-if="note.visibility != 'public'">
@@ -47,47 +50,52 @@
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $t('private') }})</span>
 						<router-link class="reply" v-if="appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><fa :icon="faReply"/></router-link>
 						<mfm v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
-						<a class="rp" v-if="appearNote.renote != null">RN:</a>
+						<a class="rp" v-if="appearNote.renote != null" :href="appearNote.renote | notePage">
+							RN:
+							<span v-if="isCompactMode"><mk-acct :user="appearNote.renote.user"/>: {{ appearNote.renote.text }}</span>
+						</a>
 					</div>
 					<div class="files" v-if="appearNote.files.length > 0">
 						<x-media-list :media-list="appearNote.files" :parent-element="noteBody"/>
 					</div>
 					<x-poll v-if="appearNote.poll" :note="appearNote" ref="pollViewer"/>
 					<mk-url-preview v-for="url in urls" :url="url" :key="url" :compact="true" class="url-preview"/>
-					<div class="renote" v-if="appearNote.renote"><x-note-preview :note="appearNote.renote"/></div>
+					<div class="renote" v-if="appearNote.renote && !isCompactMode"><x-note-preview :note="appearNote.renote"/></div>
 				</div>
 			</div>
 			<footer v-if="appearNote.deletedAt == null" class="footer">
-				<x-reactions-viewer :note="appearNote" ref="reactionsViewer"/>
-				<template v-if="$store.getters.isSignedIn">
-					<button @click="reply()" class="button _button">
-						<template v-if="appearNote.reply"><fa :icon="faReplyAll"/></template>
-						<template v-else><fa :icon="faReply"/></template>
-						<p class="count" v-if="appearNote.repliesCount > 0">{{ appearNote.repliesCount }}</p>
-					</button>
-					<button v-if="canRenote" @click="renote()" class="button _button" ref="renoteButton">
-						<fa :icon="faRetweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
-					</button>
-					<button v-else class="button _button">
-						<fa :icon="faBan"/>
-					</button>
-					<button v-if="!isMyNote && appearNote.myReaction == null" class="button _button" @click="react()" ref="reactButton">
-						<fa :icon="faPlus"/>
-					</button>
-					<button v-if="!isMyNote && appearNote.myReaction != null" class="button _button reacted" @click="undoReact(appearNote)" ref="reactButton">
-						<fa :icon="faMinus"/>
-					</button>
-					<button class="button _button" @click="menu()" ref="menuButton">
-						<fa :icon="faEllipsisH"/>
-					</button>
-				</template>
-				<template v-else>
-					<button class="button _button" @click="copyContent()">
-						<fa :icon="faCopy"/>
-					</button>
-					<button class="button _button" @click="copyLink()">
-						<fa :icon="faLink"/>
-					</button>
+				<x-reactions-viewer :note="appearNote" :preview="preview" ref="reactionsViewer"/>
+				<template v-if="!isCompactMode || isHovered">
+					<template v-if="$store.getters.isSignedIn">
+						<button @click="reply()" class="button _button">
+							<template v-if="appearNote.reply"><fa :icon="faReplyAll"/></template>
+							<template v-else><fa :icon="faReply"/></template>
+							<p class="count" v-if="appearNote.repliesCount > 0">{{ appearNote.repliesCount }}</p>
+						</button>
+						<button v-if="canRenote" @click="renote()" class="button _button" ref="renoteButton">
+							<fa :icon="faRetweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
+						</button>
+						<button v-else class="button _button">
+							<fa :icon="faBan"/>
+						</button>
+						<button v-if="!isMyNote && appearNote.myReaction == null" class="button _button" @click="react()" ref="reactButton">
+							<fa :icon="faPlus"/>
+						</button>
+						<button v-if="!isMyNote && appearNote.myReaction != null" class="button _button reacted" @click="undoReact(appearNote)" ref="reactButton">
+							<fa :icon="faMinus"/>
+						</button>
+						<button class="button _button" @click="menu()" ref="menuButton">
+							<fa :icon="faEllipsisH"/>
+						</button>
+					</template>
+					<template v-else>
+						<button class="button _button" @click="copyContent()">
+							<fa :icon="faCopy"/>
+						</button>
+						<button class="button _button" @click="copyLink()">
+							<fa :icon="faLink"/>
+						</button>
+					</template>
 				</template>
 			</footer>
 			<div class="deleted" v-if="appearNote.deletedAt != null">{{ $t('deleted') }}</div>
@@ -148,6 +156,11 @@ export default Vue.extend({
 			required: false,
 			default: false
 		},
+		preview: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
 	},
 
 	data() {
@@ -158,13 +171,14 @@ export default Vue.extend({
 			showContent: false,
 			hideThisNote: false,
 			noteBody: this.$refs.noteBody,
+			isHovered: false,
 			faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart
 		};
 	},
 
 	computed: {
 		keymap(): any {
-			return {
+			return this.preview ? {} : {
 				'r': () => this.reply(true),
 				'e|a|plus': () => this.react(true),
 				'q': () => this.renote(true),
@@ -196,6 +210,10 @@ export default Vue.extend({
 				this.note.poll == null);
 		},
 
+		isCompactMode(): boolean {
+			return this.$store.state.device.postStyle === 'compact';
+		},
+
 		appearNote(): any {
 			return this.isRenote ? this.note.renote : this.note;
 		},
@@ -206,6 +224,10 @@ export default Vue.extend({
 
 		isMyNote(): boolean {
 			return this.$store.getters.isSignedIn && (this.$store.state.i.id === this.appearNote.userId);
+		},
+
+		isPreviewOrDeleted(): boolean {
+			return this.preview || this.isDeleted;
 		},
 
 		canRenote(): boolean {
@@ -390,6 +412,7 @@ export default Vue.extend({
 		},
 
 		reply(viaKeyboard = false) {
+			if (this.preview) return;
 			pleaseLogin(this.$root);
 			this.$root.post({
 				reply: this.appearNote,
@@ -400,6 +423,7 @@ export default Vue.extend({
 		},
 
 		renote(viaKeyboard = false) {
+			if (this.preview) return;
 			pleaseLogin(this.$root);
 			this.blur();
 			this.$root.menu({
@@ -433,12 +457,14 @@ export default Vue.extend({
 		},
 
 		renoteDirectly() {
+			if (this.preview) return;
 			(this as any).$root.api('notes/create', {
 				renoteId: this.appearNote.id
 			});
 		},
 
 		react(viaKeyboard = false) {
+			if (this.preview) return;
 			pleaseLogin(this.$root);
 			this.blur();
 			const picker = this.$root.new(MkReactionPicker, {
@@ -457,6 +483,7 @@ export default Vue.extend({
 		},
 
 		reactDirectly(reaction) {
+			if (this.preview) return;
 			this.$root.api('notes/reactions/create', {
 				noteId: this.appearNote.id,
 				reaction: reaction
@@ -464,6 +491,7 @@ export default Vue.extend({
 		},
 
 		undoReact(note) {
+			if (this.preview) return;
 			const oldReaction = note.myReaction;
 			if (!oldReaction) return;
 			this.$root.api('notes/reactions/delete', {
@@ -535,6 +563,7 @@ export default Vue.extend({
 		},
 
 		async menu(viaKeyboard = false) {
+			if (this.preview) return;
 			let menu;
 			if (this.$store.getters.isSignedIn) {
 				const state = await this.$root.api('notes/state', {
@@ -766,11 +795,33 @@ export default Vue.extend({
 	transition: box-shadow 0.1s ease;
 	overflow: hidden;
 
+	&.compact {
+		padding: 8px;
+		> .renote, > .article, > .info {
+			padding: 0;
+			> .avatar {
+				width: 1.5em;
+				height: 1.5em;
+			}
+		}
+
+		> .article {
+			margin-bottom: 8px;
+		}
+		
+
+		> .info, > .renote {
+			+ .article {
+				padding-top: 0;
+			}
+		}
+	}
+
 	&.max-width_500px {
 		font-size: 0.9em;
 	}
 
-	&.max-width_450px {
+	&:not(.compact).max-width_450px {
 		> .renote {
 			padding: 8px 16px 0 16px;
 		}
@@ -800,7 +851,7 @@ export default Vue.extend({
 		}
 	}
 
-	&.max-width_300px {
+	&:not(.compact).max-width_300px {
 		font-size: 0.825em;
 
 		> .article {

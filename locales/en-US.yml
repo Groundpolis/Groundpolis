@@ -526,6 +526,8 @@ muteConfirm: "Are you sure that you want to mute this account?"
 unmuteConfirm: "Are you sure that you want to unmute this account?"
 mutedWords: "Muted keywords"
 mutedWordsDescription: "Separating with spaces results in AND specifications, and delimiting with line breaks results in OR specifications"
+compactMode: "Compact Mode"
+previewText: "The quick brown fox jumps over the lazy dog."
 _theme:
   explore: "Explore Themes"
   install: "Install theme"

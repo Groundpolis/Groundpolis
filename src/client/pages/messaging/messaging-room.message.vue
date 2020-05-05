@@ -11,7 +11,8 @@
 				<div class="file" v-if="message.file">
 					<a :href="message.file.url" rel="noopener" target="_blank" :title="message.file.name">
 						<img v-if="message.file.type.split('/')[0] == 'image'" :src="message.file.url" :alt="message.file.name"
-							:style="{ backgroundColor: message.file.properties.avgColor || 'transparent' }"/>
+							:style="{ backgroundColor: message.file.properties.avgColor || 'transparent' }"
+/>
 						<p v-else>{{ message.file.name }}</p>
 					</a>
 				</div>
@@ -69,7 +70,7 @@ export default Vue.extend({
 			} else {
 				return null;
 			}
-		}
+		},
 	},
 	methods: {
 		del() {

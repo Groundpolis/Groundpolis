@@ -2,6 +2,7 @@
 <time class="mk-time" :title="absolute">
 	<span v-if="mode == 'relative'">{{ relative }}</span>
 	<span v-if="mode == 'absolute'">{{ absolute }}</span>
+	<span v-if="mode == 'time'">{{ onlyTime }}</span>
 	<span v-if="mode == 'detail'">{{ absolute }} ({{ relative }})</span>
 </time>
 </template>
@@ -49,6 +50,12 @@ export default Vue.extend({
 				ago >= -1       ? this.$t('_ago.justNow') :
 				ago <  -1       ? this.$t('_ago.future') :
 				this.$t('_ago.unknown'));
+		},
+		onlyTime(): string {
+			const hour = ('0' + this._time.getHours()).slice(-2);
+			const minutes = ('0' + this._time.getMinutes()).slice(-2);
+
+			return hour + ':' + minutes;
 		}
 	},
 	created() {

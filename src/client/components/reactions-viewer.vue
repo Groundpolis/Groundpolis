@@ -1,6 +1,6 @@
 <template>
 <div class="tdflqwzn" :class="{ isMe }">
-	<x-reaction v-for="(count, reaction) in note.reactions" :reaction="reaction" :count="count" :is-initial="initialReactions.has(reaction)" :note="note" :key="reaction"/>
+	<x-reaction v-for="(count, reaction) in note.reactions" :preview="preview" :reaction="reaction" :count="count" :is-initial="initialReactions.has(reaction)" :note="note" :key="reaction"/>
 </div>
 </template>
 
@@ -12,16 +12,20 @@ export default Vue.extend({
 	components: {
 		XReaction
 	},
-	data() {
-		return {
-			initialReactions: new Set(Object.keys(this.note.reactions))
-		};
-	},
 	props: {
 		note: {
 			type: Object,
 			required: true
 		},
+		preview: {
+			type: Boolean,
+			default: false
+		}
+	},
+	data() {
+		return {
+			initialReactions: new Set(Object.keys(this.note.reactions))
+		};
 	},
 	computed: {
 		isMe(): boolean {

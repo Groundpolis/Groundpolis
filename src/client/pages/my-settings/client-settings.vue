@@ -23,7 +23,8 @@
 			{{ $t('useOsNativeEmojis') }}
 			<template #desc><mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
 		</mk-switch>
-		<mk-switch v-model="disablePagesScript">{{ $t('disablePagesScript') }}</mk-switch>
+		<mk-switch v-model="compactMode">{{ $t('compactMode') }}</mk-switch>
+		<x-note :note="previewNote" :preview="true" />
 	</div>
 
 	<div class="_title"><fa :icon="faQuestion"/> {{ $t('confirmDialogSetting') }}</div>
@@ -96,6 +97,7 @@ import MkSelect from '../../components/ui/select.vue';
 import MkRadio from '../../components/ui/radio.vue';
 import XTheme from './theme.vue';
 import i18n from '../../i18n';
+import XNote from '../../components/note.vue';
 import { langs } from '../../config';
 
 export default Vue.extend({
@@ -111,7 +113,7 @@ export default Vue.extend({
 		MkSwitch,
 		MkSelect,
 		MkRadio,
-		XTheme
+		XNote,
 	},
 
 	data() {
@@ -263,6 +265,28 @@ export default Vue.extend({
 			get() { return this.$store.state.device.showUnMuteConfirm },
 			set(value) { this.$store.commit('device/set', { key: 'showUnMuteConfirm', value }); }
 		},
+
+		compactMode: {
+			get() { return this.$store.state.device.postStyle === 'compact' },
+			set(value) { this.$store.commit('device/set', { key: 'postStyle', value: value ? 'compact' : 'standard' }); }
+		},
+
+		previewNote () {
+			return {
+				id: '',
+				createdAt: new Date(),
+				text: this.$t('previewText'),
+				cw: null,
+				visibility: 'public',
+				user: this.$store.state.i,
+				files: [],
+				reactions: {
+					'🦊': 2,
+					'🐶': 1,
+				},
+				myReaction: '🦊',
+			};
+		}
 
 	},
 

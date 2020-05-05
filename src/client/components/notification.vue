@@ -1,5 +1,5 @@
 <template>
-<div class="mk-notification" :class="notification.type" v-size="[{ max: 500 }, { max: 600 }]">
+<div class="mk-notification" :class="[ notification.type, { compact: isCompactMode } ]" v-size="[{ max: 500 }, { max: 600 }]">
 	<div class="head">
 		<mk-avatar v-if="notification.user" class="icon" :user="notification.user"/>
 		<img v-else class="icon" :src="notification.icon" alt=""/>
@@ -12,7 +12,7 @@
 			<fa :icon="faReply" v-else-if="notification.type === 'reply'"/>
 			<fa :icon="faAt" v-else-if="notification.type === 'mention'"/>
 			<fa :icon="faQuoteLeft" v-else-if="notification.type === 'quote'"/>
-			<x-reaction-icon v-else-if="notification.type === 'reaction'" :reaction="notification.reaction" :customEmojis="notification.note.emojis" :no-style="true"/>
+			<x-reaction-icon v-else-if="notification.type === 'reaction'" :reaction="notification.reaction" :custom-emojis="notification.note.emojis" :no-style="true"/>
 		</div>
 	</div>
 	<div class="tail">
@@ -89,6 +89,11 @@ export default Vue.extend({
 			faIdCardAlt, faPlus, faQuoteLeft, faQuoteRight, faRetweet, faReply, faAt, faClock, faCheck
 		};
 	},
+	computed: {
+		isCompactMode(): boolean {
+			return this.$store.state.device.postStyle === 'compact';
+		},
+	},
 	methods: {
 		acceptFollowRequest() {
 			this.followRequestDone = true;
@@ -122,6 +127,26 @@ export default Vue.extend({
 	font-size: 0.9em;
 	overflow-wrap: break-word;
 	display: flex;
+
+	&.compact {
+		padding: 8px;
+		> .head {
+			position: relative;
+			width: unset;
+
+			> .icon {
+				width: 1.5em;
+				height: 1.5em;
+				display: inline-block;
+			}
+
+			> .sub-icon {
+				position: relative;
+				box-shadow: none;
+				display: inline-block;
+			}
+		}
+	}
 
 	&.max-width_600px {
 		padding: 16px;

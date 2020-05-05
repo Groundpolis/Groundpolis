@@ -20,7 +20,7 @@
 			<template v-if="fetchingMoreMessages"><fa icon="spinner" pulse fixed-width/></template>{{ fetchingMoreMessages ? $t('loading') : $t('loadMore') }}
 		</button>
 		<x-list class="messages" :items="messages" v-slot="{ item: message }" direction="up" reversed>
-			<x-message :message="message" :is-group="group != null" :key="message.id"/>
+			<component :is="isCompactMode ? 'x-message-compact' : 'x-message'" :message="message" :is-group="group != null" :key="message.id"/>
 		</x-list>
 	</div>
 	<footer>
@@ -40,8 +40,10 @@ import { faArrowCircleDown, faFlag, faUsers, faInfoCircle } from '@fortawesome/f
 import i18n from '../../i18n';
 import XList from '../../components/date-separated-list.vue';
 import XMessage from './messaging-room.message.vue';
+import XMessageCompact from './messaging-room.message.compact.vue';
 import XForm from './messaging-room.form.vue';
 import { url } from '../../config';
+
 import parseAcct from '../../../misc/acct/parse';
 
 export default Vue.extend({
@@ -49,6 +51,7 @@ export default Vue.extend({
 
 	components: {
 		XMessage,
+		XMessageCompact,
 		XForm,
 		XList,
 	},
@@ -71,7 +74,10 @@ export default Vue.extend({
 	computed: {
 		form(): any {
 			return this.$refs.form;
-		}
+		},
+		isCompactMode(): boolean {
+			return this.$store.state.device.postStyle === 'compact';
+		},
 	},
 
 	watch: {

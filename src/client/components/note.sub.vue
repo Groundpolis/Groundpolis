@@ -1,5 +1,5 @@
 <template>
-<div class="wrpstxzv" v-size="[{ max: 450 }]">
+<div class="wrpstxzv" v-size="[{ max: 450 }]" :class="{ compact: isCompactMode }">
 	<mk-avatar class="avatar" :user="note.user"/>
 	<div class="main">
 		<x-note-header class="header" :note="note" :mini="true"/>
@@ -41,16 +41,22 @@ export default Vue.extend({
 		}
 	},
 
-	inject: {
-		narrow: {
-			default: false
-		}
-	},
-
 	data() {
 		return {
 			showContent: false
 		};
+	},
+
+	computed : {
+		isCompactMode(): boolean {
+			return this.$store.state.device.postStyle === 'compact';
+		},
+	},
+
+	inject: {
+		narrow: {
+			default: false
+		}
 	}
 });
 </script>
@@ -60,6 +66,14 @@ export default Vue.extend({
 	display: flex;
 	padding: 16px 32px;
 	font-size: 0.9em;
+
+	&.compact {
+		padding: 8px;
+		.avatar {
+			width: 1.5em;
+			height: 1.5em;
+		}
+	}
 
 	&.max-width_450px {
 		padding: 14px 16px;

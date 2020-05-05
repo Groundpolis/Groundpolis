@@ -59,7 +59,7 @@ const defaultDeviceSettings = {
 	enableSoundsInNotifications: true,
 	soundVolume: 0.5,
 	mediaVolume: 0.5,
-	postStyle: 'standard',
+	postStyle: 'standard' as 'standard' | 'compact',
 	mobileNotificationPosition: 'bottom',
 	showPostPreview: true,
 	animatedMfm: true,
@@ -86,6 +86,7 @@ const defaultDeviceSettings = {
 	showMuteConfirm: true,
 	showUnMuteConfirm: true,
 	userData: {},
+
 };
 
 function copy<T>(data: T): T {

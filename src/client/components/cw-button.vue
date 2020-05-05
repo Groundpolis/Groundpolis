@@ -1,7 +1,10 @@
 <template>
 <button class="nrvgflfuaxwgkxoynpnumyookecqrrvh _button" @click="toggle">
-	<b>{{ value ? this.$t('_cw.hide') : this.$t('_cw.show') }}</b>
-	<span v-if="!value">{{ this.label }}</span>
+	<b v-if="isCompactMode">...</b>
+	<template v-else>
+		<b>{{ value ? this.$t('_cw.hide') : this.$t('_cw.show') }}</b>
+		<span v-if="!value">{{ label }}</span>
+	</template>
 </button>
 </template>
 
@@ -32,7 +35,10 @@ export default Vue.extend({
 				this.note.files && this.note.files.length !== 0 ? [this.$t('_cw.files', { count: this.note.files.length }) ] : [],
 				this.note.poll != null ? [this.$t('_cw.poll')] : []
 			] as string[][]).join(' / ');
-		}
+		},
+		isCompactMode(): boolean {
+			return this.$store.state.device.postStyle === 'compact';
+		},
 	},
 
 	methods: {

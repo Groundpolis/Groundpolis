@@ -1,5 +1,5 @@
 <template>
-<div class="mk-notes" v-size="[{ max: 500 }]">
+<div class="mk-notes" v-size="[{ max: 500 }]" :class="{ compact: isCompactMode }">
 	<div class="_fullinfo" v-if="empty">
 		<div>{{ $t('noNotes') }}</div>
 	</div>
@@ -32,13 +32,12 @@ import i18n from '../i18n';
 import paging from '../scripts/paging';
 import XNote from './note.vue';
 import XList from './date-separated-list.vue';
-import MkButton from './ui/button.vue';
 
 export default Vue.extend({
 	i18n,
 
 	components: {
-		XNote, XList, MkButton
+		XNote, XList
 	},
 
 	mixins: [
@@ -76,7 +75,11 @@ export default Vue.extend({
 
 		reversed(): boolean {
 			return this.pagination.reversed;
-		}
+		},
+
+		isCompactMode(): boolean {
+			return this.$store.state.device.postStyle === 'compact';
+		},
 	},
 
 	methods: {
@@ -92,6 +95,14 @@ export default Vue.extend({
 	> .notes {
 		> ::v-deep *:not(:last-child) {
 			margin-bottom: var(--marginFull);
+		}
+	}
+
+	&.compact {
+		> .notes {
+			> ::v-deep *:not(:last-child) {
+				margin-bottom: 0;
+			}
 		}
 	}
 

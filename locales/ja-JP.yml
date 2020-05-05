@@ -546,7 +546,8 @@ muteConfirm: "ミュートしますか？"
 unmuteConfirm: "ミュート解除しますか？"
 mutedWords: "ミュートされたキーワード"
 mutedWordsDescription: "スペースで区切るとAND指定になり、改行で区切るとOR指定になります"
-
+compactMode: "コンパクトモード"
+previewText: "あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。"
 
 _theme:
   explore: "テーマを探す"
