@@ -2,7 +2,7 @@
 <section class="rrfwjxfl _card">
 	<div class="_title"><fa :icon="faBan"/> {{ $t('muteAndBlock') }}</div>
 	<div class="_content">
-		<span>{{ $t('mutedUsers') }}</span>
+		<span><b>{{ $t('mutedUsers') }}</b></span>
 		<mk-pagination :pagination="mutingPagination" class="muting">
 			<template #empty><span>{{ $t('noUsers') }}</span></template>
 			<template #default="{items}">
@@ -15,7 +15,7 @@
 		</mk-pagination>
 	</div>
 	<div class="_content">
-		<span>{{ $t('blockedUsers') }}</span>
+		<span><b>{{ $t('blockedUsers') }}</b></span>
 		<mk-pagination :pagination="blockingPagination" class="blocking">
 			<template #empty><span>{{ $t('noUsers') }}</span></template>
 			<template #default="{items}">

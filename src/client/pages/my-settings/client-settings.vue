@@ -1,24 +1,20 @@
 <template>
 <section class="_card">
 	<div class="_title"><fa :icon="faTv"/> {{ $t('clinetSettings') }}</div>
-	<div class="_content">
-		<mk-switch v-model="autoReload">
-			{{ $t('autoReloadWhenDisconnected') }}
-		</mk-switch>
-	</div>
-	<x-theme/>
 
 	<div class="_content">
-		<mk-switch v-model="imageNewTab">{{ $t('openImageInNewTab') }}</mk-switch>
-		<mk-switch v-model="disableAnimatedMfm">{{ $t('disableAnimatedMfm') }}</mk-switch>
+		<mk-switch v-model="autoReload">{{ $t('autoReloadWhenDisconnected') }}</mk-switch>
 		<mk-switch v-model="reduceAnimation">{{ $t('reduceUiAnimation') }}</mk-switch>
+		<mk-switch v-model="disablePagesScript">{{ $t('disablePagesScript') }}</mk-switch>
+		<mk-switch v-model="imageNewTab">{{ $t('openImageInNewTab') }}</mk-switch>
+	</div>
+
+	<div class="_content">
+		<div><b>{{ $t('timeline') }}</b></div>
+		<mk-switch v-model="disableAnimatedMfm">{{ $t('disableAnimatedMfm') }}</mk-switch>
 		<mk-switch v-model="showFixedPostForm">{{ $t('showFixedPostForm') }}</mk-switch>
-		<mk-switch v-model="useSticker">
-			{{ $t('useSticker') }}
-		</mk-switch>
-		<mk-switch v-model="makeCustomEmojisBigger">
-			{{ $t('makeCustomEmojisBigger') }}
-		</mk-switch>
+		<mk-switch v-model="useSticker">{{ $t('useSticker') }}</mk-switch>
+		<mk-switch v-model="makeCustomEmojisBigger">{{ $t('makeCustomEmojisBigger') }}</mk-switch>
 		<mk-switch v-model="useOsNativeEmojis">
 			{{ $t('useOsNativeEmojis') }}
 			<template #desc><mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
@@ -26,9 +22,8 @@
 		<mk-switch v-model="compactMode">{{ $t('compactMode') }}</mk-switch>
 		<x-note :note="previewNote" :preview="true" />
 	</div>
-
-	<div class="_title"><fa :icon="faQuestion"/> {{ $t('confirmDialogSetting') }}</div>
 	<div class="_content">
+		<div><b>{{ $t('confirmDialogSetting') }}</b></div>
 		<mk-switch v-model="showRenoteConfirm">{{ $t('renote') }}</mk-switch>
 		<mk-switch v-model="showNoteConfirm">{{ $t('note') }}</mk-switch>
 		<mk-switch v-model="showUnrenoteConfirm">{{ $t('unrenote') }}</mk-switch>
@@ -44,7 +39,7 @@
 	</div>
 
 	<div class="_content">
-		<div>{{ $t('notifications') }}</div>
+		<div><b>{{ $t('notifications') }}</b></div>
 		<mk-switch v-model="showBrowserNotification">
 			{{ $t('showBrowserNotification') }}
 		</mk-switch>
@@ -53,7 +48,7 @@
 		</mk-switch>
 	</div>
 	<div class="_content">
-		<div>{{ $t('iconShape') }}</div>
+		<div><b>{{ $t('iconShape') }}</b></div>
 		<mk-radio v-model="iconShape" value="circle">
 			<div class="icon-shape circle"/>
 			{{ $t('_iconShape.circle') }}
@@ -95,7 +90,6 @@ import { faTv, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkSelect from '../../components/ui/select.vue';
 import MkRadio from '../../components/ui/radio.vue';
-import XTheme from './theme.vue';
 import i18n from '../../i18n';
 import XNote from '../../components/note.vue';
 import { langs } from '../../config';

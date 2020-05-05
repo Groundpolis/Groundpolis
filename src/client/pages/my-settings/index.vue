@@ -29,6 +29,7 @@
 
 	<x-sounds/>
 	<x-gacha/>
+	<x-theme/>
 	<x-client-settings/>
 
 	<x-import-export/>
@@ -58,6 +59,7 @@ import XImportExport from './import-export.vue';
 import XDrive from './drive.vue';
 import XReactionSetting from './reaction.vue';
 import XMuteBlock from './mute-block.vue';
+import XTheme from './theme.vue';
 import XSecurity from './security.vue';
 import X2fa from './2fa.vue';
 import XIntegration from './integration.vue';
@@ -86,6 +88,7 @@ export default Vue.extend({
 		X2fa,
 		XIntegration,
 		XApi,
+		XTheme,
 		MkButton,
 		MkSwitch,
 	},
