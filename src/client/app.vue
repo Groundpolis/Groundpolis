@@ -168,7 +168,6 @@ import { v4 as uuid } from 'uuid';
 import i18n from './i18n';
 import { host, instanceName } from './config';
 import { search } from './scripts/search';
-import MkToast from './components/toast.vue';
 import composeNotification from './scripts/compose-notification';
 
 const DESKTOP_THRESHOLD = 1100;
@@ -322,7 +321,8 @@ export default Vue.extend({
 
 			this.$root.dialog({
 				title: this.$t('search'),
-				input: true
+				input: true,
+				autoComplete: true
 			}).then(async ({ canceled, result: query }) => {
 				if (canceled || query == null || query === '') return;
 

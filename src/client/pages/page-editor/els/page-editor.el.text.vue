@@ -3,7 +3,7 @@
 	<template #header><fa :icon="faAlignLeft"/> {{ $t('_pages.blocks.text') }}</template>
 
 	<section class="vckmsadr">
-		<textarea v-model="value.text"></textarea>
+		<textarea v-model="value.text" v-autocomplete="{ model: 'value.text' }"></textarea>
 	</section>
 </x-container>
 </template>

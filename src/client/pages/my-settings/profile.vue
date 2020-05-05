@@ -5,11 +5,11 @@
 			<mk-avatar class="avatar" :user="$store.state.i" :disable-preview="true" :disable-link="true" @click.stop="changeAvatar"/>
 		</div>
 	
-		<mk-input v-model="name" :max="30">
+		<mk-input v-model="name" v-autocomplete="{ model: 'name' }" :max="30">
 			<span>{{ $t('_profile.name') }}</span>
 		</mk-input>
 
-		<mk-textarea v-model="description" :max="500">
+		<mk-textarea v-model="description" v-autocomplete="{ model: 'description' }" :max="500">
 			<span>{{ $t('_profile.description') }}</span>
 			<template #desc>{{ $t('_profile.youCanIncludeHashtags') }}</template>
 		</mk-textarea>
@@ -33,19 +33,19 @@
 			<summary>{{ $t('_profile.metadata') }}</summary>
 			<div class="row">
 				<mk-input v-model="fieldName0">{{ $t('_profile.metadataLabel') }}</mk-input>
-				<mk-input v-model="fieldValue0">{{ $t('_profile.metadataContent') }}</mk-input>
+				<mk-input v-model="fieldValue0" v-autocomplete="{ model: 'fieldValue0' }">{{ $t('_profile.metadataContent') }}</mk-input>
 			</div>
 			<div class="row">
 				<mk-input v-model="fieldName1">{{ $t('_profile.metadataLabel') }}</mk-input>
-				<mk-input v-model="fieldValue1">{{ $t('_profile.metadataContent') }}</mk-input>
+				<mk-input v-model="fieldValue1" v-autocomplete="{ model: 'fieldValue1' }">{{ $t('_profile.metadataContent') }}</mk-input>
 			</div>
 			<div class="row">
 				<mk-input v-model="fieldName2">{{ $t('_profile.metadataLabel') }}</mk-input>
-				<mk-input v-model="fieldValue2">{{ $t('_profile.metadataContent') }}</mk-input>
+				<mk-input v-model="fieldValue2" v-autocomplete="{ model: 'fieldValue2' }">{{ $t('_profile.metadataContent') }}</mk-input>
 			</div>
 			<div class="row">
 				<mk-input v-model="fieldName3">{{ $t('_profile.metadataLabel') }}</mk-input>
-				<mk-input v-model="fieldValue3">{{ $t('_profile.metadataContent') }}</mk-input>
+				<mk-input v-model="fieldValue3" v-autocomplete="{ model: 'fieldValue3' }">{{ $t('_profile.metadataContent') }}</mk-input>
 			</div>
 		</details>
 

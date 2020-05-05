@@ -1,5 +1,6 @@
 import * as getCaretCoordinates from 'textarea-caret';
 import { toASCII } from 'punycode';
+import findChildByTag from '../scripts/find-child-by-tag';
 
 export default {
 	bind(el, binding, vn) {
@@ -28,11 +29,22 @@ class Autocomplete {
 	private opening: boolean;
 
 	private get text(): string {
-		return this.vm[this.opts.model];
+		let tmp = this.vm;
+		for (const id of this.opts.model.split('.')) {
+			tmp = tmp[id];
+		}
+		return tmp;
 	}
 
 	private set text(text: string) {
-		this.vm[this.opts.model] = text;
+		let tmp = this.vm;
+		const splitted = this.opts.model.split('.');
+		// 代入するため、末尾だけ取り出す
+		const popped = splitted.pop();
+		for (const id of splitted) {
+			tmp = tmp[id];
+		}
+		this.vm[popped] = text;
 	}
 
 	/**
@@ -47,6 +59,19 @@ class Autocomplete {
 
 		this.suggestion = null;
 		this.textarea = textarea;
+		if (textarea instanceof HTMLElement && (!(textarea instanceof HTMLInputElement) || !(textarea instanceof HTMLTextAreaElement))) {
+			const input = findChildByTag(textarea, 'input') as HTMLInputElement
+			if (input != null) {
+				this.textarea = input;
+			} else {
+				const ta = findChildByTag(textarea, 'textarea') as HTMLTextAreaElement
+				if (ta != null) {
+					this.textarea = ta;
+				} else {
+					console.warn('The element bound to the autocomplete directive is neither an input nor a textarea.');
+				}
+			}
+		}
 		this.vm = vm;
 		this.opts = opts;
 		this.opening = false;

@@ -28,7 +28,7 @@
 		</mk-pagination>
 	</div>
 	<div class="_content">
-		<mk-textarea v-model="mutedWordsString">
+		<mk-textarea v-model="mutedWordsString" v-autocomplete="{ model: 'mutedWordsString' }">
 			<span>{{ $t('mutedWords') }}</span>
 			<template #desc>{{ $t('mutedWordsDescription') }}</template>
 		</mk-textarea>

@@ -26,11 +26,11 @@
 			<template #desc>{{ $t('antennaUsersDescription') }} <button class="_textButton" @click="addUser">{{ $t('addUser') }}</button></template>
 		</mk-textarea>
 		<mk-switch v-model="withReplies">{{ $t('withReplies') }}</mk-switch>
-		<mk-textarea v-model="keywords">
+		<mk-textarea v-model="keywords" v-autocomplete="{ model: 'keywords' }">
 			<span>{{ $t('antennaKeywords') }}</span>
 			<template #desc>{{ $t('antennaKeywordsDescription') }}</template>
 		</mk-textarea>
-		<mk-textarea v-model="excludeKeywords">
+		<mk-textarea v-model="excludeKeywords" v-autocomplete="{ model: 'excludeKeywords' }">
 			<span>{{ $t('antennaExcludeKeywords') }}</span>
 			<template #desc>{{ $t('antennaKeywordsDescription') }}</template>
 		</mk-textarea>

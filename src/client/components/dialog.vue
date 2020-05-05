@@ -23,7 +23,8 @@
 				<header v-if="title" v-html="title"></header>
 				<header v-if="title == null && user">{{ $t('enterUsername') }}</header>
 				<div class="body" v-if="text" v-html="text"></div>
-				<mk-input v-if="input" v-model="inputValue" autofocus :type="input.type || 'text'" :placeholder="input.placeholder" @keydown="onInputKeydown"></mk-input>
+				<mk-input v-if="input && autoComplete" v-model="inputValue" v-autocomplete="{ model: 'inputValue' }" autofocus :type="input.type || 'text'" :placeholder="input.placeholder" @keydown="onInputKeydown"></mk-input>
+				<mk-input v-else-if="input" v-model="inputValue" autofocus :type="input.type || 'text'" :placeholder="input.placeholder" @keydown="onInputKeydown"></mk-input>
 				<mk-input v-if="user" v-model="userInputValue" autofocus @keydown="onInputKeydown"><template #prefix>@</template></mk-input>
 				<mk-select v-if="select" v-model="selectedValue" autofocus>
 					<template v-if="select.items">
@@ -115,6 +116,10 @@ export default Vue.extend({
 			default: false
 		},
 		autoClose: {
+			type: Boolean,
+			default: false
+		},
+		autoComplete: {
 			type: Boolean,
 			default: false
 		}
