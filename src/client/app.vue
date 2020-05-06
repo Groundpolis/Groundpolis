@@ -196,7 +196,6 @@ export default Vue.extend({
 			isDesktop: window.innerWidth >= DESKTOP_THRESHOLD,
 			canBack: false,
 			disconnectedDialog: null as Promise<void> | null,
-			viewVisibility: 'visible' as VisibilityState,
 			wallpaper: localStorage.getItem('wallpaper') != null,
 			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer
 		};
@@ -314,7 +313,7 @@ export default Vue.extend({
 
 		toggleDark() {
 			this.$store.commit('device/set', { key: 'darkMode', value: !this.$store.state.device.darkMode });
-		}
+		},
 
 		search() {
 			if (this.searching) return;
@@ -536,7 +535,7 @@ export default Vue.extend({
 		},
 
 		async onNotification(notification: any) {
-			if (this.viewVisibility === 'visible') {
+			if (document.visibilityState === 'visible') {
 				this.$root.stream.send('readNotification', { id: notification.id });
 
 				if (this.$store.state.device.showToast) {
@@ -556,8 +555,8 @@ export default Vue.extend({
 						location.href = url;
 					}
 				})
-				this.$root.sound('notification');
 			}
+			this.$root.sound('notification');
 		},
 
 		widgetFunc(id) {
