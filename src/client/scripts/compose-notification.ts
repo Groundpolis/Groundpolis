@@ -1,7 +1,9 @@
 import getNoteSummary from '../../misc/get-note-summary';
 import getUserName from '../../misc/get-user-name';
 import getReactionEmoji from '../../misc/get-reaction-emoji';
-import { url } from '../config';
+
+// config を用いるとserviceworkerでエラーになるので
+const url = new URL(location.href).origin;
 
 type Notification = {
 	title: string;
