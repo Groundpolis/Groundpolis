@@ -148,7 +148,7 @@ os.init(async () => {
 		} else if (e.key === 'i') {
 			location.reload();
 		}
-	}, false)
+	}, false);
 
 	const reactions = store.state.settings.reactions.map(r => {
 		switch (r) {

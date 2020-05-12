@@ -125,6 +125,8 @@ export default define(meta, async (ps, me) => {
 		driveCapacityPerRemoteUserMb: instance.remoteDriveCapacityMb,
 		cacheRemoteFiles: instance.cacheRemoteFiles,
 		proxyRemoteFiles: instance.proxyRemoteFiles,
+		enableHcaptcha: instance.enableHcaptcha,
+		hcaptchaSiteKey: instance.hcaptchaSiteKey,
 		enableRecaptcha: instance.enableRecaptcha,
 		recaptchaSiteKey: instance.recaptchaSiteKey,
 		swPublickey: instance.swPublicKey,
@@ -154,6 +156,7 @@ export default define(meta, async (ps, me) => {
 			localTimeLine: !instance.disableLocalTimeline,
 			globalTimeLine: !instance.disableGlobalTimeline,
 			elasticsearch: config.elasticsearch ? true : false,
+			hcaptcha: instance.enableHcaptcha,
 			recaptcha: instance.enableRecaptcha,
 			objectStorage: instance.useObjectStorage,
 			twitter: instance.enableTwitterIntegration,
@@ -169,6 +172,7 @@ export default define(meta, async (ps, me) => {
 		response.pinnedUsers = instance.pinnedUsers;
 		response.hiddenTags = instance.hiddenTags;
 		response.blockedHosts = instance.blockedHosts;
+		response.hcaptchaSecretKey = instance.hcaptchaSecretKey;
 		response.recaptchaSecretKey = instance.recaptchaSecretKey;
 		response.proxyAccountId = instance.proxyAccountId;
 		response.twitterConsumerKey = instance.twitterConsumerKey;

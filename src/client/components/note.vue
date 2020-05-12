@@ -9,7 +9,7 @@
 	@mouseenter="isHovered = true"
 	@mouseleave="isHovered = false"
 >
-	<x-sub v-for="note in conversation" :key="note.id" :note="note"/>
+	<x-sub v-for="note in conversation" class="reply-to-more" :key="note.id" :note="note"/>
 	<x-sub :note="appearNote.reply" class="reply-to" v-if="appearNote.reply && (!isCompactMode || detail)"/>
 	<div class="info" v-if="pinned"><fa :icon="faThumbtack"/> {{ $t('pinnedNote') }}</div>
 	<div class="info" v-if="appearNote._prId_"><fa :icon="faBullhorn"/> {{ $t('promotion') }}<button class="_textButton hide" @click="readPromo()">{{ $t('hideThisNote') }} <fa :icon="faTimes"/></button></div>
@@ -26,13 +26,11 @@
 		<div class="info">
 			<button class="_button time" @click="showRenoteMenu()" ref="renoteTime"><mk-time :time="note.createdAt"/></button>
 			<span class="visibility" v-if="note.visibility != 'public'">
-				<fa v-if="note.visibility == 'home'" :icon="faHome"/>
-				<fa v-if="note.visibility == 'followers'" :icon="faUnlock"/>
-				<fa v-if="note.visibility == 'specified'" :icon="faEnvelope"/>
-				<fa v-if="note.visibility == 'users'" :icon="faUsers"/>
-			</span>
-			<span class="visibility" v-if="note.localOnly">
-				<fa :icon="faHeart"/>
+				<fa v-if="note.visibility === 'home'" :icon="faHome"/>
+				<fa v-if="note.visibility === 'followers'" :icon="faUnlock"/>
+				<fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
+				<fa v-if="note.visibility === 'users'" :icon="faUsers"/>
+				<fa v-if="note.localOnly" :icon="faHeart"/>
 			</span>
 		</div>
 	</div>
@@ -58,7 +56,7 @@
 					<div class="files" v-if="appearNote.files.length > 0">
 						<x-media-list :media-list="appearNote.files" :parent-element="noteBody"/>
 					</div>
-					<x-poll v-if="appearNote.poll" :note="appearNote" ref="pollViewer"/>
+					<x-poll v-if="appearNote.poll" :note="appearNote" ref="pollViewer" class="poll"/>
 					<mk-url-preview v-for="url in urls" :url="url" :key="url" :compact="true" class="url-preview"/>
 					<div class="renote" v-if="appearNote.renote && !isCompactMode"><x-note-preview :note="appearNote.renote"/></div>
 				</div>
@@ -101,7 +99,7 @@
 			<div class="deleted" v-if="appearNote.deletedAt != null">{{ $t('deleted') }}</div>
 		</div>
 	</article>
-	<x-sub v-for="note in replies" :key="note.id" :note="note" class="reply"/>
+	<x-sub v-for="note in replies" :key="note.id" :note="note" class="reply" :detail="true"/>
 </div>
 </template>
 
@@ -913,6 +911,10 @@ export default Vue.extend({
 		padding-bottom: 0;
 	}
 
+	> .reply-to-more {
+		opacity: 0.7;
+	}
+
 	> .renote {
 		display: flex;
 		align-items: center;
@@ -1019,7 +1021,7 @@ export default Vue.extend({
 						margin-top: 8px;
 					}
 
-					> .mk-poll {
+					> .poll {
 						font-size: 80%;
 					}
 
