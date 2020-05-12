@@ -44,7 +44,6 @@ export const defaultDeviceUserSettings = {
 		'featured',
 		'explore',
 		'announcements',
-		'search',
 	],
 };
 
@@ -165,11 +164,6 @@ export default () => new Vuex.Store({
 				icon: faBroadcastTower,
 				get indicated() { return getters.isSignedIn && state.i.hasUnreadAnnouncement; },
 				to: '/announcements',
-			},
-			search: {
-				title: 'search',
-				icon: faSearch,
-				action: () => actions.search(),
 			},
 			lists: {
 				title: 'lists',

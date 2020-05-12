@@ -39,46 +39,47 @@
 
 	<transition name="nav">
 		<nav class="nav" ref="nav" v-show="showNav">
-		<div>
-			<div class="item account" v-if="$store.getters.isSignedIn">
-				<router-link active-class="active" :to="`/@${ $store.state.i.username }`" exact>
-					<mk-avatar :user="$store.state.i" class="avatar"/>
-					<mk-user-name class="text" :user="$store.state.i" :nowrap="true"/>
-				</router-link>
-				<button class="_button more" @click="openAccountMenu">
-					<fa :icon="faEllipsisH" fixed-width/>
+			<div>
+				<div class="item account" v-if="$store.getters.isSignedIn">
+					<router-link active-class="active" :to="`/@${ $store.state.i.username }`" exact>
+						<mk-avatar :user="$store.state.i" class="avatar"/>
+						<mk-user-name class="text" :user="$store.state.i" :nowrap="true"/>
+					</router-link>
+					<button class="_button more" @click="openAccountMenu">
+						<fa :icon="faEllipsisH" fixed-width/>
+					</button>
+				</div>
+				
+				<button class="item _button index active" @click="top()" v-if="$route.name === 'index'">
+					<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
 				</button>
-			</div>
-			
-			<button class="item _button index active" @click="top()" v-if="$route.name === 'index'">
-				<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
-			</button>
-			<router-link class="item index" active-class="active" to="/" exact v-else>
-				<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
-			</router-link>
-			<template v-if="$store.getters.isSignedIn">
-				<template v-for="item in menu">
-					<div v-if="item === '-'" :key="item" class="divider" />
-					<component v-else-if="menuDef[item] && menuDef[item].show !== false" :is="menuDef[item].to ? 'router-link' : 'button'" class="item _button" :key="item" :class="item" active-class="active" @click="() => { if (menuDef[item].action) menuDef[item].action() }" :to="menuDef[item].to">
-						<fa :icon="menuDef[item].icon" fixed-width/><span class="text">{{ $t(menuDef[item].title) }}</span>
-						<i v-if="menuDef[item].indicated"><fa :icon="faCircle"/></i>
-					</component>
+				<router-link class="item index" active-class="active" to="/" exact v-else>
+					<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
+				</router-link>
+				<template v-if="$store.getters.isSignedIn">
+					<template v-for="item in menu">
+						<div v-if="item === '-'" :key="item" class="divider" />
+						<component v-else-if="menuDef[item] && menuDef[item].show !== false" :is="menuDef[item].to ? 'router-link' : 'button'" class="item _button" :key="item" :class="item" active-class="active" @click="() => { if (menuDef[item].action) menuDef[item].action() }" :to="menuDef[item].to">
+							<fa :icon="menuDef[item].icon" fixed-width/><span class="text">{{ $t(menuDef[item].title) }}</span>
+							<i v-if="menuDef[item].indicated"><fa :icon="faCircle"/></i>
+						</component>
+					</template>
+					<div class="divider"></div>
+					<button class="item _button hide-on-pc" @click="search()">
+						<fa :icon="faSearch" fixed-width/><span class="text">{{ $t('search') }}</span>
+					</button>
+					<router-link class="item" active-class="active" to="/my/settings">
+						<fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
+					</router-link>
+					<button class="item _button" :class="{ active: $route.path === '/instance' || $route.path.startsWith('/instance/') }" v-if="$store.getters.isSignedIn && ($store.state.i.isAdmin || $store.state.i.isModerator)" @click="oepnInstanceMenu">
+						<fa :icon="faServer" fixed-width/><span class="text">{{ $t('instance') }}</span>
+					</button>
+					<button class="item _button" @click="more">
+						<fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
+						<i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadMentions || $store.state.i.hasUnreadSpecifiedNotes)"><fa :icon="faCircle"/></i>
+					</button>
 				</template>
-				<div class="divider"></div>
-				<button class="item _button hide-on-pc" @click="search()">
-					<fa :icon="faSearch" fixed-width/><span class="text">{{ $t('search') }}</span>
-				</button>
-				<router-link class="item" active-class="active" to="/my/settings">
-					<fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
-				</router-link>
-				<button class="item _button" :class="{ active: $route.path === '/instance' || $route.path.startsWith('/instance/') }" v-if="$store.getters.isSignedIn && ($store.state.i.isAdmin || $store.state.i.isModerator)" @click="oepnInstanceMenu">
-					<fa :icon="faServer" fixed-width/><span class="text">{{ $t('instance') }}</span>
-				</button>
-				<button class="item _button" @click="more">
-					<fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
-					<i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadMentions || $store.state.i.hasUnreadSpecifiedNotes)"><fa :icon="faCircle"/></i>
-				</button>
-			</template>
+			</div>
 		</nav>
 	</transition>
 
