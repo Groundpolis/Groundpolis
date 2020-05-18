@@ -18,15 +18,16 @@
 		<router-link class="created-at" :to="note | notePage">
 			<mk-time :time="note.createdAt"/>
 		</router-link>
-		<span class="visibility" v-if="note.visibility != 'public'">
-			<fa v-if="note.visibility == 'home'" :icon="faHome"/>
-			<fa v-if="note.visibility == 'followers'" :icon="faUnlock"/>
-			<fa v-if="note.visibility == 'specified'" :icon="faEnvelope"/>
-			<fa v-if="note.visibility == 'users'" :icon="faUsers"/>
+		<span class="visibility" v-if="note.visibility !== 'public'">
+			<fa v-if="note.visibility === 'home'" :icon="faHome"/>
+			<fa v-if="note.visibility === 'followers'" :icon="faUnlock"/>
+			<fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
+			<fa v-if="note.visibility === 'users'" :icon="faUsers"/>
 		</span>
 		<span class="visibility" v-if="note.localOnly">
 			<fa :icon="faHeart"/>
 		</span>
+		<span class="localOnly" v-if="note.localOnly"><fa :icon="faBiohazard"/></span>
 	</div>
 </header>
 </template>
@@ -105,6 +106,10 @@ export default Vue.extend({
 		}
 
 		> .visibility {
+			margin-left: 8px;
+		}
+
+		> .localOnly {
 			margin-left: 8px;
 		}
 	}

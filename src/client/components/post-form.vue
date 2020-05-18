@@ -16,6 +16,7 @@
 				<span v-if="visibility === 'specified'"><fa :icon="faEnvelope"/></span>
 				<span v-if="visibility === 'users'"><fa :icon="faUsers"/></span>
 			</button>
+			<button class="_button localOnly" v-if="visibility !== 'specified'" @click="localOnly = !localOnly" :class="{ active: localOnly }"><fa :icon="faHeart"/></button>
 			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">{{ submitText }}<fa :icon="reply ? faReply : renote ? faQuoteRight : faPaperPlane"/></button>
 		</div>
 	</header>
@@ -45,7 +46,6 @@
 			<button class="_button" @click="insertFace"><fa :icon="faFish"/></button>
 			<button class="_button" @click="insertMention"><fa :icon="faAt"/></button>
 			<button class="_button" @click="insertEmoji"><fa :icon="faLaughSquint"/></button>
-			<button class="_button" v-if="visibility !== 'specified' && visibility !== 'users'" @click="localOnly = !localOnly" :class="{ active: localOnly }"><fa :icon="faHeart"/></button>
 		</footer>
 		<input ref="file" class="file _button" type="file" multiple="multiple" @change="onChangeFile"/>
 		<details v-if="text" class="preview" :open="isPreviewOpened" @toggle="isPreviewOpened = $event.target.open">
@@ -663,6 +663,20 @@ export default Vue.extend({
 				height: 34px;
 				width: 34px;
 				margin: 0 8px;
+
+				& + .localOnly {
+					margin-left: 0 !important;
+				}
+			}
+
+			> .localOnly {
+				height: 34px;
+				width: 34px;
+				margin: 0 8px;
+
+				&.active {
+					color: var(--accent);
+				}
 			}
 
 			> .submit {
