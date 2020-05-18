@@ -1,7 +1,7 @@
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import * as nestedProperty from 'nested-property';
-import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faSearch, faStar, faAt, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faSatellite, faDoorClosed } from '@fortawesome/free-solid-svg-icons';
+import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faPaintBrush, faStar, faAt, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faSatellite, faDoorClosed } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faComments } from '@fortawesome/free-regular-svg-icons';
 import { apiUrl } from './config';
 import defaultFaces from './scripts/default-faces';
@@ -39,6 +39,7 @@ export const defaultDeviceUserSettings = {
 		'notifications',
 		'messaging',
 		'drive',
+		'paint',
 		'-',
 		'followRequests',
 		'featured',
@@ -141,6 +142,12 @@ export default () => new Vuex.Store({
 				icon: faCloud,
 				get show() { return getters.isSignedIn; },
 				to: '/my/drive',
+			},
+			paint: {
+				title: 'paint',
+				icon: faPaintBrush,
+				get show() { return getters.isSignedIn; },
+				to: '/paint',
 			},
 			followRequests: {
 				title: 'followRequests',
