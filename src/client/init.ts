@@ -8,6 +8,8 @@ import VueMeta from 'vue-meta';
 import PortalVue from 'portal-vue';
 import VAnimateCss from 'v-animate-css';
 import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome';
+import VueVideoPlayer from 'vue-video-player'
+import 'video.js/dist/video-js.css'
 
 import i18n from './i18n';
 import VueHotkey from './scripts/hotkey';
@@ -27,6 +29,8 @@ Vue.use(VueHotkey);
 Vue.use(VueMeta);
 Vue.use(PortalVue);
 Vue.use(VAnimateCss);
+Vue.use(VueVideoPlayer);
+
 Vue.component('fa', FontAwesomeIcon);
 Vue.component('fa-layers', FontAwesomeLayers);
 

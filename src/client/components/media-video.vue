@@ -7,15 +7,7 @@
 </div>
 <div class="kkjnbbplepmiyuadieoenjgutgcmtsvu" v-else>
 	<i><fa :icon="faEyeSlash" @click="hide = true"/></i>
-	<a
-		:href="video.url"
-		rel="nofollow noopener"
-		target="_blank"
-		:style="imageStyle"
-		:title="video.name"
-	>
-		<fa :icon="faPlayCircle"/>
-	</a>
+	<video-player class="mnhepr3u8r3u9crjciandiivrrnvivjg" :options="playerOptions"/>
 </div>
 </template>
 
@@ -36,9 +28,8 @@ export default Vue.extend({
 	data() {
 		return {
 			hide: true,
-			faPlayCircle,
-			faExclamationTriangle,
-			faEyeSlash
+			isPreview: true,
+			faPlayCircle, faExclamationTriangle, faEyeSlash
 		};
 	},
 	computed: {
@@ -46,6 +37,16 @@ export default Vue.extend({
 			return {
 				'background-image': `url(${this.video.thumbnailUrl})`
 			};
+		},
+		playerOptions(): any {
+			return {
+				sources: [{
+					type: this.video.type,
+					src: this.video.url,
+				}],
+				playbackRates: [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0],
+				fluid: true
+			}
 		}
 	},
 	created() {
@@ -65,15 +66,16 @@ export default Vue.extend({
 		background-color: var(--fg);
 		color: var(--accentLighten);
 		font-size: 14px;
-		opacity: .5;
+		opacity: 0.8;
 		padding: 3px 6px;
 		text-align: center;
 		cursor: pointer;
+		z-index: 100;
 		top: 12px;
 		right: 12px;
 	}
 
-	> a {
+	> .preview {
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -103,5 +105,10 @@ export default Vue.extend({
 			display: block;
 		}
 	}
+}
+
+.mnhepr3u8r3u9crjciandiivrrnvivjg {
+	width: 100%;
+	height: 100%;
 }
 </style>
