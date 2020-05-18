@@ -16,7 +16,7 @@ Difference from original version
 News
 --------
 Check the latest information on the official account.
-- [Fedibird](https://fedibird.com/@Groundpolis)
+- [@dev@groundpolis.app](https://groundpolis.app/@dev)
 
 License
 --------
