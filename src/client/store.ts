@@ -101,7 +101,9 @@ export const defaultDeviceSettings = {
 	showMuteConfirm: true,
 	showUnMuteConfirm: true,
 	userData: {},
-
+	penWidth: 4,
+	eraserWidth: 32,
+	usePressure: false,
 };
 
 function copy<T>(data: T): T {

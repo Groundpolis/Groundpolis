@@ -562,6 +562,19 @@ relays: "リレー"
 addRelay: "リレーの追加"
 inboxUrl: "inboxのURL"
 addedRelays: "追加済みのリレー"
+paint: 'ペイント'
+usePressure: '筆圧感知'
+usePressureDescription: '筆圧感知を有効化すると、筆圧の検出に対応している、例えば Apple Pencil のようなデバイスを使用することで、筆圧に従ってペンの太さが変化するようになります。'
+penWidth: 'ペンの太さ'
+eraserWidth: '消しゴムの太さ'
+
+_paint:
+  tools:
+    line: '直線'
+    rect: '四角'
+    rectFill: '四角塗りつぶし'
+    circle: '円'
+    circleFill: '円塗りつぶし'
 
 _theme:
   explore: "テーマを探す"

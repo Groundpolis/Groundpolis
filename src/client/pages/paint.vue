@@ -2,7 +2,7 @@
 <div>
 	<portal to="icon"><fa :icon="faPaintBrush"/></portal>
 	<portal to="title">{{ $t('paint') }}</portal>
-	<section class="_card">
+	<section class="_card" ref="editor">
 		<div class="tools">
 			<button class="_button" @click="init(512, 512)">
 				<fa :icon="farFileAlt"></fa>
@@ -13,10 +13,25 @@
 			<button class="_button" @click="save">
 				<fa :icon="farSave"></fa>
 			</button>
+			<button class="_button" @click="undo" :disabled="undoStack.length === 0">
+				<fa :icon="faUndo"></fa>
+			</button>
+			<button class="_button" @click="redo" :disabled="redoStack.length === 0">
+				<fa :icon="faRedo"></fa>
+			</button>
+			<span v-text="pressure" />
 		</div>
-		<div class="canvas-wrapper">
+		<div class="canvas-wrapper" ref="canvasWrapper" :class="{ animation: $store.state.device.animation }">
 			<canvas
 				ref="canvas"
+				:class="{ animation: $store.state.device.animation }"
+				:style="canvasStyle"
+			>
+				Your browser doesn't support this feature.
+			</canvas>
+			<canvas
+				ref="previewCanvas"
+				:class="{ animation: $store.state.device.animation }"
 				:style="canvasStyle"
 				@mousedown="onMouseDown"
 				@touchstart="onTouchStart"
@@ -31,9 +46,7 @@
 			<button class="_button" @click="changeShape" :class="{ active: isShape(currentTool) }">
 				<fa :icon="isShape(currentTool) ? currentToolIcon : getToolIconOf('line')"></fa>
 			</button>
-			<label class="color" :style="{ background: currentColor }">
-				<input type="color" v-model="currentColor" />
-			</label>
+			<input type="color" class="color" v-model="currentColor" />
 			<button class="_button" :disabled="zoom <= 10" @click="zoom -= 10">
 				<fa :icon="faSearchMinus"></fa>
 			</button>
@@ -43,13 +56,39 @@
 			</button>
 		</div>
 	</section>
+	<section class="_card">
+		<div class="_content">
+			<div>
+				<mk-switch v-model="usePressure" style="display: inline-flex">{{ $t('usePressure') }}</mk-switch>
+				<a class="_link" @click="showUsePressureHint" style="margin-left: 8px"><fa :icon="farQuestionCircle"/></a>
+			</div>
+			<div>
+				<mk-range v-model="penWidth" :min="1" :max="256" :step="1" style="display: inline-block">
+					<fa slot="icon" :icon="faPen"/>
+					<span slot="title">{{ $t('penWidth') }}</span>
+				</mk-range>
+				<span v-text="penWidth + 'px'"/>
+			</div>
+			<div>
+				<mk-range v-model="eraserWidth" :min="1" :max="256" :step="1" style="display: inline-block">
+					<fa slot="icon" :icon="faEraser"/>
+					<span slot="title">{{ $t('eraserWidth') }}</span>
+				</mk-range>
+				<span v-text="eraserWidth + 'px'"/>
+			</div>
+		</div>
+	</section>
 </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { faPaintBrush, faPaw, faPen, faEraser, faSlash, faSquare, faCircle, faSearchMinus, faSearchPlus } from '@fortawesome/free-solid-svg-icons';
-import { faSquare as farSquare, faCircle as farCircle, faSave as farSave, faFolderOpen as farFolderOpen, faFileAlt as farFileAlt } from '@fortawesome/free-regular-svg-icons';
+import { faPaintBrush, faPaw, faPen, faEraser, faSlash, faSquare, faCircle, faSearchMinus, faSearchPlus, faUndo, faRedo } from '@fortawesome/free-solid-svg-icons';
+import { faSquare as farSquare, faCircle as farCircle, faSave as farSave, faFolderOpen as farFolderOpen, faFileAlt as farFileAlt, faQuestionCircle as farQuestionCircle } from '@fortawesome/free-regular-svg-icons';
+
+import MkSwitch from '../components/ui/switch.vue';
+import MkRange from '../components/ui/range.vue';
+
 
 export type ToolType = 'hand'| 'pen' | 'eraser' | 'line' | 'rect' | 'circle' | 'rectFill' | 'circleFill';
 
@@ -67,20 +106,35 @@ export const getToolIconOf = (type: ToolType) => {
 };
 
 export default Vue.extend({
+	components: {
+		MkSwitch,
+		MkRange,
+	},
 	data() {
 		return {
 			currentTool: 'hand' as ToolType,
 			currentColor: '#000000',
 			zoom: 100,
-			posX: 0,
-			posY: 0,
+			canvasX: 0,
+			canvasY: 0,
+			pressure: 0,
 			ctx: null as CanvasRenderingContext2D | null,
+			ctxPreview: null as CanvasRenderingContext2D | null,
 			down: false,
+			prevPressure: 0,
 			prevPointerPos: { x: 0, y: 0 },
-			faPaintBrush, faSearchMinus, faSearchPlus,
-			farSquare, farCircle, farSave, farFolderOpen, farFileAlt
+			downPointerPos: { x: 0, y: 0 },
+			undoStack: [] as ImageData[],
+			redoStack: [] as ImageData[],
+			faPaintBrush, faPen, faEraser, faSearchMinus, faSearchPlus, faUndo, faRedo,
+			farSquare, farCircle, farSave, farFolderOpen, farFileAlt, farQuestionCircle
 		}
 	},
+	metaInfo() {
+		return {
+			title: this.$t('paint') as string
+		};
+},
 	computed: {
 		currentToolIcon () {
 			return getToolIconOf(this.currentTool);
@@ -88,19 +142,46 @@ export default Vue.extend({
 		canvas () {
 			return this.$refs.canvas as HTMLCanvasElement;
 		},
+		previewCanvas () {
+			return this.$refs.previewCanvas as HTMLCanvasElement;
+		},
 		canvasStyle () {
 			return { 
 				transform: `scale(${this.zoom / 100})`, 
-				left: this.posX + 'px',
-				top: this.posY + 'px' 
+				left: this.canvasX + 'px',
+				top: this.canvasY + 'px' 
 			};
-		}
+		},
+		penWidth: {
+			get() { return parseInt(this.$store.state.device.penWidth); },
+			set(value) { this.$store.commit('device/set', { key: 'penWidth', value }) }
+		},
+		eraserWidth: {
+			get() { return parseInt(this.$store.state.device.eraserWidth); },
+			set(value) { this.$store.commit('device/set', { key: 'eraserWidth', value }) }
+		},
+		usePressure: {
+			get() { return this.$store.state.device.usePressure; },
+			set(value) { this.$store.commit('device/set', { key: 'usePressure',value }) }
+		},
 	},
 	mounted() {
 		this.ctx = this.canvas.getContext('2d');
-		if (!this.ctx) return;
+		this.ctxPreview = this.previewCanvas.getContext('2d');
+		if (!this.ctx || !this.ctxPreview) return;
 		this.init(512, 512);
 
+		// adjust editor size
+		const editor = this.$refs.editor as HTMLElement;
+		const wrapper = this.$refs.canvasWrapper as HTMLElement;
+
+		
+
+		const editorHeightWithoutWrapper = editor.getBoundingClientRect().height - wrapper.getBoundingClientRect().height;
+		const prefferedWrapperHeight = window.innerHeight - 60 - editorHeightWithoutWrapper - 64;
+
+		wrapper.style.height = prefferedWrapperHeight + 'px';
+		
 		document.addEventListener('mousemove', this.onMouseMove);
 		document.addEventListener('touchmove', this.onTouchMove);
 		document.addEventListener('mouseup', this.onMouseUp);
@@ -136,8 +217,9 @@ export default Vue.extend({
 			});
 		},
 		init(w: number, h: number) {
-			this.canvas.width = w;
-			this.canvas.height = h;
+			this.previewCanvas.width = this.canvas.width = w;
+			this.previewCanvas.height = this.canvas.height = h;
+
 			if (!this.ctx) return;
 			this.ctx.fillStyle = '#ffffff';
 			this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -150,21 +232,88 @@ export default Vue.extend({
 		save() {
 
 		},
-		onMouseDown(ev: MouseEvent) {
+		undo() {
+
+		},
+		redo() {
+
+		},
+		onPointerDown(pointerX: number, pointerY: number, pressure = 0.5) {
 			this.down = true;
-			this.prevPointerPos.x = ev.x;
-			this.prevPointerPos.y = ev.y;
+			this.prevPointerPos.x = pointerX;
+			this.prevPointerPos.y = pointerY;
+
+			const bb = this.canvas.getBoundingClientRect();
+			const scale = this.zoom * 0.01;
+
+			const x = (pointerX - bb.x) / scale;
+			const y = (pointerY - bb.y) / scale;
+
+			this.downPointerPos = { x, y };
 		},
-		onMouseUp(ev: MouseEvent) {
-			this.down = false;
-		},
-		onMouseMove(ev: MouseEvent) {
+		onPointerUp(pointerX: number, pointerY: number, pressure = 0.5) {
 			if (!this.ctx) return;
+			if (!this.ctxPreview) return;
 			if (!this.down) return;
+			const c = this.ctx;
+			const cp = this.ctxPreview;
+			this.down = false;
+			this.undoStack.push(c.getImageData(0, 0, this.canvas.width, this.canvas.height));
+			cp.clearRect(0, 0, this.previewCanvas.width, this.previewCanvas.height);
+
+			const bb = this.canvas.getBoundingClientRect();
+			const scale = this.zoom * 0.01;
+
+			const x = (pointerX - bb.x) / scale;
+			const y = (pointerY - bb.y) / scale;
+	
+			const left = Math.min(this.downPointerPos.x, x);
+			const top = Math.min(this.downPointerPos.y, y);
+			const width = Math.abs(x - this.downPointerPos.x);
+			const height = Math.abs(y - this.downPointerPos.y);
+
+			c.beginPath();
+			switch (this.currentTool) {
+				case 'rect': {
+					c.rect(left, top, width, height);
+					c.stroke();
+					break;
+				}
+				case 'rectFill': {
+					c.rect(left, top, width, height);
+					c.fill();
+					break;
+				}
+				case 'circle': {
+					c.ellipse(left + width / 2, top + height / 2, width / 2 , height / 2, 0, 0, 2 * Math.PI);
+					c.stroke();
+					break;
+				}
+				case 'circleFill': {
+					c.ellipse(left + width / 2, top + height / 2, width / 2 , height / 2, 0, 0, 2 * Math.PI);
+					c.fill();
+					break;
+				}
+			}
+		},
+		onPointerMove(pointerX: number, pointerY: number, pressure = 0.5) {
+
+			if (!this.ctx) return;
+			if (!this.ctxPreview) return;
+			if (!this.down) return;
+			const c = this.ctx;
+			const cp = this.ctxPreview;
 			// 色を当てる
-			this.ctx.strokeStyle = this.currentColor;
-			this.ctx.fillStyle = this.currentColor;
-			this.ctx.lineWidth = 5;
+			c.strokeStyle =	cp.strokeStyle = this.currentColor;
+			c.fillStyle = cp.fillStyle = this.currentColor;
+			c.lineWidth = cp.lineWidth = this.penWidth;
+
+			if (this.usePressure && (this.currentTool === 'pen' || this.currentTool === 'eraser')) {
+				// 稀に pressure が 0 になることがあるので
+				pressure = Math.max(pressure, 0.001);
+				c.lineWidth *= (pressure * 2);
+				this.pressure = pressure;
+			}
 
 			const bb = this.canvas.getBoundingClientRect();
 
@@ -172,46 +321,112 @@ export default Vue.extend({
 
 			const px = (this.prevPointerPos.x - bb.x) / scale;
 			const py = (this.prevPointerPos.y - bb.y) / scale;
+			const x = (pointerX - bb.x) / scale;
+			const y = (pointerY - bb.y) / scale;
 
-			const x = (ev.x - bb.x) / scale;
-			const y = (ev.y - bb.y) / scale;
+			const drawPen = () => {
+					c.lineCap = 'round';
+					c.lineJoin = 'round';
+					console.log(`${c.lineWidth},${pressure * 2}`);
+					c.beginPath();
+					c.moveTo(px, py);
+					c.lineTo(x, y);
+					c.stroke();
+			};
 
+			// ドラッグによる操作
 			switch (this.currentTool) {
 				case 'hand': {
-					const dx = ev.x - this.prevPointerPos.x;
-					const dy = ev.y - this.prevPointerPos.y;
-					this.posX += dx;
-					this.posY += dy;
+					const dx = pointerX - this.prevPointerPos.x;
+					const dy = pointerY - this.prevPointerPos.y;
+					this.canvasX += dx;
+					this.canvasY += dy;
 					break;
 				}
 				case 'pen': {
-					this.ctx.beginPath();
-					this.ctx.moveTo(px, py);
-					this.ctx.lineTo(x, y);
-					this.ctx.stroke();
+					drawPen();
 					break;
 				}
 				case 'eraser': {
-					this.ctx.strokeStyle = '#ffffff';
-					this.ctx.moveTo(px, py);
-					this.ctx.lineTo(x, y);
-					this.ctx.stroke();
+					c.lineWidth = this.eraserWidth;
+					c.strokeStyle = '#fff';
+					drawPen();
 					break;
 				}
 			}
 
-			this.prevPointerPos.x = ev.x;
-			this.prevPointerPos.y = ev.y;
+			// プレビューの更新
+			cp.clearRect(0, 0, this.previewCanvas.width, this.previewCanvas.height);
+	
+			const left = Math.min(this.downPointerPos.x, x);
+			const top = Math.min(this.downPointerPos.y, y);
+			const width = Math.abs(x - this.downPointerPos.x);
+			const height = Math.abs(y - this.downPointerPos.y);
+
+			cp.beginPath();
+			switch (this.currentTool) {
+				case 'rect': {
+					cp.rect(left, top, width, height);
+					cp.stroke();
+					break;
+				}
+				case 'rectFill': {
+					cp.rect(left, top, width, height);
+					cp.fill();
+					break;
+				}
+				case 'circle': {
+					cp.ellipse(left + width / 2, top + height / 2, width / 2 , height / 2, 0, 0, 2 * Math.PI);
+					cp.stroke();
+					break;
+				}
+				case 'circleFill': {
+					cp.ellipse(left + width / 2, top + height / 2, width / 2 , height / 2, 0, 0, 2 * Math.PI);
+					cp.fill();
+					break;
+				}
+			}
+
+			this.prevPointerPos.x = pointerX;
+			this.prevPointerPos.y = pointerY;
+		},
+		onMouseDown(ev: MouseEvent) {
+			this.onPointerDown(ev.x, ev.y);
+		},
+		onMouseUp(ev: MouseEvent) {
+			this.onPointerUp(ev.x, ev.y);
+		},
+		onMouseMove(ev: MouseEvent) {
+			this.onPointerMove(ev.x, ev.y);
 		},
 		onTouchStart(ev: TouchEvent) {
-			this.down = true;
+			const x = ev.touches[0].clientX;
+			const y = ev.touches[0].clientY;
+			const pressure = ev.touches[0].force;
+			this.prevPressure = pressure;
+			this.onPointerDown(x, y, pressure);
+			ev.preventDefault();
 		},
 		onTouchMove(ev: TouchEvent) {
-
+			const x = ev.touches[0].clientX;
+			const y = ev.touches[0].clientY;
+			const pressure = ev.touches[0].force;
+			this.onPointerMove(x, y, pressure);
+			this.prevPressure = pressure;
+			if (this.down) {
+				ev.preventDefault();
+			}
 		},
 		onTouchEnd(ev: TouchEvent) {
-			this.down = false;
+			const { x, y } = this.prevPointerPos;
+			this.onPointerUp(x, y, this.prevPressure);
 		},
+		showUsePressureHint() {
+			this.$root.dialog({
+				text: this.$t('usePressureDescription'),
+				type: 'info'
+			});
+		}
 	}
 })
 </script>
@@ -260,10 +475,14 @@ export default Vue.extend({
 		width: 24px;
 		height: 24px;
 		margin: 12px;
+		background: none;
+		padding: 0;
 		box-sizing: border-box;
 		border: 1px solid var(--fg);
+		-webkit-appearance: none;
+		appearance: none;
 		cursor: pointer;
-		border-radius: 24px;
+		// border-radius: 24px;
 		> input[type="color"] {
 			display: none;
 		}
@@ -291,7 +510,9 @@ $bg2: #555;
 	resize: vertical;
 	height: 256px;
 	box-shadow: 0 0 4px black inset;
-	animation: canvasWrapperAnimation 0.5s linear infinite;
+	&.animation {
+		animation: canvasWrapperAnimation 0.5s linear infinite;
+	}
 
 	position: relative;
 	overflow: hidden;
@@ -300,8 +521,11 @@ $bg2: #555;
 		position: absolute;
 		transform-origin: 0 0;
 		box-shadow: 0 0 4px black;
-		transition: transform 0.2s ease;
 		image-rendering: pixelated;
+
+		&.animation {
+			transition: transform 0.2s ease;
+		}
 	}
 }
 

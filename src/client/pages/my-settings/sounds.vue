@@ -3,7 +3,10 @@
 	<div class="_title"><fa :icon="faMusic"/> {{ $t('sounds') }}</div>
 	<div class="_content">
 		{{ $t('volume') }}
-		<input type="range" v-model="sfxVolume" min="0" max="1" step="0.1"/>
+		<mk-range v-model="sfxVolume" :min="0" :max="1" :step="0.1">
+			<fa slot="icon" :icon="volumeIcon"/>
+			<span slot="title">{{ $t('volume') }}</span>
+		</mk-range>
 	</div>
 	<div class="_content">
 		<mk-select v-model="sfxNote">
@@ -44,6 +47,7 @@
 import Vue from 'vue';
 import { faImage, faCog, faMusic, faPlay } from '@fortawesome/free-solid-svg-icons';
 import MkSelect from '../../components/ui/select.vue';
+import MkRange from '../../components/ui/range.vue';
 import i18n from '../../i18n';
 import { langs } from '../../config';
 
@@ -77,6 +81,7 @@ export default Vue.extend({
 
 	components: {
 		MkSelect,
+		MkRange,
 	},
 
 	data() {
