@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-hotkey.prevent.stop="keymap">
 	<portal to="icon"><fa :icon="faPaintBrush"/></portal>
 	<portal to="title">{{ $t('paint') }}</portal>
 	<section class="_card" ref="editor">
@@ -140,6 +140,15 @@ export default Vue.extend({
 		};
 },
 	computed: {
+		keymap(): any {
+			return {
+				'ctrl+o|meta+o': () => this.open(),
+				'ctrl+n|meta+n': () => this.init(512, 512),
+				'ctrl+s|meta+s': () => this.save(),
+				'ctrl+z|meta+z':() => this.undo(),
+				'ctrl+shift+z|meta+shift+z':() => this.redo(),
+			};
+		},
 		currentToolIcon () {
 			return getToolIconOf(this.currentTool);
 		},
