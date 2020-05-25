@@ -19,7 +19,6 @@
 			<button class="_button" @click="redo" :disabled="redoStack.length === 0">
 				<fa :icon="faRedo"></fa>
 			</button>
-			<span v-text="pressure" />
 		</div>
 		<div class="canvas-wrapper" ref="canvasWrapper" :class="{ animation: $store.state.device.animation }">
 			<canvas
@@ -88,6 +87,7 @@ import { faSquare as farSquare, faCircle as farCircle, faSave as farSave, faFold
 
 import MkSwitch from '../components/ui/switch.vue';
 import MkRange from '../components/ui/range.vue';
+import { selectDriveFile } from '../scripts/select-drive-file';
 
 
 export type ToolType = 'hand'| 'pen' | 'eraser' | 'line' | 'rect' | 'circle' | 'rectFill' | 'circleFill';
@@ -117,7 +117,6 @@ export default Vue.extend({
 			zoom: 100,
 			canvasX: 0,
 			canvasY: 0,
-			pressure: 0,
 			ctx: null as CanvasRenderingContext2D | null,
 			ctxPreview: null as CanvasRenderingContext2D | null,
 			down: false,
@@ -126,13 +125,14 @@ export default Vue.extend({
 			downPointerPos: { x: 0, y: 0 },
 			undoStack: [] as ImageData[],
 			redoStack: [] as ImageData[],
+			changed: false,
 			faPaintBrush, faPen, faEraser, faSearchMinus, faSearchPlus, faUndo, faRedo,
 			farSquare, farCircle, farSave, farFolderOpen, farFileAlt, farQuestionCircle
 		}
 	},
 	metaInfo() {
 		return {
-			title: this.$t('paint') as string
+			title: (this.$t('paint') as string) + (this.changed ? '*' : ''),
 		};
 },
 	computed: {
@@ -175,20 +175,38 @@ export default Vue.extend({
 		const editor = this.$refs.editor as HTMLElement;
 		const wrapper = this.$refs.canvasWrapper as HTMLElement;
 
-		
-
 		const editorHeightWithoutWrapper = editor.getBoundingClientRect().height - wrapper.getBoundingClientRect().height;
 		const prefferedWrapperHeight = window.innerHeight - 60 - editorHeightWithoutWrapper - 64;
 
 		wrapper.style.height = prefferedWrapperHeight + 'px';
 		
+		window.addEventListener('beforeunload', this.beforeunload);
 		document.addEventListener('mousemove', this.onMouseMove);
 		document.addEventListener('touchmove', this.onTouchMove);
 		document.addEventListener('mouseup', this.onMouseUp);
 		document.addEventListener('touchend', this.onTouchEnd);
 	},
-	beforeDestroy() {
 
+	beforeRouteLeave(to, from, next) {
+		if (this.changed) {
+			this.$root.dialog({
+				type: 'warning',
+				text: this.$t('leave-confirm'),
+				showCancelButton: true
+			}).then(({ canceled }: any) => {
+				if (canceled) {
+					next(false);
+				} else {
+					next();
+				}
+			});
+		} else {
+			next();
+		}
+	},
+
+	beforeDestroy() {
+		window.removeEventListener('beforeunload', this.beforeunload);
 	},
 	methods: {
 		getToolIconOf,
@@ -216,7 +234,7 @@ export default Vue.extend({
 				source: ev.currentTarget || ev.target,
 			});
 		},
-		init(w: number, h: number) {
+		init(w: number, h: number, confirm = true) {
 			this.previewCanvas.width = this.canvas.width = w;
 			this.previewCanvas.height = this.canvas.height = h;
 
@@ -225,18 +243,60 @@ export default Vue.extend({
 			this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 			this.ctx.fillStyle = 'transparent';
 			this.ctx.strokeStyle = this.currentColor;
+			this.changed = false;
 		},
-		open() {
+		async open() {
+			const file = await selectDriveFile(this.$root, false);
+			const img = new Image();
+			if (file.type.startsWith('image')) {
+				img.src = file.url;
+			} else if (file.thumbnailUrl) {
+				img.src = file.url;
+			} else {
+				this.$root.dialog({
+					type: 'error',
+					text: this.$t('theFileIsNotImage')
+				});
+				return;
+			}
+			const dialog = this.$root.dialog({
+				type: 'waiting',
+				iconOnly: true,
+				cancelableByBgClick: false
+			});
 
+			img.onload = () => {
+				dialog.close();
+				this.init(img.naturalWidth, img.naturalHeight, false);
+				this.ctx!.drawImage(img, 0, 0);				
+				this.changed = false;
+			};
+			img.onerror = (err) => {
+				dialog.close();
+				this.$root.dialog({
+					type: 'error',
+					text: this.$t('failedToLoadImage')
+				});				
+			};
 		},
 		save() {
-
+			this.changed = false;
 		},
 		undo() {
-
+			const data = this.undoStack.pop();
+			if (!data) return;
+			this.redoStack.push(this.ctx!.getImageData(0, 0, this.canvas.width, this.canvas.height));
+			this.ctx!.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			this.ctx!.putImageData(data, 0, 0);
+			this.changed = true;
 		},
 		redo() {
-
+			const data = this.redoStack.pop();
+			if (!data) return;
+			this.undoStack.push(this.ctx!.getImageData(0, 0, this.canvas.width, this.canvas.height));
+			this.ctx!.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			this.ctx!.putImageData(data, 0, 0);
+			this.changed = true;
 		},
 		onPointerDown(pointerX: number, pointerY: number, pressure = 0.5) {
 			this.down = true;
@@ -249,7 +309,15 @@ export default Vue.extend({
 			const x = (pointerX - bb.x) / scale;
 			const y = (pointerY - bb.y) / scale;
 
+
+			if (this.currentTool !== 'hand') {
+				this.undoStack.push(this.ctx!.getImageData(0, 0, this.canvas.width, this.canvas.height));
+				this.redoStack = [];
+				this.changed = true;
+			}
+
 			this.downPointerPos = { x, y };
+			this.onPointerMove(pointerX, pointerY, pressure);
 		},
 		onPointerUp(pointerX: number, pointerY: number, pressure = 0.5) {
 			if (!this.ctx) return;
@@ -258,7 +326,7 @@ export default Vue.extend({
 			const c = this.ctx;
 			const cp = this.ctxPreview;
 			this.down = false;
-			this.undoStack.push(c.getImageData(0, 0, this.canvas.width, this.canvas.height));
+
 			cp.clearRect(0, 0, this.previewCanvas.width, this.previewCanvas.height);
 
 			const bb = this.canvas.getBoundingClientRect();
@@ -294,6 +362,12 @@ export default Vue.extend({
 					c.fill();
 					break;
 				}
+				case 'line': {
+					c.moveTo(this.downPointerPos.x, this.downPointerPos.y);
+					c.lineTo(x, y);
+					c.stroke();
+					break;
+				}
 			}
 		},
 		onPointerMove(pointerX: number, pointerY: number, pressure = 0.5) {
@@ -309,10 +383,8 @@ export default Vue.extend({
 			c.lineWidth = cp.lineWidth = this.penWidth;
 
 			if (this.usePressure && (this.currentTool === 'pen' || this.currentTool === 'eraser')) {
-				// 稀に pressure が 0 になることがあるので
-				pressure = Math.max(pressure, 0.001);
-				c.lineWidth *= (pressure * 2);
-				this.pressure = pressure;
+				// 稀に pressure が 0 になることがあるので、0のときは0.001にする
+				c.lineWidth *= Math.max(pressure, 0.001) * 2;
 			}
 
 			const bb = this.canvas.getBoundingClientRect();
@@ -324,10 +396,12 @@ export default Vue.extend({
 			const x = (pointerX - bb.x) / scale;
 			const y = (pointerY - bb.y) / scale;
 
+			c.lineCap = 'butt';
+			c.lineJoin = 'miter';
+
 			const drawPen = () => {
 					c.lineCap = 'round';
 					c.lineJoin = 'round';
-					console.log(`${c.lineWidth},${pressure * 2}`);
 					c.beginPath();
 					c.moveTo(px, py);
 					c.lineTo(x, y);
@@ -385,6 +459,12 @@ export default Vue.extend({
 					cp.fill();
 					break;
 				}
+				case 'line': {
+					cp.moveTo(this.downPointerPos.x, this.downPointerPos.y);
+					cp.lineTo(x, y);
+					cp.stroke();
+					break;
+				}
 			}
 
 			this.prevPointerPos.x = pointerX;
@@ -426,7 +506,13 @@ export default Vue.extend({
 				text: this.$t('usePressureDescription'),
 				type: 'info'
 			});
-		}
+		},
+		beforeunload(e: BeforeUnloadEvent) {
+			if (this.changed) {
+				e.preventDefault();
+				e.returnValue = '';
+			}
+		},
 	}
 })
 </script>
