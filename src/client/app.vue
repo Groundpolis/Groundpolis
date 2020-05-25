@@ -105,7 +105,7 @@
 			</div>
 		</main>
 
-		<div class="widgets" :style="$store.state.deviceUser.hideTimelineColumn ? 'display: block' : ''">
+		<div class="widgets" v-show="!$store.state.deviceUser.hideTimelineColumn || $route.path === '/'" :style="$store.state.deviceUser.hideTimelineColumn ? 'display: block' : ''">
 			<div ref="widgets" :class="{ edit: widgetsEditMode }">
 				<template v-if="(isDesktop || $store.state.deviceUser.hideTimelineColumn) && $store.getters.isSignedIn">
 					<template v-if="widgetsEditMode">
@@ -1031,7 +1031,7 @@ export default Vue.extend({
 
 	> .contents {
 		display: flex;
-		margin: 0 auto;
+		margin: 0 16px;
 		min-width: 0;
 
 		&.wallpaper {
