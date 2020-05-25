@@ -32,6 +32,7 @@ export const defaultDeviceUserSettings = {
 	visibility: 'public',
 	localOnly: false,
 	widgets: [],
+	hideTimelineColumn: false,
 	tl: {
 		src: 'home'
 	},
@@ -39,7 +40,6 @@ export const defaultDeviceUserSettings = {
 		'notifications',
 		'messaging',
 		'drive',
-		'paint',
 		'-',
 		'followRequests',
 		'featured',
@@ -104,6 +104,7 @@ export const defaultDeviceSettings = {
 	penWidth: 4,
 	eraserWidth: 32,
 	usePressure: false,
+	collapseNav: false,
 };
 
 function copy<T>(data: T): T {
@@ -144,12 +145,6 @@ export default () => new Vuex.Store({
 				icon: faCloud,
 				get show() { return getters.isSignedIn; },
 				to: '/my/drive',
-			},
-			paint: {
-				title: 'paint',
-				icon: faPaintBrush,
-				get show() { return getters.isSignedIn; },
-				to: '/paint',
 			},
 			followRequests: {
 				title: 'followRequests',
@@ -233,6 +228,12 @@ export default () => new Vuex.Store({
 				icon: faDoorClosed,
 				get show() { return getters.isSignedIn; },
 				get to() { return `/@${state.i.username}/room`; },
+			},
+			paint: {
+				title: 'paint',
+				icon: faPaintBrush,
+				get show() { return getters.isSignedIn; },
+				to: '/paint',
 			},
 		}),
 	},

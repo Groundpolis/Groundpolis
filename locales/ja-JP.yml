@@ -572,6 +572,10 @@ failedToLoadImage: "画像データの読み込みに失敗しました。"
 theFileIsNotImage: "画像ファイルを指定してください"
 initConfirm: "未保存の変更があります。破棄して続けますか？"
 specifyFileName: "ファイル名を指定してください"
+experimentalFeatures: "実験的機能"
+experimentalFeaturesDescription: "これらの項目は実験的で、予告なく削除される可能性があります。また、正しく動作する保証はありません。"
+hideTimelineColumn: "タイムラインカラムを非表示にする"
+collapse: "たたむ"
 
 _paint:
   tools:

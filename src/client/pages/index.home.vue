@@ -1,18 +1,24 @@
 <template>
 <div class="mk-home" v-hotkey.global="keymap">
-	<portal to="header" v-if="showTitle">
-		<button @click="choose" class="_button _kjvfvyph_">
-			<i><fa v-if="$store.state.i.hasUnreadAntenna" :icon="faCircle"/></i>
-			<fa v-if="src === 'home'" :icon="faHome"/>
-			<fa v-if="src === 'local'" :icon="faComments"/>
-			<fa v-if="src === 'social'" :icon="faShareAlt"/>
-			<fa v-if="src === 'global'" :icon="faGlobe"/>
-			<fa v-if="src === 'list'" :icon="faListUl"/>
-			<fa v-if="src === 'antenna'" :icon="faSatellite"/>
-			<span style="margin-left: 8px;">{{ src === 'list' ? list.name : src === 'antenna' ? antenna.name : $t('_timelines.' + src) }}</span>
-			<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
-		</button>
-	</portal>
+	<template v-if="showTitle">
+		<portal to="header" v-if="!$store.state.deviceUser.hideTimelineColumn">
+			<button v-if="!$store.state.deviceUser.hideTimelineColumn" @click="choose" class="_button _kjvfvyph_">
+				<i><fa v-if="$store.state.i.hasUnreadAntenna" :icon="faCircle"/></i>
+				<fa v-if="src === 'home'" :icon="faHome"/>
+				<fa v-if="src === 'local'" :icon="faComments"/>
+				<fa v-if="src === 'social'" :icon="faShareAlt"/>
+				<fa v-if="src === 'global'" :icon="faGlobe"/>
+				<fa v-if="src === 'list'" :icon="faListUl"/>
+				<fa v-if="src === 'antenna'" :icon="faSatellite"/>
+				<span style="margin-left: 8px;">{{ src === 'list' ? list.name : src === 'antenna' ? antenna.name : $t('_timelines.' + src) }}</span>
+				<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
+			</button>
+		</portal>
+		<template v-else>
+			<portal to="icon"><fa :icon="faHome"/></portal>
+			<portal to="title">{{ $t('timeline') }}</portal>
+		</template>
+	</template>
 
 	<div class="new" v-if="queue > 0" :style="{ width: width + 'px' }"><button class="_buttonPrimary" @click="top()">{{ $t('newNoteRecived') }}</button></div>
 

@@ -80,6 +80,13 @@
 		<mk-radio v-model="fontSize" value="large"><span style="font-size: 18px;">Aa</span></mk-radio>
 		<mk-radio v-model="fontSize" value="veryLarge"><span style="font-size: 20px;">Aa</span></mk-radio>
 	</div>
+	<div class="_content">
+		<div>{{ $t('experimentalFeatures') }}</div>
+		<mk-info warn>{{ $t('experimentalFeaturesDescription') }}</mk-info>
+		<mk-switch v-model="hideTimelineColumn">
+			{{ $t('hideTimelineColumn') }}
+		</mk-switch>
+	</div>
 </section>
 	<!-- <mk-button @click="cacheClear()" primary style="margin: var(--margin) auto;">{{ $t('cacheClear') }}</mk-button> -->
 </template>
@@ -93,6 +100,7 @@ import MkRadio from '../../components/ui/radio.vue';
 import i18n from '../../i18n';
 import XNote from '../../components/note.vue';
 import { langs } from '../../config';
+import MkInfo from '../../components/ui/info.vue';
 
 export default Vue.extend({
 	i18n,
@@ -108,6 +116,7 @@ export default Vue.extend({
 		MkSelect,
 		MkRadio,
 		XNote,
+		MkInfo
 	},
 
 	data() {
@@ -263,6 +272,11 @@ export default Vue.extend({
 		compactMode: {
 			get() { return this.$store.state.device.postStyle === 'compact' },
 			set(value) { this.$store.commit('device/set', { key: 'postStyle', value: value ? 'compact' : 'standard' }); }
+		},
+
+		hideTimelineColumn: {
+			get() { return this.$store.state.deviceUser.hideTimelineColumn },
+			set(value) { this.$store.commit('deviceUser/set', { key: 'hideTimelineColumn', value }); }
 		},
 
 		previewNote () {

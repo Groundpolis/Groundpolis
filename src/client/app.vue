@@ -1,6 +1,6 @@
 <template>
 <div class="mk-app" v-hotkey.global="keymap">
-	<header class="header">
+	<header class="header" :class="{ 'icon-only': $store.state.device.collapseNav }">
 		<div class="title" ref="title">
 			<transition :name="$store.state.device.animation ? 'header' : ''" mode="out-in" appear>
 				<button class="_button back" v-if="canBack" @click="back()"><fa :icon="faChevronLeft"/></button>
@@ -16,6 +16,10 @@
 					</div>
 				</div>
 			</transition>
+		</div>
+		<div v-if="$store.state.deviceUser.hideTimelineColumn" class="widgets-edit-button">
+			<button v-if="widgetsEditMode" class="_button edit active" @click="widgetsEditMode = false"><fa :icon="faGripVertical"/></button>
+			<button v-else class="_button edit" @click="widgetsEditMode = true"><fa :icon="faGripVertical"/></button>
 		</div>
 		<div class="sub">
 			<button v-if="widgetsEditMode" class="_button edit active" @click="widgetsEditMode = false"><fa :icon="faGripVertical"/></button>
@@ -38,7 +42,7 @@
 	</transition>
 
 	<transition name="nav">
-		<nav class="nav" ref="nav" v-show="showNav">
+		<nav class="nav" :class="{ 'icon-only': $store.state.device.collapseNav }" ref="nav" v-show="showNav">
 			<div>
 				<div class="item account" v-if="$store.getters.isSignedIn">
 					<router-link active-class="active" :to="`/@${ $store.state.i.username }`" exact>
@@ -78,13 +82,16 @@
 						<fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
 						<i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadMentions || $store.state.i.hasUnreadSpecifiedNotes)"><fa :icon="faCircle"/></i>
 					</button>
+					<button class="item _button" @click="$store.commit('device/set', { key: 'collapseNav', value: !$store.state.device.collapseNav })">
+						<fa :icon="$store.state.device.collapseNav ? faArrowRight : faArrowLeft" fixed-width/><span class="text">{{ $t('collapse') }}</span>
+					</button>
 				</template>
 			</div>
 		</nav>
 	</transition>
 
 	<div class="contents" ref="contents" :class="{ wallpaper }">
-		<main ref="main">
+		<main ref="main" v-show="!$store.getters.isSignedIn || $route.path !== '/' || !$store.state.deviceUser.hideTimelineColumn">
 			<div class="content">
 				<transition :name="$store.state.device.animation ? 'page' : ''" mode="out-in" @enter="onTransition">
 					<keep-alive :include="['index']">
@@ -98,9 +105,9 @@
 			</div>
 		</main>
 
-		<div class="widgets">
+		<div class="widgets" :style="$store.state.deviceUser.hideTimelineColumn ? 'display: block' : ''">
 			<div ref="widgets" :class="{ edit: widgetsEditMode }">
-				<template v-if="isDesktop && $store.getters.isSignedIn">
+				<template v-if="(isDesktop || $store.state.deviceUser.hideTimelineColumn) && $store.getters.isSignedIn">
 					<template v-if="widgetsEditMode">
 						<mk-button primary @click="addWidget" class="add"><fa :icon="faPlus"/></mk-button>
 						<x-draggable
@@ -144,7 +151,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
+import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { ResizeObserver } from '@juggle/resize-observer';
 import { v4 as uuid } from 'uuid';
@@ -183,7 +190,7 @@ export default Vue.extend({
 			canBack: false,
 			disconnectedDialog: null as Promise<void> | null,
 			wallpaper: localStorage.getItem('wallpaper') != null,
-			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faProjectDiagram
+			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faProjectDiagram, faArrowLeft, faArrowRight
 		};
 	},
 
@@ -260,25 +267,6 @@ export default Vue.extend({
 	},
 
 	mounted() {
-		if (this.isDesktop) this.adjustWidgetsWidth();
-
-		const adjustTitlePosition = () => {
-			const left = this.$refs.main.getBoundingClientRect().left - this.$refs.nav.offsetWidth;
-			if (left >= 0) {
-				this.$refs.title.style.left = left + 'px';
-			}
-		};
-
-		adjustTitlePosition();
-
-		const ro = new ResizeObserver((entries, observer) => {
-			adjustTitlePosition();
-		});
-
-		ro.observe(this.$refs.contents);
-
-		window.addEventListener('resize', adjustTitlePosition, { passive: true });
-
 		if (!this.isDesktop) {
 			window.addEventListener('resize', () => {
 				if (window.innerWidth >= DESKTOP_THRESHOLD) this.isDesktop = true;
@@ -637,12 +625,16 @@ export default Vue.extend({
 		background-color: var(--header);
 		border-bottom: solid 1px var(--divider);
 
+		&.icon-only {
+				width: calc(100% - #{$nav-icon-only-width});
+		}
+
 		@media (max-width: $nav-icon-only-threshold) {
 			width: calc(100% - #{$nav-icon-only-width});
 		}
 
 		@media (max-width: $nav-hide-threshold) {
-			width: 100%;
+			width: 100% !important;
 		}
 
 		> .title {
@@ -650,7 +642,11 @@ export default Vue.extend({
 			line-height: $header-height;
 			height: $header-height;
 			max-width: $main-width;
-			text-align: center;
+			text-align: left;
+
+			@media (max-width: $nav-hide-threshold) {
+				text-align: center;
+			}
 
 			> .back {
 				position: absolute;
@@ -694,10 +690,29 @@ export default Vue.extend({
 				> .custom {
 					position: absolute;
 					top: 0;
-					left: 0;
+					left: $header-height;
+					@media (max-width: $nav-hide-threshold) {
+						left: 0;
+					}
 					height: 100%;
 					width: 100%;
 				}
+			}
+		}
+
+		> .widgets-edit-button {
+			padding: 16px;
+			position: absolute;
+			top: 0;
+			right: 16px;
+			height: $header-height;
+
+			&.active {
+				color: var(--accent);
+			}
+
+			@media (min-width: $side-hide-threshold) {
+				display: none;
 			}
 		}
 
@@ -786,6 +801,57 @@ export default Vue.extend({
 		box-sizing: border-box;
 
 		position: relative;
+
+		&.icon-only {
+			flex: 0 0 $nav-icon-only-width;
+			width: $nav-icon-only-width;
+
+			> div {
+				width: $nav-icon-only-width;
+
+				> .divider {
+					margin: 8px auto;
+					width: calc(100% - 32px);
+				}
+
+				> .item {
+					padding-left: 0;
+					width: 100%;
+					text-align: center;
+					font-size: $ui-font-size * 1.2;
+					line-height: 3.7rem;
+
+					&:first-child {
+						margin-bottom: 8px;
+					}
+
+					&:last-child {
+						margin-top: 8px;
+					}
+
+					> i {
+						left: 10px;
+					}
+
+					.text {
+						display: none;
+					}
+
+					&.account {
+						flex-direction: column;
+
+						[data-icon],
+						.avatar {
+							margin-right: 0;
+						}
+
+						> .more {
+							margin-left: 0;
+						}
+					}
+				}
+			}
+		}
 
 		@media (max-width: $nav-icon-only-threshold) {
 			flex: 0 0 $nav-icon-only-width;
@@ -1065,7 +1131,7 @@ export default Vue.extend({
 
 				.customize-container {
 					margin: 8px 0;
-					background: #fff;
+					background: var(--bg);
 
 					> header {
 						position: relative;
