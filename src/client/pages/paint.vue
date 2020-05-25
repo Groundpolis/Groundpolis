@@ -1,5 +1,5 @@
 <template>
-<div v-hotkey.prevent.stop="keymap">
+<div>
 	<portal to="icon"><fa :icon="faPaintBrush"/></portal>
 	<portal to="title">{{ $t('paint') }}</portal>
 	<section class="_card" ref="editor">
@@ -140,15 +140,6 @@ export default Vue.extend({
 		};
 },
 	computed: {
-		keymap(): any {
-			return {
-				'ctrl+o|meta+o': () => this.open(),
-				'ctrl+n|meta+n': () => this.init(512, 512),
-				'ctrl+s|meta+s': () => this.save(),
-				'ctrl+z|meta+z':() => this.undo(),
-				'ctrl+shift+z|meta+shift+z':() => this.redo(),
-			};
-		},
 		currentToolIcon () {
 			return getToolIconOf(this.currentTool);
 		},
@@ -194,6 +185,7 @@ export default Vue.extend({
 		wrapper.style.height = prefferedWrapperHeight + 'px';
 		
 		window.addEventListener('beforeunload', this.beforeunload);
+		window.addEventListener('keydown', this.keydown);
 		document.addEventListener('mousemove', this.onMouseMove);
 		document.addEventListener('touchmove', this.onTouchMove);
 		document.addEventListener('mouseup', this.onMouseUp);
@@ -220,6 +212,7 @@ export default Vue.extend({
 
 	beforeDestroy() {
 		window.removeEventListener('beforeunload', this.beforeunload);
+		window.removeEventListener('keydown', this.keydown);
 	},
 	methods: {
 		getToolIconOf,
@@ -589,6 +582,29 @@ export default Vue.extend({
 				e.returnValue = '';
 			}
 		},
+		keydown(e: KeyboardEvent) {
+			let prevent = false;
+			if (e.metaKey || e.ctrlKey) {
+				prevent = true;
+				switch (e.key) {
+					case 'z':
+						if (e.shiftKey) this.redo(); else this.undo();
+						break;
+					case 'o':
+						this.open();
+						break;
+					case 'n':
+						this.init(512, 512);
+						break;
+					case 's':
+						this.save();
+						break;
+					default:
+							prevent = false;
+				}
+			}
+			if (prevent) e.preventDefault();
+		}
 	}
 })
 </script>
