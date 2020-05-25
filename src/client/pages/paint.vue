@@ -191,7 +191,7 @@ export default Vue.extend({
 		if (this.changed) {
 			this.$root.dialog({
 				type: 'warning',
-				text: this.$t('leave-confirm'),
+				text: this.$t('leaveConfirm'),
 				showCancelButton: true
 			}).then(({ canceled }: any) => {
 				if (canceled) {
@@ -234,7 +234,15 @@ export default Vue.extend({
 				source: ev.currentTarget || ev.target,
 			});
 		},
-		init(w: number, h: number, confirm = true) {
+		async init(w: number, h: number, confirm = true) {
+			if (this.changed) {
+				const { canceled } = await this.$root.dialog({
+					type: 'warning',
+					text: this.$t('initConfirm'),
+					showCancelButton: true
+				});
+				if (canceled) return;
+			}
 			this.previewCanvas.width = this.canvas.width = w;
 			this.previewCanvas.height = this.canvas.height = h;
 
@@ -246,6 +254,14 @@ export default Vue.extend({
 			this.changed = false;
 		},
 		async open() {
+			if (this.changed) {
+				const { canceled } = await this.$root.dialog({
+					type: 'warning',
+					text: this.$t('initConfirm'),
+					showCancelButton: true
+				});
+				if (canceled) return;
+			}
 			const file = await selectDriveFile(this.$root, false);
 			const img = new Image();
 			if (file.type.startsWith('image')) {

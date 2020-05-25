@@ -567,6 +567,10 @@ usePressure: '筆圧感知'
 usePressureDescription: '筆圧感知を有効化すると、筆圧の検出に対応している、例えば Apple Pencil のようなデバイスを使用することで、筆圧に従ってペンの太さが変化するようになります。'
 penWidth: 'ペンの太さ'
 eraserWidth: '消しゴムの太さ'
+leaveConfirm: "未保存の変更があります、移動しますか？"
+failedToLoadImage: "画像データの読み込みに失敗しました。"
+theFileIsNotImage: "画像ファイルを指定してください"
+initConfirm: "未保存の変更があります。破棄して続けますか？"
 
 _paint:
   tools:
@@ -869,7 +873,6 @@ _rooms:
   remove: "しまう"
   clear: "片付け"
   clearConfirm: "全ての家具をしまいますか？"
-  leaveConfirm: "未保存の変更があります、移動しますか？"
   chooseImage: "画像を選択"
   roomType: "部屋のタイプ"
   carpetColor: "床の色"
