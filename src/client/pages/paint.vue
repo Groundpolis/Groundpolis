@@ -13,6 +13,7 @@
 			<button class="_button" @click="save">
 				<fa :icon="farSave"></fa>
 			</button>
+			<span class="progress" v-if="uploadingProgress" v-text="uploadingProgress === 100 ? $t('done') : `${uploadingProgress}%`" />
 			<button class="_button" @click="undo" :disabled="undoStack.length === 0">
 				<fa :icon="faUndo"></fa>
 			</button>
@@ -88,6 +89,7 @@ import { faSquare as farSquare, faCircle as farCircle, faSave as farSave, faFold
 import MkSwitch from '../components/ui/switch.vue';
 import MkRange from '../components/ui/range.vue';
 import { selectDriveFile } from '../scripts/select-drive-file';
+import { apiUrl } from '../config';
 
 
 export type ToolType = 'hand'| 'pen' | 'eraser' | 'line' | 'rect' | 'circle' | 'rectFill' | 'circleFill';
@@ -126,6 +128,8 @@ export default Vue.extend({
 			undoStack: [] as ImageData[],
 			redoStack: [] as ImageData[],
 			changed: false,
+			fileName: '',
+			uploadingProgress: null as number | null,
 			faPaintBrush, faPen, faEraser, faSearchMinus, faSearchPlus, faUndo, faRedo,
 			farSquare, farCircle, farSave, farFolderOpen, farFileAlt, farQuestionCircle
 		}
@@ -267,7 +271,7 @@ export default Vue.extend({
 			if (file.type.startsWith('image')) {
 				img.src = file.url;
 			} else if (file.thumbnailUrl) {
-				img.src = file.url;
+				img.src = file.thumbnailUrl;
 			} else {
 				this.$root.dialog({
 					type: 'error',
@@ -284,7 +288,8 @@ export default Vue.extend({
 			img.onload = () => {
 				dialog.close();
 				this.init(img.naturalWidth, img.naturalHeight, false);
-				this.ctx!.drawImage(img, 0, 0);				
+				this.ctx!.drawImage(img, 0, 0);			
+				this.fileName = file.name;
 				this.changed = false;
 			};
 			img.onerror = (err) => {
@@ -295,8 +300,43 @@ export default Vue.extend({
 				});				
 			};
 		},
-		save() {
+		async save() {
+			const { canceled, result } = await this.$root.dialog({
+				title: this.$t('specifyFileName'),
+				input:  {
+					default: this.fileName
+				},
+				autoComplete: true
+			});
+			if (canceled || !result) return;
+			this.fileName = result;
+
+			const blob = await new Promise<Blob | null>(res => this.canvas.toBlob(res));
+
+			if (!blob) return;
+
+			const data = new FormData();
+				data.append('i', this.$store.state.i.token);
+				data.append('force', 'true');
+				data.append('file', blob);
+				data.append('name', this.fileName);
+
+				const xhr = new XMLHttpRequest();
+				xhr.open('POST', apiUrl + '/drive/files/create', true);
+				xhr.onload = (e: any) => {
+					this.uploadingProgress = 100;
+					setTimeout(() => this.uploadingProgress = null, 2000);
+				};
+
+				xhr.upload.onprogress = e => {
+					this.uploadingProgress = Math.floor(e.loaded / e.total * 100);
+				};
+
+				xhr.send(data);
+
+
 			this.changed = false;
+				
 		},
 		undo() {
 			const data = this.undoStack.pop();
@@ -390,7 +430,6 @@ export default Vue.extend({
 
 			if (!this.ctx) return;
 			if (!this.ctxPreview) return;
-			if (!this.down) return;
 			const c = this.ctx;
 			const cp = this.ctxPreview;
 			// 色を当てる
@@ -412,8 +451,13 @@ export default Vue.extend({
 			const x = (pointerX - bb.x) / scale;
 			const y = (pointerY - bb.y) / scale;
 
-			c.lineCap = 'butt';
-			c.lineJoin = 'miter';
+			cp.lineCap = c.lineCap = 'butt';
+			cp.lineJoin = c.lineJoin = 'miter';
+
+			if (this.currentTool === 'eraser') {
+				c.lineWidth = cp.lineWidth = this.eraserWidth;
+				c.strokeStyle = cp.strokeStyle = '#fff';
+			}
 
 			const drawPen = () => {
 					c.lineCap = 'round';
@@ -424,6 +468,19 @@ export default Vue.extend({
 					c.stroke();
 			};
 
+			if (!this.down) {
+				if (this.currentTool !== 'hand') {
+					cp.clearRect(0, 0, this.previewCanvas.width, this.previewCanvas.height);
+					cp.lineCap = 'round';
+					cp.lineJoin = 'round';
+					cp.beginPath();
+					cp.moveTo(x, y);
+					cp.lineTo(x, y);
+					cp.stroke();
+				}
+				return;
+			}
+
 			// ドラッグによる操作
 			switch (this.currentTool) {
 				case 'hand': {
@@ -433,15 +490,9 @@ export default Vue.extend({
 					this.canvasY += dy;
 					break;
 				}
-				case 'pen': {
-					drawPen();
-					break;
-				}
+				case 'pen':
 				case 'eraser': {
-					c.lineWidth = this.eraserWidth;
-					c.strokeStyle = '#fff';
 					drawPen();
-					break;
 				}
 			}
 
