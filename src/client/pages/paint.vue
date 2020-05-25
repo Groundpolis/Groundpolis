@@ -252,6 +252,9 @@ export default Vue.extend({
 			this.previewCanvas.width = this.canvas.width = w;
 			this.previewCanvas.height = this.canvas.height = h;
 
+			this.undoStack = [];
+			this.redoStack = [];
+
 			if (!this.ctx) return;
 			this.ctx.fillStyle = '#ffffff';
 			this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
