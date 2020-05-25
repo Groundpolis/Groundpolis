@@ -248,7 +248,7 @@ export default Vue.extend({
 			});
 		},
 		async init(w: number, h: number, confirm = true) {
-			if (this.changed) {
+			if (this.changed && confirm) {
 				const { canceled } = await this.$root.dialog({
 					type: 'warning',
 					text: this.$t('initConfirm'),
@@ -294,9 +294,9 @@ export default Vue.extend({
 				cancelableByBgClick: false
 			});
 
-			img.onload = () => {
+			img.onload = async () => {
 				dialog.close();
-				this.init(img.naturalWidth, img.naturalHeight, false);
+				await this.init(img.naturalWidth, img.naturalHeight, false);
 				this.ctx!.drawImage(img, 0, 0);			
 				this.fileName = file.name;
 				this.changed = false;
