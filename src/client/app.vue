@@ -45,7 +45,7 @@
 		<nav class="nav" :class="{ 'icon-only': $store.state.device.collapseNav }" ref="nav" v-show="showNav">
 			<div>
 				<div class="item account" v-if="$store.getters.isSignedIn">
-					<router-link active-class="active" :to="`/@${ $store.state.i.username }`" exact>
+					<router-link active-class="active" class="name" :to="`/@${ $store.state.i.username }`" exact>
 						<mk-avatar :user="$store.state.i" class="avatar"/>
 						<mk-user-name class="text" :user="$store.state.i" :nowrap="true"/>
 					</router-link>
@@ -926,6 +926,13 @@ export default Vue.extend({
 				&.account {
 					display: flex;
 					flex-direction: row;
+
+					> .name {
+						overflow: hidden;
+						text-overflow: ellipsis;
+						width: 100%;
+					}
+
 					a.active {
 						color: var(--navActive);
 					}
