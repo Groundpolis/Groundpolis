@@ -24,14 +24,15 @@
 			<fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
 			<fa v-if="note.visibility === 'users'" :icon="faUsers"/>
 		</span>
-		<span class="localonly" v-if="note.localOnly"><fa :icon="faHeart"/></span>
+		<span class="localOnly" v-if="note.localOnly"><fa :icon="faHeart"/></span>
+		<span class="global" v-if="note.user.host"><fa :icon="faWifi"/></span>
 	</div>
 </header>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faCertificate, faCheck, faUsers, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faCertificate, faCheck, faUsers, faHeart, faWifi } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
@@ -44,7 +45,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faCertificate, faCheck, faUsers, faHeart
+			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faCertificate, faCheck, faUsers, faHeart, faWifi
 		};
 	}
 });
@@ -107,6 +108,10 @@ export default Vue.extend({
 		}
 
 		> .localOnly {
+			margin-left: 8px;
+		}
+
+		> .global {
 			margin-left: 8px;
 		}
 	}
