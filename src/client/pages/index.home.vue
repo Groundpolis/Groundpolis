@@ -9,7 +9,7 @@
 				<fa v-if="src === 'social'" :icon="faShareAlt"/>
 				<fa v-if="src === 'global'" :icon="faGlobe"/>
 				<fa v-if="src === 'list'" :icon="faListUl"/>
-				<fa v-if="src === 'antenna'" :icon="faSatellite"/>
+				<fa v-if="src === 'antenna'" :icon="faBroadcastTower"/>
 				<span style="margin-left: 8px;">{{ src === 'list' ? list.name : src === 'antenna' ? antenna.name : $t('_timelines.' + src) }}</span>
 				<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
 			</button>
@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faCircle, faChevronLeft, faChevronRight, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { faComments } from '@fortawesome/free-regular-svg-icons';
 import Progress from '../scripts/loading';
 import XTimeline from '../components/timeline.vue';
@@ -86,7 +86,7 @@ export default Vue.extend({
 			queue: 0,
 			width: 0,
 			currentAnnouncementIndex: 0,
-			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faSatellite, faCircle, faChevronLeft, faChevronRight, faCheck
+			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck
 		};
 	},
 
@@ -176,7 +176,7 @@ export default Vue.extend({
 			]);
 			const antennaItems = antennas.map(antenna => ({
 				text: antenna.name,
-				icon: faSatellite,
+				icon: faBroadcastTower,
 				indicate: antenna.hasUnreadNote,
 				action: () => {
 					this.antenna = antenna;

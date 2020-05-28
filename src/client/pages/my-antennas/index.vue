@@ -1,6 +1,6 @@
 <template>
 <div class="ieepwinx">
-	<portal to="icon"><fa :icon="faSatellite"/></portal>
+	<portal to="icon"><fa :icon="faBroadcastTower"/></portal>
 	<portal to="title">{{ $t('manageAntennas') }}</portal>
 
 	<mk-button @click="create" primary class="add"><fa :icon="faPlus"/> {{ $t('add') }}</mk-button>
@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faSatellite, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faBroadcastTower, faPlus } from '@fortawesome/free-solid-svg-icons';
 import MkPagination from '../../components/ui/pagination.vue';
 import MkButton from '../../components/ui/button.vue';
 import XAntenna from './index.antenna.vue';
@@ -40,7 +40,7 @@ export default Vue.extend({
 				limit: 10,
 			},
 			draft: null,
-			faSatellite, faPlus
+			faBroadcastTower, faPlus
 		};
 	},
 

@@ -1,7 +1,7 @@
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import * as nestedProperty from 'nested-property';
-import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faPaintBrush, faStar, faAt, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faSatellite, faDoorClosed } from '@fortawesome/free-solid-svg-icons';
+import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faPaintBrush, faStar, faAt, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faDoorClosed, faBullhorn } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faComments } from '@fortawesome/free-regular-svg-icons';
 import { apiUrl } from './config';
 import defaultFaces from './scripts/default-faces';
@@ -165,7 +165,7 @@ export default () => new Vuex.Store({
 			},
 			announcements: {
 				title: 'announcements',
-				icon: faBroadcastTower,
+				icon: faBullhorn,
 				get indicated() { return getters.isSignedIn && state.i.hasUnreadAnnouncement; },
 				to: '/announcements',
 			},
@@ -183,7 +183,7 @@ export default () => new Vuex.Store({
 			},
 			antennas: {
 				title: 'antennas',
-				icon: faSatellite,
+				icon: faBroadcastTower,
 				get show() { return getters.isSignedIn; },
 				to: '/my/antennas',
 			},

@@ -24,10 +24,7 @@
 			<fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
 			<fa v-if="note.visibility === 'users'" :icon="faUsers"/>
 		</span>
-		<span class="visibility" v-if="note.localOnly">
-			<fa :icon="faHeart"/>
-		</span>
-		<span class="localOnly" v-if="note.localOnly"><fa :icon="faBiohazard"/></span>
+		<span class="localonly" v-if="note.localOnly"><fa :icon="faHeart"/></span>
 	</div>
 </header>
 </template>

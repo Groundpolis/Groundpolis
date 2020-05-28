@@ -1,6 +1,6 @@
 <template>
 <div>
-	<portal to="icon"><fa :icon="faBroadcastTower"/></portal>
+	<portal to="icon"><fa :icon="faBullhorn"/></portal>
 	<portal to="title">{{ $t('announcements') }}</portal>
 
 	<mk-pagination :pagination="pagination" #default="{items}" class="ruryvtyk" ref="list">
@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faCheck, faBroadcastTower } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faBullhorn } from '@fortawesome/free-solid-svg-icons';
 import i18n from '../i18n';
 import MkPagination from '../components/ui/pagination.vue';
 import MkButton from '../components/ui/button.vue';
@@ -45,7 +45,7 @@ export default Vue.extend({
 				endpoint: 'announcements',
 				limit: 10,
 			},
-			faCheck, faBroadcastTower
+			faCheck, faBullhorn
 		};
 	},
 
