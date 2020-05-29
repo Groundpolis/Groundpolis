@@ -16,7 +16,8 @@
 				<span v-if="visibility === 'specified'"><fa :icon="faEnvelope"/></span>
 				<span v-if="visibility === 'users'"><fa :icon="faUsers"/></span>
 			</button>
-			<button class="_button localOnly" v-if="visibility !== 'specified'" @click="localOnly = !localOnly" :class="{ active: localOnly }"><fa :icon="faHeart"/></button>
+			<button class="_button localOnly" v-if="!['specified', 'users'].includes(visibility)" @click="localOnly = !localOnly" :class="{ active: localOnly }"><fa :icon="faHeart"/></button>
+			<button class="_button remoteFollowersOnly" v-if="!['specified', 'followers', 'users'].includes(visibility)" @click="remoteFollowersOnly = !remoteFollowersOnly" :class="{ active: remoteFollowersOnly }"><fa :icon="faSatelliteDish"/></button>
 			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">{{ submitText }}<fa :icon="reply ? faReply : renote ? faQuoteRight : faPaperPlane"/></button>
 		</div>
 	</header>
@@ -49,9 +50,7 @@
 		</footer>
 		<input ref="file" class="file _button" type="file" multiple="multiple" @change="onChangeFile"/>
 		<details v-if="text" class="preview" :open="isPreviewOpened" @toggle="isPreviewOpened = $event.target.open">
-			<summary>
-				プレビュー
-			</summary>
+			<summary>{{ $t('preview') }}</summary>
 			<x-note-preview :note="previewNote"/>
 		</details>
 	</div>
@@ -60,7 +59,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish } from '@fortawesome/free-solid-svg-icons';
+import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faSatelliteDish } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash, faLaughSquint } from '@fortawesome/free-regular-svg-icons';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
@@ -137,13 +136,14 @@ export default Vue.extend({
 			useCw: false,
 			cw: null,
 			localOnly: false,
+			remoteFollowersOnly: false,
 			visibility: 'public',
 			visibleUsers: [],
 			autocomplete: null,
 			draghover: false,
 			quoteId: null,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
-			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish
+			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faSatelliteDish
 		};
 	},
 
@@ -201,13 +201,14 @@ export default Vue.extend({
 				cw: this.useCw ? this.cw : undefined,
 				visibility: this.visibility,
 				user: this.$store.state.i,
+				localOnly: this.localOnly,
+				remoteFollowersOnly: this.remoteFollowersOnly,
 				files: [],
-
 			};
 		},
 
 		isPreviewOpened: {
-			get() { return this.$store.state.device.showPostPreview }
+			get() { return this.$store.state.device.showPostPreview },
 			set(value) { this.$store.commit('device/set', { key: 'showPostPreview', value }); }
 		}
 	},
@@ -215,6 +216,9 @@ export default Vue.extend({
 	watch: {
 		localOnly() {
 			this.$store.commit('deviceUser/setLocalOnly', this.localOnly);
+		},
+		remoteFollowersOnly() {
+			this.$store.commit('deviceUser/setRemoteFollowersOnly', this.remoteFollowersOnly);
 		}
 	},
 
@@ -253,6 +257,7 @@ export default Vue.extend({
 		this.applyVisibility(this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.visibility : this.$store.state.settings.defaultNoteVisibility);
 
 		this.localOnly = this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.localOnly : this.$store.state.settings.defaultNoteLocalOnly;
+		this.remoteFollowersOnly = this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.remoteFollowersOnly : this.$store.state.settings.defaultNoteRemoteFollowersOnly;
 
 		// 公開以外へのリプライ時は元の公開範囲を引き継ぐ
 		if (this.reply && ['home', 'followers', 'specified'].includes(this.reply.visibility)) {
@@ -299,6 +304,7 @@ export default Vue.extend({
 					this.cw = draft.data.cw;
 					this.applyVisibility(draft.data.visibility);
 					this.localOnly = draft.data.localOnly;
+					this.remoteFollowersOnly = draft.data.remoteFollowersOnly;
 					this.files = (draft.data.files || []).filter(e => e);
 					if (draft.data.poll) {
 						this.poll = true;
@@ -327,6 +333,7 @@ export default Vue.extend({
 				}
 				this.visibility = init.visibility;
 				this.localOnly = init.localOnly;
+				this.remoteFollowersOnly = init.remoteFollowersOnly;
 				this.quoteId = init.renote ? init.renote.id : null;
 			}
 
@@ -343,6 +350,7 @@ export default Vue.extend({
 			this.$watch('files', () => this.saveDraft());
 			this.$watch('visibility', () => this.saveDraft());
 			this.$watch('localOnly', () => this.saveDraft());
+			this.$watch('remoteFollowersOnly', () => this.saveDraft());
 		},
 
 		trimmedLength(text: string) {
@@ -542,6 +550,7 @@ export default Vue.extend({
 					cw: this.cw,
 					visibility: this.visibility,
 					localOnly: this.localOnly,
+					remoteFollowersOnly: this.remoteFollowersOnly,
 					files: this.files,
 					poll: this.poll && this.$refs.poll ? (this.$refs.poll as any).get() : undefined
 				}
@@ -575,6 +584,7 @@ export default Vue.extend({
 				poll: this.poll ? (this.$refs.poll as any).get() : undefined,
 				cw: this.useCw ? this.cw || '' : undefined,
 				localOnly: this.localOnly,
+				remoteFollowersOnly: this.remoteFollowersOnly
 				visibility: this.visibility,
 				visibleUserIds: this.visibility == 'specified' ? this.visibleUsers.map(u => u.id) : undefined,
 				viaMobile: this.$root.isMobile
@@ -673,6 +683,16 @@ export default Vue.extend({
 				height: 34px;
 				width: 34px;
 				margin: 0 8px;
+
+				&.active {
+					color: var(--accent);
+				}
+			}
+
+			> .remoteFollowersOnly {
+				height: 34px;
+				width: 34px;
+				margin-right: 8px;
 
 				&.active {
 					color: var(--accent);

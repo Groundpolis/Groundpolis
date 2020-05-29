@@ -98,6 +98,7 @@ type Option = {
 	poll?: IPoll | null;
 	viaMobile?: boolean | null;
 	localOnly?: boolean | null;
+	remoteFollowersOnly?: boolean | null;
 	cw?: string | null;
 	visibility?: string;
 	visibleUsers?: User[] | null;
@@ -123,6 +124,11 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 	// Renote対象が「ホームまたは全体」以外の公開範囲ならreject
 	if (data.renote && data.renote.visibility !== 'public' && data.renote.visibility !== 'home' && data.renote.userId !== user.id) {
 		return rej('Renote target is not public or home');
+	}
+
+	// localOnly と remoteFollowersOnly は共存できない
+	if (data.localOnly && data.remoteFollowersOnly) {
+		return rej('You can\'t specify both localOnly and remoteFollowersOnly flags');
 	}
 
 	// Renote対象がpublicではないならhomeにする
@@ -405,6 +411,7 @@ async function insertNote(user: User, data: Option, tags: string[], emojis: stri
 		userId: user.id,
 		viaMobile: data.viaMobile!,
 		localOnly: data.localOnly!,
+		remoteFollowersOnly: data.remoteFollowersOnly!,
 		visibility: data.visibility as any,
 		visibleUserIds: data.visibility == 'specified'
 			? data.visibleUsers

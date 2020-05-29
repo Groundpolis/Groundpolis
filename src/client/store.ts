@@ -31,6 +31,7 @@ export const defaultSettings = {
 export const defaultDeviceUserSettings = {
 	visibility: 'public',
 	localOnly: false,
+	remoteFollowersOnly: false,
 	widgets: [],
 	hideTimelineColumn: false,
 	tl: {
@@ -414,6 +415,10 @@ export default () => new Vuex.Store({
 
 				setLocalOnly(state, localOnly) {
 					state.localOnly = localOnly;
+				},
+
+				setRemoteFollowersOnly(state, remoteFollowersOnly) {
+					state.remoteFollowersOnly = remoteFollowersOnly;
 				},
 
 				setWidgets(state, widgets) {

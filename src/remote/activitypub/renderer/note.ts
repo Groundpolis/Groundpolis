@@ -69,7 +69,7 @@ export default async function renderNote(note: Note, dive = true, isTalk = false
 	} else if (note.visibility === 'home') {
 		to = [`${attributedTo}/followers`];
 		cc = ['https://www.w3.org/ns/activitystreams#Public'].concat(mentions);
-	} else if (note.visibility === 'followers') {
+	} else if (note.visibility === 'followers' || note.remoteFollowersOnly) {
 		to = [`${attributedTo}/followers`];
 		cc = mentions;
 	} else {

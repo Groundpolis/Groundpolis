@@ -87,6 +87,14 @@ export const meta = {
 			}
 		},
 
+		remoteFollowersOnly: {
+			validator: $.optional.bool,
+			default: false,
+			desc: {
+				'ja-JP': 'リモートに対してはフォロワー限定にするか否か。'
+			}
+		},
+
 		noExtractMentions: {
 			validator: $.optional.bool,
 			default: false,
@@ -283,6 +291,7 @@ export default define(meta, async (ps, user) => {
 		cw: ps.cw,
 		viaMobile: ps.viaMobile,
 		localOnly: ps.localOnly,
+		remoteFollowersOnly: ps.remoteFollowersOnly,
 		visibility: ps.visibility,
 		visibleUsers,
 		apMentions: ps.noExtractMentions ? [] : undefined,
