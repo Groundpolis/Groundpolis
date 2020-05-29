@@ -1,8 +1,7 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faMusic"/> {{ $t('sounds') }}</div>
+	<div class="_title"><fa :icon="faPlay"/> {{ $t('sounds') }}</div>
 	<div class="_content">
-		{{ $t('volume') }}
 		<mk-range v-model="sfxVolume" :min="0" :max="1" :step="0.1">
 			<fa slot="icon" :icon="volumeIcon"/>
 			<span slot="title">{{ $t('volume') }}</span>
@@ -12,32 +11,32 @@
 		<mk-select v-model="sfxNote">
 			<template #label>{{ $t('_sfx.note') }}</template>
 			<option v-for="sound in sounds" :value="sound" :key="sound">{{ sound || $t('none') }}</option>
-			<template #text><button class="_textButton" @click="listen(sfxNote)" v-if="sfxNote"><fa :icon="faPlay"/> {{ $t('listen') }}</button></template>
+			<template #text><button class="_textButton" @click="listen(sfxNote)" v-if="sfxNote">{{ $t('listen') }}</button></template>
 		</mk-select>
 		<mk-select v-model="sfxNoteMy">
 			<template #label>{{ $t('_sfx.noteMy') }}</template>
 			<option v-for="sound in sounds" :value="sound" :key="sound">{{ sound || $t('none') }}</option>
-			<template #text><button class="_textButton" @click="listen(sfxNoteMy)" v-if="sfxNoteMy"><fa :icon="faPlay"/> {{ $t('listen') }}</button></template>
+			<template #text><button class="_textButton" @click="listen(sfxNoteMy)" v-if="sfxNoteMy">{{ $t('listen') }}</button></template>
 		</mk-select>
 		<mk-select v-model="sfxNotification">
 			<template #label>{{ $t('_sfx.notification') }}</template>
 			<option v-for="sound in sounds" :value="sound" :key="sound">{{ sound || $t('none') }}</option>
-			<template #text><button class="_textButton" @click="listen(sfxNotification)" v-if="sfxNotification"><fa :icon="faPlay"/> {{ $t('listen') }}</button></template>
+			<template #text><button class="_textButton" @click="listen(sfxNotification)" v-if="sfxNotification">{{ $t('listen') }}</button></template>
 		</mk-select>
 		<mk-select v-model="sfxChat">
 			<template #label>{{ $t('_sfx.chat') }}</template>
 			<option v-for="sound in sounds" :value="sound" :key="sound">{{ sound || $t('none') }}</option>
-			<template #text><button class="_textButton" @click="listen(sfxChat)" v-if="sfxChat"><fa :icon="faPlay"/> {{ $t('listen') }}</button></template>
+			<template #text><button class="_textButton" @click="listen(sfxChat)" v-if="sfxChat">{{ $t('listen') }}</button></template>
 		</mk-select>
 		<mk-select v-model="sfxChatBg">
 			<template #label>{{ $t('_sfx.chatBg') }}</template>
 			<option v-for="sound in sounds" :value="sound" :key="sound">{{ sound || $t('none') }}</option>
-			<template #text><button class="_textButton" @click="listen(sfxChatBg)" v-if="sfxChatBg"><fa :icon="faPlay"/> {{ $t('listen') }}</button></template>
+			<template #text><button class="_textButton" @click="listen(sfxChatBg)" v-if="sfxChatBg">{{ $t('listen') }}</button></template>
 		</mk-select>
 		<mk-select v-model="sfxAntenna">
 			<template #label>{{ $t('_sfx.antenna') }}</template>
 			<option v-for="sound in sounds" :value="sound" :key="sound">{{ sound || $t('none') }}</option>
-			<template #text><button class="_textButton" @click="listen(sfxAntenna)" v-if="sfxAntenna"><fa :icon="faPlay"/> {{ $t('listen') }}</button></template>
+			<template #text><button class="_textButton" @click="listen(sfxAntenna)" v-if="sfxAntenna">{{ $t('listen') }}</button></template>
 		</mk-select>
 	</div>
 </section>
@@ -45,7 +44,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faImage, faCog, faMusic, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faCog, faPlay, faVolumeUp, faVolumeDown, faVolumeOff } from '@fortawesome/free-solid-svg-icons';
 import MkSelect from '../../components/ui/select.vue';
 import MkRange from '../../components/ui/range.vue';
 import i18n from '../../i18n';
@@ -90,7 +89,7 @@ export default Vue.extend({
 			lang: localStorage.getItem('lang'),
 			fontSize: localStorage.getItem('fontSize'),
 			sounds,
-			faImage, faCog, faMusic, faPlay
+			faImage, faCog, faPlay
 		}
 	},
 
@@ -129,6 +128,10 @@ export default Vue.extend({
 			get() { return this.$store.state.device.sfxAntenna; },
 			set(value) { this.$store.commit('device/set', { key: 'sfxAntenna', value }); }
 		},
+
+		volumeIcon () {
+			return this.sfxVolume > 0.5 ? faVolumeUp : this.sfxVolume > 0 ? faVolumeDown : faVolumeOff;
+		}
 	},
 
 	methods: {

@@ -1,18 +1,13 @@
 <template>
-	<mk-button @click="cacheClear()" primary style="margin: var(--margin) auto;">{{ $t('cacheClear') }}</mk-button>
+	<button class="_panel _buttonPrimary" @click="cacheClear()" style="margin: var(--margin) auto;">{{ $t('cacheClear') }}</button>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import MkButton from '../../components/ui/button.vue';
 import i18n from '../../i18n';
 
 export default Vue.extend({
 	i18n,
-
-	components: {
-		MkButton,
-	},
 
 	methods: {
 		cacheClear() {
