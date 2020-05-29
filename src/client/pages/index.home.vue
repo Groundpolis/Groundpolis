@@ -8,6 +8,7 @@
 				<fa v-if="src === 'local'" :icon="faComments"/>
 				<fa v-if="src === 'social'" :icon="faShareAlt"/>
 				<fa v-if="src === 'global'" :icon="faGlobe"/>
+				<fa v-if="src === 'cat'" :icon="faCat"/>
 				<fa v-if="src === 'list'" :icon="faListUl"/>
 				<fa v-if="src === 'antenna'" :icon="faBroadcastTower"/>
 				<span style="margin-left: 8px;">{{ src === 'list' ? list.name : src === 'antenna' ? antenna.name : $t('_timelines.' + src) }}</span>
@@ -48,7 +49,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faCat } from '@fortawesome/free-solid-svg-icons';
 import { faComments } from '@fortawesome/free-regular-svg-icons';
 import Progress from '../scripts/loading';
 import XTimeline from '../components/timeline.vue';
@@ -86,7 +87,7 @@ export default Vue.extend({
 			queue: 0,
 			width: 0,
 			currentAnnouncementIndex: 0,
-			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck
+			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faCat
 		};
 	},
 
@@ -208,6 +209,10 @@ export default Vue.extend({
 					text: this.$t('_timelines.global'),
 					icon: faGlobe,
 					action: () => { this.setSrc('global') }
+				}, this.meta.disableCatTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
+					text: this.$t('_timelines.cat'),
+					icon: faCat,
+					action: () => { this.setSrc('cat') }
 				}, antennaItems.length > 0 ? null : undefined, ...antennaItems, listItems.length > 0 ? null : undefined, ...listItems],
 				fixed: true,
 				noCenter: true,

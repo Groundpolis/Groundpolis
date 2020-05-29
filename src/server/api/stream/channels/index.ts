@@ -3,6 +3,7 @@ import homeTimeline from './home-timeline';
 import localTimeline from './local-timeline';
 import hybridTimeline from './hybrid-timeline';
 import globalTimeline from './global-timeline';
+import catTimeline from './cat-timeline';
 import serverStats from './server-stats';
 import queueStats from './queue-stats';
 import userList from './user-list';
@@ -21,6 +22,7 @@ export default {
 	localTimeline,
 	hybridTimeline,
 	globalTimeline,
+	catTimeline,
 	serverStats,
 	queueStats,
 	userList,

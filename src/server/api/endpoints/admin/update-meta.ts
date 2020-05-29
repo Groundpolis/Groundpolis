@@ -38,6 +38,13 @@ export const meta = {
 			}
 		},
 
+		disableCatTimeline: {
+			validator: $.optional.nullable.bool,
+			desc: {
+				'ja-JP': 'キャットタイムラインを無効にするか否か'
+			}
+		},
+
 		useStarForReactionFallback: {
 			validator: $.optional.nullable.bool,
 			desc: {
@@ -450,6 +457,10 @@ export default define(meta, async (ps, me) => {
 
 	if (typeof ps.disableGlobalTimeline === 'boolean') {
 		set.disableGlobalTimeline = ps.disableGlobalTimeline;
+	}
+
+	if (typeof ps.disableCatTimeline === 'boolean') {
+		set.disableCatTimeline = ps.disableCatTimeline;
 	}
 
 	if (typeof ps.useStarForReactionFallback === 'boolean') {

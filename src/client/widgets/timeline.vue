@@ -7,6 +7,7 @@
 				<fa v-if="props.src === 'local'" :icon="faComments"/>
 				<fa v-if="props.src === 'social'" :icon="faShareAlt"/>
 				<fa v-if="props.src === 'global'" :icon="faGlobe"/>
+				<fa v-if="props.src === 'cat'" :icon="faCat"/>
 				<fa v-if="props.src === 'list'" :icon="faListUl"/>
 				<fa v-if="props.src === 'antenna'" :icon="faSatellite"/>
 				<span style="margin-left: 8px;">{{ props.src === 'list' ? props.list.name : props.src === 'antenna' ? props.antenna.name : $t('_timelines.' + props.src) }}</span>
@@ -22,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faCat } from '@fortawesome/free-solid-svg-icons';
 import { faComments } from '@fortawesome/free-regular-svg-icons';
 import MkContainer from '../components/ui/container.vue';
 import XTimeline from '../components/timeline.vue';
@@ -51,7 +52,7 @@ export default define({
 	data() {
 		return {
 			menuOpened: false,
-			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faSatellite
+			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faSatellite, faCat
 		};
 	},
 
@@ -62,7 +63,11 @@ export default define({
 
 		previewHeight(): number {
 			return previewHeights[this.props.basisStep] || 200
-		}
+		},
+
+		meta() {
+			return this.$store.state.instance.meta;
+		},
 	},
 
 	methods: {
@@ -78,6 +83,7 @@ export default define({
 		},
 
 		async choose(ev) {
+			if (this.meta == null) return;
 			this.menuOpened = true;
 			const [antennas, lists] = await Promise.all([
 				this.$root.api('antennas/list'),
@@ -104,19 +110,24 @@ export default define({
 					text: this.$t('_timelines.home'),
 					icon: faHome,
 					action: () => { this.setSrc('home') }
-				}, {
+				}, this.meta.disableLocalTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
 					text: this.$t('_timelines.local'),
 					icon: faComments,
 					action: () => { this.setSrc('local') }
-				}, {
+				}, this.meta.disableLocalTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
 					text: this.$t('_timelines.social'),
 					icon: faShareAlt,
 					action: () => { this.setSrc('social') }
-				}, {
+				}, this.meta.disableGlobalTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
 					text: this.$t('_timelines.global'),
 					icon: faGlobe,
 					action: () => { this.setSrc('global') }
+				}, this.meta.disableCatTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
+					text: this.$t('_timelines.cat'),
+					icon: faCat,
+					action: () => { this.setSrc('cat') }
 				}, antennaItems.length > 0 ? null : undefined, ...antennaItems, listItems.length > 0 ? null : undefined, ...listItems],
+				fixed: true,
 				noCenter: true,
 				source: ev.currentTarget || ev.target
 			}).then(() => {

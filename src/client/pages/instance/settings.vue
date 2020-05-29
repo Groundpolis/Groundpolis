@@ -26,6 +26,7 @@
 		<div class="_content">
 			<mk-switch v-model="enableLocalTimeline" @change="save()">{{ $t('enableLocalTimeline') }}</mk-switch>
 			<mk-switch v-model="enableGlobalTimeline" @change="save()">{{ $t('enableGlobalTimeline') }}</mk-switch>
+			<mk-switch v-model="enableCatTimeline" @change="save()">{{ $t('enableCatTimeline') }}</mk-switch>
 			<mk-info>{{ $t('disablingTimelinesInfo') }}</mk-info>
 		</div>
 	</section>
@@ -253,6 +254,7 @@ export default Vue.extend({
 			enableRegistration: false,
 			enableLocalTimeline: false,
 			enableGlobalTimeline: false,
+			enableCatTimeline: false,
 			enableHcaptcha: false,
 			hcaptchaSiteKey: null,
 			hcaptchaSecretKey: null,
@@ -428,6 +430,7 @@ export default Vue.extend({
 				disableRegistration: !this.enableRegistration,
 				disableLocalTimeline: !this.enableLocalTimeline,
 				disableGlobalTimeline: !this.enableGlobalTimeline,
+				disableCatTimeline: !this.enableCatTimeline,
 				enableHcaptcha: this.enableHcaptcha,
 				hcaptchaSiteKey: this.hcaptchaSiteKey,
 				hcaptchaSecretKey: this.hcaptchaSecretKey,

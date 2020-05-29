@@ -105,6 +105,10 @@ export default Vue.extend({
 			endpoint = 'notes/global-timeline';
 			this.connection = this.$root.stream.useSharedConnection('globalTimeline');
 			this.connection.on('note', prepend);
+		} else if (this.src == 'cat') {
+			endpoint = 'notes/cat-timeline';
+			this.connection = this.$root.stream.useSharedConnection('catTimeline');
+			this.connection.on('note', prepend);
 		} else if (this.src == 'list') {
 			endpoint = 'notes/user-list-timeline';
 			this.query = {

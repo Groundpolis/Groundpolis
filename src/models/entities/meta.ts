@@ -54,6 +54,11 @@ export class Meta {
 	@Column('boolean', {
 		default: false,
 	})
+	public disableCatTimeline: boolean;
+
+	@Column('boolean', {
+		default: false,
+	})
 	public useStarForReactionFallback: boolean;
 
 	@Column('varchar', {
