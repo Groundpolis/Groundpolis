@@ -156,8 +156,18 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 		data.localOnly = true;
 	}
 
+	// リモートフォロワー限定をRenoteしたらローカルのみにする
+	if (data.renote && data.renote.remoteFollowersOnly) {
+		data.localOnly = true;
+	}
+
 	// ローカルのみにリプライしたらローカルのみにする
 	if (data.reply && data.reply.localOnly) {
+		data.localOnly = true;
+	}
+
+	// リモートフォロワー限定にリプライしたらローカルのみにする
+	if (data.reply && data.reply.remoteFollowersOnly) {
 		data.localOnly = true;
 	}
 
