@@ -1,5 +1,5 @@
 <template>
-<x-popup :source="source" ref="popup" @closed="() => { $emit('closed'); destroyDom(); }">
+<x-popup :source="source" ref="popup" @closed="() => { $emit('closed'); choose(v); destroyDom(); }">
 	<div class="gqyayizv">
 		<button class="_button" @click="choose('public')" :class="{ active: v == 'public' }" data-index="1" key="public">
 			<div><fa :icon="faGlobe"/></div>
@@ -15,25 +15,39 @@
 				<span>{{ $t('_visibility.homeDescription') }}</span>
 			</div>
 		</button>
-		<button class="_button" @click="choose('followers')" :class="{ active: v == 'followers' }" data-index="3" key="followers">
+		<button v-if="!remoteFollowersOnly" class="_button" @click="choose('followers')" :class="{ active: v == 'followers' }" data-index="3" key="followers">
 			<div><fa :icon="faUnlock"/></div>
 			<div>
 				<span>{{ $t('_visibility.followers') }}</span>
 				<span>{{ $t('_visibility.followersDescription') }}</span>
 			</div>
 		</button>
-		<button class="_button" @click="choose('specified')" :class="{ active: v == 'specified' }" data-index="4" key="specified">
+		<button v-if="!localOnly && !remoteFollowersOnly" class="_button" @click="choose('specified')" :class="{ active: v == 'specified' }" data-index="4" key="specified">
 			<div><fa :icon="faEnvelope"/></div>
 			<div>
 				<span>{{ $t('_visibility.specified') }}</span>
 				<span>{{ $t('_visibility.specifiedDescription') }}</span>
 			</div>
 		</button>
-		<button class="_button" @click="choose('users')" :class="{ active: v == 'users' }" data-index="5" key="users">
+		<button v-if="!localOnly && !remoteFollowersOnly" class="_button" @click="choose('users')" :class="{ active: v == 'users' }" data-index="5" key="users">
 			<div><fa :icon="faUsers"/></div>
 			<div>
 				<span>{{ $t('_visibility.users') }}</span>
 				<span>{{ $t('_visibility.usersDescription') }}</span>
+			</div>
+		</button>
+		<button class="_button" @click="localOnly = !localOnly" :class="{ active: localOnly }" data-index="6" key="localOnly">
+			<div><fa :icon="faHeart"/></div>
+			<div>
+				<span>{{ $t('_visibility.localOnly') }}</span>
+				<span>{{ $t('_visibility.localOnlyDescription') }}</span>
+			</div>
+		</button>
+		<button class="_button" @click="remoteFollowersOnly = !remoteFollowersOnly" :class="{ active: remoteFollowersOnly }" data-index="6" key="remoteFollowersOnly">
+			<div><fa :icon="faHeartbeat"/></div>
+			<div>
+				<span>{{ $t('_visibility.remoteFollowersOnly') }}</span>
+				<span>{{ $t('_visibility.remoteFollowersOnlyDescription') }}</span>
 			</div>
 		</button>
 	</div>
@@ -42,7 +56,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faGlobe, faUnlock, faHome, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faGlobe, faUnlock, faHome, faUsers, faHeart, faHeartbeat } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import i18n from '../i18n';
 import XPopup from './popup.vue';
@@ -59,12 +73,37 @@ export default Vue.extend({
 		currentVisibility: {
 			type: String,
 			required: false
-		}
+		},
+		initialLocalOnly: {
+			type: Boolean,
+			required: false
+		},
+		initialRemoteFollowersOnly: {
+			type: Boolean,
+			required: false
+		},
 	},
 	data() {
 		return {
 			v: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.visibility : (this.currentVisibility || this.$store.state.settings.defaultNoteVisibility),
-			faGlobe, faUnlock, faEnvelope, faHome, faUsers
+			localOnly: this.initialLocalOnly || false,
+			remoteFollowersOnly: this.initialRemoteFollowersOnly || false,
+			faGlobe, faUnlock, faEnvelope, faHome, faUsers, faHeart, faHeartbeat
+		}
+	},
+	watch: {
+		localOnly() {
+			if (this.localOnly && this.remoteFollowersOnly) {
+				this.remoteFollowersOnly = false;
+			}
+			if (this.localOnly && ['specified', 'users'].includes(this.v)) this.v = 'followers';
+
+		},
+		remoteFollowersOnly() {
+			if (this.localOnly && this.remoteFollowersOnly) {
+				this.localOnly = false;
+			}
+			if (this.remoteFollowersOnly && ['followers', 'specified', 'users'].includes(this.v)) this.v = 'home';
 		}
 	},
 	methods: {
@@ -72,7 +111,7 @@ export default Vue.extend({
 			if (this.$store.state.settings.rememberNoteVisibility) {
 				this.$store.commit('deviceUser/setVisibility', visibility);
 			}
-			this.$emit('chosen', visibility);
+			this.$emit('chosen', { visibility, localOnly: this.localOnly, remoteFollowersOnly: this.remoteFollowersOnly} );
 			this.destroyDom();
 		},
 	}

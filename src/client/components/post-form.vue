@@ -16,8 +16,6 @@
 				<span v-if="visibility === 'specified'"><fa :icon="faEnvelope"/></span>
 				<span v-if="visibility === 'users'"><fa :icon="faUsers"/></span>
 			</button>
-			<button class="_button localOnly" v-if="!['specified', 'users'].includes(visibility)" @click="localOnly = !localOnly" :class="{ active: localOnly }"><fa :icon="faHeart"/></button>
-			<button class="_button remoteFollowersOnly" v-if="!['specified', 'followers', 'users'].includes(visibility)" @click="remoteFollowersOnly = !remoteFollowersOnly" :class="{ active: remoteFollowersOnly }"><fa :icon="faSatelliteDish"/></button>
 			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">{{ submitText }}<fa :icon="reply ? faReply : renote ? faQuoteRight : faPaperPlane"/></button>
 		</div>
 	</header>
@@ -434,10 +432,14 @@ export default Vue.extend({
 		setVisibility() {
 			const w = this.$root.new(MkVisibilityChooser, {
 				source: this.$refs.visibilityButton,
-				currentVisibility: this.visibility
+				currentVisibility: this.visibility,
+				initialLocalOnly: this.localOnly,
+				initialRemoteFollowersOnly: this.remoteFollowersOnly,
 			});
-			w.$once('chosen', v => {
-				this.applyVisibility(v);
+			w.$once('chosen', ({ visibility, localOnly, remoteFollowersOnly }) => {
+				this.applyVisibility(visibility);
+				this.localOnly = localOnly;
+				this.remoteFollowersOnly = remoteFollowersOnly;
 			});
 		},
 

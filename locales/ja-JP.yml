@@ -531,7 +531,7 @@ sort: "ソート"
 ascendingOrder: "昇順"
 descendingOrder: "降順"
 scratchpad: "スクラッチパッド"
-scratchpadDescription: "スクラッチパッドは、AiScriptの実験環境を提供します。Misskeyと対話するコードの記述、実行、結果の確認ができます。"
+scratchpadDescription: "スクラッチパッドは、AiScriptの実験環境を提供します。Groundpolis と対話するコードの記述、実行、結果の確認ができます。"
 output: "出力"
 script: "スクリプト"
 disablePagesScript: "Pagesのスクリプトを無効にする"
@@ -639,7 +639,7 @@ _gender:
   not-applicable: "その他"
 
 _tutorial:
-  title: "Misskeyの使い方"
+  title: "Groundpolisの使い方"
   step1_1: "ようこそ。"
   step1_2: "この画面は「タイムライン」と呼ばれ、あなたや、あなたが「フォロー」する人の「ノート」が時系列で表示されます。"
   step1_3: "あなたはまだ何もノートを投稿しておらず、誰もフォローしていないので、タイムラインには何も表示されていないはずです。"
@@ -648,7 +648,7 @@ _tutorial:
   step3_1: "プロフィール設定はうまくできましたか？"
   step3_2: "では試しに、何かノートを投稿してみてください。画面上にある鉛筆マークのボタンを押すとフォームが開きます。"
   step3_3: "内容を書いたら、フォーム右上のボタンを押すと投稿できます。"
-  step3_4: "内容が思いつかない？「Misskey始めました」というのはいかがでしょう。"
+  step3_4: "内容が思いつかない？「Groundpolis始めました」というのはいかがでしょう。"
   step4_1: "投稿できましたか？"
   step4_2: "あなたのノートがタイムラインに表示されていれば成功です。"
   step5_1: "次は、他の人をフォローしてタイムラインを賑やかにしたいところです。"
@@ -658,9 +658,9 @@ _tutorial:
   step6_1: "タイムラインに他のユーザーのノートが表示されていれば成功です。"
   step6_2: "他の人のノートには、「リアクション」を付けることができ、簡単にあなたの反応を伝えられます。"
   step6_3: "リアクションを付けるには、ノートの「+」マークをクリックして、好きなリアクションを選択します。"
-  step7_1: "これで、Misskeyの基本的な使い方の説明は終わりました。お疲れ様でした。"
-  step7_2: "もっとMisskeyについて知りたいときは、{help}を見てみてください。"
-  step7_3: "では、Misskeyをお楽しみください🚀"
+  step7_1: "これで、Groundpolisの基本的な使い方の説明は終わりました。お疲れ様でした。"
+  step7_2: "もっとGroundpolisについて知りたいときは、{help}を見てみてください。"
+  step7_3: "では、Groundpolisをお楽しみください🚀"
 
 _2fa:
   alreadyRegistered: "既に設定は完了しています。"
@@ -812,7 +812,10 @@ _visibility:
   specifiedDescription: "指定したユーザーのみに公開"
   users: "ログインユーザー"
   usersDescription: "ログイン中のユーザーにのみ公開"
-  localOnly: "ローカルのみ"
+  localOnly: "ローカル限定"
+  localOnlyDescription: "リモートユーザーには非公開"
+  remoteFollowersOnly: "リモートフォロワーとローカル"
+  remoteFollowersOnlyDescription: "リモートでの二次拡散を防ぐ"
 
 _postForm:
   replyPlaceholder: "このノートに返信..."
