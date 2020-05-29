@@ -1,3 +1,0 @@
-# Groundpolisについて
-
-Groundpolisはマイクロブログサービスです。
