@@ -19,6 +19,11 @@
 			{{ $t('useOsNativeEmojis') }}
 			<template #desc><mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
 		</mk-switch>
+		<mk-select v-model="noteNameDisplayMode">
+			<template #label>{{ $t('noteNameDisplayMode') }}</template>
+
+			<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $t(x) }}</option>
+		</mk-select>
 		<mk-switch v-model="compactMode">{{ $t('compactMode') }}</mk-switch>
 		<x-note :note="previewNote" :preview="true" />
 	</div>
@@ -277,6 +282,11 @@ export default Vue.extend({
 		hideTimelineColumn: {
 			get() { return this.$store.state.deviceUser.hideTimelineColumn },
 			set(value) { this.$store.commit('deviceUser/set', { key: 'hideTimelineColumn', value }); }
+		},
+
+		noteNameDisplayMode: {
+			get() { return this.$store.state.device.noteNameDisplayMode },
+			set(value) { this.$store.commit('device/set', { key: 'noteNameDisplayMode', value }) }
 		},
 
 		previewNote () {

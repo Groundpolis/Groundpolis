@@ -105,6 +105,7 @@ export const defaultDeviceSettings = {
 	eraserWidth: 32,
 	usePressure: false,
 	collapseNav: false,
+	noteNameDisplayMode: 0,
 };
 
 function copy<T>(data: T): T {

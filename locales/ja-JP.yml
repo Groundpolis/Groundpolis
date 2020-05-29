@@ -576,6 +576,11 @@ experimentalFeatures: "実験的機能"
 experimentalFeaturesDescription: "これらの項目は実験的で、予告なく削除される可能性があります。また、正しく動作する保証はありません。"
 hideTimelineColumn: "タイムラインカラムを非表示にする"
 collapse: "たたむ"
+noteNameDisplayMode: 'ユーザー名の表示モード'
+displayNameAndUserName: '表示名 @ユーザー名'
+userNameAndDisplayName: '@ユーザー名 表示名'
+displayNameOnly: '表示名'
+userNameOnly: '@ユーザー名'
 
 _paint:
   tools:

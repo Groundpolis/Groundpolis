@@ -542,6 +542,11 @@ relays: "Relays"
 addRelay: "Add Relay"
 inboxUrl: "Inbox URL"
 addedRelays: "Added Relays"
+paint: 'Paint'
+usePressure: 'Pressure Sensitivity'
+usePressureDescription: 'When pressure sensing is enabled, the thickness of the pen changes according to the pressure of the brush when using a compatible device, such as the Apple Pencil.'
+penWidth: 'Pen Width'
+eraserWidth: 'Eraser Width'
 leaveConfirm: "There are unsaved changes. Do you really want to leave?"
 failedToLoadImage: "Failed to load image file"
 theFileIsNotImage: "The specified file is not an image"
@@ -551,6 +556,11 @@ experimentalFeatures: "Experimental Features"
 experimentalFeaturesDescription: "These items are experimental and are subject to removal without notice. Also, there is no guarantee that it will work properly."
 hideTimelineColumn: "Hide timeline columns"
 collapse: "Collapse"
+noteNameDisplayMode: 'Username Display Mode'
+displayNameAndUserName: 'Display Name @Username'
+userNameAndDisplayName: '@Username Display Name'
+displayNameOnly: 'Display Name'
+userNameOnly: '@Username'
 _theme:
   explore: "Explore Themes"
   install: "Install theme"

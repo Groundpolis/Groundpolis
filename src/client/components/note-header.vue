@@ -1,10 +1,16 @@
 <template>
 <header class="kkwtjztg">
-	<router-link class="name" :to="note.user | userPage" v-user-preview="note.user.id">
-		<mk-user-name :user="note.user"/>
+	<router-link class="name-set" :to="note.user | userPage" v-user-preview="note.user.id">
+		<template v-if="$store.state.device.noteNameDisplayMode === 0">
+			<mk-user-name class="name" :user="note.user"/>
+			<span class="username"><mk-acct :user="note.user"/></span>
+		</template>
+		<template v-else>
+			<span v-if="$store.state.device.noteNameDisplayMode !== 2" class="username"><mk-acct :user="note.user"/></span>
+			<mk-user-name v-if="$store.state.device.noteNameDisplayMode !== 3" class="name" :user="note.user"/>
+		</template>
 	</router-link>
 	<span class="is-bot" v-if="note.user.isBot">bot</span>
-	<span class="username"><mk-acct :user="note.user"/></span>
 	<span class="admin" v-if="note.user.isAdmin"><fa :icon="faBookmark"/></span>
 	<span class="moderator" v-if="!note.user.isAdmin && note.user.isModerator"><fa :icon="farBookmark"/></span>
 	<span class="verified" v-if="note.user.isVerified">
@@ -57,19 +63,27 @@ export default Vue.extend({
 	align-items: baseline;
 	white-space: nowrap;
 
-	> .name {
-		display: block;
-		margin: 0 .5em 0 0;
-		padding: 0;
-		overflow: hidden;
-		color: var(--noteHeaderName);
-		font-size: 1em;
-		font-weight: bold;
-		text-decoration: none;
-		text-overflow: ellipsis;
+	.name-set {
+			display: block;
+		> .name {
+			margin: 0 .5em 0 0;
+			padding: 0;
+			overflow: hidden;
+			color: var(--noteHeaderName);
+			font-size: 1em;
+			font-weight: bold;
+			text-decoration: none;
+			text-overflow: ellipsis;
 
-		&:hover {
-			text-decoration: underline;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+
+		> .username {
+			margin: 0 .5em 0 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
 
@@ -87,12 +101,6 @@ export default Vue.extend({
 	> .moderator {
 		margin-right: 0.5em;
 		color: var(--badge);
-	}
-
-	> .username {
-		margin: 0 .5em 0 0;
-		overflow: hidden;
-		text-overflow: ellipsis;
 	}
 
 	> .info {
