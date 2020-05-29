@@ -35,7 +35,7 @@
 				<fa v-if="note.visibility === 'users'" :icon="faUsers"/>
 				<fa v-if="note.localOnly" :icon="faHeart"/>
 			</span>
-			<span class="localOnly" v-if="note.localOnly"><fa :icon="faBiohazard"/></span>
+			<span class="localOnly" v-if="note.localOnly"><fa :icon="faHeart"/></span>
 		</div>
 	</div>
 	<article class="article">
@@ -109,7 +109,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faBolt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteRight, faInfoCircle, faHeart, faEllipsisH, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteRight, faInfoCircle, faHeart, faEllipsisH, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
@@ -174,7 +174,7 @@ export default Vue.extend({
 			hideThisNote: false,
 			noteBody: this.$refs.noteBody,
 			isHovered: false,
-			faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faEllipsisH
+			faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart
 		};
 	},
 

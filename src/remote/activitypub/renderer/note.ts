@@ -19,6 +19,11 @@ export default async function renderNote(note: Note, dive = true, isTalk = false
 		return ids.map(id => items.find(item => item.id === id)).filter(item => item != null) as DriveFile[];
 	};
 
+	note = { ...note };
+	if (note.remoteFollowersOnly) {
+		note.visibility = 'followers';
+	}
+
 	let inReplyTo;
 	let inReplyToNote: Note | undefined;
 
@@ -69,7 +74,7 @@ export default async function renderNote(note: Note, dive = true, isTalk = false
 	} else if (note.visibility === 'home') {
 		to = [`${attributedTo}/followers`];
 		cc = ['https://www.w3.org/ns/activitystreams#Public'].concat(mentions);
-	} else if (note.visibility === 'followers' || note.remoteFollowersOnly) {
+	} else if (note.visibility === 'followers') {
 		to = [`${attributedTo}/followers`];
 		cc = mentions;
 	} else {

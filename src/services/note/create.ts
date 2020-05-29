@@ -115,6 +115,7 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 	if (data.visibility == null) data.visibility = 'public';
 	if (data.viaMobile == null) data.viaMobile = false;
 	if (data.localOnly == null) data.localOnly = false;
+	if (data.remoteFollowersOnly == null) data.remoteFollowersOnly = false;
 
 	// サイレンス
 	if (user.isSilenced && data.visibility === 'public') {
@@ -150,6 +151,11 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 	if (data.reply && data.reply.visibility !== 'public' && data.visibility === 'public') {
 		data.visibility = 'home';
 	}
+
+	if (data.renote)
+		console.log(data.renote.remoteFollowersOnly);
+	else
+		console.log('data.renote is null');
 
 	// ローカルのみをRenoteしたらローカルのみにする
 	if (data.renote && data.renote.localOnly) {
