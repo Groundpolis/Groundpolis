@@ -583,6 +583,7 @@ displayNameAndUserName: '表示名 @ユーザー名'
 userNameAndDisplayName: '@ユーザー名 表示名'
 displayNameOnly: '表示名'
 userNameOnly: '@ユーザー名'
+thisInformationIsNotAvailable: "この情報は利用できません"
 
 _paint:
   tools:

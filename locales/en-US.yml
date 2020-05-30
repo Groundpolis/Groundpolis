@@ -563,6 +563,7 @@ displayNameAndUserName: 'Display Name @Username'
 userNameAndDisplayName: '@Username Display Name'
 displayNameOnly: 'Display Name'
 userNameOnly: '@Username'
+thisInformationIsNotAvailable: "This information is not available"
 _theme:
   explore: "Explore Themes"
   install: "Install theme"
