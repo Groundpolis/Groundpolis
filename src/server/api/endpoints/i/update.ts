@@ -91,6 +91,13 @@ export const meta = {
 			}
 		},
 
+		hideFF: {
+			validator: $.optional.bool,
+			desc: {
+				'ja-JP': 'フォロー・フォロワーを隠すかどうか'
+			}
+		},
+
 		carefulBot: {
 			validator: $.optional.bool,
 			desc: {
@@ -202,6 +209,7 @@ export default define(meta, async (ps, user, token) => {
 	if (ps.bannerId !== undefined) updates.bannerId = ps.bannerId;
 	if (ps.sex !== undefined) updates.sex = ps.sex as any;
 	if (typeof ps.isLocked === 'boolean') updates.isLocked = ps.isLocked;
+	if (typeof ps.hideFF === 'boolean') updates.hideFF = ps.hideFF;
 	if (typeof ps.isBot === 'boolean') updates.isBot = ps.isBot;
 	if (typeof ps.carefulBot === 'boolean') profileUpdates.carefulBot = ps.carefulBot;
 	if (typeof ps.autoAcceptFollowed === 'boolean') profileUpdates.autoAcceptFollowed = ps.autoAcceptFollowed;

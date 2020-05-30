@@ -135,6 +135,12 @@ export class User {
 
 	@Column('boolean', {
 		default: false,
+		comment: 'Whether the User hides following and followers.'
+	})
+	public hideFF: boolean;
+
+	@Column('boolean', {
+		default: false,
 		comment: 'Whether the User is a bot.'
 	})
 	public isBot: boolean;

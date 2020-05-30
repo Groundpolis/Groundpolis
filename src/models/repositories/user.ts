@@ -201,6 +201,7 @@ export class UserRepository extends Repository<User> {
 				bannerUrl: user.bannerUrl,
 				bannerColor: user.bannerColor,
 				isLocked: user.isLocked,
+				hideFF: user.hideFF,
 				isModerator: user.isModerator || falsy,
 				isSilenced: user.isSilenced || falsy,
 				isSuspended: user.isSuspended || falsy,
@@ -440,6 +441,10 @@ export const packedUserSchema = {
 			nullable: false as const, optional: true as const,
 		},
 		isLocked: {
+			type: 'boolean' as const,
+			nullable: false as const, optional: true as const,
+		},
+		hideFF: {
 			type: 'boolean' as const,
 			nullable: false as const, optional: true as const,
 		},

@@ -62,6 +62,11 @@ export const meta = {
 			message: 'No such user.',
 			code: 'NO_SUCH_USER',
 			id: '63e4aba4-4156-4e53-be25-c9559e42d71b'
+		},
+		hiddenByUser: {
+			message: 'It has hidden by the user.',
+			code: 'HIDDEN_BY_USER',
+			id: 'f2a48140-a21d-11ea-8776-cd118a6d2bab'
 		}
 	}
 };
@@ -73,6 +78,11 @@ export default define(meta, async (ps, me) => {
 
 	if (user == null) {
 		throw new ApiError(meta.errors.noSuchUser);
+	}
+
+	// 他人かつ FF 非公開であればエラー
+	if (user.id !== me.id && user.hideFF) {
+		throw new ApiError(meta.errors.hiddenByUser);
 	}
 
 	const query = makePaginationQuery(Followings.createQueryBuilder('following'), ps.sinceId, ps.untilId)

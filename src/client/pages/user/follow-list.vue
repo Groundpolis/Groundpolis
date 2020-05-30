@@ -1,6 +1,13 @@
 <template>
-<mk-pagination :pagination="pagination" #default="{items}" class="mk-following-or-followers" ref="list">
-	<div class="user _panel" v-for="(user, i) in items.map(x => type === 'following' ? x.followee : x.follower)" :key="user.id">
+<div v-if="hideFF === null" />
+
+<section v-else-if="hideFF" class="_card">
+	<div class="_content">
+		{{ $t('thisInformationIsNotAvailable') }}
+	</div>
+</section>
+<mk-pagination v-else :pagination="pagination" #default="{items}" class="mk-following-or-followers" ref="list">
+	<div class="user _panel" v-for="user in items.map(x => type === 'following' ? x.followee : x.follower)" :key="user.id">
 		<mk-avatar class="avatar" :user="user"/>
 		<div class="body">
 			<div class="name">
@@ -47,6 +54,7 @@ export default Vue.extend({
 					...parseAcct(this.$route.params.user),
 				}
 			},
+			hideFF: null as boolean | null
 		};
 	},
 
@@ -58,6 +66,18 @@ export default Vue.extend({
 		'$route'() {
 			this.$refs.list.reload();
 		}
+	},
+
+	async mounted() {
+		const parsed = parseAcct(this.$route.params.user);
+		const i = this.$store.state.i;
+		if (i.username === parsed.username && i.host === parsed.host) {
+			// 自分自身であれば隠さない
+			this.hideFF = false;
+			return;
+		}
+		const u = await this.$root.api('users/show', parsed);
+		this.hideFF = u.hideFF;
 	}
 });
 </script>

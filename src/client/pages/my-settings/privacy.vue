@@ -3,6 +3,7 @@
 	<div class="_title"><fa :icon="faLock"/> {{ $t('privacy') }}</div>
 	<div class="_content">
 		<mk-switch v-model="isLocked" @change="save()">{{ $t('makeFollowManuallyApprove') }}</mk-switch>
+		<mk-switch v-model="hideFF" @change="save()">{{ $t('hideFF') }}</mk-switch>
 		<mk-switch v-model="autoAcceptFollowed" v-if="isLocked" @change="save()">{{ $t('autoAcceptFollowed') }}</mk-switch>
 	</div>
 	<div class="_content">
@@ -38,6 +39,7 @@ export default Vue.extend({
 		return {
 			isLocked: false,
 			autoAcceptFollowed: false,
+			hideFF: false,
 			faLock
 		}
 	},
@@ -61,6 +63,7 @@ export default Vue.extend({
 
 	created() {
 		this.isLocked = this.$store.state.i.isLocked;
+		this.hideFF = this.$store.state.i.hideFF;
 		this.autoAcceptFollowed = this.$store.state.i.autoAcceptFollowed;
 	},
 
@@ -68,6 +71,7 @@ export default Vue.extend({
 		save() {
 			this.$root.api('i/update', {
 				isLocked: !!this.isLocked,
+				hideFF: !!this.hideFF,
 				autoAcceptFollowed: !!this.autoAcceptFollowed,
 			});
 		}
