@@ -15,21 +15,21 @@
 				<span>{{ $t('_visibility.homeDescription') }}</span>
 			</div>
 		</button>
-		<button v-if="!remoteFollowersOnly" class="_button" @click="choose('followers')" :class="{ active: v == 'followers' }" data-index="3" key="followers">
+		<button :disabled="remoteFollowersOnly" class="_button" @click="choose('followers')" :class="{ active: v == 'followers' }" data-index="3" key="followers">
 			<div><fa :icon="faUnlock"/></div>
 			<div>
 				<span>{{ $t('_visibility.followers') }}</span>
 				<span>{{ $t('_visibility.followersDescription') }}</span>
 			</div>
 		</button>
-		<button v-if="!localOnly && !remoteFollowersOnly" class="_button" @click="choose('specified')" :class="{ active: v == 'specified' }" data-index="4" key="specified">
+		<button :disabled="localOnly || remoteFollowersOnly" class="_button" @click="choose('specified')" :class="{ active: v == 'specified' }" data-index="4" key="specified">
 			<div><fa :icon="faEnvelope"/></div>
 			<div>
 				<span>{{ $t('_visibility.specified') }}</span>
 				<span>{{ $t('_visibility.specifiedDescription') }}</span>
 			</div>
 		</button>
-		<button v-if="!localOnly && !remoteFollowersOnly" class="_button" @click="choose('users')" :class="{ active: v == 'users' }" data-index="5" key="users">
+		<button :disabled="localOnly || remoteFollowersOnly" class="_button" @click="choose('users')" :class="{ active: v == 'users' }" data-index="5" key="users">
 			<div><fa :icon="faUsers"/></div>
 			<div>
 				<span>{{ $t('_visibility.users') }}</span>
@@ -96,14 +96,14 @@ export default Vue.extend({
 			if (this.localOnly && this.remoteFollowersOnly) {
 				this.remoteFollowersOnly = false;
 			}
-			if (this.localOnly && ['specified', 'users'].includes(this.v)) this.v = 'followers';
+			if (this.localOnly && ['specified', 'users'].includes(this.v)) this.v = this.v === 'users' ? 'public' : 'followers';
 
 		},
 		remoteFollowersOnly() {
 			if (this.localOnly && this.remoteFollowersOnly) {
 				this.localOnly = false;
 			}
-			if (this.remoteFollowersOnly && ['followers', 'specified', 'users'].includes(this.v)) this.v = 'home';
+			if (this.remoteFollowersOnly && ['followers', 'specified', 'users'].includes(this.v)) this.v = this.v === 'users' ? 'public' : 'home';
 		}
 	},
 	methods: {
