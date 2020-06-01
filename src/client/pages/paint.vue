@@ -90,6 +90,7 @@ import MkSwitch from '../components/ui/switch.vue';
 import MkRange from '../components/ui/range.vue';
 import { selectDriveFile } from '../scripts/select-drive-file';
 import { apiUrl } from '../config';
+import { selectFile } from '../scripts/select-file';
 
 
 export type ToolType = 'hand'| 'pen' | 'eraser' | 'line' | 'rect' | 'circle' | 'rectFill' | 'circleFill';
@@ -262,7 +263,7 @@ export default Vue.extend({
 			this.ctx.strokeStyle = this.currentColor;
 			this.changed = false;
 		},
-		async open() {
+		async open(e) {
 			if (this.changed) {
 				const { canceled } = await this.$root.dialog({
 					type: 'warning',
@@ -271,7 +272,7 @@ export default Vue.extend({
 				});
 				if (canceled) return;
 			}
-			const file = await selectDriveFile(this.$root, false);
+			const file = await selectFile(this, e.currentTarget || e.target, this.$t('selectFile'), false);
 			const img = new Image();
 			if (file.type.startsWith('image')) {
 				img.src = file.url;
