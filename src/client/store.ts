@@ -26,6 +26,8 @@ export const defaultSettings = {
 	hybridNoteVisibility: 'default',
 	globalNoteVisibility: 'default',
 	mutedWords: [],
+	stealRule: 1,
+	stealReaction: '⭐️'
 };
 
 export const defaultDeviceUserSettings = {
@@ -101,6 +103,7 @@ export const defaultDeviceSettings = {
 	showUnblockConfirm: true,
 	showMuteConfirm: true,
 	showUnMuteConfirm: true,
+	showStealConfirm: true,
 	userData: {},
 	penWidth: 4,
 	eraserWidth: 32,

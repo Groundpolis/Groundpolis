@@ -111,7 +111,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faInfoCircle, faHeart, faEllipsisH, faUsers, faHeartbeat } from '@fortawesome/free-solid-svg-icons';
-import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
 import i18n from '../i18n';
@@ -632,6 +632,16 @@ export default Vue.extend({
 					}]
 					: []
 				),
+				// 自分でない、パブリック, ホーム なノート 
+				...(!this.isMyNote && ['public', 'home'].includes(this.appearNote.visibility) ? [
+					null,
+					{
+						icon: faMehRollingEyes,
+						text: this.$t('steal'),
+						action: this.steal
+					}]
+					: []
+				),
 				...(this.appearNote.userId == this.$store.state.i.id || this.$store.state.i.isModerator || this.$store.state.i.isAdmin ? [
 					null,
 					this.appearNote.userId == this.$store.state.i.id ? {
@@ -758,6 +768,30 @@ export default Vue.extend({
 					text: e
 				});
 			});
+		},
+
+		async steal() {
+			if (!this.appearNote.text) return;
+
+			const canceled = this.$store.state.device.showStealConfirm && (await this.$root.dialog({
+				type: 'question',
+				text: this.$t('stealConfirm'),
+				showCancelButton: true
+			})).canceled;
+			if (canceled) return;
+
+			const rule = this.$store.state.settings.stealRule;
+
+			if (rule === 1) {
+				this.reactDirectly(this.$store.state.settings.stealReaction);
+			}
+			if (rule === 2) {
+				this.renoteDirectly();
+				await new Promise((res) => setTimeout(res, 1000));
+			}
+			const u = this.appearNote.uri || this.appearNote.url || `${url}/notes/${this.appearNote.id}`;
+			const text = this.appearNote.text + (rule === 3 ? '\n\n' + u : '');
+			this.$root.createNoteInstantly(text);
 		},
 
 		focus() {

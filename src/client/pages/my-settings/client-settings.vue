@@ -41,6 +41,7 @@
 		<mk-switch v-model="showUnblockConfirm">{{ $t('unblock') }}</mk-switch>
 		<mk-switch v-model="showMuteConfirm">{{ $t('mute') }}</mk-switch>
 		<mk-switch v-model="showUnMuteConfirm">{{ $t('unmute') }}</mk-switch>
+		<mk-switch v-model="showStealConfirm">{{ $t('steal') }}</mk-switch>
 	</div>
 
 	<div class="_content">
@@ -272,6 +273,11 @@ export default Vue.extend({
 		showUnMuteConfirm: {
 			get() { return this.$store.state.device.showUnMuteConfirm },
 			set(value) { this.$store.commit('device/set', { key: 'showUnMuteConfirm', value }); }
+		},
+
+		showStealConfirm: {
+			get() { return this.$store.state.device.showStealConfirm },
+			set(value) { this.$store.commit('device/set', { key: 'showStealConfirm', value }); }
 		},
 
 		compactMode: {

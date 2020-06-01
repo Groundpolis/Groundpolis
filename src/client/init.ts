@@ -250,6 +250,17 @@ os.init(async () => {
 				const audio = new Audio(`/assets/sounds/${sound}.mp3`);
 				audio.volume = this.$store.state.device.sfxVolume;
 				audio.play();
+			},
+			createNoteInstantly(text: string) {
+				const s = this.$store.state.settings;
+				const d = this.$store.state.device;
+				return this.api('notes/create', {
+					text,
+					localOnly: s.rememberNoteVisibility ? d.localOnly : s.defaultNoteLocalOnly,
+					remoteFollowersOnly: s.rememberNoteVisibility ? false : d.localOnly,
+					visibility: s.rememberNoteVisibility ? d.visibility : s.defaultNoteVisibility,
+					viaMobile: this.isMobile
+				});
 			}
 		},
 		router: router,

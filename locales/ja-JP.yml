@@ -583,6 +583,16 @@ displayNameAndUserName: '表示名 @ユーザー名'
 userNameAndDisplayName: '@ユーザー名 表示名'
 displayNameOnly: '表示名'
 userNameOnly: '@ユーザー名'
+steal: 'パクる'
+stealingRule: 'パクるときのルール'
+chooseReaction: 'リアクションを選択'
+stealConfirm: 'このノートをパクりますか？'
+
+_steal:
+  textOnly: 'ただただ本文をパクる'
+  react: '元のノートにリアクションを付けてからパクる'
+  renote: '元のノートをリノートしてからパクる'
+  url: '元のノートの URL を添えてパクる'
 
 _paint:
   tools:
