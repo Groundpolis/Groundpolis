@@ -253,7 +253,6 @@ export default Vue.extend({
 
 		// デフォルト公開範囲
 		this.applyVisibility(this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.visibility : this.$store.state.settings.defaultNoteVisibility);
-
 		this.localOnly = this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.localOnly : this.$store.state.settings.defaultNoteLocalOnly;
 		this.remoteFollowersOnly = this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.remoteFollowersOnly : this.$store.state.settings.defaultNoteRemoteFollowersOnly;
 
