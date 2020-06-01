@@ -13,6 +13,7 @@
 			<div class="name">
 				<router-link class="name" :to="user | userPage" v-user-preview="user.id"><mk-user-name :user="user"/></router-link>
 				<p class="acct">@{{ user | acct }}</p>
+				<p class="followed" v-if="user.isFollowed">{{ $t('followsYou') }}</p>
 			</div>
 			<div class="description" v-if="user.description" :title="user.description">
 				<mfm :text="user.description" :is-note="false" :author="user" :i="$store.state.i" :custom-emojis="user.emojis" :plain="true" :nowrap="true"/>
@@ -107,6 +108,13 @@ export default Vue.extend({
 
 				@media (max-width: 500px) {
 					width: 100%;
+				}
+
+				> .followed {
+					margin: 4px 0;
+					color: var(--fg);
+					font-size: 0.7em;
+					opacity: 0.8;
 				}
 
 				> .name,

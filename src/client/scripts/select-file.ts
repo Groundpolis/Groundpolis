@@ -41,7 +41,13 @@ export function selectFile(component: any, src: any, label: string | null, multi
 				}).finally(() => {
 					dialog.close();
 				});
+
+				(window as any).__groundpolis_input_cache__ = null;
 			};
+
+			// おまじない
+			// https://qiita.com/fukasawah/items/b9dc732d95d99551013d
+			(window as any).__groundpolis_input_cache__ = input;
 			input.click();
 		};
 

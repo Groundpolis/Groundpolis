@@ -25,6 +25,19 @@
 			<mk-button @click="readAllUnreadNotes">{{ $t('markAsReadAllUnreadNotes') }}</mk-button>
 			<mk-button @click="readAllMessagingMessages">{{ $t('markAsReadAllTalkMessages') }}</mk-button>
 		</div>
+		<div class="_content">
+			<div>{{ $t('stealingRule') }}</div>
+			<mk-select v-model="stealRule">
+				<option :value="0">{{ $t('_steal.textOnly') }}</option>
+				<option :value="1">{{ $t('_steal.react') }}</option>
+				<option :value="2">{{ $t('_steal.renote') }}</option>
+				<option :value="3">{{ $t('_steal.url') }}</option>
+			</mk-select>
+			<mk-button v-if="stealRule === 1" @click="chooseReaction">
+				<mfm :text="$store.state.settings.stealReaction" :plain="true" />&nbsp;
+				{{ $t('chooseReaction') }}
+			</mk-button>
+		</div>
 	</section>
 
 	<x-sounds/>
@@ -66,8 +79,10 @@ import XSecurity from './security.vue';
 import X2fa from './2fa.vue';
 import XIntegration from './integration.vue';
 import XApi from './api.vue';
+import MkReactionPicker from '../../components/reaction-picker.vue';
 import MkButton from '../../components/ui/button.vue';
 import MkSwitch from '../../components/ui/switch.vue';
+import MkSelect from '../../components/ui/select.vue';
 
 export default Vue.extend({
 	metaInfo() {
@@ -94,12 +109,24 @@ export default Vue.extend({
 		XSidebar,
 		MkButton,
 		MkSwitch,
+		MkSelect
 	},
 
 	data() {
 		return {
 			faCog
 		}
+	},
+
+	computed: {
+		stealRule: {
+			get() { return this.$store.state.settings.stealRule; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'stealRule', value }); }
+		},
+		stealReaction: {
+			get() { return this.$store.state.settings.stealReaction; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'stealReaction', value }); }
+		},
 	},
 
 	methods: {
@@ -126,6 +153,17 @@ export default Vue.extend({
 		readAllNotifications() {
 			this.$root.api('notifications/mark_all_as_read');
 		},
+
+		chooseReaction(e) {
+			const picker = this.$root.new(MkReactionPicker, {
+				source: e.currentTarget || e.target,
+				showFocus: false,
+			});
+			picker.$once('chosen', (reaction: string) => {
+				this.stealReaction = reaction;
+				picker.close();
+			});
+		}
 	}
 });
 </script>

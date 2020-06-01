@@ -7,7 +7,12 @@
 		<div class="ekmkgxbj">
 			<mk-loading v-if="fetching"/>
 			<div class="feed" v-else>
-				<a v-for="item in items" :href="item.link" rel="nofollow noopener" target="_blank" :title="item.title">{{ item.title }}</a>
+				<div class="item" v-for="item in items" :key="item.link">
+					<a :href="item.link" rel="nofollow noopener" target="_blank" :title="item.title">{{ item.title }}</a>
+					<button class="share" @click="share(item)">
+						<fa :icon="faShareSquare" />
+					</button>
+				</div>
 			</div>
 		</div>
 	</mk-container>
@@ -15,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { faRssSquare, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faRssSquare, faCog, faShareSquare } from '@fortawesome/free-solid-svg-icons';
 import MkContainer from '../components/ui/container.vue';
 import define from './define';
 import i18n from '../i18n';
@@ -36,7 +41,7 @@ export default define({
 			items: [],
 			fetching: true,
 			clock: null,
-			faRssSquare, faCog
+			faRssSquare, faCog, faShareSquare
 		};
 	},
 	mounted() {
@@ -73,6 +78,11 @@ export default define({
 				this.save();
 				this.fetch();
 			});
+		},
+		share(item: { title: string, link: string, description: string, content: string }) {
+			const desc = item.description || item.content;
+			const initialText = desc ? `${item.title}\n\n${desc}\n\n${item.link}` : `${item.title}\n\n${item.link}`;
+			this.$root.post({ initialText, instant: true });
 		}
 	}
 });
@@ -84,16 +94,36 @@ export default define({
 		padding: 0;
 		font-size: 0.9em;
 
-		> a {
-			display: block;
-			padding: 8px 16px;
-			color: var(--text);
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			overflow: hidden;
+		.item {
+			display: grid;
+			grid-template-columns: 1fr 32px;
 
-			&:nth-child(even) {
-				background: rgba(#000, 0.05);
+			> a {
+				display: block;
+				padding: 8px 16px;
+				color: var(--text);
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
+
+				&:nth-child(even) {
+					background: rgba(#000, 0.05);
+				}
+			}
+
+			.share {
+				display: block;
+				width: 32px;
+				height: 100%;
+				background: transparent;
+				font-size: 16px;
+				border: 0px solid transparent;
+				color: var(--fg);
+				cursor: pointer;
+				outline: none;
+				&:hover {
+					opacity: 0.7;
+				}
 			}
 		}
 	}

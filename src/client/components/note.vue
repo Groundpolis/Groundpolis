@@ -6,14 +6,12 @@
 	:class="{ renote: isRenote, compact: isCompactMode }"
 	v-hotkey="keymap"
 	v-size="[{ max: 500 }, { max: 450 }, { max: 350 }, { max: 300 }]"
-	@mouseenter="isHovered = true"
-	@mouseleave="isHovered = false"
 >
 	<x-sub v-for="note in conversation" class="reply-to-more" :key="note.id" :note="note"/>
 	<x-sub :note="appearNote.reply" class="reply-to" v-if="appearNote.reply && (!isCompactMode || detail)"/>
 	<div class="info" v-if="pinned"><fa :icon="faThumbtack"/> {{ $t('pinnedNote') }}</div>
 	<div class="info" v-if="appearNote._prId_"><fa :icon="faBullhorn"/> {{ $t('promotion') }}<button class="_textButton hide" @click="readPromo()">{{ $t('hideThisNote') }} <fa :icon="faTimes"/></button></div>
-	<div class="info" v-if="appearNote._featuredId_"><fa :icon="faBolt"/> {{ $t('featured') }}</div>
+	<div class="info" v-if="appearNote._featuredId_"><fa :icon="faFireAlt"/> {{ $t('featured') }}</div>
 	<div class="renote" v-if="isRenote">
 		<mk-avatar class="avatar" :user="note.user"/>
 		<fa :icon="faRetweet"/>
@@ -33,9 +31,9 @@
 				<fa v-if="note.visibility === 'followers'" :icon="faUnlock"/>
 				<fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
 				<fa v-if="note.visibility === 'users'" :icon="faUsers"/>
-				<fa v-if="note.localOnly" :icon="faHeart"/>
 			</span>
 			<span class="localOnly" v-if="note.localOnly"><fa :icon="faHeart"/></span>
+			<span class="localOnly" v-if="note.remoteFollowersOnly"><fa :icon="faHeartbeat"/></span>
 		</div>
 	</div>
 	<article class="article">
@@ -50,11 +48,16 @@
 				<div class="content" v-show="appearNote.cw == null || showContent">
 					<div class="text">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $t('private') }})</span>
-						<router-link class="reply" v-if="appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><fa :icon="faReply"/></router-link>
+						<router-link class="reply" v-if="!isCompactMode && appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><fa :icon="faReply"/></router-link>
 						<mfm v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
+						<a class="rp" v-if="appearNote.reply != null" :href="appearNote.reply | notePage">
+							<fa :icon="faReply" fixed-width size="xs" style="margin: 0 4px" />
+							<span v-if="isCompactMode"><mk-acct :user="appearNote.reply.user"/>: {{ appearNote.reply.text }}</span>
+						</a>
 						<a class="rp" v-if="appearNote.renote != null" :href="appearNote.renote | notePage">
-							RN:
+							<fa :icon="faQuoteLeft" fixed-width size="xs" style="margin: 0 4px" />
 							<span v-if="isCompactMode"><mk-acct :user="appearNote.renote.user"/>: {{ appearNote.renote.text }}</span>
+							<fa :icon="faQuoteRight" fixed-width size="xs" style="margin-left: 4px" />
 						</a>
 					</div>
 					<div class="files" v-if="appearNote.files.length > 0">
@@ -67,7 +70,6 @@
 			</div>
 			<footer v-if="appearNote.deletedAt == null" class="footer">
 				<x-reactions-viewer :note="appearNote" :preview="preview" ref="reactionsViewer"/>
-				<template v-if="!isCompactMode || isHovered">
 					<template v-if="$store.getters.isSignedIn">
 						<button @click="reply()" class="button _button">
 							<template v-if="appearNote.reply"><fa :icon="faReplyAll"/></template>
@@ -97,7 +99,6 @@
 						<button class="button _button" @click="copyLink()">
 							<fa :icon="faLink"/>
 						</button>
-					</template>
 				</template>
 			</footer>
 			<div class="deleted" v-if="appearNote.deletedAt != null">{{ $t('deleted') }}</div>
@@ -109,8 +110,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faBolt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteRight, faInfoCircle, faHeart, faEllipsisH, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import { faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faInfoCircle, faHeart, faEllipsisH, faUsers, faHeartbeat } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
 import i18n from '../i18n';
@@ -173,8 +174,7 @@ export default Vue.extend({
 			showContent: false,
 			hideThisNote: false,
 			noteBody: this.$refs.noteBody,
-			isHovered: false,
-			faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart
+			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat
 		};
 	},
 
@@ -632,6 +632,16 @@ export default Vue.extend({
 					}]
 					: []
 				),
+				// 自分でない、パブリック, ホーム なノート 
+				...(!this.isMyNote && ['public', 'home'].includes(this.appearNote.visibility) ? [
+					null,
+					{
+						icon: faMehRollingEyes,
+						text: this.$t('steal'),
+						action: this.steal
+					}]
+					: []
+				),
 				...(this.appearNote.userId == this.$store.state.i.id || this.$store.state.i.isModerator || this.$store.state.i.isAdmin ? [
 					null,
 					this.appearNote.userId == this.$store.state.i.id ? {
@@ -760,6 +770,30 @@ export default Vue.extend({
 			});
 		},
 
+		async steal() {
+			if (!this.appearNote.text) return;
+
+			const canceled = this.$store.state.device.showStealConfirm && (await this.$root.dialog({
+				type: 'question',
+				text: this.$t('stealConfirm'),
+				showCancelButton: true
+			})).canceled;
+			if (canceled) return;
+
+			const rule = this.$store.state.settings.stealRule;
+
+			if (rule === 1) {
+				this.reactDirectly(this.$store.state.settings.stealReaction);
+			}
+			if (rule === 2) {
+				this.renoteDirectly();
+				await new Promise((res) => setTimeout(res, 1000));
+			}
+			const u = this.appearNote.uri || this.appearNote.url || `${url}/notes/${this.appearNote.id}`;
+			const text = this.appearNote.text + (rule === 3 ? '\n\n' + u : '');
+			this.$root.createNoteInstantly(text);
+		},
+
 		focus() {
 			this.$el.focus();
 		},
@@ -806,16 +840,24 @@ export default Vue.extend({
 		> .renote, > .article, > .info {
 			padding: 0;
 			> .avatar {
-				width: 1.5em;
-				height: 1.5em;
+				width: 2.5em;
+				height: 2.5em;
 			}
 		}
 
-		> .article {
-			margin-bottom: 8px;
+		.article {
+			.main {
+				.footer > .button {
+					padding: 0 8px;
+				}
+			}
+		}
+
+		> .renote > .avatar {
+			width: 1.5em;
+			height: 1.5em;
 		}
 		
-
 		> .info, > .renote {
 			+ .article {
 				padding-top: 0;
@@ -1024,7 +1066,6 @@ export default Vue.extend({
 
 						> .rp {
 							margin-left: 4px;
-							font-style: oblique;
 							color: var(--renote);
 						}
 					}

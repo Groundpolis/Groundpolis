@@ -1040,6 +1040,10 @@ export default Vue.extend({
 		margin: 0 16px;
 		min-width: 0;
 
+		@media (max-width: ($nav-hide-threshold)) {
+			margin: 0;
+		}
+
 		&.wallpaper {
 			background: var(--wallpaperOverlay);
 		}
@@ -1052,6 +1056,7 @@ export default Vue.extend({
 			@media (max-width: $side-hide-threshold) {
 				min-width: 0;
 			}
+
 
 			> .content {
 				> * {
