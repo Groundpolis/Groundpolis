@@ -568,6 +568,7 @@ steal: 'Steal it'
 stealingRule: 'Stealing Rule'
 chooseReaction: 'Choose Reaction'
 stealConfirm: 'Are you sure to steal this note?'
+autoUpdateAfterSaving: 'Update automatically after Saving'
 _steal:
   textOnly: 'Steal the text only'
   react: 'Add reaction to the base note before stealing'

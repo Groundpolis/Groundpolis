@@ -31,6 +31,8 @@
 		</div>
 		<div class="_footer">
 			<mk-button inline primary @click="add"><fa :icon="faPlus"/> {{ $t('addEmoji') }}</mk-button>
+			<mk-switch v-model="autoReload">{{ $t('autoReloadAfterSaving') }}</mk-switch>
+			<mk-button v-if="!autoReload" @click="reload">{{ $t('reload') }}</mk-button>
 		</div>
 	</section>
 	<section class="_card remote">
@@ -63,6 +65,7 @@ import { faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faLaugh } from '@fortawesome/free-regular-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 import MkInput from '../../components/ui/input.vue';
+import MkSwitch from '../../components/ui/switch.vue';
 import MkPagination from '../../components/ui/pagination.vue';
 import { selectFile } from '../../scripts/select-file';
 import { unique } from '../../../prelude/array';
@@ -78,6 +81,7 @@ export default Vue.extend({
 		MkButton,
 		MkInput,
 		MkPagination,
+		MkSwitch
 	},
 
 	data() {
@@ -110,6 +114,10 @@ export default Vue.extend({
 			} else {
 				return [];
 			}
+		},
+		autoReload: {
+			get () { return this.$store.state.device.instanceEmojisAutoReloadAfterSaving },
+			set(value) { this.$store.commit('device/set', { key: 'instanceEmojisAutoReloadAfterSaving', value }) }
 		}
 	},
 
@@ -141,7 +149,7 @@ export default Vue.extend({
 				fileId: file.id,
 			})))
 			.then(() => {
-				this.$refs.emojis.reload();
+				if (this.autoReload) this.$refs.emojis.reload();
 				this.$root.dialog({
 					type: 'success',
 					iconOnly: true, autoClose: true
@@ -165,7 +173,7 @@ export default Vue.extend({
 				iconOnly: true, autoClose: true
 			});
 
-			this.$refs.emojis.reload();
+			if (this.autoReload) this.$refs.emojis.reload();
 		},
 
 		async del() {
@@ -179,7 +187,7 @@ export default Vue.extend({
 			this.$root.api('admin/emoji/remove', {
 				id: this.selected.id
 			}).then(() => {
-				this.$refs.emojis.reload();
+				if (this.autoReload) this.$refs.emojis.reload();
 			});
 		},
 
@@ -187,7 +195,7 @@ export default Vue.extend({
 			this.$root.api('admin/emoji/copy', {
 				emojiId: this.selectedRemote.id,
 			}).then(() => {
-				this.$refs.emojis.reload();
+				if (this.autoReload) this.$refs.emojis.reload();
 				this.$root.dialog({
 					type: 'success',
 					iconOnly: true, autoClose: true
@@ -199,6 +207,10 @@ export default Vue.extend({
 				});
 			});
 		},
+
+		reload() {
+			this.$refs.emojis.reload();
+		}
 	}
 });
 </script>

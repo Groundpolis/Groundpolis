@@ -588,6 +588,7 @@ steal: 'パクる'
 stealingRule: 'パクるときのルール'
 chooseReaction: 'リアクションを選択'
 stealConfirm: 'このノートをパクりますか？'
+autoReloadAfterSaving: '保存後に自動的にリロードする'
 
 _steal:
   textOnly: 'ただただ本文をパクる'
