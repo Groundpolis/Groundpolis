@@ -2,7 +2,7 @@
 :v: この度は、ご協力ありがとうございます :v:
 
 ## Issues
-Feature suggestions and bug reports are filed in https://github.com/syuilo/misskey/issues .
+Feature suggestions and bug reports are filed in https://github.com/groundpolis/groundpolis/issues .
 機能の要望やバグ報告は https://github.com/xeltica/groundpolis/issues でお願いします
 
 * 重複を防ぐため、なるべく存在するissueがないか検索してください。もし既に同様の issue があれば、リアクションやコメントを追加して upvote してください。
@@ -14,7 +14,7 @@ Feature suggestions and bug reports are filed in https://github.com/syuilo/missk
 
 
 ## 国際化 (i18n)
-Misskey は [Vue I18n](https://github.com/kazupon/vue-i18n) という Vue.js 向けプラグインを使用しています。
+Groundpolis は [Vue I18n](https://github.com/kazupon/vue-i18n) という Vue.js 向けプラグインを使用しています。
 Vue I18n の文書は http://kazupon.github.io/vue-i18n/introduction.html にあります。
 
 ## 文書

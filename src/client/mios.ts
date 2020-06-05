@@ -159,7 +159,7 @@ export default class MiOS extends EventEmitter {
 		// Reject when browser not service worker supported
 		if (!isSwSupported) return;
 
-		// Reject when not signed in to Misskey
+		// Reject when not signed in to Groundpolis
 		if (!this.store.getters.isSignedIn) return;
 
 		// When service worker activated

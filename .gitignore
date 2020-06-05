@@ -14,7 +14,7 @@ report.*.json
 !/.config/example.yml
 !/.config/mongo_initdb_example.js
 
-# misskey
+# groundpolis
 /build
 /built
 /data

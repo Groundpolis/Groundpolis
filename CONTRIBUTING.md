@@ -14,7 +14,7 @@ Feature suggestions and bug reports are filed in https://github.com/xeltica/grou
 * **develop** branch is where we work for the next release.
 
 ## Internationalization (i18n)
-Misskey uses the Vue.js plugin [Vue I18n](https://github.com/kazupon/vue-i18n).
+Groundpolis uses the Vue.js plugin [Vue I18n](https://github.com/kazupon/vue-i18n).
 Documentation of Vue I18n is available at http://kazupon.github.io/vue-i18n/introduction.html .
 
 ## Documentation
@@ -134,7 +134,7 @@ export function something(foo: string): string {
 src ... Source code
 	@types ... Type definitions
 	prelude ... Independence utils for coding JavaScript without side effects
-	misc ... Independence utils for Misskey without side effects
+	misc ... Independence utils for Groundpolis without side effects
 	service ... Common functions with side effects
 	queue ... Job queues and Jobs
 	server ... Web Server

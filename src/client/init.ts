@@ -51,7 +51,7 @@ Vue.mixin({
 	}
 });
 
-console.info(`Misskey v${version}`);
+console.info(`Groundpolis v${version}`);
 
 // v11互換性のため
 if (localStorage.getItem('kyoppie') === 'yuppie') {
@@ -201,7 +201,7 @@ os.init(async () => {
 		store: store,
 		metaInfo: {
 			title: null,
-			titleTemplate: title => title ? `${title} | ${(instanceName || 'Misskey')}` : (instanceName || 'Misskey')
+			titleTemplate: title => title ? `${title} | ${(instanceName || 'Misskey')}` : (instanceName || 'Groundpolis')
 		},
 		data() {
 			return {
@@ -363,7 +363,7 @@ os.init(async () => {
 		});
 
 		// トークンが再生成されたとき
-		// このままではMisskeyが利用できないので強制的にサインアウトさせる
+		// このままではGroundpolisが利用できないので強制的にサインアウトさせる
 		main.on('myTokenRegenerated', () => {
 			os.signout();
 		});

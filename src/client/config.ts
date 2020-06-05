@@ -15,4 +15,4 @@ export const langs = _LANGS_;
 export const locale = JSON.parse(localStorage.getItem('locale'));
 export const version = _VERSION_;
 export const env = _ENV_;
-export const instanceName = siteName === 'Misskey' ? null : siteName;
+export const instanceName = siteName === 'Groundpolis' ? null : siteName;
