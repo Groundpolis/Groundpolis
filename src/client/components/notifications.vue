@@ -5,7 +5,7 @@
 		<x-notification v-else :notification="notification" :with-time="true" :full="true" class="_panel notification" :key="notification.id"/>
 	</x-list>
 
-	<button class="_panel _button" v-if="more" @click="fetchMore" :disabled="moreFetching">
+	<button class="_panel _button" ref="loadMore" v-show="more" :disabled="moreFetching" :style="{ cursor: moreFetching ? 'wait' : 'pointer' }">
 		<template v-if="!moreFetching">{{ $t('loadMore') }}</template>
 		<template v-if="moreFetching"><mk-loading inline/></template>
 	</button>
@@ -18,15 +18,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import i18n from '../i18n';
 import paging from '../scripts/paging';
 import XNotification from './notification.vue';
 import XList from './date-separated-list.vue';
 import XNote from './note.vue';
 
 export default Vue.extend({
-	i18n,
-
 	components: {
 		XNotification,
 		XList,
@@ -74,10 +71,13 @@ export default Vue.extend({
 
 	methods: {
 		onNotification(notification) {
-			// TODO: ユーザーが画面を見てないと思われるとき(ブラウザやタブがアクティブじゃないなど)は送信しない
-			this.$root.stream.send('readNotification', {
-				id: notification.id
-			});
+			if (document.visibilityState === 'visible') {
+				this.$root.stream.send('readNotification', {
+					id: notification.id
+				});
+
+				notification.isRead = true;
+			}
 
 			this.prepend(notification);
 		},

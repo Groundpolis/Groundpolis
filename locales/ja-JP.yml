@@ -45,6 +45,7 @@ loadMore: "もっと見る"
 youGotNewFollower: "フォローされました"
 receiveFollowRequest: "フォローリクエストされました"
 followRequestAccepted: "フォローが承認されました"
+mention: "メンション"
 mentions: "あなた宛て"
 directNotes: "ダイレクト投稿"
 importAndExport: "インポートとエクスポート"
@@ -109,6 +110,7 @@ suspendConfirm: "凍結しますか？"
 unsuspendConfirm: "解凍しますか？"
 selectList: "リストを選択"
 customEmojis: "カスタム絵文字"
+emoji: "絵文字"
 emojiName: "絵文字名"
 emojiUrl: "絵文字画像URL"
 addEmoji: "絵文字を追加"
@@ -564,6 +566,13 @@ relays: "リレー"
 addRelay: "リレーの追加"
 inboxUrl: "inboxのURL"
 addedRelays: "追加済みのリレー"
+serviceworkerInfo: "プッシュ通知を行うには有効する必要があります。"
+deletedNote: "削除された投稿"
+invisibleNote: "非公開の投稿"
+enableInfiniteScroll: "自動でもっと見る"
+visibility: "公開範囲"
+poll: "アンケート"
+useCw: "内容を隠す"
 paint: 'ペイント'
 usePressure: '筆圧感知'
 usePressureDescription: '筆圧感知を有効化すると、筆圧の検出に対応している、例えば Apple Pencil のようなデバイスを使用することで、筆圧に従ってペンの太さが変化するようになります。'
@@ -605,7 +614,6 @@ commentFromModerators: 'モデレーターからのコメント'
 emojiSuggestionSent: '提案が送信されました。モデレーターが審査するまでしばらくお待ちください。'
 emojiSuggestionDeleteConfirm: 'この提案を取り下げますか？'
 writeRejectReason: 'ユーザーへのコメントを書いてください'
-
 
 _steal:
   textOnly: 'ただただ本文をパクる'
@@ -770,7 +778,6 @@ _cw:
   show: "もっと見る"
   chars: "{count}文字"
   files: "{count}ファイル"
-  poll: "アンケート"
 
 _poll:
   noOnlyOneChoice: "選択肢は最低2つ必要です"
@@ -842,7 +849,7 @@ _visibility:
   specifiedDescription: "指定したユーザーのみに公開"
   users: "ログインユーザー"
   usersDescription: "ログイン中のユーザーにのみ公開"
-  localOnly: "ローカル限定"
+  localOnly: "ローカルのみ"
   localOnlyDescription: "リモートユーザーには非公開"
   remoteFollowersOnly: "リモートフォロワーとローカル"
   remoteFollowersOnlyDescription: "リモートでの二次拡散を防ぐ"
@@ -1268,3 +1275,18 @@ _relayStatus:
   requesting: "承認待ち"
   accepted: "承認済み"
   rejected: "拒否済み"
+
+_notification:
+  fileUploaded: "ファイルがアップロードされました"
+  youGotMention: "{name}からのメンション"
+  youGotReply: "{name}からのリプライ"
+  youGotQuote: "{name}による引用"
+  youRenoted: "{name}がRenoteしました"
+  youGotPoll: "{name}が投票しました"
+  youGotMessagingMessageFromUser: "{name}からのチャットがあります"
+  youGotMessagingMessageFromGroup: "{name}のチャットがあります"
+  youWereFollowed: "フォローされました"
+  youReceivedFollowRequest: "フォローリクエストが来ました"
+  yourFollowRequestAccepted: "フォローリクエストが承認されました"
+  youWereInvitedToGroup: "グループに招待されました"
+

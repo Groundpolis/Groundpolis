@@ -114,7 +114,6 @@ import { faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt
 import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
-import i18n from '../i18n';
 import XSub from './note.sub.vue';
 import XNoteHeader from './note-header.vue';
 import XNotePreview from './note-preview.vue';
@@ -131,7 +130,6 @@ import copyToClipboard from '../scripts/copy-to-clipboard';
 import shouldMuteNote from '../scripts/should-mute-note';
 
 export default Vue.extend({
-	i18n,
 	
 	components: {
 		XSub,

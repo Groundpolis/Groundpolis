@@ -2,6 +2,8 @@ import { Entity, Index, JoinColumn, Column, PrimaryColumn, ManyToOne } from 'typ
 import { User } from './user';
 import { DriveFile } from './drive-file';
 import { id } from '../id';
+import { noteVisibilities } from '../../types';
+
 
 @Entity()
 @Index('IDX_NOTE_TAGS', { synchronize: false })
@@ -108,8 +110,8 @@ export class Note {
 	 * specified ... visibleUserIds で指定したユーザーのみ
 	 * user ... ログインしているユーザーのみ
 	 */
-	@Column('enum', { enum: ['public', 'home', 'followers', 'specified', 'users'] })
-	public visibility: 'public' | 'home' | 'followers' | 'specified' | 'users';
+	@Column('enum', { enum: noteVisibilities })
+	public visibility: typeof noteVisibilities[number];
 
 	@Index({ unique: true })
 	@Column('varchar', {

@@ -1,5 +1,5 @@
 <template>
-<x-popup :source="source" ref="popup" @closed="() => { $emit('closed'); choose(v); destroyDom(); }">
+<x-popup :source="source" ref="popup" @closed="closed">
 	<div class="gqyayizv">
 		<button class="_button" @click="choose('public')" :class="{ active: v == 'public' }" data-index="1" key="public">
 			<div><fa :icon="faGlobe"/></div>
@@ -36,19 +36,22 @@
 				<span>{{ $t('_visibility.usersDescription') }}</span>
 			</div>
 		</button>
-		<button class="_button" @click="localOnly = !localOnly" :class="{ active: localOnly }" data-index="6" key="localOnly">
+		<div class="divider"></div>
+		<button class="_button localOnly" @click="localOnly = !localOnly" :class="{ active: localOnly }" data-index="6" key="localOnly">
 			<div><fa :icon="faHeart"/></div>
 			<div>
 				<span>{{ $t('_visibility.localOnly') }}</span>
 				<span>{{ $t('_visibility.localOnlyDescription') }}</span>
 			</div>
+			<div><fa :icon="localOnly ? faToggleOn : faToggleOff"/></div>
 		</button>
-		<button class="_button" @click="remoteFollowersOnly = !remoteFollowersOnly" :class="{ active: remoteFollowersOnly }" data-index="6" key="remoteFollowersOnly">
+		<button class="_button remoteFollowersOnly" @click="remoteFollowersOnly = !remoteFollowersOnly" :class="{ active: remoteFollowersOnly }" data-index="7" key="remoteFollowersOnly">
 			<div><fa :icon="faHeartbeat"/></div>
 			<div>
 				<span>{{ $t('_visibility.remoteFollowersOnly') }}</span>
 				<span>{{ $t('_visibility.remoteFollowersOnlyDescription') }}</span>
 			</div>
+			<div><fa :icon="remoteFollowersOnly ? faToggleOn : faToggleOff"/></div>
 		</button>
 	</div>
 </x-popup>
@@ -56,13 +59,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faGlobe, faUnlock, faHome, faUsers, faHeart, faHeartbeat } from '@fortawesome/free-solid-svg-icons';
+import { faGlobe, faUnlock, faHome, faUsers, faHeart, faHeartbeat, faToggleOn, faToggleOff } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
-import i18n from '../i18n';
 import XPopup from './popup.vue';
 
 export default Vue.extend({
-	i18n,
 	components: {
 		XPopup
 	},
@@ -74,11 +75,11 @@ export default Vue.extend({
 			type: String,
 			required: false
 		},
-		initialLocalOnly: {
+		currentLocalOnly: {
 			type: Boolean,
 			required: false
 		},
-		initialRemoteFollowersOnly: {
+		currentRemoteFollowersOnly: {
 			type: Boolean,
 			required: false
 		},
@@ -86,9 +87,9 @@ export default Vue.extend({
 	data() {
 		return {
 			v: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.visibility : (this.currentVisibility || this.$store.state.settings.defaultNoteVisibility),
-			localOnly: this.initialLocalOnly || false,
-			remoteFollowersOnly: this.initialRemoteFollowersOnly || false,
-			faGlobe, faUnlock, faEnvelope, faHome, faUsers, faHeart, faHeartbeat
+			localOnly: this.currentLocalOnly || false,
+			remoteFollowersOnly: this.currentRemoteFollowersOnly || false,
+			faGlobe, faUnlock, faEnvelope, faHome, faUsers, faHeart, faHeartbeat, faToggleOn, faToggleOff
 		}
 	},
 	watch: {
@@ -114,6 +115,12 @@ export default Vue.extend({
 			this.$emit('chosen', { visibility, localOnly: this.localOnly, remoteFollowersOnly: this.remoteFollowersOnly} );
 			this.destroyDom();
 		},
+		closed() {
+			this.$emit('closed');
+			// localOnly フラグの更新の為に chosen イベントも呼ぶ
+			this.choose(this.v);
+			this.destroyDom();
+		}
 	}
 });
 </script>
@@ -122,6 +129,11 @@ export default Vue.extend({
 .gqyayizv {
 	width: 240px;
 	padding: 8px 0;
+
+	> .divider {
+		margin: 8px 0;
+		border-top: solid 1px var(--divider);
+	}
 
 	> button {
 		display: flex;
@@ -144,7 +156,12 @@ export default Vue.extend({
 			background: var(--accent);
 		}
 
-		> *:first-child {
+		&.localOnly.active, &.remoteFollowersOnly.active {
+			color: var(--accent);
+			background: inherit;
+		}
+
+		> *:nth-child(1) {
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -156,8 +173,11 @@ export default Vue.extend({
 			margin-bottom: auto;
 		}
 
-		> *:last-child {
+		> *:nth-child(2) {
 			flex: 1 1 auto;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 
 			> span:first-child {
 				display: block;
@@ -167,6 +187,18 @@ export default Vue.extend({
 			> span:last-child:not(:first-child) {
 				opacity: 0.6;
 			}
+		}
+
+		> *:nth-child(3) {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-left: 10px;
+			width: 16px;
+			top: 0;
+			bottom: 0;
+			margin-top: auto;
+			margin-bottom: auto;
 		}
 	}
 }

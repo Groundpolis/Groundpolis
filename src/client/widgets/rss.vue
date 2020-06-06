@@ -23,7 +23,6 @@
 import { faRssSquare, faCog, faShareSquare } from '@fortawesome/free-solid-svg-icons';
 import MkContainer from '../components/ui/container.vue';
 import define from './define';
-import i18n from '../i18n';
 
 export default define({
 	name: 'rss',
@@ -32,7 +31,6 @@ export default define({
 		url: 'http://feeds.afpbb.com/rss/afpbb/afpbbnews'
 	})
 }).extend({
-	i18n,
 	components: {
 		MkContainer
 	},

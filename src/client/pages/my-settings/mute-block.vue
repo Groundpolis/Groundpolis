@@ -44,11 +44,8 @@ import { faSave } from '@fortawesome/free-regular-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 import MkTextarea from '../../components/ui/textarea.vue';
 import MkPagination from '../../components/ui/pagination.vue';
-import i18n from '../../i18n';
 
 export default Vue.extend({
-	i18n,
-
 	components: {
 		MkPagination,
 		MkButton,

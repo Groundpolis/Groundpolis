@@ -6,8 +6,8 @@
 
 	<mk-error v-if="error" @retry="init()"/>
 
-	<div v-if="more && reversed" style="margin-bottom: var(--margin);">
-		<button class="_panel _button" :disabled="moreFetching" :style="{ cursor: moreFetching ? 'wait' : 'pointer' }" @click="fetchMore()">
+	<div v-show="more && reversed" style="margin-bottom: var(--margin);">
+		<button class="_panel _button" ref="loadMore" :disabled="moreFetching" :style="{ cursor: moreFetching ? 'wait' : 'pointer' }">
 			<template v-if="!moreFetching">{{ $t('loadMore') }}</template>
 			<template v-if="moreFetching"><mk-loading inline/></template>
 		</button>
@@ -17,8 +17,8 @@
 		<x-note :note="note" :detail="detail" :key="note._featuredId_ || note._prId_ || note.id"/>
 	</x-list>
 
-	<div v-if="more && !reversed" style="margin-top: var(--margin);">
-		<button class="_panel _button" :disabled="moreFetching" :style="{ cursor: moreFetching ? 'wait' : 'pointer' }" @click="fetchMore()">
+	<div v-show="more && !reversed" style="margin-top: var(--margin);">
+		<button class="_panel _button" ref="loadMore" :disabled="moreFetching" :style="{ cursor: moreFetching ? 'wait' : 'pointer' }">
 			<template v-if="!moreFetching">{{ $t('loadMore') }}</template>
 			<template v-if="moreFetching"><mk-loading inline/></template>
 		</button>
@@ -28,14 +28,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import i18n from '../i18n';
 import paging from '../scripts/paging';
 import XNote from './note.vue';
 import XList from './date-separated-list.vue';
 
 export default Vue.extend({
-	i18n,
-
 	components: {
 		XNote, XList
 	},

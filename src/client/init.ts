@@ -7,15 +7,15 @@ import Vuex from 'vuex';
 import VueMeta from 'vue-meta';
 import PortalVue from 'portal-vue';
 import VAnimateCss from 'v-animate-css';
+import VueI18n from 'vue-i18n';
 import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome';
-import VueVideoPlayer from 'vue-video-player'
-import 'video.js/dist/video-js.css'
+import VueVideoPlayer from 'vue-video-player';
+import 'video.js/dist/video-js.css';
 
-import i18n from './i18n';
 import VueHotkey from './scripts/hotkey';
 import App from './app.vue';
 import MiOS from './mios';
-import { version, langs, instanceName } from './config';
+import { version, langs, instanceName, getLocale } from './config';
 import PostFormDialog from './components/post-form-dialog.vue';
 import Dialog from './components/dialog.vue';
 import Menu from './components/menu.vue';
@@ -23,6 +23,8 @@ import { router } from './router';
 import { applyTheme, lightTheme } from './theme';
 import { isDeviceDarkmode } from './scripts/is-device-darkmode';
 import createStore from './store';
+import { clientDb, get, count } from './db';
+import { setI18nContexts } from './scripts/set-i18n-contexts';
 
 Vue.use(Vuex);
 Vue.use(VueHotkey);
@@ -31,6 +33,7 @@ Vue.use(PortalVue);
 Vue.use(VAnimateCss);
 Vue.use(VueVideoPlayer);
 
+Vue.use(VueI18n);
 Vue.component('fa', FontAwesomeIcon);
 Vue.component('fa-layers', FontAwesomeLayers);
 
@@ -60,9 +63,6 @@ if (localStorage.getItem('kyoppie') === 'yuppie') {
 	localStorage.setItem('i', i);
 	location.reload(true);
 }
-
-
-window.history.scrollRestoration = 'manual';
 
 if (localStorage.getItem('theme') == null) {
 	applyTheme(lightTheme);
@@ -101,27 +101,6 @@ if (isMobile || window.innerWidth <= 1024) {
 		`${viewport.getAttribute('content')},minimum-scale=1,maximum-scale=1,user-scalable=no`);
 	head.appendChild(viewport);
 }
-
-//#region Fetch locale data
-const cachedLocale = localStorage.getItem('locale');
-
-if (cachedLocale == null) {
-	fetch(`/assets/locales/${lang}.${version}.json`)
-		.then(response => response.json()).then(locale => {
-			localStorage.setItem('locale', JSON.stringify(locale));
-			i18n.locale = lang;
-			i18n.setLocaleMessage(lang, locale);
-		});
-} else {
-	// TODO: 古い時だけ更新
-	setTimeout(() => {
-		fetch(`/assets/locales/${lang}.${version}.json`)
-			.then(response => response.json()).then(locale => {
-				localStorage.setItem('locale', JSON.stringify(locale));
-			});
-	}, 1000 * 5);
-}
-//#endregion
 
 //#region Set lang attr
 const html = document.documentElement;
@@ -190,6 +169,18 @@ os.init(async () => {
 	});
 	//#endregion
 
+	//#region Fetch locale data
+	const i18n = new VueI18n();
+
+	await count(clientDb.i18n).then(async n => {
+		if (n === 0) return setI18nContexts(lang, version, i18n);
+		if ((await get('_version_', clientDb.i18n) !== version)) return setI18nContexts(lang, version, i18n, true);
+
+		i18n.locale = lang;
+		i18n.setLocaleMessage(lang, await getLocale());
+	});
+	//#endregion
+
 	if ('Notification' in window && store.getters.isSignedIn) {
 		// 許可を得ていなかったらリクエスト
 		if (Notification.permission === 'default') {
@@ -199,6 +190,7 @@ os.init(async () => {
 
 	const app = new Vue({
 		store: store,
+		i18n,
 		metaInfo: {
 			title: null,
 			titleTemplate: title => title ? `${title} | ${(instanceName || 'Misskey')}` : (instanceName || 'Groundpolis')
@@ -206,7 +198,8 @@ os.init(async () => {
 		data() {
 			return {
 				stream: os.stream,
-				isMobile: isMobile
+				isMobile: isMobile,
+				i18n // TODO: 消せないか考える SEE: https://github.com/syuilo/misskey/pull/6396#discussion_r429511030
 			};
 		},
 		methods: {
