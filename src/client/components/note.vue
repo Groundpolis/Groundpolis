@@ -50,15 +50,16 @@
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $t('private') }})</span>
 						<router-link class="reply" v-if="!isCompactMode && appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><fa :icon="faReply"/></router-link>
 						<mfm v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
-						<a class="rp" v-if="appearNote.reply != null" :href="appearNote.reply | notePage">
+						<router-link class="rp" v-if="isCompactMode && appearNote.reply != null" :to="appearNote.reply | notePage">
 							<fa :icon="faReply" fixed-width size="xs" style="margin: 0 4px" />
-							<span v-if="isCompactMode"><mk-acct :user="appearNote.reply.user"/>: {{ appearNote.reply.text }}</span>
-						</a>
-						<a class="rp" v-if="appearNote.renote != null" :href="appearNote.renote | notePage">
+							<span><mk-acct :user="appearNote.reply.user"/>: {{ appearNote.reply.text }}</span>
+						</router-link>
+						<router-link class="rp" v-if="isCompactMode && appearNote.renote != null" :to="appearNote.renote | notePage">
 							<fa :icon="faQuoteLeft" fixed-width size="xs" style="margin: 0 4px" />
-							<span v-if="isCompactMode"><mk-acct :user="appearNote.renote.user"/>: {{ appearNote.renote.text }}</span>
+							<span><mk-acct :user="appearNote.renote.user"/>: {{ appearNote.renote.text }}</span>
 							<fa :icon="faQuoteRight" fixed-width size="xs" style="margin-left: 4px" />
-						</a>
+						</router-link>
+						<router-link v-else-if="appearNote.renote != null" class="rp" :to="appearNote.renote | notePage">RN: </router-link>
 					</div>
 					<div class="files" v-if="appearNote.files.length > 0">
 						<x-media-list :media-list="appearNote.files" :parent-element="noteBody"/>
