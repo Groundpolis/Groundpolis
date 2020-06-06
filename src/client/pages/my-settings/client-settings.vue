@@ -103,14 +103,11 @@ import { faTv, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkSelect from '../../components/ui/select.vue';
 import MkRadio from '../../components/ui/radio.vue';
-import i18n from '../../i18n';
 import XNote from '../../components/note.vue';
 import { langs } from '../../config';
 import MkInfo from '../../components/ui/info.vue';
 
 export default Vue.extend({
-	i18n,
-
 	metaInfo() {
 		return {
 			title: this.$t('settings') as string

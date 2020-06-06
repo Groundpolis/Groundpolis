@@ -73,6 +73,7 @@ import extractMentions from '../../misc/extract-mentions';
 import getAcct from '../../misc/acct/render';
 import { formatTimeString } from '../../misc/format-time-string';
 import { selectDriveFile } from '../scripts/select-drive-file';
+import { noteVisibilities } from '../../types';
 
 export default Vue.extend({
 	components: {

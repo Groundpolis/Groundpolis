@@ -17,12 +17,9 @@ import { faFish, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
 import MkTextarea from '../../components/ui/textarea.vue';
 import MkButton from '../../components/ui/button.vue';
-import i18n from '../../i18n';
 import defaultFaces from '../../scripts/default-faces';
 
 export default Vue.extend({
-	i18n,
-
 	components: {
 		MkTextarea,
 		MkButton,

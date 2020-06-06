@@ -47,7 +47,6 @@ import Vue from 'vue';
 import { faImage, faCog, faPlay, faVolumeUp, faVolumeDown, faVolumeOff } from '@fortawesome/free-solid-svg-icons';
 import MkSelect from '../../components/ui/select.vue';
 import MkRange from '../../components/ui/range.vue';
-import i18n from '../../i18n';
 import { langs } from '../../config';
 
 const sounds = [
@@ -70,8 +69,6 @@ const sounds = [
 ];
 
 export default Vue.extend({
-	i18n,
-
 	metaInfo() {
 		return {
 			title: this.$t('settings') as string
