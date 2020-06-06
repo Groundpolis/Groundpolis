@@ -8,7 +8,9 @@
 	<header>
 		<button v-if="!fixed" class="cancel _button" @click="cancel"><fa :icon="faTimes"/></button>
 		<div>
-			<span class="local-only" v-if="localOnly" v-text="$t('_visibility.localOnly')" />
+			<button class="_button help" v-tooltip="$t('help')" @click="help">
+				<fa :icon="faQuestionCircle" />
+			</button>
 			<span class="text-count" :class="{ over: trimmedLength(text) > max }">{{ max - trimmedLength(text) }}</span>
 			<button class="_button visibility" @click="setVisibility" ref="visibilityButton" v-tooltip="$t('visibility')">
 				<span v-if="visibility === 'public'"><fa :icon="faGlobe"/></span>
@@ -17,6 +19,12 @@
 				<span v-if="visibility === 'specified'"><fa :icon="faEnvelope"/></span>
 				<span v-if="visibility === 'users'"><fa :icon="faUsers"/></span>
 			</button>
+			<span class="local-only" v-tooltip="$t('_visibility.localOnly')" @click="localOnly = false" v-if="localOnly">
+				<fa :icon="faHeart" />
+			</span>
+			<span class="local-only" v-tooltip="$t('_visibility.remoteFollowersOnly')" @click="remoteFollowersOnly = false" v-if="remoteFollowersOnly">
+				<fa :icon="faHeartbeat" />
+			</span>
 			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">{{ submitText }}<fa :icon="reply ? faReply : renote ? faQuoteRight : faPaperPlane"/></button>
 		</div>
 	</header>
@@ -58,7 +66,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faSatelliteDish } from '@fortawesome/free-solid-svg-icons';
+import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash, faLaughSquint } from '@fortawesome/free-regular-svg-icons';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
@@ -140,7 +148,7 @@ export default Vue.extend({
 			draghover: false,
 			quoteId: null,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
-			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faSatelliteDish
+			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle
 		};
 	},
 
@@ -431,8 +439,8 @@ export default Vue.extend({
 			const w = this.$root.new(MkVisibilityChooser, {
 				source: this.$refs.visibilityButton,
 				currentVisibility: this.visibility,
-				initialLocalOnly: this.localOnly,
-				initialRemoteFollowersOnly: this.remoteFollowersOnly,
+				currentLocalOnly: this.localOnly,
+				currentRemoteFollowersOnly: this.remoteFollowersOnly,
 			});
 			w.$once('chosen', ({ visibility, localOnly, remoteFollowersOnly }) => {
 				this.applyVisibility(visibility);
@@ -461,6 +469,11 @@ export default Vue.extend({
 			this.files = [];
 			this.poll = false;
 			this.quoteId = null;
+		},
+
+		help() {
+			this.cancel();
+			this.$router.push('/docs/post')
 		},
 
 		onKeydown(e) {
@@ -660,6 +673,10 @@ export default Vue.extend({
 			top: 0;
 			right: 0;
 
+			> .help {
+				margin-right: 16px;
+			}
+
 			> .text-count {
 				opacity: 0.7;
 				line-height: 66px;
@@ -680,7 +697,8 @@ export default Vue.extend({
 			}
 			
 			.local-only {
-				margin: 0 8px;
+				margin-right: 16px;
+				color: var(--accent)
 			}
 
 			> .remoteFollowersOnly {
