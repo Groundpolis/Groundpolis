@@ -4,20 +4,20 @@
 	<portal to="title">{{ $t('paint') }}</portal>
 	<section class="_card" ref="editor">
 		<div class="tools">
-			<button class="_button" @click="init(512, 512)">
+			<button class="_button" v-tooltip="$t('_paint.new')" @click="init(512, 512)">
 				<fa :icon="farFileAlt"></fa>
 			</button>
-			<button class="_button" @click="open">
+			<button class="_button" v-tooltip="$t('_paint.open')" @click="open">
 				<fa :icon="farFolderOpen"></fa>
 			</button>
-			<button class="_button" @click="save">
+			<button class="_button" v-tooltip="$t('_paint.save')" @click="save">
 				<fa :icon="farSave"></fa>
 			</button>
 			<span class="progress" v-if="uploadingProgress" v-text="uploadingProgress === 100 ? $t('done') : `${uploadingProgress}%`" />
-			<button class="_button" @click="undo" :disabled="undoStack.length === 0">
+			<button class="_button" v-tooltip="$t('_paint.undo')" @click="undo" :disabled="undoStack.length === 0">
 				<fa :icon="faUndo"></fa>
 			</button>
-			<button class="_button" @click="redo" :disabled="redoStack.length === 0">
+			<button class="_button" v-tooltip="$t('_paint.redo')" @click="redo" :disabled="redoStack.length === 0">
 				<fa :icon="faRedo"></fa>
 			</button>
 		</div>
@@ -40,18 +40,18 @@
 			</canvas>
 		</div>
 		<div class="tools">
-			<button class="_button" v-for="tool in [ 'hand', 'pen', 'eraser' ]" :key="tool" @click="currentTool = tool" :class="{ active: currentTool === tool }">
+			<button class="_button" v-for="tool in [ 'hand', 'pen', 'eraser' ]" v-tooltip="$t('_paint.tools.' + tool)" :key="tool" @click="currentTool = tool" :class="{ active: currentTool === tool }">
 				<fa :icon="getToolIconOf(tool)" />
 			</button>
-			<button class="_button" @click="changeShape" :class="{ active: isShape(currentTool) }">
+			<button class="_button" v-tooltip="$t('_paint.tools.shapes')" @click="changeShape" :class="{ active: isShape(currentTool) }">
 				<fa :icon="isShape(currentTool) ? currentToolIcon : getToolIconOf('line')"></fa>
 			</button>
-			<input type="color" class="color" v-model="currentColor" />
-			<button class="_button" :disabled="zoom <= 10" @click="zoom -= 10">
+			<input type="color" class="color" v-model="currentColor" v-tooltip="$t('_paint.changeColor')" />
+			<button class="_button" :disabled="zoom <= 10" @click="zoom -= 10" v-tooltip="$t('_paint.zoomMinus')">
 				<fa :icon="faSearchMinus"></fa>
 			</button>
 			<div v-text="zoom + '%'"/>
-			<button class="_button" :disabled="zoom >= 400" @click="zoom += 10">
+			<button class="_button" :disabled="zoom >= 400" @click="zoom += 10" v-tooltip="$t('_paint.zoomPlus')">
 				<fa :icon="faSearchPlus"></fa>
 			</button>
 		</div>
@@ -88,7 +88,6 @@ import { faSquare as farSquare, faCircle as farCircle, faSave as farSave, faFold
 
 import MkSwitch from '../components/ui/switch.vue';
 import MkRange from '../components/ui/range.vue';
-import { selectDriveFile } from '../scripts/select-drive-file';
 import { apiUrl } from '../config';
 import { selectFile } from '../scripts/select-file';
 

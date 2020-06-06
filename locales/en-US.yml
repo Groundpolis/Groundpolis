@@ -89,6 +89,7 @@ sensitive: "NSFW"
 add: "Add"
 reaction: "Reaction"
 reactionSettingDescription: "Assign your favorite reactions which want to pin in reaction picker."
+gacha: "Kaomoji-Gacha"
 gachaSettings: "Kaomoji-Gacha Settings"
 gachaFaces: "Faces"
 gachaSettingDescription: "Customize kaomoji-gacha items (separated by line breaks)"
@@ -584,6 +585,25 @@ _steal:
   react: 'Add reaction to the base note before stealing'
   renote: 'Renote the base note before stealing'
   url: 'Stealing with URL of the base note'
+_paint:
+  new: 'New File'
+  open: 'Open File'
+  save: 'Save'
+  undo: 'Undo'
+  redo: 'Redo'
+  changeColor: 'Change color'
+  zoomMinus: '- Zoom'
+  zoomPlus: '+ Zoom'
+  tools:
+    hand: 'Hand'
+    pen: 'Pen'
+    eraser: 'Eraser'
+    shapes: 'Shapes'
+    line: 'Line'
+    rect: 'Rectangle'
+    rectFill: 'Rectangle Fill'
+    circle: 'Circle'
+    circleFill: 'Circle Fill'
 _theme:
   explore: "Explore Themes"
   install: "Install theme"

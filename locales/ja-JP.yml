@@ -89,6 +89,7 @@ sensitive: "閲覧注意"
 add: "追加"
 reaction: "リアクション"
 reactionSettingDescription: "リアクションピッカーに表示するリアクションを設定します。"
+gacha: "顔文字ガチャ"
 gachaSettings: "顔文字ガチャの設定"
 gachaFaces: "顔文字"
 gachaSettingDescription: "顔文字ガチャで出現する顔文字を改行で区切って設定します。"
@@ -622,7 +623,19 @@ _steal:
   url: '元のノートの URL を添えてパクる'
 
 _paint:
+  new: '新規ファイル'
+  open: 'ファイルを開く'
+  save: '保存'
+  undo: '元に戻す'
+  redo: 'やり直す'
+  changeColor: '色を変更'
+  zoomMinus: '- ズーム'
+  zoomPlus: '+ ズーム'
   tools:
+    hand: '手'
+    pen: 'ペン'
+    eraser: '消しゴム'
+    shapes: '図形'
     line: '直線'
     rect: '四角'
     rectFill: '四角塗りつぶし'
