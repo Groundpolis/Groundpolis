@@ -117,6 +117,14 @@ export default Vue.component('misskey-flavored-markdown', {
 					}, genEl(token.children))];
 				}
 
+				case 'right': {
+					return [createElement('div', {
+						attrs: {
+							style: 'text-align:right;'
+						}
+					}, genEl(token.children))];
+				}
+
 				case 'motion': {
 					return (createElement as any)('span', {
 						attrs: {
