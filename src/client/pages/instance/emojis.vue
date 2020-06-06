@@ -35,6 +35,39 @@
 			<mk-button v-if="!autoReload" @click="reload">{{ $t('reload') }}</mk-button>
 		</div>
 	</section>
+	<section class="_card suggestions">
+		<div class="_title"><fa :icon="faLaugh"/> {{ $t('suggestedEmojis') }}</div>
+		<div class="_content">
+			<mk-switch v-model="pendingOnly">{{ $t('pendingOnly') }}</mk-switch>
+			<mk-pagination :pagination="suggestionPagination" class="emojis" ref="suggestions">
+				<template #empty><span>{{ $t('noSuggestions') }}</span></template>
+				<template #default="{items}">
+					<div class="emoji" v-for="req in items" :key="req.id">
+						<img :src="req.file.url" class="img" :alt="req.name"/>
+						<div class="body">
+							<span class="name">{{ req.name }}</span>
+							<div class="aliases">
+								<span class="alias" v-for="a in req.aliases" :key="a" v-text="a"/>
+							</div>
+							<mfm class="description" :text="req.description" />
+							<span class="state" v-if="req.state !== pending">
+								<fa :icon="req.state === 'accepted' ? faCheck : faTimes" />
+								{{ $t(req.state) }}
+							</span>
+							<mk-button inline primary v-if="req.state !== 'accepted'" @click="accept(req.id)">
+								<fa :icon="faCheck" />
+								{{ $t('accept') }}
+							</mk-button>
+							<mk-button inline v-if="req.state === 'pending'" @click="reject(req.id)">
+								<fa :icon="faTimes" />
+								{{ $t('reject') }}
+							</mk-button>
+						</div>
+					</div>
+				</template>
+			</mk-pagination>
+		</div>
+	</section>
 	<section class="_card remote">
 		<div class="_title"><fa :icon="faLaugh"/> {{ $t('customEmojisOfRemote') }}</div>
 		<div class="_content">
@@ -61,7 +94,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSave, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faLaugh } from '@fortawesome/free-regular-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 import MkInput from '../../components/ui/input.vue';
@@ -92,9 +125,17 @@ export default Vue.extend({
 			category: null,
 			aliases: null,
 			host: '',
+			pendingOnly: true,
 			pagination: {
 				endpoint: 'admin/emoji/list',
 				limit: 10,
+			},
+			suggestionPagination: {
+				endpoint: 'suggestions/emojis/list',
+				limit: 10,
+				params: () => ({
+					includingStates: this.pendingOnly ? [ 'pending' ] : [],
+				})
 			},
 			remotePagination: {
 				endpoint: 'admin/emoji/list-remote',
@@ -103,7 +144,7 @@ export default Vue.extend({
 					host: this.host ? this.host : null
 				})
 			},
-			faTrashAlt, faPlus, faLaugh, faSave
+			faTrashAlt, faPlus, faLaugh, faSave, faCheck, faTimes
 		}
 	},
 
@@ -124,6 +165,10 @@ export default Vue.extend({
 	watch: {
 		host() {
 			this.$refs.remoteEmojis.reload();
+		},
+
+		pendingOnly() {
+			this.$refs.suggestions.reload();
 		},
 
 		selected() {
@@ -168,11 +213,6 @@ export default Vue.extend({
 				aliases: this.aliases.split(' '),
 			});
 
-			this.$root.dialog({
-				type: 'success',
-				iconOnly: true, autoClose: true
-			});
-
 			if (this.autoReload) this.$refs.emojis.reload();
 		},
 
@@ -184,11 +224,26 @@ export default Vue.extend({
 			});
 			if (canceled) return;
 
-			this.$root.api('admin/emoji/remove', {
-				id: this.selected.id
-			}).then(() => {
-				if (this.autoReload) this.$refs.emojis.reload();
+			await this.$root.api('admin/emoji/remove', { id: this.selected.id });
+			if (this.autoReload) this.$refs.emojis.reload();
+		},
+
+		async accept(suggestionId: string) {
+			await this.$root.api('admin/suggestions/emojis/accept', { suggestionId });
+			if (this.autoReload) this.$refs.suggestions.reload();
+		},
+
+		async reject(suggestionId: string) {
+			const { canceled, result: comment } = await this.$root.dialog({
+				title: this.$t('writeRejectReason'),
+				input: true,
+				autoComplete: true
 			});
+
+			if (canceled) return;
+
+			await this.$root.api('admin/suggestions/emojis/reject', { suggestionId, comment });
+			if (this.autoReload) this.$refs.suggestions.reload();
 		},
 
 		im() {
@@ -255,6 +310,49 @@ export default Vue.extend({
 							> .aliases {
 								font-style: oblique;
 							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	> .suggestions {
+		> ._content {
+			max-height: 300px;
+			overflow: auto;
+			> .emojis {
+				> .emoji {
+					display: flex;
+					align-items: center;
+
+					> .img {
+						width: 50px;
+						height: 50px;
+					}
+
+					> .body {
+						padding: 8px;
+						> .name {
+							display: block;
+							font-weight: bold;
+						}
+						> .aliases {
+							opacity: 0.5;
+							> .alias {
+								margin-right: 0.5em;
+							}
+						}
+						> .description {
+							display: block;
+							margin: 8px;
+							padding: 6px 0 6px 12px;
+							color: var(--fg);
+							border-left: solid 3px var(--fg);
+							opacity: 0.7;
+						}
+						> .state {
+							opacity: 0.5;
 						}
 					}
 				}

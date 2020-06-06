@@ -1,7 +1,7 @@
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import * as nestedProperty from 'nested-property';
-import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faPaintBrush, faStar, faAt, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faDoorClosed, faBullhorn } from '@fortawesome/free-solid-svg-icons';
+import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faPaintBrush, faStar, faAt, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faDoorClosed, faBullhorn, faLaugh } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faComments } from '@fortawesome/free-regular-svg-icons';
 import { apiUrl } from './config';
 import defaultFaces from './scripts/default-faces';
@@ -241,6 +241,11 @@ export default () => new Vuex.Store({
 				get show() { return getters.isSignedIn; },
 				to: '/paint',
 			},
+			emojiSuggestion: {
+				title: 'emojiSuggestion',
+				icon: faLaugh,
+				to: '/emoji-suggestion',
+			},
 		}),
 	},
 
@@ -452,11 +457,7 @@ export default () => new Vuex.Store({
 			state: defaultSettings,
 
 			getters: {
-				getRandomFace: ({ faces }) => () => {
-					const face = faces.length > 0 ? faces[Math.floor(Math.random() * faces.length)] : ''
-					console.log(Math.random())
-					return face
-				},
+				getRandomFace: ({ faces }) => () => faces.length > 0 ? faces[Math.floor(Math.random() * faces.length)] : '',
 			},
 
 			mutations: {

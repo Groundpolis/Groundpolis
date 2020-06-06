@@ -53,6 +53,7 @@ import { PromoNote } from './entities/promo-note';
 import { PromoRead } from './entities/promo-read';
 import { EmojiRepository } from './repositories/emoji';
 import { RelayRepository } from './repositories/relay';
+import { EmojiRequestRepository } from './repositories/emoji-request';
 
 export const Announcements = getRepository(Announcement);
 export const AnnouncementReads = getRepository(AnnouncementRead);
@@ -108,3 +109,4 @@ export const AntennaNotes = getRepository(AntennaNote);
 export const PromoNotes = getRepository(PromoNote);
 export const PromoReads = getRepository(PromoRead);
 export const Relays = getCustomRepository(RelayRepository);
+export const EmojiRequests = getCustomRepository(EmojiRequestRepository);
