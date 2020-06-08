@@ -13,8 +13,14 @@
 		<div><b>{{ $t('timeline') }}</b></div>
 		<mk-switch v-model="disableAnimatedMfm">{{ $t('disableAnimatedMfm') }}</mk-switch>
 		<mk-switch v-model="showFixedPostForm">{{ $t('showFixedPostForm') }}</mk-switch>
-		<mk-switch v-model="useSticker">{{ $t('useSticker') }}</mk-switch>
-		<mk-switch v-model="makeCustomEmojisBigger">{{ $t('makeCustomEmojisBigger') }}</mk-switch>
+		<mk-switch v-model="useSticker">
+			{{ $t('useSticker') }}
+			<a class="_link" @click.stop="showHint($t('useSticker'), $t('useStickerDesc'))" style="margin-left: 8px"><fa :icon="faQuestionCircle"/></a>
+		</mk-switch>
+		<mk-switch v-model="makeCustomEmojisBigger">
+			{{ $t('makeCustomEmojisBigger') }}
+			<a class="_link" @click.stop="showHint($t('makeCustomEmojisBigger'), $t('makeCustomEmojisBiggerDesc'))" style="margin-left: 8px"><fa :icon="faQuestionCircle"/></a>
+		</mk-switch>
 		<mk-switch v-model="useOsNativeEmojis">
 			{{ $t('useOsNativeEmojis') }}
 			<template #desc><mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
@@ -100,6 +106,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { faTv, faQuestion } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkSelect from '../../components/ui/select.vue';
 import MkRadio from '../../components/ui/radio.vue';
@@ -127,7 +134,7 @@ export default Vue.extend({
 			langs,
 			lang: localStorage.getItem('lang'),
 			fontSize: localStorage.getItem('fontSize'),
-			faTv, faQuestion
+			faTv, faQuestion, faQuestionCircle
 		}
 	},
 
@@ -308,7 +315,6 @@ export default Vue.extend({
 				myReaction: '🦊',
 			};
 		}
-
 	},
 
 	watch: {
@@ -327,6 +333,12 @@ export default Vue.extend({
 			location.reload();
 		},
 	},
+
+	methods: {
+		showHint(title: string, text: string) {
+			this.$root.dialog({ title, text, type: 'info' });
+		}
+	}
 });
 </script>
 
