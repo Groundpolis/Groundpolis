@@ -1,10 +1,11 @@
 import $ from 'cafy';
 import define from '../../../define';
-import * as ms from 'ms';
 import { ID } from '../../../../../misc/cafy-id';
 import { DriveFiles, Emojis, EmojiRequests } from '../../../../../models';
 import { ApiError } from '../../../error';
 import { genId } from '../../../../../misc/gen-id';
+
+const MAXIMUM_SUGGESTION_COUNT = 10;
 
 export const meta = {
 	desc: {
@@ -14,11 +15,6 @@ export const meta = {
 	tags: ['suggestions'],
 
 	requireCredential: true as const,
-
-	limit: {
-		duration: ms('30min'),
-		max: 10
-	},
 
 	params: {
 		fileId: {
@@ -51,6 +47,11 @@ export const meta = {
 			code: 'ALREADY_EXISTS',
 			id: '5c6ae780-a7c4-11ea-9cce-594df8f0a075'
 		},
+		tooManySuggestions: {
+			message: 'You have reached the limit of suggestions.',
+			code: 'TOO_MANY_SUGGESTIONS',
+			id: 'c28fa1ef-c459-48dc-809a-99a40a4af48b'
+		},
 	}
 };
 
@@ -62,6 +63,11 @@ export default define(meta, async (ps, user) => {
 
 	// 既に存在している名前であればエラー
 	if (await Emojis.findOne({ name: ps.name, host: null })) throw new ApiError(meta.errors.alreadyExists);
+
+	// 上限に達していればエラー
+	// プレミアム会員およびモデレーター以上は例外
+	const count = await EmojiRequests.count({ where: { proposerId: user.id, state: 'pending' } });
+	if (!user.isPremium && !user.isAdmin && !user.isModerator && count >= MAXIMUM_SUGGESTION_COUNT) throw new ApiError(meta.errors.tooManySuggestions);
 
 	await EmojiRequests.insert({
 		id: genId(),
