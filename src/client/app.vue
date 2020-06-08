@@ -501,7 +501,7 @@ export default Vue.extend({
 					this.$root.new(await import('./components/toast.vue').then(m => m.default), { notification });
 				}
 			} else if (this.$store.state.device.showBrowserNotification) {
-				const { title, body, icon, url } = composeNotification('notification', notification);
+				const [ title, { body, icon, url } ] = await composeNotification('notification', notification);
 				const n = new Notification(title, {
 					body: body,
 					icon: icon,
