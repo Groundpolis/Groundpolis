@@ -581,6 +581,7 @@ chooseReaction: 'Choose Reaction'
 stealConfirm: 'Are you sure to steal this note?'
 autoUpdateAfterSaving: 'Update automatically after Saving'
 emojiSuggesiton: 'Emoji Suggestion'
+proposer: "Proposer"
 _steal:
   textOnly: 'Steal the text only'
   react: 'Add reaction to the base note before stealing'

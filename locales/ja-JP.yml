@@ -616,6 +616,7 @@ commentFromModerators: 'モデレーターからのコメント'
 emojiSuggestionSent: '提案が送信されました。モデレーターが審査するまでしばらくお待ちください。'
 emojiSuggestionDeleteConfirm: 'この提案を取り下げますか？'
 writeRejectReason: 'ユーザーへのコメントを書いてください'
+proposer: "提案者"
 
 _steal:
   textOnly: 'ただただ本文をパクる'

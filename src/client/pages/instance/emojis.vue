@@ -45,12 +45,16 @@
 					<div class="emoji" v-for="req in items" :key="req.id">
 						<img :src="req.file.url" class="img" :alt="req.name"/>
 						<div class="body">
-							<span class="name">{{ req.name }}</span>
-							<div class="aliases">
+							<div>
+								<span class="name">{{ req.name }}</span>
 								<span class="alias" v-for="a in req.aliases" :key="a" v-text="a"/>
 							</div>
+							<div class="proposer">
+								{{ $t('proposer') }}: 
+								<router-link :to="req.proposer | userPage"><mk-acct :user="req.proposer"/></router-link>
+							</div>
 							<mfm class="description" :text="req.description" />
-							<span class="state" v-if="req.state !== pending">
+							<span class="state" v-if="req.state !== 'pending'">
 								<fa :icon="req.state === 'accepted' ? faCheck : faTimes" />
 								{{ $t(req.state) }}
 							</span>
@@ -333,15 +337,17 @@ export default Vue.extend({
 
 					> .body {
 						padding: 8px;
-						> .name {
-							display: block;
-							font-weight: bold;
-						}
-						> .aliases {
-							opacity: 0.5;
-							> .alias {
-								margin-right: 0.5em;
+						div {
+							> .name {
+								font-weight: bold;
 							}
+							> .alias {
+								opacity: 0.5;
+								margin: 0 0.25em;
+							}
+						}
+						> .proposer {
+							opacity: 0.5;
 						}
 						> .description {
 							display: block;
