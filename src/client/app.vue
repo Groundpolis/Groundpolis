@@ -501,17 +501,13 @@ export default Vue.extend({
 					this.$root.new(await import('./components/toast.vue').then(m => m.default), { notification });
 				}
 			} else if (this.$store.state.device.showBrowserNotification) {
-				const [ title, { body, icon, url } ] = await composeNotification('notification', notification);
-				const n = new Notification(title, {
-					body: body,
-					icon: icon,
-					data: url ? { url } : { }
-				});
+				const composed = await composeNotification('notification', notification);
+				const n = new Notification(...composed);
 				n.addEventListener('click', () => {
 					this.$root.stream.send('readNotification', { id: notification.id });
-
-					if (url) {
-						location.href = url;
+					n.close();
+					if (composed[1].data && composed[1].data.url) {
+						location.href = composed[1].data.url;
 					}
 				})
 			}

@@ -1,8 +1,12 @@
 import getNoteSummary from '../../misc/get-note-summary';
 import getUserName from '../../misc/get-user-name';
+import getAcct from '../../misc/acct/render';
+
 import { clientDb, get, bulkGet } from '../db';
 
 const getTranslation = (text: string): Promise<string> => get(text, clientDb.i18n);
+
+const url = new URL(location.href).origin;
 
 export default async function(type, data): Promise<[string, NotificationOptions]> {
 	const contexts = ['deletedNote', 'invisibleNote', 'withNFiles', 'poll'];
@@ -19,60 +23,70 @@ export default async function(type, data): Promise<[string, NotificationOptions]
 				case 'mention':
 					return [(await getTranslation('_notification.youGotMention')).replace('{name}', getUserName(data.user)), {
 						body: getNoteSummary(data.note, locale),
-						icon: data.user.avatarUrl
+						icon: data.user.avatarUrl,
+						data: { url: url + '/notes/' + data.note.id }
 					}];
 
 				case 'reply':
 					return [(await getTranslation('_notification.youGotReply')).replace('{name}', getUserName(data.user)), {
 						body: getNoteSummary(data.note, locale),
-						icon: data.user.avatarUrl
+						icon: data.user.avatarUrl,
+						data: { url: url + '/notes/' + data.note.id }
 					}];
 
 				case 'renote':
 					return [(await getTranslation('_notification.youRenoted')).replace('{name}', getUserName(data.user)), {
 						body: getNoteSummary(data.note, locale),
-						icon: data.user.avatarUrl
+						icon: data.user.avatarUrl,
+						data: { url: url + '/notes/' + data.note.id }
 					}];
 
 				case 'quote':
 					return [(await getTranslation('_notification.youGotQuote')).replace('{name}', getUserName(data.user)), {
 						body: getNoteSummary(data.note, locale),
-						icon: data.user.avatarUrl
+						icon: data.user.avatarUrl,
+						data: { url: url + '/notes/' + data.note.id }
 					}];
 
 				case 'reaction':
 					return [`${data.reaction} ${getUserName(data.user)}`, {
 						body: getNoteSummary(data.note, locale),
-						icon: data.user.avatarUrl
+						icon: data.user.avatarUrl,
+						data: { url: url + '/notes/' + data.note.id }
 					}];
 
 				case 'pollVote':
 					return [(await getTranslation('_notification.youGotPoll')).replace('{name}', getUserName(data.user)), {
 						body: getNoteSummary(data.note, locale),
-						icon: data.user.avatarUrl
+						icon: data.user.avatarUrl,
+						data: { url: url + '/notes/' + data.note.id }
 					}];
 
 				case 'follow':
 					return [await getTranslation('_notification.youWereFollowed'), {
 						body: getUserName(data.user),
-						icon: data.user.avatarUrl
+						icon: data.user.avatarUrl,
+						data: { url: url + '/@' + getAcct(data.user) }
 					}];
 
 				case 'receiveFollowRequest':
 					return [await getTranslation('_notification.youReceivedFollowRequest'), {
 						body: getUserName(data.user),
-						icon: data.user.avatarUrl
+						icon: data.user.avatarUrl,
+						data: { url: url + '/@' + getAcct(data.user) }
 					}];
 
 				case 'followRequestAccepted':
 					return [await getTranslation('_notification.yourFollowRequestAccepted'), {
 						body: getUserName(data.user),
-						icon: data.user.avatarUrl
+						icon: data.user.avatarUrl,
+						data: { url: url + '/@' + getAcct(data.user) }
 					}];
 
 				case 'groupInvited':
 					return [await getTranslation('_notification.youWereInvitedToGroup'), {
-						body: data.group.name
+						body: data.group.name,
+						data: { url: url + '/my/groups' }
 					}];
 
 				default:
