@@ -598,6 +598,8 @@ emptyToDisableSmtpAuth: 'Empty username and password to disable SMTP authenticat
 smtpSecure: 'Use implicit SSL/TLS in the SMTP connection'
 smtpSecureInfo: 'Turn off STARTTLS when used that'
 testEmail: 'Test delivery'
+logoutAll: 'Logout all accounts'
+logoutAllConfirm: 'Are you sure to delete all accounts added to this device?'
 _steal:
   textOnly: 'Steal the text only'
   react: 'Add reaction to the base note before stealing'
