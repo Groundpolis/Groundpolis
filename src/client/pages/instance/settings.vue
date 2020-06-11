@@ -85,6 +85,7 @@
 		<div class="_content">
 			<mk-switch v-model="enableEmail">{{ $t('enableEmail') }}<template #desc>{{ $t('emailConfigInfo') }}</template></mk-switch>
 			<mk-input v-model="email" type="email" @change="save()" :disabled="!enableEmail">{{ $t('email') }}</mk-input>
+			<div><b>{{ $t('smtpConfig') }}</b></div>
 			<div class="_inputs">
 				<mk-input v-model="smtpHost" :disabled="!enableEmail">{{ $t('smtpHost') }}</mk-input>
 				<mk-input v-model="smtpPort" type="number" :disabled="!enableEmail">{{ $t('smtpPort') }}</mk-input>
@@ -559,6 +560,7 @@ export default Vue.extend({
 				smtpUser: this.smtpUser,
 				smtpPass: this.smtpPass,
 				summalyProxy: this.summalyProxy,
+				useStarForReactionFallback: this.useStarForReactionFallback,
 			}).then(() => {
 				this.$store.dispatch('instance/fetch');
 				if (withDialog) {
