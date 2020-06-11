@@ -4,6 +4,7 @@
 
 	<div class="_content">
 		<mk-switch v-model="autoReload">{{ $t('autoReloadWhenDisconnected') }}</mk-switch>
+		<mk-switch v-model="enableInfiniteScroll">{{ $t('enableInfiniteScroll') }}</mk-switch>
 		<mk-switch v-model="reduceAnimation">{{ $t('reduceUiAnimation') }}</mk-switch>
 		<mk-switch v-model="disablePagesScript">{{ $t('disablePagesScript') }}</mk-switch>
 		<mk-switch v-model="imageNewTab">{{ $t('openImageInNewTab') }}</mk-switch>
@@ -142,6 +143,11 @@ export default Vue.extend({
 		autoReload: {
 			get() { return this.$store.state.device.autoReload; },
 			set(value) { this.$store.commit('device/set', { key: 'autoReload', value }); }
+		},
+
+		enableInfiniteScroll: {
+			get() { return this.$store.state.device.enableInfiniteScroll; },
+			set(value) { this.$store.commit('device/setInfiniteScrollEnabling', value); }
 		},
 
 		reduceAnimation: {

@@ -1,8 +1,8 @@
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import * as nestedProperty from 'nested-property';
-import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faPaintBrush, faStar, faAt, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faDoorClosed, faBullhorn, faLaugh } from '@fortawesome/free-solid-svg-icons';
-import { faBell, faEnvelope, faComments } from '@fortawesome/free-regular-svg-icons';
+import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faPaintBrush, faStar, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faDoorClosed, faBullhorn, faLaugh } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faComments } from '@fortawesome/free-regular-svg-icons';
 import { apiUrl } from './config';
 import defaultFaces from './scripts/default-faces';
 
@@ -193,20 +193,6 @@ export default () => new Vuex.Store({
 				icon: faBroadcastTower,
 				get show() { return getters.isSignedIn; },
 				to: '/my/antennas',
-			},
-			mentions: {
-				title: 'mentions',
-				icon: faAt,
-				get show() { return getters.isSignedIn; },
-				get indicated() { return getters.isSignedIn && state.i.hasUnreadMentions; },
-				to: '/my/mentions',
-			},
-			messages: {
-				title: 'directNotes',
-				icon: faEnvelope,
-				get show() { return getters.isSignedIn; },
-				get indicated() { return getters.isSignedIn && state.i.hasUnreadSpecifiedNotes; },
-				to: '/my/messages',
 			},
 			favorites: {
 				title: 'favorites',
