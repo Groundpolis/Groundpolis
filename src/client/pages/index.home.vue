@@ -13,6 +13,8 @@
 				<fa v-if="src === 'antenna'" :icon="faBroadcastTower"/>
 				<fa v-if="src === 'mentions'" :icon="faAt"/>
 				<fa v-if="src === 'direct'" :icon="faEnvelope"/>
+				<fa v-if="src === 'followers'" :icon="faCommentAlt"/>
+				<fa v-if="src === 'remoteFollowing'" :icon="faProjectDiagram"/>
 				<span style="margin-left: 8px;">{{ timelineTitle }}</span>
 				<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
 			</button>
@@ -51,8 +53,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faCat, faAt } from '@fortawesome/free-solid-svg-icons';
-import { faComments, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faCat, faAt, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
+import { faComments, faEnvelope, faCommentAlt } from '@fortawesome/free-regular-svg-icons';
 import Progress from '../scripts/loading';
 import XTimeline from '../components/timeline.vue';
 import MkButton from '../components/ui/button.vue';
@@ -89,7 +91,7 @@ export default Vue.extend({
 			queue: 0,
 			width: 0,
 			currentAnnouncementIndex: 0,
-			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faCat, faAt, faEnvelope
+			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faCat, faAt, faEnvelope, faCommentAlt, faProjectDiagram
 		};
 	},
 
@@ -223,6 +225,14 @@ export default Vue.extend({
 					text: this.$t('_timelines.cat'),
 					icon: faCat,
 					action: () => { this.setSrc('cat') }
+				}, {
+					text: this.$t('_timelines.remoteFollowing'),
+					icon: faProjectDiagram,
+					action: () => { this.setSrc('remoteFollowing') }
+				}, {
+					text: this.$t('_timelines.followers'),
+					icon: faCommentAlt,
+					action: () => { this.setSrc('followers') }
 				}, antennaItems.length > 0 ? null : undefined, ...antennaItems, listItems.length > 0 ? null : undefined, ...listItems, null, {
 					text: this.$t('mentions'),
 					icon: faAt,

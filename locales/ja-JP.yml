@@ -947,6 +947,8 @@ _timelines:
   social: "ホーム + ローカル"
   global: "グローバル"
   cat: "キャット"
+  remoteFollowing: "リモートフォロー"
+  followers: "フォロワー"
 
 _rooms:
   roomOf: "{user}のルーム"

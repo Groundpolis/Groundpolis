@@ -12,6 +12,8 @@
 				<fa v-if="props.src === 'mentions'" :icon="faAt"/>
 				<fa v-if="props.src === 'direct'" :icon="faEnvelope"/>
 				<fa v-if="props.src === 'antenna'" :icon="faSatellite"/>
+				<fa v-if="props.src === 'followers'" :icon="faCommentAlt"/>
+				<fa v-if="props.src === 'remoteFollowing'" :icon="faProjectDiagram"/>
 				<span style="margin-left: 8px;">{{ timelineTitle }}</span>
 				<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
 			</button>
@@ -25,8 +27,8 @@
 </template>
 
 <script lang="ts">
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faCat, faAt } from '@fortawesome/free-solid-svg-icons';
-import { faComments, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faCat, faAt, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
+import { faComments, faEnvelope, faCommentAlt } from '@fortawesome/free-regular-svg-icons';
 import MkContainer from '../components/ui/container.vue';
 import XTimeline from '../components/timeline.vue';
 import define from './define';
@@ -52,7 +54,7 @@ export default define({
 	data() {
 		return {
 			menuOpened: false,
-			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faSatellite, faCat, faAt, faEnvelope
+			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faSatellite, faCat, faAt, faEnvelope, faProjectDiagram, faCommentAlt
 		};
 	},
 
@@ -134,6 +136,14 @@ export default define({
 					text: this.$t('_timelines.cat'),
 					icon: faCat,
 					action: () => { this.setSrc('cat') }
+				}, {
+					text: this.$t('_timelines.remoteFollowing'),
+					icon: faProjectDiagram,
+					action: () => { this.setSrc('remoteFollowing') }
+				}, {
+					text: this.$t('_timelines.followers'),
+					icon: faCommentAlt,
+					action: () => { this.setSrc('followers') }
 				}, antennaItems.length > 0 ? null : undefined, ...antennaItems, listItems.length > 0 ? null : undefined, ...listItems, null, {
 					text: this.$t('mentions'),
 					icon: faAt,

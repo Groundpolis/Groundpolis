@@ -851,6 +851,8 @@ _timelines:
   social: "Social"
   global: "Global"
   cat: "Cat"
+  remoteFollowing: "Remote Following"
+  followers: "Followers"
 _rooms:
   roomOf: "{user}'s room"
   addFurniture: "Place furniture"
