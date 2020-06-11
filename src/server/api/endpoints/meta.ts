@@ -107,9 +107,6 @@ export default define(meta, async (ps, me) => {
 
 		version: config.version,
 
-		// For checking groundpolis
-		isGroundpolis: true,
-
 		name: instance.name,
 		uri: config.url,
 		description: instance.description,
