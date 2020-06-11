@@ -205,6 +205,7 @@ os.init(async () => {
 		methods: {
 			api: (endpoint: string, data: { [x: string]: any } = {}, token?) => store.dispatch('api', { endpoint, data, token }),
 			signout: os.signout,
+			signoutAll: os.signoutAll,
 			new(vm, props) {
 				const x = new vm({
 					parent: this,

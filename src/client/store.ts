@@ -264,6 +264,27 @@ export default () => new Vuex.Store({
 
 		logout(ctx) {
 			ctx.commit('device/setUserData', { userId: ctx.state.i.id, data: ctx.state.deviceUser });
+			const accounts = (ctx.state.device.accounts as any[]);
+			const current = accounts.findIndex(a => a.id === ctx.state.i.id);
+			const newAccounts = accounts.filter((_, i) => i !== current);
+			ctx.commit('device/set', {
+				key: 'accounts',
+				value: newAccounts
+			});
+			if (newAccounts.length > 0) {
+				ctx.dispatch('switchAccount', newAccounts[0]);
+			} else {
+				ctx.commit('updateI', null);
+				ctx.commit('settings/init', {});
+				ctx.commit('deviceUser/init', {});
+				localStorage.removeItem('i');
+				document.cookie = `igi=; path=/`;
+			}
+		},
+
+		logoutAll(ctx) {
+			ctx.commit('device/setUserData', { userId: ctx.state.i.id, data: ctx.state.deviceUser });
+			ctx.commit('device/set', { key: 'accounts', value: [] });
 			ctx.commit('updateI', null);
 			ctx.commit('settings/init', {});
 			ctx.commit('deviceUser/init', {});
