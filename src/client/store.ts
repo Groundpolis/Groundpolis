@@ -19,7 +19,6 @@ export const defaultSettings = {
 	reactions: ['👍', '❤️', '😆', '🤔', '😮', '🎉', '💢', '😥', '😇', '🍮'],
 	faces: defaultFaces,
 	widgets: [],
-	iconType: 'circle' as 'circle' | 'square' | 'rounded' | 'droplet',
 	useVisibilitySwitch: false,
 	homeNoteVisibility: 'default',
 	localNoteVisibility: 'default',

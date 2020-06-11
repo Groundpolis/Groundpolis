@@ -31,6 +31,7 @@
 
 			<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $t(x) }}</option>
 		</mk-select>
+		<mk-switch v-model="showFullAcct">{{ $t('showFullAcct') }}</mk-switch>
 		<mk-switch v-model="compactMode">{{ $t('compactMode') }}</mk-switch>
 		<x-note :note="previewNote" :preview="true" />
 	</div>
@@ -305,6 +306,11 @@ export default Vue.extend({
 			set(value) { this.$store.commit('device/set', { key: 'noteNameDisplayMode', value }) }
 		},
 
+		showFullAcct: {
+			get() { return this.$store.state.settings.showFullAcct },
+			set(value) { this.$store.dispatch('settings/set', { key: 'showFullAcct', value }) }
+		},
+
 		previewNote () {
 			return {
 				id: '',
@@ -338,6 +344,10 @@ export default Vue.extend({
 			}
 			location.reload();
 		},
+
+		showFullAcct() {
+			location.reload();
+		}
 	},
 
 	methods: {
