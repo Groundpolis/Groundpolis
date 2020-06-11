@@ -9,8 +9,10 @@
 				<fa v-if="props.src === 'global'" :icon="faGlobe"/>
 				<fa v-if="props.src === 'cat'" :icon="faCat"/>
 				<fa v-if="props.src === 'list'" :icon="faListUl"/>
+				<fa v-if="props.src === 'mentions'" :icon="faAt"/>
+				<fa v-if="props.src === 'direct'" :icon="faEnvelope"/>
 				<fa v-if="props.src === 'antenna'" :icon="faSatellite"/>
-				<span style="margin-left: 8px;">{{ props.src === 'list' ? props.list.name : props.src === 'antenna' ? props.antenna.name : $t('_timelines.' + props.src) }}</span>
+				<span style="margin-left: 8px;">{{ timelineTitle }}</span>
 				<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
 			</button>
 		</template>
@@ -23,8 +25,8 @@
 </template>
 
 <script lang="ts">
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faCat } from '@fortawesome/free-solid-svg-icons';
-import { faComments } from '@fortawesome/free-regular-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faCat, faAt } from '@fortawesome/free-solid-svg-icons';
+import { faComments, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import MkContainer from '../components/ui/container.vue';
 import XTimeline from '../components/timeline.vue';
 import define from './define';
@@ -50,7 +52,7 @@ export default define({
 	data() {
 		return {
 			menuOpened: false,
-			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faSatellite, faCat
+			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faSatellite, faCat, faAt, faEnvelope
 		};
 	},
 
@@ -66,6 +68,14 @@ export default define({
 		meta() {
 			return this.$store.state.instance.meta;
 		},
+
+		timelineTitle() {
+			return 	this.props.src === 'list' ?  this.props.list.name : 
+							this.props.src === 'antenna' ? this.props.antenna.name : 
+							this.props.src === 'mentions' ? this.$t('mentions') :
+							this.props.src === 'direct' ? this.$t('directNotes') :
+							this.$t('_timelines.' + this.props.src);
+		}
 	},
 
 	methods: {
@@ -124,7 +134,15 @@ export default define({
 					text: this.$t('_timelines.cat'),
 					icon: faCat,
 					action: () => { this.setSrc('cat') }
-				}, antennaItems.length > 0 ? null : undefined, ...antennaItems, listItems.length > 0 ? null : undefined, ...listItems],
+				}, antennaItems.length > 0 ? null : undefined, ...antennaItems, listItems.length > 0 ? null : undefined, ...listItems, null, {
+					text: this.$t('mentions'),
+					icon: faAt,
+					action: () => { this.setSrc('mentions') }
+				}, {
+					text: this.$t('directNotes'),
+					icon: faEnvelope,
+					action: () => { this.setSrc('direct') }
+				}],
 				fixed: true,
 				noCenter: true,
 				source: ev.currentTarget || ev.target

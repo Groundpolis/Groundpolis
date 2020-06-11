@@ -76,6 +76,8 @@ export default Vue.extend({
 
 		let endpoint;
 
+		let params = {} as any;
+
 		if (this.src == 'antenna') {
 			endpoint = 'antennas/notes';
 			this.query = {
@@ -109,6 +111,11 @@ export default Vue.extend({
 			endpoint = 'notes/cat-timeline';
 			this.connection = this.$root.stream.useSharedConnection('catTimeline');
 			this.connection.on('note', prepend);
+		} else if (this.src == 'mentions') {
+			endpoint = 'notes/mentions';
+		} else if (this.src == 'direct') {
+			endpoint = 'notes/mentions';
+			params.visibility = 'specified';
 		} else if (this.src == 'list') {
 			endpoint = 'notes/user-list-timeline';
 			this.query = {
@@ -127,7 +134,8 @@ export default Vue.extend({
 			limit: 10,
 			params: init => ({
 				untilDate: init ? undefined : (this.date ? this.date.getTime() : undefined),
-				...this.baseQuery, ...this.query
+				...this.baseQuery, ...this.query,
+				...params,
 			})
 		};
 	},

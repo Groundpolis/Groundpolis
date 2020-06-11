@@ -11,7 +11,9 @@
 				<fa v-if="src === 'cat'" :icon="faCat"/>
 				<fa v-if="src === 'list'" :icon="faListUl"/>
 				<fa v-if="src === 'antenna'" :icon="faBroadcastTower"/>
-				<span style="margin-left: 8px;">{{ src === 'list' ? list.name : src === 'antenna' ? antenna.name : $t('_timelines.' + src) }}</span>
+				<fa v-if="src === 'mentions'" :icon="faAt"/>
+				<fa v-if="src === 'direct'" :icon="faEnvelope"/>
+				<span style="margin-left: 8px;">{{ timelineTitle }}</span>
 				<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
 			</button>
 		</portal>
@@ -49,8 +51,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faCat } from '@fortawesome/free-solid-svg-icons';
-import { faComments } from '@fortawesome/free-regular-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faCat, faAt } from '@fortawesome/free-solid-svg-icons';
+import { faComments, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import Progress from '../scripts/loading';
 import XTimeline from '../components/timeline.vue';
 import MkButton from '../components/ui/button.vue';
@@ -87,7 +89,7 @@ export default Vue.extend({
 			queue: 0,
 			width: 0,
 			currentAnnouncementIndex: 0,
-			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faCat
+			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faCat, faAt, faEnvelope
 		};
 	},
 
@@ -112,6 +114,14 @@ export default Vue.extend({
 		meta() {
 			return this.$store.state.instance.meta;
 		},
+
+		timelineTitle() {
+			return 	this.src === 'list' ?  this.list.name : 
+							this.src === 'antenna' ? this.antenna.name : 
+							this.src === 'mentions' ? this.$t('mentions') :
+							this.src === 'direct' ? this.$t('directNotes') :
+							this.$t('_timelines.' + this.src);
+		}
 	},
 
 	watch: {
@@ -213,7 +223,15 @@ export default Vue.extend({
 					text: this.$t('_timelines.cat'),
 					icon: faCat,
 					action: () => { this.setSrc('cat') }
-				}, antennaItems.length > 0 ? null : undefined, ...antennaItems, listItems.length > 0 ? null : undefined, ...listItems],
+				}, antennaItems.length > 0 ? null : undefined, ...antennaItems, listItems.length > 0 ? null : undefined, ...listItems, null, {
+					text: this.$t('mentions'),
+					icon: faAt,
+					action: () => { this.setSrc('mentions') }
+				}, {
+					text: this.$t('directNotes'),
+					icon: faEnvelope,
+					action: () => { this.setSrc('direct') }
+				}],
 				fixed: true,
 				noCenter: true,
 				source: ev.currentTarget || ev.target
