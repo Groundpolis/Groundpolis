@@ -107,6 +107,9 @@ export default define(meta, async (ps, me) => {
 
 		version: config.version,
 
+		// For checking groundpolis
+		isGroundpolis: true,
+
 		name: instance.name,
 		uri: config.url,
 		description: instance.description,
@@ -120,6 +123,7 @@ export default define(meta, async (ps, me) => {
 		disableRegistration: instance.disableRegistration,
 		disableLocalTimeline: instance.disableLocalTimeline,
 		disableGlobalTimeline: instance.disableGlobalTimeline,
+		disableCatTimeline: instance.disableCatTimeline,
 		driveCapacityPerLocalUserMb: instance.localDriveCapacityMb,
 		driveCapacityPerPremiumUserMb: instance.premiumDriveCapacityMb,
 		driveCapacityPerRemoteUserMb: instance.remoteDriveCapacityMb,
@@ -155,6 +159,7 @@ export default define(meta, async (ps, me) => {
 			registration: !instance.disableRegistration,
 			localTimeLine: !instance.disableLocalTimeline,
 			globalTimeLine: !instance.disableGlobalTimeline,
+			catTimeline: !instance.disableCatTimeline,
 			elasticsearch: config.elasticsearch ? true : false,
 			hcaptcha: instance.enableHcaptcha,
 			recaptcha: instance.enableRecaptcha,

@@ -303,6 +303,7 @@ export default Vue.extend({
 		this.enableRegistration = !this.meta.disableRegistration;
 		this.enableLocalTimeline = !this.meta.disableLocalTimeline;
 		this.enableGlobalTimeline = !this.meta.disableGlobalTimeline;
+		this.enableCatTimeline = !this.meta.disableCatTimeline;
 		this.enableHcaptcha = this.meta.enableHcaptcha;
 		this.hcaptchaSiteKey = this.meta.hcaptchaSiteKey;
 		this.hcaptchaSecretKey = this.meta.hcaptchaSecretKey;
