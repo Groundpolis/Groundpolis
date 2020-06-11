@@ -86,6 +86,7 @@
 
 			<option v-for="x in langs" :value="x[0]" :key="x[0]">{{ x[1] }}</option>
 		</mk-select>
+		<mk-button @click="reloadLang()">{{ $t('reload') }}</mk-button>
 	</div>
 	<div class="_content">
 		<div>{{ $t('fontSize') }}</div>
@@ -111,10 +112,12 @@ import { faTv, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkSelect from '../../components/ui/select.vue';
+import MkButton from '../../components/ui/button.vue';
 import MkRadio from '../../components/ui/radio.vue';
 import XNote from '../../components/note.vue';
 import { langs } from '../../config';
 import MkInfo from '../../components/ui/info.vue';
+import { clientDb, set } from '../../db';
 
 export default Vue.extend({
 	metaInfo() {
@@ -127,6 +130,7 @@ export default Vue.extend({
 		MkSwitch,
 		MkSelect,
 		MkRadio,
+		MkButton,
 		XNote,
 		MkInfo
 	},
@@ -331,9 +335,23 @@ export default Vue.extend({
 
 	watch: {
 		lang() {
+			const dialog = this.$root.dialog({
+				type: 'waiting',
+				iconOnly: true
+			});
+
 			localStorage.setItem('lang', this.lang);
-			localStorage.removeItem('locale');
-			location.reload();
+
+			return set('_version_', `changeLang-${(new Date()).toJSON()}`, clientDb.i18n)
+				.then(() => location.reload())
+				.catch(() => {
+					dialog.close();
+					this.$root.dialog({
+						type: 'error',
+						iconOnly: true,
+						autoClose: true
+					});
+				});
 		},
 
 		fontSize() {
@@ -353,6 +371,24 @@ export default Vue.extend({
 	methods: {
 		showHint(title: string, text: string) {
 			this.$root.dialog({ title, text, type: 'info' });
+		},
+
+		reloadLang() {
+			const dialog = this.$root.dialog({
+				type: 'waiting',
+				iconOnly: true
+			});
+
+			return set('_version_', `reload-${(new Date()).toJSON()}`, clientDb.i18n)
+				.then(() => location.reload())
+				.catch(() => {
+					dialog.close();
+					this.$root.dialog({
+						type: 'error',
+						iconOnly: true,
+						autoClose: true
+					});
+				});
 		}
 	}
 });
