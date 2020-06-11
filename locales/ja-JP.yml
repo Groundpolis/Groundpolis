@@ -806,6 +806,7 @@ _widgets:
   rss: "RSSリーダー"
   activity: "アクティビティ"
   photos: "フォト"
+  post-form: "投稿フォーム"
 
 _cw:
   hide: "隠す"

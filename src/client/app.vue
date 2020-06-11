@@ -532,6 +532,7 @@ export default Vue.extend({
 		addWidget(ev) {
 			const widgets = [
 				'memo',
+				'post-form',
 				'notifications',
 				'timeline',
 				'calendar',

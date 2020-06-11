@@ -753,6 +753,7 @@ _widgets:
   rss: "RSS reader"
   activity: "Activity"
   photos: "Photos"
+  post-form: "Post Form"
 _cw:
   hide: "Hide"
   show: "Load more"
