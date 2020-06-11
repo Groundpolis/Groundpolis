@@ -633,6 +633,7 @@ emptyToDisableSmtpAuth: 'ユーザー名とパスワードを空欄にするこ�
 smtpSecure: 'SMTP 接続に暗黙的なSSL/TLSを使用する'
 smtpSecureInfo: 'STARTTLS使用時はオフにします。'
 testEmail: '配信テスト'
+showFullAcct: 'ローカルユーザーのホスト名を省略しない'
 
 _steal:
   textOnly: 'ただただ本文をパクる'
