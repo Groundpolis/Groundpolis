@@ -109,6 +109,20 @@ export default Vue.extend({
 			endpoint = 'notes/cat-timeline';
 			this.connection = this.$root.stream.useSharedConnection('catTimeline');
 			this.connection.on('note', prepend);
+		} else if (this.src == 'remoteFollowing') {
+			endpoint = 'notes/timeline';
+			this.query = { remoteOnly: true };
+			this.connection = this.$root.stream.useSharedConnection('remoteFollowingTimeline');
+			this.connection.on('note', prepend);
+		} else if (this.src == 'followers') {
+			endpoint = 'notes/followers-timeline';
+			this.connection = this.$root.stream.useSharedConnection('followersTimeline');
+			this.connection.on('note', prepend);
+		} else if (this.src == 'mentions') {
+			endpoint = 'notes/mentions';
+		} else if (this.src == 'direct') {
+			endpoint = 'notes/mentions';
+			this.query = { visibility: 'specified' };
 		} else if (this.src == 'list') {
 			endpoint = 'notes/user-list-timeline';
 			this.query = {
@@ -127,7 +141,7 @@ export default Vue.extend({
 			limit: 10,
 			params: init => ({
 				untilDate: init ? undefined : (this.date ? this.date.getTime() : undefined),
-				...this.baseQuery, ...this.query
+				...this.baseQuery, ...this.query,
 			})
 		};
 	},

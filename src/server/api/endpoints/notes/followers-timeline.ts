@@ -13,8 +13,8 @@ import { injectFeatured } from '../../common/inject-featured';
 
 export const meta = {
 	desc: {
-		'ja-JP': 'タイムラインを取得します。',
-		'en-US': 'Get timeline of myself.'
+		'ja-JP': 'フォロワータイムラインを取得します。',
+		'en-US': 'Get followers timeline.'
 	},
 
 	tags: ['notes'],
@@ -88,13 +88,6 @@ export const meta = {
 				'ja-JP': 'true にすると、ファイルが添付された投稿だけ取得します'
 			}
 		},
-
-		remoteOnly: {
-			validator: $.optional.bool,
-			desc: {
-				'ja-JP': 'true にすると、リモートユーザーのノートだけ取得します'
-			}
-		},
 	},
 
 	res: {
@@ -117,26 +110,22 @@ export default define(meta, async (ps, user) => {
 	})) !== 0;
 
 	//#region Construct query
-	const followingQuery = Followings.createQueryBuilder('following')
-		.select('following.followeeId')
-		.where('following.followerId = :followerId', { followerId: user.id });
+	const followersQuery = Followings.createQueryBuilder('following')
+		.select('following.followerId')
+		.where('following.followeeId = :followeeId', { followeeId: user.id });
 
 	const query = makePaginationQuery(Notes.createQueryBuilder('note'),
 			ps.sinceId, ps.untilId, ps.sinceDate, ps.untilDate)
 		.andWhere(new Brackets(qb => { qb
 			.where('note.userId = :meId', { meId: user.id });
-			if (hasFollowing) qb.orWhere(`note.userId IN (${ followingQuery.getQuery() })`);
+			if (hasFollowing) qb.orWhere(`note.userId IN (${ followersQuery.getQuery() })`);
 		}))
 		.leftJoinAndSelect('note.user', 'user')
-		.setParameters(followingQuery.getParameters());
+		.setParameters(followersQuery.getParameters());
 
 	generateRepliesQuery(query, user);
 	generateVisibilityQuery(query, user);
 	generateMuteQuery(query, user);
-
-	if (ps.remoteOnly) {
-		query.andWhere('note.userHost IS NOT NULL');
-	}
 
 	if (ps.includeMyRenotes === false) {
 		query.andWhere(new Brackets(qb => {

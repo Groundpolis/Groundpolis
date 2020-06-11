@@ -37,6 +37,12 @@ export default class MiOS extends EventEmitter {
 		location.href = '/';
 	}
 
+	@autobind
+	public signoutAll() {
+		this.store.dispatch('logoutAll');
+		location.href = '/';
+	}
+
 	/**
 	 * Initialize MiOS (boot)
 	 * @param callback A function that call when initialized

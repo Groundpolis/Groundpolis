@@ -347,15 +347,17 @@ export default Vue.extend({
 			this.$root.menu({
 				items: [{
 					type: 'item',
-					icon: faPlus,
 					text: this.$t('addAcount'),
 					action: () => { this.addAcount() },
 				}, {
 					type: 'item',
-					icon: faPlus,
 					text: this.$t('createAccount'),
 					action: () => { this.createAccount() },
-				}, accountItems.length > 0 ? null : undefined, ...accountItems, ].filter(m => m !== undefined),
+				}, accountItems.length > 0 ? null : undefined, ...accountItems, {
+					type: 'item',
+					text: this.$t('logout'),
+					action: () => { this.$root.signout() },
+				}].filter(m => m !== undefined),
 				align: 'left',
 				fixed: true,
 				width: 240,
@@ -526,6 +528,7 @@ export default Vue.extend({
 		addWidget(ev) {
 			const widgets = [
 				'memo',
+				'post-form',
 				'notifications',
 				'timeline',
 				'calendar',

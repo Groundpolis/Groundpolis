@@ -1,8 +1,8 @@
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import * as nestedProperty from 'nested-property';
-import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faPaintBrush, faStar, faAt, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faDoorClosed, faBullhorn, faLaugh } from '@fortawesome/free-solid-svg-icons';
-import { faBell, faEnvelope, faComments } from '@fortawesome/free-regular-svg-icons';
+import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faPaintBrush, faStar, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faDoorClosed, faBullhorn, faLaugh } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faComments } from '@fortawesome/free-regular-svg-icons';
 import { apiUrl } from './config';
 import defaultFaces from './scripts/default-faces';
 
@@ -19,7 +19,6 @@ export const defaultSettings = {
 	reactions: ['👍', '❤️', '😆', '🤔', '😮', '🎉', '💢', '😥', '😇', '🍮'],
 	faces: defaultFaces,
 	widgets: [],
-	iconType: 'circle' as 'circle' | 'square' | 'rounded' | 'droplet',
 	useVisibilitySwitch: false,
 	homeNoteVisibility: 'default',
 	localNoteVisibility: 'default',
@@ -194,20 +193,6 @@ export default () => new Vuex.Store({
 				get show() { return getters.isSignedIn; },
 				to: '/my/antennas',
 			},
-			mentions: {
-				title: 'mentions',
-				icon: faAt,
-				get show() { return getters.isSignedIn; },
-				get indicated() { return getters.isSignedIn && state.i.hasUnreadMentions; },
-				to: '/my/mentions',
-			},
-			messages: {
-				title: 'directNotes',
-				icon: faEnvelope,
-				get show() { return getters.isSignedIn; },
-				get indicated() { return getters.isSignedIn && state.i.hasUnreadSpecifiedNotes; },
-				to: '/my/messages',
-			},
 			favorites: {
 				title: 'favorites',
 				icon: faStar,
@@ -279,6 +264,27 @@ export default () => new Vuex.Store({
 
 		logout(ctx) {
 			ctx.commit('device/setUserData', { userId: ctx.state.i.id, data: ctx.state.deviceUser });
+			const accounts = (ctx.state.device.accounts as any[]);
+			const current = accounts.findIndex(a => a.id === ctx.state.i.id);
+			const newAccounts = accounts.filter((_, i) => i !== current);
+			ctx.commit('device/set', {
+				key: 'accounts',
+				value: newAccounts
+			});
+			if (newAccounts.length > 0) {
+				ctx.dispatch('switchAccount', newAccounts[0]);
+			} else {
+				ctx.commit('updateI', null);
+				ctx.commit('settings/init', {});
+				ctx.commit('deviceUser/init', {});
+				localStorage.removeItem('i');
+				document.cookie = `igi=; path=/`;
+			}
+		},
+
+		logoutAll(ctx) {
+			ctx.commit('device/setUserData', { userId: ctx.state.i.id, data: ctx.state.deviceUser });
+			ctx.commit('device/set', { key: 'accounts', value: [] });
 			ctx.commit('updateI', null);
 			ctx.commit('settings/init', {});
 			ctx.commit('deviceUser/init', {});

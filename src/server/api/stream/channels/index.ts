@@ -4,6 +4,8 @@ import localTimeline from './local-timeline';
 import hybridTimeline from './hybrid-timeline';
 import globalTimeline from './global-timeline';
 import catTimeline from './cat-timeline';
+import remoteFollowingTimeline from './remote-following-timeline';
+import followersTimeline from './followers-timeline';
 import serverStats from './server-stats';
 import queueStats from './queue-stats';
 import userList from './user-list';
@@ -22,6 +24,8 @@ export default {
 	localTimeline,
 	hybridTimeline,
 	globalTimeline,
+	remoteFollowingTimeline,
+	followersTimeline,
 	catTimeline,
 	serverStats,
 	queueStats,

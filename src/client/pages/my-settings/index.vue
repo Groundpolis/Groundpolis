@@ -58,6 +58,7 @@
 	<router-link class="_panel _buttonPrimary" to="/my/apps" style="margin: var(--margin) auto;">{{ $t('installedApps') }}</router-link>
 
 	<button class="_panel _buttonPrimary" @click="$root.signout()" style="margin: var(--margin) auto;">{{ $t('logout') }}</button>
+	<button class="_panel _buttonPrimary" @click="signoutAll()" style="margin: var(--margin) auto;">{{ $t('logoutAll') }}</button>
 </div>
 </template>
 
@@ -162,6 +163,17 @@ export default Vue.extend({
 			picker.$once('chosen', (reaction: string) => {
 				this.stealReaction = reaction;
 				picker.close();
+			});
+		},
+
+		signoutAll() {
+			this.$root.dialog({
+				type: 'warning',
+				text: this.$t('logoutAllConfirm'),
+				showCancelButton: true
+			}).then(({ canceled }) => {
+				if (canceled) return;
+				this.$root.signoutAll();
 			});
 		}
 	}

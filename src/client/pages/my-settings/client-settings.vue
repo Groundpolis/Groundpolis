@@ -4,6 +4,7 @@
 
 	<div class="_content">
 		<mk-switch v-model="autoReload">{{ $t('autoReloadWhenDisconnected') }}</mk-switch>
+		<mk-switch v-model="enableInfiniteScroll">{{ $t('enableInfiniteScroll') }}</mk-switch>
 		<mk-switch v-model="reduceAnimation">{{ $t('reduceUiAnimation') }}</mk-switch>
 		<mk-switch v-model="disablePagesScript">{{ $t('disablePagesScript') }}</mk-switch>
 		<mk-switch v-model="imageNewTab">{{ $t('openImageInNewTab') }}</mk-switch>
@@ -30,6 +31,7 @@
 
 			<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $t(x) }}</option>
 		</mk-select>
+		<mk-switch v-model="showFullAcct">{{ $t('showFullAcct') }}</mk-switch>
 		<mk-switch v-model="compactMode">{{ $t('compactMode') }}</mk-switch>
 		<x-note :note="previewNote" :preview="true" />
 	</div>
@@ -84,6 +86,7 @@
 
 			<option v-for="x in langs" :value="x[0]" :key="x[0]">{{ x[1] }}</option>
 		</mk-select>
+		<mk-button @click="reloadLang()">{{ $t('reload') }}</mk-button>
 	</div>
 	<div class="_content">
 		<div>{{ $t('fontSize') }}</div>
@@ -109,10 +112,12 @@ import { faTv, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkSelect from '../../components/ui/select.vue';
+import MkButton from '../../components/ui/button.vue';
 import MkRadio from '../../components/ui/radio.vue';
 import XNote from '../../components/note.vue';
 import { langs } from '../../config';
 import MkInfo from '../../components/ui/info.vue';
+import { clientDb, set } from '../../db';
 
 export default Vue.extend({
 	metaInfo() {
@@ -125,6 +130,7 @@ export default Vue.extend({
 		MkSwitch,
 		MkSelect,
 		MkRadio,
+		MkButton,
 		XNote,
 		MkInfo
 	},
@@ -142,6 +148,11 @@ export default Vue.extend({
 		autoReload: {
 			get() { return this.$store.state.device.autoReload; },
 			set(value) { this.$store.commit('device/set', { key: 'autoReload', value }); }
+		},
+
+		enableInfiniteScroll: {
+			get() { return this.$store.state.device.enableInfiniteScroll; },
+			set(value) { this.$store.commit('device/setInfiniteScrollEnabling', value); }
 		},
 
 		reduceAnimation: {
@@ -299,6 +310,11 @@ export default Vue.extend({
 			set(value) { this.$store.commit('device/set', { key: 'noteNameDisplayMode', value }) }
 		},
 
+		showFullAcct: {
+			get() { return this.$store.state.settings.showFullAcct },
+			set(value) { this.$store.dispatch('settings/set', { key: 'showFullAcct', value }) }
+		},
+
 		previewNote () {
 			return {
 				id: '',
@@ -319,9 +335,23 @@ export default Vue.extend({
 
 	watch: {
 		lang() {
+			const dialog = this.$root.dialog({
+				type: 'waiting',
+				iconOnly: true
+			});
+
 			localStorage.setItem('lang', this.lang);
-			localStorage.removeItem('locale');
-			location.reload();
+
+			return set('_version_', `changeLang-${(new Date()).toJSON()}`, clientDb.i18n)
+				.then(() => location.reload())
+				.catch(() => {
+					dialog.close();
+					this.$root.dialog({
+						type: 'error',
+						iconOnly: true,
+						autoClose: true
+					});
+				});
 		},
 
 		fontSize() {
@@ -332,11 +362,33 @@ export default Vue.extend({
 			}
 			location.reload();
 		},
+
+		showFullAcct() {
+			location.reload();
+		}
 	},
 
 	methods: {
 		showHint(title: string, text: string) {
 			this.$root.dialog({ title, text, type: 'info' });
+		},
+
+		reloadLang() {
+			const dialog = this.$root.dialog({
+				type: 'waiting',
+				iconOnly: true
+			});
+
+			return set('_version_', `reload-${(new Date()).toJSON()}`, clientDb.i18n)
+				.then(() => location.reload())
+				.catch(() => {
+					dialog.close();
+					this.$root.dialog({
+						type: 'error',
+						iconOnly: true,
+						autoClose: true
+					});
+				});
 		}
 	}
 });
