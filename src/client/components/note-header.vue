@@ -19,6 +19,7 @@
 			<fa :icon="faCheck" transform="shrink-6" size="xs" :style="{ color: 'var(--panel)' }"/>
 		</fa-layers>
 	</span>
+	<span class="premium" v-if="note.user.isPremium"><fa :icon="faCrown"/></span>
 	<div class="info">
 		<span class="mobile" v-if="note.viaMobile"><fa :icon="faMobileAlt"/></span>
 		<router-link class="created-at" :to="note | notePage">
@@ -39,7 +40,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faCertificate, faCheck, faUsers, faHeart, faGlobeAmericas, faHeartbeat } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faCertificate, faCheck, faUsers, faHeart, faGlobeAmericas, faHeartbeat, faCrown } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
@@ -52,7 +53,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faCertificate, faCheck, faUsers, faHeart, faGlobeAmericas, faHeartbeat
+			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faCertificate, faCheck, faUsers, faHeart, faGlobeAmericas, faHeartbeat, faCrown
 		};
 	}
 });
@@ -103,6 +104,15 @@ export default Vue.extend({
 	> .moderator {
 		margin-right: 0.5em;
 		color: var(--badge);
+	}
+
+	> .premium {
+		margin-right: 0.5em;
+		color: var(--premium);
+	}
+
+	> .verified {
+		margin-right: 0.5em;
 	}
 
 	> .info {

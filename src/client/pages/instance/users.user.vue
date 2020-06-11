@@ -11,6 +11,7 @@
 			<span class="staff" v-if="user.isAdmin"><fa :icon="faBookmark"/></span>
 			<span class="staff" v-if="user.isModerator"><fa :icon="farBookmark"/></span>
 			<span class="staff" v-if="user.isVerified"><fa :icon="faCertificate"/></span>
+			<span class="staff" v-if="user.isPremium"><fa :icon="faCrown"/></span>
 			<span class="punished" v-if="user.isSilenced"><fa :icon="faMicrophoneSlash"/></span>
 			<span class="punished" v-if="user.isSuspended"><fa :icon="faSnowflake"/></span>
 		</div>
@@ -20,6 +21,7 @@
 				<mk-switch @change="toggleSilence()" v-model="silenced">{{ $t('silence') }}</mk-switch>
 				<mk-switch @change="toggleSuspend()" v-model="suspended">{{ $t('suspend') }}</mk-switch>
 				<mk-switch @change="toggleVerified()" v-model="verified">{{ $t('verify') }}</mk-switch>
+				<mk-switch @change="togglePremium()" v-model="premium">{{ $t('premium') }}</mk-switch>
 			</div>
 			<div style="flex: 1; padding-left: 1em;">
 				<mk-button @click="openProfile"><fa :icon="faExternalLinkSquareAlt"/> {{ $t('profile') }}</mk-button>
@@ -37,7 +39,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faTimes, faBookmark, faKey, faSync, faMicrophoneSlash, faExternalLinkSquareAlt, faCertificate } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faBookmark, faKey, faSync, faMicrophoneSlash, faExternalLinkSquareAlt, faCertificate, faCrown } from '@fortawesome/free-solid-svg-icons';
 import { faSnowflake, faTrashAlt, faBookmark as farBookmark  } from '@fortawesome/free-regular-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 import MkSwitch from '../../components/ui/switch.vue';
@@ -57,7 +59,8 @@ export default Vue.extend({
 			silenced: false,
 			suspended: false,
 			verified: false,
-			faTimes, faBookmark, farBookmark, faKey, faSync, faMicrophoneSlash, faSnowflake, faTrashAlt, faExternalLinkSquareAlt, faCertificate
+			premium: false,
+			faTimes, faBookmark, farBookmark, faKey, faSync, faMicrophoneSlash, faSnowflake, faTrashAlt, faExternalLinkSquareAlt, faCertificate, faCrown
 		};
 	},
 
@@ -78,6 +81,7 @@ export default Vue.extend({
 			this.silenced = this.info.isSilenced;
 			this.suspended = this.info.isSuspended;
 			this.verified = this.info.isVerified;
+			this.premium = this.info.isPremium;
 			Progress.done();
 		},
 
@@ -159,6 +163,11 @@ export default Vue.extend({
 
 		async toggleVerified() {
 			await this.$root.api(this.verified ? 'admin/verify-user' : 'admin/unverify-user', { userId: this.user.id });
+			await this.refreshUser();
+		},
+
+		async togglePremium() {
+			await this.$root.api(this.premium ? 'admin/set-premium' : 'admin/unset-premium', { userId: this.user.id });
 			await this.refreshUser();
 		},
 
