@@ -5,7 +5,6 @@
 
 		<div class="otgbylcu">
 			<textarea v-model="text" :placeholder="$t('placeholder')" @input="onChange"></textarea>
-			<button @click="saveMemo" :disabled="!changed" class="_buttonPrimary">{{ $t('save') }}</button>
 		</div>
 	</mk-container>
 </div>
@@ -19,7 +18,8 @@ import define from './define';
 export default define({
 	name: 'memo',
 	props: () => ({
-		compact: false
+		compact: false,
+		memo: ''
 	})
 }).extend({
 	
@@ -27,21 +27,27 @@ export default define({
 		MkContainer
 	},
 
+	computed: {
+		text: {
+			get() { return this.props.memo; },
+			set(value: string) {
+				this.props.memo = value;
+				this.save();
+			}
+		}
+	},
+
 	data() {
 		return {
-			text: null,
-			changed: false,
-			timeoutId: null,
 			faStickyNote
 		};
 	},
 
 	created() {
-		this.text = this.$store.state.settings.memo;
-
-		this.$watch('$store.state.settings.memo', text => {
-			this.text = text;
-		});
+		if (this.text === null) {
+			// migration
+			this.text = this.$store.state.settings.memo;
+		}
 	},
 
 	methods: {
@@ -49,20 +55,6 @@ export default define({
 			this.props.compact = !this.props.compact;
 			this.save();
 		},
-
-		onChange() {
-			this.changed = true;
-			clearTimeout(this.timeoutId);
-			this.timeoutId = setTimeout(this.saveMemo, 1000);
-		},
-
-		saveMemo() {
-			this.$store.dispatch('settings/set', {
-				key: 'memo',
-				value: this.text
-			});
-			this.changed = false;
-		}
 	}
 });
 </script>
