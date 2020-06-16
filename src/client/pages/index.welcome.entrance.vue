@@ -13,14 +13,18 @@
 			<mk-button @click="signin()" style="display: inline-block;">{{ $t('login') }}</mk-button>
 		</div>
 	</div>
-	<x-notes :pagination="featuredPagination"/>
+	<div class="_panel header" v-if="endpoint">
+		<fa :icon="notesIcon"/>
+		<span style="margin-left: 0.5em" v-text="notesHeader" />
+	</div>
+	<x-notes v-if="endpoint" :pagination="pagination"/>
 </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { toUnicode } from 'punycode';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+import { faExclamationTriangle, faFireAlt, faComments, faGlobe } from '@fortawesome/free-solid-svg-icons'
 import XSigninDialog from '../components/signin-dialog.vue';
 import XSignupDialog from '../components/signup-dialog.vue';
 import MkButton from '../components/ui/button.vue';
@@ -35,11 +39,6 @@ export default Vue.extend({
 
 	data() {
 		return {
-			featuredPagination: {
-				endpoint: 'notes/featured',
-				limit: 10,
-				noPaging: true,
-			},
 			host: toUnicode(host),
 			faExclamationTriangle
 		};
@@ -49,6 +48,30 @@ export default Vue.extend({
 		meta() {
 			return this.$store.state.instance.meta;
 		},
+		endpoint() {
+			return  !this.meta.disableFeatured ? 'notes/featured' :
+							!this.meta.disableLocalTimeline ? 'notes/local-timeline' :
+							!this.meta.disableGlobalTimeline ? 'notes/global-timeline' : null;
+		},
+		notesIcon() {
+			switch (this.endpoint) {
+				case 'notes/featured': return faFireAlt;
+				case 'notes/local-timeline': return faComments;
+				case 'notes/global-timeline': return faGlobe;
+				default: return null;
+			}
+		},
+		notesHeader() {
+			return this.$t(this.endpoint === 'notes/featured' ? 'welcomeFeatured' : 'welcomeTimeline');
+		},
+		pagination() {
+			if (this.endpoint === null) return null;
+			return {
+				endpoint: this.endpoint,
+				limit: 10,
+				noPaging: true,
+			};
+		}
 	},
 
 	created() {
@@ -110,6 +133,10 @@ export default Vue.extend({
 				}
 			}
 		}
+	}
+
+	> .header {
+		padding: 16px;
 	}
 }
 </style>

@@ -606,6 +606,8 @@ enableInvitation: 'Allow registration with invitation code'
 disableInvitationReason: 'Reason to disable registration'
 signupDisabled: 'you cannot register now.'
 enableFeatured: 'Enable Featured'
+welcomeFeatured: 'Let's explore the featured notes!'
+welcomeTimeline: 'Let's explore the timeline!'
 _steal:
   textOnly: 'Steal the text only'
   react: 'Add reaction to the base note before stealing'
