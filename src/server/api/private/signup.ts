@@ -43,7 +43,7 @@ export default async (ctx: Koa.Context) => {
 	const invitationCode = body['invitationCode'];
 
 	if (instance && instance.disableRegistration) {
-		if (invitationCode == null || typeof invitationCode != 'string') {
+		if (instance.disableInvitation || invitationCode == null || typeof invitationCode != 'string') {
 			ctx.status = 400;
 			return;
 		}

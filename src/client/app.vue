@@ -11,7 +11,7 @@
 						<portal-target name="avatar" slim/>
 						<h1 class="title"><portal-target name="icon" slim/><portal-target name="title" slim/></h1>
 					</div>
-					<div class="custom">
+					<div class="custom" :class="{ dense: !canBack }">
 						<portal-target name="header" slim/>
 					</div>
 				</div>
@@ -226,7 +226,11 @@ export default Vue.extend({
 				if (this.menuDef[def].indicated) return true;
 			}
 			return false;
-		}
+		},
+
+		meta() {
+			return this.$store.state.instance.meta;
+		},
 	},
 
 	watch:{
@@ -349,7 +353,7 @@ export default Vue.extend({
 					type: 'item',
 					text: this.$t('addAcount'),
 					action: () => { this.addAcount() },
-				}, {
+				}, (!this.meta || (this.meta.disableRegistration && this.meta.disableInvitation)) ? undefined : {
 					type: 'item',
 					text: this.$t('createAccount'),
 					action: () => { this.createAccount() },
@@ -455,13 +459,6 @@ export default Vue.extend({
 
 		async addAcount() {
 			this.$root.new(await import('./components/signin-dialog.vue').then(m => m.default)).$once('login', res => {
-				this.$store.dispatch('addAcount', res);
-				this.switchAccountWithToken(res.i);
-			});
-		},
-
-		async createAccount() {
-			this.$root.new(await import('./components/signup-dialog.vue').then(m => m.default)).$once('signup', res => {
 				this.$store.dispatch('addAcount', res);
 				this.switchAccountWithToken(res.i);
 			});
@@ -691,6 +688,10 @@ export default Vue.extend({
 					}
 					height: 100%;
 					width: 100%;
+
+					&.dense {
+						left: 16px - 1px;
+					}
 				}
 			}
 		}

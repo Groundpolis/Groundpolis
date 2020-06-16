@@ -600,6 +600,12 @@ smtpSecureInfo: 'Turn off STARTTLS when used that'
 testEmail: 'Test delivery'
 logoutAll: 'Logout all accounts'
 logoutAllConfirm: 'Are you sure to delete all accounts added to this device?'
+premium: 'Premium Member'
+driveCapacityPerPremiumAccount: "Drive capacity per premium member"
+enableInvitation: 'Allow registration with invitation code'
+disableInvitationReason: 'Reason to disable registration'
+signupDisabled: 'you cannot register now.'
+enableFeatured: 'Enable Featured'
 _steal:
   textOnly: 'Steal the text only'
   react: 'Add reaction to the base note before stealing'

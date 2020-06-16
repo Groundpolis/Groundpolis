@@ -32,6 +32,7 @@
 			<mk-info>{{ $t('disablingTimelinesInfo') }}</mk-info>
 		</div>
 		<div class="_content">
+			<mk-switch v-model="enableFeatured" @change="save()">{{ $t('enableFeatured') }}</mk-switch>
 			<mk-switch v-model="useStarForReactionFallback" @change="save()">{{ $t('useStarForReactionFallback') }}</mk-switch>
 		</div>
 	</section>
@@ -40,7 +41,14 @@
 		<div class="_title"><fa :icon="faUser"/> {{ $t('registration') }}</div>
 		<div class="_content">
 			<mk-switch v-model="enableRegistration" @change="save()">{{ $t('enableRegistration') }}</mk-switch>
-			<mk-button v-if="!enableRegistration" @click="invite">{{ $t('invite') }}</mk-button>
+			<template v-if="!enableRegistration">
+				<mk-switch v-if="!enableRegistration" v-model="enableInvitation" @change="save()">{{ $t('enableInvitation') }}</mk-switch>
+				<template v-if="!enableInvitation">
+					<mk-input v-model="disableInvitationReason">{{ $t('disableInvitationReason') }}</mk-input>
+					<mk-button primary @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
+				</template>
+				<mk-button v-else @click="invite">{{ $t('invite') }}</mk-button>
+			</template>
 		</div>
 	</section>
 
@@ -296,9 +304,12 @@ export default Vue.extend({
 			iconUrl: null,
 			maxNoteTextLength: 0,
 			enableRegistration: false,
+			enableInvitation: false,
+			disableInvitationReason: '',
 			enableLocalTimeline: false,
 			enableGlobalTimeline: false,
 			enableCatTimeline: false,
+			enableFeatured: false,
 			enableHcaptcha: false,
 			hcaptchaSiteKey: null,
 			hcaptchaSecretKey: null,
@@ -359,9 +370,12 @@ export default Vue.extend({
 		this.maintainerEmail = this.meta.maintainerEmail;
 		this.maxNoteTextLength = this.meta.maxNoteTextLength;
 		this.enableRegistration = !this.meta.disableRegistration;
+		this.enableInvitation = !this.meta.disableInvitation;
+		this.disableInvitationReason = this.meta.disableInvitationReason;
 		this.enableLocalTimeline = !this.meta.disableLocalTimeline;
 		this.enableGlobalTimeline = !this.meta.disableGlobalTimeline;
 		this.enableCatTimeline = !this.meta.disableCatTimeline;
+		this.enableFeatured = !this.meta.disableFeatured;
 		this.enableHcaptcha = this.meta.enableHcaptcha;
 		this.hcaptchaSiteKey = this.meta.hcaptchaSiteKey;
 		this.hcaptchaSecretKey = this.meta.hcaptchaSecretKey;
@@ -512,8 +526,11 @@ export default Vue.extend({
 				maintainerEmail: this.maintainerEmail,
 				maxNoteTextLength: this.maxNoteTextLength,
 				disableRegistration: !this.enableRegistration,
+				disableInvitation: !this.enableInvitation,
+				disableInvitationReason: this.disableInvitationReason,
 				disableLocalTimeline: !this.enableLocalTimeline,
 				disableGlobalTimeline: !this.enableGlobalTimeline,
+				disableFeatured: !this.enableFeatured,
 				disableCatTimeline: !this.enableCatTimeline,
 				enableHcaptcha: this.enableHcaptcha,
 				hcaptchaSiteKey: this.hcaptchaSiteKey,

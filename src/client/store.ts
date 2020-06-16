@@ -162,6 +162,7 @@ export default () => new Vuex.Store({
 			featured: {
 				title: 'featured',
 				icon: faFireAlt,
+				get show() { return state.instance.meta && !state.instance.meta.disableFeatured; },
 				to: '/featured',
 			},
 			explore: {

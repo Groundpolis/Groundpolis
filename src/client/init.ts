@@ -25,6 +25,7 @@ import { isDeviceDarkmode } from './scripts/is-device-darkmode';
 import createStore from './store';
 import { clientDb, get, count } from './db';
 import { setI18nContexts } from './scripts/set-i18n-contexts';
+import { NoteVisibility } from '../types';
 
 Vue.use(Vuex);
 Vue.use(VueHotkey);
@@ -245,14 +246,14 @@ os.init(async () => {
 				audio.volume = this.$store.state.device.sfxVolume;
 				audio.play();
 			},
-			createNoteInstantly(text: string) {
+			createNoteInstantly(text: string, cw?: string, visibility?: NoteVisibility) {
 				const s = this.$store.state.settings;
 				const d = this.$store.state.device;
 				return this.api('notes/create', {
-					text,
+					text, cw,
 					localOnly: s.rememberNoteVisibility ? d.localOnly : s.defaultNoteLocalOnly,
 					remoteFollowersOnly: s.rememberNoteVisibility ? false : d.localOnly,
-					visibility: s.rememberNoteVisibility ? d.visibility : s.defaultNoteVisibility,
+					visibility: visibility ? visibility : s.rememberNoteVisibility ? d.visibility : s.defaultNoteVisibility,
 					viaMobile: this.isMobile
 				});
 			}
