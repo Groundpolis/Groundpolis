@@ -3,7 +3,7 @@
 	<mk-container :show-header="!props.compact" class="container">
 		<template #header>
 			<button @click="choose" class="_button">
-				<fa :icon="getIconOfTimeline(src)"/>
+				<fa :icon="getIconOfTimeline(props.src)"/>
 				<span style="margin-left: 8px;">{{ timelineTitle }}</span>
 				<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
 			</button>
@@ -19,6 +19,7 @@
 <script lang="ts">
 import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faCat, faAt, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
 import { faComments, faEnvelope, faCommentAlt } from '@fortawesome/free-regular-svg-icons';
+import { getIconOfTimeline } from '../scripts/get-icon-of-timeline';
 import MkContainer from '../components/ui/container.vue';
 import XTimeline from '../components/timeline.vue';
 import define from './define';
@@ -71,6 +72,7 @@ export default define({
 	},
 
 	methods: {
+		getIconOfTimeline,
 		func() {
 			if (this.props.basisStep === basisSteps.length - 1) {
 				this.props.basisStep = 0
