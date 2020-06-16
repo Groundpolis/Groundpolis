@@ -786,11 +786,10 @@ export default Vue.extend({
 			}
 			if (rule === 2) {
 				this.renoteDirectly();
-				await new Promise((res) => setTimeout(res, 1000));
 			}
 			const u = this.appearNote.uri || this.appearNote.url || `${url}/notes/${this.appearNote.id}`;
 			const text = this.appearNote.text + (rule === 3 ? '\n\n' + u : '');
-			this.$root.createNoteInstantly(text);
+			this.$root.createNoteInstantly(text, this.appearNote.cw, this.appearNote.visibility);
 		},
 
 		focus() {
