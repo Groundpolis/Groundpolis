@@ -1,7 +1,7 @@
 <template>
 <div class="yfudmmck">
 	<nav>
-		<div class="path" @contextmenu.prevent.stop="() => {}">
+		<div class="path" v-if="folder">
 			<x-nav-folder :class="{ current: folder == null }"/>
 			<template v-for="f in hierarchyFolders">
 				<span class="separator" :key="f.id + ':separator'"><fa :icon="faAngleRight"/></span>

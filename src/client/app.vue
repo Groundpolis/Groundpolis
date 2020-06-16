@@ -11,7 +11,7 @@
 						<portal-target name="avatar" slim/>
 						<h1 class="title"><portal-target name="icon" slim/><portal-target name="title" slim/></h1>
 					</div>
-					<div class="custom">
+					<div class="custom" :class="{ dense: !canBack }">
 						<portal-target name="header" slim/>
 					</div>
 				</div>
@@ -692,6 +692,10 @@ export default Vue.extend({
 					}
 					height: 100%;
 					width: 100%;
+
+					&.dense {
+						left: 16px - 1px;
+					}
 				}
 			}
 		}

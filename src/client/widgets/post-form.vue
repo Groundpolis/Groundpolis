@@ -266,9 +266,9 @@ export default define({
 .form {
 	padding: 8px;
 	max-width: unset;
-	margin: 0 auto;
+	margin: 0;
+	box-sizing: border-box;
 	font-size: 14px;
-
 
 	> .cw,
 	> .text {

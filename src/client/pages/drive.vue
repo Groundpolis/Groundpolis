@@ -5,7 +5,7 @@
 			<fa :icon="faCloud" style="margin-right: 8px;"/>
 			<span v-if="folder">{{ $t('drive') }} ({{ folder.name }})</span>
 			<span v-else>{{ $t('drive') }}</span>
-			<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
+			<fa :icon="faPlusCircle" style="color: var(--accent); margin-left: 8px;"/>
 		</button>
 	</portal>
 	<x-drive ref="drive" @cd="x => folder = x"/>
@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faCloud, faAngleDown, faAngleUp, faFolderPlus, faUpload, faLink, faICursor, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCloud, faPlusCircle, faFolderPlus, faUpload, faLink, faICursor, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import XDrive from '../components/drive.vue';
 
 export default Vue.extend({
@@ -32,7 +32,7 @@ export default Vue.extend({
 		return {
 			menuOpened: false,
 			folder: null,
-			faCloud, faAngleDown, faAngleUp
+			faCloud, faPlusCircle
 		};
 	},
 

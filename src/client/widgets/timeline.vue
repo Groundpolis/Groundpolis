@@ -3,17 +3,7 @@
 	<mk-container :show-header="!props.compact" class="container">
 		<template #header>
 			<button @click="choose" class="_button">
-				<fa v-if="props.src === 'home'" :icon="faHome"/>
-				<fa v-if="props.src === 'local'" :icon="faComments"/>
-				<fa v-if="props.src === 'social'" :icon="faShareAlt"/>
-				<fa v-if="props.src === 'global'" :icon="faGlobe"/>
-				<fa v-if="props.src === 'cat'" :icon="faCat"/>
-				<fa v-if="props.src === 'list'" :icon="faListUl"/>
-				<fa v-if="props.src === 'mentions'" :icon="faAt"/>
-				<fa v-if="props.src === 'direct'" :icon="faEnvelope"/>
-				<fa v-if="props.src === 'antenna'" :icon="faSatellite"/>
-				<fa v-if="props.src === 'followers'" :icon="faCommentAlt"/>
-				<fa v-if="props.src === 'remoteFollowing'" :icon="faProjectDiagram"/>
+				<fa :icon="getIconOfTimeline(src)"/>
 				<span style="margin-left: 8px;">{{ timelineTitle }}</span>
 				<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
 			</button>

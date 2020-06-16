@@ -2,22 +2,25 @@
 <div class="mk-home" v-hotkey.global="keymap">
 	<template v-if="showTitle">
 		<portal to="header" v-if="!$store.state.deviceUser.hideTimelineColumn">
-			<button v-if="!$store.state.deviceUser.hideTimelineColumn" @click="choose" class="_button _kjvfvyph_">
+			<button v-if="isMobile" @click="choose" class="_button _kjvfvyph_">
 				<i><fa v-if="$store.state.i.hasUnreadAntenna" :icon="faCircle"/></i>
-				<fa v-if="src === 'home'" :icon="faHome"/>
-				<fa v-if="src === 'local'" :icon="faComments"/>
-				<fa v-if="src === 'social'" :icon="faShareAlt"/>
-				<fa v-if="src === 'global'" :icon="faGlobe"/>
-				<fa v-if="src === 'cat'" :icon="faCat"/>
-				<fa v-if="src === 'list'" :icon="faListUl"/>
-				<fa v-if="src === 'antenna'" :icon="faBroadcastTower"/>
-				<fa v-if="src === 'mentions'" :icon="faAt"/>
-				<fa v-if="src === 'direct'" :icon="faEnvelope"/>
-				<fa v-if="src === 'followers'" :icon="faCommentAlt"/>
-				<fa v-if="src === 'remoteFollowing'" :icon="faProjectDiagram"/>
+				<fa :icon="getIconOfTimeline(src)"/>
 				<span style="margin-left: 8px;">{{ timelineTitle }}</span>
 				<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
 			</button>
+			<div class="tabs" v-else>
+				<button class="_button tab" v-for="(item, i) in tabItems" :key="i" :class="{ active: item.src === src }" v-tooltip="item.text" @click="item.action">
+					<fa :icon="item.icon" />
+					<span v-if="item.src === src" v-text="item.text" style="margin-left: 8px" />
+				</button>
+				<div class="_button tab active" v-if="!tabItems.map(i => i.src).includes(src)">
+					<fa :icon="getIconOfTimeline(src)"/>
+					<span style="margin-left: 8px;">{{ timelineTitle }}</span>
+				</div>
+				<button class="_button tab _kjvfvyph_" @click="choose">
+					<fa :icon="menuOpened ? faAngleUp : faAngleDown" />
+				</button>
+			</div>
 		</portal>
 		<template v-else>
 			<portal to="icon"><fa :icon="faHome"/></portal>
@@ -53,9 +56,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faCat, faAt, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
-import { faComments, faEnvelope, faCommentAlt } from '@fortawesome/free-regular-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck } from '@fortawesome/free-solid-svg-icons';
 import Progress from '../scripts/loading';
+import { getIconOfTimeline } from '../scripts/get-icon-of-timeline';
 import XTimeline from '../components/timeline.vue';
 import MkButton from '../components/ui/button.vue';
 import XPostForm from '../components/post-form.vue';
@@ -90,8 +93,9 @@ export default Vue.extend({
 			announcements: [] as any[],
 			queue: 0,
 			width: 0,
+			isMobile: window.innerWidth < 650,
 			currentAnnouncementIndex: 0,
-			faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faComments, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faCat, faAt, faEnvelope, faCommentAlt, faProjectDiagram
+			faAngleDown, faAngleUp, faHome, faCircle, faChevronLeft, faChevronRight, faCheck
 		};
 	},
 
@@ -113,6 +117,18 @@ export default Vue.extend({
 			return null;
 		},
 
+		tabItems() {
+			return [
+				this.genItem('home'),
+				this.ifLTL(this.genItem('local')),
+				this.ifLTL(this.genItem('social')),
+				this.ifGTL(this.genItem('global')),
+				this.ifCTL(this.genItem('cat')),
+				this.genItem('remoteFollowing'),
+				this.genItem('followers'),
+			].filter(it => it !== undefined);
+		},
+
 		meta() {
 			return this.$store.state.instance.meta;
 		},
@@ -123,7 +139,7 @@ export default Vue.extend({
 							this.src === 'mentions' ? this.$t('mentions') :
 							this.src === 'direct' ? this.$t('directNotes') :
 							this.$t('_timelines.' + this.src);
-		}
+		},
 	},
 
 	watch: {
@@ -160,9 +176,14 @@ export default Vue.extend({
 
 	mounted() {
 		this.width = this.$el.offsetWidth;
+
+		window.addEventListener('resize', () => {
+			this.isMobile = window.innerWidth < 650;
+		}, { passive: true });
 	},
 
 	methods: {
+		getIconOfTimeline, 
 		before() {
 			Progress.start();
 		},
@@ -178,6 +199,27 @@ export default Vue.extend({
 
 		top() {
 			window.scroll({ top: 0, behavior: 'instant' });
+		},
+
+		genItem(src: string, name?: string) {
+			return {
+				text: name || this.$t('_timelines.' + src),
+				icon: getIconOfTimeline(src),
+				src,
+				action: () => { this.setSrc(src); }
+			};
+		},
+
+		ifLTL<T>(item: T) : (T | undefined) {
+			return this.meta.disableLocalTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : item;
+		},
+
+		ifGTL<T>(item: T) : (T | undefined) {
+			return this.meta.disabledGlobalTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : item;
+		},
+
+		ifCTL<T>(item: T) : (T | undefined) {
+			return this.meta.disableCatTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : item;
 		},
 
 		async choose(ev) {
@@ -204,44 +246,18 @@ export default Vue.extend({
 					this.setSrc('list');
 				}
 			}));
+			
 			this.$root.menu({
-				items: [{
-					text: this.$t('_timelines.home'),
-					icon: faHome,
-					action: () => { this.setSrc('home') }
-				}, this.meta.disableLocalTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
-					text: this.$t('_timelines.local'),
-					icon: faComments,
-					action: () => { this.setSrc('local') }
-				}, this.meta.disableLocalTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
-					text: this.$t('_timelines.social'),
-					icon: faShareAlt,
-					action: () => { this.setSrc('social') }
-				}, this.meta.disableGlobalTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
-					text: this.$t('_timelines.global'),
-					icon: faGlobe,
-					action: () => { this.setSrc('global') }
-				}, this.meta.disableCatTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
-					text: this.$t('_timelines.cat'),
-					icon: faCat,
-					action: () => { this.setSrc('cat') }
-				}, {
-					text: this.$t('_timelines.remoteFollowing'),
-					icon: faProjectDiagram,
-					action: () => { this.setSrc('remoteFollowing') }
-				}, {
-					text: this.$t('_timelines.followers'),
-					icon: faCommentAlt,
-					action: () => { this.setSrc('followers') }
-				}, antennaItems.length > 0 ? null : undefined, ...antennaItems, listItems.length > 0 ? null : undefined, ...listItems, null, {
-					text: this.$t('mentions'),
-					icon: faAt,
-					action: () => { this.setSrc('mentions') }
-				}, {
-					text: this.$t('directNotes'),
-					icon: faEnvelope,
-					action: () => { this.setSrc('direct') }
-				}],
+				items: [
+					...(this.isMobile ? this.tabItems : [ undefined ]),
+					antennaItems.length > 0 ? null : undefined,
+					...antennaItems,
+					listItems.length > 0 ? null : undefined,
+					...listItems,
+					null,
+					this.genItem('mentions', this.$t('mentions').toString()),
+					this.genItem('direct', this.$t('directNotes').toString()),
+				],
 				fixed: true,
 				noCenter: true,
 				source: ev.currentTarget || ev.target
@@ -250,7 +266,7 @@ export default Vue.extend({
 			});
 		},
 
-		setSrc(src) {
+		setSrc(src: string) {
 			this.src = src;
 		},
 
@@ -303,6 +319,28 @@ export default Vue.extend({
 
 .post-form {
 	margin-bottom: var(--margin);
+}
+
+.tabs {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	> .tab {
+		display: block;
+		min-width: 64px;
+		padding: 0 16px;
+		height: 100%;
+		border-left: 1px solid var(--divider);
+
+		&:last-child {
+			border-right: 1px solid var(--divider);
+		}
+
+		&.active {
+			color: var(--accent);
+			background: var(--panel);
+		}
+	}
 }
 
 .mk-home {
