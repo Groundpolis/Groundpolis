@@ -1,6 +1,60 @@
 ChangeLog
 =========
 
+12.39.1 (2020/6/5)
+-------------------
+### ✨Improvements
+- メンションの色をテーマで指定できるように [071c7e6](https://github.com/syuilo/misskey/commit/071c7e6a581ca5d025d414869e03536011219370)
+
+### 🐛Fixes
+- リモートからのノートが受信できない問題を修正 [3c2d94ac](https://github.com/syuilo/misskey/commit/3c2d94ace31c0dbbbd18606d16828df60d0392eb), [7f76a73e](https://github.com/syuilo/misskey/commit/7f76a73eeef5df3b1fc02a00a0ca5710383a2429)
+  * MiAuthのレスポンスが返ってこない問題を修正を差し戻し
+- ドキュメントのMiAuthのURLを現状利用できるものに修正 [ddf92c3e](https://github.com/syuilo/misskey/commit/ddf92c3e2c5bdfc89e5c223a3cc2794f6a023400), [7f76a73e](https://github.com/syuilo/misskey/commit/7f76a73eeef5df3b1fc02a00a0ca5710383a2429)
+
+12.39.0 (2020/6/4)
+-------------------
+**12.39.0にはリモートからのノートが受信できないという重大なバグがありますので、使わないでください。**  
+**NEVER USE 12.39.0 because it has a serious bug that Misskey cannot recieve notes from remotes.**  
+
+### ✨Improvements
+- アラビア語を追加 [#6416](https://github.com/syuilo/misskey/pull/6416)
+- 自動でもっと見る [#6403](https://github.com/syuilo/misskey/pull/6403)
+- MFMのテキストノードは、HTMLではspanタグではなくテキストノードに変換するように [#6399](https://github.com/syuilo/misskey/pull/6399)
+- ローカルのみボタンを公開範囲ピッカーに統合 [#6428](https://github.com/syuilo/misskey/pull/6428)
+- ユーザーが画面を見てないと思われるとき（ブラウザやタブがアクティブではない時）は通知を既読にしないように [#6407](https://github.com/syuilo/misskey/pull/6407)
+- 通知一覧で、通知が画面に表示されると既読にするように [#6407](https://github.com/syuilo/misskey/pull/6407)
+- APIのNotificationでisRead（既読かどうか）を含めるように [#6407](https://github.com/syuilo/misskey/pull/6407)
+
+### 🐛Fixes
+- 引用ノートのフォントサイズがおかしいときがあるのを修正 [#6414](https://github.com/syuilo/misskey/pull/6414)
+- iOS Safari 上で アイコンおよびバナーのアップロードができない不具合を修正 [#6427](https://github.com/syuilo/misskey/pull/6427)
+- APで `HTTP-Signature検証失敗 かつ LD-Signatureなし` がキューに溜まってリトライし続けるのを修正 [#6437](https://github.com/syuilo/misskey/pull/6437)
+- MiAuthでトークンが利用できない問題を修正 [6b2c2890](https://github.com/syuilo/misskey/commit/6b2c289029cbf01537c2a67a3e61d615aad30c34)
+- Twitterのプレビューが利用できなくなっている問題を修正 [f296410](https://github.com/syuilo/misskey/commit/f2964101d162fb64ac9e7ad99123c5bb568ac52b)
+- IDの重複が起きてしまう問題を修正 [#6440](https://github.com/syuilo/misskey/pull/6440)
+- ※MiAuthのレスポンスが返ってこない問題を修正 [#6418](https://github.com/syuilo/misskey/issues/6418)
+
+12.38.0 (2020/5/17)
+-------------------
+### ✨Improvements
+* Renoteの削除をわかりやすく [#6366](https://github.com/syuilo/misskey/pull/6366), [#6373](https://github.com/syuilo/misskey/pull/6373)
+* Unicode 13.0の絵文字に対応 [#6365](https://github.com/syuilo/misskey/pull/6365)
+* リレーのHTTP-Signatureは投稿者の鍵でするように [#6357](https://github.com/syuilo/misskey/pull/6357)
+* 追加のAPオブジェクトをキャッシュ出来るように [#6349](https://github.com/syuilo/misskey/pull/6349)
+* ローカルのみボタンを公開範囲ボタンの横に移動 [51cf097](https://github.com/syuilo/misskey/commit/51cf0970b3b990cd67c94c5fcc5d7c1c3f7f13df)
+* 公開範囲がローカルのみであることを表示するように [#6291](https://github.com/syuilo/misskey/pull/6291)
+* Roomに藍ちゃん人形と札束を追加 [#6350](https://github.com/syuilo/misskey/pull/6350), [6cee608](https://github.com/syuilo/misskey/commit/6cee608c91850c035c35f605296410e72d1ef793), [7dd8dbe](https://github.com/syuilo/misskey/commit/7dd8dbeb5b2f33b679248ecc2138f556b72d9a06)
+* ユーザーページの画像欄の画像をクリックしたとき、UIが再読み込みされないように [ca2a33e](https://github.com/syuilo/misskey/commit/ca2a33edc928c0dfe59f50502d3eedb9e97e88db)
+
+### 🐛Fixes
+* reCAPTCHAが動かなくなっているのを修正 [#6367](https://github.com/syuilo/misskey/pull/6367)
+* インスタンスブロックがリレーに適用されない問題を修正 [#6355](https://github.com/syuilo/misskey/pull/6355)
+* リレーに不正なURLを追加できてしまう問題を修正 [#6351](https://github.com/syuilo/misskey/pull/6351)
+* Pages: Mk:api関数にトークンを渡せない問題を修正 [9244efe](https://github.com/syuilo/misskey/commit/9244efe3513dd72be04d7588dea8ec27509e96d1)
+* nyaizeが適用されるとMFMのオプションが失われるのを修正 [#6371](https://github.com/syuilo/misskey/pull/6371)
+* 上流ノートの削除に伴うノートの削除が連合リレーに伝達されない問題を修正 [#6374](https://github.com/syuilo/misskey/pull/6374)
+* 引用元の削除に伴う引用RNの削除がリモートに伝達されない問題を修正 [#6374](https://github.com/syuilo/misskey/pull/6374)
+
 12.37.0 (2020/5/10)
 -------------------
 ### ✨Improvements

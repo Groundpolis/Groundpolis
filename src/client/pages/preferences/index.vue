@@ -67,6 +67,7 @@
 				<template #desc><mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
 			</mk-switch>
 			<mk-switch v-model="showFixedPostForm">{{ $t('showFixedPostForm') }}</mk-switch>
+			<mk-switch v-model="enableInfiniteScroll">{{ $t('enableInfiniteScroll') }}</mk-switch>
 			<mk-switch v-model="disablePagesScript">{{ $t('disablePagesScript') }}</mk-switch>
 		</div>
 		<div class="_content">
@@ -99,8 +100,8 @@ import MkRadio from '../../components/ui/radio.vue';
 import MkRange from '../../components/ui/range.vue';
 import XTheme from './theme.vue';
 import XSidebar from './sidebar.vue';
-import i18n from '../../i18n';
 import { langs } from '../../config';
+import { clientDb, set } from '../../db';
 
 const sounds = [
 	null,
@@ -120,8 +121,6 @@ const sounds = [
 ];
 
 export default Vue.extend({
-	i18n,
-
 	metaInfo() {
 		return {
 			title: this.$t('settings') as string
@@ -184,6 +183,11 @@ export default Vue.extend({
 			set(value) { this.$store.commit('device/set', { key: 'showFixedPostForm', value }); }
 		},
 
+		enableInfiniteScroll: {
+			get() { return this.$store.state.device.enableInfiniteScroll; },
+			set(value) { this.$store.commit('device/setInfiniteScrollEnabling', value); }
+		},
+
 		sfxVolume: {
 			get() { return this.$store.state.device.sfxVolume; },
 			set(value) { this.$store.commit('device/set', { key: 'sfxVolume', value: parseFloat(value, 10) }); }
@@ -228,9 +232,23 @@ export default Vue.extend({
 
 	watch: {
 		lang() {
+			const dialog = this.$root.dialog({
+				type: 'waiting',
+				iconOnly: true
+			});
+
 			localStorage.setItem('lang', this.lang);
-			localStorage.removeItem('locale');
-			location.reload();
+
+			return set('_version_', `changeLang-${(new Date()).toJSON()}`, clientDb.i18n)
+				.then(() => location.reload())
+				.catch(() => {
+					dialog.close();
+					this.$root.dialog({
+						type: 'error',
+						iconOnly: true,
+						autoClose: true
+					});
+				});
 		},
 
 		fontSize() {

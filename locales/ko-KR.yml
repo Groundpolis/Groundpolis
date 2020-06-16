@@ -632,7 +632,6 @@ _cw:
   show: "더 보기"
   chars: "{count} 문자"
   files: "{count} 파일"
-  poll: "투표"
 _poll:
   noOnlyOneChoice: "투표 항목이 최소 2개 필요합니다"
   choiceN: "선택지 {n}"
@@ -780,6 +779,8 @@ _rooms:
     cup-noodle: "컵라면"
     holo-display: "홀로그램"
     energy-drink: "에너지 드링크"
+    doll-ai: "아이쨩 인형"
+    banknote: "지폐뭉치"
 _pages:
   newPage: "페이지 만들기"
   editPage: "페이지 수정"
@@ -1065,3 +1066,7 @@ _relayStatus:
   requesting: "대기 중"
   accepted: "승인됨"
   rejected: "거절됨"
+_notification:
+  youWereFollowed: "새로운 팔로워가 있습니다"
+  youWereInvitedToGroup: "그룹에 초대되었습니다"
+
