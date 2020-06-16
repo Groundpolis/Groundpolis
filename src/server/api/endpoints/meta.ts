@@ -118,6 +118,8 @@ export default define(meta, async (ps, me) => {
 		secure: config.https != null,
 
 		disableRegistration: instance.disableRegistration,
+		disableInvitation: instance.disableInvitation,
+		disableInvitationReason: instance.disableInvitationReason,
 		disableLocalTimeline: instance.disableLocalTimeline,
 		disableGlobalTimeline: instance.disableGlobalTimeline,
 		disableCatTimeline: instance.disableCatTimeline,

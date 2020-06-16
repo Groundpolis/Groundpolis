@@ -5,7 +5,11 @@
 		<div class="body">
 			<h1 class="name" v-html="meta.name || host"></h1>
 			<div class="desc" v-html="meta.description || $t('introMisskey')"></div>
-			<mk-button @click="signup()" style="display: inline-block; margin-right: 16px;" primary>{{ $t('signup') }}</mk-button>
+			<div v-if="meta.disableRegistration && meta.disableInvitation" class="signup-disabled">
+				<h1><fa :icon="faExclamationTriangle" /> {{ $t('signupDisabled') }}</h1>
+				<p v-if="meta.disableInvitationReason" v-text="meta.disableInvitationReason"/>
+			</div>
+			<mk-button v-if="!(meta.disableRegistration && meta.disableInvitation)" @click="signup()" style="display: inline-block; margin-right: 16px;" primary>{{ $t('signup') }}</mk-button>
 			<mk-button @click="signin()" style="display: inline-block;">{{ $t('login') }}</mk-button>
 		</div>
 	</div>
@@ -16,6 +20,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { toUnicode } from 'punycode';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 import XSigninDialog from '../components/signin-dialog.vue';
 import XSignupDialog from '../components/signup-dialog.vue';
 import MkButton from '../components/ui/button.vue';
@@ -36,6 +41,7 @@ export default Vue.extend({
 				noPaging: true,
 			},
 			host: toUnicode(host),
+			faExclamationTriangle
 		};
 	},
 
@@ -88,6 +94,20 @@ export default Vue.extend({
 
 			> .name {
 				margin: 0 0 0.5em 0;
+			}
+
+			> .signup-disabled {
+				color: var(--infoWarnFg);
+				background-color: var(--infoWarnBg);
+				padding: 8px;
+				margin: 8px 0;
+				h1 {
+					font-size: 1em;
+					margin: 0 0 8px 0;
+				}
+				p {
+					margin: 0 0 0 8px;
+				}
 			}
 		}
 	}

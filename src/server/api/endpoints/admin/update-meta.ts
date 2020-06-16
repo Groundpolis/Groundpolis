@@ -20,7 +20,21 @@ export const meta = {
 		disableRegistration: {
 			validator: $.optional.nullable.bool,
 			desc: {
-				'ja-JP': '招待制か否か'
+				'ja-JP': '登録を停止しているか否か'
+			}
+		},
+
+		disableInvitation: {
+			validator: $.optional.nullable.bool,
+			desc: {
+				'ja-JP': '招待機能を停止しているか否か'
+			}
+		},
+
+		disableInvitationReason: {
+			validator: $.optional.str,
+			desc: {
+				'ja-JP': '招待を停止している理由'
 			}
 		},
 
@@ -449,6 +463,14 @@ export default define(meta, async (ps, me) => {
 
 	if (typeof ps.disableRegistration === 'boolean') {
 		set.disableRegistration = ps.disableRegistration;
+	}
+
+	if (typeof ps.disableInvitation === 'boolean') {
+		set.disableInvitation = ps.disableInvitation;
+	}
+
+	if (ps.disableInvitationReason !== undefined) {
+		set.disableInvitationReason = ps.disableInvitationReason;
 	}
 
 	if (typeof ps.disableLocalTimeline === 'boolean') {

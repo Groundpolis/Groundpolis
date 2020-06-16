@@ -636,6 +636,11 @@ testEmail: '配信テスト'
 showFullAcct: 'ローカルユーザーのホスト名を省略しない'
 logoutAll: '全アカウントをログアウト'
 logoutAllConfirm: 'このデバイスに追加した全てのアカウントをログアウトしますか？'
+premium: 'プレミアム会員'
+driveCapacityPerPremiumAccount: "プレミアム会員ひとりあたりのドライブ容量"
+enableInvitation: '招待コードを使って新規登録できるようにする'
+disableInvitationReason: '登録を無効化する理由'
+signupDisabled: '現在、新規登録を停止しています。'
 
 _steal:
   textOnly: 'ただただ本文をパクる'

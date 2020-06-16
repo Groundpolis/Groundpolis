@@ -44,6 +44,17 @@ export class Meta {
 	@Column('boolean', {
 		default: false,
 	})
+	public disableInvitation: boolean;
+
+	@Column('varchar', {
+		length: 64,
+		default: ''
+	})
+	public disableInvitationReason: string;
+
+	@Column('boolean', {
+		default: false,
+	})
 	public disableLocalTimeline: boolean;
 
 	@Column('boolean', {
