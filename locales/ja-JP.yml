@@ -641,6 +641,7 @@ driveCapacityPerPremiumAccount: "プレミアム会員ひとりあたりのド�
 enableInvitation: '招待コードを使って新規登録できるようにする'
 disableInvitationReason: '登録を無効化する理由'
 signupDisabled: '現在、新規登録を停止しています。'
+enableFeatured: 'ハイライトを有効にする'
 
 _steal:
   textOnly: 'ただただ本文をパクる'

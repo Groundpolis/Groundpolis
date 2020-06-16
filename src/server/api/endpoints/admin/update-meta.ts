@@ -59,6 +59,13 @@ export const meta = {
 			}
 		},
 
+		disableFeatured: {
+			validator: $.optional.nullable.bool,
+			desc: {
+				'ja-JP': 'ハイライトを無効にするか否か'
+			}
+		},
+
 		useStarForReactionFallback: {
 			validator: $.optional.nullable.bool,
 			desc: {
@@ -471,6 +478,10 @@ export default define(meta, async (ps, me) => {
 
 	if (ps.disableInvitationReason !== undefined) {
 		set.disableInvitationReason = ps.disableInvitationReason;
+	}
+
+	if (typeof ps.disableFeatured === 'boolean') {
+		set.disableFeatured = ps.disableFeatured;
 	}
 
 	if (typeof ps.disableLocalTimeline === 'boolean') {

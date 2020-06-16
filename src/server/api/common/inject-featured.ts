@@ -4,11 +4,16 @@ import { User } from '../../../models/entities/user';
 import { Notes, UserProfiles, NoteReactions } from '../../../models';
 import { generateMuteQuery } from './generate-mute-query';
 import { ensure } from '../../../prelude/ensure';
+import { fetchMeta } from '../../../misc/fetch-meta';
 
 // TODO: リアクション、Renote、返信などをしたノートは除外する
 
 export async function injectFeatured(timeline: Note[], user?: User | null) {
 	if (timeline.length < 5) return;
+
+	const m = await fetchMeta();
+	// 無効化されていれば何もしない
+	if (m.disableFeatured) return;
 
 	if (user) {
 		const profile = await UserProfiles.findOne(user.id).then(ensure);

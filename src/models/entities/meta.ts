@@ -46,6 +46,11 @@ export class Meta {
 	})
 	public disableInvitation: boolean;
 
+	@Column('boolean', {
+		default: false,
+	})
+	public disableFeatured: boolean;
+
 	@Column('varchar', {
 		length: 64,
 		default: ''

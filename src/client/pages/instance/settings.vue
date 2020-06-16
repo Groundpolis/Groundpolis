@@ -32,6 +32,7 @@
 			<mk-info>{{ $t('disablingTimelinesInfo') }}</mk-info>
 		</div>
 		<div class="_content">
+			<mk-switch v-model="enableFeatured" @change="save()">{{ $t('enableFeatured') }}</mk-switch>
 			<mk-switch v-model="useStarForReactionFallback" @change="save()">{{ $t('useStarForReactionFallback') }}</mk-switch>
 		</div>
 	</section>
@@ -308,6 +309,7 @@ export default Vue.extend({
 			enableLocalTimeline: false,
 			enableGlobalTimeline: false,
 			enableCatTimeline: false,
+			enableFeatured: false,
 			enableHcaptcha: false,
 			hcaptchaSiteKey: null,
 			hcaptchaSecretKey: null,
@@ -373,6 +375,7 @@ export default Vue.extend({
 		this.enableLocalTimeline = !this.meta.disableLocalTimeline;
 		this.enableGlobalTimeline = !this.meta.disableGlobalTimeline;
 		this.enableCatTimeline = !this.meta.disableCatTimeline;
+		this.enableFeatured = !this.meta.disableFeatured;
 		this.enableHcaptcha = this.meta.enableHcaptcha;
 		this.hcaptchaSiteKey = this.meta.hcaptchaSiteKey;
 		this.hcaptchaSecretKey = this.meta.hcaptchaSecretKey;
@@ -527,6 +530,7 @@ export default Vue.extend({
 				disableInvitationReason: this.disableInvitationReason,
 				disableLocalTimeline: !this.enableLocalTimeline,
 				disableGlobalTimeline: !this.enableGlobalTimeline,
+				disableFeatured: !this.enableFeatured,
 				disableCatTimeline: !this.enableCatTimeline,
 				enableHcaptcha: this.enableHcaptcha,
 				hcaptchaSiteKey: this.hcaptchaSiteKey,

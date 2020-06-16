@@ -18,7 +18,7 @@
 					<span style="margin-left: 8px;">{{ timelineTitle }}</span>
 				</div>
 				<button class="_button tab _kjvfvyph_" @click="choose">
-					<fa :icon="menuOpened ? faAngleUp : faAngleDown" />
+					<fa :icon="faEllipsisH" />
 				</button>
 			</div>
 		</portal>
@@ -56,7 +56,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faAngleDown, faAngleUp, faHome, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import Progress from '../scripts/loading';
 import { getIconOfTimeline } from '../scripts/get-icon-of-timeline';
 import XTimeline from '../components/timeline.vue';
@@ -95,7 +95,7 @@ export default Vue.extend({
 			width: 0,
 			isMobile: window.innerWidth < 650,
 			currentAnnouncementIndex: 0,
-			faAngleDown, faAngleUp, faHome, faCircle, faChevronLeft, faChevronRight, faCheck
+			faAngleDown, faAngleUp, faHome, faCircle, faChevronLeft, faChevronRight, faCheck, faEllipsisH
 		};
 	},
 

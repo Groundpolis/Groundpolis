@@ -2,10 +2,12 @@ import $ from 'cafy';
 import define from '../../define';
 import { generateMuteQuery } from '../../common/generate-mute-query';
 import { Notes } from '../../../../models';
+import { fetchMeta } from '../../../../misc/fetch-meta';
+import { ApiError } from '../../error';
 
 export const meta = {
 	desc: {
-		'ja-JP': 'Featuredな投稿を取得します。',
+		'ja-JP': 'ハイライト投稿を取得します。',
 		'en-US': 'Get featured notes.'
 	},
 
@@ -37,9 +39,23 @@ export const meta = {
 			ref: 'Note',
 		}
 	},
+
+	errors: {
+		featuredDisabled: {
+			message: 'Featured has been disabled.',
+			code: 'FEATURED_DISABLED',
+			id: '5c15dafb-750a-44e0-8c37-56ede5b1f734'
+		},
+	}
 };
 
 export default define(meta, async (ps, user) => {
+	const m = await fetchMeta();
+
+	if (m.disableFeatured) {
+		throw new ApiError(meta.errors.featuredDisabled);
+	}
+
 	const max = 30;
 	const day = 1000 * 60 * 60 * 24 * 3; // 3日前まで
 
