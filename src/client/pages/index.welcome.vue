@@ -20,7 +20,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			instanceName: instanceName || 'Misskey',
+			instanceName: instanceName || 'Hitorisskey',
 		}
 	},
 

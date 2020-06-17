@@ -51,7 +51,8 @@
 					</i18n>
 				</li>
 				<li>{{ $t('_2fa.step2') }}<br><img :src="data.qr"></li>
-				<li>{{ $t('_2fa.step3') }}<br>
+				<li>
+{{ $t('_2fa.step3') }}<br>
 					<mk-input v-model="token" type="text" pattern="^[0-9]{6}$" autocomplete="off" spellcheck="false">{{ $t('token') }}</mk-input>
 					<mk-button primary @click="submit">{{ $t('done') }}</mk-button>
 				</li>
@@ -205,7 +206,7 @@ export default Vue.extend({
 							challenge: byteify(registration.challenge, 'base64'),
 							rp: {
 								id: hostname,
-								name: 'Misskey'
+								name: 'Hitorisskey'
 							},
 							user: {
 								id: byteify(this.$store.state.i.id, 'ascii'),

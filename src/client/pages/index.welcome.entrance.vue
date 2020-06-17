@@ -9,7 +9,6 @@
 			<mk-button @click="signin()" style="display: inline-block;">{{ $t('login') }}</mk-button>
 		</div>
 	</div>
-	<x-notes :pagination="featuredPagination"/>
 </div>
 </template>
 

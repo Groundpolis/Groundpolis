@@ -35,9 +35,6 @@
 	<transition name="nav">
 		<nav class="nav" ref="nav" v-show="showNav">
 			<div>
-				<button class="item _button" @click="top()">
-					<span class="text">Hitorisskey</span>
-				</button>
 				<router-link class="item index" active-class="active" to="/" exact>
 					<fa :icon="$store.getters.isSignedIn ? faUser : faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('_timelines.myself') : $t('home') }}</span>
 				</router-link>
@@ -45,15 +42,7 @@
 					<router-link class="item index" active-class="active" to="/everyone" exact>
 						<fa :icon="faUsers" fixed-width/><span class="text">{{ $t('_timelines.everyone') }}</span>
 					</router-link>
-					<router-link class="item index" active-class="active" to="/reacted" exact>
-						<fa :icon="faStar" fixed-width/><span class="text">{{ $t('_timelines.reacted') }}</span>
-					</router-link>
 				</template>
-				<!-- <template v-if="$store.getters.isSignedIn">
-					<router-link class="item" active-class="active" to="/my/drive">
-						<fa :icon="faCloud" fixed-width/><span class="text">{{ $t('drive') }}</span>
-					</router-link>
-				</template> -->
 				<router-link class="item" active-class="active" to="/announcements">
 					<fa :icon="faBroadcastTower" fixed-width/><span class="text">{{ $t('announcements') }}</span>
 					<i v-if="$store.getters.isSignedIn && $store.state.i.hasUnreadAnnouncement"><fa :icon="faCircle"/></i>
@@ -61,6 +50,9 @@
 				<button class="item _button" :class="{ active: $route.path === '/instance' || $route.path.startsWith('/instance/') }" v-if="$store.getters.isSignedIn && ($store.state.i.isAdmin || $store.state.i.isModerator)" @click="oepnInstanceMenu">
 					<fa :icon="faServer" fixed-width/><span class="text">{{ $t('instance') }}</span>
 				</button>
+				<router-link class="item" active-class="active" to="/docs">
+					<fa :icon="faQuestionCircle" fixed-width/><span class="text">{{ $t('help') }}</span>
+				</router-link>
 				<button class="item _button" @click="more">
 					<fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
 					<i v-if="otherNavItemIndicated"><fa :icon="faCircle"/></i>
@@ -131,8 +123,6 @@
 		<button v-else class="button home _button" @click="$router.push('/')"><fa :icon="faUser"/></button>
 		<button v-if="$route.name === 'everyone'" class="button home _button" @click="top()"><fa :icon="faUsers"/></button>
 		<button v-else class="button home _button" @click="$router.push('/everyone')"><fa :icon="faUsers"/></button>
-		<button v-if="$route.name === 'reacted'" class="button home _button" @click="top()"><fa :icon="faStar"/></button>
-		<button v-else class="button home _button" @click="$router.push('/reacted')"><fa :icon="faStar"/></button>
 	</div>
 
 
@@ -175,7 +165,7 @@ export default Vue.extend({
 			isDesktop: window.innerWidth >= DESKTOP_THRESHOLD,
 			canBack: false,
 			wallpaper: localStorage.getItem('wallpaper') != null,
-			faGripVertical, faChevronLeft, faSlidersH, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer
+			faGripVertical, faChevronLeft, faSlidersH, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faQuestionCircle
 		};
 	},
 
@@ -359,11 +349,6 @@ export default Vue.extend({
 			}));
 			this.$root.menu({
 				items: [{
-					type: 'link',
-					text: this.$t('help'),
-					to: '/docs',
-					icon: faQuestionCircle,
-				}, {
 					type: 'link',
 					text: this.$t('aboutX', { x: instanceName || host }),
 					to: '/about',
@@ -688,6 +673,7 @@ export default Vue.extend({
 		> div {
 			position: fixed;
 			top: 0;
+			padding-top: 60px;
 			left: 0;
 			z-index: 1001;
 			width: $nav-width;
@@ -746,6 +732,10 @@ export default Vue.extend({
 					vertical-align: middle;
 				}
 
+				.icon {
+					margin: auto;
+				}
+
 				> i {
 					position: absolute;
 					top: 0;
@@ -764,7 +754,7 @@ export default Vue.extend({
 					color: var(--navActive);
 				}
 
-				&:first-child, &:last-child {
+				&:last-child {
 					position: sticky;
 					z-index: 1;
 					padding-top: 8px;
@@ -772,12 +762,6 @@ export default Vue.extend({
 					background: var(--wboyroyc);
 					-webkit-backdrop-filter: blur(8px);
 					backdrop-filter: blur(8px);
-				}
-
-				&:first-child {
-					top: 0;
-					margin-bottom: 16px;
-					border-bottom: solid 1px var(--divider);
 				}
 
 				@media (max-width: $nav-icon-only-threshold) and (min-width: $nav-hide-threshold + 1px) {

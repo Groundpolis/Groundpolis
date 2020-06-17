@@ -17,4 +17,4 @@ export const langs = _LANGS_;
 export const getLocale = async () => Object.fromEntries((await entries(clientDb.i18n)) as [string, string][]);
 export const version = _VERSION_;
 export const env = _ENV_;
-export const instanceName = siteName === 'Misskey' ? null : siteName;
+export const instanceName = siteName === 'Hitorisskey' ? null : siteName;

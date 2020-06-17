@@ -49,7 +49,7 @@ Vue.mixin({
 	}
 });
 
-console.info(`Misskey v${version}`);
+console.info(`Hitorisskey v${version}`);
 
 // v11互換性のため
 if (localStorage.getItem('kyoppie') === 'yuppie') {
@@ -171,7 +171,7 @@ os.init(async () => {
 		i18n,
 		metaInfo: {
 			title: null,
-			titleTemplate: title => title ? `${title} | ${(instanceName || 'Misskey')}` : (instanceName || 'Misskey')
+			titleTemplate: title => title ? `${title} | ${(instanceName || 'Hitorisskey')}` : (instanceName || 'Hitorisskey')
 		},
 		data() {
 			return {
