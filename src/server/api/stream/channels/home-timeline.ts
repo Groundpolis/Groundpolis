@@ -1,6 +1,7 @@
 import autobind from 'autobind-decorator';
 import Channel from '../channel';
 import { PackedNote } from '../../../../models/repositories/note';
+import { Notes } from '../../../../models';
 
 export default class extends Channel {
 	public readonly chName = 'homeTimeline';
@@ -15,10 +16,12 @@ export default class extends Channel {
 
 	@autobind
 	private async onNote(note: PackedNote) {
+		// 流れるノートは投稿主に向けてpackしたものなので、packし直す
+		const repacked = await Notes.pack(note.id, this.user!);
 		// 自分のノートでなければ弾く
-		if (!note.isMyNote) return;
+		if (!repacked.isMyNote) return;
 
-		this.send('note', note);
+		this.send('note', repacked);
 	}
 
 	@autobind

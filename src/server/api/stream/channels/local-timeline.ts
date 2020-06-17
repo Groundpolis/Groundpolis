@@ -1,6 +1,7 @@
 import autobind from 'autobind-decorator';
 import Channel from '../channel';
 import { PackedNote } from '../../../../models/repositories/note';
+import { Notes } from '../../../../models';
 
 export default class extends Channel {
 	public readonly chName = 'localTimeline';
@@ -15,7 +16,10 @@ export default class extends Channel {
 
 	@autobind
 	private async onNote(note: PackedNote) {
-		this.send('note', note);
+		// 流れるノートは投稿主に向けてpackしたものなので、packし直す
+		const repacked = await Notes.pack(note.id, this.user!);
+
+		this.send('note', repacked);
 	}
 
 	@autobind

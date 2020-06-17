@@ -36,14 +36,12 @@
 					<fa :icon="faSmile" fixed-width/>
 					<fa :icon="faMinus" fixed-width/>
 				</button>
-				<template v-if="appearNote.isMyNote">
-					<button class="button _button" @click="delEdit()">
-						<fa :icon="faEdit"/>						
-					</button>
-					<button class="button _button" @click="del()">
-						<fa :icon="faTrashAlt"/>						
-					</button>
-				</template>
+				<button v-if="appearNote.isMyNote" class="button _button" @click="delEdit()">
+					<fa :icon="faEdit"/>						
+				</button>
+				<button v-if="appearNote.isMyNote || ($store.state.i && ($store.state.i.isModerator || $store.state.i.isAdmin))" class="button _button" @click="del()">
+					<fa :icon="faTrashAlt"/>						
+				</button>
 				<button class="button _button" @click="report(appearNote)">
 					<fa :icon="faExclamationCircle" fixed-width/>
 				</button>

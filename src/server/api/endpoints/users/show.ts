@@ -24,14 +24,6 @@ export const meta = {
 				'en-US': 'Target user ID'
 			}
 		},
-
-		userIds: {
-			validator: $.optional.arr($.type(ID)).unique(),
-			desc: {
-				'ja-JP': 'ユーザーID (配列)'
-			}
-		},
-
 		username: {
 			validator: $.optional.str
 		},
@@ -68,42 +60,25 @@ export default define(meta, async (ps, me) => {
 
 	const isAdminOrModerator = me && (me.isAdmin || me.isModerator);
 
-	if (ps.userIds) {
-		if (ps.userIds.length === 0) {
-			return [];
-		}
-
-		const users = await Users.find(isAdminOrModerator ? {
-			id: In(ps.userIds)
-		} : {
-			id: In(ps.userIds),
-			isSuspended: false
+	// Lookup user
+	if (typeof ps.host === 'string' && typeof ps.username === 'string') {
+		user = await resolveUser(ps.username, ps.host).catch(e => {
+			apiLogger.warn(`failed to resolve remote user: ${e}`);
+			throw new ApiError(meta.errors.failedToResolveRemoteUser);
 		});
-
-		return await Promise.all(users.map(u => Users.pack(u, me, {
-			detail: true
-		})));
 	} else {
-		// Lookup user
-		if (typeof ps.host === 'string' && typeof ps.username === 'string') {
-			user = await resolveUser(ps.username, ps.host).catch(e => {
-				apiLogger.warn(`failed to resolve remote user: ${e}`);
-				throw new ApiError(meta.errors.failedToResolveRemoteUser);
-			});
-		} else {
-			const q: any = ps.userId != null
-				? { id: ps.userId }
-				: { usernameLower: ps.username!.toLowerCase(), host: null };
+		const q: any = ps.userId != null
+			? { id: ps.userId }
+			: { usernameLower: ps.username!.toLowerCase(), host: null };
 
-			user = await Users.findOne(q);
-		}
-
-		if (user == null || (!isAdminOrModerator && user.isSuspended)) {
-			throw new ApiError(meta.errors.noSuchUser);
-		}
-
-		return await Users.pack(user, me, {
-			detail: true
-		});
+		user = await Users.findOne(q);
 	}
+
+	if (user == null || (!isAdminOrModerator && user.isSuspended)) {
+		throw new ApiError(meta.errors.noSuchUser);
+	}
+
+	const { twoFactorEnabled, usePasswordLessLogin, securityKeys, username, id, isSuspended, isSilenced, isModerator, isAdmin } = await Users.pack(user, me, { detail: true });
+
+	return { twoFactorEnabled, usePasswordLessLogin, securityKeys, username, id, isSuspended, isSilenced, isModerator, isAdmin  };
 });
