@@ -80,9 +80,7 @@
 			<div class="powerd-by" :class="{ visible: !$store.getters.isSignedIn }">
 				<b><router-link to="/">{{ host }}</router-link></b>
 				<small>
-					<i18n path="powered-by">
-						<a href="https://github.com/xeltica/hitorisskey" class="_link" target="_blank">{{ $t('hitorisskey') }}</a>
-					</i18n>
+					<a href="https://github.com/xeltica/hitorisskey" class="_link" target="_blank">Powered by Hitorisskey</a>
 				</small>
 			</div>
 		</main>
@@ -132,7 +130,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faGripVertical, faChevronLeft, faSlidersH, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faGamepad, faServer, faFileAlt, faSatellite, faInfoCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faGripVertical, faChevronLeft, faSlidersH, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { ResizeObserver } from '@juggle/resize-observer';
 import { v4 as uuid } from 'uuid';
@@ -322,14 +320,14 @@ export default Vue.extend({
 					icon: faExchangeAlt,
 				}, {
 					type: 'link',
-					text: this.$t('federation'),
-					to: '/instance/federation',
-					icon: faGlobe,
-				}, {
-					type: 'link',
 					text: this.$t('announcements'),
 					to: '/instance/announcements',
 					icon: faBroadcastTower,
+				}, {
+					type: 'link',
+					text: this.$t('reportedNotes'),
+					to: '/instance/reported-notes',
+					icon: faExclamationCircle,
 				}],
 				align: 'left',
 				fixed: true,

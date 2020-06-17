@@ -502,6 +502,14 @@ enableInfiniteScroll: "Enable infinite scrolling"
 visibility: "Visiblility"
 poll: "Poll"
 useCw: "Hide content"
+exploreEveryone: "Explore notes by everyone"
+reportedNotes: "Reported Notes"
+report: "Report"
+reporter: "Reporter"
+enterTheReasonToReportThisNote: 'Enter the reason to report this note'
+reason: 'Reason'
+thisNoteIsDeleted: 'This note has been deleted'
+
 _theme:
   explore: "Explore Themes"
   install: "Install theme"

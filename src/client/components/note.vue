@@ -32,11 +32,11 @@
 					<fa :icon="faSmile" fixed-width/>
 					<fa :icon="faPlus" fixed-width/>
 				</button>
-				<button v-if="appearNote.myReaction != null" class="button _button reacted" @click="undoReact(appearNote)" ref="reactButton">
+				<button v-if="appearNote.myReaction != null" class="button _button reacted" @click="undoReact(appearNote)">
 					<fa :icon="faSmile" fixed-width/>
 					<fa :icon="faMinus" fixed-width/>
 				</button>
-				<template v-if="appearNote.user.id === $store.state.i.id">
+				<template v-if="appearNote.isMyNote">
 					<button class="button _button" @click="delEdit()">
 						<fa :icon="faEdit"/>						
 					</button>
@@ -44,6 +44,9 @@
 						<fa :icon="faTrashAlt"/>						
 					</button>
 				</template>
+				<button class="button _button" @click="report(appearNote)">
+					<fa :icon="faExclamationCircle" fixed-width/>
+				</button>
 			</footer>
 			<div class="deleted" v-if="appearNote.deletedAt != null">{{ $t('deleted') }}</div>
 		</div>
@@ -53,17 +56,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faBolt, faTimes, faBullhorn, faSmile, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteRight, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faTimes, faBullhorn, faSmile, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faEdit} from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
-import XSub from './note.sub.vue';
 import XNoteHeader from './note-header.vue';
-import XNotePreview from './note-preview.vue';
 import XReactionsViewer from './reactions-viewer.vue';
 import XMediaList from './media-list.vue';
 import XCwButton from './cw-button.vue';
-import XPoll from './poll.vue';
 import MkUrlPreview from './url-preview.vue';
 import MkReactionPicker from './reaction-picker.vue';
 import pleaseLogin from '../scripts/please-login';
@@ -74,13 +74,10 @@ import copyToClipboard from '../scripts/copy-to-clipboard';
 export default Vue.extend({
 	
 	components: {
-		XSub,
 		XNoteHeader,
-		XNotePreview,
 		XReactionsViewer,
 		XMediaList,
 		XCwButton,
-		XPoll,
 		MkUrlPreview,
 	},
 
@@ -108,7 +105,7 @@ export default Vue.extend({
 			replies: [],
 			showContent: false,
 			hideThisNote: false,
-			faEdit, faBolt, faSmile, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faTrashAlt
+			faEdit, faBolt, faSmile, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faTrashAlt, faExclamationCircle
 		};
 	},
 
@@ -352,6 +349,42 @@ export default Vue.extend({
 			this.$root.api('notes/reactions/delete', {
 				noteId: note.id
 			});
+		},
+
+		async report(note) {
+			pleaseLogin(this.$root);
+			const { canceled, result: comment } = await this.$root.dialog({
+				title: this.$t('enterTheReasonToReportThisNote'),
+				input: {
+					placeholder: this.$t('reason'),
+					allowEmpty: false
+				}
+			});
+
+			if (canceled) return;
+
+			if (!comment) {
+				this.$root.dialog({
+					type: 'error',
+					iconOnly: true,
+					autoClose: true
+				});
+				return;
+			}
+
+			try {
+				await this.$root.api('notes/report', { noteId: note.id, comment });
+				this.$root.dialog({
+					type: 'success',
+					iconOnly: true,
+					autoClose: true
+				});
+			} catch (e) {
+				this.$root.dialog({
+					type: 'error',
+					text: e.message,
+				});
+			}
 		},
 
 		favorite() {

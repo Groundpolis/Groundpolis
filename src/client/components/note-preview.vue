@@ -1,6 +1,5 @@
 <template>
 <div class="yohlumlk">
-	<mk-avatar class="avatar" :user="note.user"/>
 	<div class="main">
 		<x-note-header class="header" :note="note" :mini="true"/>
 		<div class="body">

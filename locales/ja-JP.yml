@@ -500,6 +500,13 @@ enableInfiniteScroll: "自動でもっと見る"
 visibility: "公開範囲"
 poll: "アンケート"
 useCw: "内容を隠す"
+reportedNotes: "通報されたノート"
+report: "通報"
+reporter: "通報者"
+exploreEveryone: "みんなの投稿を見に行く"
+enterTheReasonToReportThisNote: 'このノートを通報する理由'
+reason: '理由'
+thisNoteIsDeleted: 'このノートは削除されています'
 
 _theme:
   explore: "テーマを探す"

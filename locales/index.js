@@ -14,26 +14,13 @@ const merge = (...args) => args.reduce((a, c) => ({
 }), {});
 
 const languages = [
-	'ar-SA',
-	//'cs-CZ',
-	//'da-DK',
-	'de-DE',
 	'en-US',
-	'es-ES',
-	'fr-FR',
 	'ja-JP',
-	'ja-KS',
-	'ko-KR',
-	//'nl-NL',
-	//'pl-PL',
-	'zh-CN',
-	'zh-TW',
 ];
 
 const primaries = {
 	'en': 'US',
 	'ja': 'JP',
-	'zh': 'CN',
 };
 
 const locales = languages.reduce((a, c) => (a[c] = yaml.safeLoad(fs.readFileSync(`${__dirname}/${c}.yml`, 'utf-8')) || {}, a), {});
@@ -43,7 +30,6 @@ module.exports = Object.entries(locales)
 		const [lang] = k.split('-');
 		switch (k) {
 			case 'ja-JP': return v;
-			case 'ja-KS':
 			case 'en-US': return merge(locales['ja-JP'], v);
 			default: return merge(
 				locales['ja-JP'],

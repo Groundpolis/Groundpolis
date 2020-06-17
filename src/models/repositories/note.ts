@@ -1,7 +1,7 @@
 import { EntityRepository, Repository, In } from 'typeorm';
 import { Note } from '../entities/note';
 import { User } from '../entities/user';
-import { Emojis, DriveFiles, NoteReactions } from '..';
+import { Emojis, DriveFiles, NoteReactions, Users } from '..';
 import { ensure } from '../../prelude/ensure';
 import { SchemaType } from '../../misc/schema';
 import { awaitAll } from '../../prelude/await-all';
@@ -34,11 +34,13 @@ export class NoteRepository extends Repository<Note> {
 		options?: {
 			detail?: boolean;
 			skipHide?: boolean;
+			showActualUser?: boolean;
 		}
 	): Promise<PackedNote> {
 		const opts = Object.assign({
 			detail: true,
-			skipHide: false
+			skipHide: false,
+			showActualUser: false,
 		}, options);
 
 		const meId = me ? typeof me === 'string' ? me : me.id : null;
@@ -136,7 +138,7 @@ export class NoteRepository extends Repository<Note> {
 			text = `【${note.name}】\n${(note.text || '').trim()}\n\n${note.url || note.uri}`;
 		}
 
-		const user = populateVirtualUser();
+		const user = opts.showActualUser ? await Users.pack(note.user || note.userId, meId) : populateVirtualUser();
 
 		const packed = await awaitAll({
 			id: note.id,
@@ -176,6 +178,7 @@ export class NoteRepository extends Repository<Note> {
 		options?: {
 			detail?: boolean;
 			skipHide?: boolean;
+			showActualuser?: boolean;
 		}
 	) {
 		return Promise.all(notes.map(n => this.pack(n, me, options)));

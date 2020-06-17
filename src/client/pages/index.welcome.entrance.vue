@@ -9,22 +9,24 @@
 			<mk-button @click="signin()" style="display: inline-block;">{{ $t('login') }}</mk-button>
 		</div>
 	</div>
+	<div class="_panel" style="padding: 16px">
+		<router-link to="/everyone" class="_link"><fa :icon="faRocket" /> {{ $t('exploreEveryone') }}</router-link>
+	</div>
 </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import { faRocket } from '@fortawesome/free-solid-svg-icons';
 import { toUnicode } from 'punycode';
 import XSigninDialog from '../components/signin-dialog.vue';
 import XSignupDialog from '../components/signup-dialog.vue';
 import MkButton from '../components/ui/button.vue';
-import XNotes from '../components/notes.vue';
 import { host } from '../config';
 
 export default Vue.extend({
 	components: {
 		MkButton,
-		XNotes,
 	},
 
 	data() {
@@ -35,6 +37,7 @@ export default Vue.extend({
 				noPaging: true,
 			},
 			host: toUnicode(host),
+			faRocket
 		};
 	},
 

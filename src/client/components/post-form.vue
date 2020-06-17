@@ -5,14 +5,6 @@
 	@dragleave="onDragleave"
 	@drop.stop="onDrop"
 >
-	<header>
-		<button v-if="!fixed" class="cancel _button" @click="cancel"><fa :icon="faTimes"/></button>
-		<div>
-			<span class="local-only" v-if="localOnly" v-text="$t('_visibility.localOnly')" />
-			<span class="text-count" :class="{ over: trimmedLength(text) > max }">{{ max - trimmedLength(text) }}</span>
-			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">{{ submitText }}<fa :icon="faPaperPlane"/></button>
-		</div>
-	</header>
 	<div class="form" :class="{ fixed }">
 		<input v-show="useCw" ref="cw" class="cw" v-model="cw" :placeholder="$t('annotation')" v-autocomplete="{ model: 'cw' }">
 		<textarea v-model="text" class="text" :class="{ withCw: useCw }" ref="text" :disabled="posting" :placeholder="placeholder" v-autocomplete="{ model: 'text' }" @keydown="onKeydown" @paste="onPaste"></textarea>
@@ -22,6 +14,10 @@
 			<button class="_button" @click="chooseFileFrom"><fa :icon="faPhotoVideo"/></button>
 			<button class="_button" @click="useCw = !useCw" :class="{ active: useCw }"><fa :icon="faEyeSlash"/></button>
 			<button class="_button" @click="insertEmoji"><fa :icon="faLaughSquint"/></button>
+			<div class="right">
+				<span class="text-count" :class="{ over: trimmedLength(text) > max }">{{ max - trimmedLength(text) }}</span>
+				<button class="submit _buttonPrimary" :disabled="!canPost" @click="post"><fa :icon="faPaperPlane"/></button>
+			</div>
 		</footer>
 		<input ref="file" class="file _button" type="file" multiple="multiple" @change="onChangeFile"/>
 	</div>
@@ -358,66 +354,10 @@ export default Vue.extend({
 .gafaadew {
 	background: var(--panel);
 
-	> header {
-		z-index: 1000;
-		height: 66px;
-
-		@media (max-width: 500px) {
-			height: 50px;
-		}
-
-		> .cancel {
-			padding: 0;
-			font-size: 20px;
-			width: 64px;
-			line-height: 66px;
-
-			@media (max-width: 500px) {
-				width: 50px;
-				line-height: 50px;
-			}
-		}
-
-		> div {
-			position: absolute;
-			top: 0;
-			right: 0;
-
-			> .text-count {
-				opacity: 0.7;
-				line-height: 66px;
-
-				@media (max-width: 500px) {
-					line-height: 50px;
-				}
-			}
-
-			> .submit {
-				margin: 16px;
-				padding: 0 12px;
-				line-height: 34px;
-				font-weight: bold;
-				vertical-align: bottom;
-				border-radius: 4px;
-
-				@media (max-width: 500px) {
-					margin: 8px;
-				}
-
-				&:disabled {
-					opacity: 0.7;
-				}
-
-				> [data-icon] {
-					margin-left: 6px;
-				}
-			}
-		}
-	}
-
 	> .form {
 		max-width: 500px;
 		margin: 0 auto;
+		padding-top: 16px;
 
 		&.fixed {
 			max-width: unset;
@@ -508,7 +448,6 @@ export default Vue.extend({
 		> .cw {
 			z-index: 1;
 			padding-bottom: 8px;
-			border-bottom: solid 1px var(--divider);
 		}
 
 		> .text {
@@ -558,6 +497,38 @@ export default Vue.extend({
 					color: var(--accent);
 				}
 			}
+
+		> .right {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+
+			> .text-count {
+				opacity: 0.7;
+				line-height: 66px;
+
+				@media (max-width: 500px) {
+					line-height: 50px;
+				}
+			}
+
+			> .submit {
+				margin: 16px;
+				padding: 0 12px;
+				line-height: 34px;
+				font-weight: bold;
+				vertical-align: bottom;
+				border-radius: 4px;
+
+				@media (max-width: 500px) {
+					margin: 8px;
+				}
+
+				&:disabled {
+					opacity: 0.7;
+				}
+			}
+		}
 		}
 	}
 }
