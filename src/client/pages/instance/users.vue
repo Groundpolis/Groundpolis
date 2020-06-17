@@ -36,19 +36,10 @@
 					<option value="silenced">{{ $t('silence') }}</option>
 					<option value="suspended">{{ $t('suspend') }}</option>
 				</mk-select>
-				<mk-select v-model="origin" style="margin: 0; flex: 1;">
-					<template #label>{{ $t('instance') }}</template>
-					<option value="combined">{{ $t('all') }}</option>
-					<option value="local">{{ $t('local') }}</option>
-					<option value="remote">{{ $t('remote') }}</option>
-				</mk-select>
 			</div>
 			<div class="inputs" style="display: flex; padding-top: 1.2em;">
 				<mk-input v-model="searchUsername" style="margin: 0; flex: 1;" type="text" spellcheck="false" @input="$refs.users.reload()">
 					<span>{{ $t('username') }}</span>
-				</mk-input>
-				<mk-input v-model="searchHost" style="margin: 0; flex: 1;" type="text" spellcheck="false" @input="$refs.users.reload()" :disabled="pagination.params().origin === 'local'">
-					<span>{{ $t('host') }}</span>
 				</mk-input>
 			</div>
 		</div>
@@ -84,7 +75,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faPlus, faUsers, faSearch, faBookmark, faMicrophoneSlash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faUsers, faSearch, faBookmark, faMicrophoneSlash, faTint } from '@fortawesome/free-solid-svg-icons';
 import { faSnowflake, faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import parseAcct from '../../../misc/acct/parse';
 import MkButton from '../../components/ui/button.vue';
@@ -112,18 +103,16 @@ export default Vue.extend({
 			target: '',
 			sort: '+createdAt',
 			state: 'all',
-			origin: 'local',
 			searchUsername: '',
-			searchHost: '',
 			pagination: {
 				endpoint: 'admin/show-users',
 				limit: 10,
 				params: () => ({
 					sort: this.sort,
 					state: this.state,
-					origin: this.origin,
+					origin: 'combined',
 					username: this.searchUsername,
-					hostname: this.searchHost,
+					hostname: '',
 				}),
 				offsetMode: true
 			},

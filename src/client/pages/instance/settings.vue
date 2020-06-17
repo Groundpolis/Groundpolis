@@ -22,17 +22,6 @@
 	<section class="_card info">
 		<div class="_content">
 			<mk-input v-model="maxNoteTextLength" type="number" :save="() => save()" style="margin:0;"><template #icon><fa :icon="faPencilAlt"/></template>{{ $t('maxNoteTextLength') }}</mk-input>
-		</div>
-		<div class="_content">
-			<mk-switch v-model="enableLocalTimeline" @change="save()">{{ $t('enableLocalTimeline') }}</mk-switch>
-			<mk-switch v-model="enableGlobalTimeline" @change="save()">{{ $t('enableGlobalTimeline') }}</mk-switch>
-			<mk-info>{{ $t('disablingTimelinesInfo') }}</mk-info>
-		</div>
-	</section>
-
-	<section class="_card info">
-		<div class="_title"><fa :icon="faUser"/> {{ $t('registration') }}</div>
-		<div class="_content">
 			<mk-switch v-model="enableRegistration" @change="save()">{{ $t('enableRegistration') }}</mk-switch>
 			<mk-button v-if="!enableRegistration" @click="invite">{{ $t('invite') }}</mk-button>
 		</div>
@@ -75,40 +64,9 @@
 	</section>
 
 	<section class="_card">
-		<div class="_title"><fa :icon="faBolt"/> {{ $t('serviceworker') }}</div>
-		<div class="_content">
-			<mk-switch v-model="enableServiceWorker">{{ $t('enableServiceworker') }}<template #desc>{{ $t('serviceworkerInfo') }}</template></mk-switch>
-			<template v-if="enableServiceWorker">
-				<div class="_inputs">
-					<mk-input v-model="swPublicKey" :disabled="!enableServiceWorker"><template #icon><fa :icon="faKey"/></template>Public key</mk-input>
-					<mk-input v-model="swPrivateKey" :disabled="!enableServiceWorker"><template #icon><fa :icon="faKey"/></template>Private key</mk-input>
-				</div>
-			</template>
-		</div>
-		<div class="_footer">
-			<mk-button primary @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
-		</div>
-	</section>
-
-	<section class="_card">
-		<div class="_title"><fa :icon="faThumbtack"/> {{ $t('pinnedUsers') }}</div>
-		<div class="_content">
-			<mk-textarea v-model="pinnedUsers">
-				<template #desc>{{ $t('pinnedUsersDescription') }} <button class="_textButton" @click="addPinUser">{{ $t('addUser') }}</button></template>
-			</mk-textarea>
-		</div>
-		<div class="_footer">
-			<mk-button primary @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
-		</div>
-	</section>
-
-	<section class="_card">
 		<div class="_title"><fa :icon="faCloud"/> {{ $t('files') }}</div>
 		<div class="_content">
-			<mk-switch v-model="cacheRemoteFiles">{{ $t('cacheRemoteFiles') }}<template #desc>{{ $t('cacheRemoteFilesDescription') }}</template></mk-switch>
-			<mk-switch v-model="proxyRemoteFiles">{{ $t('proxyRemoteFiles') }}<template #desc>{{ $t('proxyRemoteFilesDescription') }}</template></mk-switch>
 			<mk-input v-model="localDriveCapacityMb" type="number">{{ $t('driveCapacityPerLocalAccount') }}<template #suffix>MB</template><template #desc>{{ $t('inMb') }}</template></mk-input>
-			<mk-input v-model="remoteDriveCapacityMb" type="number" :disabled="!cacheRemoteFiles" style="margin-bottom: 0;">{{ $t('driveCapacityPerRemoteAccount') }}<template #suffix>MB</template><template #desc>{{ $t('inMb') }}</template></mk-input>
 		</div>
 		<div class="_footer">
 			<mk-button primary @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
@@ -136,26 +94,6 @@
 				<mk-switch v-model="objectStorageUseSSL" :disabled="!useObjectStorage">{{ $t('objectStorageUseSSL') }}<template #desc>{{ $t('objectStorageUseSSLDesc') }}</template></mk-switch>
 				<mk-switch v-model="objectStorageUseProxy" :disabled="!useObjectStorage">{{ $t('objectStorageUseProxy') }}<template #desc>{{ $t('objectStorageUseProxyDesc') }}</template></mk-switch>
 			</template>
-		</div>
-		<div class="_footer">
-			<mk-button primary @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
-		</div>
-	</section>
-
-	<section class="_card">
-		<div class="_title"><fa :icon="faGhost"/> {{ $t('proxyAccount') }}</div>
-		<div class="_content">
-			<mk-input :value="proxyAccount ? proxyAccount.username : null" style="margin: 0;" disabled><template #prefix>@</template>{{ $t('proxyAccount') }}<template #desc>{{ $t('proxyAccountDescription') }}</template></mk-input>
-			<mk-button primary @click="chooseProxyAccount">{{ $t('chooseProxyAccount') }}</mk-button>
-		</div>
-	</section>
-
-	<section class="_card">
-		<div class="_title"><fa :icon="faBan"/> {{ $t('blockedInstances') }}</div>
-		<div class="_content">
-			<mk-textarea v-model="blockedHosts">
-				<template #desc>{{ $t('blockedInstancesDescription') }}</template>
-			</mk-textarea>
 		</div>
 		<div class="_footer">
 			<mk-button primary @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>

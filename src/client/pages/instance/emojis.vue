@@ -33,27 +33,6 @@
 			<mk-button inline primary @click="add"><fa :icon="faPlus"/> {{ $t('addEmoji') }}</mk-button>
 		</div>
 	</section>
-	<section class="_card remote">
-		<div class="_title"><fa :icon="faLaugh"/> {{ $t('customEmojisOfRemote') }}</div>
-		<div class="_content">
-			<mk-input v-model="host" :debounce="true"><span>{{ $t('host') }}</span></mk-input>
-			<mk-pagination :pagination="remotePagination" class="emojis" ref="remoteEmojis">
-				<template #empty><span>{{ $t('noCustomEmojis') }}</span></template>
-				<template #default="{items}">
-					<div class="emoji" v-for="(emoji, i) in items" :key="emoji.id" @click="selectedRemote = emoji" :class="{ selected: selectedRemote && (selectedRemote.id === emoji.id) }">
-						<img :src="emoji.url" class="img" :alt="emoji.name"/>
-						<div class="body">
-							<span class="name">{{ emoji.name }}</span>
-							<span class="info">{{ emoji.host }}</span>
-						</div>
-					</div>
-				</template>
-			</mk-pagination>
-		</div>
-		<div class="_footer">
-			<mk-button inline primary :disabled="selectedRemote == null" @click="im()"><fa :icon="faPlus"/> {{ $t('import') }}</mk-button>
-		</div>
-	</section>
 </div>
 </template>
 
