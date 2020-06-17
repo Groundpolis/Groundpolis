@@ -507,6 +507,7 @@ exploreEveryone: "みんなの投稿を見に行く"
 enterTheReasonToReportThisNote: 'このノートを通報する理由'
 reason: '理由'
 thisNoteIsDeleted: 'このノートは削除されています'
+signupInfo: 'ここで入力したユーザー情報はログインするためだけに必要であり、運営を除く他のユーザーには一切開示されません。'
 
 _theme:
   explore: "テーマを探す"

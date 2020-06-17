@@ -1,6 +1,9 @@
 <template>
 <form class="mk-signup" @submit.prevent="onSubmit" :autocomplete="Math.random()">
 	<template v-if="meta">
+		<div class="info">
+			{{ $t('signupInfo') }}
+		</div>
 		<mk-input v-if="meta.disableRegistration" v-model="invitationCode" type="text" :autocomplete="Math.random()" spellcheck="false" required>
 			<span>{{ $t('invitationCode') }}</span>
 			<template #prefix><fa :icon="faKey"/></template>
@@ -66,6 +69,14 @@ export default Vue.extend({
 		captcha: () => import('./captcha.vue').then(x => x.default),
 	},
 
+	props: {
+		autoSet: {
+			type: Boolean,
+			required: false,
+			default: false,
+		}
+	},
+
 	data() {
 		return {
 			host: toUnicode(host),
@@ -82,14 +93,6 @@ export default Vue.extend({
 			hCaptchaResponse: null,
 			reCaptchaResponse: null,
 			faLock, faExclamationTriangle, faSpinner, faCheck, faKey
-		}
-	},
-
-	props: {
-		autoSet: {
-			type: Boolean,
-			required: false,
-			default: false,
 		}
 	},
 

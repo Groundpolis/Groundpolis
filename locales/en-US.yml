@@ -509,6 +509,7 @@ reporter: "Reporter"
 enterTheReasonToReportThisNote: 'Enter the reason to report this note'
 reason: 'Reason'
 thisNoteIsDeleted: 'This note has been deleted'
+signupInfo: 'Your entered informations are only needed to login, and they will not be disclosed to any users other than moderators.'
 
 _theme:
   explore: "Explore Themes"

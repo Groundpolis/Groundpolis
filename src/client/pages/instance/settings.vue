@@ -275,12 +275,6 @@ export default Vue.extend({
 		this.enableDiscordIntegration = this.meta.enableDiscordIntegration;
 		this.discordClientId = this.meta.discordClientId;
 		this.discordClientSecret = this.meta.discordClientSecret;
-
-		if (this.proxyAccountId) {
-			this.$root.api('users/show', { userId: this.proxyAccountId }).then(proxyAccount => {
-				this.proxyAccount = proxyAccount;
-			});
-		}
 	},
 
 	mounted() {

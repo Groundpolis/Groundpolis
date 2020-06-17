@@ -1,6 +1,5 @@
 <template>
 <form class="eppvobhk" :class="{ signing, totpLogin }" @submit.prevent="onSubmit">
-	<div class="avatar" :style="{ backgroundImage: user ? `url('${ user.avatarUrl }')` : null }" v-show="withAvatar"></div>
 	<div class="normal-signin" v-if="!totpLogin">
 		<mk-input v-model="username" type="text" pattern="^[a-zA-Z0-9_]+$" spellcheck="false" autofocus required @input="onUsernameChange">
 			<span>{{ $t('username') }}</span>
@@ -13,7 +12,7 @@
 		</mk-input>
 		<mk-button type="submit" primary :disabled="signing" style="margin: 0 auto;">{{ signing ? $t('loggingIn') : $t('login') }}</mk-button>
 		<a class="_panel _button" style="margin: 8px auto;" v-if="meta && meta.enableTwitterIntegration" :href="`${apiUrl}/signin/twitter`"><fa :icon="faTwitter" style="margin-right: 4px;"/>{{ $t('signinWith', { x: 'Twitter' }) }}</a>
-		<a class="_panel _button" style="margin: 8px auto;" v-if="meta && meta.enableGithubIntegration"  :href="`${apiUrl}/signin/github`"><fa :icon="faGithub" style="margin-right: 4px;"/>{{ $t('signinWith', { x: 'GitHub' }) }}</a>
+		<a class="_panel _button" style="margin: 8px auto;" v-if="meta && meta.enableGithubIntegration" :href="`${apiUrl}/signin/github`"><fa :icon="faGithub" style="margin-right: 4px;"/>{{ $t('signinWith', { x: 'GitHub' }) }}</a>
 		<a class="_panel _button" style="margin: 8px auto;" v-if="meta && meta.enableDiscordIntegration" :href="`${apiUrl}/signin/discord`"><fa :icon="faDiscord" style="margin-right: 4px;"/>{{ $t('signinWith', { x: 'Discord' }) }}</a>
 	</div>
 	<div class="2fa-signin" v-if="totpLogin" :class="{ securityKeys: user && user.securityKeys }">

@@ -1,5 +1,5 @@
 <template>
-<x-window ref="window" @closed="() => { $emit('closed'); destroyDom(); }">
+<x-window ref="window" :height="270" @closed="() => { $emit('closed'); destroyDom(); }">
 	<template #header>{{ $t('login') }}</template>
 	<mk-signin :auto-set="autoSet" @login="onLogin"/>
 </x-window>
