@@ -5,8 +5,6 @@
 
 	<x-theme/>
 
-	<x-sidebar/>
-
 	<section class="_card">
 		<div class="_title"><fa :icon="faMusic"/> {{ $t('sounds') }}</div>
 		<div class="_content">
