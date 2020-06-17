@@ -109,9 +109,6 @@ export default define(meta, async (ps, user) => {
 
 	const timeline = await query.take(ps.limit!).getMany();
 
-	await injectPromo(timeline, user);
-	await injectFeatured(timeline, user);
-
 	process.nextTick(() => {
 		if (user) {
 			activeUsersChart.update(user);
