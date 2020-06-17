@@ -13,7 +13,7 @@ export default async (user: User, note: Note, reaction?: string) => {
 		reaction = '👍'
 	}
 
-	reaction = await toDbReaction(reaction);
+	reaction = await toDbReaction(reaction, user.host);
 
 	const exist = await NoteReactions.findOne({
 		noteId: note.id,
@@ -52,8 +52,27 @@ export default async (user: User, note: Note, reaction?: string) => {
 
 	perUserReactionsChart.update(user, note);
 
+	// カスタム絵文字リアクションだったら絵文字情報も送る
+	const decodedReaction = decodeReaction(reaction);
+
+	let emoji = await Emojis.findOne({
+		where: {
+			name: decodedReaction.name,
+			host: decodedReaction.host
+		},
+		select: ['name', 'host', 'url']
+	});
+
+	if (emoji) {
+		emoji = {
+			name: emoji.host ? `${emoji.name}@${emoji.host}` : `${emoji.name}@.`,
+			url: emoji.url
+		} as any;
+	}
+
 	publishNoteStream(note.id, 'reacted', {
-		reaction: reaction,
+		reaction: decodedReaction.reaction,
+		emoji: emoji,
 		userId: user.id
 	});
 

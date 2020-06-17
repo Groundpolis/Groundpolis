@@ -1,6 +1,6 @@
 <template>
 <div>
-	<mk-container :show-header="props.design === 0" :naked="props.design === 2" :class="$style.root" :data-melt="props.design == 2">
+	<mk-container :show-header="props.design === 0" :naked="props.design === 2" :class="$style.root" :data-melt="props.design === 2">
 		<template #header><fa :icon="faCamera"/>{{ $t('_widgets.photos') }}</template>
 
 		<div class="">
@@ -20,7 +20,6 @@
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import MkContainer from '../components/ui/container.vue';
 import define from './define';
-import i18n from '../i18n';
 import { getStaticImageUrl } from '../scripts/get-static-image-url';
 
 export default define({
@@ -29,7 +28,6 @@ export default define({
 		design: 0,
 	})
 }).extend({
-	i18n,
 	components: {
 		MkContainer,
 	},
@@ -66,7 +64,7 @@ export default define({
 		},
 
 		func() {
-			if (this.props.design == 2) {
+			if (this.props.design === 2) {
 				this.props.design = 0;
 			} else {
 				this.props.design++;

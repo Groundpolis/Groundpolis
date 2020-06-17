@@ -7,7 +7,6 @@ import { fetchMeta } from '../../misc/fetch-meta';
 import { getS3 } from './s3';
 import { v4 as uuid } from 'uuid';
 
-
 export async function deleteFile(file: DriveFile, isExpired = false) {
 	if (file.storedInternal) {
 		InternalStorage.del(file.accessKey!);

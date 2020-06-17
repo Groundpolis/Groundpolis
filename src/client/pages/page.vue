@@ -5,6 +5,9 @@
 
 	<div class="_card" v-if="page" :key="page.id">
 		<div class="_title">{{ page.title }}</div>
+		<div class="banner">
+			<img :src="page.eyeCatchingImage.url" v-if="page.eyeCatchingImageId"/>
+		</div>
 		<div class="_content">
 			<x-page :page="page"/>
 		</div>
@@ -115,6 +118,21 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .xcukqgmh {
+	> ._card {
+		> .banner {
+			> img {
+				display: block;
+				width: 100%;
+				height: 120px;
+				object-fit: cover;
+			}
+		}
 
+		> ._footer {
+			> * {
+				margin: 0 0.5em;
+			}
+		}
+	}
 }
 </style>

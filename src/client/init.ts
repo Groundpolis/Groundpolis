@@ -7,25 +7,29 @@ import Vuex from 'vuex';
 import VueMeta from 'vue-meta';
 import PortalVue from 'portal-vue';
 import VAnimateCss from 'v-animate-css';
+import VueI18n from 'vue-i18n';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-import i18n from './i18n';
 import VueHotkey from './scripts/hotkey';
 import App from './app.vue';
 import MiOS from './mios';
-import { version, langs, instanceName } from './config';
+import { version, langs, instanceName, getLocale } from './config';
 import PostFormDialog from './components/post-form-dialog.vue';
 import Dialog from './components/dialog.vue';
 import Menu from './components/menu.vue';
 import { router } from './router';
-import { applyTheme, lightTheme, builtinThemes } from './theme';
+import { applyTheme, lightTheme } from './theme';
 import { isDeviceDarkmode } from './scripts/is-device-darkmode';
+import createStore from './store';
+import { clientDb, get, count } from './db';
+import { setI18nContexts } from './scripts/set-i18n-contexts';
 
 Vue.use(Vuex);
 Vue.use(VueHotkey);
 Vue.use(VueMeta);
 Vue.use(PortalVue);
 Vue.use(VAnimateCss);
+Vue.use(VueI18n);
 Vue.component('fa', FontAwesomeIcon);
 
 require('./directives');
@@ -54,8 +58,6 @@ if (localStorage.getItem('kyoppie') === 'yuppie') {
 	localStorage.setItem('i', i);
 	location.reload(true);
 }
-
-window.history.scrollRestoration = 'manual';
 
 if (localStorage.getItem('theme') == null) {
 	applyTheme(lightTheme);
@@ -95,27 +97,6 @@ if (isMobile || window.innerWidth <= 1024) {
 	head.appendChild(viewport);
 }
 
-//#region Fetch locale data
-const cachedLocale = localStorage.getItem('locale');
-
-if (cachedLocale == null) {
-	fetch(`/assets/locales/${lang}.${version}.json`)
-		.then(response => response.json()).then(locale => {
-			localStorage.setItem('locale', JSON.stringify(locale));
-			i18n.locale = lang;
-			i18n.setLocaleMessage(lang, locale);
-		});
-} else {
-	// TODO: 古い時だけ更新
-	setTimeout(() => {
-		fetch(`/assets/locales/${lang}.${version}.json`)
-			.then(response => response.json()).then(locale => {
-				localStorage.setItem('locale', JSON.stringify(locale));
-			});
-	}, 1000 * 5);
-}
-//#endregion
-
 //#region Set lang attr
 const html = document.documentElement;
 html.setAttribute('lang', lang);
@@ -134,36 +115,51 @@ document.body.setAttribute('ontouchstart', '');
 // アプリ基底要素マウント
 document.body.innerHTML = '<div id="app"></div>';
 
-const os = new MiOS();
+const store = createStore();
+
+const os = new MiOS(store);
 
 os.init(async () => {
 	window.addEventListener('storage', e => {
 		if (e.key === 'vuex') {
-			os.store.replaceState(JSON.parse(localStorage['vuex']));
+			store.replaceState(JSON.parse(localStorage['vuex']));
 		} else if (e.key === 'i') {
 			location.reload();
 		}
-	}, false)
+	}, false);
 
-	os.store.watch(state => state.device.darkMode, darkMode => {
-		// TODO: このファイルでbuiltinThemesを参照するとcode splittingが効かず、初回読み込み時に全てのテーマコードを読み込むことになってしまい無駄なので何とかする
-		const themes = builtinThemes.concat(os.store.state.device.themes);
-		applyTheme(themes.find(x => x.id === (darkMode ? os.store.state.device.darkTheme : os.store.state.device.lightTheme)));
+	store.watch(state => state.device.darkMode, darkMode => {
+		import('./theme').then(({ builtinThemes }) => {
+			const themes = builtinThemes.concat(store.state.device.themes);
+			applyTheme(themes.find(x => x.id === (darkMode ? store.state.device.darkTheme : store.state.device.lightTheme)));
+		});
 	});
 
 	//#region Sync dark mode
-	if (os.store.state.device.syncDeviceDarkMode) {
-		os.store.commit('device/set', { key: 'darkMode', value: isDeviceDarkmode() });
+	if (store.state.device.syncDeviceDarkMode) {
+		store.commit('device/set', { key: 'darkMode', value: isDeviceDarkmode() });
 	}
 
 	window.matchMedia('(prefers-color-scheme: dark)').addListener(mql => {
-		if (os.store.state.device.syncDeviceDarkMode) {
-			os.store.commit('device/set', { key: 'darkMode', value: mql.matches });
+		if (store.state.device.syncDeviceDarkMode) {
+			store.commit('device/set', { key: 'darkMode', value: mql.matches });
 		}
 	});
 	//#endregion
 
-	if ('Notification' in window && os.store.getters.isSignedIn) {
+	//#region Fetch locale data
+	const i18n = new VueI18n();
+
+	await count(clientDb.i18n).then(async n => {
+		if (n === 0) return setI18nContexts(lang, version, i18n);
+		if ((await get('_version_', clientDb.i18n) !== version)) return setI18nContexts(lang, version, i18n, true);
+
+		i18n.locale = lang;
+		i18n.setLocaleMessage(lang, await getLocale());
+	});
+	//#endregion
+
+	if ('Notification' in window && store.getters.isSignedIn) {
 		// 許可を得ていなかったらリクエスト
 		if (Notification.permission === 'default') {
 			Notification.requestPermission();
@@ -171,7 +167,8 @@ os.init(async () => {
 	}
 
 	const app = new Vue({
-		store: os.store,
+		store: store,
+		i18n,
 		metaInfo: {
 			title: null,
 			titleTemplate: title => title ? `${title} | ${(instanceName || 'Misskey')}` : (instanceName || 'Misskey')
@@ -179,11 +176,12 @@ os.init(async () => {
 		data() {
 			return {
 				stream: os.stream,
-				isMobile: isMobile
+				isMobile: isMobile,
+				i18n // TODO: 消せないか考える SEE: https://github.com/syuilo/misskey/pull/6396#discussion_r429511030
 			};
 		},
 		methods: {
-			api: os.api,
+			api: (endpoint: string, data: { [x: string]: any } = {}, token?) => store.dispatch('api', { endpoint, data, token }),
 			signout: os.signout,
 			new(vm, props) {
 				const x = new vm({
@@ -234,58 +232,63 @@ os.init(async () => {
 	// マウント
 	app.$mount('#app');
 
-	if (app.$store.getters.isSignedIn) {
+	os.stream.on('emojiAdded', data => {
+		// TODO
+		//store.commit('instance/set', );
+	});
+
+	if (store.getters.isSignedIn) {
 		const main = os.stream.useSharedConnection('main');
 
 		// 自分の情報が更新されたとき
 		main.on('meUpdated', i => {
-			app.$store.dispatch('mergeMe', i);
+			store.dispatch('mergeMe', i);
 		});
 
 		main.on('readAllNotifications', () => {
-			app.$store.dispatch('mergeMe', {
+			store.dispatch('mergeMe', {
 				hasUnreadNotification: false
 			});
 		});
 
 		main.on('unreadNotification', () => {
-			app.$store.dispatch('mergeMe', {
+			store.dispatch('mergeMe', {
 				hasUnreadNotification: true
 			});
 		});
 
 		main.on('unreadMention', () => {
-			app.$store.dispatch('mergeMe', {
+			store.dispatch('mergeMe', {
 				hasUnreadMentions: true
 			});
 		});
 
 		main.on('readAllUnreadMentions', () => {
-			app.$store.dispatch('mergeMe', {
+			store.dispatch('mergeMe', {
 				hasUnreadMentions: false
 			});
 		});
 
 		main.on('unreadSpecifiedNote', () => {
-			app.$store.dispatch('mergeMe', {
+			store.dispatch('mergeMe', {
 				hasUnreadSpecifiedNotes: true
 			});
 		});
 
 		main.on('readAllUnreadSpecifiedNotes', () => {
-			app.$store.dispatch('mergeMe', {
+			store.dispatch('mergeMe', {
 				hasUnreadSpecifiedNotes: false
 			});
 		});
 
 		main.on('readAllMessagingMessages', () => {
-			app.$store.dispatch('mergeMe', {
+			store.dispatch('mergeMe', {
 				hasUnreadMessagingMessage: false
 			});
 		});
 
 		main.on('unreadMessagingMessage', () => {
-			app.$store.dispatch('mergeMe', {
+			store.dispatch('mergeMe', {
 				hasUnreadMessagingMessage: true
 			});
 
@@ -293,13 +296,13 @@ os.init(async () => {
 		});
 
 		main.on('readAllAntennas', () => {
-			app.$store.dispatch('mergeMe', {
+			store.dispatch('mergeMe', {
 				hasUnreadAntenna: false
 			});
 		});
 
 		main.on('unreadAntenna', () => {
-			app.$store.dispatch('mergeMe', {
+			store.dispatch('mergeMe', {
 				hasUnreadAntenna: true
 			});
 
@@ -307,13 +310,13 @@ os.init(async () => {
 		});
 
 		main.on('readAllAnnouncements', () => {
-			app.$store.dispatch('mergeMe', {
+			store.dispatch('mergeMe', {
 				hasUnreadAnnouncement: false
 			});
 		});
 
 		main.on('clientSettingUpdated', x => {
-			app.$store.commit('settings/set', {
+			store.commit('settings/set', {
 				key: x.key,
 				value: x.value
 			});

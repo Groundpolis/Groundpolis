@@ -25,6 +25,12 @@ function initializeQueue(name: string, limitPerSec = -1) {
 	});
 }
 
+export type InboxJobData = {
+	activity: IActivity,
+	/** HTTP-Signature */
+	signature: httpSignature.IParsedSignature
+};
+
 function renderError(e: Error): any {
 	return {
 		stack: e?.stack,

@@ -16,7 +16,11 @@ export default async (user: User, note: Note) => {
 	}
 
 	// Delete reaction
-	await NoteReactions.delete(exist.id);
+	const result = await NoteReactions.delete(exist.id);
+
+	if (result.affected !== 1) {
+		throw new IdentifiableError('60527ec9-b4cb-4a88-a6bd-32d3ad26817d', 'not reacted');
+	}
 
 	// Decrement reactions count
 	const sql = `jsonb_set("reactions", '{${exist.reaction}}', (COALESCE("reactions"->>'${exist.reaction}', '0')::int - 1)::text::jsonb)`;
@@ -30,7 +34,7 @@ export default async (user: User, note: Note) => {
 	Notes.decrement({ id: note.id }, 'score', 1);
 
 	publishNoteStream(note.id, 'unreacted', {
-		reaction: exist.reaction,
+		reaction: decodeReaction(exist.reaction).reaction,
 		userId: user.id
 	});
 };

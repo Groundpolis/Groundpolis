@@ -39,9 +39,27 @@
 	</section>
 
 	<section class="_card">
+		<div class="_title"><fa :icon="faShieldAlt"/> {{ $t('hcaptcha') }}</div>
+		<div class="_content">
+			<mk-switch v-model="enableHcaptcha" ref="enableHcaptcha">{{ $t('enableHcaptcha') }}</mk-switch>
+			<template v-if="enableHcaptcha">
+				<mk-input v-model="hcaptchaSiteKey" :disabled="!enableHcaptcha"><template #icon><fa :icon="faKey"/></template>{{ $t('hcaptchaSiteKey') }}</mk-input>
+				<mk-input v-model="hcaptchaSecretKey" :disabled="!enableHcaptcha"><template #icon><fa :icon="faKey"/></template>{{ $t('hcaptchaSecretKey') }}</mk-input>
+			</template>
+		</div>
+		<div class="_content" v-if="enableHcaptcha">
+			<header>{{ $t('preview') }}</header>
+			<captcha v-if="enableHcaptcha" provider="hcaptcha" :sitekey="hcaptchaSiteKey || '10000000-ffff-ffff-ffff-000000000001'"/>
+		</div>
+		<div class="_footer">
+			<mk-button primary @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
+		</div>
+	</section>
+
+	<section class="_card">
 		<div class="_title"><fa :icon="faShieldAlt"/> {{ $t('recaptcha') }}</div>
 		<div class="_content">
-			<mk-switch v-model="enableRecaptcha">{{ $t('enableRecaptcha') }}</mk-switch>
+			<mk-switch v-model="enableRecaptcha" ref="enableRecaptcha">{{ $t('enableRecaptcha') }}</mk-switch>
 			<template v-if="enableRecaptcha">
 				<mk-input v-model="recaptchaSiteKey" :disabled="!enableRecaptcha"><template #icon><fa :icon="faKey"/></template>{{ $t('recaptchaSiteKey') }}</mk-input>
 				<mk-input v-model="recaptchaSecretKey" :disabled="!enableRecaptcha"><template #icon><fa :icon="faKey"/></template>{{ $t('recaptchaSecretKey') }}</mk-input>
@@ -49,7 +67,7 @@
 		</div>
 		<div class="_content" v-if="enableRecaptcha && recaptchaSiteKey">
 			<header>{{ $t('preview') }}</header>
-			<div ref="recaptcha" style="margin: 16px 0 0 0;" :key="recaptchaSiteKey"></div>
+			<captcha v-if="enableRecaptcha" provider="grecaptcha" :sitekey="recaptchaSiteKey"/>
 		</div>
 		<div class="_footer">
 			<mk-button primary @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
@@ -116,6 +134,7 @@
 					<mk-input v-model="objectStorageSecretKey" :disabled="!useObjectStorage"><template #icon><fa :icon="faKey"/></template>Secret key</mk-input>
 				</div>
 				<mk-switch v-model="objectStorageUseSSL" :disabled="!useObjectStorage">{{ $t('objectStorageUseSSL') }}<template #desc>{{ $t('objectStorageUseSSLDesc') }}</template></mk-switch>
+				<mk-switch v-model="objectStorageUseProxy" :disabled="!useObjectStorage">{{ $t('objectStorageUseProxy') }}<template #desc>{{ $t('objectStorageUseProxyDesc') }}</template></mk-switch>
 			</template>
 		</div>
 		<div class="_footer">
@@ -191,12 +210,9 @@ import MkSwitch from '../../components/ui/switch.vue';
 import MkInfo from '../../components/ui/info.vue';
 import MkUserSelect from '../../components/user-select.vue';
 import { url } from '../../config';
-import i18n from '../../i18n';
 import getAcct from '../../../misc/acct/render';
 
 export default Vue.extend({
-	i18n,
-
 	metaInfo() {
 		return {
 			title: this.$t('instance') as string
@@ -209,6 +225,7 @@ export default Vue.extend({
 		MkTextarea,
 		MkSwitch,
 		MkInfo,
+		Captcha: () => import('../../components/captcha.vue').then(x => x.default),
 	},
 
 	data() {
@@ -233,6 +250,9 @@ export default Vue.extend({
 			enableRegistration: false,
 			enableLocalTimeline: false,
 			enableGlobalTimeline: false,
+			enableHcaptcha: false,
+			hcaptchaSiteKey: null,
+			hcaptchaSecretKey: null,
 			enableRecaptcha: false,
 			recaptchaSiteKey: null,
 			recaptchaSecretKey: null,
@@ -249,6 +269,7 @@ export default Vue.extend({
 			objectStorageAccessKey: null,
 			objectStorageSecretKey: null,
 			objectStorageUseSSL: false,
+			objectStorageUseProxy: false,
 			enableTwitterIntegration: false,
 			twitterConsumerKey: null,
 			twitterConsumerSecret: null,
@@ -280,6 +301,9 @@ export default Vue.extend({
 		this.enableRegistration = !this.meta.disableRegistration;
 		this.enableLocalTimeline = !this.meta.disableLocalTimeline;
 		this.enableGlobalTimeline = !this.meta.disableGlobalTimeline;
+		this.enableHcaptcha = this.meta.enableHcaptcha;
+		this.hcaptchaSiteKey = this.meta.hcaptchaSiteKey;
+		this.hcaptchaSecretKey = this.meta.hcaptchaSecretKey;
 		this.enableRecaptcha = this.meta.enableRecaptcha;
 		this.recaptchaSiteKey = this.meta.recaptchaSiteKey;
 		this.recaptchaSecretKey = this.meta.recaptchaSecretKey;
@@ -303,6 +327,7 @@ export default Vue.extend({
 		this.objectStorageAccessKey = this.meta.objectStorageAccessKey;
 		this.objectStorageSecretKey = this.meta.objectStorageSecretKey;
 		this.objectStorageUseSSL = this.meta.objectStorageUseSSL;
+		this.objectStorageUseProxy = this.meta.objectStorageUseProxy;
 		this.enableTwitterIntegration = this.meta.enableTwitterIntegration;
 		this.twitterConsumerKey = this.meta.twitterConsumerKey;
 		this.twitterConsumerSecret = this.meta.twitterConsumerSecret;
@@ -321,26 +346,38 @@ export default Vue.extend({
 	},
 
 	mounted() {
-		const renderRecaptchaPreview = () => {
-			if (!(window as any).grecaptcha) return;
-			if (!this.$refs.recaptcha) return;
-			if (!this.recaptchaSiteKey) return;
-			(window as any).grecaptcha.render(this.$refs.recaptcha, {
-				sitekey: this.recaptchaSiteKey
-			});
-		};
-		window.onRecaotchaLoad = () => {
-			renderRecaptchaPreview();
-		};
-		const head = document.getElementsByTagName('head')[0];
-		const script = document.createElement('script');
-		script.setAttribute('src', 'https://www.google.com/recaptcha/api.js?onload=onRecaotchaLoad');
-		head.appendChild(script);
-		this.$watch('enableRecaptcha', () => {
-			renderRecaptchaPreview();
+		this.$refs.enableHcaptcha.$on('change', () => {
+			if (this.enableHcaptcha && this.enableRecaptcha) {
+				this.$root.dialog({
+					type: 'question', // warning だと間違って cancel するかもしれない
+					showCancelButton: true,
+					title: this.$t('settingGuide'),
+					text: this.$t('avoidMultiCaptchaConfirm'),
+				}).then(({ canceled }) => {
+					if (canceled) {
+						return;
+					}
+
+					this.enableRecaptcha = false;
+				});
+			}
 		});
-		this.$watch('recaptchaSiteKey', () => {
-			renderRecaptchaPreview();
+
+		this.$refs.enableRecaptcha.$on('change', () => {
+			if (this.enableRecaptcha && this.enableHcaptcha) {
+				this.$root.dialog({
+					type: 'question', // warning だと間違って cancel するかもしれない
+					showCancelButton: true,
+					title: this.$t('settingGuide'),
+					text: this.$t('avoidMultiCaptchaConfirm'),
+				}).then(({ canceled }) => {
+					if (canceled) {
+						return;
+					}
+
+					this.enableHcaptcha = false;
+				});
+			}
 		});
 	},
 
@@ -388,6 +425,9 @@ export default Vue.extend({
 				disableRegistration: !this.enableRegistration,
 				disableLocalTimeline: !this.enableLocalTimeline,
 				disableGlobalTimeline: !this.enableGlobalTimeline,
+				enableHcaptcha: this.enableHcaptcha,
+				hcaptchaSiteKey: this.hcaptchaSiteKey,
+				hcaptchaSecretKey: this.hcaptchaSecretKey,
 				enableRecaptcha: this.enableRecaptcha,
 				recaptchaSiteKey: this.recaptchaSiteKey,
 				recaptchaSecretKey: this.recaptchaSecretKey,
@@ -411,6 +451,7 @@ export default Vue.extend({
 				objectStorageAccessKey: this.objectStorageAccessKey ? this.objectStorageAccessKey : null,
 				objectStorageSecretKey: this.objectStorageSecretKey ? this.objectStorageSecretKey : null,
 				objectStorageUseSSL: this.objectStorageUseSSL,
+				objectStorageUseProxy: this.objectStorageUseProxy,
 				enableTwitterIntegration: this.enableTwitterIntegration,
 				twitterConsumerKey: this.twitterConsumerKey,
 				twitterConsumerSecret: this.twitterConsumerSecret,

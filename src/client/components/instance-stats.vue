@@ -83,7 +83,6 @@
 import Vue from 'vue';
 import { faChartBar, faUser, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import Chart from 'chart.js';
-import i18n from '../i18n';
 import MkSelect from './ui/select.vue';
 
 const chartLimit = 90;
@@ -98,8 +97,6 @@ const alpha = (hex, a) => {
 };
 
 export default Vue.extend({
-	i18n,
-
 	components: {
 		MkSelect
 	},

@@ -38,6 +38,7 @@ type Option = {
 	apHashtags?: string[] | null;
 	apEmojis?: string[] | null;
 	uri?: string | null;
+	url?: string | null;
 	app?: App | null;
 };
 
@@ -212,6 +213,7 @@ async function insertNote(user: User, data: Option, tags: string[], emojis: stri
 	});
 
 	if (data.uri != null) insert.uri = data.uri;
+	if (data.url != null) insert.url = data.url;
 
 	// Append mentions data
 	if (mentionedUsers.length > 0) {
@@ -231,30 +233,29 @@ async function insertNote(user: User, data: Option, tags: string[], emojis: stri
 
 	// 投稿を作成
 	try {
-		let note: Note;
 		if (insert.hasPoll) {
 			// Start transaction
 			await getConnection().transaction(async transactionalEntityManager => {
-				note = await transactionalEntityManager.save(insert);
+				await transactionalEntityManager.insert(Note, insert);
 
 				const poll = new Poll({
-					noteId: note.id,
+					noteId: insert.id,
 					choices: data.poll!.choices,
 					expiresAt: data.poll!.expiresAt,
 					multiple: data.poll!.multiple,
 					votes: new Array(data.poll!.choices.length).fill(0),
-					noteVisibility: note.visibility,
+					noteVisibility: insert.visibility,
 					userId: user.id,
 					userHost: user.host
 				});
 
-				await transactionalEntityManager.save(poll);
+				await transactionalEntityManager.insert(Poll, poll);
 			});
 		} else {
-			note = await Notes.save(insert);
+			await Notes.insert(insert);
 		}
 
-		return note!;
+		return await Notes.findOneOrFail(insert.id);
 	} catch (e) {
 		// duplicate key error
 		if (isDuplicateKeyValueError(e)) {
@@ -265,7 +266,7 @@ async function insertNote(user: User, data: Option, tags: string[], emojis: stri
 
 		console.error(e);
 
-		throw new Error('something happened');
+		throw e;
 	}
 }
 

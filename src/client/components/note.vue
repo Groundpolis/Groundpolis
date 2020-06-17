@@ -10,7 +10,7 @@
 	<article class="article">
 		<div class="main">
 			<x-note-header class="header" :note="appearNote" :mini="true"/>
-			<div class="body" v-if="appearNote.deletedAt == null">
+			<div class="body" v-if="appearNote.deletedAt == null" ref="noteBody">
 				<p v-if="appearNote.cw != null" class="cw">
 					<mfm v-if="appearNote.cw != ''" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis" />
 					<x-cw-button v-model="showContent" :note="appearNote"/>
@@ -21,7 +21,7 @@
 						<mfm v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
 					</div>
 					<div class="files" v-if="appearNote.files.length > 0">
-						<x-media-list :media-list="appearNote.files"/>
+						<x-media-list :media-list="appearNote.files" :parent-element="noteBody"/>
 					</div>
 					<mk-url-preview v-for="url in urls" :url="url" :key="url" :compact="true" class="url-preview"/>
 				</div>
@@ -57,7 +57,6 @@ import { faBolt, faTimes, faBullhorn, faSmile, faPlus, faMinus, faRetweet, faRep
 import { faTrashAlt, faEdit} from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
-import i18n from '../i18n';
 import XSub from './note.sub.vue';
 import XNoteHeader from './note-header.vue';
 import XNotePreview from './note-preview.vue';
@@ -73,7 +72,6 @@ import { url } from '../config';
 import copyToClipboard from '../scripts/copy-to-clipboard';
 
 export default Vue.extend({
-	i18n,
 	
 	components: {
 		XSub,
@@ -156,6 +154,10 @@ export default Vue.extend({
 			return this.$store.getters.isSignedIn && (this.$store.state.i.id === this.appearNote.userId);
 		},
 
+		isMyRenote(): boolean {
+			return this.$store.getters.isSignedIn && (this.$store.state.i.id === this.note.userId);
+		},
+
 		canRenote(): boolean {
 			return ['public', 'home'].includes(this.appearNote.visibility) || this.isMyNote;
 		},
@@ -218,6 +220,8 @@ export default Vue.extend({
 		if (this.$store.getters.isSignedIn) {
 			this.connection.on('_connected_', this.onStreamConnected);
 		}
+
+		this.noteBody = this.$refs.noteBody
 	},
 
 	beforeDestroy() {
@@ -258,6 +262,14 @@ export default Vue.extend({
 			switch (type) {
 				case 'reacted': {
 					const reaction = body.reaction;
+
+					if (body.emoji) {
+						const emojis = this.appearNote.emojis || [];
+						if (!emojis.includes(body.emoji)) {
+							emojis.push(body.emoji);
+							Vue.set(this.appearNote, 'emojis', emojis);
+						}
+					}
 
 					if (this.appearNote.reactions == null) {
 						Vue.set(this.appearNote, 'reactions', {});
@@ -415,7 +427,7 @@ export default Vue.extend({
 		},
 
 		showRenoteMenu(viaKeyboard = false) {
-			if (!this.$store.getters.isSignedIn || (this.$store.state.i.id !== this.note.userId)) return;
+			if (!this.isMyRenote) return;
 			this.$root.menu({
 				items: [{
 					text: this.$t('unrenote'),
@@ -615,6 +627,10 @@ export default Vue.extend({
 		padding-bottom: 0;
 	}
 
+	> .reply-to-more {
+		opacity: 0.7;
+	}
+
 	> .renote {
 		display: flex;
 		align-items: center;
@@ -654,14 +670,18 @@ export default Vue.extend({
 			> .time {
 				flex-shrink: 0;
 				color: inherit;
+
+				> .dropdownIcon {
+					margin-right: 4px;
+				}
 			}
 
 			> .visibility {
 				margin-left: 8px;
+			}
 
-				[data-icon] {
-					margin-right: 0;
-				}
+			> .localOnly {
+				margin-left: 8px;
 			}
 		}
 	}
@@ -721,7 +741,7 @@ export default Vue.extend({
 						margin-top: 8px;
 					}
 
-					> .mk-poll {
+					> .poll {
 						font-size: 80%;
 					}
 

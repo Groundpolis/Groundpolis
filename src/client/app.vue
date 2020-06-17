@@ -63,7 +63,7 @@
 				</button>
 				<button class="item _button" @click="more">
 					<fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
-					<i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadMentions || $store.state.i.hasUnreadSpecifiedNotes)"><fa :icon="faCircle"/></i>
+					<i v-if="otherNavItemIndicated"><fa :icon="faCircle"/></i>
 				</button>
 				<div class="divider"></div>
 				<router-link class="item" active-class="active" to="/my/settings">
@@ -146,14 +146,11 @@ import { faGripVertical, faChevronLeft, faSlidersH, faHashtag, faBroadcastTower,
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { ResizeObserver } from '@juggle/resize-observer';
 import { v4 as uuid } from 'uuid';
-import i18n from './i18n';
 import { host, instanceName } from './config';
 
 const DESKTOP_THRESHOLD = 1100;
 
 export default Vue.extend({
-	i18n,
-
 	components: {
 		XClock: () => import('./components/header-clock.vue').then(m => m.default),
 		MkButton: () => import('./components/ui/button.vue').then(m => m.default),
@@ -172,6 +169,9 @@ export default Vue.extend({
 			searchQuery: '',
 			searchWait: false,
 			widgetsEditMode: false,
+			menuDef: this.$store.getters.nav({
+				search: this.search
+			}),
 			isDesktop: window.innerWidth >= DESKTOP_THRESHOLD,
 			canBack: false,
 			wallpaper: localStorage.getItem('wallpaper') != null,
@@ -188,6 +188,29 @@ export default Vue.extend({
 
 		widgets(): any[] {
 			return this.$store.state.deviceUser.widgets;
+		},
+
+		menu(): string[] {
+			return this.$store.state.deviceUser.menu;
+		},
+
+		otherNavItemIndicated(): boolean {
+			if (!this.$store.getters.isSignedIn) return false;
+			for (const def in this.menuDef) {
+				if (this.menu.includes(def)) continue;
+				if (this.menuDef[def].indicated) return true;
+			}
+			return false;
+		},
+
+		navIndicated(): boolean {
+			if (!this.$store.getters.isSignedIn) return false;
+			for (const def in this.menuDef) {
+				if (def === 'timeline') continue;
+				if (def === 'notifications') continue;
+				if (this.menuDef[def].indicated) return true;
+			}
+			return false;
 		}
 	},
 
@@ -314,6 +337,11 @@ export default Vue.extend({
 					icon: faGlobe,
 				}, {
 					type: 'link',
+					text: this.$t('relays'),
+					to: '/instance/relays',
+					icon: faProjectDiagram,
+				}, {
+					type: 'link',
 					text: this.$t('announcements'),
 					to: '/instance/announcements',
 					icon: faBroadcastTower,
@@ -326,6 +354,14 @@ export default Vue.extend({
 		},
 
 		more(ev) {
+			const items = Object.keys(this.menuDef).filter(k => !this.menu.includes(k)).map(k => this.menuDef[k]).filter(def => def.show == null ? true : def.show).map(def => ({
+				type: def.to ? 'link' : 'button',
+				text: this.$t(def.title),
+				icon: def.icon,
+				to: def.to,
+				action: def.action,
+				indicate: def.indicated,
+			}));
 			this.$root.menu({
 				items: [{
 					type: 'link',
@@ -383,7 +419,9 @@ export default Vue.extend({
 					...i,
 					token: token
 				}).then(() => {
-					location.reload();
+					this.$nextTick(() => {
+						location.reload();
+					});
 				});
 			});
 		},

@@ -1,15 +1,17 @@
 <template>
 <button
 	class="hkzvhatu _button"
-	:class="{ reacted: note.myReaction == reaction }"
+	:class="{ reacted: note.myReaction == reaction, canToggle }"
 	@click="toggleReaction(reaction)"
 	v-if="count > 0"
+	@touchstart="onMouseover"
 	@mouseover="onMouseover"
 	@mouseleave="onMouseleave"
+	@touchend="onMouseleave"
 	ref="reaction"
 	v-particle
 >
-	<x-reaction-icon :reaction="reaction" ref="icon"/>
+	<x-reaction-icon :reaction="reaction" :customEmojis="note.emojis" ref="icon"/>
 	<span>{{ count }}</span>
 </button>
 </template>
@@ -39,11 +41,6 @@ export default Vue.extend({
 			type: Object,
 			required: true,
 		},
-		canToggle: {
-			type: Boolean,
-			required: false,
-			default: true,
-		},
 	},
 	data() {
 		return {
@@ -55,6 +52,9 @@ export default Vue.extend({
 	computed: {
 		isMe(): boolean {
 			return this.$store.getters.isSignedIn && this.$store.state.i.id === this.note.userId;
+		},
+		canToggle(): boolean {
+			return !this.reaction.match(/@\w/);
 		},
 	},
 	watch: {
@@ -106,19 +106,27 @@ export default Vue.extend({
 	padding: 0 6px;
 	border-radius: 4px;
 
-	&.reacted {
-		background: var(--accent);
-
-		> span {
-			color: #fff;
-		}
-	}
-
-	&:not(.reacted) {
+	&.canToggle {
 		background: rgba(0, 0, 0, 0.05);
 
 		&:hover {
 			background: rgba(0, 0, 0, 0.1);
+		}
+	}
+
+	&:not(.canToggle) {
+		cursor: default;
+	}
+
+	&.reacted {
+		background: var(--accent);
+
+		&:hover {
+			background: var(--accent);
+		}
+
+		> span {
+			color: #fff;
 		}
 	}
 

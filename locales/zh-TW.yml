@@ -235,6 +235,8 @@ iconUrl: "圖像URL"
 bannerUrl: "橫幅圖片URL"
 basicInfo: "基本資訊"
 pinnedUsers: "置頂用戶"
+hcaptchaSiteKey: "網站金鑰"
+hcaptchaSecretKey: "金鑰"
 recaptcha: "reCAPTCHA"
 enableRecaptcha: "啟用 reCAPTCHA"
 recaptchaSiteKey: "網站金鑰"
@@ -256,8 +258,6 @@ userList: "清單"
 passwordLessLogin: "設置無密碼登入"
 resetPassword: "重置密碼"
 newPasswordIs: "新密碼為「{password}」"
-post: "投稿"
-posted: "投稿完成"
 autoReloadWhenDisconnected: "和伺服器斷線時自動重新載入"
 autoNoteWatch: "自動關注筆記"
 autoNoteWatchDescription: "收到反應或回覆過的筆記的通知"
@@ -369,6 +369,9 @@ _exportOrImport:
   userLists: "清單"
 _timelines:
   home: "首頁"
+_rooms:
+  _furnitures:
+    monitor: "監視器"
 _pages:
   script:
     categories:
@@ -388,3 +391,6 @@ _pages:
         arg1: "清單"
     types:
       array: "清單"
+_notification:
+  youWereFollowed: "您有新的追隨者"
+

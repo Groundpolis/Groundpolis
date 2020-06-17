@@ -21,21 +21,29 @@
 	<p class="upload" v-if="$store.state.settings.uploadFolder == folder.id">
 		{{ $t('uploadFolder') }}
 	</p>
+	<button v-if="selectMode" class="checkbox _button" :class="{ checked: isSelected }" @click.prevent.stop="checkboxClicked"></button>
 </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { faFolder, faFolderOpen } from '@fortawesome/free-regular-svg-icons';
-import i18n from '../i18n';
 
 export default Vue.extend({
-	i18n,
-
 	props: {
 		folder: {
 			type: Object,
 			required: true,
+		},
+		isSelected: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		selectMode: {
+			type: Boolean,
+			required: false,
+			default: false,
 		}
 	},
 
@@ -56,7 +64,12 @@ export default Vue.extend({
 			return this.folder.name;
 		}
 	},
+
 	methods: {
+		checkboxClicked(e) {
+			this.$emit('chosen', this.folder);
+		},
+
 		onClick() {
 			this.browser.move(this.folder);
 		},
@@ -241,8 +254,22 @@ export default Vue.extend({
 		cursor: pointer;
 	}
 
-	* {
+	*:not(.checkbox) {
 		pointer-events: none;
+	}
+
+	> .checkbox {
+		position: absolute;
+		bottom: 8px;
+		right: 8px;
+		width: 16px;
+		height: 16px;
+		background: #fff;
+		border: solid 1px #000;
+
+		&.checked {
+			background: var(--accent);
+		}
 	}
 
 	&[data-draghover] {

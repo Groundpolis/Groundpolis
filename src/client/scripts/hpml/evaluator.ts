@@ -2,35 +2,72 @@ import autobind from 'autobind-decorator';
 import * as seedrandom from 'seedrandom';
 import { Variable, PageVar, envVarsDef, funcDefs, Block, isFnBlock } from '.';
 import { version } from '../../config';
+import { AiScript, utils, values } from '@syuilo/aiscript';
+import { createAiScriptEnv } from '../create-aiscript-env';
+import { collectPageVars } from '../collect-page-vars';
+import { initLib } from './lib';
 
 type Fn = {
 	slots: string[];
-	exec: (args: Record<string, any>) => ReturnType<ASEvaluator['evaluate']>;
+	exec: (args: Record<string, any>) => ReturnType<Hpml['evaluate']>;
 };
 
 /**
- * AiScript evaluator
+ * Hpml evaluator
  */
-export class ASEvaluator {
+export class Hpml {
 	private variables: Variable[];
 	private pageVars: PageVar[];
 	private envVars: Record<keyof typeof envVarsDef, any>;
+	public aiscript?: AiScript;
+	private pageVarUpdatedCallback;
+	public canvases: Record<string, HTMLCanvasElement> = {};
+	public vars: Record<string, any>;
+	public page: Record<string, any>;
 
 	private opts: {
-		randomSeed: string; visitor?: any; page?: any; url?: string;
+		randomSeed: string; visitor?: any; url?: string;
+		enableAiScript: boolean;
 	};
 
-	constructor(variables: Variable[], pageVars: PageVar[], opts: ASEvaluator['opts']) {
-		this.variables = variables;
-		this.pageVars = pageVars;
+	constructor(vm: any, page: Hpml['page'], opts: Hpml['opts']) {
+		this.page = page;
+		this.variables = this.page.variables;
+		this.pageVars = collectPageVars(this.page.content);
 		this.opts = opts;
+
+		if (this.opts.enableAiScript) {
+			this.aiscript = new AiScript({ ...createAiScriptEnv(vm, {
+				storageKey: 'pages:' + this.page.id
+			}), ...initLib(this)}, {
+				in: (q) => {
+					return new Promise(ok => {
+						vm.$root.dialog({
+							title: q,
+							input: {}
+						}).then(({ canceled, result: a }) => {
+							ok(a);
+						});
+					});
+				},
+				out: (value) => {
+					console.log(value);
+				},
+				log: (type, params) => {
+				},
+			});
+
+			this.aiscript.scope.opts.onUpdated = (name, value) => {
+				this.eval();
+			};
+		}
 
 		const date = new Date();
 
 		this.envVars = {
 			AI: 'kawaii',
 			VERSION: version,
-			URL: opts.page ? `${opts.url}/@${opts.page.user.username}/pages/${opts.page.name}` : '',
+			URL: this.page ? `${opts.url}/@${this.page.user.username}/pages/${this.page.name}` : '',
 			LOGIN: opts.visitor != null,
 			NAME: opts.visitor ? opts.visitor.name || opts.visitor.username : '',
 			USERNAME: opts.visitor ? opts.visitor.username : '',
@@ -41,8 +78,41 @@ export class ASEvaluator {
 			IS_CAT: opts.visitor ? opts.visitor.isCat : false,
 			SEED: opts.randomSeed ? opts.randomSeed : '',
 			YMD: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`,
+			AISCRIPT_DISABLED: !this.opts.enableAiScript,
 			NULL: null
 		};
+
+		this.eval();
+	}
+
+	@autobind
+	public eval() {
+		try {
+			this.vars = this.evaluateVars();
+		} catch (e) {
+			//this.onError(e);
+		}
+	}
+
+	@autobind
+	public interpolate(str: string) {
+		if (str == null) return null;
+		return str.replace(/{(.+?)}/g, match => {
+			const v = this.vars ? this.vars[match.slice(1, -1).trim()] : null;
+			return v == null ? 'NULL' : v.toString();
+		});
+	}
+
+	@autobind
+	public callAiScript(fn: string) {
+		try {
+			if (this.aiscript) this.aiscript.execFn(this.aiscript.scope.get(fn), []);
+		} catch (e) {}
+	}
+
+	@autobind
+	public registerCanvas(id: string, canvas: any) {
+		this.canvases[id] = canvas;
 	}
 
 	@autobind
@@ -50,8 +120,11 @@ export class ASEvaluator {
 		const pageVar = this.pageVars.find(v => v.name === name);
 		if (pageVar !== undefined) {
 			pageVar.value = value;
+			if (this.pageVarUpdatedCallback) {
+				if (this.aiscript) this.aiscript.execFn(this.pageVarUpdatedCallback, [values.STR(name), utils.jsToVal(value)]);
+			}
 		} else {
-			throw new AiScriptError(`No such page var '${name}'`);
+			throw new HpmlError(`No such page var '${name}'`);
 		}
 	}
 
@@ -62,7 +135,7 @@ export class ASEvaluator {
 	}
 
 	@autobind
-	private interpolate(str: string, scope: Scope) {
+	private _interpolate(str: string, scope: Scope) {
 		return str.replace(/{(.+?)}/g, match => {
 			const v = scope.getState(match.slice(1, -1).trim());
 			return v == null ? 'NULL' : v.toString();
@@ -99,15 +172,27 @@ export class ASEvaluator {
 		}
 
 		if (block.type === 'text' || block.type === 'multiLineText') {
-			return this.interpolate(block.value || '', scope);
+			return this._interpolate(block.value || '', scope);
 		}
 
 		if (block.type === 'textList') {
-			return this.interpolate(block.value || '', scope).trim().split('\n');
+			return this._interpolate(block.value || '', scope).trim().split('\n');
 		}
 
 		if (block.type === 'ref') {
 			return scope.getState(block.value);
+		}
+
+		if (block.type === 'aiScriptVar') {
+			if (this.aiscript) {
+				try {
+					return utils.valToJs(this.aiscript.scope.get(block.value));
+				} catch (e) {
+					return null;
+				}
+			} else {
+				return null;
+			}
 		}
 
 		if (isFnBlock(block)) { // ユーザー関数定義
@@ -206,14 +291,14 @@ export class ASEvaluator {
 		const fnName = block.type;
 		const fn = (funcs as any)[fnName];
 		if (fn == null) {
-			throw new AiScriptError(`No such function '${fnName}'`);
+			throw new HpmlError(`No such function '${fnName}'`);
 		} else {
 			return fn(...block.args.map(x => this.evaluate(x, scope)));
 		}
 	}
 }
 
-class AiScriptError extends Error {
+class HpmlError extends Error {
 	public info?: any;
 
 	constructor(message: string, info?: any) {
@@ -223,7 +308,7 @@ class AiScriptError extends Error {
 
 		// Maintains proper stack trace for where our error was thrown (only available on V8)
 		if (Error.captureStackTrace) {
-			Error.captureStackTrace(this, AiScriptError);
+			Error.captureStackTrace(this, HpmlError);
 		}
 	}
 }
@@ -256,7 +341,7 @@ class Scope {
 			}
 		}
 
-		throw new AiScriptError(
+		throw new HpmlError(
 			`No such variable '${name}' in scope '${this.name}'`, {
 				scope: this.layerdStates
 			});

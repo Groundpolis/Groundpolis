@@ -24,7 +24,6 @@ import Vue from 'vue';
 import { faAngleDown, faAngleUp, faUser, faUsers, faStar } from '@fortawesome/free-solid-svg-icons';
 import Progress from '../scripts/loading';
 import XTimeline from '../components/timeline.vue';
-import XTutorial from './index.home.tutorial.vue';
 import XPostForm from '../components/post-form.vue';
 
 export default Vue.extend({
@@ -36,7 +35,7 @@ export default Vue.extend({
 
 	components: {
 		XTimeline,
-		XTutorial,
+		XTutorial: () => import('./index.home.tutorial.vue').then(m => m.default),
 		XPostForm,
 	},
 

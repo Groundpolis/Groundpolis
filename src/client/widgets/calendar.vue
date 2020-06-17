@@ -33,7 +33,6 @@
 
 <script lang="ts">
 import define from './define';
-import i18n from '../i18n';
 
 export default define({
 	name: 'calendar',
@@ -41,7 +40,6 @@ export default define({
 		design: 0
 	})
 }).extend({
-	i18n,
 	data() {
 		return {
 			now: new Date(),
@@ -65,7 +63,7 @@ export default define({
 	},
 	methods: {
 		func() {
-			if (this.props.design == 2) {
+			if (this.props.design === 2) {
 				this.props.design = 0;
 			} else {
 				this.props.design++;
@@ -102,7 +100,7 @@ export default define({
 			this.monthP = monthNumer / monthDenom * 100;
 			this.yearP  = yearNumer  / yearDenom  * 100;
 
-			this.isHoliday = now.getDay() == 0 || now.getDay() == 6;
+			this.isHoliday = now.getDay() === 0 || now.getDay() === 6;
 		}
 	}
 });

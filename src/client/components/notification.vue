@@ -1,5 +1,5 @@
 <template>
-<div class="mk-notification" :class="notification.type" v-size="[{ max: 500 }, { max: 600 }]">
+<div class="qglefbjs" :class="notification.type" v-size="[{ max: 500 }, { max: 600 }]">
 	<div class="head">
 		<mk-avatar v-if="notification.user" class="icon" :user="notification.user"/>
 		<img v-else class="icon" :src="notification.icon" alt=""/>
@@ -12,7 +12,8 @@
 			<fa :icon="faReply" v-else-if="notification.type === 'reply'"/>
 			<fa :icon="faAt" v-else-if="notification.type === 'mention'"/>
 			<fa :icon="faQuoteLeft" v-else-if="notification.type === 'quote'"/>
-			<x-reaction-icon v-else-if="notification.type === 'reaction'" :reaction="notification.reaction" :no-style="true"/>
+			<fa :icon="faPollH" v-else-if="notification.type === 'pollVote'"/>
+			<x-reaction-icon v-else-if="notification.type === 'reaction'" :reaction="notification.reaction" :custom-emojis="notification.note.emojis" :no-style="true"/>
 		</div>
 	</div>
 	<div class="tail">
@@ -40,6 +41,11 @@
 		<router-link v-if="notification.type === 'quote'" class="text" :to="notification.note | notePage" :title="getNoteSummary(notification.note)">
 			<mfm :text="getNoteSummary(notification.note)" :plain="true" :nowrap="!full" :custom-emojis="notification.note.emojis"/>
 		</router-link>
+		<router-link v-if="notification.type === 'pollVote'" class="text" :to="notification.note | notePage" :title="getNoteSummary(notification.note)">
+			<fa :icon="faQuoteLeft"/>
+			<mfm :text="getNoteSummary(notification.note)" :plain="true" :nowrap="!full" :custom-emojis="notification.note.emojis"/>
+			<fa :icon="faQuoteRight"/>
+		</router-link>
 		<span v-if="notification.type === 'follow'" class="text" style="opacity: 0.6;">{{ $t('youGotNewFollower') }}<div v-if="full"><mk-follow-button :user="notification.user" :full="true"/></div></span>
 		<span v-if="notification.type === 'followRequestAccepted'" class="text" style="opacity: 0.6;">{{ $t('followRequestAccepted') }}</span>
 		<span v-if="notification.type === 'receiveFollowRequest'" class="text" style="opacity: 0.6;">{{ $t('receiveFollowRequest') }}<div v-if="full && !followRequestDone"><button class="_textButton" @click="acceptFollowRequest()">{{ $t('accept') }}</button> | <button class="_textButton" @click="rejectFollowRequest()">{{ $t('reject') }}</button></div></span>
@@ -53,15 +59,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faIdCardAlt, faPlus, faQuoteLeft, faQuoteRight, faRetweet, faReply, faAt, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faIdCardAlt, faPlus, faQuoteLeft, faQuoteRight, faRetweet, faReply, faAt, faCheck, faPollH } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
-import getNoteSummary from '../../misc/get-note-summary';
+import noteSummary from '../../misc/get-note-summary';
 import XReactionIcon from './reaction-icon.vue';
 import MkFollowButton from './follow-button.vue';
-import i18n from '../i18n';
 
 export default Vue.extend({
-	i18n,
 	components: {
 		XReactionIcon, MkFollowButton
 	},
@@ -83,12 +87,39 @@ export default Vue.extend({
 	},
 	data() {
 		return {
-			getNoteSummary,
+			getNoteSummary: (text: string) => noteSummary(text, this.$root.i18n.messages[this.$root.i18n.locale]),
 			followRequestDone: false,
 			groupInviteDone: false,
-			faIdCardAlt, faPlus, faQuoteLeft, faQuoteRight, faRetweet, faReply, faAt, faClock, faCheck
+			connection: null,
+			readObserver: null,
+			faIdCardAlt, faPlus, faQuoteLeft, faQuoteRight, faRetweet, faReply, faAt, faClock, faCheck, faPollH
 		};
 	},
+
+	mounted() {
+		if (!this.notification.isRead) {
+			this.readObserver = new IntersectionObserver((entries, observer) => {
+				if (!entries.some(entry => entry.isIntersecting)) return;
+				this.$root.stream.send('readNotification', {
+					id: this.notification.id
+				});
+				entries.map(({ target }) => observer.unobserve(target));
+			});
+
+			this.readObserver.observe(this.$el);
+
+			this.connection = this.$root.stream.useSharedConnection('main');
+			this.connection.on('readAllNotifications', () => this.readObserver.unobserve(this.$el));
+		}
+	},
+
+	beforeDestroy() {
+		if (!this.notification.isRead) {
+			this.readObserver.unobserve(this.$el);
+			this.connection.dispose();
+		}
+	},
+
 	methods: {
 		acceptFollowRequest() {
 			this.followRequestDone = true;
@@ -115,7 +146,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.mk-notification {
+.qglefbjs {
 	position: relative;
 	box-sizing: border-box;
 	padding: 24px 32px;
@@ -199,6 +230,11 @@ export default Vue.extend({
 			}
 
 			&.mention {
+				padding: 3px;
+				background: #88a6b7;
+			}
+
+			&.pollVote {
 				padding: 3px;
 				background: #88a6b7;
 			}
