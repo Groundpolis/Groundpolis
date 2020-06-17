@@ -4,7 +4,6 @@ import { Note } from '../../models/entities/note';
 import { Notes } from '../../models';
 import { notesChart, perUserNotesChart } from '../chart';
 import { countSameRenotes } from '../../misc/count-same-renotes';
-import { deliverToRelays } from '../relay';
 import { Brackets } from 'typeorm';
 
 /**

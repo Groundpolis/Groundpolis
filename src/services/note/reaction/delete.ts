@@ -34,7 +34,7 @@ export default async (user: User, note: Note) => {
 	Notes.decrement({ id: note.id }, 'score', 1);
 
 	publishNoteStream(note.id, 'unreacted', {
-		reaction: decodeReaction(exist.reaction).reaction,
+		reaction: exist.reaction,
 		userId: user.id
 	});
 };

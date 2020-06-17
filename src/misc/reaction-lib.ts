@@ -1,7 +1,6 @@
 import { emojiRegex } from './emoji-regex';
 import { fetchMeta } from './fetch-meta';
 import { Emojis } from '../models';
-import { toPunyNullable } from './convert-host';
 
 const legacies: Record<string, string> = {
 	'like':     '👍',
@@ -43,19 +42,11 @@ export function convertLegacyReactions(reactions: Record<string, number>) {
 		}
 	}
 
-	const _reactions2 = {} as Record<string, number>;
-
-	for (const reaction of Object.keys(_reactions)) {
-		_reactions2[decodeReaction(reaction).reaction] = _reactions[reaction];
-	}
-
-	return _reactions2;
+	return _reactions;
 }
 
-export async function toDbReaction(reaction?: string | null, reacterHost?: string | null): Promise<string> {
+export async function toDbReaction(reaction?: string | null): Promise<string> {
 	if (reaction == null) return await getFallbackReaction();
-
-	reacterHost = toPunyNullable(reacterHost);
 
 	// 文字列タイプのリアクションを絵文字に変換
 	if (Object.keys(legacies).includes(reaction)) return legacies[reaction];
@@ -72,58 +63,18 @@ export async function toDbReaction(reaction?: string | null, reacterHost?: strin
 
 	const custom = reaction.match(/^:([\w+-]+)(?:@\.)?:$/);
 	if (custom) {
-		const name = custom[1];
 		const emoji = await Emojis.findOne({
-			host: reacterHost || null,
-			name,
+			host: null,
+			name: custom[1],
 		});
 
-		if (emoji) return reacterHost ? `:${name}@${reacterHost}:` : `:${name}:`;
+		if (emoji) return reaction;
 	}
 
 	return await getFallbackReaction();
 }
 
-type DecodedReaction = {
-	/**
-	 * リアクション名 (Unicode Emoji or ':name@hostname' or ':name@.')
-	 */
-	reaction: string;
-
-	/**
-	 * name (カスタム絵文字の場合name, Emojiクエリに使う)
-	 */
-	name?: string;
-
-	/**
-	 * host (カスタム絵文字の場合host, Emojiクエリに使う)
-	 */
-	host?: string | null;
-};
-
-export function decodeReaction(str: string): DecodedReaction {
-	const custom = str.match(/^:([\w+-]+)(?:@([\w.-]+))?:$/);
-
-	if (custom) {
-		const name = custom[1];
-		const host = custom[2] || null;
-
-		return {
-			reaction: `:${name}@${host || '.'}:`,	// ローカル分は@以降を省略するのではなく.にする
-			name,
-			host
-		};
-	}
-
-	return {
-		reaction: str,
-		name: undefined,
-		host: undefined
-	};
-}
-
 export function convertLegacyReaction(reaction: string): string {
-	reaction = decodeReaction(reaction).reaction;
 	if (Object.keys(legacies).includes(reaction)) return legacies[reaction];
 	return reaction;
 }

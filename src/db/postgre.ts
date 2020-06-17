@@ -58,7 +58,6 @@ import { AntennaNote } from '../models/entities/antenna-note';
 import { PromoNote } from '../models/entities/promo-note';
 import { PromoRead } from '../models/entities/promo-read';
 import { program } from '../argv';
-import { Relay } from '../models/entities/relay';
 
 const sqlLogger = dbLogger.createSubLogger('sql', 'white', false);
 
@@ -150,7 +149,6 @@ export const entities = [
 	PromoRead,
 	ReversiGame,
 	ReversiMatching,
-	Relay,
 	...charts as any
 ];
 

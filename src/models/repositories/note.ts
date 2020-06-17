@@ -46,54 +46,30 @@ export class NoteRepository extends Repository<Note> {
 		const host = note.userHost;
 
 		async function populateEmojis(emojiNames: string[], noteUserHost: string | null, reactionNames: string[]) {
-			let all = [] as {
-				name: string,
-				url: string
-			}[];
+			const where = [] as {}[];
 
-			// カスタム絵文字
 			if (emojiNames?.length > 0) {
-				const tmp = await Emojis.find({
-					where: {
-						name: In(emojiNames),
-						host: noteUserHost
-					},
-					select: ['name', 'host', 'url']
-				}).then(emojis => emojis.map((emoji: Emoji) => {
-					return {
-						name: emoji.name,
-						url: emoji.url,
-					};
-				}));
-
-				all = concat([all, tmp]);
+				where.push({
+					name: In(emojiNames),
+					host: noteUserHost
+				});
 			}
 
-			const customReactions = reactionNames?.map(x => decodeReaction(x)).filter(x => x.name);
+			reactionNames = reactionNames?.filter(x => x.match(/^:[^:]+:$/)).map(x => x.replace(/:/g, ''));
 
-			if (customReactions?.length > 0) {
-				const where = [] as {}[];
-
-				for (const customReaction of customReactions) {
-					where.push({
-						name: customReaction.name,
-						host: customReaction.host
-					});
-				}
-
-				const tmp = await Emojis.find({
-					where,
-					select: ['name', 'host', 'url']
-				}).then(emojis => emojis.map((emoji: Emoji) => {
-					return {
-						name: `${emoji.name}@${emoji.host || '.'}`,	// @host付きでローカルは.
-						url: emoji.url,
-					};
-				}));
-				all = concat([all, tmp]);
+			if (reactionNames?.length > 0) {
+				where.push({
+					name: In(reactionNames),
+					host: null
+				});
 			}
 
-			return all;
+			if (where.length === 0) return [];
+
+			return Emojis.find({
+				where,
+				select: ['name', 'host', 'url', 'aliases']
+			});
 		}
 
 		async function populateMyReaction() {

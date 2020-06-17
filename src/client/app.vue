@@ -337,11 +337,6 @@ export default Vue.extend({
 					icon: faGlobe,
 				}, {
 					type: 'link',
-					text: this.$t('relays'),
-					to: '/instance/relays',
-					icon: faProjectDiagram,
-				}, {
-					type: 'link',
 					text: this.$t('announcements'),
 					to: '/instance/announcements',
 					icon: faBroadcastTower,
