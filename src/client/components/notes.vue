@@ -90,6 +90,9 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .mk-notes {
 	> .notes {
+		-webkit-backdrop-filter: blur(4px);
+		backdrop-filter: blur(4px);
+
 		> ::v-deep *:not(:last-child) {
 			margin-bottom: var(--marginFull);
 		}

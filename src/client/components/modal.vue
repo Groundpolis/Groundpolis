@@ -76,6 +76,9 @@ export default Vue.extend({
 		overflow: auto;
 		margin: auto;
 
+		-webkit-backdrop-filter: blur(4px);
+		backdrop-filter: blur(4px);
+
 		::v-deep > * {
 			position: absolute;
 			top: 0;

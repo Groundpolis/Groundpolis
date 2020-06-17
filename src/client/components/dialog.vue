@@ -273,6 +273,9 @@ export default Vue.extend({
 		background: var(--panel);
 		border-radius: var(--radius);
 
+		-webkit-backdrop-filter: blur(4px);
+		backdrop-filter: blur(4px);
+
 		> .icon {
 			font-size: 32px;
 

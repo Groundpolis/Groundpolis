@@ -648,6 +648,9 @@ export default Vue.extend({
 .gafaadew {
 	background: var(--panel);
 
+	-webkit-backdrop-filter: blur(4px);
+	backdrop-filter: blur(4px);
+
 	> header {
 		z-index: 1000;
 		height: 66px;

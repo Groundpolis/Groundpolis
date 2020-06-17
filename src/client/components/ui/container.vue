@@ -97,6 +97,8 @@ export default Vue.extend({
 .ukygtjoj {
 	position: relative;
 	overflow: hidden;
+	-webkit-backdrop-filter: blur(4px);
+	backdrop-filter: blur(4px);
 
 	& + .ukygtjoj {
 		margin-top: var(--margin);

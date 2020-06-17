@@ -611,9 +611,8 @@ export default Vue.extend({
 		right: 0;
 		height: $header-height;
 		width: calc(100% - #{$nav-width});
-		//background-color: var(--panel);
-		-webkit-backdrop-filter: blur(32px);
-		backdrop-filter: blur(32px);
+		-webkit-backdrop-filter: blur(8px);
+		backdrop-filter: blur(8px);
 		background-color: var(--header);
 		border-bottom: solid 1px var(--divider);
 
@@ -786,6 +785,8 @@ export default Vue.extend({
 		width: 100%;
 		height: 100%;
 		background: var(--modalBg);
+		-webkit-backdrop-filter: blur(4px);
+		backdrop-filter: blur(4px);
 	}
 
 	> .nav {
@@ -876,6 +877,8 @@ export default Vue.extend({
 			overflow: auto;
 			background: var(--navBg);
 			border-right: solid 1px var(--divider);
+			-webkit-backdrop-filter: blur(4px);
+			backdrop-filter: blur(4px);
 
 			> .divider {
 				margin: 16px 0;
@@ -976,9 +979,6 @@ export default Vue.extend({
 					z-index: 1;
 					padding-top: 8px;
 					padding-bottom: 8px;
-					background: var(--wboyroyc);
-					-webkit-backdrop-filter: blur(8px);
-					backdrop-filter: blur(8px);
 				}
 
 				&:first-child {
@@ -1218,6 +1218,8 @@ export default Vue.extend({
 			height: 64px;
 			border-radius: 100%;
 			box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
+			-webkit-backdrop-filter: blur(4px);
+			backdrop-filter: blur(4px);
 
 			&:first-child {
 				margin-left: 0;

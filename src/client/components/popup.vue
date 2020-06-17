@@ -134,17 +134,18 @@ export default Vue.extend({
 		z-index: 10000;
 		width: 100%;
 		height: 100%;
-		background: var(--modalBg)
+		background: var(--modalBg);
 	}
 
 	> .content {
 		position: absolute;
 		z-index: 10001;
 		background: var(--panel);
-		border-radius: 8px;
 		box-shadow: 0 3px 12px rgba(27, 31, 35, 0.15);
 		overflow: hidden;
 		transform-origin: center top;
+		-webkit-backdrop-filter: blur(4px);
+		backdrop-filter: blur(4px);
 
 		&.fixed {
 			position: fixed;
