@@ -54,7 +54,6 @@ export default async (user: User, note: Note, reaction?: string) => {
 
 	publishNoteStream(note.id, 'reacted', {
 		reaction: reaction,
-		userId: user.id
 	});
 
 	const profile = await UserProfiles.findOne(user.id);

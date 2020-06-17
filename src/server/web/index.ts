@@ -141,53 +141,6 @@ router.get('/docs.json', async ctx => {
 	ctx.body = docs;
 });
 
-const getFeed = async (acct: string) => {
-	const { username, host } = parseAcct(acct);
-	const user = await Users.findOne({
-		usernameLower: username.toLowerCase(),
-		host,
-		isSuspended: false
-	});
-
-	return user && await packFeed(user);
-};
-
-// Atom
-router.get('/@:user.atom', async ctx => {
-	const feed = await getFeed(ctx.params.user);
-
-	if (feed) {
-		ctx.set('Content-Type', 'application/atom+xml; charset=utf-8');
-		ctx.body = feed.atom1();
-	} else {
-		ctx.status = 404;
-	}
-});
-
-// RSS
-router.get('/@:user.rss', async ctx => {
-	const feed = await getFeed(ctx.params.user);
-
-	if (feed) {
-		ctx.set('Content-Type', 'application/rss+xml; charset=utf-8');
-		ctx.body = feed.rss2();
-	} else {
-		ctx.status = 404;
-	}
-});
-
-// JSON
-router.get('/@:user.json', async ctx => {
-	const feed = await getFeed(ctx.params.user);
-
-	if (feed) {
-		ctx.set('Content-Type', 'application/json; charset=utf-8');
-		ctx.body = feed.json1();
-	} else {
-		ctx.status = 404;
-	}
-});
-
 //#region for crawlers
 // User
 router.get(['/@:user', '/@:user/:sub'], async (ctx, next) => {
