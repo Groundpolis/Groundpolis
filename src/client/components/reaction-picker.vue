@@ -62,8 +62,6 @@ export default Vue.extend({
 				'6': () => this.react(this.rs[5]),
 				'7': () => this.react(this.rs[6]),
 				'8': () => this.react(this.rs[7]),
-				'9': () => this.react(this.rs[8]),
-				'0': () => this.react(this.rs[9]),
 			};
 		},
 	},

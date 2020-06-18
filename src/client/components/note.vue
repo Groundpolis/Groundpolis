@@ -111,23 +111,12 @@ export default Vue.extend({
 	computed: {
 		keymap(): any {
 			return {
-				'r|e|a|plus': () => this.react(true),
 				'delete|ctrl+d': this.del,
 				'up|k|shift+tab': this.focusBefore,
 				'down|j|tab': this.focusAfter,
 				'esc': this.blur,
 				'm|o': () => this.menu(true),
 				's': this.toggleShowContent,
-				'1': () => this.reactDirectly(this.$store.state.settings.reactions[0]),
-				'2': () => this.reactDirectly(this.$store.state.settings.reactions[1]),
-				'3': () => this.reactDirectly(this.$store.state.settings.reactions[2]),
-				'4': () => this.reactDirectly(this.$store.state.settings.reactions[3]),
-				'5': () => this.reactDirectly(this.$store.state.settings.reactions[4]),
-				'6': () => this.reactDirectly(this.$store.state.settings.reactions[5]),
-				'7': () => this.reactDirectly(this.$store.state.settings.reactions[6]),
-				'8': () => this.reactDirectly(this.$store.state.settings.reactions[7]),
-				'9': () => this.reactDirectly(this.$store.state.settings.reactions[8]),
-				'0': () => this.reactDirectly(this.$store.state.settings.reactions[9]),
 			};
 		},
 
