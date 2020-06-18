@@ -11,7 +11,7 @@
 
 	<div class="new" v-if="queue > 0" :style="{ width: width + 'px' }"><button class="_buttonPrimary" @click="top()">{{ $t('newNoteRecived') }}</button></div>
 
-	<template v-if="src === 'myself'">
+	<template v-if="$store.getters.isSignedIn">
 		<x-tutorial class="tutorial" v-if="$store.state.settings.tutorial != -1"/>
 		<x-post-form class="post-form _panel" fixed/>
 	</template>
