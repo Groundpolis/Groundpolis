@@ -511,6 +511,9 @@ signupInfo: 'ここで入力したユーザー情報はログインするため�
 thisIsAnnouncement: '運営の公式ノートです'
 officialNote: '公式ノート'
 makeNotePrivate: 'ノートを非公開にする'
+copyContent: '内容をコピー'
+copyLink: 'リンクをコピー'
+makeResponse: 'レスする'
 
 _theme:
   explore: "テーマを探す"

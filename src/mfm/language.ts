@@ -77,6 +77,7 @@ export const mfmLanguage = P.createLanguage({
 		r.jump,
 		r.flip,
 		r.inlineCode,
+		r.mention,
 		r.mathInline,
 		r.hashtag,
 		r.url,
@@ -125,6 +126,17 @@ export const mfmLanguage = P.createLanguage({
 	inlineCode: () => P.regexp(/`([^´\n]+?)`/, 1).map(x => createLeaf('inlineCode', { code: x })),
 	mathBlock: r => r.startOfLine.then(P.regexp(/\\\[([\s\S]+?)\\\]/, 1).map(x => createLeaf('mathBlock', { formula: x.trim() }))),
 	mathInline: () => P.regexp(/\\\((.+?)\\\)/, 1).map(x => createLeaf('mathInline', { formula: x })),
+	mention: () => {
+		return P((input, i) => {
+			const text = input.substr(i);
+			const match = text.match(/^@[a-zA-Z0-9]+/);
+			if (!match) return P.makeFailure(i, 'not a mention');
+			if (input[i - 1] != null && input[i - 1].match(/[a-zA-Z0-9]/i)) return P.makeFailure(i, 'not a mention');
+			return P.makeSuccess(i + match[0].length, match[0]);
+		}).map(x => {
+			return createLeaf('mention', { noteId: x.substr(1) });
+		});
+	},
 	hashtag: () => P((input, i) => {
 		const text = input.substr(i);
 		const match = text.match(/^#([^\s.,!?'"#:\/\[\]【】]+)/i);

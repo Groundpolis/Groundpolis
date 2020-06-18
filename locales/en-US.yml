@@ -513,6 +513,9 @@ signupInfo: 'Your entered informations are only needed to login, and they will n
 thisIsAnnouncement: 'Official note by the moderator'
 officialNote: 'Official Note'
 makeNotePrivate: 'Make this note private'
+copyContent: 'Copy the content'
+copyLink: 'Copy the link'
+makeResponse: 'Make a response'
 
 _theme:
   explore: "Explore Themes"

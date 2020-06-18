@@ -5,6 +5,7 @@ import MkUrl from './url.vue';
 import MkLink from './link.vue';
 import { concat } from '../../prelude/array';
 import MkFormula from './formula.vue';
+import MkMention from './mention.vue';
 import MkCode from './code.vue';
 import MkGoogle from './google.vue';
 import { host } from '../config';
@@ -164,6 +165,15 @@ export default Vue.component('misskey-flavored-markdown', {
 							rel: 'nofollow noopener',
 						},
 					}, genEl(token.children))];
+				}
+
+				case 'mention': {
+					return [createElement(MkMention, {
+						key: Math.random(),
+						props: {
+							noteId: token.node.props.noteId
+						}
+					})];
 				}
 
 				case 'hashtag': {

@@ -29,21 +29,19 @@
 			<footer v-if="appearNote.deletedAt == null" class="footer">
 				<x-reactions-viewer :note="appearNote" ref="reactionsViewer"/>
 				<button v-if="appearNote.myReaction == null" class="button _button" @click="react()" ref="reactButton">
-					<fa :icon="faSmile" fixed-width/>
 					<fa :icon="faPlus" fixed-width/>
 				</button>
 				<button v-if="appearNote.myReaction != null" class="button _button reacted" @click="undoReact(appearNote)">
-					<fa :icon="faSmile" fixed-width/>
 					<fa :icon="faMinus" fixed-width/>
 				</button>
-				<button v-if="appearNote.isMyNote" class="button _button" @click="delEdit()">
+				<button v-if="appearNote.isMyNote" v-tooltip="$t('deleteAndEdit')" class="button _button" @click="delEdit()">
 					<fa :icon="faEdit"/>						
 				</button>
-				<button v-if="appearNote.isMyNote || ($store.state.i && ($store.state.i.isModerator || $store.state.i.isAdmin))" class="button _button" @click="del()">
+				<button v-if="appearNote.isMyNote || ($store.state.i && ($store.state.i.isModerator || $store.state.i.isAdmin))" v-tooltip="$t('delete')" class="button _button" @click="del()">
 					<fa :icon="faTrashAlt"/>						
 				</button>
-				<button class="button _button" @click="report(appearNote)">
-					<fa :icon="faExclamationCircle" fixed-width/>
+				<button class="button _button" @click="menu()" ref="menuButton">
+					<fa :icon="faEllipsisH" fixed-width/>
 				</button>
 			</footer>
 			<div class="deleted" v-if="appearNote.deletedAt != null">{{ $t('deleted') }}</div>
@@ -54,7 +52,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faBolt, faTimes, faBullhorn, faSmile, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faTimes, faBullhorn, faSmile, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faExclamationCircle, faInfoCircle, faCopy, faLink } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faEdit} from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
@@ -493,6 +491,42 @@ export default Vue.extend({
 					});
 				}
 			});
+		},
+
+		async menu(viaKeyboard = false) {
+			const items = [{
+				type: 'link',
+				icon: faInfoCircle,
+				text: this.$t('details'),
+				to: '/notes/' + this.appearNote.id
+			}, null, {
+				icon: faCopy,
+				text: this.$t('copyContent'),
+				action: this.copyContent
+			}, {
+				icon: faLink,
+				text: this.$t('copyLink'),
+				action: this.copyLink
+			}, null, {
+				icon: faReply,
+				text: this.$t('makeResponse'),
+				action: this.response
+			}, {
+				icon: faExclamationCircle,
+				text: this.$t('report'),
+				action: this.report
+			}];
+
+			this.$root.menu({
+				items,
+				source: this.$refs.menuButton,
+				viaKeyboard
+			}).then(this.focus);
+		},
+
+		response() {
+			pleaseLogin(this.$root);
+			this.$root.post({ instant: true, initialText: `@${this.appearNote.id} ` });
 		},
 
 		async promote() {

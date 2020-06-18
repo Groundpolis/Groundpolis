@@ -15,7 +15,7 @@
 			<button class="_button" v-tooltip="$t('useCw')" @click="useCw = !useCw" :class="{ active: useCw }"><fa :icon="faEyeSlash"/></button>
 			<button class="_button" v-tooltip="$t('emoji')" @click="insertEmoji"><fa :icon="faLaughSquint"/></button>
 			<button class="_button" v-tooltip="$t('officialNote')" v-if="$store.state.i.isAdmin || $store.state.i.isModerator" @click="announcement = !announcement" :class="{ active: announcement }"><fa :icon="faBullhorn"/></button>
-			<button class="_button" v-tooltip="$t('makeNote' + (isPrivate ? 'Public' : 'Private'))" @click="setVisibility" :class="{ active: isPrivate }"><fa :icon="isPrivate ? faLock : faUnlock"/></button>
+			<button class="_button" v-tooltip="$t('makeNotePrivate')" @click="setVisibility" :class="{ active: isPrivate }"><fa :icon="isPrivate ? faLock : faUnlock"/></button>
 			<div class="right">
 				<span class="text-count" :class="{ over: trimmedLength(text) > max }">{{ max - trimmedLength(text) }}</span>
 				<button class="submit _buttonPrimary" :disabled="!canPost" @click="post"><fa :icon="faPaperPlane"/></button>
@@ -482,6 +482,7 @@ export default Vue.extend({
 
 		> footer {
 			padding: 0 16px 16px 16px;
+			position: relative;
 
 			@media (max-width: 500px) {
 				padding: 0 8px 8px 8px;
