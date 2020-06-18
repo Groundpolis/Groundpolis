@@ -122,6 +122,8 @@ export default Vue.extend({
 
 		this.focus();
 
+		this.isPrivate = this.$store.state.deviceUser.visibility === 'followers';
+
 		this.$nextTick(() => {
 			this.focus();
 		});
@@ -144,6 +146,7 @@ export default Vue.extend({
 				this.text = init.text ? init.text : '';
 				this.files = init.files;
 				this.cw = init.cw;
+				this.isPrivate = init.visibility === 'followers';
 				this.announcement = init.announcement;
 				this.useCw = init.cw != null;
 			}
@@ -162,6 +165,7 @@ export default Vue.extend({
 		
 		setVisibility() {
 			this.isPrivate = !this.isPrivate;
+			this.$store.commit('deviceUser/setVisibility', this.isPrivate ? 'followers' : 'public');
 			this.$root.soundDirect(this.isPrivate ? 'lock' : 'unlock');
 		},
 
@@ -332,6 +336,7 @@ export default Vue.extend({
 			}).catch(err => {
 			}).then(() => {
 				this.posting = false;
+				this.announcement = false;
 			});
 
 			if (this.text && this.text != '') {
