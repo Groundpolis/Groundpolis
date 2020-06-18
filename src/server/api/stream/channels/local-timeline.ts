@@ -19,6 +19,9 @@ export default class extends Channel {
 		// 流れるノートは投稿主に向けてpackしたものなので、packし直す
 		const repacked = await Notes.pack(note.id, this.user!);
 
+		// パブリックでなければ送らない
+		if (repacked.visibility !== 'public') return;
+
 		this.send('note', repacked);
 	}
 
