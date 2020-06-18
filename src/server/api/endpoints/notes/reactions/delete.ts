@@ -1,7 +1,6 @@
 import $ from 'cafy';
 import { ID } from '../../../../../misc/cafy-id';
 import define from '../../../define';
-import * as ms from 'ms';
 import deleteReaction from '../../../../../services/note/reaction/delete';
 import { getNote } from '../../../common/getters';
 import { ApiError } from '../../../error';
@@ -17,12 +16,6 @@ export const meta = {
 	requireCredential: true as const,
 
 	kind: 'write:reactions',
-
-	limit: {
-		duration: ms('1hour'),
-		max: 60,
-		minInterval: ms('3sec')
-	},
 
 	params: {
 		noteId: {
