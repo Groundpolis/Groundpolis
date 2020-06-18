@@ -722,6 +722,7 @@ export default Vue.extend({
 			min-width: 0;
 
 			> .body {
+				margin-left: 0.5em;
 				> .cw {
 					cursor: default;
 					display: block;
@@ -771,6 +772,7 @@ export default Vue.extend({
 			}
 
 			> .footer {
+				margin-top: 8px;
 				> .button {
 					margin: 0;
 					padding: 8px;

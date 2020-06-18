@@ -173,6 +173,11 @@ export class Note {
 	})
 	public hasPoll: boolean;
 
+	@Column('boolean', {
+		default: false
+	})
+	public isAnnouncement: boolean;
+
 	//#region Denormalized fields
 	@Index()
 	@Column('varchar', {

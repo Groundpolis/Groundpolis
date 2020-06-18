@@ -157,6 +157,7 @@ export class NoteRepository extends Repository<Note> {
 			files: DriveFiles.packMany(note.fileIds),
 			uri: note.uri || undefined,
 			isMyNote: meId === note.userId,
+			isAnnouncement: note.isAnnouncement,
 
 			...(opts.detail ? {
 				...(meId ? {
@@ -229,6 +230,10 @@ export const packedNoteSchema = {
 			optional: true as const, nullable: false as const,
 		},
 		isMyNote: {
+			type: 'boolean' as const,
+			optional: false as const, nullable: false as const,
+		},
+		isAnnouncement: {
 			type: 'boolean' as const,
 			optional: false as const, nullable: false as const,
 		},

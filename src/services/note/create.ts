@@ -40,6 +40,7 @@ type Option = {
 	uri?: string | null;
 	url?: string | null;
 	app?: App | null;
+	isAnnouncement?: boolean | null;
 };
 
 export default async (user: User, data: Option, silent = false) => new Promise<Note>(async (res, rej) => {
@@ -47,6 +48,7 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 	if (data.visibility == null) data.visibility = 'public';
 	if (data.viaMobile == null) data.viaMobile = false;
 	if (data.localOnly == null) data.localOnly = false;
+	if (data.isAnnouncement == null) data.isAnnouncement = false;
 
 	// サイレンス
 	if (user.isSilenced && data.visibility === 'public') {
@@ -137,7 +139,7 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 	perUserNotesChart.update(user, note, true);
 
 	// ハッシュタグ更新
-	if (data.visibility === 'public' || data.visibility === 'home') {
+	if (data.visibility === 'public') {
 		updateHashtags(user, tags);
 	}
 
@@ -151,19 +153,6 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 	if (!silent) {
 		// ローカルユーザーのチャートはタイムライン取得時に更新しているのでリモートユーザーの場合だけでよい
 		if (Users.isRemoteUser(user)) activeUsersChart.update(user);
-
-		// 未読通知を作成
-		if (data.visibility == 'specified') {
-			if (data.visibleUsers == null) throw new Error('invalid param');
-
-			for (const u of data.visibleUsers) {
-				insertNoteUnread(u, note, true);
-			}
-		} else {
-			for (const u of mentionedUsers) {
-				insertNoteUnread(u, note, false);
-			}
-		}
 
 		// Pack the note
 		const noteObj = await Notes.pack(note, user);
@@ -203,6 +192,8 @@ async function insertNote(user: User, data: Option, tags: string[], emojis: stri
 			: [],
 
 		attachedFileTypes: data.files ? data.files.map(file => file.type) : [],
+
+		isAnnouncement: data.isAnnouncement!,
 
 		// 以下非正規化データ
 		replyUserId: data.reply ? data.reply.userId : null,

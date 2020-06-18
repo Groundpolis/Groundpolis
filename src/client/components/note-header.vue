@@ -1,16 +1,17 @@
 <template>
 <header class="kkwtjztg">
-	<router-link :to="note | notePage" class="username">ID: {{ note.id }}</router-link>
+	<span class="username">{{ $t('note') }} ID: {{ note.id }}</span>
 	<span class="is-myself" v-if="note.isMyNote">{{ $t('you') }}</span>
+	<span class="announcement" v-tooltip="$t('thisIsAnnouncement')" v-if="note.isAnnouncement"><fa :icon="faBullhorn" /></span>
 	<div class="info">
-		<mk-time :time="note.createdAt"/>
+		<router-link :to="note | notePage" class="username"><mk-time :time="note.createdAt"/></router-link>
 	</div>
 </header>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faBiohazard } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faBiohazard, faBullhorn } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
@@ -23,7 +24,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faBiohazard
+			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faBiohazard, faBullhorn
 		};
 	}
 });
@@ -63,13 +64,15 @@ export default Vue.extend({
 	}
 
 	> .admin,
-	> .moderator {
+	> .moderator,
+	> .announcement {
 		margin-right: 0.5em;
 		color: var(--badge);
 	}
 
 	> .username {
 		margin: 0 .5em 0 0;
+		font-weight: bold;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}

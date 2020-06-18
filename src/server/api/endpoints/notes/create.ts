@@ -6,12 +6,9 @@ import define from '../../define';
 import { fetchMeta } from '../../../../misc/fetch-meta';
 import { ApiError } from '../../error';
 import { ID } from '../../../../misc/cafy-id';
-import { User } from '../../../../models/entities/user';
-import { Users, DriveFiles, Notes } from '../../../../models';
+import { DriveFiles, Notes } from '../../../../models';
 import { DriveFile } from '../../../../models/entities/drive-file';
-import { Note } from '../../../../models/entities/note';
 import { DB_MAX_NOTE_TEXT_LENGTH } from '../../../../misc/hard-limits';
-import { noteVisibilities } from '../../../../types';
 
 let maxNoteTextLength = 500;
 
@@ -55,6 +52,10 @@ export const meta = {
 			desc: {
 				'ja-JP': 'コンテンツの警告。このパラメータを指定すると設定したテキストで投稿のコンテンツを隠す事が出来ます。'
 			}
+		},
+
+		announcement: {
+			validator: $.optional.nullable.boolean,
 		},
 
 		viaMobile: {
@@ -119,41 +120,18 @@ export const meta = {
 	},
 
 	errors: {
-		noSuchRenoteTarget: {
-			message: 'No such renote target.',
-			code: 'NO_SUCH_RENOTE_TARGET',
-			id: 'b5c90186-4ab0-49c8-9bba-a1f76c282ba4'
-		},
-
-		cannotReRenote: {
-			message: 'You can not Renote a pure Renote.',
-			code: 'CANNOT_RENOTE_TO_A_PURE_RENOTE',
-			id: 'fd4cc33e-2a37-48dd-99cc-9b806eb2031a'
-		},
-
-		noSuchReplyTarget: {
-			message: 'No such reply target.',
-			code: 'NO_SUCH_REPLY_TARGET',
-			id: '749ee0f6-d3da-459a-bf02-282e2da4292c'
-		},
-
-		cannotReplyToPureRenote: {
-			message: 'You can not reply to a pure Renote.',
-			code: 'CANNOT_REPLY_TO_A_PURE_RENOTE',
-			id: '3ac74a84-8fd5-4bb0-870f-01804f82ce15'
-		},
-
 		contentRequired: {
-			message: 'Content required. You need to set text, fileIds, renoteId or poll.',
+			message: 'Content required. You need to set text or fileIds.',
 			code: 'CONTENT_REQUIRED',
 			id: '6f57e42b-c348-439b-bc45-993995cc515a'
 		},
 
-		cannotCreateAlreadyExpiredPoll: {
-			message: 'Poll is already expired.',
-			code: 'CANNOT_CREATE_ALREADY_EXPIRED_POLL',
-			id: '04da457d-b083-4055-9082-955525eda5a5'
-		}
+		notModerator: {
+			message: 'Access denied.',
+			code: 'ACCESS_DENIED',
+			id: '56f35758-7dd5-468b-8439-5d6fb8ec9b8e',
+			reason: 'You are not a moderator.'
+		},
 	}
 };
 
@@ -174,6 +152,10 @@ export default define(meta, async (ps, user) => {
 		throw new ApiError(meta.errors.contentRequired);
 	}
 
+	if (ps.announcement && !user.isAdmin && !user.isModerator) {
+		throw new ApiError(meta.errors.notModerator);
+	}
+
 	// 投稿を作成
 	const note = await create(user, {
 		createdAt: new Date(),
@@ -181,6 +163,7 @@ export default define(meta, async (ps, user) => {
 		text: ps.text || undefined,
 		cw: ps.cw,
 		viaMobile: ps.viaMobile,
+		isAnnouncement: ps.announcement,
 	});
 
 	return {
