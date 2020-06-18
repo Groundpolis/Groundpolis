@@ -512,6 +512,7 @@ thisNoteIsDeleted: 'This note has been deleted'
 signupInfo: 'Your entered informations are only needed to login, and they will not be disclosed to any users other than moderators.'
 thisIsAnnouncement: 'Official note by the moderator'
 officialNote: 'Official Note'
+makeNotePrivate: 'Make this note private'
 
 _theme:
   explore: "Explore Themes"

@@ -5,13 +5,17 @@
 	<span class="announcement" v-tooltip="$t('thisIsAnnouncement')" v-if="note.isAnnouncement"><fa :icon="faBullhorn" /></span>
 	<div class="info">
 		<router-link :to="note | notePage" class="username"><mk-time :time="note.createdAt"/></router-link>
+
+		<span class="visibility" v-if="note.visibility !== 'public'">
+			<fa v-if="note.visibility === 'followers'" :icon="faLock"/>
+		</span>
 	</div>
 </header>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faBiohazard, faBullhorn } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faMicrophoneAltSlash, faMobileAlt, faBookmark, faBiohazard, faBullhorn } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 
 export default Vue.extend({
@@ -24,7 +28,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faBiohazard, faBullhorn
+			faLock, faMicrophoneAltSlash, faMobileAlt, faBookmark, farBookmark, faBiohazard, faBullhorn
 		};
 	}
 });

@@ -13,8 +13,9 @@
 		<footer>
 			<button class="_button" v-tooltip="$t('attachFile')" @click="chooseFileFrom"><fa :icon="faPhotoVideo"/></button>
 			<button class="_button" v-tooltip="$t('useCw')" @click="useCw = !useCw" :class="{ active: useCw }"><fa :icon="faEyeSlash"/></button>
-			<button class="_button" v-tooltip="$t('insertEmoji')" @click="insertEmoji"><fa :icon="faLaughSquint"/></button>
+			<button class="_button" v-tooltip="$t('emoji')" @click="insertEmoji"><fa :icon="faLaughSquint"/></button>
 			<button class="_button" v-tooltip="$t('officialNote')" v-if="$store.state.i.isAdmin || $store.state.i.isModerator" @click="announcement = !announcement" :class="{ active: announcement }"><fa :icon="faBullhorn"/></button>
+			<button class="_button" v-tooltip="$t('makeNote' + (isPrivate ? 'Public' : 'Private'))" @click="setVisibility" :class="{ active: isPrivate }"><fa :icon="isPrivate ? faLock : faUnlock"/></button>
 			<div class="right">
 				<span class="text-count" :class="{ over: trimmedLength(text) > max }">{{ max - trimmedLength(text) }}</span>
 				<button class="submit _buttonPrimary" :disabled="!canPost" @click="post"><fa :icon="faPaperPlane"/></button>
@@ -27,7 +28,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faBiohazard, faBullhorn } from '@fortawesome/free-solid-svg-icons';
+import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faBiohazard, faBullhorn, faLock } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash, faLaughSquint } from '@fortawesome/free-regular-svg-icons';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
@@ -71,11 +72,12 @@ export default Vue.extend({
 			uploadings: [],
 			useCw: false,
 			cw: null,
+			isPrivate: false,
 			announcement: false,
 			autocomplete: null,
 			draghover: false,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
-			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faBiohazard, faBullhorn
+			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faBiohazard, faBullhorn, faLock
 		};
 	},
 
@@ -156,6 +158,11 @@ export default Vue.extend({
 			this.$watch('useCw', () => this.saveDraft());
 			this.$watch('cw', () => this.saveDraft());
 			this.$watch('files', () => this.saveDraft());
+		},
+		
+		setVisibility() {
+			this.isPrivate = !this.isPrivate;
+			this.$root.soundDirect(this.isPrivate ? 'lock' : 'unlock');
 		},
 
 		trimmedLength(text: string) {
@@ -316,6 +323,7 @@ export default Vue.extend({
 				text: this.text == '' ? undefined : this.text,
 				fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
 				announcement: this.announcement,
+				visibility: this.isPrivate ? 'followers' : 'public',
 				cw: this.useCw ? this.cw || '' : undefined,
 			}).then(data => {
 				this.clear();

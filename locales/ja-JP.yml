@@ -510,6 +510,7 @@ thisNoteIsDeleted: 'このノートは削除されています'
 signupInfo: 'ここで入力したユーザー情報はログインするためだけに必要であり、運営を除く他のユーザーには一切開示されません。'
 thisIsAnnouncement: '運営の公式ノートです'
 officialNote: '公式ノート'
+makeNotePrivate: 'ノートを非公開にする'
 
 _theme:
   explore: "テーマを探す"

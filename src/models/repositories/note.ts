@@ -147,7 +147,7 @@ export class NoteRepository extends Repository<Note> {
 			user,
 			text: text,
 			cw: note.cw,
-			visibility: 'public',
+			visibility: note.visibility,
 			viaMobile: note.viaMobile || undefined,
 			repliesCount: note.repliesCount,
 			reactions: convertLegacyReactions(note.reactions),

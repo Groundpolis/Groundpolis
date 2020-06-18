@@ -9,6 +9,7 @@ import { ID } from '../../../../misc/cafy-id';
 import { DriveFiles, Notes } from '../../../../models';
 import { DriveFile } from '../../../../models/entities/drive-file';
 import { DB_MAX_NOTE_TEXT_LENGTH } from '../../../../misc/hard-limits';
+import { noteVisibilities } from '../../../../types';
 
 let maxNoteTextLength = 500;
 
@@ -35,6 +36,14 @@ export const meta = {
 	kind: 'write:notes',
 
 	params: {
+		visibility: {
+			validator: $.optional.str.or(noteVisibilities as unknown as string[]),
+			default: 'public',
+			desc: {
+				'ja-JP': '投稿の公開範囲'
+			}
+		},
+
 		text: {
 			validator: $.optional.nullable.str.pipe(text =>
 				text.trim() != ''
@@ -162,6 +171,7 @@ export default define(meta, async (ps, user) => {
 		files: files,
 		text: ps.text || undefined,
 		cw: ps.cw,
+		visibility: ps.visibility,
 		viaMobile: ps.viaMobile,
 		isAnnouncement: ps.announcement,
 	});

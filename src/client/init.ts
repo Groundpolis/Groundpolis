@@ -218,10 +218,13 @@ os.init(async () => {
 				if (this.$store.state.device.sfxVolume === 0) return;
 				const sound = this.$store.state.device['sfx' + type.substr(0, 1).toUpperCase() + type.substr(1)];
 				if (sound == null) return;
+				this.soundDirect(sound);
+			},
+			soundDirect(sound: string) {
 				const audio = new Audio(`/assets/sounds/${sound}.mp3`);
 				audio.volume = this.$store.state.device.sfxVolume;
 				audio.play();
-			}
+			},
 		},
 		router: router,
 		render: createEl => createEl(App)
