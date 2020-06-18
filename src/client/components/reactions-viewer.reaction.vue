@@ -4,10 +4,6 @@
 	:class="{ reacted: note.myReaction == reaction, canToggle }"
 	@click="toggleReaction(reaction)"
 	v-if="count > 0"
-	@touchstart="onMouseover"
-	@mouseover="onMouseover"
-	@mouseleave="onMouseleave"
-	@touchend="onMouseleave"
 	ref="reaction"
 	v-particle
 >

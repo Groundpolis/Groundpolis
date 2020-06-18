@@ -13,7 +13,6 @@ import * as views from 'koa-views';
 import * as glob from 'glob';
 import * as MarkdownIt from 'markdown-it';
 
-import packFeed from './feed';
 import { fetchMeta } from '../../misc/fetch-meta';
 import { genOpenapiSpec } from '../api/openapi/gen-spec';
 import config from '../../config';

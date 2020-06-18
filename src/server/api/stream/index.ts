@@ -151,10 +151,20 @@ export default class Connection {
 
 	@autobind
 	private async onNoteStreamMessage(data: any) {
+		const { id, body } = data.body;
+
+		if (body.userId) {
+			// ちょっとハックだけど
+			// 匿名性の確保のため、ユーザーIDが含まれている場合は
+			// 自分自身を指しているかの情報だけを返す
+			// 完全に消してしまうとリアクションが自分のものかわからない
+			body.userIdIsMine = this.user && body.userId === this.user.id;
+			delete body.userId;
+		}
+
 		this.sendMessageToWs('noteUpdated', {
-			id: data.body.id,
+			id, body,
 			type: data.type,
-			body: data.body.body,
 		});
 	}
 

@@ -100,6 +100,7 @@ export default Vue.extend({
 		return {
 			connection: null,
 			conversation: [],
+			noteBody: null,
 			replies: [],
 			showContent: false,
 			hideThisNote: false,
@@ -269,7 +270,7 @@ export default Vue.extend({
 					// Increment the count
 					this.appearNote.reactions[reaction]++;
 
-					if (body.userId == this.$store.state.i.id) {
+					if (body.userIdIsMine) {
 						Vue.set(this.appearNote, 'myReaction', reaction);
 					}
 					break;
@@ -289,7 +290,7 @@ export default Vue.extend({
 					// Decrement the count
 					if (this.appearNote.reactions[reaction] > 0) this.appearNote.reactions[reaction]--;
 
-					if (body.userId == this.$store.state.i.id) {
+					if (body.userIdIsMine) {
 						Vue.set(this.appearNote, 'myReaction', null);
 					}
 					break;

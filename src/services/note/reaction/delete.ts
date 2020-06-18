@@ -35,5 +35,6 @@ export default async (user: User, note: Note) => {
 
 	publishNoteStream(note.id, 'unreacted', {
 		reaction: exist.reaction,
+		userId: user.id,
 	});
 };
