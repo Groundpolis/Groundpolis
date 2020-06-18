@@ -39,7 +39,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			rs: [ '👍', '❤️', '😆', '😇', '😮', '🎉', '👏', '🍣' ],
+			rs: [ '👍', '❤️', '😆', '😇', '😮', '🎉', '👏', '🍣', '🍮', '🙏', '🤯', '🥴' ],
 			text: null,
 			focus: null
 		};
@@ -54,14 +54,6 @@ export default Vue.extend({
 				'left|h|shift+tab': this.focusLeft,
 				'right|l|tab': this.focusRight,
 				'down|j': this.focusDown,
-				'1': () => this.react(this.rs[0]),
-				'2': () => this.react(this.rs[1]),
-				'3': () => this.react(this.rs[2]),
-				'4': () => this.react(this.rs[3]),
-				'5': () => this.react(this.rs[4]),
-				'6': () => this.react(this.rs[5]),
-				'7': () => this.react(this.rs[6]),
-				'8': () => this.react(this.rs[7]),
 			};
 		},
 	},

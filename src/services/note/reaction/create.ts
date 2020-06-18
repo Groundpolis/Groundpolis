@@ -9,7 +9,7 @@ import { genId } from '../../../misc/gen-id';
 import deleteReaction from './delete';
 
 export default async (user: User, note: Note, reaction?: string) => {
-	if (!reaction || !['👍', '❤️', '❤', '😆', '😇', '😮', '🎉', '👏', '🍣'].includes(reaction)) {
+	if (!reaction || !['👍', '❤️', '❤', '😆', '😇', '😮', '🎉', '👏', '🍣', '🍮', '🙏', '🤯', '🥴'].includes(reaction)) {
 		reaction = '👍'
 	}
 
