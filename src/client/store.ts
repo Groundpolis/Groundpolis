@@ -55,6 +55,7 @@ export const defaultDeviceSettings = {
 	animatedMfm: true,
 	imageNewTab: false,
 	showFixedPostForm: false,
+	postFormAppear: false,
 	disablePagesScript: true,
 	enableInfiniteScroll: true,
 	roomGraphicsQuality: 'medium',

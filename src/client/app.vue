@@ -4,6 +4,12 @@
 		<div class="title" ref="title">
 			<transition :name="$store.state.device.animation ? 'header' : ''" mode="out-in" appear>
 				<button class="_button back" v-if="canBack" @click="back()"><fa :icon="faChevronLeft"/></button>
+				<button class="_button back" v-else-if="isMobile" @click="showNav = true">
+					<fa :icon="faBars"/>
+					<i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadSpecifiedNotes || $store.state.i.hasPendingReceivedFollowRequest || $store.state.i.hasUnreadMessagingMessage || $store.state.i.hasUnreadAnnouncement)">
+						<fa :icon="faCircle"/>
+					</i>
+				</button>
 			</transition>
 			<transition :name="$store.state.device.animation ? 'header' : ''" mode="out-in" appear>
 				<div class="body" :key="pageKey">
@@ -35,11 +41,11 @@
 	<transition name="nav">
 		<nav class="nav" ref="nav" v-show="showNav">
 			<div>
-				<router-link class="item index" active-class="active" to="/" exact>
+				<router-link class="item" active-class="active" to="/" exact>
 					<fa :icon="$store.getters.isSignedIn ? faUser : faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('_timelines.myself') : $t('home') }}</span>
 				</router-link>
 				<template v-if="$store.getters.isSignedIn">
-					<router-link class="item index" active-class="active" to="/everyone" exact>
+					<router-link class="item" active-class="active" to="/everyone" exact>
 						<fa :icon="faUsers" fixed-width/><span class="text">{{ $t('_timelines.everyone') }}</span>
 					</router-link>
 				</template>
@@ -115,15 +121,6 @@
 		</div>
 	</div>
 
-	<div class="buttons">
-		<button class="button nav _button" @click="showNav = true" ref="navButton"><fa :icon="faBars"/><i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadSpecifiedNotes || $store.state.i.hasPendingReceivedFollowRequest || $store.state.i.hasUnreadMessagingMessage || $store.state.i.hasUnreadAnnouncement)"><fa :icon="faCircle"/></i></button>
-		<button v-if="$route.name === 'index'" class="button home _button" @click="top()"><fa :icon="faUser"/></button>
-		<button v-else class="button home _button" @click="$router.push('/')"><fa :icon="faUser"/></button>
-		<button v-if="$route.name === 'everyone'" class="button home _button" @click="top()"><fa :icon="faUsers"/></button>
-		<button v-else class="button home _button" @click="$router.push('/everyone')"><fa :icon="faUsers"/></button>
-	</div>
-
-
 	<stream-indicator v-if="$store.getters.isSignedIn"/>
 </div>
 </template>
@@ -147,7 +144,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			host: host,
+			host,
 			pageKey: 0,
 			showNav: false,
 			searching: false,
@@ -161,6 +158,7 @@ export default Vue.extend({
 				search: this.search
 			}),
 			isDesktop: window.innerWidth >= DESKTOP_THRESHOLD,
+			isMobile:  window.innerWidth < 650,
 			canBack: false,
 			wallpaper: localStorage.getItem('wallpaper') != null,
 			faGripVertical, faChevronLeft, faSlidersH, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faQuestionCircle
@@ -206,7 +204,7 @@ export default Vue.extend({
 		$route(to, from) {
 			this.pageKey++;
 			this.showNav = false;
-			this.canBack = (window.history.length > 0 && !['index'].includes(to.name));
+			this.canBack = (window.history.length > 0 && !['index', 'everyone'].includes(to.name));
 		},
 
 		isDesktop() {
@@ -243,13 +241,11 @@ export default Vue.extend({
 
 		ro.observe(this.$refs.contents);
 
-		window.addEventListener('resize', adjustTitlePosition, { passive: true });
-
-		if (!this.isDesktop) {
-			window.addEventListener('resize', () => {
-				if (window.innerWidth >= DESKTOP_THRESHOLD) this.isDesktop = true;
-			}, { passive: true });
-		}
+		window.addEventListener('resize', () => {
+			this.isDesktop = window.innerWidth >= DESKTOP_THRESHOLD;
+			adjustTitlePosition();
+			this.isMobile = window.innerWidth < 650;
+		}, { passive: true });
 	},
 
 	methods: {
@@ -526,6 +522,15 @@ export default Vue.extend({
 				left: 0;
 				height: $header-height;
 				width: $header-height;
+
+				> i {
+					position: absolute;
+					top: 16px;
+					left: 40px;
+					color: var(--indicator);
+					font-size: 8px;
+					animation: blink 1s infinite;
+				}
 			}
 
 			> .body {
@@ -945,73 +950,6 @@ export default Vue.extend({
 
 		@media (min-width: ($side-hide-threshold + 1px)) {
 			display: none;
-		}
-	}
-
-	> .buttons {
-		position: fixed;
-		z-index: 1000;
-		bottom: 0;
-		padding: 0 32px 32px 32px;
-		display: flex;
-		width: 100%;
-		box-sizing: border-box;
-		background: linear-gradient(0deg, var(--bg), var(--bonzsgfz));
-
-		@media (max-width: 500px) {
-			padding: 0 16px 16px 16px;
-		}
-
-		@media (min-width: ($nav-hide-threshold + 1px)) {
-			display: none;
-		}
-
-		> .button {
-			position: relative;
-			padding: 0;
-			margin: auto;
-			width: 64px;
-			height: 64px;
-			border-radius: 100%;
-			box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
-
-			&:first-child {
-				margin-left: 0;
-			}
-
-			&:last-child {
-				margin-right: 0;
-			}
-
-			> * {
-				font-size: 22px;
-			}
-
-			&:disabled {
-				cursor: default;
-
-				> * {
-					opacity: 0.5;
-				}
-			}
-
-			&:not(.post) {
-				background: var(--panel);
-				color: var(--fg);
-
-				&:hover {
-					background: var(--pcncwizz);
-				}
-
-				> i {
-					position: absolute;
-					top: 0;
-					left: 0;
-					color: var(--indicator);
-					font-size: 16px;
-					animation: blink 1s infinite;
-				}
-			}
 		}
 	}
 }

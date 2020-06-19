@@ -26,7 +26,8 @@
 			"src/@types"
 		],
 		"lib": [
-			"esnext"
+			"esnext",
+			"DOM",
 		]
 	},
 	"compileOnSave": false,
