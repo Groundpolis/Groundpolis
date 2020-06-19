@@ -133,8 +133,11 @@ export default Vue.extend({
 		},
 
 		updateFormState() {
+			this.isMobile = window.innerWidth < 650;
+
 			if (!this.isMobile) {
-				this.formStyle = this.toggleStyle = {};
+				console.log('is not mobile');
+				this.formStyle = { transform: undefined };
 				return;
 			}
 			const form = (this.$refs.form as Vue).$el;
