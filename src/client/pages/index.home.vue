@@ -95,11 +95,15 @@ export default Vue.extend({
 		observer = new ResizeObserver(() => this.updateFormState());
 		observer.observe(form);
 
-		this.$nextTick(() => this.updateFormState());
+		this.updateFormState();
+
+		window.addEventListener('resize', this.onResize, { passive: true });
+		this.onResize();
 	},
 
 	beforeDestroy() {
 		observer.disconnect();
+		window.removeEventListener('resize', this.onResize);
 	},
 
 	methods: {
@@ -109,6 +113,10 @@ export default Vue.extend({
 
 		after() {
 			Progress.done();
+		},
+
+		onResize() {
+			this.isMobile = window.innerWidth < 650;
 		},
 
 		queueUpdated(q) {
@@ -125,9 +133,12 @@ export default Vue.extend({
 		},
 
 		updateFormState() {
+			if (!this.isMobile) {
+				this.formStyle = this.toggleStyle = {};
+				return;
+			}
 			const form = (this.$refs.form as Vue).$el;
 			const height = form.getBoundingClientRect().height;
-			console.log(height);
 			this.formStyle = {
 				transform: `translateY(${this.formAppear ? 0 : height}px)`,
 			};
@@ -162,7 +173,7 @@ $nav-hide-threshold: 650px;
 
 	> .post-form-toggle {
 		display: none;
-		transition: bottom 0.5s ease, transform 0.5s ease;
+		// transition: bottom 0.5s ease, transform 0.5s ease;
 		@media screen and (max-width: $nav-hide-threshold) {
 			display: block;
 			position: fixed;
@@ -177,7 +188,8 @@ $nav-hide-threshold: 650px;
 	> .post-form {
 		position: relative;
 		margin-bottom: var(--margin);
-		transition: transform 0.5s ease;
+		// transition: transform 0.5s ease;
+
 		@media screen and (max-width: $nav-hide-threshold) {
 			position: fixed;
 			bottom: 0;
