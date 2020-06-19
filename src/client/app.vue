@@ -3,7 +3,7 @@
 	<header class="header">
 		<div class="title" ref="title">
 			<transition :name="$store.state.device.animation ? 'header' : ''" mode="out-in" appear>
-				<button class="_button back" v-if="canBack" @click="back()"><fa :icon="faChevronLeft"/></button>
+				<button class="_button back" v-if="canBack" @click="back()"><fa :icon="faArrowLeft"/></button>
 				<button class="_button back" v-else-if="isMobile" @click="showNav = true">
 					<fa :icon="faBars"/>
 					<i v-if="$store.getters.isSignedIn && $store.state.i.hasUnreadAnnouncement">
@@ -46,6 +46,9 @@
 				<template v-if="$store.getters.isSignedIn">
 					<router-link class="item" active-class="active" to="/everyone" exact>
 						<fa :icon="faUsers" fixed-width/><span class="text">{{ $t('_timelines.everyone') }}</span>
+					</router-link>
+					<router-link class="item" active-class="active" to="/my/drive">
+						<fa :icon="faCloud" fixed-width/><span class="text">{{ $t('drive') }}</span>
 					</router-link>
 				</template>
 				<router-link class="item" active-class="active" to="/announcements">
@@ -126,7 +129,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faGripVertical, faSlidersH, faHashtag, faBroadcastTower, faEllipsisH, faBars, faTimes, faCog, faUser, faHome, faCircle, faPlus, faUsers, faTachometerAlt, faExchangeAlt, faCloud, faServer, faInfoCircle, faQuestionCircle, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faGripVertical, faSlidersH, faHashtag, faBroadcastTower, faEllipsisH, faBars, faTimes, faCog, faUser, faHome, faCircle, faPlus, faUsers, faTachometerAlt, faExchangeAlt, faCloud, faServer, faInfoCircle, faQuestionCircle, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { ResizeObserver } from '@juggle/resize-observer';
 import { v4 as uuid } from 'uuid';
@@ -157,7 +160,7 @@ export default Vue.extend({
 			isMobile:  window.innerWidth < 650,
 			canBack: false,
 			wallpaper: localStorage.getItem('wallpaper') != null,
-			faGripVertical, faSlidersH, faComments, faHashtag, faBroadcastTower, faEllipsisH, faBars, faTimes, faCog, faUser, faHome, faCircle, faPlus, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faCloud, faServer, faQuestionCircle
+			faArrowLeft, faGripVertical, faSlidersH, faComments, faHashtag, faBroadcastTower, faEllipsisH, faBars, faTimes, faCog, faUser, faHome, faCircle, faPlus, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faCloud, faServer, faQuestionCircle
 		};
 	},
 
