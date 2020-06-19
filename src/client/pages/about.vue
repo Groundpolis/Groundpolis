@@ -8,9 +8,12 @@
 		<div class="_content" v-if="meta.description">
 			<div v-html="meta.description"></div>
 		</div>
-		<div class="_content table">
-			<div><b>{{ $t('administrator') }}</b><span>{{ meta.maintainerName }}</span></div>
-			<div><b></b><span>{{ meta.maintainerEmail }}</span></div>
+		<div class="_content table" v-if="meta.maintainerName || meta.maintainerEmail || meta.tosUrl">
+			<div v-if="meta.maintainerName"><b>{{ $t('administrator') }}</b><span>{{ meta.maintainerName }}</span></div>
+			<div v-if="meta.maintainerEmail"><b></b><span>{{ meta.maintainerEmail }}</span></div>
+		</div>
+		<div class="_content table" v-if="meta.tosUrl">
+			<div><b>{{ $t('tos') }}</b><a :href="meta.tosUrl">{{ meta.tosUrl }}</a></div>
 		</div>
 		<div class="_content table">
 			<div><b>Hitorisskey</b><span>v{{ version }}</span></div>
