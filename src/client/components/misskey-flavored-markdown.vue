@@ -24,6 +24,14 @@ export default Vue.extend({
 		text-overflow: ellipsis;
 	}
 
+	&:not(.nowrap) ::v-deep > .mk-emoji:only-child {
+		font-size: 8em;
+		height: 1em;
+		&:hover {
+			transform: none;
+		}
+	}
+
 	::v-deep .quote {
 		display: block;
 		margin: 8px;

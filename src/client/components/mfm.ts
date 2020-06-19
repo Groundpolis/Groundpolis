@@ -8,7 +8,6 @@ import MkFormula from './formula.vue';
 import MkMention from './mention.vue';
 import MkCode from './code.vue';
 import MkGoogle from './google.vue';
-import { host } from '../config';
 
 export default Vue.component('misskey-flavored-markdown', {
 	props: {
@@ -53,11 +52,10 @@ export default Vue.component('misskey-flavored-markdown', {
 
 					if (!this.plain) {
 						const x = text.split('\n')
-							.map(t => t == '' ? [createElement('br')] : [this._v(t), createElement('br')]); // NOTE: this._vはHACK SEE: https://github.com/syuilo/misskey/pull/6399#issuecomment-632820283
-						x[x.length - 1].pop();
+							.map(t => t == '' ? [createElement('br')] : [createElement('span', t), createElement('br')]);						x[x.length - 1].pop();
 						return x;
 					} else {
-						return [this._v(text.replace(/\n/g, ' '))];
+						return [createElement('span', text.replace(/\n/g, ' '))];
 					}
 				}
 
