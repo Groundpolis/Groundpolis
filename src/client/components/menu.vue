@@ -166,12 +166,6 @@ export default Vue.extend({
 			width: 20px;
 		}
 
-		> .avatar {
-			margin-right: 4px;
-			width: 20px;
-			height: 20px;
-		}
-
 		> i {
 			position: absolute;
 			top: 5px;

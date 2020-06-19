@@ -1,12 +1,9 @@
 import es from '../../db/elasticsearch';
 import { publishNotesStream } from '../stream';
 import { parse } from '../../mfm/parse';
-import { resolveUser } from '../../remote/resolve-user';
 import config from '../../config';
 import { updateHashtags } from '../update-hashtag';
 import { concat } from '../../prelude/array';
-import insertNoteUnread from './unread';
-import extractMentions from '../../misc/extract-mentions';
 import extractEmojis from '../../misc/extract-emojis';
 import extractHashtags from '../../misc/extract-hashtags';
 import { Note, IMentionedRemoteUsers } from '../../models/entities/note';
@@ -19,7 +16,6 @@ import { genId } from '../../misc/gen-id';
 import { notesChart, perUserNotesChart, activeUsersChart } from '../chart';
 import { Poll, IPoll } from '../../models/entities/poll';
 import { isDuplicateKeyValueError } from '../../misc/is-duplicate-key-value-error';
-import { ensure } from '../../prelude/ensure';
 
 type Option = {
 	createdAt?: Date | null;
@@ -91,10 +87,9 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 
 	let tags = data.apHashtags;
 	let emojis = data.apEmojis;
-	let mentionedUsers = data.apMentions;
 
 	// Parse MFM if needed
-	if (!tags || !emojis || !mentionedUsers) {
+	if (!tags || !emojis) {
 		const tokens = data.text ? parse(data.text)! : [];
 		const cwTokens = data.cw ? parse(data.cw)! : [];
 		const choiceTokens = data.poll && data.poll.choices
@@ -106,31 +101,11 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 		tags = data.apHashtags || extractHashtags(combinedTokens);
 
 		emojis = data.apEmojis || extractEmojis(combinedTokens);
-
-		mentionedUsers = data.apMentions || await extractMentionedUsers(user, combinedTokens);
 	}
 
 	tags = tags.filter(tag => Array.from(tag || '').length <= 128).splice(0, 32);
 
-	if (data.reply && (user.id !== data.reply.userId) && !mentionedUsers.some(u => u.id === data.reply!.userId)) {
-		mentionedUsers.push(await Users.findOne(data.reply.userId).then(ensure));
-	}
-
-	if (data.visibility == 'specified') {
-		if (data.visibleUsers == null) throw new Error('invalid param');
-
-		for (const u of data.visibleUsers) {
-			if (!mentionedUsers.some(x => x.id === u.id)) {
-				mentionedUsers.push(u);
-			}
-		}
-
-		if (data.reply && !data.visibleUsers.some(x => x.id === data.reply!.userId)) {
-			data.visibleUsers.push(await Users.findOne(data.reply.userId).then(ensure));
-		}
-	}
-
-	const note = await insertNote(user, data, tags, emojis, mentionedUsers);
+	const note = await insertNote(user, data, tags, emojis);
 
 	res(note);
 
@@ -168,7 +143,7 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 	index(note);
 });
 
-async function insertNote(user: User, data: Option, tags: string[], emojis: string[], mentionedUsers: User[]) {
+async function insertNote(user: User, data: Option, tags: string[], emojis: string[]) {
 	const insert = new Note({
 		id: genId(data.createdAt!),
 		createdAt: data.createdAt!,
@@ -185,11 +160,6 @@ async function insertNote(user: User, data: Option, tags: string[], emojis: stri
 		viaMobile: data.viaMobile!,
 		localOnly: data.localOnly!,
 		visibility: data.visibility as any,
-		visibleUserIds: data.visibility == 'specified'
-			? data.visibleUsers
-				? data.visibleUsers.map(u => u.id)
-				: []
-			: [],
 
 		attachedFileTypes: data.files ? data.files.map(file => file.type) : [],
 
@@ -205,22 +175,6 @@ async function insertNote(user: User, data: Option, tags: string[], emojis: stri
 
 	if (data.uri != null) insert.uri = data.uri;
 	if (data.url != null) insert.url = data.url;
-
-	// Append mentions data
-	if (mentionedUsers.length > 0) {
-		insert.mentions = mentionedUsers.map(u => u.id);
-		const profiles = await UserProfiles.find({ userId: In(insert.mentions) });
-		insert.mentionedRemoteUsers = JSON.stringify(mentionedUsers.filter(u => Users.isRemoteUser(u)).map(u => {
-			const profile = profiles.find(p => p.userId == u.id);
-			const url = profile != null ? profile.url : null;
-			return {
-				uri: u.uri,
-				url: url == null ? undefined : url,
-				username: u.username,
-				host: u.host
-			} as IMentionedRemoteUsers[0];
-		}));
-	}
 
 	// 投稿を作成
 	try {
@@ -284,21 +238,4 @@ function incNotesCountOfUser(user: User) {
 	Users.update({ id: user.id }, {
 		updatedAt: new Date()
 	});
-}
-
-async function extractMentionedUsers(user: User, tokens: ReturnType<typeof parse>): Promise<User[]> {
-	if (tokens == null) return [];
-
-	const mentions = extractMentions(tokens);
-
-	let mentionedUsers = (await Promise.all(mentions.map(m =>
-		resolveUser(m.username, m.host || user.host).catch(() => null)
-	))).filter(x => x != null) as User[];
-
-	// Drop duplicate users
-	mentionedUsers = mentionedUsers.filter((u, i, self) =>
-		i === self.findIndex(u2 => u.id === u2.id)
-	);
-
-	return mentionedUsers;
 }

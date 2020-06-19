@@ -41,31 +41,5 @@ export default Vue.extend({
 			faCog
 		}
 	},
-
-	methods: {
-		onChangeAutoWatch(v) {
-			this.$root.api('i/update', {
-				autoWatch: v
-			});
-		},
-
-		onChangeInjectFeaturedNote(v) {
-			this.$root.api('i/update', {
-				injectFeaturedNote: v
-			});
-		},
-
-		readAllUnreadNotes() {
-			this.$root.api('i/read-all-unread-notes');
-		},
-
-		readAllMessagingMessages() {
-			this.$root.api('i/read-all-messaging-messages');
-		},
-
-		readAllNotifications() {
-			this.$root.api('notifications/mark-all-as-read');
-		},
-	}
 });
 </script>

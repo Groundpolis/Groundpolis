@@ -34,7 +34,6 @@
 import Vue from 'vue';
 import { faExclamationCircle, faPlus, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { faSave, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
-import XNotePreview from '../../components/note-preview.vue';
 import MkPagination from '../../components/ui/pagination.vue';
 
 export default Vue.extend({
@@ -46,7 +45,6 @@ export default Vue.extend({
 
 	components: {
 		MkPagination,
-		XNotePreview,
 	},
 
 	data() {

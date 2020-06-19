@@ -159,13 +159,6 @@ os.init(async () => {
 	});
 	//#endregion
 
-	if ('Notification' in window && store.getters.isSignedIn) {
-		// 許可を得ていなかったらリクエスト
-		if (Notification.permission === 'default') {
-			Notification.requestPermission();
-		}
-	}
-
 	const app = new Vue({
 		store: store,
 		i18n,
@@ -242,75 +235,6 @@ os.init(async () => {
 
 	if (store.getters.isSignedIn) {
 		const main = os.stream.useSharedConnection('main');
-
-		// 自分の情報が更新されたとき
-		main.on('meUpdated', i => {
-			store.dispatch('mergeMe', i);
-		});
-
-		main.on('readAllNotifications', () => {
-			store.dispatch('mergeMe', {
-				hasUnreadNotification: false
-			});
-		});
-
-		main.on('unreadNotification', () => {
-			store.dispatch('mergeMe', {
-				hasUnreadNotification: true
-			});
-		});
-
-		main.on('unreadMention', () => {
-			store.dispatch('mergeMe', {
-				hasUnreadMentions: true
-			});
-		});
-
-		main.on('readAllUnreadMentions', () => {
-			store.dispatch('mergeMe', {
-				hasUnreadMentions: false
-			});
-		});
-
-		main.on('unreadSpecifiedNote', () => {
-			store.dispatch('mergeMe', {
-				hasUnreadSpecifiedNotes: true
-			});
-		});
-
-		main.on('readAllUnreadSpecifiedNotes', () => {
-			store.dispatch('mergeMe', {
-				hasUnreadSpecifiedNotes: false
-			});
-		});
-
-		main.on('readAllMessagingMessages', () => {
-			store.dispatch('mergeMe', {
-				hasUnreadMessagingMessage: false
-			});
-		});
-
-		main.on('unreadMessagingMessage', () => {
-			store.dispatch('mergeMe', {
-				hasUnreadMessagingMessage: true
-			});
-
-			app.sound('chatBg');
-		});
-
-		main.on('readAllAntennas', () => {
-			store.dispatch('mergeMe', {
-				hasUnreadAntenna: false
-			});
-		});
-
-		main.on('unreadAntenna', () => {
-			store.dispatch('mergeMe', {
-				hasUnreadAntenna: true
-			});
-
-			app.sound('antenna');
-		});
 
 		main.on('readAllAnnouncements', () => {
 			store.dispatch('mergeMe', {

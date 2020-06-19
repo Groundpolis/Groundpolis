@@ -6,7 +6,7 @@
 				<button class="_button back" v-if="canBack" @click="back()"><fa :icon="faChevronLeft"/></button>
 				<button class="_button back" v-else-if="isMobile" @click="showNav = true">
 					<fa :icon="faBars"/>
-					<i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadSpecifiedNotes || $store.state.i.hasPendingReceivedFollowRequest || $store.state.i.hasUnreadMessagingMessage || $store.state.i.hasUnreadAnnouncement)">
+					<i v-if="$store.getters.isSignedIn && $store.state.i.hasUnreadAnnouncement">
 						<fa :icon="faCircle"/>
 					</i>
 				</button>
@@ -14,7 +14,6 @@
 			<transition :name="$store.state.device.animation ? 'header' : ''" mode="out-in" appear>
 				<div class="body" :key="pageKey">
 					<div class="default">
-						<portal-target name="avatar" slim/>
 						<h1 class="title"><portal-target name="icon" slim/><portal-target name="title" slim/></h1>
 					</div>
 					<div class="custom">
@@ -127,8 +126,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faGripVertical, faChevronLeft, faSlidersH, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
+import { faGripVertical, faSlidersH, faHashtag, faBroadcastTower, faEllipsisH, faBars, faTimes, faCog, faUser, faHome, faCircle, faPlus, faUsers, faTachometerAlt, faExchangeAlt, faCloud, faServer, faInfoCircle, faQuestionCircle, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { ResizeObserver } from '@juggle/resize-observer';
 import { v4 as uuid } from 'uuid';
 import { host, instanceName } from './config';
@@ -154,14 +153,11 @@ export default Vue.extend({
 			searchQuery: '',
 			searchWait: false,
 			widgetsEditMode: false,
-			menuDef: this.$store.getters.nav({
-				search: this.search
-			}),
 			isDesktop: window.innerWidth >= DESKTOP_THRESHOLD,
 			isMobile:  window.innerWidth < 650,
 			canBack: false,
 			wallpaper: localStorage.getItem('wallpaper') != null,
-			faGripVertical, faChevronLeft, faSlidersH, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faQuestionCircle
+			faGripVertical, faSlidersH, faComments, faHashtag, faBroadcastTower, faEllipsisH, faBars, faTimes, faCog, faUser, faHome, faCircle, faPlus, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faCloud, faServer, faQuestionCircle
 		};
 	},
 
@@ -176,28 +172,10 @@ export default Vue.extend({
 			return this.$store.state.deviceUser.widgets;
 		},
 
-		menu(): string[] {
-			return this.$store.state.deviceUser.menu;
-		},
-
 		otherNavItemIndicated(): boolean {
 			if (!this.$store.getters.isSignedIn) return false;
-			for (const def in this.menuDef) {
-				if (this.menu.includes(def)) continue;
-				if (this.menuDef[def].indicated) return true;
-			}
 			return false;
 		},
-
-		navIndicated(): boolean {
-			if (!this.$store.getters.isSignedIn) return false;
-			for (const def in this.menuDef) {
-				if (def === 'timeline') continue;
-				if (def === 'notifications') continue;
-				if (this.menuDef[def].indicated) return true;
-			}
-			return false;
-		}
 	},
 
 	watch:{
@@ -352,46 +330,6 @@ export default Vue.extend({
 			});
 		},
 
-		async addAcount() {
-			this.$root.new(await import('./components/signin-dialog.vue').then(m => m.default)).$once('login', res => {
-				this.$store.dispatch('addAcount', res);
-				this.$root.dialog({
-					type: 'success',
-					iconOnly: true, autoClose: true
-				});
-			});
-		},
-
-		async createAccount() {
-			this.$root.new(await import('./components/signup-dialog.vue').then(m => m.default)).$once('signup', res => {
-				this.$store.dispatch('addAcount', res);
-				this.switchAccountWithToken(res.i);
-			});
-		},
-
-		async switchAccount(account: any) {
-			const token = this.$store.state.device.accounts.find((x: any) => x.id === account.id).token;
-			this.switchAccountWithToken(token);
-		},
-
-		switchAccountWithToken(token: string) {
-			this.$root.dialog({
-				type: 'waiting',
-				iconOnly: true
-			});
-
-			this.$root.api('i', {}, token).then((i: any) => {
-				this.$store.dispatch('switchAccount', {
-					...i,
-					token: token
-				}).then(() => {
-					this.$nextTick(() => {
-						location.reload();
-					});
-				});
-			});
-		},
-
 		widgetFunc(id) {
 			const w = this.$refs[id][0];
 			if (w.func) w.func();
@@ -534,15 +472,6 @@ export default Vue.extend({
 				> .default {
 					padding: 0 $header-height;
 
-					> .avatar {
-						$size: 32px;
-						display: inline-block;
-						width: $size;
-						height: $size;
-						vertical-align: bottom;
-						margin: (($header-height - $size) / 2) 8px (($header-height - $size) / 2) 0;
-					}
-
 					> .title {
 						display: inline-block;
 						font-size: $ui-font-size;
@@ -585,44 +514,6 @@ export default Vue.extend({
 				&.active {
 					color: var(--accent);
 				}
-			}
-
-			> .search {
-				position: relative;
-
-				> input {
-					width: 220px;
-					box-sizing: border-box;
-					margin-right: 8px;
-					padding: 0 12px 0 42px;
-					font-size: 1rem;
-					line-height: 38px;
-					border: none;
-					border-radius: 38px;
-					color: var(--fg);
-					background: var(--bg);
-
-					&:focus {
-						outline: none;
-					}
-				}
-
-				> [data-icon] {
-					position: absolute;
-					top: 0;
-					left: 16px;
-					height: 100%;
-					pointer-events: none;
-					font-size: 16px;
-				}
-			}
-
-			> .post {
-				width: $post-button-size;
-				height: $post-button-size;
-				margin-left: $post-button-margin;
-				border-radius: 100%;
-				font-size: 16px;
 			}
 
 			> .clock {
@@ -716,17 +607,6 @@ export default Vue.extend({
 					width: ($header-height - ($avatar-margin * 2));
 				}
 
-				> [data-icon],
-				> .avatar {
-					margin-right: $avatar-margin;
-				}
-
-				> .avatar {
-					width: $avatar-size;
-					height: $avatar-size;
-					vertical-align: middle;
-				}
-
 				.icon {
 					margin: auto;
 				}
@@ -766,11 +646,6 @@ export default Vue.extend({
 					font-size: $ui-font-size * 1.2;
 					line-height: 3.7rem;
 
-					> [data-icon],
-					> .avatar {
-						margin-right: 0;
-					}
-
 					> i {
 						left: 10px;
 					}
@@ -778,13 +653,6 @@ export default Vue.extend({
 					> .text {
 						display: none;
 					}
-				}
-			}
-
-			@media (max-width: $nav-hide-threshold) {
-				> .index,
-				> .notifications {
-					display: none;
 				}
 			}
 		}

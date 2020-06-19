@@ -4,7 +4,6 @@
 		<div class="_kjvfvyph_">
 			<fa v-if="src === 'myself'" :icon="faUser"/>
 			<fa v-if="src === 'everyone'" :icon="faUsers"/>
-			<fa v-if="src === 'reacted'" :icon="faStar"/>
 			<span style="margin-left: 8px;">{{ $t('_timelines.' + src) }}</span>
 		</div>
 	</portal>
@@ -24,7 +23,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faAngleDown, faAngleUp, faUser, faUsers, faStar, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { faAngleUp, faUser, faUsers, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import Progress from '../scripts/loading';
 import XTimeline from '../components/timeline.vue';
 import XPostForm from '../components/post-form.vue';
@@ -57,15 +56,13 @@ export default Vue.extend({
 
 	data() {
 		return {
-			showNav: false,
-			menuOpened: false,
 			queue: 0,
 			width: 0,
 			formStyle: {},
 			toggleStyle: {},
 			formAppear: this.$store.state.device.postFormToggle,
 
-			faAngleDown, faAngleUp, faUser, faUsers, faStar, faPencilAlt
+			faAngleUp, faUser, faUsers, faPencilAlt
 		};
 	},
 

@@ -167,14 +167,9 @@ export default Vue.extend({
 	data() {
 		return {
 			url,
-			proxyAccount: null,
-			proxyAccountId: null,
 			cacheRemoteFiles: false,
 			proxyRemoteFiles: false,
 			localDriveCapacityMb: 0,
-			remoteDriveCapacityMb: 0,
-			blockedHosts: '',
-			pinnedUsers: '',
 			maintainerName: null,
 			maintainerEmail: null,
 			name: null,
@@ -184,17 +179,12 @@ export default Vue.extend({
 			iconUrl: null,
 			maxNoteTextLength: 0,
 			enableRegistration: false,
-			enableLocalTimeline: false,
-			enableGlobalTimeline: false,
 			enableHcaptcha: false,
 			hcaptchaSiteKey: null,
 			hcaptchaSecretKey: null,
 			enableRecaptcha: false,
 			recaptchaSiteKey: null,
 			recaptchaSecretKey: null,
-			enableServiceWorker: false,
-			swPublicKey: null,
-			swPrivateKey: null,
 			useObjectStorage: false,
 			objectStorageBaseUrl: null,
 			objectStorageBucket: null,
@@ -235,24 +225,15 @@ export default Vue.extend({
 		this.maintainerEmail = this.meta.maintainerEmail;
 		this.maxNoteTextLength = this.meta.maxNoteTextLength;
 		this.enableRegistration = !this.meta.disableRegistration;
-		this.enableLocalTimeline = !this.meta.disableLocalTimeline;
-		this.enableGlobalTimeline = !this.meta.disableGlobalTimeline;
 		this.enableHcaptcha = this.meta.enableHcaptcha;
 		this.hcaptchaSiteKey = this.meta.hcaptchaSiteKey;
 		this.hcaptchaSecretKey = this.meta.hcaptchaSecretKey;
 		this.enableRecaptcha = this.meta.enableRecaptcha;
 		this.recaptchaSiteKey = this.meta.recaptchaSiteKey;
 		this.recaptchaSecretKey = this.meta.recaptchaSecretKey;
-		this.proxyAccountId = this.meta.proxyAccountId;
 		this.cacheRemoteFiles = this.meta.cacheRemoteFiles;
 		this.proxyRemoteFiles = this.meta.proxyRemoteFiles;
 		this.localDriveCapacityMb = this.meta.driveCapacityPerLocalUserMb;
-		this.remoteDriveCapacityMb = this.meta.driveCapacityPerRemoteUserMb;
-		this.blockedHosts = this.meta.blockedHosts.join('\n');
-		this.pinnedUsers = this.meta.pinnedUsers.join('\n');
-		this.enableServiceWorker = this.meta.enableServiceWorker;
-		this.swPublicKey = this.meta.swPublickey;
-		this.swPrivateKey = this.meta.swPrivateKey;
 		this.useObjectStorage = this.meta.useObjectStorage;
 		this.objectStorageBaseUrl = this.meta.objectStorageBaseUrl;
 		this.objectStorageBucket = this.meta.objectStorageBucket;
@@ -337,24 +318,15 @@ export default Vue.extend({
 				maintainerEmail: this.maintainerEmail,
 				maxNoteTextLength: this.maxNoteTextLength,
 				disableRegistration: !this.enableRegistration,
-				disableLocalTimeline: !this.enableLocalTimeline,
-				disableGlobalTimeline: !this.enableGlobalTimeline,
 				enableHcaptcha: this.enableHcaptcha,
 				hcaptchaSiteKey: this.hcaptchaSiteKey,
 				hcaptchaSecretKey: this.hcaptchaSecretKey,
 				enableRecaptcha: this.enableRecaptcha,
 				recaptchaSiteKey: this.recaptchaSiteKey,
 				recaptchaSecretKey: this.recaptchaSecretKey,
-				proxyAccountId: this.proxyAccountId,
 				cacheRemoteFiles: this.cacheRemoteFiles,
 				proxyRemoteFiles: this.proxyRemoteFiles,
 				localDriveCapacityMb: parseInt(this.localDriveCapacityMb, 10),
-				remoteDriveCapacityMb: parseInt(this.remoteDriveCapacityMb, 10),
-				blockedHosts: this.blockedHosts.split('\n') || [],
-				pinnedUsers: this.pinnedUsers ? this.pinnedUsers.split('\n') : [],
-				enableServiceWorker: this.enableServiceWorker,
-				swPublicKey: this.swPublicKey,
-				swPrivateKey: this.swPrivateKey,
 				useObjectStorage: this.useObjectStorage,
 				objectStorageBaseUrl: this.objectStorageBaseUrl ? this.objectStorageBaseUrl : null,
 				objectStorageBucket: this.objectStorageBucket ? this.objectStorageBucket : null,

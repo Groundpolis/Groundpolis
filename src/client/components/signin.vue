@@ -58,11 +58,6 @@ export default Vue.extend({
 	},
 
 	props: {
-		withAvatar: {
-			type: Boolean,
-			required: false,
-			default: true
-		},
 		autoSet: {
 			type: Boolean,
 			required: false,
@@ -196,17 +191,3 @@ export default Vue.extend({
 	}
 });
 </script>
-
-<style lang="scss" scoped>
-.eppvobhk {
-	> .avatar {
-		margin: 0 auto 0 auto;
-		width: 64px;
-		height: 64px;
-		background: #ddd;
-		background-position: center;
-		background-size: cover;
-		border-radius: 100%;
-	}
-}
-</style>

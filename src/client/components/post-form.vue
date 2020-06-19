@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faBiohazard, faBullhorn, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane, faUpload, faUnlock, faPhotoVideo, faCloud, faBullhorn, faLock } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash, faLaughSquint } from '@fortawesome/free-regular-svg-icons';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
@@ -77,7 +77,7 @@ export default Vue.extend({
 			autocomplete: null,
 			draghover: false,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
-			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faBiohazard, faBullhorn, faLock
+			faPaperPlane, faUpload, faUnlock, faEyeSlash, faLaughSquint, faPhotoVideo, faCloud, faBullhorn, faLock
 		};
 	},
 
@@ -393,39 +393,6 @@ export default Vue.extend({
 
 				&:active {
 					color: var(--accentDarken30);
-				}
-			}
-		}
-
-		> .to-specified {
-			padding: 6px 24px;
-			margin-bottom: 8px;
-			overflow: auto;
-			white-space: nowrap;
-
-			@media (max-width: 500px) {
-				padding: 6px 16px;
-			}
-
-			> .visibleUsers {
-				display: inline;
-				top: -1px;
-				font-size: 14px;
-
-				> button {
-					padding: 4px;
-					border-radius: 8px;
-				}
-
-				> span {
-					margin-right: 14px;
-					padding: 8px 0 8px 8px;
-					border-radius: 8px;
-					background: var(--nwjktjjq);
-
-					> button {
-						padding: 4px 8px;
-					}
 				}
 			}
 		}

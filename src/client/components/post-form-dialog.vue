@@ -9,16 +9,13 @@
 		>
 			<x-post-form ref="form"
 				v-if="show"
-				:reply="reply"
-				:renote="renote"
-				:mention="mention"
-				:specified="specified"
 				:initial-text="initialText"
 				:initial-note="initialNote"
 				:instant="instant"
 				@posted="onPosted"
 				@cancel="onCanceled"
-				style="border-radius: var(--radius);"/>
+				style="border-radius: var(--radius);"
+/>
 		</transition>
 	</div>
 </div>
@@ -34,22 +31,6 @@ export default Vue.extend({
 	},
 
 	props: {
-		reply: {
-			type: Object,
-			required: false
-		},
-		renote: {
-			type: Object,
-			required: false
-		},
-		mention: {
-			type: Object,
-			required: false
-		},
-		specified: {
-			type: Object,
-			required: false
-		},
 		initialText: {
 			type: String,
 			required: false

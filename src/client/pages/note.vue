@@ -18,7 +18,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Progress from '../scripts/loading';
 import XNote from '../components/note.vue';
 
@@ -34,29 +33,7 @@ export default Vue.extend({
 	data() {
 		return {
 			note: null,
-			hasPrev: false,
-			hasNext: false,
-			showPrev: false,
-			showNext: false,
 			error: null,
-			prev: {
-				endpoint: 'users/notes',
-				limit: 10,
-				params: init => ({
-					userId: this.note.userId,
-					untilId: this.note.id,
-				})
-			},
-			next: {
-				reversed: true,
-				endpoint: 'users/notes',
-				limit: 10,
-				params: init => ({
-					userId: this.note.userId,
-					sinceId: this.note.id,
-				})
-			},
-			faChevronUp, faChevronDown
 		};
 	},
 	watch: {

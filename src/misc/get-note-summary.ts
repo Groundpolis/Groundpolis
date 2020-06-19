@@ -25,29 +25,6 @@ const summarize = (note: any, locale: any): string => {
 		summary += ` (${locale['withNFiles'].replace('{n}', note.files.length)})`;
 	}
 
-	// 投票が添付されているとき
-	if (note.poll) {
-		summary += ` (${locale['poll']})`;
-	}
-
-	// 返信のとき
-	if (note.replyId) {
-		if (note.reply) {
-			summary += `\n\nRE: ${summarize(note.reply, locale)}`;
-		} else {
-			summary += '\n\nRE: ...';
-		}
-	}
-
-	// Renoteのとき
-	if (note.renoteId) {
-		if (note.renote) {
-			summary += `\n\nRN: ${summarize(note.renote, locale)}`;
-		} else {
-			summary += '\n\nRN: ...';
-		}
-	}
-
 	return summary.trim();
 };
 

@@ -15,8 +15,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faLock, faMicrophoneAltSlash, faMobileAlt, faBookmark, faBiohazard, faBullhorn } from '@fortawesome/free-solid-svg-icons';
-import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
+import { faLock, faBullhorn } from '@fortawesome/free-solid-svg-icons';
 
 export default Vue.extend({
 	props: {
@@ -28,7 +27,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			faLock, faMicrophoneAltSlash, faMobileAlt, faBookmark, farBookmark, faBiohazard, faBullhorn
+			faLock, faBullhorn
 		};
 	}
 });

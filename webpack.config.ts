@@ -34,7 +34,6 @@ const postcss = {
 module.exports = {
 	entry: {
 		app: './src/client/init.ts',
-		sw: './src/client/sw.ts'
 	},
 	module: {
 		rules: [{
@@ -124,6 +123,10 @@ module.exports = {
 			_VERSION_: JSON.stringify(meta.version),
 			_LANGS_: JSON.stringify(Object.entries(locales).map(([k, v]: [string, any]) => [k, v._lang_])),
 			_ENV_: JSON.stringify(process.env.NODE_ENV)
+		}),
+    new webpack.IgnorePlugin({
+			resourceRegExp: /^\.\/locale$/,
+			contextRegExp: /moment$/,
 		}),
 		new VueLoaderPlugin(),
 		new WebpackOnBuildPlugin((stats: any) => {

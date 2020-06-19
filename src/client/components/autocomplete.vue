@@ -105,7 +105,6 @@ export default Vue.extend({
 		return {
 			getStaticImageUrl,
 			fetching: true,
-			users: [],
 			hashtags: [],
 			emojis: [],
 			select: -1,
@@ -211,33 +210,7 @@ export default Vue.extend({
 				}
 			}
 
-			if (this.type == 'user') {
-				if (this.q == null) {
-					this.users = [];
-					this.fetching = false;
-					return;
-				}
-
-				const cacheKey = `autocomplete:user:${this.q}`;
-				const cache = sessionStorage.getItem(cacheKey);
-				if (cache) {
-					const users = JSON.parse(cache);
-					this.users = users;
-					this.fetching = false;
-				} else {
-					this.$root.api('users/search', {
-						query: this.q,
-						limit: 10,
-						detail: false
-					}).then(users => {
-						this.users = users;
-						this.fetching = false;
-
-						// キャッシュ
-						sessionStorage.setItem(cacheKey, JSON.stringify(users));
-					});
-				}
-			} else if (this.type == 'hashtag') {
+			if (this.type == 'hashtag') {
 				if (this.q == null || this.q == '') {
 					this.hashtags = JSON.parse(localStorage.getItem('hashtags') || '[]');
 					this.fetching = false;
@@ -422,22 +395,6 @@ export default Vue.extend({
 					color: #fff !important;
 				}
 			}
-		}
-	}
-
-	> .users > li {
-
-		.avatar {
-			min-width: 28px;
-			min-height: 28px;
-			max-width: 28px;
-			max-height: 28px;
-			margin: 0 8px 0 0;
-			border-radius: 100%;
-		}
-
-		.name {
-			margin: 0 8px 0 0;
 		}
 	}
 

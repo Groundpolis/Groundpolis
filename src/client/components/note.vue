@@ -3,7 +3,6 @@
 	class="note _panel"
 	v-show="!isDeleted && !hideThisNote"
 	:tabindex="!isDeleted ? '-1' : null"
-	:class="{ renote: isRenote }"
 	v-hotkey="keymap"
 	v-size="[{ max: 500 }, { max: 450 }, { max: 350 }, { max: 300 }]"
 >
@@ -17,7 +16,6 @@
 				</p>
 				<div class="content" v-show="appearNote.cw == null || showContent">
 					<div class="text">
-						<router-link class="reply" v-if="appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><fa :icon="faReply"/></router-link>
 						<mfm v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
 					</div>
 					<div class="files" v-if="appearNote.files.length > 0">
@@ -82,16 +80,6 @@ export default Vue.extend({
 			type: Object,
 			required: true
 		},
-		detail: {
-			type: Boolean,
-			required: false,
-			default: false
-		},
-		pinned: {
-			type: Boolean,
-			required: false,
-			default: false
-		},
 	},
 
 	data() {
@@ -118,31 +106,12 @@ export default Vue.extend({
 			};
 		},
 
-		isRenote(): boolean {
-			return (this.note.renote &&
-				this.note.text == null &&
-				this.note.fileIds.length == 0 &&
-				this.note.poll == null);
-		},
-
 		appearNote(): any {
-			return this.isRenote ? this.note.renote : this.note;
+			return this.note;
 		},
 
 		isDeleted(): boolean {
 			return this.appearNote.deletedAt != null || this.note.deletedAt != null;
-		},
-
-		isMyNote(): boolean {
-			return this.$store.getters.isSignedIn && (this.$store.state.i.id === this.appearNote.userId);
-		},
-
-		isMyRenote(): boolean {
-			return this.$store.getters.isSignedIn && (this.$store.state.i.id === this.note.userId);
-		},
-
-		canRenote(): boolean {
-			return ['public', 'home'].includes(this.appearNote.visibility) || this.isMyNote;
 		},
 
 		reactionsCount(): number {
@@ -177,23 +146,6 @@ export default Vue.extend({
 	created() {
 		if (this.$store.getters.isSignedIn) {
 			this.connection = this.$root.stream;
-		}
-
-		if (this.detail) {
-			this.$root.api('notes/children', {
-				noteId: this.appearNote.id,
-				limit: 30
-			}).then(replies => {
-				this.replies = replies;
-			});
-
-			if (this.appearNote.replyId) {
-				this.$root.api('notes/conversation', {
-					noteId: this.appearNote.replyId
-				}).then(conversation => {
-					this.conversation = conversation.reverse();
-				});
-			}
 		}
 	},
 
@@ -283,21 +235,10 @@ export default Vue.extend({
 					break;
 				}
 
-				case 'pollVoted': {
-					const choice = body.choice;
-					this.appearNote.poll.choices[choice].votes++;
-					if (body.userId == this.$store.state.i.id) {
-						Vue.set(this.appearNote.poll.choices[choice], 'isVoted', true);
-					}
-					break;
-				}
-
 				case 'deleted': {
 					Vue.set(this.appearNote, 'deletedAt', body.deletedAt);
-					Vue.set(this.appearNote, 'renote', null);
 					this.appearNote.text = null;
 					this.appearNote.fileIds = [];
-					this.appearNote.poll = null;
 					this.appearNote.cw = null;
 					break;
 				}
@@ -373,18 +314,6 @@ export default Vue.extend({
 			}
 		},
 
-		favorite() {
-			pleaseLogin(this.$root);
-			this.$root.api('notes/favorites/create', {
-				noteId: this.appearNote.id
-			}).then(() => {
-				this.$root.dialog({
-					type: 'success',
-					iconOnly: true, autoClose: true
-				});
-			});
-		},
-
 		del() {
 			this.$root.dialog({
 				type: 'warning',
@@ -411,47 +340,7 @@ export default Vue.extend({
 					noteId: this.appearNote.id
 				});
 
-				this.$root.post({ initialNote: this.appearNote, renote: this.appearNote.renote, reply: this.appearNote.reply });
-			});
-		},
-
-		toggleFavorite(favorite: boolean) {
-			this.$root.api(favorite ? 'notes/favorites/create' : 'notes/favorites/delete', {
-				noteId: this.appearNote.id
-			}).then(() => {
-				this.$root.dialog({
-					type: 'success',
-					iconOnly: true, autoClose: true
-				});
-			});
-		},
-
-		toggleWatch(watch: boolean) {
-			this.$root.api(watch ? 'notes/watching/create' : 'notes/watching/delete', {
-				noteId: this.appearNote.id
-			}).then(() => {
-				this.$root.dialog({
-					type: 'success',
-					iconOnly: true, autoClose: true
-				});
-			});
-		},
-
-		showRenoteMenu(viaKeyboard = false) {
-			if (!this.isMyRenote) return;
-			this.$root.menu({
-				items: [{
-					text: this.$t('unrenote'),
-					icon: faTrashAlt,
-					action: () => {
-						this.$root.api('notes/delete', {
-							noteId: this.note.id
-						});
-						Vue.set(this.note, 'deletedAt', new Date());
-					}
-				}],
-				source: this.$refs.renoteTime,
-				viaKeyboard: viaKeyboard
+				this.$root.post({ initialNote: this.appearNote });
 			});
 		},
 
@@ -472,24 +361,6 @@ export default Vue.extend({
 			this.$root.dialog({
 				type: 'success',
 				iconOnly: true, autoClose: true
-			});
-		},
-
-		togglePin(pin: boolean) {
-			this.$root.api(pin ? 'i/pin' : 'i/unpin', {
-				noteId: this.appearNote.id
-			}).then(() => {
-				this.$root.dialog({
-					type: 'success',
-					iconOnly: true, autoClose: true
-				});
-			}).catch(e => {
-				if (e.id === '72dab508-c64d-498f-8740-a8eec1ba385a') {
-					this.$root.dialog({
-						type: 'error',
-						text: this.$t('pinLimitExceeded')
-					});
-				}
 			});
 		},
 
@@ -583,18 +454,8 @@ export default Vue.extend({
 	}
 
 	&.max-width_450px {
-		> .renote {
-			padding: 8px 16px 0 16px;
-		}
-
 		> .article {
 			padding: 14px 16px 9px;
-
-			> .avatar {
-				margin: 0 10px 8px 0;
-				width: 50px;
-				height: 50px;
-			}
 		}
 	}
 
@@ -616,10 +477,6 @@ export default Vue.extend({
 		font-size: 0.825em;
 
 		> .article {
-			> .avatar {
-				width: 44px;
-				height: 44px;
-			}
 
 			> .main {
 				> .footer {
@@ -669,87 +526,9 @@ export default Vue.extend({
 		padding-top: 8px;
 	}
 
-	> .reply-to {
-		opacity: 0.7;
-		padding-bottom: 0;
-	}
-
-	> .reply-to-more {
-		opacity: 0.7;
-	}
-
-	> .renote {
-		display: flex;
-		align-items: center;
-		padding: 16px 32px 8px 32px;
-		line-height: 28px;
-		white-space: pre;
-		color: var(--renote);
-
-		> .avatar {
-			flex-shrink: 0;
-			display: inline-block;
-			width: 28px;
-			height: 28px;
-			margin: 0 8px 0 0;
-			border-radius: 6px;
-		}
-
-		> [data-icon] {
-			margin-right: 4px;
-		}
-
-		> span {
-			overflow: hidden;
-			flex-shrink: 1;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-
-			> .name {
-				font-weight: bold;
-			}
-		}
-
-		> .info {
-			margin-left: auto;
-			font-size: 0.9em;
-
-			> .time {
-				flex-shrink: 0;
-				color: inherit;
-
-				> .dropdownIcon {
-					margin-right: 4px;
-				}
-			}
-
-			> .visibility {
-				margin-left: 8px;
-			}
-
-			> .localOnly {
-				margin-left: 8px;
-			}
-		}
-	}
-
-	> .renote + .article {
-		padding-top: 8px;
-	}
-
 	> .article {
 		display: flex;
 		padding: 28px 32px 18px;
-
-		> .avatar {
-			flex-shrink: 0;
-			display: block;
-			//position: sticky;
-			//top: 72px;
-			margin: 0 14px 8px 0;
-			width: 58px;
-			height: 58px;
-		}
 
 		> .main {
 			flex: 1;
@@ -772,35 +551,10 @@ export default Vue.extend({
 				> .content {
 					> .text {
 						overflow-wrap: break-word;
-
-						> .reply {
-							color: var(--accent);
-							margin-right: 0.5em;
-						}
-
-						> .rp {
-							margin-left: 4px;
-							font-style: oblique;
-							color: var(--renote);
-						}
 					}
 
 					> .url-preview {
 						margin-top: 8px;
-					}
-
-					> .poll {
-						font-size: 80%;
-					}
-
-					> .renote {
-						padding: 8px 0;
-
-						> * {
-							padding: 16px;
-							border: dashed 1px var(--renote);
-							border-radius: 8px;
-						}
 					}
 				}
 			}
@@ -836,10 +590,6 @@ export default Vue.extend({
 				opacity: 0.7;
 			}
 		}
-	}
-
-	> .reply {
-		border-top: solid 1px var(--divider);
 	}
 }
 </style>

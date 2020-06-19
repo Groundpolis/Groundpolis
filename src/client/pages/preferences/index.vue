@@ -58,21 +58,17 @@
 			<mk-radio v-model="fontSize" value="veryLarge"><span style="font-size: 20px;">Aa</span></mk-radio>
 		</div>
 	</section>
-
-	<mk-button @click="cacheClear()" primary style="margin: var(--margin) auto;">{{ $t('cacheClear') }}</mk-button>
 </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { faImage, faSlidersH, faMusic, faPlay, faVolumeUp, faVolumeMute } from '@fortawesome/free-solid-svg-icons';
-import MkButton from '../../components/ui/button.vue';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkSelect from '../../components/ui/select.vue';
 import MkRadio from '../../components/ui/radio.vue';
 import MkRange from '../../components/ui/range.vue';
 import XTheme from './theme.vue';
-import XSidebar from './sidebar.vue';
 import { langs } from '../../config';
 import { clientDb, set } from '../../db';
 
@@ -102,8 +98,6 @@ export default Vue.extend({
 
 	components: {
 		XTheme,
-		XSidebar,
-		MkButton,
 		MkSwitch,
 		MkSelect,
 		MkRadio,
@@ -146,11 +140,6 @@ export default Vue.extend({
 			set(value) { this.$store.commit('device/set', { key: 'imageNewTab', value }); }
 		},
 
-		disablePagesScript: {
-			get() { return this.$store.state.device.disablePagesScript; },
-			set(value) { this.$store.commit('device/set', { key: 'disablePagesScript', value }); }
-		},
-
 		showFixedPostForm: {
 			get() { return this.$store.state.device.showFixedPostForm; },
 			set(value) { this.$store.commit('device/set', { key: 'showFixedPostForm', value }); }
@@ -174,26 +163,6 @@ export default Vue.extend({
 		sfxNoteMy: {
 			get() { return this.$store.state.device.sfxNoteMy; },
 			set(value) { this.$store.commit('device/set', { key: 'sfxNoteMy', value }); }
-		},
-
-		sfxNotification: {
-			get() { return this.$store.state.device.sfxNotification; },
-			set(value) { this.$store.commit('device/set', { key: 'sfxNotification', value }); }
-		},
-
-		sfxChat: {
-			get() { return this.$store.state.device.sfxChat; },
-			set(value) { this.$store.commit('device/set', { key: 'sfxChat', value }); }
-		},
-
-		sfxChatBg: {
-			get() { return this.$store.state.device.sfxChatBg; },
-			set(value) { this.$store.commit('device/set', { key: 'sfxChatBg', value }); }
-		},
-
-		sfxAntenna: {
-			get() { return this.$store.state.device.sfxAntenna; },
-			set(value) { this.$store.commit('device/set', { key: 'sfxAntenna', value }); }
 		},
 
 		volumeIcon: {
@@ -239,22 +208,6 @@ export default Vue.extend({
 			const audio = new Audio(`/assets/sounds/${sound}.mp3`);
 			audio.volume = this.$store.state.device.sfxVolume;
 			audio.play();
-		},
-
-		cacheClear() {
-			// Clear cache (service worker)
-			try {
-				navigator.serviceWorker.controller.postMessage('clear');
-
-				navigator.serviceWorker.getRegistrations().then(registrations => {
-					for (const registration of registrations) registration.unregister();
-				});
-			} catch (e) {
-				console.error(e);
-			}
-
-			// Force reload
-			location.reload(true);
 		}
 	}
 });

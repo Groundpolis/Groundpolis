@@ -169,14 +169,6 @@ export default Vue.extend({
 			});
 		},
 
-		setAsAvatar() {
-			updateAvatar(this.$root)(this.file);
-		},
-
-		setAsBanner() {
-			updateBanner(this.$root)(this.file);
-		},
-
 		addApp() {
 			alert('not implemented yet');
 		},

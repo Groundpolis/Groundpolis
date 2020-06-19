@@ -51,30 +51,6 @@ export default Vue.extend({
 	overflow: hidden;
 	font-size: 0.95em;
 
-	> .avatar {
-
-		@media (min-width: 350px) {
-			margin: 0 10px 0 0;
-			width: 44px;
-			height: 44px;
-		}
-
-		@media (min-width: 500px) {
-			margin: 0 12px 0 0;
-			width: 48px;
-			height: 48px;
-		}
-	}
-
-	> .avatar {
-		flex-shrink: 0;
-		display: block;
-		margin: 0 10px 0 0;
-		width: 40px;
-		height: 40px;
-		border-radius: 8px;
-	}
-
 	> .main {
 		flex: 1;
 		min-width: 0;

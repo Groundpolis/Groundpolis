@@ -34,11 +34,6 @@ export default Vue.extend({
 			connection: null,
 			connection2: null,
 			pagination: null,
-			baseQuery: {
-				includeMyRenotes: this.$store.state.settings.showMyRenotes,
-				includeRenotedMyNotes: this.$store.state.settings.showRenotedMyNotes,
-				includeLocalRenotes: this.$store.state.settings.showLocalRenotes
-			},
 			query: {},
 		};
 	},
@@ -56,14 +51,6 @@ export default Vue.extend({
 			if (this.sound) {
 				this.$root.sound(note.userId === this.$store.state.i.id ? 'noteMy' : 'note');
 			}
-		};
-
-		const onUserAdded = () => {
-			(this.$refs.tl as any).reload();
-		};
-
-		const onUserRemoved = () => {
-			(this.$refs.tl as any).reload();
 		};
 
 		const onChangeFollowing = () => {
@@ -93,7 +80,7 @@ export default Vue.extend({
 			limit: 10,
 			params: init => ({
 				untilDate: init ? undefined : (this.date ? this.date.getTime() : undefined),
-				...this.baseQuery, ...this.query
+				...this.query
 			})
 		};
 	},

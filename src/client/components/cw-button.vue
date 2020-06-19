@@ -27,7 +27,6 @@ export default Vue.extend({
 			return concat([
 				this.note.text ? [this.$t('_cw.chars', { count: length(this.note.text) })] : [],
 				this.note.files && this.note.files.length !== 0 ? [this.$t('_cw.files', { count: this.note.files.length }) ] : [],
-				this.note.poll != null ? [this.$t('poll')] : []
 			] as string[][]).join(' / ');
 		}
 	},
