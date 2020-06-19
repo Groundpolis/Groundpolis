@@ -1,22 +1,12 @@
 <template>
 <div class="swhvrteh" @contextmenu.prevent="() => {}">
-	<ol class="users" ref="suggests" v-if="type === 'user'">
-		<li v-for="user in users" @click="complete(type, user)" @keydown="onKeydown" tabindex="-1" class="user">
-			<img class="avatar" :src="user.avatarUrl"/>
-			<span class="name">
-				<mk-user-name :user="user" :key="user.id"/>
-			</span>
-			<span class="username">@{{ user | acct }}</span>
-		</li>
-		<li @click="chooseUser()" @keydown="onKeydown" tabindex="-1" class="choose">{{ $t('selectUser') }}</li>
-	</ol>
 	<ol class="hashtags" ref="suggests" v-if="hashtags.length > 0">
-		<li v-for="hashtag in hashtags" @click="complete(type, hashtag)" @keydown="onKeydown" tabindex="-1">
+		<li v-for="hashtag in hashtags" :key="hashtag" @click="complete(type, hashtag)" @keydown="onKeydown" tabindex="-1">
 			<span class="name">{{ hashtag }}</span>
 		</li>
 	</ol>
 	<ol class="emojis" ref="suggests" v-if="emojis.length > 0">
-		<li v-for="emoji in emojis" @click="complete(type, emoji.emoji)" @keydown="onKeydown" tabindex="-1">
+		<li v-for="(emoji, i) in emojis" :key="i" @click="complete(type, emoji.emoji)" @keydown="onKeydown" tabindex="-1">
 			<span class="emoji" v-if="emoji.isCustomEmoji"><img :src="$store.state.device.disableShowingAnimatedImages ? getStaticImageUrl(emoji.url) : emoji.url" :alt="emoji.emoji"/></span>
 			<span class="emoji" v-else-if="!useOsNativeEmojis"><img :src="emoji.url" :alt="emoji.emoji"/></span>
 			<span class="emoji" v-else>{{ emoji.emoji }}</span>
@@ -33,7 +23,6 @@ import { emojilist } from '../../misc/emojilist';
 import contains from '../scripts/contains';
 import { twemojiSvgBase } from '../../misc/twemoji-base';
 import { getStaticImageUrl } from '../scripts/get-static-image-url';
-import MkUserSelect from './user-select.vue';
 
 type EmojiDef = {
 	emoji: string;
@@ -371,17 +360,6 @@ export default Vue.extend({
 			this.items[this.select].setAttribute('data-selected', 'true');
 			(this.items[this.select] as any).focus();
 		},
-
-		chooseUser() {
-			this.close();
-			const vm = this.$root.new(MkUserSelect, {});
-			vm.$once('selected', user => {
-				this.complete('user', user);
-			});
-			vm.$once('closed', () => {
-				this.textarea.focus();
-			});
-		}
 	}
 });
 </script>

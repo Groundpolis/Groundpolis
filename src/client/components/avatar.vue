@@ -1,16 +1,7 @@
 <template>
-<span class="eiwwqkts" :class="{ cat }" :title="user | acct" v-if="disableLink && !disablePreview" v-user-preview="user.id" @click="onClick">
-	<span class="inner" :style="icon"></span>
-</span>
-<span class="eiwwqkts" :class="{ cat }" :title="user | acct" v-else-if="disableLink && disablePreview" @click="onClick">
-	<span class="inner" :style="icon"></span>
-</span>
-<router-link class="eiwwqkts" :class="{ cat }" :to="user | userPage" :title="user | acct" :target="target" v-else-if="!disableLink && !disablePreview" v-user-preview="user.id">
-	<span class="inner" :style="icon"></span>
-</router-link>
-<router-link class="eiwwqkts" :class="{ cat }" :to="user | userPage" :title="user | acct" :target="target" v-else-if="!disableLink && disablePreview">
-	<span class="inner" :style="icon"></span>
-</router-link>
+	<span class="eiwwqkts" :class="{ cat }" :title="user | acct" @click="onClick">
+		<span class="inner" :style="icon"></span>
+	</span>
 </template>
 
 <script lang="ts">
@@ -27,14 +18,6 @@ export default Vue.extend({
 			required: false,
 			default: null
 		},
-		disableLink: {
-			required: false,
-			default: false
-		},
-		disablePreview: {
-			required: false,
-			default: false
-		}
 	},
 	computed: {
 		cat(): boolean {

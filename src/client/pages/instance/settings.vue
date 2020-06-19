@@ -146,9 +146,7 @@ import MkInput from '../../components/ui/input.vue';
 import MkTextarea from '../../components/ui/textarea.vue';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkInfo from '../../components/ui/info.vue';
-import MkUserSelect from '../../components/user-select.vue';
 import { url } from '../../config';
-import getAcct from '../../../misc/acct/render';
 
 export default Vue.extend({
 	metaInfo() {
@@ -325,22 +323,6 @@ export default Vue.extend({
 					type: 'error',
 					text: e
 				});
-			});
-		},
-
-		addPinUser() {
-			this.$root.new(MkUserSelect, {}).$once('selected', user => {
-				this.pinnedUsers = this.pinnedUsers.trim();
-				this.pinnedUsers += '\n@' + getAcct(user);
-				this.pinnedUsers = this.pinnedUsers.trim();
-			});
-		},
-
-		chooseProxyAccount() {
-			this.$root.new(MkUserSelect, {}).$once('selected', user => {
-				this.proxyAccount = user;
-				this.proxyAccountId = user.id;
-				this.save(true);
 			});
 		},
 

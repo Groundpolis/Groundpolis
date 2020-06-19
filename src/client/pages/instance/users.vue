@@ -11,9 +11,6 @@
 			</mk-input>
 			<mk-button @click="showUser()" primary><fa :icon="faSearch"/> {{ $t('lookup') }}</mk-button>
 		</div>
-		<div class="_footer">
-			<mk-button inline primary @click="searchUser()"><fa :icon="faSearch"/> {{ $t('search') }}</mk-button>
-		</div>
 	</section>
 
 	<section class="_card users">
@@ -82,7 +79,6 @@ import MkButton from '../../components/ui/button.vue';
 import MkInput from '../../components/ui/input.vue';
 import MkSelect from '../../components/ui/select.vue';
 import MkPagination from '../../components/ui/pagination.vue';
-import MkUserSelect from '../../components/user-select.vue';
 
 export default Vue.extend({
 	metaInfo() {
@@ -165,12 +161,6 @@ export default Vue.extend({
 			const user = await this.fetchUser();
 			this.show(user);
 			this.target = '';
-		},
-
-		searchUser() {
-			this.$root.new(MkUserSelect, {}).$once('selected', user => {
-				this.show(user);
-			});
 		},
 
 		async addUser() {

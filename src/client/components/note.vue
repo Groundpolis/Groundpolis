@@ -52,7 +52,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faBolt, faTimes, faBullhorn, faSmile, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faExclamationCircle, faInfoCircle, faCopy, faLink } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faReply, faEllipsisH, faExclamationCircle, faInfoCircle, faCopy, faLink } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faEdit} from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
@@ -102,7 +102,7 @@ export default Vue.extend({
 			replies: [],
 			showContent: false,
 			hideThisNote: false,
-			faEdit, faBolt, faSmile, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faTrashAlt, faExclamationCircle
+			faEdit, faPlus, faMinus, faReply, faEllipsisH, faTrashAlt, faExclamationCircle
 		};
 	},
 

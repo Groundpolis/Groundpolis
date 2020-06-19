@@ -1,4 +1,4 @@
-<template>
+<template functional>
 <div class="yxspomdl" :class="{ inline }">
 	<div class="ring"></div>
 </div>
@@ -8,6 +8,7 @@
 import Vue from 'vue';
 
 export default Vue.extend({
+	name: 'MkLoading',
 	props: {
 		inline: {
 			type: Boolean,

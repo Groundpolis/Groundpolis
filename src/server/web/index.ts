@@ -173,21 +173,6 @@ router.get(['/@:user', '/@:user/:sub'], async (ctx, next) => {
 	}
 });
 
-router.get('/users/:user', async ctx => {
-	const user = await Users.findOne({
-		id: ctx.params.user,
-		host: null,
-		isSuspended: false
-	});
-
-	if (user == null) {
-		ctx.status = 404;
-		return;
-	}
-
-	ctx.redirect(`/@${user.username}${ user.host == null ? '' : '@' + user.host}`);
-});
-
 // Note
 router.get('/notes/:note', async ctx => {
 	const note = await Notes.findOne(ctx.params.note);

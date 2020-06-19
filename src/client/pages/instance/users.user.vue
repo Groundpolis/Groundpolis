@@ -15,13 +15,12 @@
 		</div>
 		<div class="_content actions">
 			<div style="flex: 1; padding-left: 1em;">
-				<mk-switch v-if="user.host == null && $store.state.i.isAdmin && (this.moderator || !user.isAdmin)" @change="toggleModerator()" v-model="moderator">{{ $t('moderator') }}</mk-switch>
+				<mk-switch v-if="$store.state.i.isAdmin && (this.moderator || !user.isAdmin)" @change="toggleModerator()" v-model="moderator">{{ $t('moderator') }}</mk-switch>
 				<mk-switch @change="toggleSilence()" v-model="silenced">{{ $t('silence') }}</mk-switch>
 				<mk-switch @change="toggleSuspend()" v-model="suspended">{{ $t('suspend') }}</mk-switch>
 			</div>
 			<div style="flex: 1; padding-left: 1em;">
-				<mk-button @click="openProfile"><fa :icon="faExternalLinkSquareAlt"/> {{ $t('profile')}}</mk-button>
-				<mk-button v-if="user.host != null" @click="updateRemoteUser"><fa :icon="faSync"/> {{ $t('updateRemoteUser') }}</mk-button>
+				<mk-button @click="updateRemoteUser"><fa :icon="faSync"/> {{ $t('updateRemoteUser') }}</mk-button>
 				<mk-button @click="resetPassword"><fa :icon="faKey"/> {{ $t('resetPassword') }}</mk-button>
 				<mk-button @click="deleteAllFiles"><fa :icon="faTrashAlt"/> {{ $t('deleteAllFiles') }}</mk-button>
 			</div>

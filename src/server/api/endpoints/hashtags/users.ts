@@ -67,12 +67,6 @@ export default define(meta, async (ps, me) => {
 		query.andWhere('user.updatedAt > :date', { date: recent });
 	}
 
-	if (ps.origin === 'local') {
-		query.andWhere('user.host IS NULL');
-	} else if (ps.origin === 'remote') {
-		query.andWhere('user.host IS NOT NULL');
-	}
-
 	switch (ps.sort) {
 		case '+follower': query.orderBy('user.followersCount', 'DESC'); break;
 		case '-follower': query.orderBy('user.followersCount', 'ASC'); break;

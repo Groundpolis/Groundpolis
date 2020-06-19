@@ -44,7 +44,6 @@ import Vue from 'vue';
 import { faUser, faUsers, faComments, faPlus } from '@fortawesome/free-solid-svg-icons';
 import getAcct from '../../../misc/acct/render';
 import MkButton from '../../components/ui/button.vue';
-import MkUserSelect from '../../components/user-select.vue';
 
 export default Vue.extend({
 	components: {
@@ -127,12 +126,6 @@ export default Vue.extend({
 				}],
 				noCenter: true,
 				source: ev.currentTarget || ev.target,
-			});
-		},
-
-		async startUser() {
-			this.$root.new(MkUserSelect, {}).$once('selected', user => {
-				this.$router.push(`/my/messaging/${getAcct(user)}`);
 			});
 		},
 

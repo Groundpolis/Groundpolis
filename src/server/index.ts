@@ -13,8 +13,6 @@ import * as koaLogger from 'koa-logger';
 import * as requestStats from 'request-stats';
 import * as slow from 'koa-slow';
 
-import nodeinfo from './nodeinfo';
-import wellKnown from './well-known';
 import config from '../config';
 import apiServer from './api';
 import { sum } from '../prelude/array';
@@ -62,8 +60,6 @@ app.use(mount('/proxy', require('./proxy')));
 const router = new Router();
 
 // Routing
-router.use(nodeinfo.routes());
-router.use(wellKnown.routes());
 
 router.get('/avatar/:x', async ctx => {
 	const [temp] = await createTemp();
