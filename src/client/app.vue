@@ -267,7 +267,7 @@ export default Vue.extend({
 		},
 
 		help() {
-			this.$router.push('/docs/keyboard-shortcut');
+			this.$router.push('/docs');
 		},
 
 		back() {
@@ -333,14 +333,6 @@ export default Vue.extend({
 		},
 
 		more(ev) {
-			const items = Object.keys(this.menuDef).filter(k => !this.menu.includes(k)).map(k => this.menuDef[k]).filter(def => def.show == null ? true : def.show).map(def => ({
-				type: def.to ? 'link' : 'button',
-				text: this.$t(def.title),
-				icon: def.icon,
-				to: def.to,
-				action: def.action,
-				indicate: def.indicated,
-			}));
 			this.$root.menu({
 				items: [{
 					type: 'link',

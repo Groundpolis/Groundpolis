@@ -200,7 +200,7 @@ $nav-hide-threshold: 650px;
 			right: 0;
 			z-index: 100;
 			margin-bottom: 0;
-			box-shadow: 0 0 4px black;
+			box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
 		}
 	}
 }
