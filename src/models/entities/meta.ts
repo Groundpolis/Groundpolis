@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user';
 import { id } from '../id';
+import { defaultEmojiReactions } from '../../misc/default-emoji-reactions';
 
 @Entity()
 export class Meta {
@@ -65,6 +66,11 @@ export class Meta {
 		length: 256, array: true, default: '{}'
 	})
 	public pinnedUsers: string[];
+
+	@Column('varchar', {
+		length: 128, array: true, default: '{}',
+	})
+	public allowedEmojiReactions: string[];
 
 	@Column('varchar', {
 		length: 256, array: true, default: '{}'

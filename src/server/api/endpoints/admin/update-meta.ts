@@ -52,6 +52,13 @@ export const meta = {
 			}
 		},
 
+		allowedEmojiReactions: {
+			validator: $.optional.nullable.arr($.str),
+			desc: {
+				'ja-JP': 'このインスタンスで許可されるリアクション'
+			}
+		},
+
 		hiddenTags: {
 			validator: $.optional.nullable.arr($.str),
 			desc: {
@@ -451,6 +458,10 @@ export default define(meta, async (ps, me) => {
 
 	if (Array.isArray(ps.blockedHosts)) {
 		set.blockedHosts = ps.blockedHosts.filter(Boolean);
+	}
+
+	if (Array.isArray(ps.allowedEmojiReactions)) {
+		set.allowedEmojiReactions = ps.allowedEmojiReactions.filter(Boolean);
 	}
 
 	if (ps.mascotImageUrl !== undefined) {

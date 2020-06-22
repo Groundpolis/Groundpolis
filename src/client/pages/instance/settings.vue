@@ -27,6 +27,18 @@
 		</div>
 	</section>
 
+	<section class="_card info">
+		<div class="_title"><fa :icon="faLaugh"/> {{ $t('allowedEmojiReactions') }}</div>
+		<div class="_content">
+			<mk-input v-model="allowedReactions" style="font-family: 'Segoe UI Emoji', 'Noto Color Emoji', Roboto, HelveticaNeue, Arial, sans-serif">
+				{{ $t('reaction') }}<template #desc>{{ $t('allowedEmojiReactionsSettingDescription') }} <button class="_textButton" @click="chooseEmoji">{{ $t('chooseEmoji') }}</button></template>
+			</mk-input>
+		</div>
+		<div class="_footer">
+			<mk-button @click="save(true)" primary inline><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
+		</div>
+	</section>
+
 	<section class="_card">
 		<div class="_title"><fa :icon="faShieldAlt"/> {{ $t('hcaptcha') }}</div>
 		<div class="_content">
@@ -138,7 +150,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faPencilAlt, faShareAlt, faGhost, faCog, faPlus, faCloud, faInfoCircle, faBan, faSave, faServer, faLink, faThumbtack, faUser, faShieldAlt, faKey, faBolt } from '@fortawesome/free-solid-svg-icons';
+import { faPencilAlt, faShareAlt, faGhost, faCog, faPlus, faCloud, faInfoCircle, faBan, faSave, faServer, faLink, faThumbtack, faUser, faShieldAlt, faKey, faBolt, faLaugh } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
 import MkButton from '../../components/ui/button.vue';
@@ -147,6 +159,7 @@ import MkTextarea from '../../components/ui/textarea.vue';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkInfo from '../../components/ui/info.vue';
 import { url } from '../../config';
+import { emojiRegexWithCustom } from '../../../misc/emoji-regex';
 
 export default Vue.extend({
 	metaInfo() {
@@ -205,7 +218,8 @@ export default Vue.extend({
 			enableDiscordIntegration: false,
 			discordClientId: null,
 			discordClientSecret: null,
-			faPencilAlt, faTwitter, faDiscord, faGithub, faShareAlt, faTrashAlt, faGhost, faCog, faPlus, faCloud, faInfoCircle, faBan, faSave, faServer, faLink, faEnvelope, faThumbtack, faUser, faShieldAlt, faKey, faBolt
+			allowedReactions: '',
+			faPencilAlt, faTwitter, faDiscord, faGithub, faShareAlt, faTrashAlt, faGhost, faCog, faPlus, faCloud, faInfoCircle, faBan, faSave, faServer, faLink, faEnvelope, faThumbtack, faUser, faShieldAlt, faKey, faBolt, faLaugh
 		}
 	},
 
@@ -254,6 +268,7 @@ export default Vue.extend({
 		this.enableDiscordIntegration = this.meta.enableDiscordIntegration;
 		this.discordClientId = this.meta.discordClientId;
 		this.discordClientSecret = this.meta.discordClientSecret;
+		this.allowedReactions = this.meta.allowedEmojiReactions.join('');
 	},
 
 	mounted() {
@@ -347,6 +362,7 @@ export default Vue.extend({
 				enableDiscordIntegration: this.enableDiscordIntegration,
 				discordClientId: this.discordClientId,
 				discordClientSecret: this.discordClientSecret,
+				allowedEmojiReactions: this.allowedReactions.match(emojiRegexWithCustom),
 			}).then(() => {
 				this.$store.dispatch('instance/fetch');
 				if (withDialog) {
@@ -360,6 +376,15 @@ export default Vue.extend({
 					type: 'error',
 					text: e
 				});
+			});
+		},
+
+		async chooseEmoji(ev) {
+			const vm = this.$root.new(await import('../../components/emoji-picker.vue').then(m => m.default), {
+				source: ev.currentTarget || ev.target
+			}).$once('chosen', emoji => {
+				this.allowedReactions += emoji;
+				vm.close();
 			});
 		}
 	}

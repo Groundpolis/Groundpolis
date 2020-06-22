@@ -7,10 +7,17 @@ import { NoteReactions, Users, Notes, UserProfiles } from '../../../models';
 import { perUserReactionsChart } from '../../chart';
 import { genId } from '../../../misc/gen-id';
 import deleteReaction from './delete';
+import { fetchMeta } from '../../../misc/fetch-meta';
+import { defaultEmojiReactions } from '../../../misc/default-emoji-reactions';
 
 export default async (user: User, note: Note, reaction?: string) => {
-	if (!reaction || !['👍', '❤️', '❤', '😆', '😇', '😮', '🎉', '👏', '🍣', '🍮', '🙏', '🤯', '🥴'].includes(reaction)) {
-		reaction = '👍'
+	const meta = await fetchMeta();
+	const allowed = [
+		...defaultEmojiReactions,
+		...meta.allowedEmojiReactions
+	];
+	if (!reaction || !allowed.includes(reaction)) {
+		reaction = '👍';
 	}
 
 	reaction = await toDbReaction(reaction);

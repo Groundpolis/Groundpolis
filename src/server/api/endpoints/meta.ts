@@ -126,6 +126,7 @@ export default define(meta, async (ps, me) => {
 		hcaptchaSiteKey: instance.hcaptchaSiteKey,
 		enableRecaptcha: instance.enableRecaptcha,
 		recaptchaSiteKey: instance.recaptchaSiteKey,
+		allowedEmojiReactions: instance.allowedEmojiReactions,
 		swPublickey: instance.swPublicKey,
 		mascotImageUrl: instance.mascotImageUrl,
 		bannerUrl: instance.bannerUrl,

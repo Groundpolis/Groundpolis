@@ -516,6 +516,8 @@ makeNotePrivate: 'Make this note private'
 copyContent: 'Copy the content'
 copyLink: 'Copy the link'
 makeResponse: 'Make a response'
+allowedEmojiReactions: "Allowed Reactions"
+allowedEmojiReactionsDescription: "Assign emojis to allow additional use as a reaction."
 
 _theme:
   explore: "Explore Themes"

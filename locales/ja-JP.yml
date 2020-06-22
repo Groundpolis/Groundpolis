@@ -514,6 +514,8 @@ makeNotePrivate: 'ノートを非公開にする'
 copyContent: '内容をコピー'
 copyLink: 'リンクをコピー'
 makeResponse: 'レスする'
+allowedEmojiReactions: "許可するリアクション"
+allowedEmojiReactionsDescription: "通常のリアクションに加えて許可する絵文字を設定します。"
 
 _theme:
   explore: "テーマを探す"

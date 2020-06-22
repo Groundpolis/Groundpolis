@@ -14,6 +14,7 @@ import Vue from 'vue';
 import { emojiRegex } from '../../misc/emoji-regex';
 import XReactionIcon from './reaction-icon.vue';
 import XPopup from './popup.vue';
+import { defaultEmojiReactions } from '../../misc/default-emoji-reactions';
 
 export default Vue.extend({
 	components: {
@@ -39,7 +40,10 @@ export default Vue.extend({
 
 	data() {
 		return {
-			rs: [ '👍', '❤️', '😆', '😇', '😮', '🎉', '👏', '🍣', '🍮', '🙏', '🤯', '🥴' ],
+			rs: [
+				...defaultEmojiReactions,
+				...this.$store.state.instance.meta.allowedEmojiReactions
+			],
 			text: null,
 			focus: null
 		};
