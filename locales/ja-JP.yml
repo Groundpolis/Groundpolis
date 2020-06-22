@@ -644,6 +644,8 @@ signupDisabled: '現在、新規登録を停止しています。'
 enableFeatured: 'ハイライトを有効にする'
 welcomeFeatured: '今人気のつぶやきを見てみよう'
 welcomeTimeline: 'タイムラインを見てみよう'
+broadcastMode: '実況モード'
+broadcastModeDescription: '常にノートに添付するテキストを書いてください'
 
 _steal:
   textOnly: 'ただただ本文をパクる'

@@ -608,6 +608,8 @@ signupDisabled: 'you cannot register now.'
 enableFeatured: 'Enable Featured'
 welcomeFeatured: "Let's explore the featured notes!"
 welcomeTimeline: "Let's explore the timeline!"
+broadcastMode: 'Broadcast Mode'
+broadcastModeDescription: 'Write the text to attach automatically'
 _steal:
   textOnly: 'Steal the text only'
   react: 'Add reaction to the base note before stealing'
