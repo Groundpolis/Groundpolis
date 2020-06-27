@@ -516,6 +516,7 @@ copyLink: 'リンクをコピー'
 makeResponse: 'レスする'
 allowedEmojiReactions: "許可するリアクション"
 allowedEmojiReactionsDescription: "通常のリアクションに加えて許可する絵文字を設定します。"
+disableShowingAnimatedImages: "画像や絵文字のアニメーションを無効化する"
 
 _theme:
   explore: "テーマを探す"

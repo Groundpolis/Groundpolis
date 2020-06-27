@@ -30,6 +30,7 @@ export const defaultDeviceSettings = {
 	loadRawImages: false,
 	alwaysShowNsfw: false,
 	useOsNativeEmojis: false,
+	disableShowingAnimatedImages: false,
 	autoReload: false,
 	accounts: [],
 	recentEmojis: [],

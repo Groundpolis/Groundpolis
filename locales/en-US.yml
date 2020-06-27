@@ -518,6 +518,7 @@ copyLink: 'Copy the link'
 makeResponse: 'Make a response'
 allowedEmojiReactions: "Allowed Reactions"
 allowedEmojiReactionsDescription: "Assign emojis to allow additional use as a reaction."
+disableShowingAnimatedImages: "Disable animated images and emojis"
 
 _theme:
   explore: "Explore Themes"
