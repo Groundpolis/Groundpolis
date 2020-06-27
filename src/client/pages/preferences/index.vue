@@ -132,7 +132,7 @@ export default Vue.extend({
 		},
 
 		disableShowingAnimatedImages: {
-			get() { return !this.$store.state.device.disableShowingAnimatedImages; },
+			get() { return this.$store.state.device.disableShowingAnimatedImages; },
 			set(value) { this.$store.commit('device/set', { key: 'disableShowingAnimatedImages', value: value }); }
 		},
 
