@@ -9,7 +9,8 @@ import { ID } from '../../../../misc/cafy-id';
 import { DriveFiles, Notes } from '../../../../models';
 import { DriveFile } from '../../../../models/entities/drive-file';
 import { DB_MAX_NOTE_TEXT_LENGTH } from '../../../../misc/hard-limits';
-import { noteVisibilities } from '../../../../types';
+import { noteVisibilities, tanzakuColors } from '../../../../types';
+import { isTanabata } from '../../../../misc/is-tanabata';
 
 let maxNoteTextLength = 500;
 
@@ -113,6 +114,10 @@ export const meta = {
 				'ja-JP': '添付するファイル (このパラメータは廃止予定です。代わりに fileIds を使ってください。)'
 			}
 		},
+
+		tanzakuColor: {
+			validator: $.optional.str.or(tanzakuColors as unknown as string[]),
+		},
 	},
 
 	res: {
@@ -141,6 +146,24 @@ export const meta = {
 			id: '56f35758-7dd5-468b-8439-5d6fb8ec9b8e',
 			reason: 'You are not a moderator.'
 		},
+
+		duplicatedTanzaku: {
+			message: 'You can create only one tanzaku in the same year.',
+			code: 'DUPLICATED_TANZAKU',
+			id: '0eb2d588-ad00-4e5d-9615-b5833cdf8e0e',
+		},
+
+		invalidTanzakuFormat: {
+			message: 'Invalid Tanzaku format',
+			code: 'INVALID_TANZAKU_FORMAT',
+			id: 'e70d769e-fe00-4381-ae65-7958cb9e675a'
+		},
+
+		outOfTanabataSeason: {
+			message: 'It is not Tanabata season today',
+			code: 'OUT_OF_TANABATA_SEASON',
+			id: 'cdeb9e85-a582-4cf7-9646-65f4f2d0bea4'
+		},
 	}
 };
 
@@ -165,6 +188,29 @@ export default define(meta, async (ps, user) => {
 		throw new ApiError(meta.errors.notModerator);
 	}
 
+
+	// 七夕バリデーション
+	if (ps.tanzakuColor) {
+		// 7/1 - 7/7 でなければエラー
+		if (!isTanabata()) {
+			throw new ApiError(meta.errors.outOfTanabataSeason);
+		}
+
+		// ファイルを含んでいる / 公式ノート / 文字数が50以上 のどれかならエラー
+		if (files.length || ps.announcement || (ps.text && ps.text.length > 50)) {
+			throw new ApiError(meta.errors.invalidTanzakuFormat);
+		}
+
+		// 既にあったらエラー
+		const tanzaku = await Notes.findOne({
+			userId: user.id,
+			tanabataYear: new Date().getFullYear(),
+		});
+		if (tanzaku) {
+			throw new ApiError(meta.errors.duplicatedTanzaku);
+		}
+	}
+
 	// 投稿を作成
 	const note = await create(user, {
 		createdAt: new Date(),
@@ -174,6 +220,8 @@ export default define(meta, async (ps, user) => {
 		visibility: ps.visibility,
 		viaMobile: ps.viaMobile,
 		isAnnouncement: ps.announcement,
+		tanzakuColor: ps.tanzakuColor || null,
+		tanabataYear: ps.tanzakuColor ? year : null,
 	});
 
 	return {

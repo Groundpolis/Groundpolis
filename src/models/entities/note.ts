@@ -2,7 +2,7 @@ import { Entity, Index, JoinColumn, Column, PrimaryColumn, ManyToOne } from 'typ
 import { User } from './user';
 import { DriveFile } from './drive-file';
 import { id } from '../id';
-import { noteVisibilities } from '../../types';
+import { noteVisibilities, tanzakuColors } from '../../types';
 
 
 @Entity()
@@ -97,6 +97,18 @@ export class Note {
 		default: {}
 	})
 	public reactions: Record<string, number>;
+
+	@Column('integer', {
+		nullable: true,
+		comment: '七夕ノートであれば、その開催年が入る',
+	})
+	public tanabataYear: number | null;
+
+	@Column('enum', { 
+		enum: tanzakuColors,
+		nullable: true,
+ })
+	public tanzakuColor: typeof tanzakuColors[number] | null;
 
 	/**
 	 * public ... 公開

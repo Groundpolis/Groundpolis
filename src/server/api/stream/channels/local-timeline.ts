@@ -21,6 +21,8 @@ export default class extends Channel {
 
 		// パブリックでなければ送らない
 		if (repacked.visibility !== 'public') return;
+		// 短冊は送らない
+		if (repacked.isTanzaku) return;
 
 		this.send('note', repacked);
 	}

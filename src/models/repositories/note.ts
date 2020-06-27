@@ -6,6 +6,7 @@ import { ensure } from '../../prelude/ensure';
 import { SchemaType } from '../../misc/schema';
 import { awaitAll } from '../../prelude/await-all';
 import { convertLegacyReaction, convertLegacyReactions } from '../../misc/reaction-lib';
+import { populateVirtualUser } from '../../misc/populate-virtual-user';
 
 export type PackedNote = SchemaType<typeof packedNoteSchema>;
 
@@ -87,51 +88,6 @@ export class NoteRepository extends Repository<Note> {
 			return undefined;
 		}
 
-		function populateVirtualUser() {
-			return {
-				id: 'VIRTUAL_ANONYMOUS_USER',
-				name: null,
-				username: 'anonymous',
-				host: null,
-				avatarUrl: null,
-				avatarColor: null,
-				isAdmin: false,
-				isModerator: false,
-				isBot: false,
-				isCat: false,
-				emojis: [],
-				url: null,
-				createdAt: '1970-01-01T00:00:00.000Z',
-				updatedAt: '1970-01-01T00:00:00.000Z',
-				bannerUrl: null,
-				bannerColor: null,
-				isLocked: false,
-				isSilenced: false,
-				isSuspended: false,
-				description: null,
-				location: null,
-				birthday: null,
-				fields: [],
-				followersCount: 0,
-				followingCount: 0,
-				notesCount: 0,
-				pinnedNoteIds: [],
-				pinnedNotes: [],
-				pinnedPageId: null,
-				pinnedPage: null,
-				twoFactorEnabled: false,
-				usePasswordLessLogin: false,
-				securityKeys: false,
-				isFollowing: false,
-				isFollowed: false,
-				hasPendingFollowRequestFromYou: false,
-				hasPendingFollowRequestToYou: false,
-				isBlocking: false,
-				isBlocked: false,
-				isMuted: false
-			};
-		}
-
 		let text = note.text;
 
 		if (note.name && (note.url || note.uri)) {
@@ -139,6 +95,8 @@ export class NoteRepository extends Repository<Note> {
 		}
 
 		const user = opts.showActualUser ? await Users.pack(note.user || note.userId, meId) : populateVirtualUser();
+
+		const isTanzaku = note.tanabataYear != null;
 
 		const packed = await awaitAll({
 			id: note.id,
@@ -153,6 +111,9 @@ export class NoteRepository extends Repository<Note> {
 			reactions: convertLegacyReactions(note.reactions),
 			tags: note.tags.length > 0 ? note.tags : undefined,
 			emojis: populateEmojis(note.emojis, host, Object.keys(note.reactions)),
+			isTanzaku,
+			tanabataYear: isTanzaku ? note.tanabataYear : undefined,
+			tanzakuColor: isTanzaku ? note.tanzakuColor : undefined,
 			fileIds: note.fileIds,
 			files: DriveFiles.packMany(note.fileIds),
 			uri: note.uri || undefined,
@@ -223,6 +184,18 @@ export const packedNoteSchema = {
 		},
 		viaMobile: {
 			type: 'boolean' as const,
+			optional: true as const, nullable: false as const,
+		},
+		isTanzaku: {
+			type: 'boolean' as const,
+			optional: false as const, nullable: false as const,
+		},
+		tanzakuColor: {
+			type: 'string' as const,
+			optional: true as const, nullable: false as const,
+		},
+		tanabataYear: {
+			type: 'number' as const,
 			optional: true as const, nullable: false as const,
 		},
 		isHidden: {

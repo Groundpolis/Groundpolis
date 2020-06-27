@@ -518,6 +518,21 @@ allowedEmojiReactions: "許可するリアクション"
 allowedEmojiReactionsDescription: "通常のリアクションに加えて許可する絵文字を設定します。"
 disableShowingAnimatedImages: "画像や絵文字のアニメーションを無効化する"
 
+_tanabata:
+  title: 'ひとりすきー七夕祭り'
+  info1: '7/1 から 7/7 は、年に一度の七夕祭り！特別な「短冊ノート」に、あなたの願い事を書いて、この「笹タイムライン」に投稿しよう。'
+  info2: '祭りが終わっても、7月中はここでみんなの短冊を見られるよ。願い事が叶いますように…。'
+  end: '今年の七夕祭りは終了しました。また来年。'
+  posted: '投稿しました！願いが叶いますように。'
+  placeholder: '願い事は？'
+  chooseTanzakuColor: '短冊の色を選ぶ'
+  colors:
+    purple: '「学業成就」の紫'
+    red: '「感謝」の赤'
+    white: '「規則」の白'
+    yellow: '「人間関係」の黄'
+    blue: '「成長」の青'
+
 _theme:
   explore: "テーマを探す"
   install: "テーマのインストール"

@@ -126,6 +126,7 @@ export default define(meta, async (ps, user) => {
 	generateRepliesQuery(query, user);
 	generateVisibilityQuery(query, user);
 	generateMuteQuery(query, user);
+	query.andWhere('note."tanabataYear" IS NULL');
 
 	if (ps.includeMyRenotes === false) {
 		query.andWhere(new Brackets(qb => {

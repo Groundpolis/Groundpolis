@@ -16,6 +16,7 @@ export const router = new VueRouter({
 		{ path: '/announcements', component: page('announcements') },
 		{ path: '/about', component: page('about') },
 		{ path: '/about-misskey', component: page('about-misskey') },
+		{ path: '/tanabata', component: page(new Date().getMonth() + 1 === 7 ? 'tanabata' : 'not-found') },
 		{ path: '/docs', component: page('docs') },
 		{ path: '/docs/:doc', component: page('doc'), props: true },
 		{ path: '/my/drive', name: 'drive', component: page('drive') },

@@ -18,8 +18,11 @@ export default class extends Channel {
 	private async onNote(note: PackedNote) {
 		// 流れるノートは投稿主に向けてpackしたものなので、packし直す
 		const repacked = await Notes.pack(note.id, this.user!);
+
 		// 自分のノートでなければ弾く
 		if (!repacked.isMyNote) return;
+		// 短冊は送らない
+		if (repacked.isTanzaku) return;
 
 		this.send('note', repacked);
 	}

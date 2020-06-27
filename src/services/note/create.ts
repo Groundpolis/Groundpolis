@@ -6,11 +6,11 @@ import { updateHashtags } from '../update-hashtag';
 import { concat } from '../../prelude/array';
 import extractEmojis from '../../misc/extract-emojis';
 import extractHashtags from '../../misc/extract-hashtags';
-import { Note, IMentionedRemoteUsers } from '../../models/entities/note';
-import { Users, Notes, UserProfiles } from '../../models';
+import { Note } from '../../models/entities/note';
+import { Users, Notes } from '../../models';
 import { DriveFile } from '../../models/entities/drive-file';
 import { App } from '../../models/entities/app';
-import { getConnection, In } from 'typeorm';
+import { getConnection } from 'typeorm';
 import { User } from '../../models/entities/user';
 import { genId } from '../../misc/gen-id';
 import { notesChart, perUserNotesChart, activeUsersChart } from '../chart';
@@ -27,6 +27,8 @@ type Option = {
 	poll?: IPoll | null;
 	viaMobile?: boolean | null;
 	localOnly?: boolean | null;
+	tanzakuColor?: string | null;
+	tanabataYear?: number | null;
 	cw?: string | null;
 	visibility?: string;
 	visibleUsers?: User[] | null;
@@ -49,36 +51,6 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 	// サイレンス
 	if (user.isSilenced && data.visibility === 'public') {
 		data.visibility = 'home';
-	}
-
-	// Renote対象が「ホームまたは全体」以外の公開範囲ならreject
-	if (data.renote && data.renote.visibility !== 'public' && data.renote.visibility !== 'home' && data.renote.userId !== user.id) {
-		return rej('Renote target is not public or home');
-	}
-
-	// Renote対象がpublicではないならhomeにする
-	if (data.renote && data.renote.visibility !== 'public' && data.visibility === 'public') {
-		data.visibility = 'home';
-	}
-
-	// Renote対象がfollowersならfollowersにする
-	if (data.renote && data.renote.visibility === 'followers') {
-		data.visibility = 'followers';
-	}
-
-	// 返信対象がpublicではないならhomeにする
-	if (data.reply && data.reply.visibility !== 'public' && data.visibility === 'public') {
-		data.visibility = 'home';
-	}
-
-	// ローカルのみをRenoteしたらローカルのみにする
-	if (data.renote && data.renote.localOnly) {
-		data.localOnly = true;
-	}
-
-	// ローカルのみにリプライしたらローカルのみにする
-	if (data.reply && data.reply.localOnly) {
-		data.localOnly = true;
 	}
 
 	if (data.text) {
@@ -160,7 +132,8 @@ async function insertNote(user: User, data: Option, tags: string[], emojis: stri
 		viaMobile: data.viaMobile!,
 		localOnly: data.localOnly!,
 		visibility: data.visibility as any,
-
+		tanzakuColor: data.tanzakuColor!,
+		tanabataYear: data.tanabataYear,
 		attachedFileTypes: data.files ? data.files.map(file => file.type) : [],
 
 		isAnnouncement: data.isAnnouncement!,
