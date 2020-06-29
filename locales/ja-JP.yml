@@ -649,6 +649,7 @@ broadcastModeDescription: '常にノートに添付するテキストを書い�
 themeEditor: "テーマエディター"
 description: "説明"
 author: "作者"
+leaveConfirm: "未保存の変更があります。破棄しますか？"
 
 _steal:
   textOnly: 'ただただ本文をパクる'
