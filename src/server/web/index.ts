@@ -64,7 +64,7 @@ const router = new Router();
 
 //#region static assets
 
-router.get('/assets/*', async ctx => {
+router.get('/assets/(.*)', async ctx => {
 	if (env !== 'production') {
 		ctx.set('Cache-Control', 'no-store');
 	}
