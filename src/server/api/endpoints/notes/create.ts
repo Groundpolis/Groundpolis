@@ -221,7 +221,7 @@ export default define(meta, async (ps, user) => {
 		viaMobile: ps.viaMobile,
 		isAnnouncement: ps.announcement,
 		tanzakuColor: ps.tanzakuColor || null,
-		tanabataYear: ps.tanzakuColor ? year : null,
+		tanabataYear: ps.tanzakuColor ? new Date().getFullYear() : null,
 	});
 
 	return {
