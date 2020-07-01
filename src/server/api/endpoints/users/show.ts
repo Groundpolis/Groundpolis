@@ -5,7 +5,7 @@ import { apiLogger } from '../../logger';
 import { ApiError } from '../../error';
 import { ID } from '../../../../misc/cafy-id';
 import { Users } from '../../../../models';
-import { In } from 'typeorm';
+import { populateVirtualUser } from '../../../../misc/populate-virtual-user';
 
 export const meta = {
 	desc: {
@@ -57,6 +57,10 @@ export const meta = {
 
 export default define(meta, async (ps, me) => {
 	let user;
+
+	// 仮想ユーザーを求めていれば返す
+	const v = populateVirtualUser();
+	if (ps.userId === v.id || ps.username === v.username) return v;
 
 	const isAdminOrModerator = me && (me.isAdmin || me.isModerator);
 
