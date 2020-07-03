@@ -9,6 +9,7 @@
 				<mfm v-if="note.text" :text="note.text" :author="note.user" :i="$store.state.i" :custom-emojis="note.emojis"/>
 			</div>
 			<footer class="footer">
+				<button v-if=" note.isMyNote" class="_button button" @click="updateColor">{{ $t('changeColor') }}</button>
 				<button v-if="canDelete" class="_button button" @click="del()">{{ $t('delete') }}</button>
 			</footer>
 		</div>
@@ -20,6 +21,7 @@
 import Vue from 'vue';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { focusPrev, focusNext } from '../scripts/focus';
+import { tanzakuColors } from '../../types';
 export default Vue.extend({
 
 	props: {
@@ -74,6 +76,26 @@ export default Vue.extend({
 
 			await this.$root.api('notes/delete', { noteId: this.note.id });
 			this.$emit('deleted');
+		},
+
+		updateColor(ev: MouseEvent) {
+			const items = tanzakuColors.map(tanzakuColor => ({
+				text: this.$t(`_tanabata.colors.${tanzakuColor}`),
+				action: () => {
+					this.$root.api('i/update-tanzaku', { tanzakuColor })
+						.then(() => {
+							Vue.set(this.note, 'tanzakuColor', tanzakuColor);
+						})
+						.catch(e => {
+							this.$root.dialog({
+								type: 'error',
+								text: e.message
+							});
+						});
+				}
+			}));
+
+			this.$root.menu({ items, source: ev.currentTarget || ev.target });
 		},
 	}
 });
