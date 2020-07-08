@@ -68,6 +68,7 @@
 			</mk-switch>
 			<mk-switch v-model="showFixedPostForm">{{ $t('showFixedPostForm') }}</mk-switch>
 			<mk-switch v-model="enableInfiniteScroll">{{ $t('enableInfiniteScroll') }}</mk-switch>
+			<mk-switch v-model="fixedWidgetsPosition">{{ $t('fixedWidgetsPosition') }}</mk-switch>
 			<mk-switch v-model="disablePagesScript">{{ $t('disablePagesScript') }}</mk-switch>
 		</div>
 		<div class="_content">
@@ -114,6 +115,7 @@ const sounds = [
 	'syuilo/triple',
 	'syuilo/poi1',
 	'syuilo/poi2',
+	'syuilo/pirori',
 	'aisha/1',
 	'aisha/2',
 	'aisha/3',
@@ -188,6 +190,11 @@ export default Vue.extend({
 			set(value) { this.$store.commit('device/setInfiniteScrollEnabling', value); }
 		},
 
+		fixedWidgetsPosition: {
+			get() { return this.$store.state.device.fixedWidgetsPosition; },
+			set(value) { this.$store.commit('device/set', { key: 'fixedWidgetsPosition', value }); }
+		},
+
 		sfxVolume: {
 			get() { return this.$store.state.device.sfxVolume; },
 			set(value) { this.$store.commit('device/set', { key: 'sfxVolume', value: parseFloat(value, 10) }); }
@@ -258,6 +265,10 @@ export default Vue.extend({
 				localStorage.setItem('fontSize', this.fontSize);
 			}
 			location.reload();
+		},
+
+		fixedWidgetsPosition() {
+			location.reload()
 		},
 	},
 
