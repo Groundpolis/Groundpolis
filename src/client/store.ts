@@ -3,6 +3,7 @@ import createPersistedState from 'vuex-persistedstate';
 import * as nestedProperty from 'nested-property';
 import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faPaintBrush, faStar, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faDoorClosed, faBullhorn, faLaugh, faColumns } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faComments } from '@fortawesome/free-regular-svg-icons';
+import { AiScript, utils, values } from '@syuilo/aiscript';
 import { apiUrl, deckmode } from './config';
 import defaultFaces from './scripts/default-faces';
 import { erase } from '../prelude/array';
@@ -55,6 +56,7 @@ export const defaultDeviceUserSettings = {
 		columns: [],
 		layout: [],
 	},
+	plugins: [],
 };
 
 export const defaultDeviceSettings = {
@@ -137,7 +139,13 @@ export default () => new Vuex.Store({
 	state: {
 		i: null,
 		pendingApiRequestsCount: 0,
-		spinner: null
+		spinner: null,
+
+		// Plugin
+		pluginContexts: new Map<string, AiScript>(),
+		postFormActions: [],
+		userActions: [],
+		noteActions: [],
 	},
 
 	getters: {
@@ -261,8 +269,38 @@ export default () => new Vuex.Store({
 			state.i = x;
 		},
 
-		updateIKeyValue(state, x) {
-			state.i[x.key] = x.value;
+		updateIKeyValue(state, { key, value }) {
+			state.i[key] = value;
+		},
+
+		initPlugin(state, { plugin, aiscript }) {
+			state.pluginContexts.set(plugin.id, aiscript);
+		},
+
+		registerPostFormAction(state, { pluginId, title, handler }) {
+			state.postFormActions.push({
+				title, handler: (form, update) => {
+					state.pluginContexts.get(pluginId).execFn(handler, [utils.jsToVal(form), values.FN_NATIVE(([key, value]) => {
+						update(key.value, value.value);
+					})]);
+				}
+			});
+		},
+
+		registerUserAction(state, { pluginId, title, handler }) {
+			state.userActions.push({
+				title, handler: (user) => {
+					state.pluginContexts.get(pluginId).execFn(handler, [utils.jsToVal(user)]);
+				}
+			});
+		},
+
+		registerNoteAction(state, { pluginId, title, handler }) {
+			state.noteActions.push({
+				title, handler: (note) => {
+					state.pluginContexts.get(pluginId).execFn(handler, [utils.jsToVal(note)]);
+				}
+			});
 		},
 	},
 
@@ -271,6 +309,7 @@ export default () => new Vuex.Store({
 			ctx.commit('updateI', i);
 			ctx.commit('settings/init', i.clientData);
 			ctx.commit('deviceUser/init', ctx.state.device.userData[i.id] || {});
+			// TODO: ローカルストレージを消してページリロードしたときは i が無いのでその場合のハンドリングをよしなにやる
 			await ctx.dispatch('addAcount', { id: i.id, i: localStorage.getItem('i') });
 		},
 
@@ -412,10 +451,6 @@ export default () => new Vuex.Store({
 				setUserData(state, x: { userId: string; data: any }) {
 					state.userData[x.userId] = copy(x.data);
 				},
-
-				setInfiniteScrollEnabling(state, x: boolean) {
-					state.enableInfiniteScroll = x;
-				},
 			}
 		},
 
@@ -487,13 +522,13 @@ export default () => new Vuex.Store({
 					state.deck.columns.push(column);
 					state.deck.layout.push([column.id]);
 				},
-		
+
 				removeDeckColumn(state, id) {
 					state.deck.columns = state.deck.columns.filter(c => c.id != id);
 					state.deck.layout = state.deck.layout.map(ids => erase(id, ids));
 					state.deck.layout = state.deck.layout.filter(ids => ids.length > 0);
 				},
-		
+
 				swapDeckColumn(state, x) {
 					const a = x.a;
 					const b = x.b;
@@ -504,7 +539,7 @@ export default () => new Vuex.Store({
 					state.deck.layout[aX][aY] = b;
 					state.deck.layout[bX][bY] = a;
 				},
-		
+
 				swapLeftDeckColumn(state, id) {
 					state.deck.layout.some((ids, i) => {
 						if (ids.indexOf(id) != -1) {
@@ -520,7 +555,7 @@ export default () => new Vuex.Store({
 						}
 					});
 				},
-		
+
 				swapRightDeckColumn(state, id) {
 					state.deck.layout.some((ids, i) => {
 						if (ids.indexOf(id) != -1) {
@@ -536,7 +571,7 @@ export default () => new Vuex.Store({
 						}
 					});
 				},
-		
+
 				swapUpDeckColumn(state, id) {
 					const ids = state.deck.layout.find(ids => ids.indexOf(id) != -1);
 					ids.some((x, i) => {
@@ -553,7 +588,7 @@ export default () => new Vuex.Store({
 						}
 					});
 				},
-		
+
 				swapDownDeckColumn(state, id) {
 					const ids = state.deck.layout.find(ids => ids.indexOf(id) != -1);
 					ids.some((x, i) => {
@@ -570,7 +605,7 @@ export default () => new Vuex.Store({
 						}
 					});
 				},
-		
+
 				stackLeftDeckColumn(state, id) {
 					const i = state.deck.layout.findIndex(ids => ids.indexOf(id) != -1);
 					state.deck.layout = state.deck.layout.map(ids => erase(id, ids));
@@ -578,39 +613,54 @@ export default () => new Vuex.Store({
 					if (left) state.deck.layout[i - 1].push(id);
 					state.deck.layout = state.deck.layout.filter(ids => ids.length > 0);
 				},
-		
+
 				popRightDeckColumn(state, id) {
 					const i = state.deck.layout.findIndex(ids => ids.indexOf(id) != -1);
 					state.deck.layout = state.deck.layout.map(ids => erase(id, ids));
 					state.deck.layout.splice(i + 1, 0, [id]);
 					state.deck.layout = state.deck.layout.filter(ids => ids.length > 0);
 				},
-		
+
 				addDeckWidget(state, x) {
 					const column = state.deck.columns.find(c => c.id == x.id);
 					if (column == null) return;
 					if (column.widgets == null) column.widgets = [];
 					column.widgets.unshift(x.widget);
 				},
-		
+
 				removeDeckWidget(state, x) {
 					const column = state.deck.columns.find(c => c.id == x.id);
 					if (column == null) return;
 					column.widgets = column.widgets.filter(w => w.id != x.widget.id);
 				},
-		
+
 				renameDeckColumn(state, x) {
 					const column = state.deck.columns.find(c => c.id == x.id);
 					if (column == null) return;
 					column.name = x.name;
 				},
-		
+
 				updateDeckColumn(state, x) {
 					let column = state.deck.columns.find(c => c.id == x.id);
 					if (column == null) return;
 					column = x;
 				},
 				//#endregion
+
+				installPlugin(state, { meta, ast }) {
+					state.plugins.push({
+						id: meta.id,
+						name: meta.name,
+						version: meta.version,
+						author: meta.author,
+						description: meta.description,
+						ast: ast
+					});
+				},
+
+				uninstallPlugin(state, id) {
+					state.plugins = state.plugins.filter(x => x.id != id);
+				},
 			}
 		},
 

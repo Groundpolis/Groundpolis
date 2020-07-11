@@ -91,9 +91,13 @@ export default Vue.extend({
 						'remoteFollowing',
 					].map(value => ({ value, text: this.$t(`_timelines.${value}`) })),
 				},
-				showCancelButton: true
 			});
-			if (canceled) return;
+			if (canceled) {
+				if (this.column.tl == null) {
+					this.setType();
+				}
+				return;
+			}
 			Vue.set(this.column, 'tl', src);
 			this.$store.commit('deviceUser/updateDeckColumn', this.column);
 		},

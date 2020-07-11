@@ -44,6 +44,7 @@
 	<x-gacha/>
 	<x-theme/>
 	<x-sidebar/>
+	<x-plugins/>
 
 	<section class="_card">
 		<div class="_title"><fa :icon="faColumns"/> {{ $t('deck') }}</div>
@@ -91,6 +92,7 @@ import XReactionSetting from './reaction.vue';
 import XMuteBlock from './mute-block.vue';
 import XTheme from './theme.vue';
 import XSidebar from './sidebar.vue';
+import XPlugins from './plugins.vue';
 import XSecurity from './security.vue';
 import X2fa from './2fa.vue';
 import XIntegration from './integration.vue';
@@ -124,6 +126,7 @@ export default Vue.extend({
 		XApi,
 		XTheme,
 		XSidebar,
+		XPlugins,
 		MkButton,
 		MkSwitch,
 		MkSelect,

@@ -4,7 +4,7 @@
 	"contributors": [
 		"syuilo <syuilotan@yahoo.co.jp>"
 	],
-	"version": "12.40.0-gp-3.10.0",
+	"version": "12.41.0-gp-3.10.0",
 	"codename": "reunion",
 	"repository": {
 		"type": "git",
@@ -54,7 +54,7 @@
 		"@koa/multer": "3.0.0",
 		"@koa/router": "9.3.1",
 		"@sinonjs/fake-timers": "6.0.1",
-		"@syuilo/aiscript": "0.7.0",
+		"@syuilo/aiscript": "0.7.2",
 		"@types/animejs": "2.0.2",
 		"@types/bcryptjs": "2.4.2",
 		"@types/bull": "3.14.0",

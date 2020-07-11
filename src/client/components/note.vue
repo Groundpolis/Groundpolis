@@ -111,7 +111,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faInfoCircle, faHeart, faEllipsisH, faUsers, faHeartbeat } from '@fortawesome/free-solid-svg-icons';
+import { faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faInfoCircle, faHeart, faEllipsisH, faUsers, faHeartbeat, faPlug } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
@@ -131,7 +131,6 @@ import copyToClipboard from '../scripts/copy-to-clipboard';
 import shouldMuteNote from '../scripts/should-mute-note';
 
 export default Vue.extend({
-	
 	components: {
 		XSub,
 		XNoteHeader,
@@ -173,7 +172,7 @@ export default Vue.extend({
 			showContent: false,
 			hideThisNote: false,
 			noteBody: this.$refs.noteBody,
-			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat
+			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug
 		};
 	},
 
@@ -673,6 +672,16 @@ export default Vue.extend({
 					}
 				} : undefined]
 				.filter(x => x !== undefined);
+			}
+
+			if (this.$store.state.noteActions.length > 0) {
+				menu = menu.concat([null, ...this.$store.state.noteActions.map(action => ({
+					icon: faPlug,
+					text: action.title,
+					action: () => {
+						action.handler(this.appearNote);
+					}
+				}))]);
 			}
 
 			this.$root.menu({
