@@ -44,6 +44,21 @@
 	<x-gacha/>
 	<x-theme/>
 	<x-sidebar/>
+
+	<section class="_card">
+		<div class="_title"><fa :icon="faColumns"/> {{ $t('deck') }}</div>
+		<div class="_content">
+			<mk-switch v-model="deckAlwaysShowMainColumn">
+				{{ $t('_deck.alwaysShowMainColumn') }}
+			</mk-switch>
+		</div>
+		<div class="_content">
+			<div>{{ $t('_deck.columnAlign') }}</div>
+			<mk-radio v-model="deckColumnAlign" value="left">{{ $t('left') }}</mk-radio>
+			<mk-radio v-model="deckColumnAlign" value="center">{{ $t('center') }}</mk-radio>
+		</div>
+	</section>
+
 	<x-client-settings/>
 
 	<x-import-export/>
@@ -84,6 +99,7 @@ import MkReactionPicker from '../../components/reaction-picker.vue';
 import MkButton from '../../components/ui/button.vue';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkSelect from '../../components/ui/select.vue';
+import MkRadio from '../../components/ui/radio.vue';
 
 export default Vue.extend({
 	metaInfo() {
@@ -110,7 +126,8 @@ export default Vue.extend({
 		XSidebar,
 		MkButton,
 		MkSwitch,
-		MkSelect
+		MkSelect,
+		MkRadio
 	},
 
 	data() {
@@ -127,6 +144,14 @@ export default Vue.extend({
 		stealReaction: {
 			get() { return this.$store.state.settings.stealReaction; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'stealReaction', value }); }
+		},
+		deckAlwaysShowMainColumn: {
+			get() { return this.$store.state.device.deckAlwaysShowMainColumn; },
+			set(value) { this.$store.commit('device/set', { key: 'deckAlwaysShowMainColumn', value }); }
+		},
+		deckColumnAlign: {
+			get() { return this.$store.state.device.deckColumnAlign; },
+			set(value) { this.$store.commit('device/set', { key: 'deckColumnAlign', value }); }
 		},
 	},
 

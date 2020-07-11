@@ -5,6 +5,7 @@
 	<div class="_content">
 		<mk-switch v-model="autoReload">{{ $t('autoReloadWhenDisconnected') }}</mk-switch>
 		<mk-switch v-model="enableInfiniteScroll">{{ $t('enableInfiniteScroll') }}</mk-switch>
+		<mk-switch v-model="fixedWidgetsPosition">{{ $t('fixedWidgetsPosition') }}</mk-switch>
 		<mk-switch v-model="reduceAnimation">{{ $t('reduceUiAnimation') }}</mk-switch>
 		<mk-switch v-model="disablePagesScript">{{ $t('disablePagesScript') }}</mk-switch>
 		<mk-switch v-model="imageNewTab">{{ $t('openImageInNewTab') }}</mk-switch>
@@ -313,6 +314,11 @@ export default Vue.extend({
 		showFullAcct: {
 			get() { return this.$store.state.settings.showFullAcct },
 			set(value) { this.$store.dispatch('settings/set', { key: 'showFullAcct', value }) }
+		},
+
+		fixedWidgetsPosition: {
+			get() { return this.$store.state.device.fixedWidgetsPosition; },
+			set(value) { this.$store.commit('device/set', { key: 'fixedWidgetsPosition', value }); }
 		},
 
 		previewNote () {

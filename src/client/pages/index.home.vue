@@ -2,7 +2,7 @@
 <div class="mk-home" v-hotkey.global="keymap">
 	<template v-if="showTitle">
 		<portal to="header" v-if="!$store.state.deviceUser.hideTimelineColumn">
-			<button v-if="isMobile" @click="choose" class="_button _kjvfvyph_">
+			<button v-if="isMobile || deckMode" @click="choose" class="_button _kjvfvyph_">
 				<i><fa v-if="$store.state.i.hasUnreadAntenna" :icon="faCircle"/></i>
 				<fa :icon="getIconOfTimeline(src)"/>
 				<span style="margin-left: 8px;">{{ timelineTitle }}</span>
@@ -62,6 +62,7 @@ import { getIconOfTimeline } from '../scripts/get-icon-of-timeline';
 import XTimeline from '../components/timeline.vue';
 import MkButton from '../components/ui/button.vue';
 import XPostForm from '../components/post-form.vue';
+import { deckmode } from '../config';
 
 export default Vue.extend({
 	metaInfo() {
@@ -116,7 +117,7 @@ export default Vue.extend({
 			}
 			return null;
 		},
-
+		deckMode() { return deckmode; },
 		tabItems() {
 			return [
 				this.genItem('home'),
@@ -249,7 +250,7 @@ export default Vue.extend({
 			
 			this.$root.menu({
 				items: [
-					...(this.isMobile ? this.tabItems : [ undefined ]),
+					...(this.isMobile || this.deckMode ? this.tabItems : [ undefined ]),
 					antennaItems.length > 0 ? null : undefined,
 					...antennaItems,
 					listItems.length > 0 ? null : undefined,

@@ -1,10 +1,7 @@
 <template>
 <x-column :menu="menu" :column="column" :is-stacked="isStacked" :indicated="indicated" @change-active-state="onChangeActiveState">
 	<template #header>
-		<fa v-if="column.tl === 'home'" :icon="faHome"/>
-		<fa v-else-if="column.tl === 'local'" :icon="faComments"/>
-		<fa v-else-if="column.tl === 'social'" :icon="faShareAlt"/>
-		<fa v-else-if="column.tl === 'global'" :icon="faGlobe"/>
+		<fa :icon="getIconOfTimeline(column.tl)"/>
 		<span style="margin-left: 8px;">{{ column.name }}</span>
 	</template>
 
@@ -24,6 +21,7 @@ import Vue from 'vue';
 import { faMinusCircle, faHome, faComments, faShareAlt, faGlobe, faCog } from '@fortawesome/free-solid-svg-icons';
 import XColumn from './column.vue';
 import XTimeline from '../timeline.vue';
+import { getIconOfTimeline } from '../../scripts/get-icon-of-timeline';
 
 export default Vue.extend({
 	components: {
@@ -77,20 +75,21 @@ export default Vue.extend({
 	},
 
 	methods: {
+		getIconOfTimeline,
 		async setType() {
 			const { canceled, result: src } = await this.$root.dialog({
 				title: this.$t('timeline'),
 				type: null,
 				select: {
-					items: [{
-						value: 'home', text: this.$t('_timelines.home')
-					}, {
-						value: 'local', text: this.$t('_timelines.local')
-					}, {
-						value: 'social', text: this.$t('_timelines.social')
-					}, {
-						value: 'global', text: this.$t('_timelines.global')
-					}]
+					items: [
+						'home',
+						'local',
+						'social',
+						'global', 
+						'cat',
+						'followers',
+						'remoteFollowing',
+					].map(value => ({ value, text: this.$t(`_timelines.${value}`) })),
 				},
 				showCancelButton: true
 			});

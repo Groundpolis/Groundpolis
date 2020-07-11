@@ -94,6 +94,10 @@ export default Vue.extend({
 			}
 			return false;
 		},
+
+		meta() {
+			return this.$store.state.instance.meta;
+		},
 	},
 
 	watch: {
@@ -243,14 +247,14 @@ export default Vue.extend({
 		},
 
 		async addAcount() {
-			this.$root.new(await import('./components/signin-dialog.vue').then(m => m.default)).$once('login', res => {
+			this.$root.new(await import('./signin-dialog.vue').then(m => m.default)).$once('login', res => {
 				this.$store.dispatch('addAcount', res);
 				this.switchAccountWithToken(res.i);
 			});
 		},
 
 		async createAccount() {
-			this.$root.new(await import('./components/signup-dialog.vue').then(m => m.default)).$once('signup', res => {
+			this.$root.new(await import('./signup-dialog.vue').then(m => m.default)).$once('signup', res => {
 				this.$store.dispatch('addAcount', res);
 				this.switchAccountWithToken(res.i);
 			});
@@ -304,6 +308,7 @@ export default Vue.extend({
 }
 
 .mvcprjjd {
+	$header-height: 60px;
 	$ui-font-size: 1em; // TODO: どこかに集約したい
 	$nav-width: 250px; // TODO: どこかに集約したい
 	$nav-icon-only-width: 80px; // TODO: どこかに集約したい

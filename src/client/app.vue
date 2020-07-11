@@ -475,7 +475,7 @@ export default Vue.extend({
 				color: var(--accent);
 			}
 
-			@media (min-width: $side-hide-threshold) {
+			@media (min-width: $right-widgets-hide-threshold) {
 				display: none;
 			}
 		}
@@ -790,7 +790,7 @@ export default Vue.extend({
 	.hide-on-pc {
 		display: none !important;
 
-		@media (max-width: $side-hide-threshold) {
+		@media (max-width: $right-widgets-hide-threshold) {
 			display: inherit !important;
 		}
 	}

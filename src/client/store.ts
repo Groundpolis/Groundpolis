@@ -5,6 +5,7 @@ import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faPaintBrush, faSta
 import { faBell, faComments } from '@fortawesome/free-regular-svg-icons';
 import { apiUrl, deckmode } from './config';
 import defaultFaces from './scripts/default-faces';
+import { erase } from '../prelude/array';
 
 export const defaultSettings = {
 	tutorial: 0,
