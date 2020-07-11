@@ -9,6 +9,8 @@
 
 	<x-sidebar/>
 
+	<x-plugins/>
+
 	<section class="_card">
 		<div class="_title"><fa :icon="faMusic"/> {{ $t('sounds') }}</div>
 		<div class="_content">
@@ -48,6 +50,20 @@
 				<option v-for="sound in sounds" :value="sound" :key="sound">{{ sound || $t('none') }}</option>
 				<template #text><button class="_textButton" @click="listen(sfxAntenna)" v-if="sfxAntenna"><fa :icon="faPlay"/> {{ $t('listen') }}</button></template>
 			</mk-select>
+		</div>
+	</section>
+
+	<section class="_card">
+		<div class="_title"><fa :icon="faColumns"/> {{ $t('deck') }}</div>
+		<div class="_content">
+			<mk-switch v-model="deckAlwaysShowMainColumn">
+				{{ $t('_deck.alwaysShowMainColumn') }}
+			</mk-switch>
+		</div>
+		<div class="_content">
+			<div>{{ $t('_deck.columnAlign') }}</div>
+			<mk-radio v-model="deckColumnAlign" value="left">{{ $t('left') }}</mk-radio>
+			<mk-radio v-model="deckColumnAlign" value="center">{{ $t('center') }}</mk-radio>
 		</div>
 	</section>
 
@@ -93,7 +109,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faImage, faCog, faMusic, faPlay, faVolumeUp, faVolumeMute } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faCog, faMusic, faPlay, faVolumeUp, faVolumeMute, faColumns } from '@fortawesome/free-solid-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkSelect from '../../components/ui/select.vue';
@@ -101,6 +117,7 @@ import MkRadio from '../../components/ui/radio.vue';
 import MkRange from '../../components/ui/range.vue';
 import XTheme from './theme.vue';
 import XSidebar from './sidebar.vue';
+import XPlugins from './plugins.vue';
 import { langs } from '../../config';
 import { clientDb, set } from '../../db';
 
@@ -132,11 +149,12 @@ export default Vue.extend({
 	components: {
 		XTheme,
 		XSidebar,
+		XPlugins,
 		MkButton,
 		MkSwitch,
 		MkSelect,
 		MkRadio,
-		MkRange
+		MkRange,
 	},
 
 	data() {
@@ -145,7 +163,7 @@ export default Vue.extend({
 			lang: localStorage.getItem('lang'),
 			fontSize: localStorage.getItem('fontSize'),
 			sounds,
-			faImage, faCog, faMusic, faPlay, faVolumeUp, faVolumeMute
+			faImage, faCog, faMusic, faPlay, faVolumeUp, faVolumeMute, faColumns
 		}
 	},
 
@@ -187,12 +205,22 @@ export default Vue.extend({
 
 		enableInfiniteScroll: {
 			get() { return this.$store.state.device.enableInfiniteScroll; },
-			set(value) { this.$store.commit('device/setInfiniteScrollEnabling', value); }
+			set(value) { this.$store.commit('device/set', { key: 'enableInfiniteScroll', value }); }
 		},
 
 		fixedWidgetsPosition: {
 			get() { return this.$store.state.device.fixedWidgetsPosition; },
 			set(value) { this.$store.commit('device/set', { key: 'fixedWidgetsPosition', value }); }
+		},
+
+		deckAlwaysShowMainColumn: {
+			get() { return this.$store.state.device.deckAlwaysShowMainColumn; },
+			set(value) { this.$store.commit('device/set', { key: 'deckAlwaysShowMainColumn', value }); }
+		},
+
+		deckColumnAlign: {
+			get() { return this.$store.state.device.deckColumnAlign; },
+			set(value) { this.$store.commit('device/set', { key: 'deckColumnAlign', value }); }
 		},
 
 		sfxVolume: {
@@ -268,6 +296,10 @@ export default Vue.extend({
 		},
 
 		fixedWidgetsPosition() {
+			location.reload()
+		},
+
+		enableInfiniteScroll() {
 			location.reload()
 		},
 	},
