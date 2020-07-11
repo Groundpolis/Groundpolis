@@ -1,19 +1,17 @@
 <template>
-<div class="mkw-timeline" :style="`flex-basis: calc(${basis}% - var(--margin)); height: ${previewHeight}px;`">
-	<mk-container :show-header="!props.compact" class="container">
-		<template #header>
-			<button @click="choose" class="_button">
-				<fa :icon="getIconOfTimeline(props.src)"/>
-				<span style="margin-left: 8px;">{{ timelineTitle }}</span>
-				<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
-			</button>
-		</template>
+<mk-container :show-header="props.showHeader" :style="`height: ${props.height}px;`" :scrollable="true">
+	<template #header>
+		<button @click="choose" class="_button">
+			<fa :icon="getIconOfTimeline(props.src)"/>
+			<span style="margin-left: 8px;">{{ timelineTitle }}</span>
+			<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
+		</button>
+	</template>
 
-		<div>
-			<x-timeline :key="props.src === 'list' ? `list:${props.list.id}` : props.src === 'antenna' ? `antenna:${props.antenna.id}` : props.src" :src="props.src" :list="props.list" :antenna="props.antenna"/>
-		</div>
-	</mk-container>
-</div>
+	<div>
+		<x-timeline :key="props.src === 'list' ? `list:${props.list.id}` : props.src === 'antenna' ? `antenna:${props.antenna.id}` : props.src" :src="props.src" :list="props.list ? props.list.id : null" :antenna="props.antenna ? props.antenna.id : null"/>
+	</div>
+</mk-container>
 </template>
 
 <script lang="ts">
@@ -24,19 +22,25 @@ import MkContainer from '../components/ui/container.vue';
 import XTimeline from '../components/timeline.vue';
 import define from './define';
 
-const basisSteps = [25, 50, 75, 100]
-const previewHeights = [200, 300, 400, 500]
-
 export default define({
 	name: 'timeline',
 	props: () => ({
-		src: 'home',
-		list: null,
-		compact: false,
-		basisStep: 0
+		showHeader: {
+			type: 'boolean',
+			default: true,
+		},
+		src: {
+			type: 'string',
+			default: 'home',
+			hidden: true,
+		},
+		list: {
+			type: 'object',
+			default: null,
+			hidden: true,
+		},
 	})
 }).extend({
-	
 	components: {
 		MkContainer,
 		XTimeline,
@@ -50,14 +54,6 @@ export default define({
 	},
 
 	computed: {
-		basis(): number {
-			return basisSteps[this.props.basisStep] || 25
-		},
-
-		previewHeight(): number {
-			return previewHeights[this.props.basisStep] || 200
-		},
-
 		meta() {
 			return this.$store.state.instance.meta;
 		},
@@ -73,16 +69,6 @@ export default define({
 
 	methods: {
 		getIconOfTimeline,
-		func() {
-			if (this.props.basisStep === basisSteps.length - 1) {
-				this.props.basisStep = 0
-				this.props.compact = !this.props.compact;
-			} else {
-				this.props.basisStep += 1
-			}
-
-			this.save();
-		},
 
 		async choose(ev) {
 			if (this.meta == null) return;
@@ -160,22 +146,3 @@ export default define({
 	}
 });
 </script>
-
-<style lang="scss">
-.mkw-timeline {
-	flex-grow: 1;
-	flex-shrink: 0;
-	min-height: 0; // https://www.gwtcenter.com/min-height-required-on-firefox-flexbox
-
-	.container {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-
-		> div {
-			overflow: auto;
-			flex-grow: 1;
-		}
-	}
-}
-</style>

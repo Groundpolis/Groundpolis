@@ -67,6 +67,9 @@ export default Vue.extend({
 
 	.name-set {
 		overflow: hidden;
+		font-size: 1em;
+		font-weight: bold;
+		text-decoration: none;
 		text-overflow: ellipsis;
 		> .name {
 			margin: 0 .5em 0 0;

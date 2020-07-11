@@ -1,5 +1,5 @@
 <template>
-<div class="mk-notes" v-size="[{ max: 500 }]" :class="{ compact: isCompactMode }">
+<div class="mk-notes" :class="{ compact: isCompactMode }">
 	<div class="_fullinfo" v-if="empty">
 		<div>{{ $t('noNotes') }}</div>
 	</div>
@@ -13,7 +13,7 @@
 		</button>
 	</div>
 
-	<x-list ref="notes" class="notes" :items="notes" v-slot="{ item: note }" :direction="reversed ? 'up' : 'down'" :reversed="reversed">
+	<x-list ref="notes" :items="notes" v-slot="{ item: note }" :direction="reversed ? 'up' : 'down'" :reversed="reversed">
 		<x-note :note="note" :detail="detail" :key="note._featuredId_ || note._prId_ || note.id"/>
 	</x-list>
 

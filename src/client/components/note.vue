@@ -65,7 +65,7 @@
 						<x-media-list :media-list="appearNote.files" :parent-element="noteBody"/>
 					</div>
 					<x-poll v-if="appearNote.poll" :note="appearNote" ref="pollViewer" class="poll"/>
-					<mk-url-preview v-for="url in urls" :url="url" :key="url" :compact="true" class="url-preview"/>
+					<mk-url-preview v-for="url in urls" :url="url" :key="url" :compact="true" :detail="detail" class="url-preview"/>
 					<div class="renote" v-if="appearNote.renote && !isCompactMode"><x-note-preview :note="appearNote.renote"/></div>
 				</div>
 			</div>
@@ -936,10 +936,6 @@ export default Vue.extend({
 		white-space: pre;
 		color: #d28a3f;
 
-		@media (max-width: 450px) {
-			padding: 8px 16px 0 16px;
-		}
-
 		> [data-icon] {
 			margin-right: 4px;
 		}
@@ -1122,6 +1118,65 @@ export default Vue.extend({
 
 	> .reply {
 		border-top: solid 1px var(--divider);
+	}
+
+	&.max-width_500px {
+		font-size: 0.9em;
+	}
+
+	&.max-width_450px {
+		> .renote {
+			padding: 8px 16px 0 16px;
+		}
+
+		> .info {
+			padding: 8px 16px 0 16px;
+		}
+
+		> .article {
+			padding: 14px 16px 9px;
+
+			> .avatar {
+				margin: 0 10px 8px 0;
+				width: 50px;
+				height: 50px;
+			}
+		}
+	}
+
+	&.max-width_350px {
+		> .article {
+			> .main {
+				> .footer {
+					> .button {
+						&:not(:last-child) {
+							margin-right: 18px;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	&.max-width_300px {
+		font-size: 0.825em;
+
+		> .article {
+			> .avatar {
+				width: 44px;
+				height: 44px;
+			}
+
+			> .main {
+				> .footer {
+					> .button {
+						&:not(:last-child) {
+							margin-right: 12px;
+						}
+					}
+				}
+			}
+		}
 	}
 }
 </style>

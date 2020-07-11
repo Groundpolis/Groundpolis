@@ -33,62 +33,7 @@
 		</div>
 	</header>
 
-	<transition name="nav-back">
-		<div class="nav-back"
-			v-if="showNav"
-			@click="showNav = false"
-			@touchstart="showNav = false"
-		></div>
-	</transition>
-
-	<transition name="nav">
-		<nav class="nav" :class="{ 'icon-only': $store.state.device.collapseNav }" ref="nav" v-show="showNav">
-			<div>
-				<div class="item account" v-if="$store.getters.isSignedIn">
-					<router-link active-class="active" class="name" :to="`/@${ $store.state.i.username }`" exact>
-						<mk-avatar :user="$store.state.i" class="avatar"/>
-						<mk-user-name class="text" :user="$store.state.i" :nowrap="true"/>
-					</router-link>
-					<button class="_button more" @click="openAccountMenu">
-						<fa :icon="faEllipsisH" fixed-width/>
-					</button>
-				</div>
-				
-				<button class="item _button index active" @click="top()" v-if="$route.name === 'index'">
-					<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
-				</button>
-				<router-link class="item index" active-class="active" to="/" exact v-else>
-					<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
-				</router-link>
-				<template v-if="$store.getters.isSignedIn">
-					<template v-for="item in menu">
-						<div v-if="item === '-'" :key="item" class="divider" />
-						<component v-else-if="menuDef[item] && menuDef[item].show !== false" :is="menuDef[item].to ? 'router-link' : 'button'" class="item _button" :key="item" :class="item" active-class="active" @click="() => { if (menuDef[item].action) menuDef[item].action() }" :to="menuDef[item].to">
-							<fa :icon="menuDef[item].icon" fixed-width/><span class="text">{{ $t(menuDef[item].title) }}</span>
-							<i v-if="menuDef[item].indicated"><fa :icon="faCircle"/></i>
-						</component>
-					</template>
-					<div class="divider"></div>
-					<button class="item _button hide-on-pc" @click="search()">
-						<fa :icon="faSearch" fixed-width/><span class="text">{{ $t('search') }}</span>
-					</button>
-					<router-link class="item" active-class="active" to="/my/settings">
-						<fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
-					</router-link>
-					<button class="item _button" :class="{ active: $route.path === '/instance' || $route.path.startsWith('/instance/') }" v-if="$store.getters.isSignedIn && ($store.state.i.isAdmin || $store.state.i.isModerator)" @click="oepnInstanceMenu">
-						<fa :icon="faServer" fixed-width/><span class="text">{{ $t('instance') }}</span>
-					</button>
-					<button class="item _button" @click="more">
-						<fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
-						<i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadMentions || $store.state.i.hasUnreadSpecifiedNotes)"><fa :icon="faCircle"/></i>
-					</button>
-					<button class="item _button" @click="$store.commit('device/set', { key: 'collapseNav', value: !$store.state.device.collapseNav })">
-						<fa :icon="$store.state.device.collapseNav ? faArrowRight : faArrowLeft" fixed-width/><span class="text">{{ $t('collapse') }}</span>
-					</button>
-				</template>
-			</div>
-		</nav>
-	</transition>
+	<x-sidebar ref="nav"/>
 
 	<div class="contents" ref="contents" :class="{ wallpaper }">
 		<main ref="main" v-show="!$store.getters.isSignedIn || $route.path !== '/' || !$store.state.deviceUser.hideTimelineColumn">
@@ -105,38 +50,37 @@
 			</div>
 		</main>
 
-		<div class="widgets" v-show="!$store.state.deviceUser.hideTimelineColumn || $route.path === '/'" :style="$store.state.deviceUser.hideTimelineColumn ? 'display: block' : ''">
-			<div ref="widgets" :class="{ edit: widgetsEditMode }">
-				<template v-if="(isDesktop || $store.state.deviceUser.hideTimelineColumn) && $store.getters.isSignedIn">
-					<template v-if="widgetsEditMode">
-						<mk-button primary @click="addWidget" class="add"><fa :icon="faPlus"/></mk-button>
-						<x-draggable
-							:list="widgets"
-							handle=".handle"
-							animation="150"
-							class="sortable"
-							@sort="onWidgetSort"
-						>
-							<div v-for="widget in widgets" class="customize-container _panel" :key="widget.id">
-								<header>
-									<span class="handle"><fa :icon="faBars"/></span>{{ $t('_widgets.' + widget.name) }}<button class="remove _button" @click="removeWidget(widget)"><fa :icon="faTimes"/></button>
-								</header>
-								<div @click="widgetFunc(widget.id)">
-									<component :is="`mkw-${widget.name}`" :widget="widget" :ref="widget.id" :is-customize-mode="true"/>
-								</div>
+		<template v-if="isDesktop">
+			<div v-for="place in ['left', 'right']" ref="widgets" class="widgets" :class="{ edit: widgetsEditMode, fixed: $store.state.device.fixedWidgetsPosition, empty: widgets[place].length === 0 && !widgetsEditMode }" :key="place">
+				<div class="spacer"></div>
+				<div class="container" v-if="widgetsEditMode">
+					<mk-button primary @click="addWidget(place)" class="add"><fa :icon="faPlus"/></mk-button>
+					<x-draggable
+						:list="widgets[place]"
+						handle=".handle"
+						animation="150"
+						class="sortable"
+						@sort="onWidgetSort"
+					>
+						<div v-for="widget in widgets[place]" class="customize-container _panel" :key="widget.id">
+							<header>
+								<span class="handle"><fa :icon="faBars"/></span>{{ $t('_widgets.' + widget.name) }}<button class="remove _button" @click="removeWidget(widget)"><fa :icon="faTimes"/></button>
+							</header>
+							<div @click="widgetFunc(widget.id)">
+								<component class="_close_ _forceContainerFull_" :is="`mkw-${widget.name}`" :widget="widget" :ref="widget.id" :is-customize-mode="true"/>
 							</div>
-						</x-draggable>
-					</template>
-					<template v-else>
-						<component class="widget" v-for="widget in widgets" :is="`mkw-${widget.name}`" :key="widget.id" :ref="widget.id" :widget="widget"/>
-					</template>
-				</template>
+						</div>
+					</x-draggable>
+				</div>
+				<div class="container" v-else>
+					<component v-for="widget in widgets[place]" class="_close_ _forceContainerFull_" :is="`mkw-${widget.name}`" :key="widget.id" :ref="widget.id" :widget="widget"/>
+				</div>
 			</div>
-		</div>
+		</template>
 	</div>
 
 	<div class="buttons">
-		<button class="button nav _button" @click="showNav = true" ref="navButton"><fa :icon="faBars"/><i v-if="navIndicated"><fa :icon="faCircle"/></i></button>
+		<button class="button nav _button" @click="showNav" ref="navButton"><fa :icon="faBars"/><i v-if="navIndicated"><fa :icon="faCircle"/></i></button>
 		<button v-if="$route.name === 'index'" class="button home _button" @click="top()"><fa :icon="faHome"/></button>
 		<button v-else class="button home _button" @click="$router.push('/')"><fa :icon="faHome"/></button>
 		<button v-if="$store.getters.isSignedIn" class="button notifications _button" @click="$router.push('/my/notifications')"><fa :icon="faBell"/><i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i></button>
@@ -154,14 +98,18 @@ import Vue from 'vue';
 import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { v4 as uuid } from 'uuid';
-import { host, instanceName } from './config';
+import { host } from './config';
 import { search } from './scripts/search';
 import composeNotification from './scripts/compose-notification';
+import { StickySidebar } from './scripts/sticky-sidebar';
+import { widgets } from './widgets';
+import XSidebar from './components/sidebar.vue';
 
 const DESKTOP_THRESHOLD = 1100;
 
 export default Vue.extend({
 	components: {
+		XSidebar,
 		XClock: () => import('./components/header-clock.vue').then(m => m.default),
 		MkButton: () => import('./components/ui/button.vue').then(m => m.default),
 		XDraggable: () => import('vuedraggable'),
@@ -171,20 +119,14 @@ export default Vue.extend({
 		return {
 			host: host,
 			pageKey: 0,
-			showNav: false,
 			searching: false,
-			accounts: [],
-			lists: [],
 			connection: null,
 			searchQuery: '',
 			searchWait: false,
 			widgetsEditMode: false,
-			menuDef: this.$store.getters.nav({
-				search: this.search
-			}),
 			isDesktop: window.innerWidth >= DESKTOP_THRESHOLD,
 			canBack: false,
-			disconnectedDialog: null as Promise<void> | null,
+			menuDef: this.$store.getters.nav({}),
 			wallpaper: localStorage.getItem('wallpaper') != null,
 			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faProjectDiagram, faArrowLeft, faArrowRight
 		};
@@ -193,6 +135,10 @@ export default Vue.extend({
 	computed: {
 		keymap(): any {
 			return {
+				'd': () => {
+					if (this.$store.state.device.syncDeviceDarkMode) return;
+					this.$store.commit('device/set', { key: 'darkMode', value: !this.$store.state.device.darkMode });
+				},
 				'p': this.post,
 				'n': this.post,
 				'd': this.toggleDark,
@@ -202,27 +148,39 @@ export default Vue.extend({
 		},
 
 		widgets(): any[] {
-			return this.$store.state.deviceUser.widgets;
+			if (this.$store.getters.isSignedIn) {
+				const widgets = this.$store.state.deviceUser.widgets;
+				return {
+					left: widgets.filter(x => x.place === 'left'),
+					right: widgets.filter(x => x.place == null || x.place === 'right'),
+					mobile: widgets.filter(x => x.place === 'mobile'),
+				};
+			} else {
+				return {
+					left: [],
+					right: [{
+						name: 'welcome',
+						id: 'a', place: 'right', data: {}
+					}, {
+						name: 'calendar',
+						id: 'b', place: 'right', data: {}
+					}, {
+						name: 'trends',
+						id: 'c', place: 'right', data: {}
+					}],
+					mobile: [],
+				};
+			}
 		},
 
 		menu(): string[] {
 			return this.$store.state.deviceUser.menu;
 		},
 
-		otherNavItemIndicated(): boolean {
-			if (!this.$store.getters.isSignedIn) return false;
-			for (const def in this.menuDef) {
-				if (this.menu.includes(def)) continue;
-				if (this.menuDef[def].indicated) return true;
-			}
-			return false;
-		},
-
 		navIndicated(): boolean {
 			if (!this.$store.getters.isSignedIn) return false;
 			for (const def in this.menuDef) {
-				if (def === 'timeline') continue;
-				if (def === 'notifications') continue;
+				if (def === 'notifications') continue; // 通知は下にボタンとして表示されてるから
 				if (this.menuDef[def].indicated) return true;
 			}
 			return false;
@@ -233,34 +191,37 @@ export default Vue.extend({
 		},
 	},
 
-	watch:{
+	watch: {
 		$route(to, from) {
 			this.pageKey++;
-			this.showNav = false;
 			this.canBack = (window.history.length > 0 && !['index'].includes(to.name));
 		},
 
 		isDesktop() {
-			if (this.isDesktop) this.adjustWidgetsWidth();
+			this.$nextTick(() => {
+				this.attachSticky();
+			});
 		}
 	},
 
 	created() {
 		this.$store.dispatch('instance/fetch');
+		document.documentElement.style.overflowY = 'scroll';
+
 		if (this.$store.getters.isSignedIn) {
 			this.connection = this.$root.stream.useSharedConnection('main');
 			this.connection.on('notification', this.onNotification);
 
-			if (this.widgets.length === 0) {
+			if (this.$store.state.deviceUser.widgets.length === 0) {
 				this.$store.commit('deviceUser/setWidgets', [{
 					name: 'calendar',
-					id: 'a', data: {}
+					id: 'a', place: 'right', data: {}
 				}, {
 					name: 'notifications',
-					id: 'b', data: {}
+					id: 'b', place: 'right', data: {}
 				}, {
 					name: 'trends',
-					id: 'c', data: {}
+					id: 'c', place: 'right', data: {}
 				}]);
 			}
 		}
@@ -272,20 +233,26 @@ export default Vue.extend({
 				if (window.innerWidth >= DESKTOP_THRESHOLD) this.isDesktop = true;
 			}, { passive: true });
 		}
+
+		// widget follow
+		this.attachSticky();
 	},
 
 	methods: {
-		adjustWidgetsWidth() {
-			// https://stackoverflow.com/questions/33891709/when-flexbox-items-wrap-in-column-mode-container-does-not-grow-its-width
-			const adjust = () => {
-				const lastChild = this.$refs.widgets.children[this.$refs.widgets.children.length - 1];
-				if (lastChild == null) return;
+		showNav() {
+			this.$refs.nav.show();
+		},
 
-				const width = lastChild.offsetLeft + 300 + 16;
-				this.$refs.widgets.style.width = width + 'px';
-			};
-			setInterval(adjust, 1000);
-			setTimeout(adjust, 100);
+		attachSticky() {
+			if (!this.isDesktop) return;
+			if (this.$store.state.device.fixedWidgetsPosition) return;
+
+			const stickyWidgetColumns = this.$refs.widgets.map(w => new StickySidebar(w.children[1], w.children[0], w.offsetTop));
+			window.addEventListener('scroll', () => {
+				for (const stickyWidgetColumn of stickyWidgetColumns) {
+					stickyWidgetColumn.calc(window.scrollY);
+				}
+			}, { passive: true });
 		},
 
 		top() {
@@ -312,23 +279,6 @@ export default Vue.extend({
 			this.$store.commit('device/set', { key: 'darkMode', value: !this.$store.state.device.darkMode });
 		},
 
-		search() {
-			if (this.searching) return;
-
-			this.$root.dialog({
-				title: this.$t('search'),
-				input: true,
-				autoComplete: true
-			}).then(async ({ canceled, result: query }) => {
-				if (canceled || query == null || query === '') return;
-
-				this.searching = true;
-				search(this, query).finally(() => {
-					this.searching = false;
-				});
-			});
-		},
-
 		searchKeypress(e) {
 			if (e.keyCode === 13) {
 				this.searchWait = true;
@@ -337,159 +287,6 @@ export default Vue.extend({
 					this.searchQuery = '';
 				});
 			}
-		},
-
-		async openAccountMenu(ev) {
-			const accounts = (await this.$root.api('users/show', { userIds: this.$store.state.device.accounts.map(x => x.id) })).filter(x => x.id !== this.$store.state.i.id);
-
-			const accountItems = accounts.map(account => ({
-				type: 'user',
-				user: account,
-				action: () => { this.switchAccount(account); }
-			}));
-
-			this.$root.menu({
-				items: [{
-					type: 'item',
-					text: this.$t('addAcount'),
-					action: () => { this.addAcount() },
-				}, (!this.meta || (this.meta.disableRegistration && this.meta.disableInvitation)) ? undefined : {
-					type: 'item',
-					text: this.$t('createAccount'),
-					action: () => { this.createAccount() },
-				}, accountItems.length > 0 ? null : undefined, ...accountItems, {
-					type: 'item',
-					text: this.$t('logout'),
-					action: () => { this.$root.signout() },
-				}].filter(m => m !== undefined),
-				align: 'left',
-				fixed: true,
-				width: 240,
-				source: ev.currentTarget || ev.target,
-			});
-		},
-
-		oepnInstanceMenu(ev) {
-			this.$root.menu({
-				items: [{
-					type: 'link',
-					text: this.$t('dashboard'),
-					to: '/instance',
-					icon: faTachometerAlt,
-				}, null, {
-					type: 'link',
-					text: this.$t('settings'),
-					to: '/instance/settings',
-					icon: faCog,
-				}, {
-					type: 'link',
-					text: this.$t('customEmojis'),
-					to: '/instance/emojis',
-					icon: faLaugh,
-				}, {
-					type: 'link',
-					text: this.$t('users'),
-					to: '/instance/users',
-					icon: faUsers,
-				}, {
-					type: 'link',
-					text: this.$t('files'),
-					to: '/instance/files',
-					icon: faCloud,
-				}, {
-					type: 'link',
-					text: this.$t('jobQueue'),
-					to: '/instance/queue',
-					icon: faExchangeAlt,
-				}, {
-					type: 'link',
-					text: this.$t('federation'),
-					to: '/instance/federation',
-					icon: faGlobe,
-				}, {
-					type: 'link',
-					text: this.$t('relays'),
-					to: '/instance/relays',
-					icon: faProjectDiagram,
-				}, {
-					type: 'link',
-					text: this.$t('announcements'),
-					to: '/instance/announcements',
-					icon: faBroadcastTower,
-				}],
-				align: 'left',
-				fixed: true,
-				width: 200,
-				source: ev.currentTarget || ev.target,
-			});
-		},
-
-		more(ev) {
-			const items = Object.keys(this.menuDef).filter(k => !this.menu.includes(k)).map(k => this.menuDef[k]).filter(def => def.show == null ? true : def.show).map(def => ({
-				type: def.to ? 'link' : 'button',
-				text: this.$t(def.title),
-				icon: def.icon,
-				to: def.to,
-				action: def.action,
-				indicate: def.indicated,
-			}));
-			this.$root.menu({
-				items: [...items, null, {
-					type: 'link',
-					text: this.$t('help'),
-					to: '/docs',
-					icon: faQuestionCircle,
-				}, {
-					type: 'link',
-					text: this.$t('aboutX', { x: instanceName || host }),
-					to: '/about',
-					icon: faInfoCircle,
-				}, {
-					type: 'link',
-					text: this.$t('aboutMisskey'),
-					to: '/about-misskey',
-					icon: faInfoCircle,
-				}],
-				align: 'left',
-				fixed: true,
-				width: 200,
-				source: ev.currentTarget || ev.target,
-			});
-		},
-
-		async addAcount() {
-			this.$root.new(await import('./components/signin-dialog.vue').then(m => m.default)).$once('login', res => {
-				this.$store.dispatch('addAcount', res);
-				this.switchAccountWithToken(res.i);
-			});
-		},
-
-		async createAccount() {
-			this.$root.new(await import('./components/signup-dialog.vue').then(m => m.default)).$once('signup', res => {
-				this.$store.dispatch('addAcount', res);
-				this.switchAccountWithToken(res.i);
-			});
-		},
-
-		async switchAccount(account: any) {
-			const token = this.$store.state.device.accounts.find((x: any) => x.id === account.id).token;
-			this.switchAccountWithToken(token);
-		},
-
-		switchAccountWithToken(token: string) {
-			this.$root.dialog({
-				type: 'waiting',
-				iconOnly: true
-			});
-
-			this.$root.api('i', {}, token).then((i: any) => {
-				this.$store.dispatch('switchAccount', {
-					...i,
-					token: token
-				}).then(() => {
-					location.reload();
-				});
-			});
 		},
 
 		async onNotification(notification: any) {
@@ -514,40 +311,32 @@ export default Vue.extend({
 		},
 
 		widgetFunc(id) {
-			const w = this.$refs[id][0];
-			if (w.func) w.func();
+			this.$refs[id][0].setting();
 		},
 
 		onWidgetSort() {
 			this.saveHome();
 		},
 
-		addWidget(ev) {
-			const widgets = [
-				'memo',
-				'post-form',
-				'notifications',
-				'timeline',
-				'calendar',
-				'rss',
-				'trends',
-				'clock',
-				'activity',
-				'photos',
-			];
+		async addWidget(place) {
+			const { canceled, result: widget } = await this.$root.dialog({
+				type: null,
+				title: this.$t('chooseWidget'),
+				select: {
+					items: widgets.map(widget => ({
+						value: widget,
+						text: this.$t('_widgets.' + widget),
+					}))
+				},
+				showCancelButton: true
+			});
+			if (canceled) return;
 
-			this.$root.menu({
-				items: widgets.map(widget => ({
-					text: this.$t('_widgets.' + widget),
-					action: () => {
-						this.$store.commit('deviceUser/addWidget', {
-							name: widget,
-							id: uuid(),
-							data: {}
-						});
-					}
-				})),
-				source: ev.currentTarget || ev.target,
+			this.$store.commit('deviceUser/addWidget', {
+				name: widget,
+				id: uuid(),
+				place: place,
+				data: {}
 			});
 		},
 
@@ -556,44 +345,24 @@ export default Vue.extend({
 		},
 
 		saveHome() {
-			this.$store.commit('deviceUser/setWidgets', this.widgets);
+			this.$store.commit('deviceUser/setWidgets', [...this.widgets.left, ...this.widgets.right, ...this.widgets.mobile]);
 		}
 	}
 });
 </script>
 
 <style lang="scss" scoped>
-.nav-enter-active,
-.nav-leave-active {
-	opacity: 1;
-	transform: translateX(0);
-	transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
-}
-.nav-enter,
-.nav-leave-active {
-	opacity: 0;
-	transform: translateX(-240px);
-}
-
-.nav-back-enter-active,
-.nav-back-leave-active {
-	opacity: 1;
-	transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
-}
-.nav-back-enter,
-.nav-back-leave-active {
-	opacity: 0;
-}
-
 .mk-app {
 	$header-height: 60px;
-	$nav-width: 250px;
-	$nav-icon-only-width: 80px;
-	$main-width: 650px;
-	$ui-font-size: 1em;
-	$nav-icon-only-threshold: 1300px;
-	$nav-hide-threshold: 650px;
-	$side-hide-threshold: 1070px;
+	$nav-width: 250px; // TODO: どこかに集約したい
+	$nav-icon-only-width: 80px; // TODO: どこかに集約したい
+	$main-width: 670px;
+	$ui-font-size: 1em; // TODO: どこかに集約したい
+	$nav-icon-only-threshold: 1279px; // TODO: どこかに集約したい
+	$nav-hide-threshold: 650px; // TODO: どこかに集約したい
+	$header-sub-hide-threshold: 1090px;
+	$left-widgets-hide-threshold: 1600px;
+	$right-widgets-hide-threshold: 1090px;
 
 	min-height: 100vh;
 	box-sizing: border-box;
@@ -721,7 +490,7 @@ export default Vue.extend({
 			right: 16px;
 			height: $header-height;
 
-			@media (max-width: $side-hide-threshold) {
+			@media (max-width: $header-sub-hide-threshold) {
 				display: none;
 			}
 
@@ -777,261 +546,6 @@ export default Vue.extend({
 		}
 	}
 
-	> .nav-back {
-		position: fixed;
-		top: 0;
-		left: 0;
-		z-index: 1001;
-		width: 100%;
-		height: 100%;
-		background: var(--modalBg);
-		-webkit-backdrop-filter: blur(4px);
-		backdrop-filter: blur(4px);
-	}
-
-	> .nav {
-		$avatar-size: 32px;
-		$avatar-margin: ($header-height - $avatar-size) / 2;
-
-		flex: 0 0 $nav-width;
-		width: $nav-width;
-		box-sizing: border-box;
-
-		position: relative;
-
-		&.icon-only {
-			flex: 0 0 $nav-icon-only-width;
-			width: $nav-icon-only-width;
-
-			> div {
-				width: $nav-icon-only-width;
-
-				> .divider {
-					margin: 8px auto;
-					width: calc(100% - 32px);
-				}
-
-				> .item {
-					padding-left: 0;
-					width: 100%;
-					text-align: center;
-					font-size: $ui-font-size * 1.2;
-					line-height: 3.7rem;
-
-					&:first-child {
-						margin-bottom: 8px;
-					}
-
-					&:last-child {
-						margin-top: 8px;
-					}
-
-					> i {
-						left: 10px;
-					}
-
-					.text {
-						display: none;
-					}
-
-					&.account {
-						flex-direction: column;
-
-						[data-icon],
-						.avatar {
-							margin-right: 0;
-						}
-
-						> .more {
-							margin-left: 0;
-						}
-					}
-				}
-			}
-		}
-
-		@media (max-width: $nav-icon-only-threshold) {
-			flex: 0 0 $nav-icon-only-width;
-			width: $nav-icon-only-width;
-		}
-
-		@media (max-width: $nav-hide-threshold) {
-			position: fixed;
-			top: 0;
-			left: 0;
-			z-index: 1001;
-		}
-
-		@media (min-width: $nav-hide-threshold + 1px) {
-			display: block !important;
-		}
-
-		> div {
-			position: fixed;
-			top: 0;
-			left: 0;
-			z-index: 1001;
-			width: $nav-width;
-			height: 100vh;
-			box-sizing: border-box;
-			overflow: auto;
-			background: var(--navBg);
-			border-right: solid 1px var(--divider);
-			-webkit-backdrop-filter: blur(4px);
-			backdrop-filter: blur(4px);
-
-			> .divider {
-				margin: 16px 0;
-				border-top: solid 1px var(--divider);
-			}
-
-			@media (max-width: $nav-icon-only-threshold) and (min-width: $nav-hide-threshold + 1px) {
-				width: $nav-icon-only-width;
-
-				> .divider {
-					margin: 8px auto;
-					width: calc(100% - 32px);
-				}
-
-				> .item {
-					&:first-child {
-						margin-bottom: 8px;
-					}
-
-					&:last-child {
-						margin-top: 8px;
-					}
-				}
-			}
-
-			> .item {
-				position: relative;
-				display: block;
-				padding-left: 32px;
-				font-size: $ui-font-size;
-				line-height: 3.2rem;
-				text-overflow: ellipsis;
-				overflow: hidden;
-				white-space: nowrap;
-				width: 100%;
-				text-align: left;
-				box-sizing: border-box;
-				color: var(--navFg);
-
-				> [data-icon] {
-					width: ($header-height - ($avatar-margin * 2));
-				}
-
-				&.account {
-					display: flex;
-					flex-direction: row;
-
-					> .name {
-						overflow: hidden;
-						text-overflow: ellipsis;
-						width: 100%;
-					}
-
-					a.active {
-						color: var(--navActive);
-					}
-
-					.more {
-						margin-left: auto;
-					}
-
-					[data-icon],
-					.avatar {
-						margin-right: $avatar-margin;
-					}
-
-					.avatar {
-						width: $avatar-size;
-						height: $avatar-size;
-						vertical-align: middle;
-					}
-				}
-
-				> [data-icon] {
-					width: ($header-height - ($avatar-margin * 2));
-				}
-
-				> i {
-					position: absolute;
-					top: 0;
-					left: 20px;
-					color: var(--navIndicator);
-					font-size: 8px;
-					animation: blink 1s infinite;
-				}
-
-				&:hover {
-					text-decoration: none;
-					color: var(--navHoverFg);
-				}
-
-				&.active {
-					color: var(--navActive);
-				}
-
-				&:first-child, &:last-child {
-					position: sticky;
-					z-index: 1;
-					padding-top: 8px;
-					padding-bottom: 8px;
-				}
-
-				&:first-child {
-					top: 0;
-					margin-bottom: 16px;
-					border-bottom: solid 1px var(--divider);
-				}
-
-				&:last-child {
-					bottom: 0;
-					margin-top: 16px;
-					border-top: solid 1px var(--divider);
-				}
-
-				@media (max-width: $nav-icon-only-threshold) and (min-width: $nav-hide-threshold + 1px) {
-					padding-left: 0;
-					width: 100%;
-					text-align: center;
-					font-size: $ui-font-size * 1.2;
-					line-height: 3.7rem;
-
-					> i {
-						left: 10px;
-					}
-
-					.text {
-						display: none;
-					}
-
-					&.account {
-						flex-direction: column;
-
-						[data-icon],
-						.avatar {
-							margin-right: 0;
-						}
-
-						> .more {
-							margin-left: 0;
-						}
-					}
-				}
-			}
-
-			@media (max-width: $nav-hide-threshold) {
-				> .index,
-				> .notifications {
-					display: none;
-				}
-			}
-		}
-	}
-
 	> .contents {
 		display: flex;
 		margin: 0 16px;
@@ -1043,26 +557,22 @@ export default Vue.extend({
 
 		&.wallpaper {
 			background: var(--wallpaperOverlay);
+			backdrop-filter: blur(4px);
 		}
 
 		> main {
 			width: $main-width;
-			min-width: $main-width;
-			box-shadow: 1px 0 0 0 var(--divider), -1px 0 0 0 var(--divider);
-
-			@media (max-width: $side-hide-threshold) {
-				min-width: 0;
-			}
+			min-width: 0;
 
 
 			> .content {
 				> * {
-					&:not(.full) {
-						padding: var(--margin) 0;
-					}
+					min-height: calc(100vh - #{$header-height});
+					box-sizing: border-box;
+					padding: var(--margin);
 
-					&:not(.naked) {
-						background: var(--pageBg);
+					&.full {
+						padding: 0 var(--margin);
 					}
 
 					&.naked {
@@ -1104,67 +614,83 @@ export default Vue.extend({
 		}
 
 		> .widgets {
-			box-sizing: border-box;
-			margin-left: var(--margin);
+			padding: 0 var(--margin);
+			box-shadow: 1px 0 0 0 var(--divider), -1px 0 0 0 var(--divider);
 
-			@media (max-width: $side-hide-threshold) {
+			&.fixed {
+				position: sticky;
+				overflow: auto;
+				height: calc(100vh - #{$header-height});
+				top: $header-height;
+			}
+
+			&:first-of-type {
+				order: -1;
+
+				@media (max-width: $left-widgets-hide-threshold) {
+					display: none;
+				}
+			}
+
+			&.empty {
 				display: none;
 			}
 
-			> div {
+			@media (max-width: $right-widgets-hide-threshold) {
+				display: none;
+			}
+
+			> .container {
 				position: sticky;
-				top: calc(#{$header-height} + var(--margin));
-				height: calc(100vh - #{$header-height} - var(--margin));
-
-				&.edit {
-					overflow: auto;
-					width: auto !important;
-				}
-
-				&:not(.edit) {
-					display: inline-flex;
-					flex-wrap: wrap;
-					flex-direction: column;
-					place-content: flex-start;
-				}
+				height: min-content;
+				min-height: calc(100vh - #{$header-height});
+				padding: var(--margin) 0;
+				box-sizing: border-box;
 
 				> * {
-					margin: 0 var(--margin) var(--margin) 0;
+					margin: var(--margin) 0;
 					width: 300px;
-				}
 
-				> .add {
-					margin: 0 auto;
-				}
-
-				.customize-container {
-					margin: 8px 0;
-					background: var(--bg);
-
-					> header {
-						position: relative;
-						line-height: 32px;
-
-						> .handle {
-							padding: 0 8px;
-							cursor: move;
-						}
-
-						> .remove {
-							position: absolute;
-							top: 0;
-							right: 0;
-							padding: 0 8px;
-							line-height: 32px;
-						}
+					&:first-child {
+						margin-top: 0;
 					}
 
-					> div {
-						padding: 8px;
+					&:last-child {
+						margin-bottom: 0;
+					}
+				}
+			}
 
-						> * {
-							pointer-events: none;
-						}
+			> .add {
+				margin: 0 auto;
+			}
+
+			.customize-container {
+				margin: 8px 0;
+
+				> header {
+					position: relative;
+					line-height: 32px;
+
+					> .handle {
+						padding: 0 8px;
+						cursor: move;
+					}
+
+					> .remove {
+						position: absolute;
+						top: 0;
+						right: 0;
+						padding: 0 8px;
+						line-height: 32px;
+					}
+				}
+
+				> div {
+					padding: 8px;
+
+					> * {
+						pointer-events: none;
 					}
 				}
 			}
@@ -1187,7 +713,7 @@ export default Vue.extend({
 			display: block;
 		}
 
-		@media (min-width: ($side-hide-threshold + 1px)) {
+		@media (min-width: ($header-sub-hide-threshold + 1px)) {
 			display: none;
 		}
 	}
@@ -1200,7 +726,7 @@ export default Vue.extend({
 		display: flex;
 		width: 100%;
 		box-sizing: border-box;
-		background: linear-gradient(0deg, var(--bg), var(--bonzsgfz));
+		background: linear-gradient(0deg, var(--bg), var(--X1));
 
 		@media (max-width: 500px) {
 			padding: 0 16px 16px 16px;
@@ -1246,7 +772,7 @@ export default Vue.extend({
 				color: var(--fg);
 
 				&:hover {
-					background: var(--pcncwizz);
+					background: var(--X2);
 				}
 
 				> i {

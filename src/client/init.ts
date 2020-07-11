@@ -1,5 +1,5 @@
 /**
- * App entry point
+ * Client entry point
  */
 
 import Vue from 'vue';
@@ -14,13 +14,15 @@ import 'video.js/dist/video-js.css';
 
 import VueHotkey from './scripts/hotkey';
 import App from './app.vue';
+import Deck from './deck.vue';
 import MiOS from './mios';
-import { version, langs, instanceName, getLocale } from './config';
+import { version, langs, instanceName, getLocale, deckmode } from './config';
 import PostFormDialog from './components/post-form-dialog.vue';
 import Dialog from './components/dialog.vue';
 import Menu from './components/menu.vue';
+import Form from './components/form-window.vue';
 import { router } from './router';
-import { applyTheme, lightTheme } from './theme';
+import { applyTheme, lightTheme } from './scripts/theme';
 import { isDeviceDarkmode } from './scripts/is-device-darkmode';
 import createStore from './store';
 import { clientDb, get, count } from './db';
@@ -56,14 +58,6 @@ Vue.mixin({
 });
 
 console.info(`Groundpolis v${version}`);
-
-// v11互換性のため
-if (localStorage.getItem('kyoppie') === 'yuppie') {
-	const i = localStorage.getItem('i');
-	localStorage.clear();
-	localStorage.setItem('i', i);
-	location.reload(true);
-}
 
 if (localStorage.getItem('theme') == null) {
 	applyTheme(lightTheme);
@@ -108,13 +102,6 @@ const html = document.documentElement;
 html.setAttribute('lang', lang);
 //#endregion
 
-// iOSでプライベートモードだとlocalStorageが使えないので既存のメソッドを上書きする
-try {
-	localStorage.setItem('foo', 'bar');
-} catch (e) {
-	Storage.prototype.setItem = () => { }; // noop
-}
-
 // http://qiita.com/junya/items/3ff380878f26ca447f85
 document.body.setAttribute('ontouchstart', '');
 
@@ -152,7 +139,7 @@ os.init(async () => {
 	store.dispatch('settings/set', { key: 'reactions', value: reactions });
 
 	store.watch(state => state.device.darkMode, darkMode => {
-		import('./theme').then(({ builtinThemes }) => {
+		import('./scripts/theme').then(({ builtinThemes }) => {
 			const themes = builtinThemes.concat(store.state.device.themes);
 			applyTheme(themes.find(x => x.id === (darkMode ? store.state.device.darkTheme : store.state.device.lightTheme)));
 		});
@@ -203,6 +190,7 @@ os.init(async () => {
 				i18n // TODO: 消せないか考える SEE: https://github.com/syuilo/misskey/pull/6396#discussion_r429511030
 			};
 		},
+		// TODO: ここらへんのメソッド全部Vuexに移したい
 		methods: {
 			api: (endpoint: string, data: { [x: string]: any } = {}, token?) => store.dispatch('api', { endpoint, data, token }),
 			signout: os.signout,
@@ -233,7 +221,15 @@ os.init(async () => {
 				});
 				return p;
 			},
+			form(title, form) {
+				const vm = this.new(Form, { title, form });
+				return new Promise((res) => {
+					vm.$once('ok', result => res({ canceled: false, result }));
+					vm.$once('cancel', () => res({ canceled: true }));
+				});
+			},
 			post(opts, cb) {
+				if (!this.$store.getters.isSignedIn) return;
 				const vm = this.new(PostFormDialog, opts);
 				if (cb) vm.$once('closed', cb);
 				(vm as any).focus();
@@ -259,10 +255,8 @@ os.init(async () => {
 			}
 		},
 		router: router,
-		render: createEl => createEl(App)
+		render: createEl => createEl(deckmode ? Deck : App)
 	});
-
-	os.app = app;
 
 	// マウント
 	app.$mount('#app');
