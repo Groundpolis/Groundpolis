@@ -61,7 +61,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
+import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { host, instanceName } from '../config';
 import { search } from '../scripts/search';
@@ -77,7 +77,7 @@ export default Vue.extend({
 			menuDef: this.$store.getters.nav({
 				search: this.search
 			}),
-			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faProjectDiagram
+			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faProjectDiagram, faArrowLeft, faArrowRight
 		};
 	},
 
@@ -314,6 +314,7 @@ export default Vue.extend({
 	$nav-icon-only-width: 80px; // TODO: どこかに集約したい
 	$nav-icon-only-threshold: 1279px; // TODO: どこかに集約したい
 	$nav-hide-threshold: 650px; // TODO: どこかに集約したい
+	$right-widgets-hide-threshold: 1090px;
 
 	> .nav-back {
 		position: fixed;
@@ -569,6 +570,12 @@ export default Vue.extend({
 			}
 		}
 	}
+	.hide-on-pc {
+		display: none !important;
 
+		@media (max-width: $right-widgets-hide-threshold) {
+			display: inherit !important;
+		}
+	}
 }
 </style>
