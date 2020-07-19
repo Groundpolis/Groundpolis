@@ -3,7 +3,6 @@
 	<div class="_title"><fa :icon="faTv"/> {{ $t('appearance') }}</div>
 
 	<div class="_content">
-		<div><b>{{ $t('timeline') }}</b></div>
 		<mk-switch v-model="disableAnimatedMfm">{{ $t('disableAnimatedMfm') }}</mk-switch>
 		<mk-switch v-model="showFixedPostForm">{{ $t('showFixedPostForm') }}</mk-switch>
 		<mk-switch v-model="useBlurEffectForModal">{{ $t('useBlurEffectForModal') }}</mk-switch>
@@ -19,34 +18,46 @@
 			{{ $t('useOsNativeEmojis') }}
 			<template #desc><mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
 		</mk-switch>
+		<mk-switch v-model="showFullAcct">{{ $t('showFullAcct') }}</mk-switch>
+		<mk-switch v-model="compactMode">{{ $t('compactMode') }}</mk-switch>
 		<mk-select v-model="noteNameDisplayMode">
 			<template #label>{{ $t('noteNameDisplayMode') }}</template>
 			<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $t(x) }}</option>
 		</mk-select>
-		<mk-switch v-model="showFullAcct">{{ $t('showFullAcct') }}</mk-switch>
-		<mk-switch v-model="compactMode">{{ $t('compactMode') }}</mk-switch>
-		<div class="_content">
-			<div><b>{{ $t('iconShape') }}</b></div>
-			<div class="_inputs">
-				<mk-radio v-model="iconShape" value="circle">
-					<div class="icon-shape circle"/>
-					{{ $t('_iconShape.circle') }}
-				</mk-radio>
-				<mk-radio v-model="iconShape" value="square">
-					<div class="icon-shape square"/>
-					{{ $t('_iconShape.square') }}
-				</mk-radio>
-				<mk-radio v-model="iconShape" value="rounded">
-					<div class="icon-shape rounded"/>
-					{{ $t('_iconShape.rounded') }}
-				</mk-radio>
-				<mk-radio v-model="iconShape" value="droplet">
-					<div class="icon-shape droplet"/>
-					{{ $t('_iconShape.droplet') }}
-				</mk-radio>
-			</div>
+	</div>
+	<div class="_content">
+		<div><b>InstanceTicker</b></div>
+		<p style="opacity: 0.6"><small>Powered by <a href="http://miy.pw/" target="_blank" rel="noopener noreferrer">InstanceTicker</a></small></p>
+		<mk-select v-model="instanceTicker">
+			<option value="null">{{ $t('_instanceTicker.disable') }}</option>
+			<option value="40">{{ $t('_instanceTicker.alternative') }}</option>
+			<option value="41">{{ $t('_instanceTicker.favicon') }}</option>
+			<option value="42">{{ $t('_instanceTicker.outline') }}</option>
+		</mk-select>
+		<mk-switch v-model="hideHostName">{{ $t('hideHostName') }}</mk-switch>
+	</div>
+	<div class="_content">
+		<div><b>{{ $t('iconShape') }}</b></div>
+		<div class="_inputs">
+			<mk-radio v-model="iconShape" value="circle">
+				<div class="icon-shape circle"/>
+				{{ $t('_iconShape.circle') }}
+			</mk-radio>
+			<mk-radio v-model="iconShape" value="square">
+				<div class="icon-shape square"/>
+				{{ $t('_iconShape.square') }}
+			</mk-radio>
+			<mk-radio v-model="iconShape" value="rounded">
+				<div class="icon-shape rounded"/>
+				{{ $t('_iconShape.rounded') }}
+			</mk-radio>
+			<mk-radio v-model="iconShape" value="droplet">
+				<div class="icon-shape droplet"/>
+				{{ $t('_iconShape.droplet') }}
+			</mk-radio>
 		</div>
-		<div style="margin: 4px 0" />
+	</div>
+	<div class="_content">
 		<x-note :note="previewNote" :preview="true" />
 	</div>
 	<div class="_content">
@@ -120,7 +131,6 @@ import MkButton from '../../components/ui/button.vue';
 import MkRadio from '../../components/ui/radio.vue';
 import XNote from '../../components/note.vue';
 import { langs } from '../../config';
-import MkInfo from '../../components/ui/info.vue';
 import { clientDb, set } from '../../db';
 
 export default Vue.extend({
@@ -136,7 +146,6 @@ export default Vue.extend({
 		MkRadio,
 		MkButton,
 		XNote,
-		MkInfo
 	},
 
 	data() {
@@ -294,6 +303,19 @@ export default Vue.extend({
 			set(value) { this.$store.dispatch('settings/set', { key: 'showFullAcct', value }) }
 		},
 
+		hideHostName: {
+			get() { return this.$store.state.device.hideHostName },
+			set(value) { this.$store.commit('device/set', { key: 'hideHostName', value }) }
+		},
+
+		instanceTicker: {
+			get() { return localStorage.getItem('instanceTicker') || 'null' },
+			set(value) { 
+				localStorage.setItem('instanceTicker', value);
+				location.reload();
+			 }
+		},
+
 		previewNote () {
 			return {
 				id: '',
@@ -344,7 +366,7 @@ export default Vue.extend({
 
 		showFullAcct() {
 			location.reload();
-		}
+		},
 	},
 
 	methods: {

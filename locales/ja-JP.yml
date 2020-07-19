@@ -666,6 +666,13 @@ disableAll: "全て無効にする"
 tokenRequested: "アカウントへのアクセス許可"
 pluginTokenRequestedDescription: "このプラグインはここで設定した権限を行使できるようになります。"
 makeBotFollowManuallyApprove: "Bot からのフォローのみ承認制にする"
+hideHostName: "ホスト名を表示しない"
+
+_instanceTicker:
+  disable: "使用しない"
+  alternative: "代替アイコンモード"
+  favicon: "ファビコンモード"
+  outline: "縁取りファビコンモード"
 
 _steal:
   textOnly: "ただただ本文をパクる"
