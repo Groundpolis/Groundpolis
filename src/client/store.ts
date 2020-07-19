@@ -176,7 +176,7 @@ export default () => new Vuex.Store({
 			followRequests: {
 				title: 'followRequests',
 				icon: faUserClock,
-				get show() { return getters.isSignedIn && state.i.isLocked; },
+				get show() { return getters.isSignedIn && state.i.hasPendingReceivedFollowRequest; },
 				get indicated() { return getters.isSignedIn && state.i.hasPendingReceivedFollowRequest; },
 				to: '/my/follow-requests',
 			},
