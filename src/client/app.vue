@@ -32,7 +32,7 @@
 	<x-sidebar ref="nav"/>
 
 	<div class="contents" ref="contents" :class="{ wallpaper }">
-		<main ref="main" v-show="!$store.getters.isSignedIn || $route.path !== '/'">
+		<main ref="main">
 			<div class="content">
 				<transition :name="$store.state.device.animation ? 'page' : ''" mode="out-in" @enter="onTransition">
 					<keep-alive :include="['index']">
@@ -556,6 +556,7 @@ export default Vue.extend({
 		&.wallpaper {
 			background: var(--wallpaperOverlay);
 			backdrop-filter: blur(4px);
+			-webkit-backdrop-filter: blur(4px);
 		}
 
 		> main {
