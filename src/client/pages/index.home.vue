@@ -63,6 +63,7 @@ import XTimeline from '../components/timeline.vue';
 import MkButton from '../components/ui/button.vue';
 import XPostForm from '../components/post-form.vue';
 import { deckmode } from '../config';
+import { scroll } from '../scripts/scroll';
 
 export default Vue.extend({
 	metaInfo() {
@@ -199,7 +200,7 @@ export default Vue.extend({
 		},
 
 		top() {
-			window.scroll({ top: 0, behavior: 'instant' });
+			scroll(this.$el, 0);
 		},
 
 		genItem(src: string, name?: string) {
@@ -375,7 +376,7 @@ export default Vue.extend({
 
 	> i {
 		position: absolute;
-		top: 16px;
+		top: initial;
 		right: 8px;
 		color: var(--indicator);
 		font-size: 12px;

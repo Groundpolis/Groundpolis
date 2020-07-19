@@ -1,5 +1,5 @@
 <template>
-<div class="mk-messaging-room naked"
+<div class="mk-messaging-room"
 	@dragover.prevent.stop="onDragover"
 	@drop.prevent.stop="onDrop"
 >
@@ -42,6 +42,7 @@ import XMessage from './messaging-room.message.vue';
 import XMessageCompact from './messaging-room.message.compact.vue';
 import XForm from './messaging-room.form.vue';
 import parseAcct from '../../../misc/acct/parse';
+import { isBottom, onScrollBottom } from '../../scripts/scroll';
 
 export default Vue.extend({
 	components: {
@@ -96,8 +97,6 @@ export default Vue.extend({
 	beforeDestroy() {
 		this.connection.dispose();
 
-		window.removeEventListener('scroll', this.onScroll);
-
 		document.removeEventListener('visibilitychange', this.onVisibilitychange);
 
 		this.ilObserver.disconnect();
@@ -122,8 +121,6 @@ export default Vue.extend({
 			this.connection.on('message', this.onMessage);
 			this.connection.on('read', this.onRead);
 			this.connection.on('deleted', this.onDeleted);
-
-			window.addEventListener('scroll', this.onScroll, { passive: true });
 
 			document.addEventListener('visibilitychange', this.onVisibilitychange);
 
@@ -203,7 +200,7 @@ export default Vue.extend({
 		onMessage(message) {
 			this.$root.sound('chat');
 
-			const isBottom = this.isBottom();
+			const _isBottom = isBottom(this.$el, 64);
 
 			this.messages.push(message);
 			if (message.userId != this.$store.state.i.id && !document.hidden) {
@@ -212,7 +209,7 @@ export default Vue.extend({
 				});
 			}
 
-			if (isBottom) {
+			if (_isBottom) {
 				// Scroll to bottom
 				this.$nextTick(() => {
 					this.scrollToBottom();
@@ -249,17 +246,6 @@ export default Vue.extend({
 			}
 		},
 
-		isBottom() {
-			const asobi = 64;
-			const current = this.isNaked
-				? window.scrollY + window.innerHeight
-				: this.$el.scrollTop + this.$el.offsetHeight;
-			const max = this.isNaked
-				? document.body.offsetHeight
-				: this.$el.scrollHeight;
-			return current > (max - asobi);
-		},
-
 		scrollToBottom() {
 			window.scroll(0, document.body.offsetHeight);
 		},
@@ -272,19 +258,15 @@ export default Vue.extend({
 		notifyNewMessage() {
 			this.showIndicator = true;
 
+			onScrollBottom(this.$el, () => {
+				this.showIndicator = false;
+			});
+
 			if (this.timer) clearTimeout(this.timer);
 
 			this.timer = setTimeout(() => {
 				this.showIndicator = false;
 			}, 4000);
-		},
-
-		onScroll() {
-			const el = this.isNaked ? window.document.documentElement : this.$el;
-			const current = el.scrollTop + el.clientHeight;
-			if (current > el.scrollHeight - 1) {
-				this.showIndicator = false;
-			}
 		},
 
 		onVisibilitychange() {

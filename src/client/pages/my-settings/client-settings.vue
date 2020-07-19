@@ -15,6 +15,7 @@
 		<div><b>{{ $t('timeline') }}</b></div>
 		<mk-switch v-model="disableAnimatedMfm">{{ $t('disableAnimatedMfm') }}</mk-switch>
 		<mk-switch v-model="showFixedPostForm">{{ $t('showFixedPostForm') }}</mk-switch>
+		<mk-switch v-model="useBlurEffectForModal">{{ $t('useBlurEffectForModal') }}</mk-switch>
 		<mk-switch v-model="useSticker">
 			{{ $t('useSticker') }}
 			<a class="_link" @click.stop="showHint($t('useSticker'), $t('useStickerDesc'))" style="margin-left: 8px"><fa :icon="faQuestionCircle"/></a>
@@ -204,6 +205,11 @@ export default Vue.extend({
 		useSticker: {
 			get() { return this.$store.state.device.useSticker; },
 			set(value) { this.$store.commit('device/set', { key: 'useSticker', value: value }); }
+		},
+
+		useBlurEffectForModal: {
+			get() { return this.$store.state.device.useBlurEffectForModal; },
+			set(value) { this.$store.commit('device/set', { key: 'useBlurEffectForModal', value: value }); }
 		},
 
 		iconShapeCircle: {

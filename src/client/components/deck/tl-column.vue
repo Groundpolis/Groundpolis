@@ -94,7 +94,7 @@ export default Vue.extend({
 			});
 			if (canceled) {
 				if (this.column.tl == null) {
-					this.setType();
+					this.$store.commit('deviceUser/removeDeckColumn', this.column.id);
 				}
 				return;
 			}

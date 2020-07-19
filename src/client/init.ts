@@ -11,6 +11,8 @@ import VueI18n from 'vue-i18n';
 import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome';
 import VueVideoPlayer from 'vue-video-player';
 import 'video.js/dist/video-js.css';
+import { AiScript } from '@syuilo/aiscript';
+import { deserialize } from '@syuilo/aiscript/built/serializer';
 
 import VueHotkey from './scripts/hotkey';
 import App from './app.vue';
@@ -29,7 +31,6 @@ import { clientDb, get, count } from './db';
 import { setI18nContexts } from './scripts/set-i18n-contexts';
 import { NoteVisibility } from '../types';
 import { createPluginEnv } from './scripts/aiscript/api';
-import { AiScript } from '@syuilo/aiscript';
 
 Vue.use(Vuex);
 Vue.use(VueHotkey);
@@ -64,6 +65,16 @@ console.info(`Groundpolis v${version}`);
 if (localStorage.getItem('theme') == null) {
 	applyTheme(lightTheme);
 }
+
+//#region SEE: https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+// TODO: いつの日にか消したい
+const vh = window.innerHeight * 0.01;
+document.documentElement.style.setProperty('--vh', `${vh}px`);
+window.addEventListener('resize', () => {
+	const vh = window.innerHeight * 0.01;
+	document.documentElement.style.setProperty('--vh', `${vh}px`);
+});
+//#endregion
 
 //#region Detect the user language
 let lang = localStorage.getItem('lang');
@@ -104,61 +115,26 @@ const html = document.documentElement;
 html.setAttribute('lang', lang);
 //#endregion
 
-// http://qiita.com/junya/items/3ff380878f26ca447f85
-document.body.setAttribute('ontouchstart', '');
-
 // アプリ基底要素マウント
 document.body.innerHTML = '<div id="app"></div>';
 
 const store = createStore();
 
+// 他のタブと永続化されたstateを同期
+window.addEventListener('storage', e => {
+	if (e.key === 'vuex') {
+		store.replaceState({
+			...store.state,
+			...JSON.parse(e.newValue)
+		});
+	} else if (e.key === 'i') {
+		location.reload();
+	}
+}, false);
+
 const os = new MiOS(store);
 
 os.init(async () => {
-	window.addEventListener('storage', e => {
-		if (e.key === 'vuex') {
-			store.replaceState(JSON.parse(localStorage['vuex']));
-		} else if (e.key === 'i') {
-			location.reload();
-		}
-	}, false);
-
-	const reactions = store.state.settings.reactions.map(r => {
-		switch (r) {
-			case 'like': return '👍';
-			case 'love': return '❤️';
-			case 'laugh': return '😆';
-			case 'hmm': return '🤔';
-			case 'surprise': return '😮';
-			case 'congrats': return '🎉';
-			case 'angry': return '💢';
-			case 'confused': return '😥';
-			case 'rip': return '😇';
-			case 'pudding': return '🍮';
-			default: return r;
-		}
-	});
-	store.dispatch('settings/set', { key: 'reactions', value: reactions });
-
-	store.watch(state => state.device.darkMode, darkMode => {
-		import('./scripts/theme').then(({ builtinThemes }) => {
-			const themes = builtinThemes.concat(store.state.device.themes);
-			applyTheme(themes.find(x => x.id === (darkMode ? store.state.device.darkTheme : store.state.device.lightTheme)));
-		});
-	});
-
-	//#region Sync dark mode
-	if (store.state.device.syncDeviceDarkMode) {
-		store.commit('device/set', { key: 'darkMode', value: isDeviceDarkmode() });
-	}
-
-	window.matchMedia('(prefers-color-scheme: dark)').addListener(mql => {
-		if (store.state.device.syncDeviceDarkMode) {
-			store.commit('device/set', { key: 'darkMode', value: mql.matches });
-		}
-	});
-	//#endregion
-
 	//#region Fetch locale data
 	const i18n = new VueI18n();
 
@@ -170,13 +146,6 @@ os.init(async () => {
 		i18n.setLocaleMessage(lang, await getLocale());
 	});
 	//#endregion
-
-	if ('Notification' in window && store.getters.isSignedIn) {
-		// 許可を得ていなかったらリクエスト
-		if (Notification.permission === 'default') {
-			Notification.requestPermission();
-		}
-	}
 
 	const app = new Vue({
 		store: store,
@@ -263,6 +232,47 @@ os.init(async () => {
 	// マウント
 	app.$mount('#app');
 
+	store.watch(state => state.device.darkMode, darkMode => {
+		import('./scripts/theme').then(({ builtinThemes }) => {
+			const themes = builtinThemes.concat(store.state.device.themes);
+			applyTheme(themes.find(x => x.id === (darkMode ? store.state.device.darkTheme : store.state.device.lightTheme)));
+		});
+	});
+
+	// v2 リアクションの移行
+	const reactions = store.state.settings.reactions.map(r => {
+		switch (r) {
+			case 'like': return '👍';
+			case 'love': return '❤️';
+			case 'laugh': return '😆';
+			case 'hmm': return '🤔';
+			case 'surprise': return '😮';
+			case 'congrats': return '🎉';
+			case 'angry': return '💢';
+			case 'confused': return '😥';
+			case 'rip': return '😇';
+			case 'pudding': return '🍮';
+			default: return r;
+		}
+	});
+	store.dispatch('settings/set', { key: 'reactions', value: reactions });
+
+	//#region Sync dark mode
+	if (store.state.device.syncDeviceDarkMode) {
+		store.commit('device/set', { key: 'darkMode', value: isDeviceDarkmode() });
+	}
+
+	window.matchMedia('(prefers-color-scheme: dark)').addListener(mql => {
+		if (store.state.device.syncDeviceDarkMode) {
+			store.commit('device/set', { key: 'darkMode', value: mql.matches });
+		}
+	});
+	//#endregion
+
+	store.watch(state => state.device.useBlurEffectForModal, v => {
+		document.documentElement.style.setProperty('--modalBgFilter', v ? 'blur(4px)' : 'none');
+	}, { immediate: true });
+
 	os.stream.on('emojiAdded', data => {
 		// TODO
 		//store.commit('instance/set', );
@@ -294,10 +304,17 @@ os.init(async () => {
 
 		store.commit('initPlugin', { plugin, aiscript });
 
-		aiscript.exec(plugin.ast);
+		aiscript.exec(deserialize(plugin.ast));
 	}
 
 	if (store.getters.isSignedIn) {
+		if ('Notification' in window) {
+			// 許可を得ていなかったらリクエスト
+			if (Notification.permission === 'default') {
+				Notification.requestPermission();
+			}
+		}
+
 		const main = os.stream.useSharedConnection('main');
 
 		// 自分の情報が更新されたとき

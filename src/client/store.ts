@@ -93,6 +93,7 @@ export const defaultDeviceSettings = {
 	disablePagesScript: true,
 	enableInfiniteScroll: true,
 	fixedWidgetsPosition: false,
+	useBlurEffectForModal: true,
 	roomGraphicsQuality: 'medium',
 	roomUseOrthographicCamera: true,
 	deckColumnAlign: 'left',
@@ -359,6 +360,7 @@ export default () => new Vuex.Store({
 		},
 
 		mergeMe(ctx, me) {
+			// TODO: プロパティ一つ一つに対してコミットが発生するのはアレなので良い感じにする
 			for (const [key, value] of Object.entries(me)) {
 				ctx.commit('updateIKeyValue', { key, value });
 			}
@@ -647,19 +649,21 @@ export default () => new Vuex.Store({
 				},
 				//#endregion
 
-				installPlugin(state, { meta, ast }) {
+				installPlugin(state, { meta, ast, token }) {
 					state.plugins.push({
-						id: meta.id,
-						name: meta.name,
-						version: meta.version,
-						author: meta.author,
-						description: meta.description,
+						...meta,
+						configData: {},
+						token: token,
 						ast: ast
 					});
 				},
 
 				uninstallPlugin(state, id) {
 					state.plugins = state.plugins.filter(x => x.id != id);
+				},
+
+				configPlugin(state, { id, config }) {
+					state.plugins.find(p => p.id === id).configData = config;
 				},
 			}
 		},

@@ -58,6 +58,7 @@
 		premium: '#ffc107',
 		messageBg: '@panel',
 		deckColumnBorder: ':darken<20<@panel',
+		htmlThemeColor: '@bg',
 		X1: ':alpha<0<@bg',
 		X2: ':darken<2<@panel',
 		X3: 'rgba(0, 0, 0, 0.05)',
