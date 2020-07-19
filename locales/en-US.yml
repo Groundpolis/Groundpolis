@@ -555,11 +555,11 @@ enableInfiniteScroll: "Enable infinite scrolling"
 visibility: "Visiblility"
 poll: "Poll"
 useCw: "Hide content"
-paint: 'Paint'
-usePressure: 'Pressure Sensitivity'
-usePressureDescription: 'When pressure sensing is enabled, the thickness of the pen changes according to the pressure of the brush when using a compatible device, such as the Apple Pencil.'
-penWidth: 'Pen Width'
-eraserWidth: 'Eraser Width'
+paint: "Paint"
+usePressure: "Pressure Sensitivity"
+usePressureDescription: "When pressure sensing is enabled, the thickness of the pen changes according to the pressure of the brush when using a compatible device, such as the Apple Pencil."
+penWidth: "Pen Width"
+eraserWidth: "Eraser Width"
 failedToLoadImage: "Failed to load image file"
 theFileIsNotImage: "The specified file is not an image"
 initConfirm: "There are unsaved changes. Do you really want to destroy them and continue?"
@@ -568,47 +568,47 @@ experimentalFeatures: "Experimental Features"
 experimentalFeaturesDescription: "These items are experimental and are subject to removal without notice. Also, there is no guarantee that it will work properly."
 hideTimelineColumn: "Hide timeline columns"
 collapse: "Collapse"
-noteNameDisplayMode: 'Username Display Mode'
-displayNameAndUserName: 'Display Name @Username'
-userNameAndDisplayName: '@Username Display Name'
-displayNameOnly: 'Display Name'
-userNameOnly: '@Username'
+noteNameDisplayMode: "Username Display Mode"
+displayNameAndUserName: "Display Name @Username"
+userNameAndDisplayName: "@Username Display Name"
+displayNameOnly: "Display Name"
+userNameOnly: "@Username"
 thisInformationIsNotAvailable: "This information is not available"
-steal: 'Steal it'
-stealingRule: 'Stealing Rule'
-chooseReaction: 'Choose Reaction'
-stealConfirm: 'Are you sure to steal this note?'
-autoUpdateAfterSaving: 'Update automatically after Saving'
-emojiSuggesiton: 'Emoji Suggestion'
+steal: "Steal it"
+stealingRule: "Stealing Rule"
+chooseReaction: "Choose Reaction"
+stealConfirm: "Are you sure to steal this note?"
+autoUpdateAfterSaving: "Update automatically after Saving"
+emojiSuggesiton: "Emoji Suggestion"
 proposer: "Proposer"
-feedbackUrl: 'Feedback URL'
-repositoryUrl: 'Source Code URL'
-useStarForReactionFallback: 'Use ★ if the reaction emoji is unknown'
-emailConfig: 'Email server settings'
-enableEmail: 'Enable email delivery'
-emailConfigInfo: 'Used to confirm email and password reset etc.'
-email: 'Email Address'
-smtpConfig: 'SMTP Server Setting'
-smtpHost: 'Host'
-smtpPort: 'Port'
-smtpUser: 'Username'
-smtpPass: 'Password'
-emptyToDisableSmtpAuth: 'Empty username and password to disable SMTP authentication.'
-smtpSecure: 'Use implicit SSL/TLS in the SMTP connection'
-smtpSecureInfo: 'Turn off STARTTLS when used that'
-testEmail: 'Test delivery'
-logoutAll: 'Logout all accounts'
-logoutAllConfirm: 'Are you sure to delete all accounts added to this device?'
-premium: 'Premium Member'
+feedbackUrl: "Feedback URL"
+repositoryUrl: "Source Code URL"
+useStarForReactionFallback: "Use ★ if the reaction emoji is unknown"
+emailConfig: "Email server settings"
+enableEmail: "Enable email delivery"
+emailConfigInfo: "Used to confirm email and password reset etc."
+email: "Email Address"
+smtpConfig: "SMTP Server Setting"
+smtpHost: "Host"
+smtpPort: "Port"
+smtpUser: "Username"
+smtpPass: "Password"
+emptyToDisableSmtpAuth: "Empty username and password to disable SMTP authentication."
+smtpSecure: "Use implicit SSL/TLS in the SMTP connection"
+smtpSecureInfo: "Turn off STARTTLS when used that"
+testEmail: "Test delivery"
+logoutAll: "Logout all accounts"
+logoutAllConfirm: "Are you sure to delete all accounts added to this device?"
+premium: "Premium Member"
 driveCapacityPerPremiumAccount: "Drive capacity per premium member"
-enableInvitation: 'Allow registration with invitation code'
-disableInvitationReason: 'Reason to disable registration'
-signupDisabled: 'you cannot register now.'
-enableFeatured: 'Enable Featured'
+enableInvitation: "Allow registration with invitation code"
+disableInvitationReason: "Reason to disable registration"
+signupDisabled: "you cannot register now."
+enableFeatured: "Enable Featured"
 welcomeFeatured: "Let's explore the featured notes!"
 welcomeTimeline: "Let's explore the timeline!"
-broadcastMode: 'Broadcast Mode'
-broadcastModeDescription: 'Write the text to attach automatically'
+broadcastMode: "Broadcast Mode"
+broadcastModeDescription: "Write the text to attach automatically"
 fixedWidgetsPosition: "Make widget position fixed"
 enablePlayer: "Open video player"
 disablePlayer: "Close video player"
@@ -622,30 +622,31 @@ plugins: "Plugins"
 pluginInstallWarn: "Please do not install untrustworthy plugins."
 deck: "Deck"
 undeck: "Leave Deck"
+makeBotFollowManuallyApprove: "Follow requests from bots require approval"
 _steal:
-  textOnly: 'Steal the text only'
-  react: 'Add reaction to the base note before stealing'
-  renote: 'Renote the base note before stealing'
-  url: 'Stealing with URL of the base note'
+  textOnly: "Steal the text only"
+  react: "Add reaction to the base note before stealing"
+  renote: "Renote the base note before stealing"
+  url: "Stealing with URL of the base note"
 _paint:
-  new: 'New File'
-  open: 'Open File'
-  save: 'Save'
-  undo: 'Undo'
-  redo: 'Redo'
-  changeColor: 'Change color'
-  zoomMinus: '- Zoom'
-  zoomPlus: '+ Zoom'
+  new: "New File"
+  open: "Open File"
+  save: "Save"
+  undo: "Undo"
+  redo: "Redo"
+  changeColor: "Change color"
+  zoomMinus: "- Zoom"
+  zoomPlus: "+ Zoom"
   tools:
-    hand: 'Hand'
-    pen: 'Pen'
-    eraser: 'Eraser'
-    shapes: 'Shapes'
-    line: 'Line'
-    rect: 'Rectangle'
-    rectFill: 'Rectangle Fill'
-    circle: 'Circle'
-    circleFill: 'Circle Fill'
+    hand: "Hand"
+    pen: "Pen"
+    eraser: "Eraser"
+    shapes: "Shapes"
+    line: "Line"
+    rect: "Rectangle"
+    rectFill: "Rectangle Fill"
+    circle: "Circle"
+    circleFill: "Circle Fill"
 _theme:
   explore: "Explore Themes"
   install: "Install theme"

@@ -575,11 +575,11 @@ enableInfiniteScroll: "自動でもっと見る"
 visibility: "公開範囲"
 poll: "アンケート"
 useCw: "内容を隠す"
-paint: 'ペイント'
-usePressure: '筆圧感知'
-usePressureDescription: '筆圧感知を有効化すると、筆圧の検出に対応している、例えば Apple Pencil のようなデバイスを使用することで、筆圧に従ってペンの太さが変化するようになります。'
-penWidth: 'ペンの太さ'
-eraserWidth: '消しゴムの太さ'
+paint: "ペイント"
+usePressure: "筆圧感知"
+usePressureDescription: "筆圧感知を有効化すると、筆圧の検出に対応している、例えば Apple Pencil のようなデバイスを使用することで、筆圧に従ってペンの太さが変化するようになります。"
+penWidth: "ペンの太さ"
+eraserWidth: "消しゴムの太さ"
 failedToLoadImage: "画像データの読み込みに失敗しました。"
 theFileIsNotImage: "画像ファイルを指定してください"
 initConfirm: "未保存の変更があります。破棄して続けますか？"
@@ -588,63 +588,63 @@ experimentalFeatures: "実験的機能"
 experimentalFeaturesDescription: "これらの項目は実験的で、予告なく削除される可能性があります。また、正しく動作する保証はありません。"
 hideTimelineColumn: "タイムラインカラムを非表示にする"
 collapse: "たたむ"
-noteNameDisplayMode: 'ユーザー名の表示モード'
-displayNameAndUserName: '表示名 @ユーザー名'
-userNameAndDisplayName: '@ユーザー名 表示名'
-displayNameOnly: '表示名'
-userNameOnly: '@ユーザー名'
+noteNameDisplayMode: "ユーザー名の表示モード"
+displayNameAndUserName: "表示名 @ユーザー名"
+userNameAndDisplayName: "@ユーザー名 表示名"
+displayNameOnly: "表示名"
+userNameOnly: "@ユーザー名"
 thisInformationIsNotAvailable: "この情報は利用できません"
-steal: 'パクる'
-stealingRule: 'パクるときのルール'
-chooseReaction: 'リアクションを選択'
-stealConfirm: 'このノートをパクりますか？'
-autoReloadAfterSaving: '保存後に自動的にリロードする'
-emojiSuggestion: '絵文字の提案'
-history: '履歴'
-emojiSuggestionMessage: '補足説明'
-emojiSuggestionMessageDescription: '審査に必要な情報を事細かく記載してください。例えば、絵文字に使われている画像の出処や、ミームが元となっている場合はそれを説明しているURLなどを記載してください。'
-sendSuggestion: '提案を送信'
-tagsDescription: '絵文字の別名を指定できます。空白区切りで複数指定できます。'
-pending: '承認待ち'
-accepted: '承認済み'
-rejected: '拒否済み'
-noSuggestions: '提案はありません'
-suggestedEmojis: 'ユーザーから提案されたカスタム絵文字'
-pendingOnly: '承認待ちのみ'
-commentFromModerators: 'モデレーターからのコメント'
-emojiSuggestionSent: '提案が送信されました。モデレーターが審査するまでしばらくお待ちください。'
-emojiSuggestionDeleteConfirm: 'この提案を取り下げますか？'
-writeRejectReason: 'ユーザーへのコメントを書いてください'
+steal: "パクる"
+stealingRule: "パクるときのルール"
+chooseReaction: "リアクションを選択"
+stealConfirm: "このノートをパクりますか？"
+autoReloadAfterSaving: "保存後に自動的にリロードする"
+emojiSuggestion: "絵文字の提案"
+history: "履歴"
+emojiSuggestionMessage: "補足説明"
+emojiSuggestionMessageDescription: "審査に必要な情報を事細かく記載してください。例えば、絵文字に使われている画像の出処や、ミームが元となっている場合はそれを説明しているURLなどを記載してください。"
+sendSuggestion: "提案を送信"
+tagsDescription: "絵文字の別名を指定できます。空白区切りで複数指定できます。"
+pending: "承認待ち"
+accepted: "承認済み"
+rejected: "拒否済み"
+noSuggestions: "提案はありません"
+suggestedEmojis: "ユーザーから提案されたカスタム絵文字"
+pendingOnly: "承認待ちのみ"
+commentFromModerators: "モデレーターからのコメント"
+emojiSuggestionSent: "提案が送信されました。モデレーターが審査するまでしばらくお待ちください。"
+emojiSuggestionDeleteConfirm: "この提案を取り下げますか？"
+writeRejectReason: "ユーザーへのコメントを書いてください"
 proposer: "提案者"
-feedbackUrl: 'フィードバックURL'
-repositoryUrl: 'ソースコードの配布URL'
-useStarForReactionFallback: 'リアクション絵文字が不明な場合、代わりに★を使う'
-emailConfig: 'メールサーバー設定'
-enableEmail: 'メール配信機能を有効化する'
-emailConfigInfo: 'メールアドレスの確認やパスワードリセットの際に使います'
-email: 'メールアドレス'
-smtpConfig: 'SMTP サーバーの設定'
-smtpHost: 'ホスト'
-smtpPort: 'ポート'
-smtpUser: 'ユーザー名'
-smtpPass: 'パスワード'
-emptyToDisableSmtpAuth: 'ユーザー名とパスワードを空欄にすることで、SMTP認証を無効化出来ます'
-smtpSecure: 'SMTP 接続に暗黙的なSSL/TLSを使用する'
-smtpSecureInfo: 'STARTTLS使用時はオフにします。'
-testEmail: '配信テスト'
-showFullAcct: 'ローカルユーザーのホスト名を省略しない'
-logoutAll: '全アカウントをログアウト'
-logoutAllConfirm: 'このデバイスに追加した全てのアカウントをログアウトしますか？'
-premium: 'プレミアム会員'
+feedbackUrl: "フィードバックURL"
+repositoryUrl: "ソースコードの配布URL"
+useStarForReactionFallback: "リアクション絵文字が不明な場合、代わりに★を使う"
+emailConfig: "メールサーバー設定"
+enableEmail: "メール配信機能を有効化する"
+emailConfigInfo: "メールアドレスの確認やパスワードリセットの際に使います"
+email: "メールアドレス"
+smtpConfig: "SMTP サーバーの設定"
+smtpHost: "ホスト"
+smtpPort: "ポート"
+smtpUser: "ユーザー名"
+smtpPass: "パスワード"
+emptyToDisableSmtpAuth: "ユーザー名とパスワードを空欄にすることで、SMTP認証を無効化出来ます"
+smtpSecure: "SMTP 接続に暗黙的なSSL/TLSを使用する"
+smtpSecureInfo: "STARTTLS使用時はオフにします。"
+testEmail: "配信テスト"
+showFullAcct: "ローカルユーザーのホスト名を省略しない"
+logoutAll: "全アカウントをログアウト"
+logoutAllConfirm: "このデバイスに追加した全てのアカウントをログアウトしますか？"
+premium: "プレミアム会員"
 driveCapacityPerPremiumAccount: "プレミアム会員ひとりあたりのドライブ容量"
-enableInvitation: '招待コードを使って新規登録できるようにする'
-disableInvitationReason: '登録を無効化する理由'
-signupDisabled: '現在、新規登録を停止しています。'
-enableFeatured: 'ハイライトを有効にする'
-welcomeFeatured: '今人気のつぶやきを見てみよう'
-welcomeTimeline: 'タイムラインを見てみよう'
-broadcastMode: '実況モード'
-broadcastModeDescription: '常にノートに添付するテキストを書いてください'
+enableInvitation: "招待コードを使って新規登録できるようにする"
+disableInvitationReason: "登録を無効化する理由"
+signupDisabled: "現在、新規登録を停止しています。"
+enableFeatured: "ハイライトを有効にする"
+welcomeFeatured: "今人気のつぶやきを見てみよう"
+welcomeTimeline: "タイムラインを見てみよう"
+broadcastMode: "実況モード"
+broadcastModeDescription: "常にノートに添付するテキストを書いてください"
 fixedWidgetsPosition: "ウィジェットの位置を固定する"
 enablePlayer: "プレイヤーを開く"
 disablePlayer: "プレイヤーを閉じる"
@@ -665,32 +665,33 @@ enableAll: "全て有効にする"
 disableAll: "全て無効にする"
 tokenRequested: "アカウントへのアクセス許可"
 pluginTokenRequestedDescription: "このプラグインはここで設定した権限を行使できるようになります。"
+makeBotFollowManuallyApprove: "Bot からのフォローのみ承認制にする"
 
 _steal:
-  textOnly: 'ただただ本文をパクる'
-  react: '元のノートにリアクションを付けてからパクる'
-  renote: '元のノートをリノートしてからパクる'
-  url: '元のノートの URL を添えてパクる'
+  textOnly: "ただただ本文をパクる"
+  react: "元のノートにリアクションを付けてからパクる"
+  renote: "元のノートをリノートしてからパクる"
+  url: "元のノートの URL を添えてパクる"
 
 _paint:
-  new: '新規ファイル'
-  open: 'ファイルを開く'
-  save: '保存'
-  undo: '元に戻す'
-  redo: 'やり直す'
-  changeColor: '色を変更'
-  zoomMinus: '- ズーム'
-  zoomPlus: '+ ズーム'
+  new: "新規ファイル"
+  open: "ファイルを開く"
+  save: "保存"
+  undo: "元に戻す"
+  redo: "やり直す"
+  changeColor: "色を変更"
+  zoomMinus: "- ズーム"
+  zoomPlus: "+ ズーム"
   tools:
-    hand: '手'
-    pen: 'ペン'
-    eraser: '消しゴム'
-    shapes: '図形'
-    line: '直線'
-    rect: '四角'
-    rectFill: '四角塗りつぶし'
-    circle: '円'
-    circleFill: '円塗りつぶし'
+    hand: "手"
+    pen: "ペン"
+    eraser: "消しゴム"
+    shapes: "図形"
+    line: "直線"
+    rect: "四角"
+    rectFill: "四角塗りつぶし"
+    circle: "円"
+    circleFill: "円塗りつぶし"
 
 
 _theme:
