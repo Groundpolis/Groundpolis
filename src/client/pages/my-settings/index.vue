@@ -7,7 +7,6 @@
 		{{ $t('editProfile') }}
 	</router-link>
 
-	<x-privacy-setting/>
 	<x-reaction-setting/>
 
 	<section class="_card">
@@ -40,11 +39,11 @@
 		</div>
 	</section>
 
+	<x-theme/>
+	<x-plugins/>
+	<x-sidebar/>
 	<x-sounds/>
 	<x-gacha/>
-	<x-theme/>
-	<x-sidebar/>
-	<x-plugins/>
 
 	<section class="_card">
 		<div class="_title"><fa :icon="faColumns"/> {{ $t('deck') }}</div>
@@ -60,19 +59,24 @@
 		</div>
 	</section>
 
-	<x-client-settings/>
+	<x-appearance/>
+	<x-client/>
 
 	<x-import-export/>
 	<x-drive/>
 	<x-mute-block/>
+
+	<x-privacy-setting/>
 	<x-security/>
 	<x-2fa/>
+
 	<x-integration/>
+
 	<x-api/>
 
 	<x-cache-clear/>
-	<router-link class="_panel _buttonPrimary" to="/my/apps" style="margin: var(--margin) auto;">{{ $t('installedApps') }}</router-link>
 
+	<router-link class="_panel _buttonPrimary" to="/my/apps" style="margin: var(--margin) auto;">{{ $t('installedApps') }}</router-link>
 	<button class="_panel _buttonPrimary" @click="$root.signout()" style="margin: var(--margin) auto;">{{ $t('logout') }}</button>
 	<button class="_panel _buttonPrimary" @click="signoutAll()" style="margin: var(--margin) auto;">{{ $t('logoutAll') }}</button>
 </div>
@@ -80,9 +84,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faColumns } from '@fortawesome/free-solid-svg-icons';
 import XCacheClear from './cache-clear.vue';
-import XClientSettings from './client-settings.vue';
+import XAppearance from './appearance.vue';
+import XClient from './client.vue';
 import XSounds from './sounds.vue';
 import XGacha from './gacha.vue';
 import XPrivacySetting from './privacy.vue';
@@ -111,7 +116,8 @@ export default Vue.extend({
 	},
 
 	components: {
-		XClientSettings,
+		XAppearance,
+		XClient,
 		XCacheClear,
 		XSounds,
 		XGacha,
@@ -135,7 +141,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			faCog
+			faCog, faColumns
 		}
 	},
 

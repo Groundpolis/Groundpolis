@@ -46,8 +46,8 @@
 		<a href="https://assets.msky.cafe/theme/list" rel="noopener" target="_blank" class="_link">{{ $t('_theme.explore') }}</a>・<router-link to="/theme-editor" class="_link">{{ $t('_theme.make') }}</router-link>
 	</div>
 	<div class="_content">
-		<mk-button primary v-if="wallpaper == null" @click="setWallpaper">{{ $t('setWallpaper') }}</mk-button>
-		<mk-button primary v-else @click="wallpaper = null">{{ $t('removeWallpaper') }}</mk-button>
+		<mk-button v-if="wallpaper == null" @click="setWallpaper">{{ $t('setWallpaper') }}</mk-button>
+		<mk-button v-else @click="wallpaper = null">{{ $t('removeWallpaper') }}</mk-button>
 	</div>
 	<div class="_content">
 		<details>

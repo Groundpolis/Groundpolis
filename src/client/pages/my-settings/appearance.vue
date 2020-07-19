@@ -1,15 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faTv"/> {{ $t('clinetSettings') }}</div>
-
-	<div class="_content">
-		<mk-switch v-model="autoReload">{{ $t('autoReloadWhenDisconnected') }}</mk-switch>
-		<mk-switch v-model="enableInfiniteScroll">{{ $t('enableInfiniteScroll') }}</mk-switch>
-		<mk-switch v-model="fixedWidgetsPosition">{{ $t('fixedWidgetsPosition') }}</mk-switch>
-		<mk-switch v-model="reduceAnimation">{{ $t('reduceUiAnimation') }}</mk-switch>
-		<mk-switch v-model="disablePagesScript">{{ $t('disablePagesScript') }}</mk-switch>
-		<mk-switch v-model="imageNewTab">{{ $t('openImageInNewTab') }}</mk-switch>
-	</div>
+	<div class="_title"><fa :icon="faTv"/> {{ $t('appearance') }}</div>
 
 	<div class="_content">
 		<div><b>{{ $t('timeline') }}</b></div>
@@ -30,57 +21,71 @@
 		</mk-switch>
 		<mk-select v-model="noteNameDisplayMode">
 			<template #label>{{ $t('noteNameDisplayMode') }}</template>
-
 			<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $t(x) }}</option>
 		</mk-select>
 		<mk-switch v-model="showFullAcct">{{ $t('showFullAcct') }}</mk-switch>
 		<mk-switch v-model="compactMode">{{ $t('compactMode') }}</mk-switch>
+		<div class="_content">
+			<div><b>{{ $t('iconShape') }}</b></div>
+			<div class="_inputs">
+				<mk-radio v-model="iconShape" value="circle">
+					<div class="icon-shape circle"/>
+					{{ $t('_iconShape.circle') }}
+				</mk-radio>
+				<mk-radio v-model="iconShape" value="square">
+					<div class="icon-shape square"/>
+					{{ $t('_iconShape.square') }}
+				</mk-radio>
+				<mk-radio v-model="iconShape" value="rounded">
+					<div class="icon-shape rounded"/>
+					{{ $t('_iconShape.rounded') }}
+				</mk-radio>
+				<mk-radio v-model="iconShape" value="droplet">
+					<div class="icon-shape droplet"/>
+					{{ $t('_iconShape.droplet') }}
+				</mk-radio>
+			</div>
+		</div>
+		<div style="margin: 4px 0" />
 		<x-note :note="previewNote" :preview="true" />
 	</div>
 	<div class="_content">
 		<div><b>{{ $t('confirmDialogSetting') }}</b></div>
-		<mk-switch v-model="showRenoteConfirm">{{ $t('renote') }}</mk-switch>
-		<mk-switch v-model="showNoteConfirm">{{ $t('note') }}</mk-switch>
-		<mk-switch v-model="showUnrenoteConfirm">{{ $t('unrenote') }}</mk-switch>
-		<mk-switch v-model="showNoteDeleteConfirm">{{ $t('noteDelete') }}</mk-switch>
+		<div class="_inputs">
+			<mk-switch v-model="showRenoteConfirm">{{ $t('renote') }}</mk-switch>
+			<mk-switch v-model="showUnrenoteConfirm">{{ $t('unrenote') }}</mk-switch>
+		</div>
+		<div class="_inputs">
+			<mk-switch v-model="showNoteConfirm">{{ $t('note') }}</mk-switch>
+			<mk-switch v-model="showNoteDeleteConfirm">{{ $t('noteDelete') }}</mk-switch>
+		</div>
+		<div class="_inputs">
+			<mk-switch v-model="showFollowConfirm">{{ $t('follow') }}</mk-switch>
+			<mk-switch v-model="showUnfollowConfirm">{{ $t('unfollow') }}</mk-switch>
+		</div>
+		<div class="_inputs">
+			<mk-switch v-model="showBlockConfirm">{{ $t('block') }}</mk-switch>
+			<mk-switch v-model="showUnblockConfirm">{{ $t('unblock') }}</mk-switch>
+		</div>
+		<div class="_inputs">
+			<mk-switch v-model="showMuteConfirm">{{ $t('mute') }}</mk-switch>
+			<mk-switch v-model="showUnMuteConfirm">{{ $t('unmute') }}</mk-switch>
+		</div>
 		<mk-switch v-model="showDeleteAndEditConfirm">{{ $t('revert-to-draft') }}</mk-switch>
 		<mk-switch v-model="showDriveFileDeleteConfirm">{{ $t('driveFileDelete') }}</mk-switch>
-		<mk-switch v-model="showFollowConfirm">{{ $t('follow') }}</mk-switch>
-		<mk-switch v-model="showUnfollowConfirm">{{ $t('unfollow') }}</mk-switch>
-		<mk-switch v-model="showBlockConfirm">{{ $t('block') }}</mk-switch>
-		<mk-switch v-model="showUnblockConfirm">{{ $t('unblock') }}</mk-switch>
-		<mk-switch v-model="showMuteConfirm">{{ $t('mute') }}</mk-switch>
-		<mk-switch v-model="showUnMuteConfirm">{{ $t('unmute') }}</mk-switch>
 		<mk-switch v-model="showStealConfirm">{{ $t('steal') }}</mk-switch>
 	</div>
 
 	<div class="_content">
 		<div><b>{{ $t('notifications') }}</b></div>
-		<mk-switch v-model="showBrowserNotification">
-			{{ $t('showBrowserNotification') }}
-		</mk-switch>
-		<mk-switch v-model="showToast">
-			{{ $t('showToast') }}
-		</mk-switch>
-	</div>
-	<div class="_content">
-		<div><b>{{ $t('iconShape') }}</b></div>
-		<mk-radio v-model="iconShape" value="circle">
-			<div class="icon-shape circle"/>
-			{{ $t('_iconShape.circle') }}
-		</mk-radio>
-		<mk-radio v-model="iconShape" value="square">
-			<div class="icon-shape square"/>
-			{{ $t('_iconShape.square') }}
-		</mk-radio>
-		<mk-radio v-model="iconShape" value="rounded">
-			<div class="icon-shape rounded"/>
-			{{ $t('_iconShape.rounded') }}
-		</mk-radio>
-		<mk-radio v-model="iconShape" value="droplet">
-			<div class="icon-shape droplet"/>
-			{{ $t('_iconShape.droplet') }}
-		</mk-radio>
+		<div class="_inputs">
+			<mk-switch v-model="showBrowserNotification">
+				{{ $t('showBrowserNotification') }}
+			</mk-switch>
+			<mk-switch v-model="showToast">
+				{{ $t('showToast') }}
+			</mk-switch>
+		</div>
 	</div>
 	<div class="_content">
 		<mk-select v-model="lang">
@@ -144,21 +149,6 @@ export default Vue.extend({
 	},
 
 	computed: {
-		autoReload: {
-			get() { return this.$store.state.device.autoReload; },
-			set(value) { this.$store.commit('device/set', { key: 'autoReload', value }); }
-		},
-
-		enableInfiniteScroll: {
-			get() { return this.$store.state.device.enableInfiniteScroll; },
-			set(value) { this.$store.commit('device/setInfiniteScrollEnabling', value); }
-		},
-
-		reduceAnimation: {
-			get() { return !this.$store.state.device.animation; },
-			set(value) { this.$store.commit('device/set', { key: 'animation', value: !value }); }
-		},
-
 		disableAnimatedMfm: {
 			get() { return !this.$store.state.device.animatedMfm; },
 			set(value) { this.$store.commit('device/set', { key: 'animatedMfm', value: !value }); }
@@ -167,16 +157,6 @@ export default Vue.extend({
 		useOsNativeEmojis: {
 			get() { return this.$store.state.device.useOsNativeEmojis; },
 			set(value) { this.$store.commit('device/set', { key: 'useOsNativeEmojis', value }); }
-		},
-
-		disablePagesScript: {
-			get() { return this.$store.state.device.disablePagesScript; },
-			set(value) { this.$store.commit('device/set', { key: 'disablePagesScript', value }); }
-		},
-
-		imageNewTab: {
-			get() { return this.$store.state.device.imageNewTab; },
-			set(value) { this.$store.commit('device/set', { key: 'imageNewTab', value }); }
 		},
 
 		showFixedPostForm: {
@@ -312,11 +292,6 @@ export default Vue.extend({
 		showFullAcct: {
 			get() { return this.$store.state.settings.showFullAcct },
 			set(value) { this.$store.dispatch('settings/set', { key: 'showFullAcct', value }) }
-		},
-
-		fixedWidgetsPosition: {
-			get() { return this.$store.state.device.fixedWidgetsPosition; },
-			set(value) { this.$store.commit('device/set', { key: 'fixedWidgetsPosition', value }); }
 		},
 
 		previewNote () {
