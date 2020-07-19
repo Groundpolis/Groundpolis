@@ -1,7 +1,7 @@
 <template>
 <div class="mk-home" v-hotkey.global="keymap">
 	<template v-if="showTitle">
-		<portal to="header" v-if="!$store.state.deviceUser.hideTimelineColumn">
+		<portal to="header">
 			<button v-if="isMobile || deckMode" @click="choose" class="_button _kjvfvyph_">
 				<i><fa v-if="$store.state.i.hasUnreadAntenna" :icon="faCircle"/></i>
 				<fa :icon="getIconOfTimeline(src)"/>

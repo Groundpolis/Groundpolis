@@ -97,13 +97,10 @@
 		<mk-radio v-model="fontSize" value="large"><span style="font-size: 18px;">Aa</span></mk-radio>
 		<mk-radio v-model="fontSize" value="veryLarge"><span style="font-size: 20px;">Aa</span></mk-radio>
 	</div>
-	<div class="_content">
+	<!-- <div class="_content">
 		<div>{{ $t('experimentalFeatures') }}</div>
 		<mk-info warn>{{ $t('experimentalFeaturesDescription') }}</mk-info>
-		<mk-switch v-model="hideTimelineColumn">
-			{{ $t('hideTimelineColumn') }}
-		</mk-switch>
-	</div>
+	</div> -->
 </section>
 	<!-- <mk-button @click="cacheClear()" primary style="margin: var(--margin) auto;">{{ $t('cacheClear') }}</mk-button> -->
 </template>
@@ -305,11 +302,6 @@ export default Vue.extend({
 		compactMode: {
 			get() { return this.$store.state.device.postStyle === 'compact' },
 			set(value) { this.$store.commit('device/set', { key: 'postStyle', value: value ? 'compact' : 'standard' }); }
-		},
-
-		hideTimelineColumn: {
-			get() { return this.$store.state.deviceUser.hideTimelineColumn },
-			set(value) { this.$store.commit('deviceUser/set', { key: 'hideTimelineColumn', value }); }
 		},
 
 		noteNameDisplayMode: {

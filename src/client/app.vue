@@ -17,10 +17,6 @@
 				</div>
 			</transition>
 		</div>
-		<div v-if="$store.state.deviceUser.hideTimelineColumn" class="widgets-edit-button">
-			<button v-if="widgetsEditMode" class="_button edit active" @click="widgetsEditMode = false"><fa :icon="faGripVertical"/></button>
-			<button v-else class="_button edit" @click="widgetsEditMode = true"><fa :icon="faGripVertical"/></button>
-		</div>
 		<div class="sub">
 			<button v-if="widgetsEditMode" class="_button edit active" @click="widgetsEditMode = false"><fa :icon="faGripVertical"/></button>
 			<button v-else class="_button edit" @click="widgetsEditMode = true"><fa :icon="faGripVertical"/></button>
@@ -36,7 +32,7 @@
 	<x-sidebar ref="nav"/>
 
 	<div class="contents" ref="contents" :class="{ wallpaper }">
-		<main ref="main" v-show="!$store.getters.isSignedIn || $route.path !== '/' || !$store.state.deviceUser.hideTimelineColumn">
+		<main ref="main" v-show="!$store.getters.isSignedIn || $route.path !== '/'">
 			<div class="content">
 				<transition :name="$store.state.device.animation ? 'page' : ''" mode="out-in" @enter="onTransition">
 					<keep-alive :include="['index']">
