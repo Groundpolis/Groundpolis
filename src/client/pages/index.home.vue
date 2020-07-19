@@ -22,10 +22,6 @@
 				</button>
 			</div>
 		</portal>
-		<template v-else>
-			<portal to="icon"><fa :icon="faHome"/></portal>
-			<portal to="title">{{ $t('timeline') }}</portal>
-		</template>
 	</template>
 
 	<div class="new" v-if="queue > 0" :style="{ width: width + 'px' }"><button class="_buttonPrimary" @click="top()">{{ $t('newNoteRecived') }}</button></div>
