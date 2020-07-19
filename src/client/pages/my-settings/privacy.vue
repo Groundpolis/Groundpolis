@@ -2,9 +2,10 @@
 <section class="_card">
 	<div class="_title"><fa :icon="faLock"/> {{ $t('privacy') }}</div>
 	<div class="_content">
-		<mk-switch v-model="isLocked" @change="save()">{{ $t('makeFollowManuallyApprove') }}</mk-switch>
+		<mk-switch v-model="isLocked" :disabled="carefulBot" @change="save()">{{ $t('makeFollowManuallyApprove') }}</mk-switch>
+		<mk-switch v-model="carefulBot" :disabled="isLocked" @change="save()">{{ $t('makeBotFollowManuallyApprove') }}</mk-switch>
+		<mk-switch v-model="autoAcceptFollowed" v-if="isLocked || carefulBot" @change="save()">{{ $t('autoAcceptFollowed') }}</mk-switch>
 		<mk-switch v-model="hideFF" @change="save()">{{ $t('hideFF') }}</mk-switch>
-		<mk-switch v-model="autoAcceptFollowed" v-if="isLocked" @change="save()">{{ $t('autoAcceptFollowed') }}</mk-switch>
 	</div>
 	<div class="_content">
 		<mk-switch v-model="rememberNoteVisibility" @change="save()">{{ $t('rememberNoteVisibility') }}</mk-switch>
@@ -36,6 +37,7 @@ export default Vue.extend({
 		return {
 			isLocked: false,
 			autoAcceptFollowed: false,
+			carefulBot: false,
 			hideFF: false,
 			faLock
 		}
@@ -61,6 +63,7 @@ export default Vue.extend({
 	created() {
 		this.isLocked = this.$store.state.i.isLocked;
 		this.hideFF = this.$store.state.i.hideFF;
+		this.carefulBot = this.$store.state.i.carefulBot;
 		this.autoAcceptFollowed = this.$store.state.i.autoAcceptFollowed;
 	},
 
@@ -69,6 +72,7 @@ export default Vue.extend({
 			this.$root.api('i/update', {
 				isLocked: !!this.isLocked,
 				hideFF: !!this.hideFF,
+				carefulBot: !!this.carefulBot,
 				autoAcceptFollowed: !!this.autoAcceptFollowed,
 			});
 		}
