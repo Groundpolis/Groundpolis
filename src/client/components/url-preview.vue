@@ -104,6 +104,7 @@ export default Vue.extend({
 
 		fetch(`/url?url=${encodeURIComponent(requestUrl.href)}&lang=${requestLang}`).then(res => {
 			res.json().then(info => {
+				if (info._isBlocked) return;
 				if (info.url == null) return;
 				this.title = info.title;
 				this.description = info.description;
@@ -124,6 +125,10 @@ export default Vue.extend({
 		if (areaWidth && areaWidth < 300) this.tweetLeft = areaWidth - 241;
 	},
 
+	beforeDestroy() {
+		(window as any).removeEventListener('message', this.adjustTweetHeight);
+	},
+
 	methods: {
 		adjustTweetHeight(message: any) {
 			if (message.origin !== 'https://platform.twitter.com') return;
@@ -133,10 +138,6 @@ export default Vue.extend({
 			const height = embed?.params[0]?.height;
 			if (height) this.tweetHeight = height;
  		},
-	},
-
-	beforeDestroy() {
-		(window as any).removeEventListener('message', this.adjustTweetHeight);
 	},
 });
 </script>
