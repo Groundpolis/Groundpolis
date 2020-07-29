@@ -27,13 +27,6 @@
 			</template>
 		</mk-pagination>
 	</div>
-	<div class="_content">
-		<mk-textarea v-model="mutedWordsString" v-autocomplete="{ model: 'mutedWordsString' }">
-			<span>{{ $t('mutedWords') }}</span>
-			<template #desc>{{ $t('mutedWordsDescription') }}</template>
-		</mk-textarea>
-		<mk-button @click="saveMutedWords()" primary inline :disabled="!changedMutedWords"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
-	</div>
 </section>
 </template>
 
@@ -41,15 +34,11 @@
 import Vue from 'vue';
 import { faBan } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
-import MkButton from '../../components/ui/button.vue';
-import MkTextarea from '../../components/ui/textarea.vue';
 import MkPagination from '../../components/ui/pagination.vue';
 
 export default Vue.extend({
 	components: {
 		MkPagination,
-		MkButton,
-		MkTextarea,
 	},
 
 	data() {
@@ -62,29 +51,9 @@ export default Vue.extend({
 				endpoint: 'blocking/list',
 				limit: 10,
 			},
-			mutedWordsString: this.$store.state.settings.mutedWords.map(words => words.join(' ')).join('\n'),
-			changedMutedWords: false,
 			faBan, faSave,
 		}
 	},
-
-	watch: {
-		mutedWordsString() {
-			this.changedMutedWords = true;
-		}
-	},
-
-	methods: {
-		saveMutedWords() {
-			this.$store.dispatch('settings/set', { key: 'mutedWords', value: this.mutedWordsString.split('\n').map((line: string) => line.split(' ').filter(x => x != '')) })
-			this.changedMutedWords = false;
-
-			this.$root.dialog({
-				type: 'success',
-				iconOnly: true, autoClose: true
-			});
-		}
-	}
 });
 </script>
 
