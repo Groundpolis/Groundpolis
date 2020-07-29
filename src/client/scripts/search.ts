@@ -8,11 +8,6 @@ export async function search(v: any, q: string) {
 		return;
 	}
 
-	if (q.startsWith('#')) {
-		v.$router.push(`/tags/${encodeURIComponent(q.substr(1))}`);
-		return;
-	}
-
 	// like 2018/03/12
 	if (/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}/.test(q.replace(/-/g, '/'))) {
 		const date = new Date(q.replace(/-/g, '/'));

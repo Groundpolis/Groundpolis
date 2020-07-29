@@ -146,7 +146,7 @@ export function toHtml(tokens: MfmForest | null, mentionedRemoteUsers: IMentione
 
 		hashtag(token) {
 			const a = doc.createElement('a');
-			a.href = `${config.url}/tags/${token.node.props.hashtag}`;
+			a.href = `${config.url}/search?q=${token.node.props.hashtag}`;
 			a.textContent = `#${token.node.props.hashtag}`;
 			a.setAttribute('rel', 'tag');
 			return a;
