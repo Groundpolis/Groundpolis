@@ -4,7 +4,8 @@ import define from '../../define';
 import { makePaginationQuery } from '../../common/make-pagination-query';
 import { Notes, Followings } from '../../../../models';
 import { generateVisibilityQuery } from '../../common/generate-visibility-query';
-import { generateMuteQuery } from '../../common/generate-mute-query';
+import { generateMutedUserQuery } from '../../common/generate-muted-user-query';
+import { generateMutedNoteQuery } from '../../common/generate-muted-note-query';
 import { activeUsersChart } from '../../../../services/chart';
 import { Brackets } from 'typeorm';
 import { generateRepliesQuery } from '../../common/generate-replies-query';
@@ -125,7 +126,9 @@ export default define(meta, async (ps, user) => {
 
 	generateRepliesQuery(query, user);
 	generateVisibilityQuery(query, user);
-	generateMuteQuery(query, user);
+
+	generateMutedUserQuery(query, user);
+	generateMutedNoteQuery(query, user);
 
 	if (ps.includeMyRenotes === false) {
 		query.andWhere(new Brackets(qb => {

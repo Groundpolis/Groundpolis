@@ -4,12 +4,13 @@ import define from '../../define';
 import { fetchMeta } from '../../../../misc/fetch-meta';
 import { ApiError } from '../../error';
 import { makePaginationQuery } from '../../common/make-pagination-query';
-import { Notes, Users } from '../../../../models';
-import { generateMuteQuery } from '../../common/generate-mute-query';
+import { Notes } from '../../../../models';
+import { generateMutedUserQuery } from '../../common/generate-muted-user-query';
 import { activeUsersChart } from '../../../../services/chart';
 import { generateRepliesQuery } from '../../common/generate-replies-query';
 import { injectPromo } from '../../common/inject-promo';
 import { injectFeatured } from '../../common/inject-featured';
+import { generateMutedNoteQuery } from '../../common/generate-muted-note-query';
 
 export const meta = {
 	desc: {
@@ -83,7 +84,8 @@ export default define(meta, async (ps, user) => {
 		.leftJoinAndSelect('note.user', 'user');
 
 	generateRepliesQuery(query, user);
-	if (user) generateMuteQuery(query, user);
+	if (user) generateMutedUserQuery(query, user);
+	if (user) generateMutedNoteQuery(query, user);
 
 	if (ps.withFiles) {
 		query.andWhere('note.fileIds != \'{}\'');
