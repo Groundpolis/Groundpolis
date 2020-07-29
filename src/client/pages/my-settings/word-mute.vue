@@ -1,7 +1,9 @@
 <template>
 <section class="_card">
 	<div class="_title"><fa :icon="faCommentSlash"/> {{ $t('wordMute') }}</div>
-	<p v-text="$t('_wordMute.description')"/>
+	<div class="_content">
+		<p v-text="$t('_wordMute.description')"/>
+	</div>
 	<div class="_content _noPad">
 		<mk-tab v-model="tab" :items="[{ label: $t('_wordMute.soft'), value: 'soft' }, { label: $t('_wordMute.hard'), value: 'hard' }]"/>
 	</div>
