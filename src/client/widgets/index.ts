@@ -26,4 +26,5 @@ export const widgets = [
 	'photos',
 	'digitalClock',
 	'federation',
+	'post-form',
 ];

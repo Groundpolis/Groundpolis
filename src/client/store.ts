@@ -132,7 +132,8 @@ export const defaultDeviceSettings = {
 	usePressure: false,
 	collapseNav: false,
 	noteNameDisplayMode: 0,
-	instanceEmojisAutoReloadAfterSaving: true
+	instanceEmojisAutoReloadAfterSaving: true,
+	hideHostName: false,
 };
 
 function copy<T>(data: T): T {

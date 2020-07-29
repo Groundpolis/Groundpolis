@@ -671,6 +671,13 @@ testEmail: "配信テスト"
 wordMute: "ワードミュート"
 userSaysSomething: "{name}が何かを言いました"
 makeActive: "アクティブにする"
+hideHostName: "ホスト名を表示しない"
+
+_instanceTicker:
+  disable: "使用しない"
+  alternative: "代替アイコンモード"
+  favicon: "ファビコンモード"
+  outline: "縁取りファビコンモード"
 
 _wordMute:
   muteWords: "ミュートするワード"

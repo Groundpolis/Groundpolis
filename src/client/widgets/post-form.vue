@@ -42,13 +42,30 @@ import { selectDriveFile } from '../scripts/select-drive-file';
 export default define({
 	name: 'post-form',
 	props: () => ({
-		visibility: 'public',
-		localOnly: false,
-		remoteFollowersOnly: false,
-		draft: '',
-		cw: '',
-		useCw: false,
-		files: [],
+		visibility: {
+			type: 'string',
+			default: 'public',
+		},
+		localOnly: {
+			type: 'boolean',
+			default: false,
+		},
+		remoteFollowersOnly: {
+			type: 'boolean',
+			default: false,
+		},
+		draft: {
+			type: 'string',
+			default: '',
+		},
+		cw: {
+			type: 'string',
+			default: '',
+		},
+		useCw: {
+			type: 'boolean',
+			default: false,
+		},
 	})
 }).extend({
 	
@@ -64,13 +81,6 @@ export default define({
 			files: [],
 			faPaperPlane, faPhotoVideo, faAt, faEyeSlash, faLaughSquint, faFish, faGlobe, faHome, faUnlock, faEnvelope, faUsers, faHeart, faHeartbeat
 		};
-	},
-
-	watch: {
-		files() {
-			this.props.files = this.files;
-			this.save();
-		}
 	},
 
 	computed: {
@@ -117,10 +127,6 @@ export default define({
 			];
 			return xs[Math.floor(Math.random() * xs.length)].toString();
 		}
-	},
-
-	created() {
-		this.files = this.props.files;
 	},
 
 	methods: {

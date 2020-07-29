@@ -1,0 +1,11 @@
+#!/bin/sh
+
+git pull
+npx yarn
+NODE_ENV=production npx yarn build
+if [ "$1" = '--migrate' ]; then
+	npx yarn migrate
+fi
+systemctl restart gp
+sleep 7
+systemctl restart nginx

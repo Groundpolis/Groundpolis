@@ -14,14 +14,13 @@
 	<div class="info" v-if="appearNote._prId_"><fa :icon="faBullhorn"/> {{ $t('promotion') }}<button class="_textButton hide" @click="readPromo()">{{ $t('hideThisNote') }} <fa :icon="faTimes"/></button></div>
 	<div class="info" v-if="appearNote._featuredId_"><fa :icon="faFireAlt"/> {{ $t('featured') }}</div>
 	<div class="renote" v-if="isRenote">
-		<mk-avatar class="avatar" :user="note.user"/>
+		<mk-avatar class="avatar" :user="note.user" v-if="!isCompactMode"/>
 		<fa :icon="faRetweet"/>
-		<i18n path="renotedBy" tag="span" v-if="!isCompactMode">
-			<router-link class="name" :to="note.user | userPage" v-user-preview="note.userId" place="user">
-				<mk-user-name :user="note.user"/>
-			</router-link>
-		</i18n>
-		<mk-user-name v-else :user="note.user"/>
+		<router-link class="name" :to="note.user | userPage" v-user-preview="note.userId">
+			<i18n path="renotedBy" tag="span">
+					<mk-user-name :user="note.user" place="user"/>
+			</i18n>
+		</router-link>
 		<div class="info">
 			<button class="_button time" @click="showRenoteMenu()" ref="renoteTime">
 				<fa class="dropdownIcon" v-if="isMyRenote" :icon="faEllipsisH"/>
@@ -903,6 +902,10 @@ export default Vue.extend({
 			}
 		}
 
+		> .renote {
+			margin-left: 2.5em;
+		}
+
 		.article {
 			.main {
 				.footer > .button {
@@ -1040,16 +1043,18 @@ export default Vue.extend({
 			margin-right: 4px;
 		}
 
-		> span {
-			overflow: hidden;
-			flex-shrink: 1;
-			text-overflow: ellipsis;
-			white-space: nowrap;
 
-			> .name {
-				font-weight: bold;
+		> .name {
+			font-weight: bold;
+
+			> span {
+				overflow: hidden;
+				flex-shrink: 1;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 			}
 		}
+
 
 		> .info {
 			margin-left: auto;
@@ -1180,7 +1185,7 @@ export default Vue.extend({
 		font-size: 0.9em;
 	}
 
-	&.max-width_450px {
+	&:not(.compact).max-width_450px {
 		> .renote {
 			padding: 8px 16px 0 16px;
 		}
@@ -1215,14 +1220,7 @@ export default Vue.extend({
 	}
 
 	&.max-width_300px {
-		font-size: 0.825em;
-
 		> .article {
-			> .avatar {
-				width: 44px;
-				height: 44px;
-			}
-
 			> .main {
 				> .footer {
 					> .button {

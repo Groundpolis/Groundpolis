@@ -5,10 +5,42 @@ import Logger from '../../services/logger';
 import config from '../../config';
 import { query } from '../../prelude/url';
 import { getJson } from '../../misc/fetch';
+import { URL } from 'url';
 
 const logger = new Logger('url-preview');
 
+const blockedHost = [
+	'asahi.com',
+];
+
 module.exports = async (ctx: Koa.Context) => {
+	const url = new URL(ctx.query.url);
+
+	if (blockedHost.some(host => url.hostname.includes(host))) {
+		logger.warn(`Failed to get preview of ${ctx.query.url}: This website is blocked`);
+		const summary = {
+			title: 'Blocked',
+			icon: null,
+			description: 'This website is blocked',
+			thumbnail: null,
+			player: {
+			url: null,
+			width: null,
+			height: null
+			},
+			sitename: url.hostname,
+			sensitive: false,
+			url: ctx.query.url,
+			_isBlocked: true
+		};
+
+		// Cache 7days
+		ctx.set('Cache-Control', 'max-age=604800, immutable');
+		ctx.status = 200;
+		ctx.body = summary;
+		return;
+	}
+
 	const meta = await fetchMeta();
 
 	logger.info(meta.summalyProxy
