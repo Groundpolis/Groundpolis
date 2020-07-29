@@ -121,9 +121,6 @@ export default Vue.extend({
 				this.ifLTL(this.genItem('local')),
 				this.ifLTL(this.genItem('social')),
 				this.ifGTL(this.genItem('global')),
-				this.ifCTL(this.genItem('cat')),
-				this.genItem('remoteFollowing'),
-				this.genItem('followers'),
 			].filter(it => it !== undefined);
 		},
 
@@ -247,6 +244,9 @@ export default Vue.extend({
 			
 			this.$root.menu({
 				items: [
+					this.ifCTL(this.genItem('cat')),
+					this.genItem('remoteFollowing'),
+					this.genItem('followers'),
 					...(this.isMobile || this.deckMode ? this.tabItems : [ undefined ]),
 					antennaItems.length > 0 ? null : undefined,
 					...antennaItems,

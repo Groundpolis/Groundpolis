@@ -22,7 +22,7 @@ export const router = new VueRouter({
 		{ path: '/announcements', component: page('announcements') },
 		{ path: '/about', component: page('about') },
 		{ path: '/about-misskey', component: page('about-misskey') },
-		{ path: '/featured', component: page('featured') },
+		{ path: '/featured', component: page('explore') },
 		{ path: '/docs', component: page('docs') },
 		{ path: '/theme-editor', component: page('theme-editor') },
 		{ path: '/docs/:doc', component: page('doc'), props: true },
