@@ -56,7 +56,14 @@ export const defaultDeviceUserSettings = {
 		columns: [],
 		layout: [],
 	},
-	plugins: [],
+	plugins: [] as {
+		id: string;
+		name: string;
+		active: boolean;
+		configData: Record<string, any>;
+		token: string;
+		ast: any[];
+	}[],
 };
 
 export const defaultDeviceSettings = {
@@ -147,6 +154,8 @@ export default () => new Vuex.Store({
 		postFormActions: [],
 		userActions: [],
 		noteActions: [],
+		noteViewInterruptors: [],
+		notePostInterruptors: [],
 	},
 
 	getters: {
@@ -300,6 +309,22 @@ export default () => new Vuex.Store({
 			state.noteActions.push({
 				title, handler: (note) => {
 					state.pluginContexts.get(pluginId).execFn(handler, [utils.jsToVal(note)]);
+				}
+			});
+		},
+
+		registerNoteViewInterruptor(state, { pluginId, handler }) {
+			state.noteViewInterruptors.push({
+				handler: (note) => {
+					return state.pluginContexts.get(pluginId).execFn(handler, [utils.jsToVal(note)]);
+				}
+			});
+		},
+
+		registerNotePostInterruptor(state, { pluginId, handler }) {
+			state.notePostInterruptors.push({
+				handler: (note) => {
+					return state.pluginContexts.get(pluginId).execFn(handler, [utils.jsToVal(note)]);
 				}
 			});
 		},
@@ -649,9 +674,11 @@ export default () => new Vuex.Store({
 				},
 				//#endregion
 
-				installPlugin(state, { meta, ast, token }) {
+				installPlugin(state, { id, meta, ast, token }) {
 					state.plugins.push({
 						...meta,
+						id,
+						active: true,
 						configData: {},
 						token: token,
 						ast: ast
@@ -664,6 +691,10 @@ export default () => new Vuex.Store({
 
 				configPlugin(state, { id, config }) {
 					state.plugins.find(p => p.id === id).configData = config;
+				},
+
+				changePluginActive(state, { id, active }) {
+					state.plugins.find(p => p.id === id).active = active;
 				},
 			}
 		},

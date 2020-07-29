@@ -2,5 +2,10 @@ export const notificationTypes = ['follow', 'mention', 'reply', 'renote', 'quote
 
 export const noteVisibilities = ['public', 'home', 'followers', 'specified', 'users'] as const;
 
+export const mutedNoteReasons = ['word', 'manual', 'spam', 'other'] as const;
+
 export type NoteVisibility = typeof noteVisibilities[number];
+
 export type NotificationType = typeof notificationTypes[number];
+
+export type MutedNoteReasons = typeof mutedNoteReasons[number];

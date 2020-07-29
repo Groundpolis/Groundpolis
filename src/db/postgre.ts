@@ -60,6 +60,7 @@ import { PromoRead } from '../models/entities/promo-read';
 import { program } from '../argv';
 import { Relay } from '../models/entities/relay';
 import { EmojiRequest } from '../models/entities/emoji-request';
+import { MutedNote } from '../models/entities/muted-note';
 
 const sqlLogger = dbLogger.createSubLogger('sql', 'white', false);
 
@@ -153,6 +154,7 @@ export const entities = [
 	ReversiMatching,
 	Relay,
 	EmojiRequest,
+	MutedNote,
 	...charts as any
 ];
 

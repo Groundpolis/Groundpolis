@@ -1,6 +1,6 @@
 import $ from 'cafy';
 import define from '../../define';
-import { generateMuteQuery } from '../../common/generate-mute-query';
+import { generateMutedUserQuery } from '../../common/generate-muted-user-query';
 import { Notes } from '../../../../models';
 import { fetchMeta } from '../../../../misc/fetch-meta';
 import { ApiError } from '../../error';
@@ -67,7 +67,7 @@ export default define(meta, async (ps, user) => {
 		.andWhere(`note.visibility = 'public'`)
 		.leftJoinAndSelect('note.user', 'user');
 
-	if (user) generateMuteQuery(query, user);
+	if (user) generateMutedUserQuery(query, user);
 
 	let notes = await query
 		.orderBy('note.score', 'DESC')

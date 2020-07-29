@@ -157,6 +157,10 @@ export const meta = {
 				'ja-JP': '性別'
 			}
 		},
+
+		mutedWords: {
+			validator: $.optional.arr($.arr($.str))
+		},
 	},
 
 	errors: {
@@ -208,6 +212,10 @@ export default define(meta, async (ps, user, token) => {
 	if (ps.avatarId !== undefined) updates.avatarId = ps.avatarId;
 	if (ps.bannerId !== undefined) updates.bannerId = ps.bannerId;
 	if (ps.sex !== undefined) updates.sex = ps.sex as any;
+	if (ps.mutedWords !== undefined) {
+		profileUpdates.mutedWords = ps.mutedWords;
+		profileUpdates.enableWordMute = ps.mutedWords.length > 0;
+	}
 	if (typeof ps.isLocked === 'boolean') updates.isLocked = ps.isLocked;
 	if (typeof ps.hideFF === 'boolean') updates.hideFF = ps.hideFF;
 	if (typeof ps.isBot === 'boolean') updates.isBot = ps.isBot;

@@ -12,6 +12,7 @@ Vue.component('mkw-clock', () => import('./clock.vue').then(m => m.default));
 Vue.component('mkw-activity', () => import('./activity.vue').then(m => m.default));
 Vue.component('mkw-photos', () => import('./photos.vue').then(m => m.default));
 Vue.component('mkw-digitalClock', () => import('./digital-clock.vue').then(m => m.default));
+Vue.component('mkw-federation', () => import('./federation.vue').then(m => m.default));
 
 export const widgets = [
 	'memo',
@@ -24,4 +25,5 @@ export const widgets = [
 	'activity',
 	'photos',
 	'digitalClock',
+	'federation',
 ];
