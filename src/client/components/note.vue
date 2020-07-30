@@ -42,7 +42,7 @@
 			<x-note-header class="header" :note="appearNote" :mini="true"/>
 			<div class="body" ref="noteBody">
 				<p v-if="appearNote.cw != null" class="cw">
-				<mfm v-if="appearNote.cw != ''" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
+				<mfm v-if="appearNote.cw != ''" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis" :no-sticker="true"/>
 					<x-cw-button v-model="showContent" :note="appearNote"/>
 				</p>
 				<div class="content" v-show="appearNote.cw == null || showContent">
@@ -138,10 +138,6 @@ import { checkWordMute } from '../scripts/check-word-mute';
 import { utils } from '@syuilo/aiscript';
 
 export default Vue.extend({
-	model: {
-		prop: 'note',
-		event: 'updated'
-	},
 
 	components: {
 		XSub,
@@ -152,6 +148,10 @@ export default Vue.extend({
 		XCwButton,
 		XPoll,
 		MkUrlPreview,
+	},
+	model: {
+		prop: 'note',
+		event: 'updated'
 	},
 
 	props: {
