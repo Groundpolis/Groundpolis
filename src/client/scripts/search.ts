@@ -8,25 +8,26 @@ export async function search(v: any, q: string) {
 		return;
 	}
 
+	// 機能してないのでとりあえず廃止
 	// like 2018/03/12
-	if (/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}/.test(q.replace(/-/g, '/'))) {
-		const date = new Date(q.replace(/-/g, '/'));
+	// if (/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}/.test(q.replace(/-/g, '/'))) {
+	// 	const date = new Date(q.replace(/-/g, '/'));
 
-		// 日付しか指定されてない場合、例えば 2018/03/12 ならユーザーは
-		// 2018/03/12 のコンテンツを「含む」結果になることを期待するはずなので
-		// 23時間59分進める(そのままだと 2018/03/12 00:00:00 「まで」の
-		// 結果になってしまい、2018/03/12 のコンテンツは含まれない)
-		if (q.replace(/-/g, '/').match(/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/)) {
-			date.setHours(23, 59, 59, 999);
-		}
+	// 	// 日付しか指定されてない場合、例えば 2018/03/12 ならユーザーは
+	// 	// 2018/03/12 のコンテンツを「含む」結果になることを期待するはずなので
+	// 	// 23時間59分進める(そのままだと 2018/03/12 00:00:00 「まで」の
+	// 	// 結果になってしまい、2018/03/12 のコンテンツは含まれない)
+	// 	if (q.replace(/-/g, '/').match(/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/)) {
+	// 		date.setHours(23, 59, 59, 999);
+	// 	}
 
-		v.$root.$emit('warp', date);
-		v.$root.dialog({
-			icon: faHistory,
-			iconOnly: true, autoClose: true
-		});
-		return;
-	}
+	// 	v.$root.$emit('warp', date);
+	// 	v.$root.dialog({
+	// 		icon: faHistory,
+	// 		iconOnly: true, autoClose: true
+	// 	});
+	// 	return;
+	// }
 
 	if (q.startsWith('https://')) {
 		const dialog = v.$root.dialog({

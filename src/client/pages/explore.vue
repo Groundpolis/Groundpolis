@@ -8,6 +8,7 @@
 		<portal to="title">{{ $t('explore') }}</portal>
 	</template>
 
+	<x-search @search="search"/>
 
 	<template v-if="tab === '/explore'">
 		<mk-container :body-togglable="true" :expanded="true" ref="tags">
@@ -67,10 +68,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faChartLine, faPlus, faHashtag, faRocket, faFireAlt } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faPlus, faHashtag, faRocket, faFireAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark, faCommentAlt } from '@fortawesome/free-regular-svg-icons';
 import XUserList from '../components/user-list.vue';
 import XNotes from '../components/notes.vue';
+import XSearch from '../components/search.vue';
 import MkContainer from '../components/ui/container.vue';
 import MkTab from '../components/tab.vue';
 import Progress from '../scripts/loading';
@@ -85,6 +87,7 @@ export default Vue.extend({
 	components: {
 		XUserList,
 		XNotes,
+		XSearch,
 		MkContainer,
 		MkTab,
 	},
@@ -136,7 +139,7 @@ export default Vue.extend({
 			stats: null,
 			num: Vue.filter('number'),
 			tab: this.$route.path,
-			faBookmark, faChartLine, faCommentAlt, faPlus, faHashtag, faRocket, faFireAlt,
+			faBookmark, faChartLine, faCommentAlt, faPlus, faHashtag, faRocket, faFireAlt, faSearch,
 		};
 	},
 
@@ -193,7 +196,14 @@ export default Vue.extend({
 
 		after() {
 			Progress.done();
-		}
+		},
+
+		search(q: string) {
+			this.$router.push({
+				path: '/search',
+				query: { q },
+			});
+		},
 	}
 });
 </script>
