@@ -85,13 +85,13 @@ export default Vue.extend({
 
 	computed: {
 		notesPagination() {
-			const query: string = typeof this.$route.query.q === 'string' ? this.$route.query.q : '';
-			const isTag = query.trim().startsWith('#');
+			const query: string = typeof this.$route.query.q === 'string' ? this.$route.query.q.trim() : '';
+			const isTag = query.startsWith('#') && !/\s/.test(query);
 			return isTag ? {
 				endpoint: 'notes/search-by-tag',
 				limit: 10,
 				params: () => ({
-					tag: query.substring(1)
+					tag: query.trim().substring(1)
 				})
 			} : {
 				endpoint: 'notes/search',
@@ -100,13 +100,15 @@ export default Vue.extend({
 			};
 		},
 		usersPagination () {
-			const query: string = typeof this.$route.query.q === 'string' ? this.$route.query.q : '';
-			const isTag = query.trim().startsWith('#');
+			const query: string = typeof this.$route.query.q === 'string' ? this.$route.query.q.trim() : '';
+			const isTag = query.startsWith('#') && !/\s/.test(query);
 			return isTag ? {
-				endpoint: 'users/search-by-tag',
+				endpoint: 'hashtags/users',
 				limit: 10,
 				params: () => ({
-					tag: query.substring(1)
+					tag: query.trim().substring(1),
+					sort: "+updatedAt",
+					origin: "combined"
 				})
 			} : {
 				endpoint: 'users/search',

@@ -263,7 +263,7 @@ export default Vue.component('misskey-flavored-markdown', {
 					return [createElement('router-link', {
 						key: Math.random(),
 						attrs: {
-							to: `/search?q=${encodeURIComponent(token.node.props.hashtag)}&f=${this.isNote ? 'notes' : 'users'}`,
+							to: `/search?q=%23${encodeURIComponent(token.node.props.hashtag)}&f=${this.isNote ? 'notes' : 'users'}`,
 							style: 'color:var(--hashtag);'
 						}
 					}, `#${token.node.props.hashtag}`)];
