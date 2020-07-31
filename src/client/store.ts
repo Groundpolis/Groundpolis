@@ -133,6 +133,7 @@ export const defaultDeviceSettings = {
 	noteNameDisplayMode: 0,
 	instanceEmojisAutoReloadAfterSaving: true,
 	hideHostName: false,
+	collapseLongNote: true,
 };
 
 function copy<T>(data: T): T {

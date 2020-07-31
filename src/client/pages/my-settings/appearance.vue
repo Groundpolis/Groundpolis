@@ -19,6 +19,7 @@
 			<template #desc><mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
 		</mk-switch>
 		<mk-switch v-model="showFullAcct">{{ $t('showFullAcct') }}</mk-switch>
+		<mk-switch v-model="collapseLongNote">{{ $t('collapseLongNote') }}</mk-switch>
 		<mk-switch v-model="compactMode">{{ $t('compactMode') }}</mk-switch>
 		<mk-select v-model="noteNameDisplayMode">
 			<template #label>{{ $t('noteNameDisplayMode') }}</template>
@@ -236,6 +237,11 @@ export default Vue.extend({
 		showDeleteAndEditConfirm: {
 			get() { return this.$store.state.device.showDeleteAndEditConfirm },
 			set(value) { this.$store.commit('device/set', { key: 'showDeleteAndEditConfirm', value }); }
+		},
+
+		collapseLongNote: {
+			get() { return this.$store.state.device.collapseLongNote },
+			set(value) { this.$store.commit('device/set', { key: 'collapseLongNote', value }); }
 		},
 
 		showDriveFileDeleteConfirm: {

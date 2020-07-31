@@ -672,6 +672,8 @@ wordMute: "ワードミュート"
 userSaysSomething: "{name}が何かを言いました"
 makeActive: "アクティブにする"
 hideHostName: "ホスト名を表示しない"
+readMore: "続きを読む"
+collapseLongNote: "長いノートを折りたたむ"
 
 _instanceTicker:
   disable: "使用しない"
