@@ -58,9 +58,9 @@ export default define(meta, async (ps, me) => {
 	.andWhere('user.isSuspended = FALSE')
 	.andWhere(new Brackets(qb => {
 			if (parsed) {
-				qb.where(`"user".username ILIKE :q`, {q: `%${parsed.username}$%`});
+				qb.where(`"user".username ILIKE :q`, {q: `%${parsed.username}%`});
 				if (parsed.host) {
-					qb.andWhere(`"user".host ILIKE :q`, {q: `%${parsed.host}$%`});
+					qb.andWhere(`"user".host ILIKE :q`, {q: `%${parsed.host}%`});
 				}
 			} else {
 				qb.where(`user.username ILIKE :q`, { q })
