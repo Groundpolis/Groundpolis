@@ -8,7 +8,7 @@
 		<portal to="title">{{ $t('explore') }}</portal>
 	</template>
 
-	<x-search @search="search"/>
+	<x-search v-model="query" @search="search"/>
 
 	<template v-if="tab === '/explore'">
 		<mk-container :body-togglable="true" :expanded="true" ref="tags">
@@ -139,6 +139,7 @@ export default Vue.extend({
 			stats: null,
 			num: Vue.filter('number'),
 			tab: this.$route.path,
+			query: '',
 			faBookmark, faChartLine, faCommentAlt, faPlus, faHashtag, faRocket, faFireAlt, faSearch,
 		};
 	},
@@ -198,10 +199,10 @@ export default Vue.extend({
 			Progress.done();
 		},
 
-		search(q: string) {
+		search() {
 			this.$router.push({
 				path: '/search',
-				query: { q },
+				query: { q: this.query },
 			});
 		},
 	}
