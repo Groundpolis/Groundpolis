@@ -12,9 +12,10 @@
 	<template v-if="smartCard">
 			<x-note class="smart-card" :note="smartCard.note" v-if="smartCard.type === 'note'"/>
 			<x-user class="smart-card" :user="smartCard.user" v-else-if="smartCard.type === 'user'"/>
-			<div class="_panel smart-card" v-else-if="smartCard.type === 'apFetching'">
-				<fa class="icon" :icon="faSpinner" pulse/>
-				<div class="body" v-text="$t('fetchingAsApObject') + '...'"/>
+			<div class="_panel smart-card" v-else-if="smartCard.type === 'custom'">
+				<fa class="icon" :icon="smartCard.icon"/>
+				<h1 class="header" v-text="smartCard.header"/>
+				<div class="body" v-text="smartCard.body"/>
 			</div>
 			<div class="_panel smart-card" v-else-if="smartCard.type === 'apError'">
 				<fa class="icon" :icon="faTimesCircle"/>
@@ -47,11 +48,6 @@ type SmartCard = {
 } | {
 	type: 'user',
 	user: PackedUser,
-} | {
-	type: 'apFetching'
-}| {
-	type: 'apError',
-	message?: string,
 } | {
 	type: 'custom',
 	icon?: IconDefinition,
@@ -171,24 +167,16 @@ export default Vue.extend({
 
 			// ActivityPub Object
 			if (q.startsWith('https://')) {
-				this.smartCard = { type: 'apFetching' };
-				try {
-					const res = await this.$root.api('ap/show', { uri: q });
-					if (res.type === 'User') {
-						this.smartCard = {
-							type: 'user',
-							user: res.object
-						};
-					} else if (res.type === 'Note') {
-						this.smartCard = {
-							type: 'note',
-							note: res.object
-						};
-					}
-				} catch (e) {
+				const res = await this.$root.api('ap/show', { uri: q });
+				if (res.type === 'User') {
 					this.smartCard = {
-						type: 'apError',
-						message: e.message,
+						type: 'user',
+						user: res.object
+					};
+				} else if (res.type === 'Note') {
+					this.smartCard = {
+						type: 'note',
+						note: res.object
 					};
 				}
 			}
