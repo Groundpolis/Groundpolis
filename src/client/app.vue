@@ -277,10 +277,13 @@ export default Vue.extend({
 
 		searchKeypress(e) {
 			if (e.keyCode === 13) {
-				this.searchWait = true;
-				search(this, this.searchQuery).finally(() => {
-					this.searchWait = false;
-					this.searchQuery = '';
+				if (this.$route.query.q === this.searchQuery) return;
+
+				this.$router.push({
+					path: '/search',
+					query: {
+						q: this.searchQuery,
+					}
 				});
 			}
 		},
@@ -447,12 +450,13 @@ export default Vue.extend({
 				> .custom {
 					position: absolute;
 					top: 0;
-					left: $header-height;
+					left: 0;
+					right: 0;
+					padding: 0 $header-height;
 					@media (max-width: $nav-hide-threshold) {
 						left: 0;
 					}
 					height: 100%;
-					width: 100%;
 
 					&.dense {
 						left: 16px - 1px;

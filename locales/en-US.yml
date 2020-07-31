@@ -638,6 +638,8 @@ userSaysSomething: "{name} said something"
 makeActive: "Activate"
 makeBotFollowManuallyApprove: "Follow requests from bots require approval"
 hideHostName: "Hide the host name"
+readMore: "Read More"
+collapseLongNote: "Collapse long notes"
 _instanceTicker:
   disable: "Don't use"
   alternative: "Alternative Icon Mode"

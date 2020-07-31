@@ -42,11 +42,11 @@
 			<x-note-header class="header" :note="appearNote" :mini="true"/>
 			<div class="body" ref="noteBody">
 				<p v-if="appearNote.cw != null" class="cw">
-				<mfm v-if="appearNote.cw != ''" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
+				<mfm v-if="appearNote.cw != ''" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis" :no-sticker="true"/>
 					<x-cw-button v-model="showContent" :note="appearNote"/>
 				</p>
 				<div class="content" v-show="appearNote.cw == null || showContent">
-					<div class="text">
+					<div class="text" ref="text" :class="{ collapse: !readMore }">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $t('private') }})</span>
 						<router-link class="reply" v-if="!isCompactMode && appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><fa :icon="faReply"/></router-link>
 						<mfm v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
@@ -61,6 +61,7 @@
 						</router-link>
 						<router-link v-else-if="appearNote.renote != null" class="rp" :to="appearNote.renote | notePage">RN: </router-link>
 					</div>
+					<button v-if="!readMore" class="read-more-button _button _link" @click="readMore = true" v-text="$t('readMore')"/>
 					<div class="files" v-if="appearNote.files.length > 0">
 						<x-media-list :media-list="appearNote.files" :parent-element="noteBody"/>
 					</div>
@@ -138,10 +139,6 @@ import { checkWordMute } from '../scripts/check-word-mute';
 import { utils } from '@syuilo/aiscript';
 
 export default Vue.extend({
-	model: {
-		prop: 'note',
-		event: 'updated'
-	},
 
 	components: {
 		XSub,
@@ -152,6 +149,10 @@ export default Vue.extend({
 		XCwButton,
 		XPoll,
 		MkUrlPreview,
+	},
+	model: {
+		prop: 'note',
+		event: 'updated'
 	},
 
 	props: {
@@ -185,6 +186,7 @@ export default Vue.extend({
 			isDeleted: false,
 			muted: false,
 			noteBody: this.$refs.noteBody,
+			readMore: true,
 			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug
 		};
 	},
@@ -307,6 +309,15 @@ export default Vue.extend({
 					this.conversation = conversation.reverse();
 				});
 			}
+		} else if (this.$store.state.device.collapseLongNote) {
+			const textElement = this.$refs.text as HTMLElement | null;
+			if (textElement) {
+				const h = textElement.getBoundingClientRect().height;
+				if (h > 192) {
+					this.readMore = false;
+				}
+			}
+			
 		}
 	},
 
@@ -1118,6 +1129,22 @@ export default Vue.extend({
 					> .text {
 						overflow-wrap: break-word;
 
+						&.collapse {
+							display: block;
+							overflow: hidden;
+							height: 192px;
+							position: relative;
+							&::after {
+								content: '';
+								position: absolute;
+								left: 0;
+								top: 0;
+								right: 0;
+								bottom: 0;
+								background: linear-gradient(to bottom, transparent 50%, var(--panel) 100%);
+							}
+						}
+
 						> .reply {
 							color: var(--accent);
 							margin-right: 0.5em;
@@ -1127,6 +1154,11 @@ export default Vue.extend({
 							margin-left: 4px;
 							color: var(--renote);
 						}
+					}
+
+					> .read-more-button {
+						display: block;
+						margin: 16px 0;
 					}
 
 					> .url-preview {

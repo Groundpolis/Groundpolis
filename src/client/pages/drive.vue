@@ -81,7 +81,6 @@ export default Vue.extend({
 <style lang="scss">
 ._jmoebdiw_ {
 	height: 100%;
-	padding: 0 16px;
 	font-weight: bold;
 }
 </style>

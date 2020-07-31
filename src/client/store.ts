@@ -1,7 +1,7 @@
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import * as nestedProperty from 'nested-property';
-import { faTerminal, faHashtag, faBroadcastTower, faFireAlt, faPaintBrush, faStar, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faDoorClosed, faBullhorn, faLaugh, faColumns } from '@fortawesome/free-solid-svg-icons';
+import { faTerminal, faHashtag, faBroadcastTower, faPaintBrush, faStar, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faDoorClosed, faBullhorn, faLaugh, faColumns } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faComments } from '@fortawesome/free-regular-svg-icons';
 import { AiScript, utils, values } from '@syuilo/aiscript';
 import { apiUrl, deckmode } from './config';
@@ -46,7 +46,6 @@ export const defaultDeviceUserSettings = {
 		'drive',
 		'-',
 		'followRequests',
-		'featured',
 		'explore',
 		'announcements',
 		'-',
@@ -134,6 +133,7 @@ export const defaultDeviceSettings = {
 	noteNameDisplayMode: 0,
 	instanceEmojisAutoReloadAfterSaving: true,
 	hideHostName: false,
+	collapseLongNote: true,
 };
 
 function copy<T>(data: T): T {
@@ -189,12 +189,6 @@ export default () => new Vuex.Store({
 				get show() { return getters.isSignedIn && state.i.hasPendingReceivedFollowRequest; },
 				get indicated() { return getters.isSignedIn && state.i.hasPendingReceivedFollowRequest; },
 				to: '/my/follow-requests',
-			},
-			featured: {
-				title: 'featured',
-				icon: faFireAlt,
-				get show() { return state.instance.meta && !state.instance.meta.disableFeatured; },
-				to: '/featured',
 			},
 			explore: {
 				title: 'explore',

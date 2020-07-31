@@ -23,10 +23,13 @@
 		"isolatedModules": true,
 		"typeRoots": [
 			"node_modules/@types",
-			"src/@types"
+			"src/@types",
+			"dom"
 		],
 		"lib": [
-			"esnext"
+			"esnext",
+      "dom",
+      "webworker"
 		]
 	},
 	"compileOnSave": false,
