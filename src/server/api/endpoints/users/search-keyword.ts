@@ -57,18 +57,15 @@ export default define(meta, async (ps, me) => {
 	const query = makePaginationQuery(Users.createQueryBuilder('user'), ps.sinceId, ps.untilId)
 	.andWhere('user.isSuspended = FALSE')
 	.andWhere(new Brackets(qb => {
-			if (parsed) {
-				qb.where(`"user".username ILIKE :q`, {q: `%${parsed.username}%`});
-				if (parsed.host) {
-					qb.andWhere(`"user".host ILIKE :q`, {q: `%${parsed.host}%`});
-				}
-			} else {
-				qb.where(`user.username ILIKE :q`, { q })
-					.orWhere(`user.name ILIKE :q`, { q })
-					.orWhere(`(select "description" from "user_profile" where "userId" = user.id) ILIKE :q`, { q })
-					.orWhere(`(select "location" from "user_profile" where "userId" = user.id) ILIKE :q`, { q });
-			}
-		}))
+		if (parsed) {
+			qb.where(`"user".username ILIKE :q`, {q: `%${parsed.username}%`});
+		} else {
+			qb.where(`user.username ILIKE :q`, { q })
+				.orWhere(`user.name ILIKE :q`, { q })
+				.orWhere(`(select "description" from "user_profile" where "userId" = user.id) ILIKE :q`, { q })
+				.orWhere(`(select "location" from "user_profile" where "userId" = user.id) ILIKE :q`, { q });
+		}
+	}))
 	.andWhere('user.updatedAt IS NOT NULL')
 	.orderBy('user.updatedAt', 'DESC');
 
