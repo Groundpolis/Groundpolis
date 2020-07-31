@@ -277,10 +277,13 @@ export default Vue.extend({
 
 		searchKeypress(e) {
 			if (e.keyCode === 13) {
-				this.searchWait = true;
-				search(this, this.searchQuery).finally(() => {
-					this.searchWait = false;
-					this.searchQuery = '';
+				if (this.$route.query.q === this.searchQuery) return;
+
+				this.$router.push({
+					path: '/search',
+					query: {
+						q: this.searchQuery,
+					}
 				});
 			}
 		},

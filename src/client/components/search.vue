@@ -1,5 +1,5 @@
 <template>
-	<mk-input v-model="searchQuery" type="search" v-autocomplete="{ model: 'searchQuery' }" @keydown="searchKeypress">
+	<mk-input :value="value" type="search" v-autocomplete="{ model: 'value' }" @keydown="searchKeypress" @input="$emit('input', $event)">
 		<span>{{ $t('search') }}</span>
 		<template #prefix><fa :icon="faSearch" /></template>
 	</mk-input>
@@ -16,24 +16,19 @@ export default Vue.extend({
 		MkInput,
 	},
 	props: {
-		initialQuery: {
+		value: {
 			default: '',
 		}
 	},
 	data() {
 		return {
-			searchQuery: '',
-			searchWait: false,
 			faSearch,
 		}
-	},
-	mounted() {
-		this.searchQuery = this.initialQuery;
 	},
 	methods: {
 		searchKeypress(e) {
 			if (e.keyCode === 13) {
-				this.$emit('search', this.searchQuery);
+				this.$emit('search');
 			}
 		},
 	},

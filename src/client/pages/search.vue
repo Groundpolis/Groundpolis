@@ -3,7 +3,7 @@
 	<portal to="icon"><fa :icon="faSearch"/></portal>
 	<portal to="title">{{ $t('search') }}</portal>
 
-	<x-search :initial-query="$route.query.q" @search="search"/>
+	<x-search v-model="query" @search="search"/>
 
 	<div class="tab _panel _noPad">
 		<mk-tab v-model="tab" :items="[{ label: $t('notes'), value: 'notes' }, { label: $t('users'), value: 'users' }]"/>
@@ -77,6 +77,7 @@ export default Vue.extend({
 
 	data() {
 		return {
+			query: this.$route.query.q as string,
 			tab: this.$route.query.f || 'notes',
 			smartCard: null as SmartCard | null,
 			faSearch, faSpinner, faTimesCircle,
@@ -111,7 +112,7 @@ export default Vue.extend({
 					origin: "combined"
 				})
 			} : {
-				endpoint: 'users/search',
+				endpoint: 'users/search-keyword',
 				limit: 10,
 				params: () => ({ query })
 			};
@@ -119,19 +120,15 @@ export default Vue.extend({
 	},
 
 	watch: {
-		$route() {
-			// (this.$refs.notes as any)?.reload();
-			// (this.$refs.users as any)?.reload();
-		},
+		$route: 'fetch',
 		tab() {
 			this.$router.push({
 				path: this.$route.path,
 				query: {
-					...this.$route.query,
+					q: this.query,
 					f: this.tab,
 				}
 			});
-			this.generateSmartCard();
 		}
 	},
 
@@ -148,16 +145,21 @@ export default Vue.extend({
 			Progress.done();
 		},
 
-		search(q: string) {
-			if (this.$route.query.q === q) return;
+		search() {
+			console.log(this.query);
+			if (this.$route.query.q === this.query) return;
 
 			this.$router.push({
 				path: this.$route.path,
 				query: {
-					q,
+					q: this.query,
 					f: this.tab,
 				}
 			});
+		},
+
+		fetch() {
+			this.query = this.$route.query.q;
 			this.generateSmartCard();
 		},
 
