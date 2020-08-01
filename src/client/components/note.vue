@@ -40,13 +40,17 @@
 		<mk-avatar class="avatar" :user="appearNote.user"/>
 		<div class="main">
 			<x-note-header class="header" :note="appearNote" :mini="true"/>
+			<div v-if="$store.state.device.userHostDisplayMode !== 0 && instance" class="ticker" :class="instance.softwareName">
+				<img :src="instance.iconUrl" alt="favicon" class="favicon"/>
+				<span v-text="instance.name && instance.name !== instance.host ? `${instance.name} (${instance.host})` : instance.host"/>
+			</div>
 			<div class="body" ref="noteBody">
 				<p v-if="appearNote.cw != null" class="cw">
 				<mfm v-if="appearNote.cw != ''" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis" :no-sticker="true"/>
 					<x-cw-button v-model="showContent" :note="appearNote"/>
 				</p>
 				<div class="content" v-show="appearNote.cw == null || showContent">
-					<div class="text" ref="text" :class="{ collapse: !readMore }">
+					<div class="text" ref="text" :class="{ collapse: readMore === false }">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $t('private') }})</span>
 						<router-link class="reply" v-if="!isCompactMode && appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><fa :icon="faReply"/></router-link>
 						<mfm v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
@@ -61,7 +65,7 @@
 						</router-link>
 						<router-link v-else-if="appearNote.renote != null" class="rp" :to="appearNote.renote | notePage">RN: </router-link>
 					</div>
-					<button v-if="!readMore" class="read-more-button _button _link" @click="readMore = true" v-text="$t('readMore')"/>
+					<button v-if="readMore !== null" class="read-more-button _button _link" @click="readMore = !readMore" v-text="$t(readMore ? 'hide' : 'readMore')"/>
 					<div class="files" v-if="appearNote.files.length > 0">
 						<x-media-list :media-list="appearNote.files" :parent-element="noteBody"/>
 					</div>
@@ -84,10 +88,10 @@
 						<button v-else class="button _button">
 							<fa :icon="faBan"/>
 						</button>
-						<button v-if="!isMyNote && appearNote.myReaction == null" class="button _button" @click="react()" ref="reactButton">
+						<button v-if="appearNote.myReaction == null" class="button _button" @click="react()" ref="reactButton">
 							<fa :icon="faPlus"/>
 						</button>
-						<button v-if="!isMyNote && appearNote.myReaction != null" class="button _button reacted" @click="undoReact(appearNote)" ref="reactButton">
+						<button v-else class="button _button reacted" @click="undoReact(appearNote)" ref="reactButton">
 							<fa :icon="faMinus"/>
 						</button>
 						<button class="button _button" @click="menu()" ref="menuButton">
@@ -186,7 +190,8 @@ export default Vue.extend({
 			isDeleted: false,
 			muted: false,
 			noteBody: this.$refs.noteBody,
-			readMore: true,
+			readMore: null as boolean | null,
+			instance: null as {} | null,
 			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug
 		};
 	},
@@ -329,6 +334,12 @@ export default Vue.extend({
 		}
 
 		this.noteBody = this.$refs.noteBody;
+
+		if (this.appearNote.user.host) {
+			this.$root.getInstance(this.appearNote.user.host).then(instance => {
+				this.instance = instance;
+			});
+		}
 	},
 
 	beforeDestroy() {
@@ -451,18 +462,18 @@ export default Vue.extend({
 						...this.appearNote,
 					};
 
+					const choices = [...this.appearNote.poll.choices];
+					choices[choice] = {
+						...choices[choice],
+						votes: choices[choice].votes + 1,
+						...(body.userId === this.$store.state.i.id ? {
+							isVoted: true
+						} : {})
+					};
+
 					n.poll = {
 						...this.appearNote.poll,
-						choices: {
-							...this.appearNote.poll.choices,
-							[choice]: {
-								...this.appearNote.poll.choices[choice],
-								votes: this.appearNote.poll.choices[choice].votes + 1,
-								...(body.userId === this.$store.state.i.id ? {
-									isVoted: true
-								} : {})
-							}
-						}
+						choices: choices
 					};
 
 					this.updateAppearNote(n);
@@ -898,6 +909,13 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+
+@mixin ticker($bg, $fg) {
+	// background: linear-gradient(90deg, $bg, transparent);
+	background: $bg;
+	color: $fg;
+}
+
 .note {
 	position: relative;
 	transition: box-shadow 0.1s ease;
@@ -1111,6 +1129,36 @@ export default Vue.extend({
 		> .main {
 			flex: 1;
 			min-width: 0;
+
+			> .ticker {
+				display: flex;
+				@include ticker(var(--bg), var(--fg));
+				width: 100%;
+				margin-bottom: 8px;
+				align-items: center;
+				padding: 1px 8px;
+				font-size: 0.8em;
+				font-weight: bold;
+				border-radius: 4px 0 0 4px;
+
+				&.misskey {
+					@include ticker(rgb(134, 179, 0), rgb(242, 242, 242));
+				}
+
+				&.mastodon {
+					@include ticker(#2b90d9, #fff);
+				}
+
+				&.pleroma {
+					@include ticker(#10181e, #ffaf6d);
+				}
+
+				> .favicon {
+					display: inline-block;
+					height: 1em;
+					margin-right: 4px;
+				}
+			}
 
 			> .body {
 				> .cw {

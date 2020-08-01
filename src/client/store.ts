@@ -133,6 +133,7 @@ export const defaultDeviceSettings = {
 	noteNameDisplayMode: 0,
 	instanceEmojisAutoReloadAfterSaving: true,
 	hideHostName: false,
+	userHostDisplayMode: 0,
 	collapseLongNote: true,
 };
 

@@ -1,7 +1,7 @@
 <template>
 <span class="mk-acct" v-once>
 	<span class="name">@{{ user.username }}</span>
-	<span class="host" v-if="(user.host && !$store.state.device.hideAcct) || detail || $store.state.settings.showFullAcct">@{{ user.host || host }}</span>
+	<span class="host" v-if="(user.host && $store.state.device.userHostDisplayMode !== 1) || detail || $store.state.settings.showFullAcct">@{{ user.host || host }}</span>
 </span>
 </template>
 

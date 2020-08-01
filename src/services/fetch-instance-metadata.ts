@@ -47,6 +47,15 @@ export async function fetchInstanceMetadata(instance: Instance): Promise<void> {
 			updates.iconUrl = icon;
 		}
 
+		if (!updates.name && !updates.description && updates.softwareName === 'mastodon') {
+			// マストドンは nodeinfo にインスタンス情報を流さないので、Mastodon API を叩いて追加情報の取得を試みる
+			try {
+				const { title, description } = await fetchMastodonInfo(instance);
+				updates.name = title;
+				updates.description = description;
+			} catch { /* 失敗したら諦める */ }
+		}
+
 		await Instances.update(instance.id, updates);
 
 		logger.succ(`Successfuly updated metadata of ${instance.host}`);
@@ -54,6 +63,20 @@ export async function fetchInstanceMetadata(instance: Instance): Promise<void> {
 		logger.error(`Failed to update metadata of ${instance.host}: ${e}`);
 	} finally {
 		unlock();
+	}
+}
+
+async function fetchMastodonInfo(instance: Instance): Promise<Record<string, any>> {
+	logger.info(`Fetching mastodon information of ${instance.host} ...`);
+
+	try {
+		const info = await getJson(`https://${instance.host}/api/v1/instance`);
+		logger.succ(`Successfuly fetched mastodon information of ${instance.host}`);
+		return info;
+	} catch (e) {
+		logger.error(`Failed to fetch mastodon information of ${instance.host}: ${e}`);
+
+		throw e;
 	}
 }
 

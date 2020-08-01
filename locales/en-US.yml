@@ -640,11 +640,13 @@ makeBotFollowManuallyApprove: "Follow requests from bots require approval"
 hideHostName: "Hide the host name"
 readMore: "Read More"
 collapseLongNote: "Collapse long notes"
-_instanceTicker:
-  disable: "Don't use"
-  alternative: "Alternative Icon Mode"
-  favicon: "Favicon Mode"
-  outline: "Outlined Favicon Mode"
+userHostDisplayMode: "Host Display mode"
+broadcastTextDescription: "The text to merge at the end"
+hide: "Hide"
+_userHostDisplayMode:
+  withUserName: "Include in username"
+  asBadge: "Display as a badge"
+  both: "Both"
 _steal:
   textOnly: "Steal the text only"
   react: "Add reaction to the base note before stealing"

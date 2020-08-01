@@ -674,12 +674,14 @@ makeActive: "アクティブにする"
 hideHostName: "ホスト名を表示しない"
 readMore: "続きを読む"
 collapseLongNote: "長いノートを折りたたむ"
+userHostDisplayMode: "ユーザーのホスト名の表示モード"
+broadcastTextDescription: "ノートの末尾に加えるテキスト"
+hide: "隠す"
 
-_instanceTicker:
-  disable: "使用しない"
-  alternative: "代替アイコンモード"
-  favicon: "ファビコンモード"
-  outline: "縁取りファビコンモード"
+_userHostDisplayMode:
+  withUserName: "ユーザー名に含める"
+  asBadge: "バッジとして表示"
+  both: "両方"
 
 _wordMute:
   muteWords: "ミュートするワード"
