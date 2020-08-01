@@ -10,6 +10,7 @@ import { IIdentifier } from '../models/identifier';
 import renderHashtag from './hashtag';
 import { DriveFiles, UserProfiles, UserKeypairs } from '../../../models';
 import { ensure } from '../../../prelude/ensure';
+import { vCardSexMap } from '../../../misc/vcard-sex-map';
 
 export async function renderPerson(user: ILocalUser) {
 	const id = `${config.url}/users/${user.id}`;
@@ -72,7 +73,8 @@ export async function renderPerson(user: ILocalUser) {
 		manuallyApprovesFollowers: user.isLocked,
 		publicKey: renderKey(user, keypair, `#main-key`),
 		isCat: user.isCat,
-		attachment: attachment.length ? attachment : undefined
+		attachment: attachment.length ? attachment : undefined,
+		'vcard:gender': vCardSexMap[user.sex],
 	} as any;
 
 	if (profile?.birthday) {

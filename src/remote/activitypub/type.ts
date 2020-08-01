@@ -150,6 +150,7 @@ export interface IPerson extends IObject {
 	};
 	'vcard:bday'?: string;
 	'vcard:Address'?: string;
+	'vcard:gender'?: string;
 }
 
 export const isCollection = (object: IObject): object is ICollection =>

@@ -27,6 +27,8 @@ import { getConnection } from 'typeorm';
 import { ensure } from '../../../prelude/ensure';
 import { toArray } from '../../../prelude/array';
 import { fetchInstanceMetadata } from '../../../services/fetch-instance-metadata';
+import { gpSexMap } from '../../../misc/vcard-sex-map';
+import { parseGender } from './gender';
 
 const logger = apLogger;
 
@@ -140,6 +142,8 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<Us
 
 	const bday = person['vcard:bday']?.match(/^\d{4}-\d{2}-\d{2}/);
 
+	const { sex } = parseGender(person['vcard:gender']);
+
 	// Create user
 	let user: IRemoteUser;
 	try {
@@ -162,7 +166,9 @@ export async function createPerson(uri: string, resolver?: Resolver): Promise<Us
 				uri: person.id,
 				tags,
 				isBot,
-				isCat: (person as any).isCat === true
+				isCat: (person as any).isCat === true,
+				sex: gpSexMap[sex],
+				// todo 性別に自由記述を実装したら対応する
 			})) as IRemoteUser;
 
 			await transactionalEntityManager.save(new UserProfile({
