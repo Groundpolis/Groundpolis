@@ -676,6 +676,7 @@ readMore: "続きを読む"
 collapseLongNote: "長いノートを折りたたむ"
 userHostDisplayMode: "ユーザーのホスト名の表示モード"
 broadcastTextDescription: "ノートの末尾に加えるテキスト"
+hide: "隠す"
 
 _userHostDisplayMode:
   withUserName: "ユーザー名に含める"

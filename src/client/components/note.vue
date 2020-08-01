@@ -50,7 +50,7 @@
 					<x-cw-button v-model="showContent" :note="appearNote"/>
 				</p>
 				<div class="content" v-show="appearNote.cw == null || showContent">
-					<div class="text" ref="text" :class="{ collapse: !readMore }">
+					<div class="text" ref="text" :class="{ collapse: readMore === false }">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $t('private') }})</span>
 						<router-link class="reply" v-if="!isCompactMode && appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><fa :icon="faReply"/></router-link>
 						<mfm v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
@@ -65,7 +65,7 @@
 						</router-link>
 						<router-link v-else-if="appearNote.renote != null" class="rp" :to="appearNote.renote | notePage">RN: </router-link>
 					</div>
-					<button v-if="!readMore" class="read-more-button _button _link" @click="readMore = true" v-text="$t('readMore')"/>
+					<button v-if="readMore !== null" class="read-more-button _button _link" @click="readMore = !readMore" v-text="$t(readMore ? 'hide' : 'readMore')"/>
 					<div class="files" v-if="appearNote.files.length > 0">
 						<x-media-list :media-list="appearNote.files" :parent-element="noteBody"/>
 					</div>
@@ -190,7 +190,7 @@ export default Vue.extend({
 			isDeleted: false,
 			muted: false,
 			noteBody: this.$refs.noteBody,
-			readMore: true,
+			readMore: null as boolean | null,
 			instance: null as {} | null,
 			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug
 		};

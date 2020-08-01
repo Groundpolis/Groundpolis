@@ -642,6 +642,7 @@ readMore: "Read More"
 collapseLongNote: "Collapse long notes"
 userHostDisplayMode: "Host Display mode"
 broadcastTextDescription: "The text to merge at the end"
+hide: "Hide"
 _userHostDisplayMode:
   withUserName: "Include in username"
   asBadge: "Display as a badge"
