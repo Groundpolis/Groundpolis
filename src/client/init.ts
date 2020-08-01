@@ -102,17 +102,6 @@ const isMobile = /mobile|iphone|ipad|android/.test(ua);
 // Get the <head> element
 const head = document.getElementsByTagName('head')[0];
 
-const ticker = localStorage['instanceTicker'];
-
-if (ticker && ticker !== 'null') {
-	console.log('Installing InstanceTicker ' + ticker);
-	const itcss = document.createElement('link');
-	itcss.rel = 'stylesheet';
-	itcss.href = `https://miy.pw/css/${ticker}.css`;
-	itcss.media = 'all';
-	head.appendChild(itcss);
-}
-
 // If mobile, insert the viewport meta tag
 if (isMobile || window.innerWidth <= 1024) {
 	const viewport = document.getElementsByName('viewport').item(0);
@@ -162,6 +151,17 @@ os.init(async () => {
 		fetchedAt: number,
 		instance: Record<string, any>
 	}> = {};
+
+	const ticker = localStorage['instanceTicker'];
+
+		if (ticker && ticker !== 'null') {
+			// マイグレーション
+			console.info('InstanceTicker settings detected, start migrating...');
+
+			const value = (store.state as any).device.hideAcct ? 1 : 2;
+			store.commit('device/set', { key: 'userHostDisplayMode', value });
+			localStorage.removeItem('instanceTicker');
+		}
 
 	const app = new Vue({
 		store: store,
