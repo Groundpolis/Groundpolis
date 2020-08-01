@@ -40,6 +40,10 @@
 		<mk-avatar class="avatar" :user="appearNote.user"/>
 		<div class="main">
 			<x-note-header class="header" :note="appearNote" :mini="true"/>
+			<div v-if="$store.state.device.userHostDisplayMode !== 0 && instance" class="ticker" :class="instance.softwareName">
+				<img :src="instance.iconUrl" alt="favicon" class="favicon"/>
+				<span v-text="instance.name && instance.name !== instance.host ? `${instance.name} (${instance.host})` : instance.host"/>
+			</div>
 			<div class="body" ref="noteBody">
 				<p v-if="appearNote.cw != null" class="cw">
 				<mfm v-if="appearNote.cw != ''" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis" :no-sticker="true"/>
@@ -187,6 +191,7 @@ export default Vue.extend({
 			muted: false,
 			noteBody: this.$refs.noteBody,
 			readMore: true,
+			instance: null as {} | null,
 			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug
 		};
 	},
@@ -329,6 +334,12 @@ export default Vue.extend({
 		}
 
 		this.noteBody = this.$refs.noteBody;
+
+		if (this.appearNote.user.host) {
+			this.$root.getInstance(this.appearNote.user.host).then(instance => {
+				this.instance = instance;
+			});
+		}
 	},
 
 	beforeDestroy() {
@@ -898,6 +909,13 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+
+@mixin ticker($bg, $fg) {
+	// background: linear-gradient(90deg, $bg, transparent);
+	background: $bg;
+	color: $fg;
+}
+
 .note {
 	position: relative;
 	transition: box-shadow 0.1s ease;
@@ -1111,6 +1129,36 @@ export default Vue.extend({
 		> .main {
 			flex: 1;
 			min-width: 0;
+
+			> .ticker {
+				display: flex;
+				@include ticker(var(--bg), var(--fg));
+				width: 100%;
+				margin-bottom: 8px;
+				align-items: center;
+				padding: 1px 8px;
+				font-size: 0.8em;
+				font-weight: bold;
+				border-radius: 4px 0 0 4px;
+
+				&.misskey {
+					@include ticker(rgb(134, 179, 0), rgb(242, 242, 242));
+				}
+
+				&.mastodon {
+					@include ticker(#2b90d9, #fff);
+				}
+
+				&.pleroma {
+					@include ticker(#10181e, #ffaf6d);
+				}
+
+				> .favicon {
+					display: inline-block;
+					height: 1em;
+					margin-right: 4px;
+				}
+			}
 
 			> .body {
 				> .cw {

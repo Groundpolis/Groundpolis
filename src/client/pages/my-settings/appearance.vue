@@ -25,17 +25,10 @@
 			<template #label>{{ $t('noteNameDisplayMode') }}</template>
 			<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $t(x) }}</option>
 		</mk-select>
-	</div>
-	<div class="_content">
-		<div><b>InstanceTicker</b></div>
-		<p style="opacity: 0.6"><small>Powered by <a href="http://miy.pw/" target="_blank" rel="noopener noreferrer">InstanceTicker</a></small></p>
-		<mk-select v-model="instanceTicker">
-			<option value="null">{{ $t('_instanceTicker.disable') }}</option>
-			<option value="40">{{ $t('_instanceTicker.alternative') }}</option>
-			<option value="41">{{ $t('_instanceTicker.favicon') }}</option>
-			<option value="42">{{ $t('_instanceTicker.outline') }}</option>
+		<mk-select v-model="userHostDisplayMode">
+			<template #label>{{ $t('userHostDisplayMode') }}</template>
+			<option v-for="(x, i) in [ 'withUserName', 'asBadge', 'both' ]" :value="i" :key="x">{{ $t(`_userHostDisplayMode.${x}`) }}</option>
 		</mk-select>
-		<mk-switch v-model="hideHostName">{{ $t('hideHostName') }}</mk-switch>
 	</div>
 	<div class="_content">
 		<div><b>{{ $t('iconShape') }}</b></div>
@@ -314,12 +307,9 @@ export default Vue.extend({
 			set(value) { this.$store.commit('device/set', { key: 'hideHostName', value }) }
 		},
 
-		instanceTicker: {
-			get() { return localStorage.getItem('instanceTicker') || 'null' },
-			set(value) { 
-				localStorage.setItem('instanceTicker', value);
-				location.reload();
-			 }
+		userHostDisplayMode: {
+			get() { return this.$store.state.device.userHostDisplayMode },
+			set(value) { this.$store.commit('device/set', { key: 'userHostDisplayMode', value }) }
 		},
 
 		previewNote () {
