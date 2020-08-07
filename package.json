@@ -202,7 +202,7 @@
 		"portal-vue": "2.1.7",
 		"portscanner": "2.2.0",
 		"postcss-loader": "3.0.0",
-		"prismjs": "1.20.0",
+		"prismjs": "1.21.0",
 		"probe-image-size": "5.0.0",
 		"promise-limit": "2.7.0",
 		"promise-sequential": "1.1.1",
