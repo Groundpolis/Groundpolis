@@ -150,7 +150,7 @@ export default Vue.extend({
 			//#endregion
 		},
 
-		onKeydown(e) {
+		onKeypress(e) {
 			if ((e.which == 10 || e.which == 13) && (e.ctrlKey || e.metaKey) && this.canSend) {
 				this.send();
 			}

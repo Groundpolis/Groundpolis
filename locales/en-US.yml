@@ -643,6 +643,11 @@ collapseLongNote: "Collapse long notes"
 userHostDisplayMode: "Host Display mode"
 broadcastTextDescription: "The text to merge at the end"
 hide: "Hide"
+display: "Display"
+_sidebar:
+  full: "Full"
+  icon: "Avatar"
+  hide: "Hide"
 _userHostDisplayMode:
   withUserName: "Include in username"
   asBadge: "Display as a badge"

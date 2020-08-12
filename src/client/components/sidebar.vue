@@ -9,11 +9,11 @@
 	</transition>
 
 	<transition name="nav">
-		<nav class="nav" :class="{ 'icon-only': $store.state.device.collapseNav }" ref="nav" v-show="showing">
+		<nav class="nav" :class="{ iconOnly, hidden }" v-show="showing">
 			<div>
 				<div class="item account" v-if="$store.getters.isSignedIn">
 					<router-link active-class="active" class="name" :to="`/@${ $store.state.i.username }`" exact>
-						<mk-avatar :user="$store.state.i" class="avatar"/>
+						<mk-avatar :user="$store.state.i" class="avatar" :disable-preview="true"/>
 						<mk-user-name class="text" :user="$store.state.i" :nowrap="true"/>
 					</router-link>
 					<button class="_button more" @click="openAccountMenu">
@@ -36,9 +36,6 @@
 						</component>
 					</template>
 					<div class="divider"></div>
-					<button class="item _button hide-on-pc" @click="search()">
-						<fa :icon="faSearch" fixed-width/><span class="text">{{ $t('search') }}</span>
-					</button>
 					<router-link class="item" active-class="active" to="/my/settings">
 						<fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
 					</router-link>
@@ -49,8 +46,8 @@
 						<fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
 						<i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadMentions || $store.state.i.hasUnreadSpecifiedNotes)"><fa :icon="faCircle"/></i>
 					</button>
-					<button class="item _button" @click="$store.commit('device/set', { key: 'collapseNav', value: !$store.state.device.collapseNav })">
-						<fa :icon="$store.state.device.collapseNav ? faArrowRight : faArrowLeft" fixed-width/><span class="text">{{ $t('collapse') }}</span>
+					<button v-if="!isTablet" class="item _button" @click="$store.commit('device/set', { key: 'sidebarDisplay', value: iconOnly ? 'full' : 'icon' })">
+						<fa :icon="iconOnly ? faArrowRight : faArrowLeft" fixed-width/><span class="text">{{ $t('collapse') }}</span>
 					</button>
 				</template>
 			</div>
@@ -77,6 +74,9 @@ export default Vue.extend({
 			menuDef: this.$store.getters.nav({
 				search: this.search
 			}),
+			iconOnly: false,
+			hidden: false,
+			isTablet: false,
 			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faProjectDiagram, faArrowLeft, faArrowRight
 		};
 	},
@@ -104,9 +104,37 @@ export default Vue.extend({
 		$route(to, from) {
 			this.showing = false;
 		},
+
+		'$store.state.device.sidebarDisplay'() {
+			this.calcViewState();
+		},
+
+		iconOnly() {
+			this.$nextTick(() => {
+				this.$emit('change-view-mode');
+			});
+		},
+
+		hidden() {
+			this.$nextTick(() => {
+				this.$emit('change-view-mode');
+			});
+		}
+	},
+
+	created() {
+		window.addEventListener('resize', this.calcViewState);
+		this.calcViewState();
 	},
 
 	methods: {
+		calcViewState() {
+			console.log('calcViewState');
+			this.isTablet = window.innerWidth <= 1279;
+			this.iconOnly = (this.isTablet) || (this.$store.state.device.sidebarDisplay === 'icon');
+			this.hidden = (window.innerWidth <= 650) || (this.$store.state.device.sidebarDisplay === 'hide');
+		},
+
 		show() {
 			this.showing = true;
 		},
@@ -314,10 +342,8 @@ export default Vue.extend({
 .mvcprjjd {
 	$header-height: 60px;
 	$ui-font-size: 1em; // TODO: どこかに集約したい
-	$nav-width: 250px; // TODO: どこかに集約したい
-	$nav-icon-only-width: 80px; // TODO: どこかに集約したい
-	$nav-icon-only-threshold: 1279px; // TODO: どこかに集約したい
-	$nav-hide-threshold: 650px; // TODO: どこかに集約したい
+	$nav-width: 250px;
+	$nav-icon-only-width: 80px;
 	$right-widgets-hide-threshold: 1090px;
 
 	> .nav-back {
@@ -332,72 +358,78 @@ export default Vue.extend({
 		width: $nav-width;
 		box-sizing: border-box;
 
-		position: relative;
-
-		&.icon-only {
+		&.iconOnly {
 			flex: 0 0 $nav-icon-only-width;
 			width: $nav-icon-only-width;
 
-			> div {
-				width: $nav-icon-only-width;
+			&:not(.hidden) {
+				> div {
+					width: $nav-icon-only-width;
 
-				> .divider {
-					margin: 8px auto;
-					width: calc(100% - 32px);
-				}
-
-				> .item {
-					padding-left: 0;
-					width: 100%;
-					text-align: center;
-					font-size: $ui-font-size * 1.2;
-					line-height: 3.7rem;
-
-					&:first-child {
-						margin-bottom: 8px;
+					> .divider {
+						margin: 8px auto;
+						width: calc(100% - 32px);
 					}
 
-					&:last-child {
-						margin-top: 8px;
-					}
+					> .item {
+						padding-left: 0;
+						width: 100%;
+						text-align: center;
+						font-size: $ui-font-size * 1.1;
+						line-height: 3.7rem;
 
-					> i {
-						left: 10px;
-					}
-
-					.text {
-						display: none;
-					}
-
-					&.account {
-						flex-direction: column;
+						&.account {
+							flex-direction: column;
+						}
 
 						[data-icon],
 						.avatar {
 							margin-right: 0;
 						}
 
+						.text {
+						display: none;
+						}
+
 						> .more {
 							margin-left: 0;
+						}
+
+						> i {
+							left: 10px;
+						}
+
+						> .text {
+							display: none;
+						}
+
+						&:first-child {
+							margin-bottom: 8px;
+						}
+
+						&:last-child {
+							margin-top: 8px;
 						}
 					}
 				}
 			}
 		}
 
-		@media (max-width: $nav-icon-only-threshold) {
-			flex: 0 0 $nav-icon-only-width;
-			width: $nav-icon-only-width;
-		}
-
-		@media (max-width: $nav-hide-threshold) {
+		&.hidden {
 			position: fixed;
 			top: 0;
 			left: 0;
 			z-index: 1001;
+
+			> div {
+				> .index,
+				> .notifications {
+					display: none;
+				}
+			}
 		}
 
-		@media (min-width: $nav-hide-threshold + 1px) {
+		&:not(.hidden) {
 			display: block !important;
 		}
 
@@ -419,25 +451,6 @@ export default Vue.extend({
 			> .divider {
 				margin: 16px 0;
 				border-top: solid 1px var(--divider);
-			}
-
-			@media (max-width: $nav-icon-only-threshold) and (min-width: $nav-hide-threshold + 1px) {
-				width: $nav-icon-only-width;
-
-				> .divider {
-					margin: 8px auto;
-					width: calc(100% - 32px);
-				}
-
-				> .item {
-					&:first-child {
-						margin-bottom: 8px;
-					}
-
-					&:last-child {
-						margin-top: 8px;
-					}
-				}
 			}
 
 			> .item {
@@ -527,42 +540,6 @@ export default Vue.extend({
 					bottom: 0;
 					margin-top: 16px;
 					border-top: solid 1px var(--divider);
-				}
-
-				@media (max-width: $nav-icon-only-threshold) and (min-width: $nav-hide-threshold + 1px) {
-					padding-left: 0;
-					width: 100%;
-					text-align: center;
-					font-size: $ui-font-size * 1.2;
-					line-height: 3.7rem;
-
-					> i {
-						left: 10px;
-					}
-
-					.text {
-						display: none;
-					}
-
-					&.account {
-						flex-direction: column;
-
-						[data-icon],
-						.avatar {
-							margin-right: 0;
-						}
-
-						> .more {
-							margin-left: 0;
-						}
-					}
-				}
-			}
-
-			@media (max-width: $nav-hide-threshold) {
-				> .index,
-				> .notifications {
-					display: none;
 				}
 			}
 		}

@@ -677,6 +677,12 @@ collapseLongNote: "長いノートを折りたたむ"
 userHostDisplayMode: "ユーザーのホスト名の表示モード"
 broadcastTextDescription: "ノートの末尾に加えるテキスト"
 hide: "隠す"
+display: "表示"
+
+_sidebar:
+  full: "フル"
+  icon: "アイコン"
+  hide: "隠す"
 
 _userHostDisplayMode:
   withUserName: "ユーザー名に含める"
