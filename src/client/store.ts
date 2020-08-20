@@ -37,6 +37,7 @@ export const defaultDeviceUserSettings = {
 	remoteFollowersOnly: false,
 	widgets: [],
 	hideTimelineColumn: false,
+	latestReaction: null as string | null,
 	tl: {
 		src: 'home'
 	},
