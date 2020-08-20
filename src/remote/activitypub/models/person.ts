@@ -331,6 +331,8 @@ export async function updatePerson(uri: string, resolver?: Resolver | null, hint
 
 	const bday = person['vcard:bday']?.match(/^\d{4}-\d{2}-\d{2}/);
 
+	const { sex } = parseGender(person['vcard:gender']);
+
 	const updates = {
 		lastFetchedAt: new Date(),
 		inbox: person.inbox,
@@ -342,6 +344,7 @@ export async function updatePerson(uri: string, resolver?: Resolver | null, hint
 		isBot: object.type === 'Service',
 		isCat: (person as any).isCat === true,
 		isLocked: !!person.manuallyApprovesFollowers,
+		sex: gpSexMap[sex],
 	} as Partial<User>;
 
 	if (avatar) {
