@@ -35,7 +35,7 @@
 			<mk-button v-if="!autoReload" @click="reload">{{ $t('reload') }}</mk-button>
 		</div>
 	</section>
-	<section class="_card suggestions">
+	<section class="_card _vMargin suggestions">
 		<div class="_title"><fa :icon="faLaugh"/> {{ $t('suggestedEmojis') }}</div>
 		<div class="_content">
 			<mk-switch v-model="pendingOnly">{{ $t('pendingOnly') }}</mk-switch>

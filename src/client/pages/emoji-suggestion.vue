@@ -3,7 +3,7 @@
 		<portal to="icon"><fa :icon="faLaugh"/></portal>
 		<portal to="title">{{ $t('emojiSuggestion') }}</portal>
 
-		<section class="_card">
+		<section class="_card _vMargin">
 			<div class="_content">
 				<div class="preview">
 					<mk-button inline @click="selectFile">{{ $t('selectFile') }}</mk-button>
@@ -23,7 +23,7 @@
 				<mk-button inline primary :disabled="!canSend" @click="send"><fa :icon="faPaperPlane" fixed-width />{{ $t('sendSuggestion') }}</mk-button>
 			</div>
 		</section>
-		<section class="_card">
+		<section class="_card _vMargin">
 			<div class="_title"><fa :icon="faHistory"/> {{ $t('history') }}</div>
 			<div class="_content filter">
 				<mk-switch v-model="includesPending"><fa :icon="faClock" fixed-width />{{ $t('pending') }}</mk-switch>

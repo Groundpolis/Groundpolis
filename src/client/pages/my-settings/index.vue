@@ -7,7 +7,7 @@
 		{{ $t('editProfile') }}
 	</router-link>
 
-	<x-reaction-setting/>
+	<x-reaction-setting class="_vMargin"/>
 
 	<section class="_card _vMargin">
 		<div class="_title"><fa :icon="faCog"/> {{ $t('general') }}</div>
@@ -39,13 +39,13 @@
 		</div>
 	</section>
 
-	<x-theme/>
-	<x-plugins/>
-	<x-sidebar/>
-	<x-sounds/>
-	<x-gacha/>
+	<x-theme class=" _vMargin"/>
+	<x-plugins class=" _vMargin"/>
+	<x-sidebar class=" _vMargin"/>
+	<x-sounds class=" _vMargin"/>
+	<x-gacha class=" _vMargin"/>
 
-	<section class="_card">
+	<section class="_card _vMargin">
 		<div class="_title"><fa :icon="faColumns"/> {{ $t('deck') }}</div>
 		<div class="_content">
 			<mk-switch v-model="deckAlwaysShowMainColumn">
@@ -59,21 +59,21 @@
 		</div>
 	</section>
 
-	<x-appearance/>
-	<x-client/>
+	<x-appearance class=" _vMargin"/>
+	<x-client class=" _vMargin"/>
 
-	<x-import-export/>
-	<x-drive/>
-	<x-mute-block/>
-	<x-word-mute/>
+	<x-import-export class=" _vMargin"/>
+	<x-drive class=" _vMargin"/>
+	<x-mute-block class=" _vMargin"/>
+	<x-word-mute class=" _vMargin"/>
 
-	<x-privacy-setting/>
-	<x-security/>
-	<x-2fa/>
+	<x-privacy-setting class=" _vMargin"/>
+	<x-security class=" _vMargin"/>
+	<x-2fa class=" _vMargin"/>
 
-	<x-integration/>
+	<x-integration class=" _vMargin"/>
 
-	<x-api/>
+	<x-api class=" _vMargin"/>
 
 	<x-cache-clear/>
 
