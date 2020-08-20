@@ -134,7 +134,7 @@ export default Vue.extend({
 							this.src === 'antenna' ? this.antenna.name : 
 							this.src === 'mentions' ? this.$t('mentions') :
 							this.src === 'direct' ? this.$t('directNotes') :
-							this.src === 'channel' ? this.channel.name
+							this.src === 'channel' ? this.channel.name :
 							this.$t('_timelines.' + this.src);
 		},
 	},
