@@ -9,7 +9,7 @@
 
 	<x-reaction-setting/>
 
-	<section class="_card">
+	<section class="_card _vMargin">
 		<div class="_title"><fa :icon="faCog"/> {{ $t('general') }}</div>
 		<div class="_content">
 			<mk-switch v-model="$store.state.i.autoWatch" @change="onChangeAutoWatch">

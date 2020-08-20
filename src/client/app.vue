@@ -33,7 +33,7 @@
 
 	<x-sidebar ref="nav" @change-view-mode="calcHeaderWidth"/>
 
-	<div class="contents" ref="contents" :class="{ wallpaper, navHidden }">
+	<div class="contents" ref="contents" :class="{ wallpaper, navHidden, full: $store.state.fullView }">
 		<main ref="main">
 			<div class="content">
 				<transition :name="$store.state.device.animation ? 'page' : ''" mode="out-in" @enter="onTransition">
@@ -88,6 +88,7 @@
 	<button v-if="$store.getters.isSignedIn" class="post _buttonPrimary" :class="{ navHidden }" @click="post()"><fa :icon="faPencilAlt"/></button>
 
 	<stream-indicator v-if="$store.getters.isSignedIn"/>
+</div>
 </div>
 </template>
 
@@ -573,6 +574,18 @@ export default Vue.extend({
 			background: var(--wallpaperOverlay);
 			backdrop-filter: blur(4px);
 			-webkit-backdrop-filter: blur(4px);
+		}
+
+		&.full {
+			width: 100%;
+
+			> main {
+				width: 100%;
+			}
+
+			> .widgets {
+				display: none;
+			}
 		}
 
 		> main {

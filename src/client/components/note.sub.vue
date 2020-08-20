@@ -1,5 +1,5 @@
 <template>
-<div class="wrpstxzv" :class="{ compact: isCompactMode, children }" v-size="[{ max: 450 }]">
+<div class="wrpstxzv" :class="{ compact: isCompactMode, children }" v-size="{ max: [450] }">
 	<div class="main">
 		<mk-avatar class="avatar" :user="note.user"/>
 		<div class="body">
@@ -17,6 +17,7 @@
 	</div>
 	<x-sub v-for="reply in replies" :key="reply.id" :note="reply" class="reply" :detail="true" :children="true"/>
 </div>
+</div>
 </template>
 
 <script lang="ts">
@@ -26,7 +27,7 @@ import XSubNoteContent from './sub-note-content.vue';
 import XCwButton from './cw-button.vue';
 
 export default Vue.extend({
-	name: 'x-sub',
+	name: 'XSub',
 
 	components: {
 		XNoteHeader,

@@ -1,4 +1,4 @@
-import { faHome, faComments, faShareAlt, faGlobe, faCat, faListUl, faBroadcastTower, faAt, faEnvelope, faCommentAlt, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faComments, faShareAlt, faGlobe, faCat, faListUl, faBroadcastTower, faAt, faEnvelope, faCommentAlt, faProjectDiagram, faSatelliteDish } from '@fortawesome/free-solid-svg-icons';
 
 export const getIconOfTimeline = (src: string) => {
 	switch (src) {
@@ -9,6 +9,7 @@ export const getIconOfTimeline = (src: string) => {
 		case 'cat': return faCat;
 		case 'list': return faListUl;
 		case 'antenna': return faBroadcastTower;
+		case 'channel': return faSatelliteDish;
 		case 'mentions': return faAt;
 		case 'direct': return faEnvelope;
 		case 'followers': return faCommentAlt;

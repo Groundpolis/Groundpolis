@@ -6,7 +6,7 @@
 	:tabindex="!isDeleted ? '-1' : null"
 	:class="{ renote: isRenote, compact: isCompactMode }"
 	v-hotkey="keymap"
-	v-size="[{ max: 500 }, { max: 450 }, { max: 350 }, { max: 300 }]"
+	v-size="{ max: [500, 450, 350, 300] }"
 >
 	<x-sub v-for="note in conversation" class="reply-to-more" :key="note.id" :note="note"/>
 	<x-sub :note="appearNote.reply" class="reply-to" v-if="appearNote.reply && (!isCompactMode || detail)"/>
@@ -73,6 +73,7 @@
 					<mk-url-preview v-for="url in urls" :url="url" :key="url" :compact="true" :detail="detail" class="url-preview"/>
 					<div class="renote" v-if="appearNote.renote && !isCompactMode"><x-note-preview :note="appearNote.renote"/></div>
 				</div>
+				<router-link v-if="appearNote.channel && !inChannel" class="channel" :to="`/channels/${appearNote.channel.id}`"><fa :icon="faSatelliteDish"/> {{ appearNote.channel.name }}</router-link>
 			</div>
 			<footer class="footer">
 				<x-reactions-viewer :note="appearNote" ref="reactionsViewer"/>
@@ -122,7 +123,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faInfoCircle, faHeart, faEllipsisH, faUsers, faHeartbeat, faPlug } from '@fortawesome/free-solid-svg-icons';
+import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faInfoCircle, faHeart, faEllipsisH, faUsers, faHeartbeat, faPlug } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
@@ -159,6 +160,12 @@ export default Vue.extend({
 		event: 'updated'
 	},
 
+	inject: {
+		inChannel: {
+			default: null
+		}
+	},
+
 	props: {
 		note: {
 			type: Object,
@@ -192,7 +199,7 @@ export default Vue.extend({
 			noteBody: this.$refs.noteBody,
 			readMore: null as boolean | null,
 			instance: null as {} | null,
-			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug
+			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish
 		};
 	},
 
@@ -1226,6 +1233,11 @@ export default Vue.extend({
 							border-radius: 8px;
 						}
 					}
+				}
+
+				> .channel {
+					opacity: 0.7;
+					font-size: 80%;
 				}
 			}
 
