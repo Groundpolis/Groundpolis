@@ -25,6 +25,7 @@
 			<mk-button @click="readAllMessagingMessages">{{ $t('markAsReadAllTalkMessages') }}</mk-button>
 		</div>
 		<div class="_content">
+			<mk-button @click="configure">{{ $t('notificationSetting') }}</mk-button>
 			<div>{{ $t('stealingRule') }}</div>
 			<mk-select v-model="stealRule">
 				<option :value="0">{{ $t('_steal.textOnly') }}</option>
@@ -36,6 +37,7 @@
 				<mfm :text="$store.state.settings.stealReaction" :plain="true" />&nbsp;
 				{{ $t('chooseReaction') }}
 			</mk-button>
+			<mk-button @click="configure">{{ $t('notificationSetting') }}</mk-button>
 		</div>
 	</section>
 
@@ -211,6 +213,24 @@ export default Vue.extend({
 			}).then(({ canceled }) => {
 				if (canceled) return;
 				this.$root.signoutAll();
+			});
+		},
+
+		async configure() {
+			this.$root.new(await import('../../components/notification-setting-window.vue').then(m => m.default), {
+				includingTypes: this.$store.state.i.includingNotificationTypes,
+				showGlobalToggle: false,
+			}).$on('ok', async ({ includingTypes: value }: any) => {
+				await this.$root.api('i/update', {
+					includingNotificationTypes: value,
+				}).then(i => {
+					this.$store.state.i.includingNotificationTypes = i.includingNotificationTypes;
+				}).catch(err => {
+					this.$root.dialog({
+						type: 'error',
+						text: err.message
+					});
+				});
 			});
 		}
 	}

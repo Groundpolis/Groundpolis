@@ -7,6 +7,7 @@ import { AiScript, utils, values } from '@syuilo/aiscript';
 import { apiUrl, deckmode } from './config';
 import defaultFaces from './scripts/default-faces';
 import { erase } from '../prelude/array';
+import { notificationTypes } from '../types';
 
 export const defaultSettings = {
 	tutorial: 0,

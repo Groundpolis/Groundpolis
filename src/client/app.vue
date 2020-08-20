@@ -316,7 +316,11 @@ export default Vue.extend({
 			}
 		},
 
-		async onNotification(notification: any) {
+		async onNotification(notification) {
+			const t = this.$store.state.i.includingNotificationTypes;
+			if (!!t && !t.includes(notification.type)) {
+				return;
+			}
 			if (document.visibilityState === 'visible') {
 				this.$root.stream.send('readNotification', { id: notification.id });
 
