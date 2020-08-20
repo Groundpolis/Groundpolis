@@ -1,6 +1,6 @@
 <template>
 <router-link :to="`/channels/${channel.id}`" class="eftoefju _panel" tabindex="-1">
-	<div class="banner" v-if="channel.bannerUrl" :style="`background-image: url('${channel.bannerUrl}')`">
+	<div class="banner" :style="channel.bannerUrl ? `background-image: url('${channel.bannerUrl}')` : ''">
 		<div class="fade"></div>
 		<div class="name"><fa :icon="faSatelliteDish"/> {{ channel.name }}</div>
 		<div class="status">
