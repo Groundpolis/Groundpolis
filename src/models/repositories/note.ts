@@ -1,7 +1,7 @@
 import { EntityRepository, Repository, In } from 'typeorm';
 import { Note } from '../entities/note';
 import { User } from '../entities/user';
-import { Emojis, Users, PollVotes, DriveFiles, NoteReactions, Followings, Polls } from '..';
+import { Emojis, Users, PollVotes, DriveFiles, NoteReactions, Followings, Polls, Channels } from '..';
 import { ensure } from '../../prelude/ensure';
 import { SchemaType } from '../../misc/schema';
 import { awaitAll } from '../../prelude/await-all';
@@ -212,6 +212,12 @@ export class NoteRepository extends Repository<Note> {
 			text = `【${note.name}】\n${(note.text || '').trim()}\n\n${note.url || note.uri}`;
 		}
 
+		const channel = note.channelId
+			? note.channel
+				? note.channel
+				: await Channels.findOne(note.channelId)
+			: null;
+
 		const packed = await awaitAll({
 			id: note.id,
 			createdAt: note.createdAt.toISOString(),
@@ -233,6 +239,11 @@ export class NoteRepository extends Repository<Note> {
 			files: DriveFiles.packMany(note.fileIds),
 			replyId: note.replyId,
 			renoteId: note.renoteId,
+			channelId: note.channelId || undefined,
+			channel: channel ? {
+				id: channel.id,
+				name: channel.name,
+			} : undefined,
 			mentions: note.mentions.length > 0 ? note.mentions : undefined,
 			uri: note.uri || undefined,
 			url: note.url || undefined,
@@ -397,6 +408,16 @@ export const packedNoteSchema = {
 			type: 'object' as const,
 			optional: true as const, nullable: true as const,
 		},
-
+		channelId: {
+			type: 'string' as const,
+			optional: true as const, nullable: true as const,
+			format: 'id',
+			example: 'xxxxxxxxxx',
+		},
+		channel: {
+			type: 'object' as const,
+			optional: true as const, nullable: true as const,
+			ref: 'Channel'
+		},
 	},
 };

@@ -1,7 +1,7 @@
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import * as nestedProperty from 'nested-property';
-import { faTerminal, faHashtag, faBroadcastTower, faPaintBrush, faStar, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faDoorClosed, faBullhorn, faLaugh, faColumns } from '@fortawesome/free-solid-svg-icons';
+import { faSatelliteDish, faTerminal, faHashtag, faBroadcastTower, faPaintBrush, faStar, faListUl, faUserClock, faUsers, faCloud, faGamepad, faFileAlt, faDoorClosed, faBullhorn, faLaugh, faColumns } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faComments } from '@fortawesome/free-regular-svg-icons';
 import { AiScript, utils, values } from '@syuilo/aiscript';
 import { apiUrl, deckmode } from './config';
@@ -37,6 +37,7 @@ export const defaultDeviceUserSettings = {
 	remoteFollowersOnly: false,
 	widgets: [],
 	hideTimelineColumn: false,
+	latestReaction: null as string | null,
 	tl: {
 		src: 'home'
 	},
@@ -75,7 +76,7 @@ export const defaultDeviceSettings = {
 	useSticker: true,
 	makeCustomEmojisBigger: true,
 	iconShape: 'circle',
-	autoReload: false,
+	serverDisconnectedBehavior: 'quiet',
 	accounts: [],
 	recentEmojis: [],
 	themes: [],
@@ -113,6 +114,7 @@ export const defaultDeviceSettings = {
 	sfxChat: 'syuilo/pope1',
 	sfxChatBg: 'syuilo/waon',
 	sfxAntenna: 'syuilo/triple',
+	sfxChannel: 'syuilo/square-pico',
 	showUnrenoteConfirm: true,
 	showNoteDeleteConfirm: true,
 	showDeleteAndEditConfirm: true,
@@ -151,6 +153,7 @@ export default () => new Vuex.Store({
 		i: null,
 		pendingApiRequestsCount: 0,
 		spinner: null,
+		fullView: false,
 
 		// Plugin
 		pluginContexts: new Map<string, AiScript>(),
@@ -233,6 +236,11 @@ export default () => new Vuex.Store({
 				get show() { return getters.isSignedIn; },
 				to: '/my/pages',
 			},
+			channels: {
+				title: 'channel',
+				icon: faSatelliteDish,
+				to: '/channels',
+			},
 			games: {
 				title: 'games',
 				icon: faGamepad,
@@ -278,6 +286,10 @@ export default () => new Vuex.Store({
 
 		updateIKeyValue(state, { key, value }) {
 			state.i[key] = value;
+		},
+
+		setFullView(state, v) {
+			state.fullView = v;
 		},
 
 		initPlugin(state, { plugin, aiscript }) {

@@ -1,5 +1,5 @@
 <template>
-<div class="qglefbjs" :class="[ notification.type, { compact: isCompactMode } ]" v-size="[{ max: 500 }, { max: 600 }]">
+<div class="qglefbjs" :class="[ notification.type, { compact: isCompactMode } ]" v-size="{ max: [500, 600] }">
 	<div class="head">
 		<mk-avatar v-if="notification.user" class="icon" :user="notification.user"/>
 		<img v-else class="icon" :src="notification.icon" alt=""/>
@@ -54,6 +54,7 @@
 			<mfm :text="notification.body" :nowrap="!full"/>
 		</span>
 	</div>
+</div>
 </div>
 </template>
 

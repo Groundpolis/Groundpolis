@@ -1,7 +1,12 @@
 <template>
 <section class="_card">
 	<div class="_title"><fa :icon="faCog"/> {{ $t('general') }}</div>
-
+	<div class="_content">
+		<div>{{ $t('whenServerDisconnected') }}</div>
+		<mk-radio v-model="serverDisconnectedBehavior" value="reload">{{ $t('_serverDisconnectedBehavior.reload') }}</mk-radio>
+		<mk-radio v-model="serverDisconnectedBehavior" value="dialog">{{ $t('_serverDisconnectedBehavior.dialog') }}</mk-radio>
+		<mk-radio v-model="serverDisconnectedBehavior" value="quiet">{{ $t('_serverDisconnectedBehavior.quiet') }}</mk-radio>
+	</div>
 	<div class="_content">
 		<mk-switch v-model="autoReload">{{ $t('autoReloadWhenDisconnected') }}</mk-switch>
 		<mk-switch v-model="enableInfiniteScroll">{{ $t('enableInfiniteScroll') }}</mk-switch>
@@ -17,6 +22,7 @@
 import Vue from 'vue';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import MkSwitch from '../../components/ui/switch.vue';
+import MkRadio from '../../components/ui/radio.vue';
 
 export default Vue.extend({
 	metaInfo() {
@@ -27,6 +33,7 @@ export default Vue.extend({
 
 	components: {
 		MkSwitch,
+		MkRadio,
 	},
 
 	data() {
@@ -36,6 +43,11 @@ export default Vue.extend({
 	},
 
 	computed: {
+		serverDisconnectedBehavior: {
+			get() { return this.$store.state.device.serverDisconnectedBehavior; },
+			set(value) { this.$store.commit('device/set', { key: 'serverDisconnectedBehavior', value }); }
+		},
+
 		autoReload: {
 			get() { return this.$store.state.device.autoReload; },
 			set(value) { this.$store.commit('device/set', { key: 'autoReload', value }); }

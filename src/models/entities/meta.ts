@@ -402,4 +402,9 @@ export class Meta {
 		default: true,
 	})
 	public objectStorageUseProxy: boolean;
+
+	@Column('boolean', {
+		default: false,
+	})
+	public objectStorageSetPublicRead: boolean;
 }

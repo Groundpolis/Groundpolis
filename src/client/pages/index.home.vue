@@ -46,13 +46,13 @@
 	</section>
 	
 	<x-post-form class="post-form _panel" fixed v-if="$store.state.device.showFixedPostForm"/>
-	<x-timeline ref="tl" :key="src === 'list' ? `list:${list.id}` : src === 'antenna' ? `antenna:${antenna.id}` : src" :src="src" :list="list ? list.id : null" :antenna="antenna ? antenna.id : null" :sound="true" @before="before()" @after="after()" @queue="queueUpdated"/>
+	<x-timeline ref="tl" :key="src === 'list' ? `list:${list.id}` : src === 'antenna' ? `antenna:${antenna.id}` : src === 'channel' ? `channel:${channel.id}` : src" :src="src" :list="list ? list.id : null" :antenna="antenna ? antenna.id : null" :channel="channel ? channel.id : null" :sound="true" @before="before()" @after="after()" @queue="queueUpdated"/>
 </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { faAngleDown, faAngleUp, faHome, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faEllipsisH, faSatelliteDish } from '@fortawesome/free-solid-svg-icons';
 import Progress from '../scripts/loading';
 import { getIconOfTimeline } from '../scripts/get-icon-of-timeline';
 import XTimeline from '../components/timeline.vue';
@@ -87,13 +87,14 @@ export default Vue.extend({
 			src: 'home',
 			list: null,
 			antenna: null,
+			channel: null,
 			menuOpened: false,
 			announcements: [] as any[],
 			queue: 0,
 			width: 0,
 			isMobile: window.innerWidth < 650,
 			currentAnnouncementIndex: 0,
-			faAngleDown, faAngleUp, faHome, faCircle, faChevronLeft, faChevronRight, faCheck, faEllipsisH
+			faAngleDown, faAngleUp, faHome, faCircle, faChevronLeft, faChevronRight, faCheck, faEllipsisH, faSatelliteDish
 		};
 	},
 
@@ -133,6 +134,7 @@ export default Vue.extend({
 							this.src === 'antenna' ? this.antenna.name : 
 							this.src === 'mentions' ? this.$t('mentions') :
 							this.src === 'direct' ? this.$t('directNotes') :
+							this.src === 'channel' ? this.channel.name :
 							this.$t('_timelines.' + this.src);
 		},
 	},
@@ -140,16 +142,20 @@ export default Vue.extend({
 	watch: {
 		src() {
 			this.showNav = false;
-			this.saveSrc();
 		},
 		list(x) {
 			this.showNav = false;
-			this.saveSrc();
 			if (x != null) this.antenna = null;
+			if (x != null) this.channel = null;
 		},
 		antenna(x) {
 			this.showNav = false;
-			this.saveSrc();
+			if (x != null) this.list = null;
+			if (x != null) this.channel = null;
+		},
+		channel(x) {
+			this.showNav = false;
+			if (x != null) this.antenna = null;
 			if (x != null) this.list = null;
 		},
 	},
@@ -160,6 +166,8 @@ export default Vue.extend({
 			this.list = this.$store.state.deviceUser.tl.arg;
 		} else if (this.src === 'antenna') {
 			this.antenna = this.$store.state.deviceUser.tl.arg;
+		} else if (this.src === 'channel') {
+			this.channel = this.$store.state.deviceUser.tl.arg;
 		}
 	},
 
@@ -220,9 +228,10 @@ export default Vue.extend({
 		async choose(ev) {
 			if (this.meta == null) return;
 			this.menuOpened = true;
-			const [antennas, lists] = await Promise.all([
+			const [antennas, lists, channels] = await Promise.all([
 				this.$root.api('antennas/list'),
-				this.$root.api('users/lists/list')
+				this.$root.api('users/lists/list'),
+				this.$root.api('channels/followed'),
 			]);
 			const antennaItems = antennas.map(antenna => ({
 				text: antenna.name,
@@ -230,7 +239,8 @@ export default Vue.extend({
 				indicate: antenna.hasUnreadNote,
 				action: () => {
 					this.antenna = antenna;
-					this.setSrc('antenna');
+					this.src = 'antenna';
+					this.saveSrc();
 				}
 			}));
 			const listItems = lists.map(list => ({
@@ -238,20 +248,35 @@ export default Vue.extend({
 				icon: faListUl,
 				action: () => {
 					this.list = list;
-					this.setSrc('list');
+					this.src = 'list';
+					this.saveSrc();
+				}
+			}));
+			const channelItems = channels.map(channel => ({
+				text: channel.name,
+				icon: faSatelliteDish,
+				indicate: channel.hasUnreadNote,
+				action: () => {
+					// NOTE: チャンネルタイムラインをこのコンポーネントで表示するようにすると投稿フォームはどうするかなどの問題が生じるのでとりあえずページ遷移で
+					//this.channel = channel;
+					//this.src = 'channel';
+					//this.saveSrc();
+					this.$router.push(`/channels/${channel.id}`);
 				}
 			}));
 			
 			this.$root.menu({
 				items: [
+					...(this.isMobile || this.deckMode ? this.tabItems : [ undefined ]),
 					this.ifCTL(this.genItem('cat')),
 					this.genItem('remoteFollowing'),
 					this.genItem('followers'),
-					...(this.isMobile || this.deckMode ? this.tabItems : [ undefined ]),
 					antennaItems.length > 0 ? null : undefined,
 					...antennaItems,
 					listItems.length > 0 ? null : undefined,
 					...listItems,
+					channelItems.length > 0 ? null : undefined,
+					...channelItems,
 					null,
 					this.genItem('mentions', this.$t('mentions').toString()),
 					this.genItem('direct', this.$t('directNotes').toString()),
@@ -271,7 +296,10 @@ export default Vue.extend({
 		saveSrc() {
 			this.$store.commit('deviceUser/setTl', {
 				src: this.src,
-				arg: this.src == 'list' ? this.list : this.antenna
+				arg:
+					this.src === 'list' ? this.list :
+					this.src === 'antenna' ? this.antenna :
+					this.channel
 			});
 		},
 

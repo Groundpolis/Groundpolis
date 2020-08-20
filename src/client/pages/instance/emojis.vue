@@ -3,7 +3,7 @@
 	<portal to="icon"><fa :icon="faLaugh"/></portal>
 	<portal to="title">{{ $t('customEmojis') }}</portal>
 
-	<section class="_card local">
+	<section class="_card _vMargin local">
 		<div class="_title"><fa :icon="faLaugh"/> {{ $t('customEmojis') }}</div>
 		<div class="_content">
 			<mk-pagination :pagination="pagination" class="emojis" ref="emojis">
@@ -35,7 +35,7 @@
 			<mk-button v-if="!autoReload" @click="reload">{{ $t('reload') }}</mk-button>
 		</div>
 	</section>
-	<section class="_card suggestions">
+	<section class="_card _vMargin suggestions">
 		<div class="_title"><fa :icon="faLaugh"/> {{ $t('suggestedEmojis') }}</div>
 		<div class="_content">
 			<mk-switch v-model="pendingOnly">{{ $t('pendingOnly') }}</mk-switch>
@@ -72,7 +72,7 @@
 			</mk-pagination>
 		</div>
 	</section>
-	<section class="_card remote">
+	<section class="_card _vMargin remote">
 		<div class="_title"><fa :icon="faLaugh"/> {{ $t('customEmojisOfRemote') }}</div>
 		<div class="_content">
 			<mk-input v-model="host" :debounce="true"><span>{{ $t('host') }}</span></mk-input>
