@@ -26,6 +26,8 @@
 		</div>
 		<div class="_content">
 			<mk-button @click="configure">{{ $t('notificationSetting') }}</mk-button>
+		</div>
+		<div class="_content">
 			<div>{{ $t('stealingRule') }}</div>
 			<mk-select v-model="stealRule">
 				<option :value="0">{{ $t('_steal.textOnly') }}</option>
@@ -37,7 +39,6 @@
 				<mfm :text="$store.state.settings.stealReaction" :plain="true" />&nbsp;
 				{{ $t('chooseReaction') }}
 			</mk-button>
-			<mk-button @click="configure">{{ $t('notificationSetting') }}</mk-button>
 		</div>
 	</section>
 
