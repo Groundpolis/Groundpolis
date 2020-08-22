@@ -918,8 +918,8 @@ export default Vue.extend({
 <style lang="scss" scoped>
 
 @mixin ticker($bg, $fg) {
-	// background: linear-gradient(90deg, $bg, transparent);
-	background: $bg;
+	background: linear-gradient(90deg, $bg, transparent);
+	// background: $bg;
 	color: $fg;
 }
 
