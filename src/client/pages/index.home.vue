@@ -239,8 +239,7 @@ export default Vue.extend({
 				indicate: antenna.hasUnreadNote,
 				action: () => {
 					this.antenna = antenna;
-					this.src = 'antenna';
-					this.saveSrc();
+					this.setSrc('antenna');
 				}
 			}));
 			const listItems = lists.map(list => ({
@@ -248,8 +247,7 @@ export default Vue.extend({
 				icon: faListUl,
 				action: () => {
 					this.list = list;
-					this.src = 'list';
-					this.saveSrc();
+					this.setSrc('list');
 				}
 			}));
 			const channelItems = channels.map(channel => ({
@@ -291,6 +289,7 @@ export default Vue.extend({
 
 		setSrc(src: string) {
 			this.src = src;
+			this.saveSrc();
 		},
 
 		saveSrc() {

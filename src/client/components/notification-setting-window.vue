@@ -2,10 +2,12 @@
 <x-window ref="window" :width="400" :height="450" :no-padding="true" @closed="() => { $emit('closed'); destroyDom(); }" :with-ok-button="true" :ok-button-disabled="false" @ok="ok()">
 	<template #header>{{ $t('notificationSetting') }}</template>
 	<div class="vv94n3oa">
-		<mk-switch v-if="showGlobalToggle" v-model="useGlobalSetting">
-			{{ $t('useGlobalSetting') }}
-			<template #desc>{{ $t('useGlobalSettingDesc') }}</template>
-		</mk-switch>
+		<div v-if="showGlobalToggle">
+			<mk-switch v-model="useGlobalSetting">
+				{{ $t('useGlobalSetting') }}
+				<template #desc>{{ $t('useGlobalSettingDesc') }}</template>
+			</mk-switch>
+		</div>
 		<div v-if="!useGlobalSetting">
 			<mk-info>{{ $t('notificationSettingDesc') }}</mk-info>
 			<mk-button inline @click="disableAll">{{ $t('disableAll') }}</mk-button>
@@ -34,7 +36,7 @@ export default Vue.extend({
 
 	props: {
 		includingTypes: {
-			// todo これで型に合わないものを弾いてくれるのかどうか要調査
+			// TODO: これで型に合わないものを弾いてくれるのかどうか要調査
 			type: Array as PropType<typeof notificationTypes[number][]>,
 			required: false,
 			default: null,

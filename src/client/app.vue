@@ -477,6 +477,7 @@ export default Vue.extend({
 
 					&.dense {
 						left: 16px - 1px;
+						padding: 0;
 					}
 				}
 			}
