@@ -6,11 +6,11 @@
 	<mk-folder>
 		<template #header><fa :icon="faTachometerAlt"/> {{ $t('overview') }}</template>
 
-		<div class="sboqnrfi">
-			<mk-instance-stats :chart-limit="300" :detailed="true"/>
+		<div class="sboqnrfi" :style="{ gridTemplateRows: overviewHeight }">
+			<mk-instance-stats :chart-limit="300" :detailed="true" class="stats" ref="stats"/>
 
 			<div class="column">
-				<mk-container :body-togglable="false" :resize-base-el="() => $el">
+				<mk-container :body-togglable="true" :resize-base-el="() => $el" class="info">
 					<template #header><fa :icon="faInfoCircle"/>{{ $t('instanceInfo') }}</template>
 
 					<div class="_content">
@@ -22,8 +22,27 @@
 						<div class="_keyValue"><b>Redis</b><span>v{{ serverInfo.redis }}</span></div>
 					</div>
 				</mk-container>
+				
+				<mk-container :body-togglable="true" :scrollable="true" :resize-base-el="() => $el" class="db">
+					<template #header><fa :icon="faDatabase"/>{{ $t('database') }}</template>
 
-				<mkw-federation/>
+					<div class="_content" v-if="dbInfo">
+						<table style="border-collapse: collapse; width: 100%;">
+							<tr style="opacity: 0.7;">
+								<th style="text-align: left; padding: 0 8px 8px 0;">Table</th>
+								<th style="text-align: left; padding: 0 8px 8px 0;">Records</th>
+								<th style="text-align: left; padding: 0 0 8px 0;">Size</th>
+							</tr>
+							<tr v-for="table in dbInfo" :key="table[0]">
+								<th style="text-align: left; padding: 0 8px 0 0; word-break: break-all;">{{ table[0] }}</th>
+								<td style="padding: 0 8px 0 0;">{{ table[1].count | number }}</td>
+								<td style="padding: 0; opacity: 0.7;">{{ table[1].size | bytes }}</td>
+							</tr>
+						</table>
+					</div>
+				</mk-container>
+
+				<mkw-federation class="fed" :body-togglable="true" :scrollable="true"/>
 			</div>
 		</div>
 	</mk-folder>
@@ -34,6 +53,7 @@
 		<div class="segusily">
 			<mk-container :body-togglable="false" :resize-base-el="() => $el">
 				<template #header><fa :icon="faMicrochip"/>{{ $t('cpuAndMemory') }}</template>
+				<template #func><button class="_button" @click="resume" :disabled="!paused"><fa :icon="faPlay"/></button><button class="_button" @click="pause" :disabled="paused"><fa :icon="faPause"/></button></template>
 
 				<div class="_content" style="margin-top: -8px; margin-bottom: -12px;">
 					<canvas ref="cpumem"></canvas>
@@ -53,8 +73,10 @@
 					</div>
 				</div>
 			</mk-container>
+
 			<mk-container :body-togglable="false" :resize-base-el="() => $el">
 				<template #header><fa :icon="faHdd"/> {{ $t('disk') }}</template>
+				<template #func><button class="_button" @click="resume" :disabled="!paused"><fa :icon="faPlay"/></button><button class="_button" @click="pause" :disabled="paused"><fa :icon="faPause"/></button></template>
 
 				<div class="_content" style="margin-top: -8px; margin-bottom: -12px;">
 					<canvas ref="disk"></canvas>
@@ -69,8 +91,10 @@
 					</div>
 				</div>
 			</mk-container>
+
 			<mk-container :body-togglable="false" :resize-base-el="() => $el">
 				<template #header><fa :icon="faExchangeAlt"/> {{ $t('network') }}</template>
+				<template #func><button class="_button" @click="resume" :disabled="!paused"><fa :icon="faPlay"/></button><button class="_button" @click="pause" :disabled="paused"><fa :icon="faPause"/></button></template>
 
 				<div class="_content" style="margin-top: -8px; margin-bottom: -12px;">
 					<canvas ref="net"></canvas>
@@ -89,7 +113,7 @@
 	<mk-folder>
 		<template #header><fa :icon="faClipboardList"/> {{ $t('jobQueue') }}</template>
 
-		<div class="vkyrmkwb">
+		<div class="vkyrmkwb" :style="{ gridTemplateRows: queueHeight }">
 			<mk-container :body-togglable="false" :scrollable="true" :resize-base-el="() => $el">
 				<template #header><fa :icon="faExclamationTriangle"/> {{ $t('delayed') }}</template>
 
@@ -100,10 +124,10 @@
 					</div>
 				</div>
 			</mk-container>
-			<x-queue :connection="queueConnection" domain="inbox">
+			<x-queue :connection="queueConnection" domain="inbox" ref="queue" class="queue">
 				<template #title><fa :icon="faExchangeAlt"/> In</template>
 			</x-queue>
-			<x-queue :connection="queueConnection" domain="deliver">
+			<x-queue :connection="queueConnection" domain="deliver" class="queue">
 				<template #title><fa :icon="faExchangeAlt"/> Out</template>
 			</x-queue>
 		</div>
@@ -161,7 +185,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faServer, faExchangeAlt, faMicrochip, faHdd, faStream, faTrashAlt, faInfoCircle, faExclamationTriangle, faTachometerAlt, faHeartbeat, faClipboardList } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPause, faDatabase, faServer, faExchangeAlt, faMicrochip, faHdd, faStream, faTrashAlt, faInfoCircle, faExclamationTriangle, faTachometerAlt, faHeartbeat, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import Chart from 'chart.js';
 import VueJsonPretty from 'vue-json-pretty';
 import MkInstanceStats from '../../components/instance-stats.vue';
@@ -218,7 +242,11 @@ export default Vue.extend({
 			logLevel: 'all',
 			logDomain: '',
 			modLogs: [],
-			faServer, faExchangeAlt, faMicrochip, faHdd, faStream, faTrashAlt, faInfoCircle, faExclamationTriangle, faTachometerAlt, faHeartbeat, faClipboardList,
+			dbInfo: null,
+			overviewHeight: '1fr',
+			queueHeight: '1fr',
+			paused: false,
+			faPlay, faPause, faDatabase, faServer, faExchangeAlt, faMicrochip, faHdd, faStream, faTrashAlt, faInfoCircle, faExclamationTriangle, faTachometerAlt, faHeartbeat, faClipboardList,
 		}
 	},
 
@@ -485,6 +513,24 @@ export default Vue.extend({
 				});
 			});
 		});
+
+		this.$root.api('admin/get-table-stats', {}).then(res => {
+			this.dbInfo = Object.entries(res).sort((a, b) => b[1].size - a[1].size);
+		});
+
+		this.$nextTick(() => {
+			new ResizeObserver((entries, observer) => {
+				if (this.$refs.stats && this.$refs.stats.$el) {
+					this.overviewHeight = this.$refs.stats.$el.offsetHeight + 'px';
+				}
+			}).observe(this.$refs.stats.$el);
+
+			new ResizeObserver((entries, observer) => {
+				if (this.$refs.queue && this.$refs.queue.$el) {
+					this.queueHeight = this.$refs.queue.$el.offsetHeight + 'px';
+				}
+			}).observe(this.$refs.queue.$el);
+		});
 	},
 
 	beforeDestroy() {
@@ -540,6 +586,8 @@ export default Vue.extend({
 		},
 
 		onStats(stats) {
+			if (this.paused) return;
+
 			const cpu = (stats.cpu * 100).toFixed(0);
 			const memActive = (stats.mem.active / this.serverInfo.mem.total * 100).toFixed(0);
 			const memUsed = (stats.mem.used / this.serverInfo.mem.total * 100).toFixed(0);
@@ -576,7 +624,15 @@ export default Vue.extend({
 			for (const stats of [...statsLog].reverse()) {
 				this.onStats(stats);
 			}
-		}
+		},
+
+		pause() {
+			this.paused = true;
+		},
+
+		resume() {
+			this.paused = false;
+		},
 	}
 });
 </script>
@@ -590,11 +646,34 @@ export default Vue.extend({
 			grid-template-rows: 1fr;
 			gap: 16px 16px;
 
+			> .stats {
+				height: min-content;
+			}
+
 			> .column {
-				display: grid;
-				grid-template-columns: 1fr;
-				grid-template-rows: auto 1fr;
-				gap: 16px 16px;
+				display: flex;
+				flex-direction: column;
+
+				> .info {
+					flex-shrink: 0;
+					flex-grow: 0;
+				}
+
+				> .db {
+					flex: 1;
+					flex-grow: 0;
+					height: 100%;
+				}
+
+				> .fed {
+					flex: 1;
+					flex-grow: 0;
+					height: 100%;
+				}
+
+				> *:not(:last-child) {
+					margin-bottom: var(--margin);
+				}
 			}
 		}
 
@@ -608,8 +687,17 @@ export default Vue.extend({
 		.vkyrmkwb {
 			display: grid;
 			grid-template-columns: 0.5fr 1fr 1fr;
-			grid-template-rows: 385px;
+			grid-template-rows: 1fr;
 			gap: 16px 16px;
+			margin-bottom: var(--margin);
+
+			> .queue {
+				height: min-content;
+			}
+
+			> * {
+				margin-bottom: 0;
+			}
 		}
 
 		.uwuemslx {
