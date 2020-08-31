@@ -63,7 +63,6 @@
 							<span><mk-acct :user="appearNote.renote.user"/>: {{ appearNote.renote.text }}</span>
 							<fa :icon="faQuoteRight" fixed-width size="xs" style="margin-left: 4px" />
 						</router-link>
-						<router-link v-else-if="appearNote.renote != null" class="rp" :to="appearNote.renote | notePage">RN: </router-link>
 					</div>
 					<button v-if="readMore !== null" class="read-more-button _button _link" @click="readMore = !readMore" v-text="$t(readMore ? 'hide' : 'readMore')"/>
 					<div class="files" v-if="appearNote.files.length > 0">
@@ -1251,12 +1250,12 @@ export default Vue.extend({
 					}
 
 					> .renote {
+						margin-left: 16px;
 						padding: 8px 0;
 
 						> * {
 							padding: 16px;
-							border: dashed 1px var(--renote);
-							border-radius: 8px;
+							border-left: solid 1px var(--renote);
 						}
 					}
 				}

@@ -10,7 +10,7 @@
 
 	<div v-if="note">
 		<mk-remote-caution v-if="note.user.host != null" :href="note.url || note.uri" style="margin-bottom: var(--margin)"/>
-		<mk-tab v-model="tab" :items="[
+		<mk-tab v-model="tab" class="tab" :items="[
 			{ label: $t('quote'), value: 'quotes', icon: faQuoteRight },
 			{ label: $t('renote'), value: 'renotes', icon: faRetweet },
 		]"
@@ -91,3 +91,9 @@ export default Vue.extend({
 	}
 });
 </script>
+
+<style lang="scss" scoped>
+.tab {
+	margin-bottom: var(--margin);
+}
+</style>
