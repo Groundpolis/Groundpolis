@@ -1255,7 +1255,8 @@ export default Vue.extend({
 
 						> * {
 							padding: 16px;
-							border-left: solid 1px var(--renote);
+							border: solid 1px var(--renote);
+							border-radius: 3px;
 						}
 					}
 				}

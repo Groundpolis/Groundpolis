@@ -110,7 +110,7 @@ export default Vue.extend({
 	box-shadow: none;
 	text-decoration: none;
 	background: var(--buttonBg);
-	border-radius: 6px;
+	border-radius: var(--radius);
 	overflow: hidden;
 
 	&:not(:disabled):hover {
@@ -148,7 +148,7 @@ export default Vue.extend({
 			bottom: -5px;
 			left: -5px;
 			border: 2px solid var(--accentAlpha03);
-			border-radius: 10px;
+			border-radius: var(--radius);
 		}
 	}
 
