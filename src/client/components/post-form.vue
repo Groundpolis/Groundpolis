@@ -42,6 +42,43 @@
 				<button @click="addVisibleUser" class="_buttonPrimary"><fa :icon="faPlus" fixed-width/></button>
 			</div>
 		</div>
+		<div class="mfm-pad">
+			<button class="_button" @click="/**/" v-tooltip="$t('bold')">
+				<b>B</b>
+			</button>
+			<button class="_button" @click="/**/" v-tooltip="$t('italic')">
+				<i>I</i>
+			</button>
+			<button class="_button" @click="/**/" v-tooltip="$t('big')">
+				<mfm text="***!***"/>
+			</button>
+			<button class="_button" @click="/**/" v-tooltip="$t('bigger')">
+				<mfm text="****!!****"/>
+			</button>
+			<button class="_button" @click="/**/" v-tooltip="$t('bigger')">
+				<mfm text="(((M)))"/>
+			</button>
+			<button class="_button" @click="/**/" v-tooltip="$t('bigger')">
+				<mfm text="<spin>S</spin>"/>
+			</button>
+			<button class="_button" @click="/**/" v-tooltip="$t('bigger')">
+				<mfm text="<jump>J</jump>"/>
+			</button>
+			<button class="_button" @click="/**/" v-tooltip="$t('bigger')">
+				<mfm text="<flip>F</flip>"/>
+			</button>
+			<button class="_button" @click="/**/" v-tooltip="$t('bigger')">
+				<mfm text="<marquee>marquee</marquee>"/>
+			</button>
+			<button class="_button" @click="/**/" v-tooltip="$t('bigger')">
+				<mfm text="x<sup>2</sup>"/>
+			</button>
+			<button class="_button" @click="/**/" v-tooltip="$t('bigger')">
+				<mfm text="x<sub>2</sub>"/>
+			</button>
+			<button class="_button" @click="insertMention" v-tooltip="$t('mention')"><fa :icon="faAt"/></button>
+			<button class="_button" @click="insertEmoji" v-tooltip="$t('emoji')"><fa :icon="faLaughSquint"/></button>
+		</div>
 		<input v-show="useCw" ref="cw" class="cw" v-model="cw" :placeholder="$t('annotation')" v-autocomplete="{ model: 'cw' }" @keydown="onKeydown">
 		<textarea v-model="text" class="text" :class="{ withCw: useCw }" ref="text" :disabled="posting" :placeholder="placeholder" v-autocomplete="{ model: 'text' }" @keydown="onKeydown" @paste="onPaste"></textarea>
 		<input v-show="useBroadcast" ref="broadcastText" class="broadcastText" v-model="broadcastText" :placeholder="$t('broadcastTextDescription')" v-autocomplete="{ model: 'broadcastText' }" @keydown="onKeydown">
@@ -54,8 +91,6 @@
 			<button class="_button" @click="useCw = !useCw" :class="{ active: useCw }" v-tooltip="$t('useCw')"><fa :icon="faEyeSlash"/></button>
 			<button class="_button" @click="insertFace" v-tooltip="$t('gacha')"><fa :icon="faFish"/></button>
 			<button class="_button" @click="useBroadcast = !useBroadcast" :class="{ active: useBroadcast }" v-tooltip="$t('broadcastMode')"><fa :icon="faBullhorn"/></button>
-			<button class="_button" @click="insertMention" v-tooltip="$t('mention')"><fa :icon="faAt"/></button>
-			<button class="_button" @click="insertEmoji" v-tooltip="$t('emoji')"><fa :icon="faLaughSquint"/></button>
 			<button class="_button" @click="showActions" v-tooltip="$t('plugin')" v-if="$store.state.postFormActions.length > 0"><fa :icon="faPlug"/></button>
 		</footer>
 		<input ref="file" class="file _button" type="file" multiple="multiple" @change="onChangeFile"/>
@@ -915,13 +950,23 @@ export default Vue.extend({
 			display: none;
 		}
 
+		> .mfm-pad {
+			padding: 0 16px;
+
+			@media (max-width: 500px) {
+				padding: 0;
+			}
+		}
+
 		> footer {
 			padding: 0 16px 16px 16px;
 
 			@media (max-width: 500px) {
-				padding: 0 8px 8px 8px;
+				padding: 0;
 			}
+		}
 
+		> .mfm-pad, > footer {
 			> button {
 				display: inline-block;
 				padding: 0;
