@@ -22,7 +22,7 @@
 	<span class="premium" v-if="note.user.isPremium"><fa :icon="faCrown"/></span>
 	<div class="info">
 		<span class="mobile" v-if="note.viaMobile"><fa :icon="faMobileAlt"/></span>
-		<router-link class="created-at" :to="note | notePage">
+		<router-link v-if="!detail" class="created-at" :to="note | notePage">
 			<mk-time :time="note.createdAt"/>
 		</router-link>
 		<span class="visibility" v-if="note.visibility !== 'public'">
@@ -33,7 +33,6 @@
 		</span>
 		<span class="localOnly" v-if="note.localOnly"><fa :icon="faHeart"/></span>
 		<span class="remoteFollowersOnly" v-if="note.remoteFollowersOnly"><fa :icon="faHeartbeat"/></span>
-		<span class="global" v-tooltip="$t('remoteUserCaution')" v-if="note.user.host"><fa :icon="faProjectDiagram"/></span>
 	</div>
 </header>
 </template>
@@ -49,6 +48,10 @@ export default Vue.extend({
 			type: Object,
 			required: true
 		},
+		detail: {
+			type: Boolean,
+			default: false,
+		}
 	},
 
 	data() {

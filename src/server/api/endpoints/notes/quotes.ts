@@ -9,8 +9,8 @@ import { Notes } from '../../../../models';
 
 export const meta = {
 	desc: {
-		'ja-JP': '指定した投稿への返信を取得します。',
-		'en-US': 'Get replies of a note.'
+		'ja-JP': '指定した投稿の引用を取得します。',
+		'en-US': 'Get quotes of a note.'
 	},
 
 	tags: ['notes'],
@@ -54,7 +54,12 @@ export const meta = {
 export default define(meta, async (ps, user) => {
 	const query = makePaginationQuery(Notes.createQueryBuilder('note'), ps.sinceId, ps.untilId)
 		.andWhere(new Brackets(qb => { qb
-			.where(`note.replyId = :noteId`, { noteId: ps.noteId })
+			.where(`note.renoteId = :noteId`, { noteId: ps.noteId })
+			.andWhere(new Brackets(qb => { qb
+				.where(`note.text IS NOT NULL`)
+				.orWhere(`note.fileIds != '{}'`)
+				.orWhere(`note.hasPoll = TRUE`);
+			}));
 		}))
 		.leftJoinAndSelect('note.user', 'user');
 

@@ -70,6 +70,7 @@ export const router = new VueRouter({
 		{ path: '/instance/relays', component: page('instance/relays') },
 		{ path: '/instance/announcements', component: page('instance/announcements') },
 		{ path: '/notes/:note', name: 'note', component: page('note') },
+		{ path: '/notes/:note/renotes', name: 'renotes', component: page('renotes') },
 		{ path: '/tags/:tag', component: page('tag') },
 		{ path: '/auth/:token', component: page('auth') },
 		{ path: '/miauth/:session', component: page('miauth') },

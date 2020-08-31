@@ -646,6 +646,7 @@ delayed: "Delayed"
 database: "Database"
 channel: "Channel"
 create: "Create"
+quotes: "Quotes"
 _serverDisconnectedBehavior:
   reload: "Automatically reload"
   dialog: "Show warning dialog"

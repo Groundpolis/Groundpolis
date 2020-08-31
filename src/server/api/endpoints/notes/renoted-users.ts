@@ -1,16 +1,17 @@
 import $ from 'cafy';
 import { ID } from '../../../../misc/cafy-id';
 import define from '../../define';
-import { makePaginationQuery } from '../../common/make-pagination-query';
+import { getNote } from '../../common/getters';
+import { ApiError } from '../../error';
 import { generateVisibilityQuery } from '../../common/generate-visibility-query';
 import { generateMutedUserQuery } from '../../common/generate-muted-user-query';
-import { Brackets } from 'typeorm';
-import { Notes } from '../../../../models';
+import { makePaginationQuery } from '../../common/make-pagination-query';
+import { Notes, Users } from '../../../../models';
 
 export const meta = {
 	desc: {
-		'ja-JP': '指定した投稿への返信を取得します。',
-		'en-US': 'Get replies of a note.'
+		'ja-JP': '指定した投稿をRenoteしたユーザー一覧を取得します。',
+		'en-US': 'Show a renotes of a note.'
 	},
 
 	tags: ['notes'],
@@ -37,7 +38,7 @@ export const meta = {
 
 		untilId: {
 			validator: $.optional.type(ID),
-		},
+		}
 	},
 
 	res: {
@@ -49,19 +50,33 @@ export const meta = {
 			ref: 'Note',
 		}
 	},
+
+	errors: {
+		noSuchNote: {
+			message: 'No such note.',
+			code: 'NO_SUCH_NOTE',
+			id: '12908022-2e21-46cd-ba6a-3edaf6093f46'
+		}
+	}
 };
 
 export default define(meta, async (ps, user) => {
+	const note = await getNote(ps.noteId).catch(e => {
+		if (e.id === '9725d0ce-ba28-4dde-95a7-2cbb2c15de24') throw new ApiError(meta.errors.noSuchNote);
+		throw e;
+	});
+
 	const query = makePaginationQuery(Notes.createQueryBuilder('note'), ps.sinceId, ps.untilId)
-		.andWhere(new Brackets(qb => { qb
-			.where(`note.replyId = :noteId`, { noteId: ps.noteId })
-		}))
+		.andWhere(`note.renoteId = :renoteId`, { renoteId: note.id })
+		.andWhere(`note.text IS NULL`)
+		.andWhere(`note.fileIds = '{}'`)
+		.andWhere(`note.hasPoll = FALSE`)
 		.leftJoinAndSelect('note.user', 'user');
 
 	generateVisibilityQuery(query, user);
 	if (user) generateMutedUserQuery(query, user);
 
-	const notes = await query.take(ps.limit!).getMany();
+	const renotes = await query.take(ps.limit!).getMany();
 
-	return await Notes.packMany(notes, user);
+	return await Users.packMany(renotes.map(n => n.userId), user);
 });

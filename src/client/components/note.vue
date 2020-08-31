@@ -39,7 +39,7 @@
 	<article class="article">
 		<mk-avatar class="avatar" :user="appearNote.user"/>
 		<div class="main">
-			<x-note-header class="header" :note="appearNote" :mini="true"/>
+			<x-note-header class="header" :note="appearNote" :mini="true" :detail="detail"/>
 			<div v-if="$store.state.device.userHostDisplayMode !== 0 && instance" class="ticker" :class="instance.softwareName">
 				<img :src="instance.iconUrl" alt="favicon" class="favicon"/>
 				<span v-text="instance.name && instance.name !== instance.host ? `${instance.name} (${instance.host})` : instance.host"/>
@@ -74,6 +74,32 @@
 					<div class="renote" v-if="appearNote.renote && !isCompactMode"><x-note-preview :note="appearNote.renote"/></div>
 				</div>
 				<router-link v-if="appearNote.channel && !inChannel" class="channel" :to="`/channels/${appearNote.channel.id}`"><fa :icon="faSatelliteDish"/> {{ appearNote.channel.name }}</router-link>
+				<div class="info" v-if="detail">
+					<div class="time">
+						<fa :icon="faClock" fixed-width />
+						<mk-time :time="note.createdAt" mode="detail"/>
+					</div>
+					<!-- <div class="visibility">
+						<span v-if="appearNote.visibility !== 'public'">
+							<fa v-if="appearNote.visibility === 'home'" :icon="faHome"/>
+							<fa v-if="appearNote.visibility === 'followers'" :icon="faUnlock"/>
+							<fa v-if="appearNote.visibility === 'specified'" :icon="faEnvelope"/>
+							<fa v-if="appearNote.visibility === 'users'" :icon="faUsers"/>
+						</span>
+						<span v-if="appearNote.localOnly"><fa :icon="faHeart"/></span>
+						<span v-if="appearNote.remoteFollowersOnly"><fa :icon="faHeartbeat"/></span>
+						<span class="desc">{{ $t(`_visibility.${appearNote.visibility}`) }}</span>
+						<span v-if="appearNote.localOnly">({{ $t(`_visibility.localOnly`) }})</span>
+						<span v-if="appearNote.remoteFollowersOnly">({{ $t(`_visibility.remoteFollowersOnly`) }})</span>
+					</div> -->
+					<div class="renotes" v-if="appearNote.renoteCount > 0">
+						<router-link :to="`/notes/${appearNote.id}/renotes`">
+							<i18n path="renoteCount" tag="span">
+								<strong place="count" v-text="appearNote.renoteCount" />
+							</i18n>
+						</router-link>
+					</div>
+				</div>
 			</div>
 			<footer class="footer">
 				<x-reactions-viewer :note="appearNote" ref="reactionsViewer"/>
@@ -84,7 +110,7 @@
 							<p class="count" v-if="appearNote.repliesCount > 0">{{ appearNote.repliesCount }}</p>
 						</button>
 						<button v-if="canRenote" @click="renote()" class="button _button" ref="renoteButton">
-							<fa :icon="faRetweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
+							<fa :icon="faRetweet"/><p class="count" v-if="!detail && appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
 						</button>
 						<button v-else class="button _button">
 							<fa :icon="faBan"/>
@@ -124,7 +150,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faInfoCircle, faHeart, faEllipsisH, faUsers, faHeartbeat, faPlug } from '@fortawesome/free-solid-svg-icons';
-import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes } from '@fortawesome/free-regular-svg-icons';
+import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes, faClock } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
 import XSub from './note.sub.vue';
@@ -199,7 +225,7 @@ export default Vue.extend({
 			noteBody: this.$refs.noteBody,
 			readMore: null as boolean | null,
 			instance: null as {} | null,
-			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish
+			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock
 		};
 	},
 
@@ -1236,8 +1262,27 @@ export default Vue.extend({
 				}
 
 				> .channel {
-					opacity: 0.7;
-					font-size: 80%;
+						opacity: 0.7;
+						font-size: 90%;
+				}
+
+				> .info {
+						margin: 8px 0;
+					> .time, .visibility {
+						opacity: 0.7;
+						font-size: 90%;
+					}
+
+					> .visibility > .desc {
+						margin-left: 4px;
+					}
+
+					> .renotes {
+						margin: 8px 0;
+						> a {
+							text-decoration: underline;
+						}
+					}
 				}
 			}
 
