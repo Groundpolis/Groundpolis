@@ -691,6 +691,14 @@ quoteCount: "{count} 件の引用ノート"
 renoteQuoteCount: "{count} 件のリノートと引用ノート"
 quotes: "引用ノート"
 
+_labs:
+  title: "ラボ"
+  description: "Groundpolis の開発中の新機能をテストしてみませんか。このページでは、開発中の新機能や仕様変更を有効化し、体験することができます。"
+  feedback: "使用中に問題が発生したり、不便な点などがあった場合は、{xeltica} にご連絡ください。"
+  notAvailable: "現在利用可能な機能はありません。"
+  newMobileView: "新しいモバイル インターフェイス"
+  newMobileViewDescription: "生まれ変わったモバイル版のビューに切り替えましょう。このスイッチをオンにすると、モバイル版の新しいユーザーインターフェイスをいち早く体験できます。"
+
 _serverDisconnectedBehavior:
   reload: "自動でリロード"
   dialog: "ダイアログで警告"

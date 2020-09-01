@@ -4,6 +4,7 @@
 		<div class="title" :class="{ navHidden }" ref="title">
 			<transition :name="$store.state.device.animation ? 'header' : ''" mode="out-in" appear>
 				<button class="_button back" v-if="canBack" @click="back()"><fa :icon="faChevronLeft"/></button>
+				<button class="_button back" v-else-if="navHidden && !$store.state.device.useLegacyMobileView" @click="showNav"><fa :icon="faBars" /></button>
 			</transition>
 			<transition :name="$store.state.device.animation ? 'header' : ''" mode="out-in" appear>
 				<div class="body" :key="pageKey">
@@ -76,11 +77,21 @@
 		</template>
 	</div>
 
-	<div class="buttons" :class="{ navHidden }">
+	<!-- Legacy Bottom Bar -->
+	<div v-if="$store.state.device.useLegacyMobileView" class="buttons" :class="{ navHidden }">
 		<button class="button nav _button" @click="showNav" ref="navButton"><fa :icon="faBars"/><i v-if="navIndicated"><fa :icon="faCircle"/></i></button>
 		<button v-if="$route.name === 'index'" class="button home _button" @click="top()"><fa :icon="faHome"/></button>
 		<button v-else class="button home _button" @click="$router.push('/')"><fa :icon="faHome"/></button>
 		<button v-if="$store.getters.isSignedIn" class="button notifications _button" @click="$router.push('/my/notifications')"><fa :icon="faBell"/><i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i></button>
+		<button v-if="$store.getters.isSignedIn" class="button post _buttonPrimary" @click="post()"><fa :icon="faPencilAlt"/></button>
+	</div>
+
+	<!-- New Bottom Bar -->
+	<div v-else class="bottom-bar" :class="{ navHidden }">
+		<button v-if="$route.name === 'index'" class="button home _button active" @click="top()"><fa :icon="faHome"/></button>
+		<button v-else class="button home _button" @click="$router.push('/')"><fa :icon="faHome"/></button>
+		<button class="button explore _button" @click="$router.push('/explore')" :class="{ active: $route.name === 'explore' }"><fa :icon="faSearch"/></button>
+		<button v-if="$store.getters.isSignedIn" class="button notifications _button" :class="{ active: $route.name === 'notifications' }" @click="$router.push('/my/notifications')"><fa :icon="faBell"/><i v-if="$store.state.i.hasUnreadNotification"><fa :icon="faCircle"/></i></button>
 		<button v-if="$store.getters.isSignedIn" class="button post _buttonPrimary" @click="post()"><fa :icon="faPencilAlt"/></button>
 	</div>
 
@@ -161,7 +172,6 @@ export default Vue.extend({
 					name: 'trends',
 					id: 'c', place: 'right', data: {}
 				}];
-
 				if (this.$route.name !== 'index') {
 					right.unshift({
 						name: 'welcome',
@@ -787,6 +797,64 @@ export default Vue.extend({
 
 			> * {
 				font-size: 22px;
+			}
+
+			&:disabled {
+				cursor: default;
+
+				> * {
+					opacity: 0.5;
+				}
+			}
+
+			&:not(.post) {
+				background: var(--panel);
+				color: var(--fg);
+
+				&:hover {
+					background: var(--X2);
+				}
+
+				> i {
+					position: absolute;
+					top: 0;
+					left: 0;
+					color: var(--indicator);
+					font-size: 16px;
+					animation: blink 1s infinite;
+				}
+			}
+		}
+	}
+
+	> .bottom-bar {
+		position: fixed;
+		z-index: 1000;
+		bottom: 0;
+		padding: 0 16px;
+		display: flex;
+		width: 100%;
+		box-sizing: border-box;
+		background: var(--panel);
+		border-top: 1px solid var(--divider);
+
+		&:not(.navHidden) {
+			display: none;
+		}
+
+		> .button {
+			position: relative;
+			padding: 0;
+			margin: 0;
+			width: 100%;
+			height: 48px;
+
+			> * {
+				font-size: 16px;
+			}
+
+			&.active {
+				border-top: 2px solid var(--accent);
 			}
 
 			&:disabled {

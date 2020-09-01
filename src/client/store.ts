@@ -138,6 +138,7 @@ export const defaultDeviceSettings = {
 	hideHostName: false,
 	userHostDisplayMode: 0,
 	collapseLongNote: true,
+	useLegacyMobileView: false,
 };
 
 function copy<T>(data: T): T {
