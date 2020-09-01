@@ -9,3 +9,11 @@ export function query(obj: {}): string {
 export function appendQuery(url: string, query: string): string {
 	return `${url}${/\?/.test(url) ? url.endsWith('?') ? '' : '&' : '?'}${query}`;
 }
+
+export function tryCreateUrl<T = URL>(source: string, constructor?: new (source: string) => T): T | null {
+	try {
+		return new (constructor || URL)(source) as T;
+	} catch {
+		return null;
+	}
+}

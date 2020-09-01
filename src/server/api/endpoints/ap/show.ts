@@ -11,6 +11,7 @@ import { Note } from '../../../../models/entities/note';
 import { User } from '../../../../models/entities/user';
 import { fetchMeta } from '../../../../misc/fetch-meta';
 import { validActor, validPost } from '../../../../remote/activitypub/type';
+import { tryCreateUrl } from '../../../../prelude/url';
 
 export const meta = {
 	tags: ['federation'],
@@ -53,6 +54,7 @@ export default define(meta, async (ps) => {
  */
 async function fetchAny(uri: string) {
 	// URIがこのサーバーを指しているなら、ローカルユーザーIDとしてDBからフェッチ
+	const url = tryCreateUrl(uri);
 	if (uri.startsWith(config.url + '/')) {
 		const parts = uri.split('/');
 		const id = parts.pop();
@@ -134,6 +136,24 @@ async function fetchAny(uri: string) {
 
 		const packed = await mergePack(user, note);
 		if (packed !== null) return packed;
+	} else if (`.${url && url.host}`.endsWith('.twitter.com')) {
+		const note = await createNoteFromTwitter(uri, resolver, true);
+
+		if (note) {
+			return {
+				type: 'Note',
+				object: await Notes.pack(note, null, { detail: true })
+			};
+		}
+
+		const user = await createUserFromTwitter(uri, resolver);
+
+		if (user) {
+			return {
+				type: 'User',
+				object: await Notes.pack(user, null, { detail: true })
+			};
+		}
 	}
 
 	// それでもみつからなければ新規であるため登録

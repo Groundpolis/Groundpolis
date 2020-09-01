@@ -33,6 +33,12 @@ export type Source = {
 		index?: string;
 	};
 
+	twitter: {
+		apiKey: string;
+		apiSecret: string;
+		bearerToken: string;
+	};
+
 	proxy?: string;
 	proxySmtp?: string;
 	proxyBypassHosts?: string[];
