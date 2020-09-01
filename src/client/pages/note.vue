@@ -86,6 +86,7 @@ export default Vue.extend({
 			this.$root.api('notes/show', {
 				noteId: this.$route.params.note
 			}).then(note => {
+				this.note = note;					
 				Promise.all([
 					this.$root.api('users/notes', {
 						userId: note.userId,
@@ -100,7 +101,6 @@ export default Vue.extend({
 				]).then(([prev, next]) => {
 					this.hasPrev = prev.length !== 0;
 					this.hasNext = next.length !== 0;
-					this.note = note;
 				});
 			}).catch(e => {
 				this.error = e;

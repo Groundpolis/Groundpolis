@@ -16,7 +16,6 @@ const merge = (...args) => args.reduce((a, c) => ({
 const languages = [
 	'en-US',
 	'ja-JP',
-	'ja-Otaku',
 ];
 
 const primaries = {

@@ -7,6 +7,7 @@ import { generateVisibilityQuery } from '../../common/generate-visibility-query'
 import { generateMutedUserQuery } from '../../common/generate-muted-user-query';
 import { makePaginationQuery } from '../../common/make-pagination-query';
 import { Notes, Users } from '../../../../models';
+import { PackedUser } from '../../../../models/repositories/user';
 
 export const meta = {
 	desc: {
@@ -47,7 +48,7 @@ export const meta = {
 		items: {
 			type: 'object' as const,
 			optional: false as const, nullable: false as const,
-			ref: 'Note',
+			ref: 'User',
 		}
 	},
 

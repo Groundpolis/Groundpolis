@@ -22,7 +22,7 @@
 		panelHeaderBg: ':lighten<3<@panel',
 		panelHeaderFg: '@fg',
 		panelHeaderDivider: 'rgba(0, 0, 0, 0)',
-		panelBorder: 'rgba(0, 0, 0, 0)',
+		panelBorder: 'rgba(153, 153, 153, 0.2)',
 		shadow: 'rgba(0, 0, 0, 0.1)',
 		header: ':alpha<0.7<@bg',
 		navBg: '@bg',

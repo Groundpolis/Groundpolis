@@ -10,9 +10,11 @@
 >
 	<x-sub v-for="note in conversation" class="reply-to-more" :key="note.id" :note="note"/>
 	<x-sub :note="appearNote.reply" class="reply-to" v-if="appearNote.reply && (!isCompactMode || detail)"/>
+
 	<div class="info" v-if="pinned"><fa :icon="faThumbtack"/> {{ $t('pinnedNote') }}</div>
 	<div class="info" v-if="appearNote._prId_"><fa :icon="faBullhorn"/> {{ $t('promotion') }}<button class="_textButton hide" @click="readPromo()">{{ $t('hideThisNote') }} <fa :icon="faTimes"/></button></div>
 	<div class="info" v-if="appearNote._featuredId_"><fa :icon="faFireAlt"/> {{ $t('featured') }}</div>
+
 	<div class="renote" v-if="isRenote">
 		<mk-avatar class="avatar" :user="note.user" v-if="!isCompactMode"/>
 		<fa :icon="faRetweet"/>
@@ -36,6 +38,7 @@
 			<span class="localOnly" v-if="note.remoteFollowersOnly"><fa :icon="faHeartbeat"/></span>
 		</div>
 	</div>
+
 	<article class="article">
 		<mk-avatar class="avatar" :user="appearNote.user"/>
 		<div class="main">
@@ -91,9 +94,9 @@
 						<span v-if="appearNote.localOnly">({{ $t(`_visibility.localOnly`) }})</span>
 						<span v-if="appearNote.remoteFollowersOnly">({{ $t(`_visibility.remoteFollowersOnly`) }})</span>
 					</div> -->
-					<div class="renotes" v-if="appearNote.renoteCount > 0">
+					<div class="renotes" v-if="renoteState">
 						<router-link :to="`/notes/${appearNote.id}/renotes`">
-							<i18n path="renoteCount" tag="span">
+							<i18n :path="renoteState.isQuoted && renoteState.isRenoted ? 'renoteQuoteCount' : renoteState.isQuoted ? 'quoteCount' : 'renoteCount'" tag="span">
 								<strong place="count" v-text="appearNote.renoteCount" />
 							</i18n>
 						</router-link>
@@ -224,6 +227,7 @@ export default Vue.extend({
 			noteBody: this.$refs.noteBody,
 			readMore: null as boolean | null,
 			instance: null as {} | null,
+			renoteState: null,
 			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock
 		};
 	},
@@ -332,6 +336,15 @@ export default Vue.extend({
 		this.muted = await checkWordMute(this.appearNote, this.$store.state.i, this.$store.state.settings.mutedWords);
 
 		if (this.detail) {
+
+			if (this.appearNote.renoteCount > 0) {
+				this.$root.api('notes/is-renoted', {
+					noteId: this.appearNote.id,
+				}).then(renoteState => {
+					this.renoteState = renoteState;
+				});
+			}
+			
 			this.$root.api('notes/children', {
 				noteId: this.appearNote.id,
 				limit: 30
