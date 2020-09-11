@@ -330,6 +330,8 @@ export default Vue.extend({
 					this.text = draft.data.text;
 					this.useCw = draft.data.useCw;
 					this.cw = draft.data.cw;
+					this.useBroadcast = draft.data.useBroadcast;
+					this.broadcastText = draft.data.broadcastText;
 					this.applyVisibility(draft.data.visibility);
 					this.localOnly = draft.data.localOnly;
 					this.remoteFollowersOnly = draft.data.remoteFollowersOnly;
@@ -374,6 +376,8 @@ export default Vue.extend({
 			this.$watch('text', () => this.saveDraft());
 			this.$watch('useCw', () => this.saveDraft());
 			this.$watch('cw', () => this.saveDraft());
+			this.$watch('useBroadcast', () => this.saveDraft());
+			this.$watch('broadcastText', () => this.saveDraft());
 			this.$watch('poll', () => this.saveDraft());
 			this.$watch('files', () => this.saveDraft());
 			this.$watch('visibility', () => this.saveDraft());
@@ -589,6 +593,8 @@ export default Vue.extend({
 					text: this.text,
 					useCw: this.useCw,
 					cw: this.cw,
+					useBroadcast: this.useBroadcast,
+					broadcastText: this.broadcastText,
 					visibility: this.visibility,
 					localOnly: this.localOnly,
 					remoteFollowersOnly: this.remoteFollowersOnly,
@@ -618,7 +624,7 @@ export default Vue.extend({
 
 			this.posting = true;
 			let data = {
-				text: this.text == '' ? undefined : this.text + (this.useBroadcast ? this.broadcastText : ''),
+				text: this.text == '' ? undefined : this.text + (this.useBroadcast ? ' ' + this.broadcastText : ''),
 				fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
 				replyId: this.reply ? this.reply.id : undefined,
 				renoteId: this.renote ? this.renote.id : this.quoteId ? this.quoteId : undefined,
