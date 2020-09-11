@@ -8,8 +8,12 @@
 	<header>
 		<button v-if="!fixed" class="cancel _button" @click="cancel"><fa :icon="faTimes"/></button>
 		<div>
+			<button class="_button" @click="insert('> ')" v-tooltip="$t('_mfmPad.quote')"><fa :icon="faQuoteRight"/></button>
+			<button class="_button" @click="link" v-tooltip="$t('_mfmPad.link')"><fa :icon="faLink"/></button>
 			<button class="_button" @click="insertMention" v-tooltip="$t('mention')"><fa :icon="faAt"/></button>
 			<button class="_button" @click="insertEmoji" v-tooltip="$t('emoji')"><fa :icon="faLaughSquint"/></button>
+			<!-- <button class="_button" @click="mfmPadMenu" v-tooltip="$t('_mfmPad.more')"><fa :icon="faEllipsisV"/></button> -->
+			<div class="divider"></div>
 			<button class="_button help" v-tooltip="$t('help')" @click="help">
 				<fa :icon="faQuestionCircle" />
 			</button>
@@ -51,8 +55,6 @@
 			<button class="_button" @click="useCw = !useCw" :class="{ active: useCw }" v-tooltip="$t('useCw')"><fa :icon="faEyeSlash"/></button>
 			<button class="_button" @click="useBroadcast = !useBroadcast" :class="{ active: useBroadcast }" v-tooltip="$t('broadcastMode')"><fa :icon="faBullhorn"/></button>
 			<button class="_button" @click="insertFace" v-tooltip="$t('gacha')"><fa :icon="faFish"/></button>
-			<!-- <button class="_button" @click="insertMention" v-tooltip="$t('mention')"><fa :icon="faAt"/></button> -->
-			<!-- <button class="_button" @click="insertEmoji" v-tooltip="$t('emoji')"><fa :icon="faLaughSquint"/></button> -->
 			<button class="_button" @click="showActions" v-tooltip="$t('plugin')" v-if="$store.state.postFormActions.length > 0"><fa :icon="faPlug"/></button>
 			<span class="text-count" :class="{ over: trimmedLength(text) > max }">{{ max - trimmedLength(text) }}</span>
 			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">
@@ -70,7 +72,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash, faLaughSquint } from '@fortawesome/free-regular-svg-icons';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
@@ -87,6 +89,7 @@ import { formatTimeString } from '../../misc/format-time-string';
 import { selectDriveFile } from '../scripts/select-drive-file';
 import { noteVisibilities } from '../../types';
 import { utils } from '@syuilo/aiscript';
+import { FormItem } from '../scripts/form';
 
 export default Vue.extend({
 	components: {
@@ -159,7 +162,7 @@ export default Vue.extend({
 			draghover: false,
 			quoteId: null,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
-			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown
+			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown, faEllipsisV
 		};
 	},
 
@@ -677,6 +680,32 @@ export default Vue.extend({
 			});
 		},
 
+		insert(text: string) {
+			insertTextAtCursor(this.$refs.text, text);
+		},
+
+		async link() {
+			const form: Record<string, FormItem> = {
+				url: {
+					type: 'string',
+					default: 'https://',
+					label: 'URL',
+				},
+				desc: {
+					type: 'string',
+					default: '',
+					label: this.$t('description').toString(),
+				},
+			};
+			const { canceled, result } = await this.$root.form('挿入するリンクの設定', form);
+			if (canceled) return;
+			this.insert(`[${result.desc}](${result.url})`);
+		},
+
+		async mfmPadMenu() {
+
+		},
+
 		showActions(ev) {
 			this.$root.menu({
 				items: this.$store.state.postFormActions.map(action => ({
@@ -755,6 +784,13 @@ export default Vue.extend({
 
 			> .spacer {
 				width: 8px;
+			}
+
+			> .divider {
+				height: 32px;
+				width: 1px;
+				margin: auto 8px;
+				background: var(--divider);
 			}
 
 			> .visibility {

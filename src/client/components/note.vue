@@ -81,19 +81,6 @@
 						<fa :icon="faClock" fixed-width />
 						<mk-time :time="note.createdAt" mode="detail"/>
 					</div>
-					<!-- <div class="visibility">
-						<span v-if="appearNote.visibility !== 'public'">
-							<fa v-if="appearNote.visibility === 'home'" :icon="faHome"/>
-							<fa v-if="appearNote.visibility === 'followers'" :icon="faUnlock"/>
-							<fa v-if="appearNote.visibility === 'specified'" :icon="faEnvelope"/>
-							<fa v-if="appearNote.visibility === 'users'" :icon="faUsers"/>
-						</span>
-						<span v-if="appearNote.localOnly"><fa :icon="faHeart"/></span>
-						<span v-if="appearNote.remoteFollowersOnly"><fa :icon="faHeartbeat"/></span>
-						<span class="desc">{{ $t(`_visibility.${appearNote.visibility}`) }}</span>
-						<span v-if="appearNote.localOnly">({{ $t(`_visibility.localOnly`) }})</span>
-						<span v-if="appearNote.remoteFollowersOnly">({{ $t(`_visibility.remoteFollowersOnly`) }})</span>
-					</div> -->
 					<div class="renotes" v-if="renoteState">
 						<router-link :to="`/notes/${appearNote.id}/renotes`">
 							<i18n :path="renoteState.isQuoted && renoteState.isRenoted ? 'renoteQuoteCount' : renoteState.isQuoted ? 'quoteCount' : 'renoteCount'" tag="span">
