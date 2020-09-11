@@ -692,8 +692,8 @@ renoteQuoteCount: "{count} 件のリノートと引用ノート"
 quotes: "引用ノート"
 post: "投稿"
 thisVideoCannotBePlayed: "このビデオは対応していない形式のため、再生できません。"
-showUnlistedNoteInLTL: "未収載・ホーム・ダイレクトノートもLTLに表示する"
-showUnlistedNoteInLTLDesc: "フォローしているローカルユーザーのものであれば、パブリック公開範囲以外のノートをローカルタイムラインに流すようにします"
+showUnlistedNotesInLTL: "未収載・ホーム・ダイレクトノートもLTLに表示する"
+showUnlistedNotesInLTLDesc: "フォローしているローカルユーザーのものであれば、パブリック公開範囲以外のノートをローカルタイムラインに流すようにします"
 
 _labs:
   title: "ラボ"
