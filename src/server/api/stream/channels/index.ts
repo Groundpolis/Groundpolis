@@ -2,6 +2,7 @@ import main from './main';
 import homeTimeline from './home-timeline';
 import localTimeline from './local-timeline';
 import hybridTimeline from './hybrid-timeline';
+import localHybridTimeline from './local-hybrid-timeline';
 import globalTimeline from './global-timeline';
 import catTimeline from './cat-timeline';
 import remoteFollowingTimeline from './remote-following-timeline';
@@ -25,6 +26,7 @@ export default {
 	localTimeline,
 	hybridTimeline,
 	globalTimeline,
+	localHybridTimeline,
 	remoteFollowingTimeline,
 	followersTimeline,
 	catTimeline,

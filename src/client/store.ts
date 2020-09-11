@@ -28,7 +28,8 @@ export const defaultSettings = {
 	globalNoteVisibility: 'default',
 	mutedWords: [],
 	stealRule: 1,
-	stealReaction: '⭐️'
+	stealReaction: '⭐️',
+	injectUnlistedNoteInLTL: false,
 };
 
 export const defaultDeviceUserSettings = {

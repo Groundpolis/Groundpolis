@@ -12,6 +12,11 @@
 				{{ $t('_labs.newMobileView') }}
 				<template #desc>{{ $t('_labs.newMobileViewDescription') }}</template>
 			</mk-switch>
+
+			<mk-switch v-model="injectUnlistedNoteInLTL">
+				{{ $t('showUnlistedNotesInLTL') }}
+				<template #desc>{{ $t('showUnlistedNotesInLTLDesc') }}</template>
+			</mk-switch>
 		</div>
 	</div>
 </div>
@@ -45,6 +50,16 @@ export default Vue.extend({
 			get() { return !this.$store.state.device.useLegacyMobileView; },
 			set(value) { this.$store.commit('device/set', { key: 'useLegacyMobileView', value: !value }); }
 		},
+		injectUnlistedNoteInLTL: {
+			get() { return this.$store.state.settings.injectUnlistedNoteInLTL; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'injectUnlistedNoteInLTL', value }); }
+		},
+	},
+
+	watch: {
+		injectUnlistedNoteInLTL() {
+			location.reload();
+		}
 	}
 });
 </script>
