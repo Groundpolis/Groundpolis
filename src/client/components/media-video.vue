@@ -6,8 +6,12 @@
 	</div>
 </div>
 <div class="kkjnbbplepmiyuadieoenjgutgcmtsvu" v-else>
-	<i><fa :icon="faEyeSlash" @click="hide = true"/></i>
-	<video-player class="mnhepr3u8r3u9crjciandiivrrnvivjg" :options="playerOptions"/>
+	<i><fa :icon="faEyeSlash" @click="hide = isPreview = true"/></i>
+	<div class="preview" v-if="isPreview" @click="isPreview = false;" :style="imageStyle">
+		<fa :icon="faPlayCircle" />
+	</div>
+	<video-player class="mnhepr3u8r3u9crjciandiivrrnvivjg" ref="videoPlayer" :options="playerOptions"/>
+	<!-- <video :src="video.url" class="player" /> -->
 </div>
 </template>
 
@@ -43,9 +47,16 @@ export default Vue.extend({
 					src: this.video.url,
 				}],
 				playbackRates: [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0],
-				fluid: true
+				fill: true
 			}
 		}
+	},
+	watch: {
+		isPreview() {
+			if (!this.isPreview) {
+				(this.$refs.videoPlayer as any).player.play();
+			}
+		},
 	},
 	created() {
 		this.hide = this.video.isSensitive && !this.$store.state.device.alwaysShowNsfw;
@@ -84,6 +95,10 @@ export default Vue.extend({
 		background-size: cover;
 		width: 100%;
 		height: 100%;
+	}
+
+	> .player {
+		width: 100%;
 	}
 }
 
