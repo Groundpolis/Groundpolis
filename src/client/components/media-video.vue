@@ -47,7 +47,8 @@ export default Vue.extend({
 					src: this.video.url,
 				}],
 				playbackRates: [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0],
-				fill: true
+				fill: true,
+				notSupportedMessage: this.$t('thisVideoCannotBePlayed'),
 			}
 		}
 	},

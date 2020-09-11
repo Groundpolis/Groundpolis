@@ -647,6 +647,7 @@ database: "Database"
 channel: "Channel"
 create: "Create"
 quotes: "Quotes"
+thisVideoCannotBePlayed: "This video is not supported format, so it can't be played."
 _serverDisconnectedBehavior:
   reload: "Automatically reload"
   dialog: "Show warning dialog"

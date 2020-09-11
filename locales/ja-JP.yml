@@ -691,6 +691,7 @@ quoteCount: "{count} 件の引用ノート"
 renoteQuoteCount: "{count} 件のリノートと引用ノート"
 quotes: "引用ノート"
 post: "投稿"
+thisVideoCannotBePlayed: "このビデオは対応していない形式のため、再生できません。"
 
 _labs:
   title: "ラボ"
