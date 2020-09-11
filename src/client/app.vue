@@ -836,7 +836,7 @@ export default Vue.extend({
 		width: 100%;
 		box-sizing: border-box;
 		background: var(--panel);
-		border-top: 1px solid var(--divider);
+		box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
 
 		&:not(.navHidden) {
 			display: none;

@@ -129,7 +129,6 @@ export default Vue.extend({
 
 	methods: {
 		calcViewState() {
-			console.log('calcViewState');
 			this.isTablet = window.innerWidth <= 1279;
 			this.iconOnly = (this.isTablet) || (this.$store.state.device.sidebarDisplay === 'icon');
 			this.hidden = (window.innerWidth <= 650) || (this.$store.state.device.sidebarDisplay === 'hide');

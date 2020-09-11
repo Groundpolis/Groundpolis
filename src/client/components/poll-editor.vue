@@ -1,30 +1,25 @@
 <template>
 <div class="zmdxowus">
-	<p class="caution" v-if="choices.length < 2">
-		<fa :icon="faExclamationTriangle"/>{{ $t('_poll.noOnlyOneChoice') }}
-	</p>
 	<ul ref="choices">
 		<li v-for="(choice, i) in choices" :key="i">
 			<mk-input class="input" :value="choice" @input="onInput(i, $event)">
 				<span>{{ $t('_poll.choiceN', { n: i + 1 }) }}</span>
 			</mk-input>
-			<button @click="remove(i)" class="_button">
+			<button v-if="choices.length > 2" @click="remove(i)" class="_button">
 				<fa :icon="faTimes"/>
 			</button>
 		</li>
 	</ul>
-	<mk-button class="add" v-if="choices.length < 10" @click="add">{{ $t('add') }}</mk-button>
-	<mk-button class="add" v-else disabled>{{ $t('_poll.noMore') }}</mk-button>
+	<mk-button class="add" v-if="choices.length < 10" @click="add"><fa :icon="faPlus" /></mk-button>
 	<section>
 		<mk-switch v-model="multiple">{{ $t('_poll.canMultipleVote') }}</mk-switch>
 		<div>
 			<mk-select v-model="expiration">
-				<template #label>{{ $t('_poll.expiration') }}</template>
 				<option value="infinite">{{ $t('_poll.infinite') }}</option>
 				<option value="at">{{ $t('_poll.at') }}</option>
 				<option value="after">{{ $t('_poll.after') }}</option>
 			</mk-select>
-			<section v-if="expiration === 'at'">
+			<section class="_inputs" v-if="expiration === 'at'">
 				<mk-input v-model="atDate" type="date" class="input">
 					<span>{{ $t('_poll.deadlineDate') }}</span>
 				</mk-input>
@@ -32,7 +27,7 @@
 					<span>{{ $t('_poll.deadlineTime') }}</span>
 				</mk-input>
 			</section>
-			<section v-if="expiration === 'after'">
+			<section class="_inputs" v-if="expiration === 'after'">
 				<mk-input v-model="after" type="number" class="input">
 					<span>{{ $t('_poll.duration') }}</span>
 				</mk-input>
@@ -50,7 +45,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faExclamationTriangle, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { erase } from '../../prelude/array';
 import { addTime } from '../../prelude/time';
 import { formatDateTimeString } from '../../misc/format-time-string';
@@ -75,7 +70,7 @@ export default Vue.extend({
 			atTime: '00:00',
 			after: 0,
 			unit: 'second',
-			faExclamationTriangle, faTimes
+			faExclamationTriangle, faTimes, faPlus
 		};
 	},
 	watch: {
@@ -184,6 +179,9 @@ export default Vue.extend({
 
 	> .add {
 		margin: 8px 0 0 0;
+		width: 100%;
+		height: 24px;
+		padding: 0;
 		z-index: 1;
 	}
 
@@ -199,7 +197,7 @@ export default Vue.extend({
 				> section {
 					align-items: center;
 					display: flex;
-					margin: -32px 0 0;
+					margin: -12px 0 8px 0;
 
 					> &:first-child {
 						margin-right: 16px;

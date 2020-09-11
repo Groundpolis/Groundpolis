@@ -182,12 +182,9 @@ os.init(async () => {
 			api: (endpoint: string, data: { [x: string]: any } = {}, token?) => store.dispatch('api', { endpoint, data, token }),
 			async getInstance (host: string) {
 				// キャッシュが無いか、前回取得時から5分以上たっていれば取得してくる
-				console.log(`pope of ${host}`);
 				if (!instances[host] || new Date().getTime() - instances[host].fetchedAt > 1000 * 60 * 5) {
 					instances[host] = await this.api('federation/show-instance', { host });
 				}
-				console.log(`poped of ${host}`);
-				console.log(instances[host]);
 				return instances[host];
 			},
 			signout: os.signout,

@@ -690,8 +690,12 @@ renoteCount: "{count} 件のリノート"
 quoteCount: "{count} 件の引用ノート"
 renoteQuoteCount: "{count} 件のリノートと引用ノート"
 quotes: "引用ノート"
+post: "投稿"
+thisVideoCannotBePlayed: "このビデオは対応していない形式のため、再生できません。"
+injectUnlistedNoteInLTL: "未収載・ホーム・ダイレクトノートもLTLに表示する"
+injectUnlistedNoteInLTLDesc: "フォローしているローカルユーザーのものであれば、パブリック公開範囲以外のノートをローカルタイムラインに流すようにします"
 
-_labs:
+labs:
   title: "ラボ"
   description: "Groundpolis の開発中の新機能をテストしてみませんか。このページでは、開発中の新機能や仕様変更を有効化し、体験することができます。"
   feedback: "使用中に問題が発生したり、不便な点などがあった場合は、{xeltica} にご連絡ください。"

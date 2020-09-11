@@ -142,7 +142,6 @@ export default Vue.extend({
 		},
 
 		search() {
-			console.log(this.query);
 			if (this.$route.query.q === this.query) return;
 
 			this.$router.push({
