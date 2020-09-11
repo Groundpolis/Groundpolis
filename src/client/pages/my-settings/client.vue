@@ -8,7 +8,6 @@
 		<mk-radio v-model="serverDisconnectedBehavior" value="quiet">{{ $t('_serverDisconnectedBehavior.quiet') }}</mk-radio>
 	</div>
 	<div class="_content">
-		<mk-switch v-model="autoReload">{{ $t('autoReloadWhenDisconnected') }}</mk-switch>
 		<mk-switch v-model="enableInfiniteScroll">{{ $t('enableInfiniteScroll') }}</mk-switch>
 		<mk-switch v-model="fixedWidgetsPosition">{{ $t('fixedWidgetsPosition') }}</mk-switch>
 		<mk-switch v-model="reduceAnimation">{{ $t('reduceUiAnimation') }}</mk-switch>
@@ -46,11 +45,6 @@ export default Vue.extend({
 		serverDisconnectedBehavior: {
 			get() { return this.$store.state.device.serverDisconnectedBehavior; },
 			set(value) { this.$store.commit('device/set', { key: 'serverDisconnectedBehavior', value }); }
-		},
-
-		autoReload: {
-			get() { return this.$store.state.device.autoReload; },
-			set(value) { this.$store.commit('device/set', { key: 'autoReload', value }); }
 		},
 
 		enableInfiniteScroll: {
