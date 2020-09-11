@@ -8,24 +8,21 @@
 	<header>
 		<button v-if="!fixed" class="cancel _button" @click="cancel"><fa :icon="faTimes"/></button>
 		<div>
+			<button class="_button" @click="insertMention" v-tooltip="$t('mention')"><fa :icon="faAt"/></button>
+			<button class="_button" @click="insertEmoji" v-tooltip="$t('emoji')"><fa :icon="faLaughSquint"/></button>
 			<button class="_button help" v-tooltip="$t('help')" @click="help">
 				<fa :icon="faQuestionCircle" />
 			</button>
-			<span class="text-count" :class="{ over: trimmedLength(text) > max }">{{ max - trimmedLength(text) }}</span>
-			<button class="_button visibility" @click="setVisibility" ref="visibilityButton" v-tooltip="$t('visibility')" :disabled="channel != null">
-				<span v-if="visibility === 'public'"><fa :icon="faGlobe"/></span>
-				<span v-if="visibility === 'home'"><fa :icon="faHome"/></span>
-				<span v-if="visibility === 'followers'"><fa :icon="faUnlock"/></span>
-				<span v-if="visibility === 'specified'"><fa :icon="faEnvelope"/></span>
-				<span v-if="visibility === 'users'"><fa :icon="faUsers"/></span>
+			<button class="_button visibility" @click="setVisibility" ref="visibilityButton" v-tooltip="$t('visibility')" v-if="channel == null">
+					<fa v-if="visibility === 'public'" :icon="faGlobe" />
+					<fa v-if="visibility === 'home'" :icon="faHome" />
+					<fa v-if="visibility === 'followers'" :icon="faUnlock" />
+					<fa v-if="visibility === 'specified'" :icon="faEnvelope" />
+					<fa v-if="visibility === 'users'" :icon="faUsers" />
+					<fa class="localOnly" v-if="localOnly" :icon="faHeart" />
+					<fa class="localOnly" v-if="remoteFollowersOnly" :icon="faHeartbeat" />
 			</button>
-			<span class="local-only" v-tooltip="$t('_visibility.localOnly')" @click="localOnly = false" v-if="localOnly">
-				<fa :icon="faHeart" />
-			</span>
-			<span class="local-only" v-tooltip="$t('_visibility.remoteFollowersOnly')" @click="remoteFollowersOnly = false" v-if="remoteFollowersOnly">
-				<fa :icon="faHeartbeat" />
-			</span>
-			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">{{ submitText }}<fa :icon="reply ? faReply : renote ? faQuoteRight : faPaperPlane"/></button>
+			<!-- <div class="spacer"></div> -->
 		</div>
 	</header>
 	<div class="form" :class="{ fixed }">
@@ -46,17 +43,21 @@
 		<textarea v-model="text" class="text" :class="{ withCw: useCw }" ref="text" :disabled="posting" :placeholder="placeholder" v-autocomplete="{ model: 'text' }" @keydown="onKeydown" @paste="onPaste"></textarea>
 		<input v-show="useBroadcast" ref="broadcastText" class="broadcastText" v-model="broadcastText" :placeholder="$t('broadcastTextDescription')" v-autocomplete="{ model: 'broadcastText' }" @keydown="onKeydown">
 		<x-post-form-attaches class="attaches" :files="files"/>
-		<x-poll-editor v-if="poll" ref="poll" @destroyed="poll = false" @updated="onPollUpdate()"/>
+		<x-poll-editor class="poll-editor" v-if="poll" ref="poll" @destroyed="poll = false" @updated="onPollUpdate()"/>
 		<x-uploader ref="uploader" @uploaded="attachMedia" @change="onChangeUploadings"/>
 		<footer>
 			<button class="_button" @click="chooseFileFrom" v-tooltip="$t('attachFile')"><fa :icon="faPhotoVideo"/></button>
 			<button class="_button" @click="poll = !poll" :class="{ active: poll }" v-tooltip="$t('poll')"><fa :icon="faPollH"/></button>
 			<button class="_button" @click="useCw = !useCw" :class="{ active: useCw }" v-tooltip="$t('useCw')"><fa :icon="faEyeSlash"/></button>
-			<button class="_button" @click="insertFace" v-tooltip="$t('gacha')"><fa :icon="faFish"/></button>
 			<button class="_button" @click="useBroadcast = !useBroadcast" :class="{ active: useBroadcast }" v-tooltip="$t('broadcastMode')"><fa :icon="faBullhorn"/></button>
-			<button class="_button" @click="insertMention" v-tooltip="$t('mention')"><fa :icon="faAt"/></button>
-			<button class="_button" @click="insertEmoji" v-tooltip="$t('emoji')"><fa :icon="faLaughSquint"/></button>
+			<button class="_button" @click="insertFace" v-tooltip="$t('gacha')"><fa :icon="faFish"/></button>
+			<!-- <button class="_button" @click="insertMention" v-tooltip="$t('mention')"><fa :icon="faAt"/></button> -->
+			<!-- <button class="_button" @click="insertEmoji" v-tooltip="$t('emoji')"><fa :icon="faLaughSquint"/></button> -->
 			<button class="_button" @click="showActions" v-tooltip="$t('plugin')" v-if="$store.state.postFormActions.length > 0"><fa :icon="faPlug"/></button>
+			<span class="text-count" :class="{ over: trimmedLength(text) > max }">{{ max - trimmedLength(text) }}</span>
+			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">
+				<fa :icon="faPaperPlane" />
+			</button>
 		</footer>
 		<input ref="file" class="file _button" type="file" multiple="multiple" @change="onChangeFile"/>
 		<details v-if="text" class="preview" :open="isPreviewOpened" @toggle="isPreviewOpened = $event.target.open">
@@ -69,7 +70,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug } from '@fortawesome/free-solid-svg-icons';
+import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash, faLaughSquint } from '@fortawesome/free-regular-svg-icons';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
@@ -158,7 +159,7 @@ export default Vue.extend({
 			draghover: false,
 			quoteId: null,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
-			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug
+			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown
 		};
 	},
 
@@ -705,6 +706,7 @@ export default Vue.extend({
 	> header {
 		z-index: 1000;
 		height: 66px;
+		position: relative;
 
 		@media (max-width: 500px) {
 			height: 50px;
@@ -723,66 +725,44 @@ export default Vue.extend({
 		}
 
 		> div {
+			display: flex;
 			position: absolute;
 			top: 0;
 			right: 0;
+			padding-right: 8px;
+			height: 100%;
 
-			> .help {
-				margin-right: 16px;
-			}
+			> button {
+				font-size: 16px;
+				padding: 8px;
+				margin: auto 0;
+				width: 32px;
+				height: 32px;
+				border-radius: 4px;
 
-			> .text-count {
-				opacity: 0.7;
-				line-height: 66px;
-
-				@media (max-width: 500px) {
-					line-height: 50px;
+				&:hover {
+					background: var(--X5);
 				}
-			}
-
-			> .visibility {
-				height: 34px;
-				width: 34px;
-				margin: 0 8px;
-
-				& + .localOnly {
-					margin-left: 0 !important;
-				}
-			}
-			
-			.local-only {
-				margin-right: 16px;
-				color: var(--accent)
-			}
-
-			> .remoteFollowersOnly {
-				height: 34px;
-				width: 34px;
-				margin-right: 8px;
 
 				&.active {
 					color: var(--accent);
 				}
+
+				&:not(:last-child) {
+					margin-right: 4px;
+				}
 			}
 
-			> .submit {
-				margin: 16px 16px 16px 0;
-				padding: 0 12px;
-				line-height: 34px;
-				font-weight: bold;
-				vertical-align: bottom;
-				border-radius: 4px;
+			> .spacer {
+				width: 8px;
+			}
 
-				@media (max-width: 500px) {
-					margin: 8px;
-				}
+			> .visibility {
+				min-width: 32px;
+				width: auto;
 
-				&:disabled {
-					opacity: 0.7;
-				}
-
-				> [data-icon] {
-					margin-left: 6px;
+				> .localOnly {
+					margin-left: 8px;
 				}
 			}
 		}
@@ -797,7 +777,11 @@ export default Vue.extend({
 		}
 
 		> .preview {
-			padding: 16px;
+			padding: 0 8px 8px 8px;
+
+			> summary {
+				margin-bottom: 8px;
+			}
 		}
 
 		> .with-quote {
@@ -835,13 +819,13 @@ export default Vue.extend({
 
 				> button {
 					padding: 4px;
-					border-radius: 8px;
+					border-radius: 4px;
 				}
 
 				> span {
 					margin-right: 14px;
 					padding: 8px 0 8px 8px;
-					border-radius: 8px;
+					border-radius: 4px;
 					background: var(--X4);
 
 					> button {
@@ -892,6 +876,10 @@ export default Vue.extend({
 			border-bottom: solid 1px var(--divider);
 		}
 
+		> .poll-editor {
+			border-top: 1px solid var(--divider);
+		}
+
 		> .text {
 			max-width: 100%;
 			min-width: 100%;
@@ -916,20 +904,26 @@ export default Vue.extend({
 		}
 
 		> footer {
-			padding: 0 16px 16px 16px;
+			display: flex;
+			padding: 0 16px;
+			align-items: center;
 
 			@media (max-width: 500px) {
 				padding: 0 8px 8px 8px;
 			}
 
 			> button {
-				display: inline-block;
+				display: block;
 				padding: 0;
 				margin: 0;
 				font-size: 16px;
-				width: 48px;
-				height: 48px;
-				border-radius: 6px;
+				width: 32px;
+				height: 32px;
+				border-radius: 4px;
+
+				&:not(:first-child) {
+					margin-left: 8px;
+				}
 
 				&:hover {
 					background: var(--X5);
@@ -937,6 +931,33 @@ export default Vue.extend({
 
 				&.active {
 					color: var(--accent);
+				}
+			}
+
+			> .text-count {
+				margin-left: auto;
+				opacity: 0.7;
+				line-height: 66px;
+
+				@media (max-width: 500px) {
+					line-height: 50px;
+				}
+			}
+
+			> .submit {
+				padding: 0 8px;
+				font-weight: bold;
+				border-radius: 4px;
+				margin: auto 0 auto 8px;
+				width: 48px;
+				padding: auto;
+
+				&:disabled {
+					opacity: 0.7;
+				}
+
+				&:hover {
+					background: var(--accentLighten);
 				}
 			}
 		}

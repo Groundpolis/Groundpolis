@@ -690,6 +690,7 @@ renoteCount: "{count} 件のリノート"
 quoteCount: "{count} 件の引用ノート"
 renoteQuoteCount: "{count} 件のリノートと引用ノート"
 quotes: "引用ノート"
+post: "投稿"
 
 _labs:
   title: "ラボ"
