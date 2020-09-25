@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as webpack from 'webpack';
+import * as path from 'path';
 
 const locales = require('./locales');
 const meta = require('./package.json');
@@ -15,7 +16,9 @@ class WebpackOnBuildPlugin {
 
 module.exports = {
 	mode: 'development',
-	entry: './src/client-react/init.tsx',
+	entry: [
+		path.resolve('./src/client-react/init.tsx'),
+	],
 	module: {
 		rules: [
 			{
@@ -86,6 +89,9 @@ module.exports = {
 	],
 	resolveLoader: {
 		modules: ['node_modules']
+	},
+	watchOptions: {
+		poll: true
 	},
 	cache: true,
 	devtool: false, //'source-map',
