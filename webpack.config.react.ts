@@ -83,5 +83,10 @@ module.exports = {
 		new WebpackOnBuildPlugin((stats: any) => {
 			fs.writeFileSync('./built/meta.json', JSON.stringify({ version: meta.version }), 'utf-8');
 		}),
-	]
+	],
+	resolveLoader: {
+		modules: ['node_modules']
+	},
+	cache: true,
+	devtool: false, //'source-map',
 };

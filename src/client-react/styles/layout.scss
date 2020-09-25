@@ -1,3 +1,19 @@
+@mixin vStack {
+	display: flex;
+	flex-direction: column;
+	> *:not(:last-child) {
+		margin-bottom: var(--margin);
+	}
+}
+
+@mixin hStack {
+	display: flex;
+	flex-wrap: wrap;
+	> *:not(:last-child) {
+		margin-right: var(--margin);
+	}
+}
+
 ._box {
 	background: var(--panel);
 	border-radius: var(--radius);
@@ -10,25 +26,33 @@
 }
 
 ._hstack {
-	display: flex;
-	flex-wrap: wrap;
-	> *:not(:last-child) {
-		margin-right: var(--margin);
-	}
+	@include hStack;
 }
 
 ._vstack {
-	display: flex;
-	flex-direction: column;
-	> *:not(:last-child) {
-		margin-bottom: var(--margin);
-	}
+	@include vStack;
 }
 
 ._bulk {
 	margin: var(--margin);
+	&:first-child {
+		margin-top: 0;
+	}
+	&:last-child {
+		margin-top: 0;
+	}
 }
 
 ._center {
 	text-align: center;
+}
+
+._split-view {
+	display: grid;
+	gap: var(--margin);
+	grid-auto-flow: column;
+	grid-auto-columns: 1fr;
+	@media screen and (max-width: 640px) {
+		@include vStack;
+	}
 }

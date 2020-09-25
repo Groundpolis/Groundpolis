@@ -1,16 +1,33 @@
 ._button {
 	border: none;
-	background: transparent;
+	background: var(--buttonBg);
 	border: 1px solid var(--accent);
 	color: var(--accent);
 	font-weight: bold;
 	font-size: 1em;
 	padding: 8px 16px;
 	border-radius: var(--radius);
+	cursor: pointer;
+
+	&:not(:disabled):hover {
+		background: var(--buttonHoverBg);
+	}
+
+	&:not(:disabled):active {
+		background: var(--buttonHoverBg);
+	}
 
 	&.primary {
 		color: white;
 		background: var(--accent);
+
+		&:not(:disabled):hover {
+			background: var(--X8);
+		}
+	
+		&:not(:disabled):active {
+			background: var(--X8);
+		}
 	}
 }
 

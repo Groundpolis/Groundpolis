@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 
 import { version, langs, instanceName, getLocale, deckmode } from './config';
 import { App } from './app';
-import { applyTheme, builtinThemes } from './scripts/theme';
+import { applyTheme, lightTheme } from './scripts/theme';
 
 
 if (localStorage.getItem('theme') == null) {
-	applyTheme(builtinThemes[builtinThemes.length - 1]);
+	applyTheme(lightTheme);
 }
 
 //#region Detect the user language
