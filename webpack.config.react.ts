@@ -15,7 +15,7 @@ class WebpackOnBuildPlugin {
 
 module.exports = {
 	mode: 'development',
-	entry: './src/client-react/app.tsx',
+	entry: './src/client-react/init.tsx',
 	module: {
 		rules: [
 			{
@@ -29,8 +29,15 @@ module.exports = {
 						configFile: __dirname + '/src/client-react/tsconfig.json',
 					}
 				}]
-			},
-		],
+			}, {
+				test: /\.json5$/,
+				loader: 'json5-loader',
+				options: {
+					esModule: false,
+				},
+				type: 'javascript/auto'
+			}
+		]
 	},
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js'],

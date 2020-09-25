@@ -4,7 +4,7 @@ doctype html
 
 != '\n<!-- Thank you for using Groundpolis! @Xeltica -->\n'
 
-html
+html(style="--bg: white; --fg: black")
 
 	head
 		meta(charset='utf-8')
@@ -29,8 +29,16 @@ html
 		block og
 			meta(property='og:image' content=img)
 
-		style
-			include ./../../../../built/client/assets/style.css
+			if fe !== 'react'
+				style
+					include ./../../../../built/client/assets/style.css
+			else
+				style.
+					html {
+						background: var(--bg);
+						color: var(--fg);
+					}
+
 		script(src=`/assets/${fe}.${version}.js` async defer)
 		script.
 			const theme = localStorage.getItem('theme');
@@ -60,12 +68,13 @@ html
 
 	//- https://qiita.com/junya/items/3ff380878f26ca447f85
 	body(ontouchstart='')
-		noscript: p
-			| JavaScriptを有効にしてください
-			br
-			| Please turn on your JavaScript
-		div#ini.
-			<svg viewBox="0 0 50 50">
-				<path d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" />
-			</svg>
+		div(style="position: absolute;left: 0;top: 0;right: 0;bottom: 0;display: flex;flex-direction: column;align-items: center;justify-content: center;")
+			svg(width='1em' height='1em' viewBox='0 0 512 512' style="font-size: 64px; fill: var(--fg)")
+				path(fill='none' d='M0 0h512v512H0z')
+				path(d='M194.593 349.511l-24.978 94.691H143.79l65.851-249.64h223.815s25.825 0 19.012 25.825L425.22 323.686c-6.813 25.825-32.637 25.825-32.637 25.825zm229.78-120.516c2.271-8.608 2.271-8.608-6.338-8.608H228.654l-27.249 103.299h189.381s8.609 0 10.879-8.608z')
+				path(d='M80.452 283.005c-25.825 0-19.013-25.825-19.013-25.825l43.144-163.557c6.812-25.825 32.637-25.825 32.637-25.825h249.639l-6.812 25.825H139.016c-8.608 0-10.879 8.608-10.879 8.608-29.519 111.908-39.818 147.506-38.602 146.341 0 0-2.271 8.608 6.337 8.608H302.47c8.609 0 8.609 0 10.879-8.608l27.249-103.299h25.825l-29.52 111.907c-6.812 25.825-32.637 25.825-32.637 25.825z')
+			noscript: p(style="text-align: center")
+				| JavaScriptを有効にしてください
+				br
+				| Please turn on your JavaScript
 		block content

@@ -7,5 +7,6 @@
     "allowJs": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
+		"moduleResolution": "node"
   }
 }

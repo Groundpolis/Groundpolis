@@ -34,7 +34,7 @@
 	},
 	"compileOnSave": false,
 	"include": [
-		"./src/**/*.ts"
+		"./src/**/*.ts", 
 	],
 	"exclude": [
 		"./src/client/**/*.ts",

@@ -702,6 +702,9 @@ _labs:
   notAvailable: "現在利用可能な機能はありません。"
   newMobileView: "新しいモバイル インターフェイス"
   newMobileViewDescription: "生まれ変わったモバイル版のビューに切り替えましょう。このスイッチをオンにすると、モバイル版の新しいユーザーインターフェイスをいち早く体験できます。"
+  tryNewApp: "新しいウェブ クライアントを試す"
+  tryNewAppDesc: "一から再設計された、軽量で高速なクライアントを体験しましょう。"
+  tryNewAppConfirm: "このオプションを有効化すると、開発中の新しいウェブ クライアントに移行します。使用中に Groundpolis を利用できなくなるほどの重大な問題が発生する可能性がありますが、それでも続けますか？"
 
 _serverDisconnectedBehavior:
   reload: "自動でリロード"
