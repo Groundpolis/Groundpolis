@@ -1,0 +1,34 @@
+._box {
+	background: var(--panel);
+	border-radius: var(--radius);
+	border: 1px solid var(--panelBorder);
+	padding: var(--margin);
+}
+
+._flat-box {
+	padding: var(--margin);
+}
+
+._hstack {
+	display: flex;
+	flex-wrap: wrap;
+	> *:not(:last-child) {
+		margin-right: var(--margin);
+	}
+}
+
+._vstack {
+	display: flex;
+	flex-direction: column;
+	> *:not(:last-child) {
+		margin-bottom: var(--margin);
+	}
+}
+
+._bulk {
+	margin: var(--margin);
+}
+
+._center {
+	text-align: center;
+}

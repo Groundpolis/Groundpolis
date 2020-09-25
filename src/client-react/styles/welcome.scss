@@ -1,0 +1,14 @@
+.welcome-header {
+	display: flex;
+	padding: 16px;
+	align-items: center;
+	margin: 0 auto;
+	> .icon {
+		font-size: 64px;
+		fill: var(--fg);
+	}
+	> .name {
+		font-size: 24px;
+		margin-left: 8px;
+	}
+}

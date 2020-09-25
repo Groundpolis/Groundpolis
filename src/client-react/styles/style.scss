@@ -1,0 +1,19 @@
+html {
+	--radius: 24px;
+	--margin: 16px;
+}
+
+body {
+	margin: var(--margin);
+	font-size: 16px;
+}
+
+a {
+	color: inherit;
+	text-decoration: underline;
+}
+
+@import './layout';
+@import './ui';
+
+@import './welcome';

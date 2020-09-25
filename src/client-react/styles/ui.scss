@@ -1,0 +1,20 @@
+._button {
+	border: none;
+	background: transparent;
+	border: 1px solid var(--accent);
+	color: var(--accent);
+	font-weight: bold;
+	font-size: 1em;
+	padding: 8px 16px;
+	border-radius: var(--radius);
+
+	&.primary {
+		color: white;
+		background: var(--accent);
+	}
+}
+
+._label {
+	font-size: 0.7em;
+	opacity: 0.6;
+}

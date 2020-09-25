@@ -36,7 +36,33 @@ module.exports = {
 					esModule: false,
 				},
 				type: 'javascript/auto'
-			}
+			},
+			{
+				test: /\.scss$/,
+				use: [
+					'style-loader',
+					{
+						loader: 'css-loader',
+					}, {
+						loader: 'postcss-loader',
+						options: {
+							plugins: [
+								require('cssnano')({
+									preset: 'default'
+								})
+							]
+						},
+					}, {
+						loader: 'sass-loader',
+						options: {
+							implementation: require('sass'),
+							sassOptions: {
+								fiber: require('fibers')
+							}
+						}
+					}
+				],
+			},
 		]
 	},
 	resolve: {
