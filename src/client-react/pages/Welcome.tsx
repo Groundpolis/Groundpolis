@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import Icon from '../components/solo/Icon';
 import { api } from '../scripts/api';
+import { t } from '../scripts/i18n';
 
 import '../styles/style.scss';
 
@@ -28,18 +29,18 @@ export const Welcome = () => {
 						<h1 className='name'>{ meta?.name || 'Groundpolis' }</h1>
 					</header>
 					<section className='_box'>
-						{ meta?.description || 'ようこそ！Groundpolisは、オープンソースの分散型マイクロブログサービスです。\n「ノート」を作成して、いま起こっていることを共有したり、あなたについて皆に発信しよう📡\n「リアクション」機能で、皆のノートに素早く反応を追加することもできます👍\n新しい世界を探検しよう🚀'}
+						{ meta?.description || t('introMisskey')}
 					</section>
 					<nav className='_flat-box'>
 						<p>アカウントを作成して、今すぐはじめよう。</p>
 						<div className="_hstack">
-							<button className='_button primary'>新規登録</button>
-							<button className='_button'>ログイン</button>
+							<button className='_button primary'>{t('signup')}</button>
+							<button className='_button'>{t('login')}</button>
 						</div>
 					</nav>
 				</article>
 				<article>
-					<header className='_bulk'><h2>人気のノートを見てみよう</h2></header>
+					<header className='_bulk'><h2>{t('welcomeFeatured')}</h2></header>
 					<section className='_box'>
 						<div className='_vstack'>
 							{tl ? tl.map(note => <p>{note.user.name || note.user.username}: {note.text}</p>) : 'Loading...'}
