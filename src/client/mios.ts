@@ -9,6 +9,8 @@ import Progress from './scripts/loading';
 import Stream from './scripts/stream';
 import store from './store';
 
+import Cookies from 'js-cookie';
+
 /**
  * Groundpolis Operating System
  */
@@ -130,7 +132,7 @@ export default class MiOS extends EventEmitter {
 
 			// 連携ログインの場合用にCookieを参照する
 			if (i == null || i === 'null') {
-				i = (document.cookie.match(/igi=(\w+)/) || [null, null])[1];
+				i = Cookies.get('igi');
 			}
 
 			fetchme(i, me => {

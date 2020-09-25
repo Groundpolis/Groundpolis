@@ -7,6 +7,7 @@ import { AiScript, utils, values } from '@syuilo/aiscript';
 import { apiUrl, deckmode } from './config';
 import defaultFaces from './scripts/default-faces';
 import { erase } from '../prelude/array';
+import Cookies from 'js-cookie';
 
 export const defaultSettings = {
 	tutorial: 0,
@@ -375,7 +376,7 @@ export default () => new Vuex.Store({
 				ctx.commit('settings/init', {});
 				ctx.commit('deviceUser/init', {});
 				localStorage.removeItem('i');
-				document.cookie = `igi=; path=/`;
+				Cookies.remove('igi');
 			}
 		},
 
@@ -386,7 +387,7 @@ export default () => new Vuex.Store({
 			ctx.commit('settings/init', {});
 			ctx.commit('deviceUser/init', {});
 			localStorage.removeItem('i');
-			document.cookie = `igi=; path=/`;
+			Cookies.remove('igi');
 		},
 
 		async switchAccount(ctx, i) {

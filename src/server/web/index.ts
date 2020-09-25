@@ -219,6 +219,7 @@ router.get(['/@:user', '/@:user/:sub'], async (ctx, next) => {
 		await ctx.render('user', {
 			user, profile, me,
 			sub: ctx.params.sub,
+			fe: ctx.cookies.get('fe') === 'react' ? 'react' : 'app',
 			instanceName: meta.name || 'Groundpolis',
 			icon: meta.iconUrl
 		});
@@ -255,6 +256,7 @@ router.get('/notes/:note', async ctx => {
 		await ctx.render('note', {
 			note: _note,
 			// TODO: Let locale changeable by instance setting
+			fe: ctx.cookies.get('fe') === 'react' ? 'react' : 'app',
 			summary: getNoteSummary(_note, locales['ja-JP']),
 			instanceName: meta.name || 'Groundpolis',
 			icon: meta.iconUrl
@@ -292,6 +294,7 @@ router.get('/@:user/pages/:page', async ctx => {
 		const meta = await fetchMeta();
 		await ctx.render('page', {
 			page: _page,
+			fe: ctx.cookies.get('fe') === 'react' ? 'react' : 'app',
 			instanceName: meta.name || 'Groundpolis'
 		});
 
@@ -318,6 +321,7 @@ router.get('/channels/:channel', async ctx => {
 		const meta = await fetchMeta();
 		await ctx.render('channel', {
 			channel: _channel,
+			fe: ctx.cookies.get('fe') === 'react' ? 'react' : 'app',
 			instanceName: meta.name || 'Misskey'
 		});
 
@@ -367,6 +371,7 @@ router.get('/flush', async ctx => {
 router.get('(.*)', async ctx => {
 	const meta = await fetchMeta();
 	await ctx.render('base', {
+		fe: ctx.cookies.get('fe') === 'react' ? 'react' : 'app',
 		img: meta.bannerUrl,
 		title: meta.name || 'Groundpolis',
 		instanceName: meta.name || 'Groundpolis',

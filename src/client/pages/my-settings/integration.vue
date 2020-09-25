@@ -27,6 +27,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import Cookies from 'js-cookie';
+
 import { faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { apiUrl } from '../../config';
@@ -67,9 +69,11 @@ export default Vue.extend({
 	},
 
 	mounted() {
-		document.cookie = `igi=${this.$store.state.i.token}; path=/;` +
-			` max-age=31536000;` +
-			(document.location.protocol.startsWith('https') ? ' secure' : '');
+		Cookies.set('igi', this.$store.state.i.token, {
+			'max-age': 31536000,
+			secure: document.location.protocol.startsWith('https'),
+		});
+		
 
 		this.$watch('integrations', () => {
 			if (this.integrations.twitter) {
