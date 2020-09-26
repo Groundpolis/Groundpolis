@@ -408,6 +408,10 @@ export const packedNoteSchema = {
 			type: 'object' as const,
 			optional: false as const, nullable: false as const,
 		},
+		myReaction: {
+			type: 'string' as const,
+			optional: true as const, nullable: true as const,
+		},
 		poll: {
 			type: 'object' as const,
 			optional: true as const, nullable: true as const,

@@ -10,22 +10,24 @@ import {
 
 import { PackedNote } from '../../models/repositories/note';
 import getAcct from '../../misc/acct/render';
+import { t } from '../scripts/i18n';
+import { PackedUser } from '../../models/repositories/user';
 
 import './Note.scss';
-import { t } from '../scripts/i18n';
 
 export const Note = (props: { note: PackedNote }) => {
 	const [ cwOpen, setCwOpen ] = useState(false);
+	const user = props.note.user as PackedUser;
 	return (
 		<article className='_com note'>
-			<img src={props.note.user.avatarUrl} className='avatar' alt={getAcct(props.note.user)} />
+			<img src={user.avatarUrl} className='avatar' alt={getAcct(user)} />
 			<section className='right'>
 				<header>
 					<span className='name'>
-						{ props.note.user.name ?? props.note.user.username }
+						{ user.name ?? user.username }
 					</span>
 					<span className='acct'>
-						@{ getAcct(props.note.user) }
+						@{ getAcct(user) }
 					</span>
 				</header>
 				<div className='content'>
