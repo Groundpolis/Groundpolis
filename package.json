@@ -222,6 +222,7 @@
 		"re2": "1.15.4",
 		"react": "16.13.1",
 		"react-dom": "16.13.1",
+		"react-md-spinner": "1.0.0",
 		"react-router": "5.2.0",
 		"react-router-dom": "5.2.0",
 		"recaptcha-promise": "0.1.3",

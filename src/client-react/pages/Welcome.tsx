@@ -1,6 +1,8 @@
 import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 
 import Icon from '../components/Icon';
 import { Note } from '../components/Note';
@@ -16,14 +18,17 @@ function stopBeta() {
 	location.href = '/';
 }
 
-
 export default () => {
 	const [ meta, setMeta ] = useState<Record<string, any> | null>(null);
+	const [ stats, setStats ] = useState<Record<string, any> | null>(null);
 	const [ tl, setTl ] = useState<any[] | null>(null);
 
 	useEffect(() => {
 		(async () => {
 			setMeta(await api('meta'));
+		})();
+		(async () => {
+			setStats(await api('stats'));
 		})();
 		(async () => {
 			setTl(await api('notes/featured'));
@@ -40,12 +45,15 @@ export default () => {
 					</header>
 					<section className='_box _fill'>
 						{ meta?.bannerUrl ? <figure className='banner' style={{backgroundImage: `url("${meta.bannerUrl}")`}}/> : null }
+						<aside className='_flat-box'>
+							<FontAwesomeIcon icon={faUser} /> {  }
+						</aside>
 						<article className='_flat-box'>
 							{ meta?.description || t('introMisskey')}
 						</article>
 					</section>
 					<nav className='_flat-box'>
-						<p>アカウントを作成して、今すぐはじめよう。</p>
+						<p>{ t('getStarted') }</p>
 						<div className="_hstack">
 							<Link to='/signup' className='_button primary'>{t('signup')}</Link>
 							<Link to='/signin' className='_button'>{t('login')}</Link>
@@ -56,7 +64,7 @@ export default () => {
 					<header className='_bulk'><h2>{t('welcomeFeatured')}</h2></header>
 					<section className='_box'>
 						<div className='_vstack'>
-							{tl ? tl.map(note => <Note note={note} />) : 'Loading...'}
+							{tl ? tl.map(note => <Note key={note.id} note={note} />) : 'Loading...'}
 						</div>
 					</section>
 				</article>

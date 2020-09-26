@@ -17,8 +17,9 @@
 ._box {
 	background: var(--panel);
 	border-radius: var(--radius);
-	// border: 1px solid var(--panelBorder);
+	border: 1px solid var(--panelBorder);
 	box-shadow: 0 0 4px var(--shadow);
+
 	padding: var(--margin);
 	overflow: hidden;
 

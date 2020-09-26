@@ -648,6 +648,8 @@ channel: "Channel"
 create: "Create"
 quotes: "Quotes"
 thisVideoCannotBePlayed: "This video is not supported format, so it can't be played."
+getStarted: "Create your account and get started now!"
+returnHome: "Return to Home"
 _serverDisconnectedBehavior:
   reload: "Automatically reload"
   dialog: "Show warning dialog"

@@ -6,7 +6,7 @@ const Page = (props: any) => {
 	const Lazy = React.lazy(() => import('./pages/' + props.name));
 	return (
 		<Route exact={props.exact ?? false} path={props.path}>
-			<Suspense fallback={<p>Loading...</p>}>
+			<Suspense fallback={<></>}>
 				<Lazy />
 			</Suspense>
 		</Route>
@@ -17,7 +17,7 @@ export const App = () => (
 	<ErrorBoundary>
 		<Router>
 			<Switch>
-				<Page exact path='/' name='Home' />
+				<Page exact path='/' name='Index' />
 				{ /* <Page exact path='/signup' name='Signup' /> */ }
 				{ /* <Page exact path='/signin' name='Signin' /> */ }
 				<Page path='*' name='NotFound'/>
