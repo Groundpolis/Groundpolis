@@ -3,10 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 
 import Icon from '../components/Icon';
+import { Note } from '../components/Note';
 import { api } from '../scripts/api';
 import { t } from '../scripts/i18n';
 
 import '../styles/style.scss';
+
+import './Welcome.scss';
 
 function stopBeta() {
 	Cookies.remove('fe');
@@ -14,7 +17,7 @@ function stopBeta() {
 }
 
 
-export const Welcome = () => {
+export default () => {
 	const [ meta, setMeta ] = useState<Record<string, any> | null>(null);
 	const [ tl, setTl ] = useState<any[] | null>(null);
 
@@ -28,7 +31,7 @@ export const Welcome = () => {
 	}, []);
 
 	return meta === null ? <>Loading...</> : (
-		<article className='welcome-shell'>
+		<article className='_page welcome'>
 			<div className='_split-view'>
 				<article>
 					<header className='_bulk title'>
@@ -53,7 +56,7 @@ export const Welcome = () => {
 					<header className='_bulk'><h2>{t('welcomeFeatured')}</h2></header>
 					<section className='_box'>
 						<div className='_vstack'>
-							{tl ? tl.map(note => <p>{note.user.name || note.user.username}: {note.text}</p>) : 'Loading...'}
+							{tl ? tl.map(note => <Note note={note} />) : 'Loading...'}
 						</div>
 					</section>
 				</article>

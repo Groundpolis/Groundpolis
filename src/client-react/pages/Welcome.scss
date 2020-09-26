@@ -1,4 +1,4 @@
-.welcome-shell {
+._page.welcome {
 	max-width: 1280px;
 	margin: 64px auto;
 
@@ -13,6 +13,9 @@
 			font-size: 24px;
 			margin-left: 8px;
 		}
+	}
+	> footer {
+		margin-top: var(--margin);
 	}
 }
 

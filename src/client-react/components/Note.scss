@@ -1,0 +1,66 @@
+._com.note {
+	display: flex;
+	> .avatar {
+		width: 60px;
+		height: 60px;
+		border-radius: 100%;
+		margin-right: 16px;
+	}
+	> .right {
+		> header {
+			display: flex;
+			> .name {
+				font-weight: bold;
+			}
+			> .acct {
+				margin-left: 8px;
+				opacity: 0.8;
+			}
+			> .time {
+				margin-left: auto;
+				opacity: 0.8;
+			}
+		}
+		> .content {
+			> .cw-button {
+				border: none;
+				background: var(--cwBg);
+				color: var(--cwFg);
+				padding: 4px 8px;
+				font-size: 14px;
+				border-radius: 16px;
+				cursor: pointer;
+				outline: none;
+				&:not(:disabled):hover {
+					background: var(--cwHoverBg);
+				}
+			}
+		}
+		> .reactions {
+				margin-top: 8px;
+			> .reaction {
+				display: inline-block;
+				background: transparent;
+				border: none;
+				padding: 4px 8px;
+				color: inherit;
+				height: 36px;
+				border-radius: 18px;
+
+				&.primary {
+					color: white;
+					background: var(--accent);
+					&:hover {
+						background: var(--X8);
+					}
+				}
+			}
+		}
+		> .commands {
+			margin-top: 8px;
+			> .command:not(:first-child) {
+				margin-left: 24px;
+			}
+		}
+	}
+}

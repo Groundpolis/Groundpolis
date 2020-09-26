@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { version, langs, instanceName, getLocale, deckmode } from './config';
-import { App } from './app';
+import { App } from './App';
 import { clientDb, get, count } from './db';
 import { applyTheme, lightTheme } from './scripts/theme';
 import { setI18nContexts, setLocale } from './scripts/i18n';
@@ -69,5 +69,5 @@ import { setI18nContexts, setLocale } from './scripts/i18n';
 	document.body.innerHTML = '<div id="app"></div>';
 	console.info(`Groundpolis v${version}`);
 
-	ReactDOM.render(<App />, document.getElementById('app'));
+	ReactDOM.render(App(), document.getElementById('app'));
 })();

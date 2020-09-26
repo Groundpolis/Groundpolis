@@ -17,7 +17,8 @@
 ._box {
 	background: var(--panel);
 	border-radius: var(--radius);
-	border: 1px solid var(--panelBorder);
+	// border: 1px solid var(--panelBorder);
+	box-shadow: 0 0 4px var(--shadow);
 	padding: var(--margin);
 	overflow: hidden;
 
@@ -44,6 +45,16 @@
 ._flat-box {
 	overflow: hidden;
 	padding: var(--margin);
+}
+
+._error-box {
+	max-width: 640px;
+	margin: 0 auto;
+	> img {
+		border-radius: var(--radius);
+		width: 240px;
+		height: 240px;
+	}
 }
 
 ._fill {

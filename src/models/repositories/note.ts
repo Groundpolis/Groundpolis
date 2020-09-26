@@ -404,6 +404,10 @@ export const packedNoteSchema = {
 				optional: false as const, nullable: false as const,
 			}
 		},
+		reactions: {
+			type: 'object' as const,
+			optional: false as const, nullable: false as const,
+		},
 		poll: {
 			type: 'object' as const,
 			optional: true as const, nullable: true as const,

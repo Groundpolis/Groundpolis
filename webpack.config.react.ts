@@ -17,7 +17,7 @@ class WebpackOnBuildPlugin {
 module.exports = {
 	mode: 'development',
 	entry: [
-		path.resolve('./src/client-react/init.tsx'),
+		path.resolve('./src/client-react/init.ts'),
 	],
 	module: {
 		rules: [

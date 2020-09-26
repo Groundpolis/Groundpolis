@@ -18,6 +18,17 @@
 		background: var(--buttonHoverBg);
 	}
 
+	&.command {
+		display: inline-block;
+		background: transparent;
+		border: none;
+		padding: 4px;
+		color: inherit;
+		width: 32px;
+		height: 32px;
+		border-radius: 100%;
+	}
+
 	&.primary {
 		color: white;
 		background: var(--accent);

@@ -1,6 +1,7 @@
-import { apiUrl } from "../config";
+import { apiUrl } from '../config';
 
-export const api = async (endpoint: string, params = {}, i?: string) => {
+export const api = async (endpoint: string, params = {}) => {
+	const i = localStorage.getItem('i');
 	const res = await fetch(endpoint.indexOf('://') > -1 ? endpoint : apiUrl + '/' + endpoint, {
 		method: 'POST',
 		body: JSON.stringify(i ? { ...params, i } : params),
@@ -17,3 +18,5 @@ export const api = async (endpoint: string, params = {}, i?: string) => {
 		throw body.error;
 	}
 };
+
+export const isSignedIn = () => !!localStorage.getItem('i');
