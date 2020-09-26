@@ -78,7 +78,7 @@ export default Vue.extend({
 					this.reactFrontend = false;
 				} else {
 					Cookies.set('fe', 'react');
-					location.reload();
+					location.href = '/';
 				}
 			}
 		},

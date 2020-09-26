@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
 
 import Icon from '../components/solo/Icon';
@@ -5,6 +6,11 @@ import { api } from '../scripts/api';
 import { t } from '../scripts/i18n';
 
 import '../styles/style.scss';
+
+function stopBeta() {
+	Cookies.remove('fe');
+	location.href = '/';
+}
 
 
 export const Welcome = () => {
@@ -28,8 +34,11 @@ export const Welcome = () => {
 						<Icon className='icon' />
 						<h1 className='name'>{ meta?.name || 'Groundpolis' }</h1>
 					</header>
-					<section className='_box'>
-						{ meta?.description || t('introMisskey')}
+					<section className='_box _fill'>
+						{ meta?.bannerUrl ? <figure className='banner' style={{backgroundImage: `url("${meta.bannerUrl}")`}}/> : null }
+						<article className='_flat-box'>
+							{ meta?.description || t('introMisskey')}
+						</article>
 					</section>
 					<nav className='_flat-box'>
 						<p>アカウントを作成して、今すぐはじめよう。</p>
@@ -49,7 +58,8 @@ export const Welcome = () => {
 				</article>
 			</div>
 			<footer className='_bulk _label _center'>
-				<a href='https://github.com/Groundpolis/Groundpolis'>Powered by Groundpolis</a>
+				<a href='https://github.com/Groundpolis/Groundpolis'>Powered by Groundpolis</a>・
+				<a href='javascript:void(0)' onClick={() => stopBeta()}>βテストをやめる</a>
 			</footer>
 		</article>
 	);
