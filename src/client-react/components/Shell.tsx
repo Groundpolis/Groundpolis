@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-
+import React from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 import './Shell.scss';
 import FAB from './FAB';
 import { api } from '../scripts/api';
+import { t } from '../scripts/i18n';
 
 const DefaultHeader = (props: { title: string, icon?: IconProp }) => (
-	<>
+	<span className='title'>
 		{props.icon ? <FontAwesomeIcon icon={props.icon} /> : null}
-		<span className='title'>{props.title}</span>
-	</>
+		{ props.title}
+	</span >
 );
 
-export default (props: { title?: string, icon?: IconProp, header?: React.ReactElement, children?: React.ReactElement }) => {
+export default (props: { title?: string, icon?: IconProp, header?: React.ReactElement, children?: React.ReactElement, fabIcon?: IconProp, onFabClicked: () => void, }) => {
 	return (
 		<div className='_com shell'>
 			<header className='header'>
@@ -25,7 +25,7 @@ export default (props: { title?: string, icon?: IconProp, header?: React.ReactEl
 					</button>
 				</div>
 				<div className='center'>
-					{props.header ?? <DefaultHeader title={props.title ?? ''} />}
+					{props.header ?? <DefaultHeader title={props.title ?? ''} icon={props.icon} />}
 				</div>
 				<div className='right'>
 
@@ -34,7 +34,7 @@ export default (props: { title?: string, icon?: IconProp, header?: React.ReactEl
 			<div className='content _container'>
 				{props.children}
 			</div>
-			<FAB icon={faPencilAlt} onClick={() => api('notes/create', { text: 'ﾍﾞﾍﾞﾖ' })} />
+			<FAB icon={props.fabIcon} onClick={props.onFabClicked} />
 		</div>
 	);
 };
