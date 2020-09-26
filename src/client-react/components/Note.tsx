@@ -34,7 +34,7 @@ export const Note = (props: { note: PackedNote }) => {
 					) : null }
 					{ !props.note.cw || cwOpen ? props.note.text : null }
 				</div>
-				<div className="reactions">
+				<div className='reactions'>
 					{
 						Object.entries(props.note.reactions as Record<string, number>)
 							.map(([ reaction, count ]) => (
