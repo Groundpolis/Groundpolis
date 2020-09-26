@@ -1,7 +1,8 @@
 import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'
 
-import Icon from '../components/solo/Icon';
+import Icon from '../components/Icon';
 import { api } from '../scripts/api';
 import { t } from '../scripts/i18n';
 
@@ -26,7 +27,7 @@ export const Welcome = () => {
 		})();
 	}, []);
 
-	return (
+	return meta === null ? <>Loading...</> : (
 		<article className='welcome-shell'>
 			<div className='_split-view'>
 				<article>
@@ -43,8 +44,8 @@ export const Welcome = () => {
 					<nav className='_flat-box'>
 						<p>アカウントを作成して、今すぐはじめよう。</p>
 						<div className="_hstack">
-							<button className='_button primary'>{t('signup')}</button>
-							<button className='_button'>{t('login')}</button>
+							<Link to='/signup' className='_button primary'>{t('signup')}</Link>
+							<Link to='/signin' className='_button'>{t('login')}</Link>
 						</div>
 					</nav>
 				</article>

@@ -14,24 +14,5 @@
 			margin-left: 8px;
 		}
 	}
-
-	.banner {
-		width: 100%;
-		height: 192px;
-		margin: 0;
-    background-size: cover;
-		background-position: 50%;
-		position: relative;
-		
-		&:after {
-			position: absolute;
-			content: '';
-			left: 0;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			background: linear-gradient(transparent 70%, var(--panel));
-		}
-	}
 }
 
