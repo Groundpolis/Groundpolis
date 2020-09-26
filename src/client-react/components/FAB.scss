@@ -1,0 +1,23 @@
+._com.fab {
+	display: flex;
+	position: fixed;
+	width: 64px;
+	height: 64px;
+	right: var(--margin);
+	bottom: var(--margin);
+	box-shadow: 0 0 8px var(--shadow);
+	border-radius: 32px;
+	background: var(--accent);
+	border: 1px solid var(--X8);
+	color: white;
+	font-size: 22px;
+	align-items: center;
+	justify-content: center;
+
+	&:hover {
+		background: var(--X8);
+	}
+	&:active {
+		background: var(--X9);
+	}
+}

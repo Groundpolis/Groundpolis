@@ -1,0 +1,36 @@
+._com.shell {
+	> .header {
+		display: flex;
+		position: fixed;
+		left: 0;
+		top: 0;
+		right: 0;
+		height: 64px;
+		padding: 0 var(--margin);
+		background: var(--header);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		border-bottom: 1px solid var(--divider);
+		align-items: center;
+		z-index: 20;
+
+		> .left {
+
+		}
+		> .center {
+			margin-left: auto;
+			margin-right: auto;
+			> .title {
+				font-weight: bold;
+				font-size: 1.2em;
+			}
+		}
+		> .right {
+
+		}
+	}
+
+	> .content {
+		margin-top: 64px;
+	}
+}

@@ -58,6 +58,10 @@
 	}
 }
 
+._container {
+	padding: var(--margin);
+}
+
 ._fill {
 	padding: 0;
 }
@@ -92,4 +96,22 @@
 	@media screen and (max-width: 640px) {
 		@include vStack;
 	}
+}
+
+@media screen and (min-width: 640px) {
+	._mobile-only {
+		display: none;
+	}
+}
+
+._fixed-center {
+	display: flex;
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+
+	justify-content: center;
+	align-items: center;
 }

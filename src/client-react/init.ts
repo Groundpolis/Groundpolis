@@ -4,12 +4,12 @@ import ReactDOM from 'react-dom';
 import { version, langs, instanceName, getLocale, deckmode } from './config';
 import { App } from './App';
 import { clientDb, get, count } from './db';
-import { applyTheme, lightTheme } from './scripts/theme';
+import { applyTheme, oceanTheme } from './scripts/theme';
 import { setI18nContexts, setLocale } from './scripts/i18n';
 
 (async () => {
 	if (localStorage.getItem('theme') == null) {
-		applyTheme(lightTheme);
+		applyTheme(oceanTheme);
 	}
 
 	//#region Detect the user language

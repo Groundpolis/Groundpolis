@@ -29,14 +29,29 @@ export const builtinThemes = [
 	require('../themes/ocean.json5'),
 ] as Theme[];
 
-let timeout = null;
+export const [
+	whiteTheme,
+	blackTheme,
+	lilacTheme,
+	halloweenTheme,
+	cityTheme,
+	rainyTheme,
+	urbanTheme,
+	cafeTheme,
+	chocolateTheme,
+	danboardTheme,
+	oliveTheme,
+	oceanTheme,
+] = builtinThemes;
+
+let timeout: number | null = null;
 
 export function applyTheme(theme: Theme, persist = true) {
 	if (timeout) clearTimeout(timeout);
 
 	document.documentElement.classList.add('changing-theme');
 
-	timeout = setTimeout(() => {
+	timeout = window.setTimeout(() => {
 		document.documentElement.classList.remove('changing-theme');
 	}, 1000);
 
@@ -50,7 +65,7 @@ export function applyTheme(theme: Theme, persist = true) {
 
 	const props = compile(_theme);
 
-	for (const tag of document.head.children) {
+	for (const tag of Array.from(document.head.children)) {
 		if (tag.tagName === 'META' && tag.getAttribute('name') === 'theme-color') {
 			tag.setAttribute('content', props['html']);
 			break;
@@ -96,7 +111,7 @@ function compile(theme: Theme): Record<string, string> {
 		return tinycolor(val);
 	}
 
-	const props = {};
+	const props: Record<string, string> = {};
 
 	for (const [k, v] of Object.entries(theme.props)) {
 		if (k.startsWith('$')) continue; // ignore const
