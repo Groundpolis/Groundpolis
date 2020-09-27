@@ -5,7 +5,7 @@ import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faUser, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 
 import Icon from '../components/Icon';
-import { Note } from '../components/Note';
+import Note from '../components/Note';
 import { api } from '../scripts/api';
 import { t } from '../scripts/i18n';
 import Spinner from '../components/Spinner';
@@ -18,7 +18,7 @@ function stopBeta() {
 	location.href = '/';
 }
 
-export default () => {
+export default function Welcome() {
 	const [meta, setMeta] = useState<Record<string, any> | null>(null);
 	const [stats, setStats] = useState<Record<string, any> | null>(null);
 	const [tl, setTl] = useState<any[] | null>(null);
@@ -80,4 +80,4 @@ export default () => {
 			</footer>
 		</article>
 	);
-};
+}

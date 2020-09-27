@@ -15,7 +15,14 @@ const DefaultHeader = (props: { title: string, icon?: IconProp }) => (
 	</span >
 );
 
-export default (props: { title?: string, icon?: IconProp, header?: React.ReactElement, children?: React.ReactElement, fabIcon?: IconProp, onFabClicked: () => void, }) => {
+export default function Shell(props: {
+	title?: string,
+	icon?: IconProp,
+	header?: React.ReactElement,
+	children?: React.ReactElement,
+	fabIcon?: IconProp,
+	onFabClicked: () => void,
+}) {
 	return (
 		<div className='_com shell'>
 			<header className='header'>
@@ -28,7 +35,7 @@ export default (props: { title?: string, icon?: IconProp, header?: React.ReactEl
 					{props.header ?? <DefaultHeader title={props.title ?? ''} icon={props.icon} />}
 				</div>
 				<div className='right'>
-
+					<div className="_class"></div>
 				</div>
 			</header>
 			<div className='content _container'>
@@ -37,4 +44,4 @@ export default (props: { title?: string, icon?: IconProp, header?: React.ReactEl
 			<FAB icon={props.fabIcon} onClick={props.onFabClicked} />
 		</div>
 	);
-};
+}

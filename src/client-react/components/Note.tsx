@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	faReply,
 	faRetweet,
@@ -15,7 +15,7 @@ import { PackedUser } from '../../models/repositories/user';
 
 import './Note.scss';
 
-export const Note = (props: { note: PackedNote }) => {
+export default function Note(props: { note: PackedNote }) {
 	const [ cwOpen, setCwOpen ] = useState(false);
 	const user = props.note.user as PackedUser;
 	return (
@@ -63,4 +63,4 @@ export const Note = (props: { note: PackedNote }) => {
 			</section>
 		</article>
 	);
-};
+}

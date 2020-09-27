@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import rndstr from 'rndstr';
 import { faPencilAlt, faComments } from '@fortawesome/free-solid-svg-icons';
 
-import { PackedNote } from '../../models/repositories/note';
-import { Note } from '../components/Note';
+import Note from '../components/Note';
 import Shell from '../components/Shell';
 import Spinner from '../components/Spinner';
 import { api } from '../scripts/api';
@@ -17,7 +16,7 @@ const fabClicked = () => {
 	api('notes/create', { text });
 };
 
-export default () => {
+export default function Home() {
 	const [tl, setTl] = useState(null as any[] | null);
 
 	useEffect(() => {
@@ -38,4 +37,4 @@ export default () => {
 
 		</Shell>
 	);
-};
+}

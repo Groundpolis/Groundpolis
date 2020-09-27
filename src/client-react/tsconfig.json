@@ -1,12 +1,12 @@
 {
-  "compilerOptions": {
-    "noImplicitAny": true,
-    "module": "esnext",
-    "target": "es5",
-    "jsx": "react",
-    "allowJs": true,
+	"compilerOptions": {
+		"noImplicitAny": true,
+		"module": "esnext",
+		"target": "es6",
+		"jsx": "react",
+		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"moduleResolution": "node"
-  }
+	}
 }

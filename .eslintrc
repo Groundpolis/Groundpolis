@@ -1,10 +1,14 @@
 {
 	"parserOptions": {
-		"parser": "@typescript-eslint/parser"
+		"parser": "@typescript-eslint/parser",
+		"ecmaFeatures": {
+			"jsx": true
+		}
 	},
 	"extends": [
 		"eslint:recommended",
-		"plugin:vue/recommended"
+		"plugin:vue/recommended",
+		"plugin:react/recommended"
 	],
 	"rules": {
 		"vue/require-v-for-key": 0,
@@ -20,8 +24,15 @@
 		"vue/no-v-html": 0,
 		"no-console": 0,
 		"no-unused-vars": 0,
-		"no-empty": 0
+		"no-empty": 0,
+		"quotes": [
+			"error",
+			"single"
+		]
 	},
+	"plugins": [
+		"react"
+	],
 	"globals": {
 		"ENV": true,
 		"VERSION": true,
