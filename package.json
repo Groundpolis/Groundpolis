@@ -1,40 +1,39 @@
 {
 	"name": "groundpolis",
-	"author": "Xeltica <xeltica@gmail.com>",
-	"contributors": [
-		"syuilo <syuilotan@yahoo.co.jp>"
-	],
 	"version": "12.47.1-gp-3.19.2",
-	"codename": "reunion",
+	"private": true,
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/xeltica/groundpolis.git"
 	},
+	"author": "Xeltica <xeltica@gmail.com>",
+	"contributors": [
+		"syuilo <syuilotan@yahoo.co.jp>"
+	],
 	"main": "./index.js",
-	"private": true,
 	"scripts": {
-		"start": "node ./index.js",
-		"start-product": "cross-env NODE_ENV=production node ./index.js",
-		"init": "npm run migrate",
-		"ormconfig": "node ./built/ormconfig.js",
-		"migrate": "ts-node ./node_modules/typeorm/cli.js migration:run",
-		"migrateandstart": "npm run migrate && npm run start",
-		"build": "webpack && gulp build",
-		"rbuild": "webpack --config webpack.config.react.ts && gulp build",
 		"bs": "npm run build && npm run start",
+		"build": "webpack && gulp build",
 		"build-product": "cross-env NODE_ENV=production webpack && gulp build",
-		"webpack": "webpack",
-		"dev": "run-p watch gulpstart",
-		"rdev": "run-p rwatch gulpstart",
-		"gulpstart": "run-s gulp start",
-		"watch": "webpack --watch",
-		"rwatch": "webpack --config webpack.config.react.ts --watch",
-		"gulp": "gulp build",
 		"clean": "gulp clean",
 		"cleanall": "gulp cleanall",
-		"lint": "tslint 'src/**/*.ts'",
+		"dev": "run-p watch gulpstart",
+		"format": "gulp format",
+		"gulp": "gulp build",
+		"gulpstart": "run-s gulp start",
+		"init": "npm run migrate",
+		"lint": "eslint --ext .js,.jsx,.ts,.tsx --fix 'src/**'",
+		"migrate": "ts-node ./node_modules/typeorm/cli.js migration:run",
+		"migrateandstart": "npm run migrate && npm run start",
+		"ormconfig": "node ./built/ormconfig.js",
+		"rbuild": "webpack --config webpack.config.react.ts && gulp build",
+		"rdev": "run-p rwatch gulpstart",
+		"rwatch": "webpack --config webpack.config.react.ts --watch",
+		"start": "node ./index.js",
+		"start-product": "cross-env NODE_ENV=production node ./index.js",
 		"test": "cross-env TS_NODE_FILES=true TS_NODE_TRANSPILE_ONLY=true TS_NODE_COMPILER_OPTIONS=\"{\\\"target\\\":\\\"es2017\\\",\\\"module\\\":\\\"commonjs\\\",\\\"typeRoots\\\":[\\\"node_modules/@types\\\",\\\"src/@types\\\"]}\" mocha",
-		"format": "gulp format"
+		"watch": "webpack --watch",
+		"webpack": "webpack"
 	},
 	"resolutions": {
 		"chokidar": "^3.3.1",
@@ -118,7 +117,8 @@
 		"@types/webpack-stream": "3.2.11",
 		"@types/websocket": "1.0.1",
 		"@types/ws": "7.2.6",
-		"@typescript-eslint/parser": "3.6.0",
+		"@typescript-eslint/eslint-plugin": "4.2.0",
+		"@typescript-eslint/parser": "4.2.0",
 		"abort-controller": "3.0.0",
 		"animejs": "3.1.0",
 		"apexcharts": "3.20.0",
@@ -255,8 +255,6 @@
 		"tmp": "0.2.1",
 		"ts-loader": "8.0.2",
 		"ts-node": "9.0.0",
-		"tslint": "6.1.3",
-		"tslint-sonarts": "1.9.0",
 		"typeorm": "0.2.25",
 		"typescript": "4.0.2",
 		"ulid": "2.3.0",
@@ -296,5 +294,6 @@
 		"chai": "4.2.0",
 		"cross-env": "7.0.2",
 		"npm-run-all": "4.1.5"
-	}
+	},
+	"codename": "reunion"
 }

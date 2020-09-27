@@ -19,24 +19,24 @@ export default function Note(props: { note: PackedNote }) {
 	const [ cwOpen, setCwOpen ] = useState(false);
 	const user = props.note.user as PackedUser;
 	return (
-		<article className='_com note'>
-			<img src={user.avatarUrl} className='avatar' alt={getAcct(user)} />
-			<section className='right'>
+		<article className="_com note">
+			<img src={user.avatarUrl} className="avatar" alt={getAcct(user)} />
+			<section className="right">
 				<header>
-					<span className='name'>
+					<span className="name">
 						{ user.name ?? user.username }
 					</span>
-					<span className='acct'>
+					<span className="acct">
 						@{ getAcct(user) }
 					</span>
 				</header>
-				<div className='content'>
+				<div className="content">
 					{ props.note.cw ? (
-						<button className='cw-button' onClick={() => setCwOpen(!cwOpen)}>{ cwOpen ? t('_cw.hide') : t('_cw.show') }</button>
+						<button className="cw-button" onClick={() => setCwOpen(!cwOpen)}>{ cwOpen ? t('_cw.hide') : t('_cw.show') }</button>
 					) : null }
 					{ !props.note.cw || cwOpen ? props.note.text : null }
 				</div>
-				<div className='reactions'>
+				<div className="reactions">
 					{
 						Object.entries(props.note.reactions as Record<string, number>)
 							.map(([ reaction, count ]) => (
@@ -46,17 +46,17 @@ export default function Note(props: { note: PackedNote }) {
 							))
 					}
 				</div>
-				<div className='commands'>
-					<button className='_button command'>
+				<div className="commands">
+					<button className="_button command">
 						<FontAwesomeIcon icon={faReply}/>
 					</button>
-					<button className='_button command'>
+					<button className="_button command">
 						<FontAwesomeIcon icon={faRetweet}/>
 					</button>
-					<button className='_button command'>
+					<button className="_button command">
 						<FontAwesomeIcon icon={faPlus}/>
 					</button>
-					<button className='_button command'>
+					<button className="_button command">
 						<FontAwesomeIcon icon={faEllipsisV}/>
 					</button>
 				</div>

@@ -17,10 +17,10 @@ export const App = () => (
 	<ErrorBoundary>
 		<Router>
 			<Switch>
-				<Page exact path='/' name='Index' />
+				<Page exact path="/" name="Index" />
 				{ /* <Page exact path='/signup' name='Signup' /> */ }
 				{ /* <Page exact path='/signin' name='Signin' /> */ }
-				<Page path='*' name='NotFound'/>
+				<Page path="*" name="NotFound"/>
 			</Switch>
 		</Router>
 	</ErrorBoundary>

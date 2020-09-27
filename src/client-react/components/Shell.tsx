@@ -9,7 +9,7 @@ import { api } from '../scripts/api';
 import { t } from '../scripts/i18n';
 
 const DefaultHeader = (props: { title: string, icon?: IconProp }) => (
-	<span className='title'>
+	<span className="title">
 		{props.icon ? <FontAwesomeIcon icon={props.icon} /> : null}
 		{ props.title}
 	</span >
@@ -24,21 +24,23 @@ export default function Shell(props: {
 	onFabClicked: () => void,
 }) {
 	return (
-		<div className='_com shell'>
-			<header className='header'>
-				<div className='left'>
-					<button className='_mobile-only _button command'>
+		<div className="_com shell">
+			<header className="header">
+				<div className="left">
+					<button className="_mobile-only _button command">
 						<FontAwesomeIcon icon={faBars} />
 					</button>
 				</div>
-				<div className='center'>
+				<div className="center">
 					{props.header ?? <DefaultHeader title={props.title ?? ''} icon={props.icon} />}
 				</div>
-				<div className='right'>
+				<div className="right">
 					<div className="_class"></div>
 				</div>
 			</header>
-			<div className='content _container'>
+			<div className="sidebar">
+			</div>
+			<div className="content _container">
 				{props.children}
 			</div>
 			<FAB icon={props.fabIcon} onClick={props.onFabClicked} />

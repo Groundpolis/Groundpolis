@@ -5,10 +5,10 @@ import { t } from '../scripts/i18n';
 
 
 const notFound = () => (
-	<div className='_flat-box _center'>
+	<div className="_flat-box _center">
 		<h1>Not found</h1>
 		<p>{ t('notFoundDescription') }</p>
-		<Link to='/' className='primary'>{ t('returnHome') }</Link>
+		<Link to="/" className="primary">{ t('returnHome') }</Link>
 	</div>
 );
 

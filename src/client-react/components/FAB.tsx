@@ -6,7 +6,7 @@ import './FAB.scss';
 
 export default function FAB(props: { icon: IconProp } & React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>) {
 	return (
-		<button className='_com fab' {...props}>
+		<button className="_com fab" {...props}>
 			<FontAwesomeIcon icon={props.icon} />
 		</button>
 	);

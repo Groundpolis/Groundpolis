@@ -16,10 +16,10 @@ export class ErrorBoundary extends React.Component<{}, {hasError: boolean}, any>
 	render() {
 		if(this.state.hasError) {
 			return (
-				<div className='_box _center _error-box'>
-					<img src='https://xn--931a.moe/assets/error.jpg' alt='error' />
+				<div className="_box _center _error-box">
+					<img src="https://xn--931a.moe/assets/error.jpg" alt="error" />
 					<p>{ t('error') }</p>
-					<a className='primary' href='/'>{ t('backToTop') }</a>
+					<a className="primary" href="/">{ t('backToTop') }</a>
 				</div>
 			);
 		}
