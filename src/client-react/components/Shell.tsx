@@ -39,6 +39,7 @@ export default function Shell(props: {
 }) {
 	const [i, setI] = useState(null as PackedUser | null);
 	const [toggle, setToggle] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 
 	const signedIn = isSignedIn();
 
@@ -52,7 +53,7 @@ export default function Shell(props: {
 		<div className="_com shell">
 			<header className="header">
 				<div className="left">
-					<button className="_mobile-only _button command">
+					<button className="_mobile-only _button command" onClick={() => setIsOpen(true)}>
 						<FontAwesomeIcon icon={faBars} />
 					</button>
 				</div>
@@ -65,7 +66,8 @@ export default function Shell(props: {
 					</button>
 				</div>
 			</header>
-			<div className="sidebar">
+			<div className={'backdrop' + (isOpen ? ' open' : '')} onClick={() => setIsOpen(false)}/>
+			<div className={'sidebar' + (isOpen ? ' open' : '')}>
 				{signedIn ?
 					<NavLink to={i ? '/@' + getAcct(i) : ''} className="item" activeClassName="active">
 						<img src={i?.avatarUrl} className="avatar" />

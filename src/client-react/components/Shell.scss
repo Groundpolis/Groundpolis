@@ -1,6 +1,10 @@
 ._com.shell {
 	--sidebarSize: 256px;
 
+	@media screen and (max-width: 640px) {
+		--sidebarSize: 0px;
+	}
+
 	> .header {
 		display: flex;
 		position: fixed;
@@ -36,18 +40,44 @@
 		}
 	}
 
+	> .backdrop {
+		position: fixed;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		pointer-events: none;
+		z-index: 21;
+		transition: all 0.2s ease;
+		&.open {
+			background: rgba(black, 0.5);
+			backdrop-filter: blur(4px);
+			-webkit-backdrop-filter: blur(4px);
+			pointer-events: all;
+		}
+	}
+
 	> .sidebar {
 		position: fixed;
 		left: 0;
 		top: 0;
-		width: var(--sidebarSize);
+		width: 256px;
 		bottom: 0;
+
+		@media screen and (max-width: 640px) {
+			transition: left 0.2s ease;
+			left: -256px;
+
+			&.open {
+				left: 0;
+			}
+		}
 
 		display: block;
 
 		background: var(--panel);
 		border-right: 1px solid var(--divider);
-		z-index: 21;
+		z-index: 22;
 		padding: var(--margin);
 
 		> .toggler {
@@ -55,7 +85,7 @@
 			right: 16px;
 			top: 16px;
 			color: var(--accent);
-			z-index: 22;
+			z-index: 23;
 		}
 
 		> .divider {
