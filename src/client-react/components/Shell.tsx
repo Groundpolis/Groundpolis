@@ -86,6 +86,7 @@ export default function Shell(props: {
 					<button className="_button command item">
 						<span className="label">{t('addAcount')}</span>
 					</button>
+					<button className="_button command item danger" onClick={logout}>{t('logout')}</button>
 				</> : <>
 						<Item exact to="/" icon={faHome} label={t('home')} />
 						{signedIn ? <Item disabled to="/my/notifications" icon={faBell} label={t('notifications')} /> : null}
@@ -107,4 +108,11 @@ export default function Shell(props: {
 			{props.fabIcon ? <FAB icon={props.fabIcon} onClick={props.onFabClicked ?? (() => { })} /> : null}
 		</div>
 	);
+}
+
+function logout() {
+	if (confirm('Are you sure to log out?')) {
+		localStorage.removeItem('i');
+		location.href = '/';
+	}
 }

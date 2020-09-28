@@ -33,13 +33,11 @@ export default function Settings() {
 
 	return (
 		<Shell title={t('settings')} icon={faCog}>
-			<div className="_vstack">
+			<article className="_vstack">
 
-				<div className="_box">
-					<h1 className="_bulk">{t('general')}</h1>
+				<article className="_box">
+					<h1 className="_bulk">{t('uiLanguage')}</h1>
 					<div className="_vstack">
-						<button className="_button static" onClick={optoutBeta}>{t('optoutNewFE')}</button>
-						<button className="_button static danger" onClick={logout}>{t('logout')}</button>
 						<select value={lang} onChange={langChanged}>
 							{
 								langs.map(lang => (
@@ -48,9 +46,9 @@ export default function Settings() {
 							}
 						</select>
 					</div>
-				</div>
+				</article>
 
-				<div className="_box">
+				<article className="_box">
 					<h1 className="_bulk">{t('theme')}</h1>
 					<div className="_vstack">
 						<select value={themeId} onChange={themeChanged}>
@@ -70,9 +68,12 @@ export default function Settings() {
 							</optgroup>
 						</select>
 					</div>
-				</div>
+				</article>
 
-			</div>
+				<article className="_box _vstack">
+					<button className="_button static" onClick={optoutBeta}>{t('optoutNewFE')}</button>
+				</article>
+			</article>
 		</Shell>
 	);
 }
@@ -80,13 +81,6 @@ export default function Settings() {
 function optoutBeta() { 
 	if (confirm('Are you sure to opt out the beta client?')) {
 		Cookies.remove('fe');
-		location.href = '/';
-	}
-}
-
-function logout() {
-	if (confirm('Are you sure to log out?')) {
-		localStorage.removeItem('i');
 		location.href = '/';
 	}
 }
