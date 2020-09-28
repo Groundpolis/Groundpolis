@@ -10,6 +10,7 @@ import { toString } from '../../mfm/to-string';
 import { parse } from '../../mfm/parse';
 import { Emoji } from '../entities/emoji';
 import { concat } from '../../prelude/array';
+import parseAcct from '../../misc/acct/parse';
 
 export type PackedNote = SchemaType<typeof packedNoteSchema>;
 
@@ -148,6 +149,8 @@ export class NoteRepository extends Repository<Note> {
 				url: string
 			}[];
 
+			const accts = emojiNames.filter(n => n.startsWith('@'));
+
 			// カスタム絵文字
 			if (emojiNames?.length > 0) {
 				const tmp = await Emojis.find({
@@ -161,6 +164,22 @@ export class NoteRepository extends Repository<Note> {
 						name: emoji.name,
 						url: emoji.url,
 					};
+				}));
+
+				all = concat([all, tmp]);
+			}
+
+			if (accts.length > 0) { 
+				const tmp = await Promise.all(
+					accts
+						.map(acct => ({ acct, parsed: parseAcct(acct) }))
+						.map(async (pair) => ({ acct: pair.acct, user: await Users.pack(await Users.findOne({ usernameLower: pair.parsed.username.toLowerCase(), host: pair.parsed.host })) }))
+				).then(users => users.filter((u) => u.user !== undefined).map(u => {
+					const res = {
+						name: u.acct,
+						url: u.user?.avatarUrl || ''
+					};
+					return res;
 				}));
 
 				all = concat([all, tmp]);
