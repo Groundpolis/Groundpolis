@@ -53,7 +53,7 @@ import: "Import"
 export: "Export"
 files: "Files"
 download: "Download"
-driveFileDeleteConfirm: "Are you sure you want to delete the file \"{name}\"? Notes with this file attached will also be deleted."
+driveFileDeleteConfirm: 'Are you sure you want to delete the file "{name}"? Notes with this file attached will also be deleted.'
 unfollowConfirm: "Are you sure that you want to unfollow {name}?"
 exportRequested: "You have requested an export. This may take a while. After the export is complete, the resulting file will be added to the drive."
 importRequested: "You requested an import. This may take a while."
@@ -211,7 +211,7 @@ announcements: "Announcements"
 imageUrl: "Image URL"
 remove: "Delete"
 removed: "Successfully deleted"
-removeAreYouSure: "Are you sure that you want to delete \"{x}\"?"
+removeAreYouSure: 'Are you sure that you want to delete "{x}"?'
 saved: "Saved"
 messaging: "Messaging"
 upload: "Upload"
@@ -311,7 +311,7 @@ iconUrl: "Icon URL"
 bannerUrl: "Banner image URL"
 basicInfo: "Basic info"
 pinnedUsers: "Pinned user"
-pinnedUsersDescription: "List one username per line. Users listed here will be pinned under \"Explore\" tab."
+pinnedUsersDescription: 'List one username per line. Users listed here will be pinned under "Explore" tab.'
 hcaptcha: "hCaptcha"
 enableHcaptcha: "Enable hCaptcha"
 hcaptchaSiteKey: "Site key"
@@ -371,7 +371,7 @@ lastUsed: "Last used"
 unregister: "Unregister"
 passwordLessLogin: "Set up password-less login"
 resetPassword: "Reset password"
-newPasswordIs: "The new password is \"{password}\""
+newPasswordIs: 'The new password is "{password}"'
 title: "Title"
 text: "Text"
 revert-to-draft: "Revert to draft"
@@ -489,7 +489,7 @@ objectStorageUseSSL: "Use SSL"
 objectStorageUseSSLDesc: "Turn off this if you are not going to use HTTPS for API connection"
 objectStorageUseProxy: "Connect over Proxy"
 objectStorageUseProxyDesc: "Turn off this if you are not going to use Proxy for ObjectStorage connection"
-objectStorageSetPublicRead: "Set \"public-read\" on upload"
+objectStorageSetPublicRead: 'Set "public-read" on upload'
 serverLogs: "Server logs"
 deleteAll: "Delete all"
 showFixedPostForm: "Display the posting form at the top of the timeline"
@@ -650,6 +650,9 @@ quotes: "Quotes"
 thisVideoCannotBePlayed: "This video is not supported format, so it can't be played."
 getStarted: "Create your account and get started now!"
 returnHome: "Return to Home"
+optoutNewFE: "Return to a stable web client"
+errorLocalOnlyToRemote: "You cannot make replies to remote users local only."
+
 _serverDisconnectedBehavior:
   reload: "Automatically reload"
   dialog: "Show warning dialog"
@@ -813,23 +816,23 @@ _time:
 _tutorial:
   title: "How to use Groundpolis"
   step1_1: "Welcome!"
-  step1_2: "This page is called \"timeline\". It shows chronologically ordered \"notes\" of people who you \"follow\"."
+  step1_2: 'This page is called "timeline". It shows chronologically ordered "notes" of people who you "follow".'
   step1_3: "Your timeline is currently empty, since you have not posted any notes or followed anyone yet."
   step2_1: "Let's finish setting up your profile before writing a note or following anyone."
   step2_2: "Providing some information about who you are will make it easier for others to follow you back."
   step3_1: "Finished setting up your profile?"
   step3_2: "The next step is to post a note. You can do this by pressing the pencil icon on the screen."
   step3_3: "Fill in the modal and press the button on the top right to post."
-  step3_4: "Have nothing to say? Try \"just setting up my msky\"!"
+  step3_4: 'Have nothing to say? Try "just setting up my msky"!'
   step4_1: "Finished posting your first note?"
   step4_2: "Hurray! Now your first note is displayed on your timeline."
   step5_1: "Now, let's try making your timeline more lively by following other people."
   step5_2: "{featured} will show you trending notes in this instance. {explore} will let you find trending users. Try following people you like!"
-  step5_3: "To follow other users, click on their icon and press \"follow\" button on their profile."
+  step5_3: 'To follow other users, click on their icon and press "follow" button on their profile.'
   step5_4: "If the other user has a lock icon next to their name, that user will have to manually approve your follow request."
   step6_1: "Now you will be able to see other users' notes on your timeline."
-  step6_2: "You can also put \"reactions\" on other people's notes to quickly respond."
-  step6_3: "To attach a \"reaction\", press the \"+\" mark on another user's note and choose an emoji you'd like to react with."
+  step6_2: 'You can also put "reactions" on other people''s notes to quickly respond.'
+  step6_3: 'To attach a "reaction", press the "+" mark on another user''s note and choose an emoji you''d like to react with.'
   step7_1: "Congratulations! You have now finished Groundpolis's basic tutorial."
   step7_2: "If you would like to learn more about Groundpolis, try the {help} section."
   step7_3: "Good luck and have fun! 🚀"
@@ -872,7 +875,7 @@ _permissions:
   "read:channels": "Read channels"
   "write:channels": "Modify channels"
 _auth:
-  shareAccess: "Would you like to authorize \"{name}\" to access this account?"
+  shareAccess: 'Would you like to authorize "{name}" to access this account?'
   shareAccessAsk: "Are you sure you want to authorize this application to access your account?"
   permissionAsk: "This application requires following permissions:"
   pleaseGoBack: "Please go back to the application"
@@ -1336,7 +1339,7 @@ _pages:
       _for:
         arg1: "Number of times to repeat"
         arg2: "Action"
-    typeError: "Slot {slot} accepts \"{expect}\" type, but the provided value is \"{actual}\"!"
+    typeError: 'Slot {slot} accepts "{expect}" type, but the provided value is "{actual}"!'
     thereIsEmptySlot: "Slot {slot} is empty!"
     types:
       string: "Text"

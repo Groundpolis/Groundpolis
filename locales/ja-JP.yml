@@ -692,11 +692,12 @@ renoteQuoteCount: "{count} 件のリノートと引用ノート"
 quotes: "引用ノート"
 post: "投稿"
 thisVideoCannotBePlayed: "このビデオは対応していない形式のため、再生できません。"
-showUnlistedNotesInLTL: "未収載・ホーム・ダイレクトノートもLTLに表示する"
+showUnlistedNotesInLTL: "未収載・フォロワー・ダイレクトノートもLTLに表示する"
 showUnlistedNotesInLTLDesc: "フォローしているローカルユーザーのものであれば、パブリック公開範囲以外のノートをローカルタイムラインに流すようにします"
 getStarted: "アカウントを作成して、今すぐはじめよう。"
 returnHome: "ホームに戻る"
 optoutNewFE: "通常のウェブ クライアントに戻す"
+errorLocalOnlyToRemote: "リモートユーザー宛てのリプライをローカル限定にすることはできません。"
 
 _labs:
   title: "ラボ"
