@@ -14,8 +14,8 @@ const Page = (props: any) => {
 };
 
 export const App = () => (
-	<ErrorBoundary>
-		<Router>
+	<Router>
+		<ErrorBoundary>
 			<Switch>
 				<Page exact path="/" name="Index" />
 				{ /* <Page exact path='/signup' name='Signup' /> */ }
@@ -23,6 +23,6 @@ export const App = () => (
 				<Page path="/my/settings" name="Settings" />
 				<Page path="*" name="NotFound" />
 			</Switch>
-		</Router>
-	</ErrorBoundary>
+		</ErrorBoundary>
+	</Router>
 );

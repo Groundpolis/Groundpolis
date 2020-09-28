@@ -31,7 +31,7 @@ export default function Welcome() {
 		})();
 	}, []);
 
-	return meta === null || stats === null ? <Spinner relative /> : (
+	return meta === null || stats === null ? <Spinner /> : (
 		<article className="_page welcome _container">
 			<div className="_split-view">
 				<article>

@@ -5,19 +5,29 @@ import { faBars, faBell, faBroadcastTower, faChevronCircleDown, faChevronCircleU
 
 import './Shell.scss';
 import FAB from './FAB';
-import { api } from '../scripts/api';
+import { api, isSignedIn } from '../scripts/api';
 import { t } from '../scripts/i18n';
 import { Link, NavLink } from 'react-router-dom';
 import getAcct from '../../misc/acct/render';
 import { PackedUser } from '../../models/repositories/user';
 import Spinner from './Spinner';
+import Icon from './Icon';
 
 const DefaultHeader = (props: { title: string, icon?: IconProp }) => (
 	<span className="title">
 		{props.icon ? <FontAwesomeIcon icon={props.icon} /> : null}
-		{ props.title}
+		{props.title}
 	</span >
 );
+
+function Item(props: { disabled?: boolean, exact?: boolean, to: string, icon?: IconProp, label: string }) { 
+	return (
+		<NavLink exact={props.exact} to={props.to} className={`item ${props.disabled ? ' disabled' : ''}`} activeClassName="active">
+			{props.icon ? <FontAwesomeIcon icon={props.icon} fixedWidth /> : null}
+			<span className="label">{props.label}</span>
+		</NavLink>
+	);
+}
 
 export default function Shell(props: {
 	title?: string,
@@ -30,13 +40,15 @@ export default function Shell(props: {
 	const [i, setI] = useState(null as PackedUser | null);
 	const [toggle, setToggle] = useState(false);
 
+	const signedIn = isSignedIn();
+
 	useEffect(() => {
 		(async () => {
 			setI(await api('i'));
 		})();
 	}, []);
 
-	return !i ? <Spinner /> : (
+	return (
 		<div className="_com shell">
 			<header className="header">
 				<div className="left">
@@ -52,10 +64,16 @@ export default function Shell(props: {
 				</div>
 			</header>
 			<div className="sidebar">
-				<NavLink to={'/@' + getAcct(i)} className="item" activeClassName="active">
-					<img src={i.avatarUrl} className="avatar" />
-					<span className="label">{i.name || i.username}</span>
-				</NavLink>
+				{signedIn ?
+					<NavLink to={i ? '/@' + getAcct(i) : ''} className="item" activeClassName="active">
+						<img src={i?.avatarUrl} className="avatar" />
+						<span className="label">{i?.name || i?.username}</span>
+					</NavLink>
+					:
+					<div className="item">
+						<Icon style={{ fontSize: '32px', fill: 'var(--fg)', }}/> Groundpolis
+					</div>
+				}
 				<div className="divider" />
 				{toggle ? <>
 					<button className="_button command item">
@@ -65,40 +83,19 @@ export default function Shell(props: {
 						<span className="label">{t('addAcount')}</span>
 					</button>
 				</> : <>
-						<NavLink exact to="/" className="item" activeClassName="active">
-							<FontAwesomeIcon icon={faHome} />
-							<span className="label">{t('home')}</span>
-						</NavLink>
-						<NavLink to="/my/notifications" className="item disabled" activeClassName="active">
-							<FontAwesomeIcon icon={faBell} />
-							<span className="label">{t('notifications')}</span>
-						</NavLink>
-						<NavLink to="/explore" className="item disabled" activeClassName="active">
-							<FontAwesomeIcon icon={faSearch} />
-							<span className="label">{t('explore')}</span>
-						</NavLink>
-						<NavLink to="/my/messaging" className="item disabled" activeClassName="active">
-							<FontAwesomeIcon icon={faComments} />
-							<span className="label">{t('messaging')}</span>
-						</NavLink>
-						<NavLink to="/my/drive" className="item disabled" activeClassName="active">
-							<FontAwesomeIcon icon={faCloud} />
-							<span className="label">{t('drive')}</span>
-						</NavLink>
+						<Item exact to="/" icon={faHome} label={t('home')} />
+						{signedIn ? <Item disabled to="/my/notifications" icon={faBell} label={t('notifications')} /> : null}
+						<Item disabled to="/explore" icon={faSearch} label={t('explore')} />
+						{signedIn ? <Item disabled to="/my/messaging" icon={faComments} label={t('messaging')} /> : null}
+						{signedIn ? <Item disabled to="/my/drive" icon={faCloud} label={t('drive')} /> : null}
 						<div className="divider" />
-						<NavLink to="/announcements" className="item disabled" activeClassName="active">
-							<FontAwesomeIcon icon={faBroadcastTower} />
-							<span className="label">{t('announcements')}</span>
-						</NavLink>
-						<NavLink to="/my/settings" className="item" activeClassName="active">
-							<FontAwesomeIcon icon={faCog} />
-							<span className="label">{t('settings')}</span>
-						</NavLink>
+						<Item disabled to="/announcements" icon={faBroadcastTower} label={t('announcements')} />
+						<Item to="/my/settings" icon={faCog} label={t('settings')} />
 					</>
 				}
-				<button className="_button command toggler" onClick={() => setToggle(!toggle)}>
+				{signedIn ? <button className="_button command toggler" onClick={() => setToggle(!toggle)}>
 					<FontAwesomeIcon icon={toggle ? faChevronCircleUp : faChevronCircleDown} />
-				</button>
+				</button> : null}
 			</div>
 			<div className="content _container">
 				{props.children}

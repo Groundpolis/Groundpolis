@@ -18,6 +18,32 @@
 		background: var(--buttonHoverBg);
 	}
 
+	&.primary {
+		color: white;
+		background: var(--accent);
+
+		&:not(:disabled):hover {
+			background: var(--X8);
+		}
+	
+		&:not(:disabled):active {
+			background: var(--X9);
+		}
+	}
+
+	&.danger {
+		color: white;
+		background: #f44336;
+
+		&:not(:disabled):hover {
+			background: #b71c1c;
+		}
+	
+		&:not(:disabled):active {
+			background: #b71c1c;
+		}
+	}
+
 	&.command {
 		display: inline-block;
 		background: transparent;
@@ -29,16 +55,21 @@
 		border-radius: 100%;
 	}
 
-	&.primary {
-		color: white;
-		background: var(--accent);
+	&.static {
+		border: none;
+		background: transparent;
+		text-align: left;
 
 		&:not(:disabled):hover {
-			background: var(--X8);
+			background: var(--buttonHoverBg);
 		}
-	
+
 		&:not(:disabled):active {
-			background: var(--X9);
+			background: var(--buttonHoverBg);
+		}
+
+		&.danger {
+			color: #ef5350;
 		}
 	}
 }
