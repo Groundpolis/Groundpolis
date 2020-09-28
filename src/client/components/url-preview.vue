@@ -5,6 +5,11 @@
 </div>
 <div v-else-if="tweetId && tweetExpanded" class="twitter" ref="twitter">
 	<iframe ref="tweet" scrolling="no" frameborder="no" :style="{ position: 'relative', left: `${tweetLeft}px`, width: `${tweetLeft < 0 ? 'auto' : '100%'}`, height: `${tweetHeight}px` }" :src="`https://platform.twitter.com/embed/index.html?embedId=${embedId}&amp;hideCard=false&amp;hideThread=false&amp;lang=en&amp;theme=${$store.state.device.darkMode ? 'dark' : 'light'}&amp;id=${tweetId}`"></iframe>
+	<div class="expandTweet" v-if="tweetId">
+		<a @click="tweetExpanded = false">
+			<fa :icon="faTwitter"/> {{ $t('hide') }}
+		</a>
+	</div>
 </div>
 <div v-else class="mk-url-preview" v-size="{ max: [400, 350] }">
 	<transition name="zoom" mode="out-in">
