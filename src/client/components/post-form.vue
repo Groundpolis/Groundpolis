@@ -224,7 +224,7 @@ export default Vue.extend({
 			return {
 				id: '',
 				createdAt: new Date(),
-				text: this.text,
+				text: this.text + (this.useBroadcast ? ' ' + this.broadcastText : ''),
 				cw: this.useCw ? this.cw : undefined,
 				visibility: this.visibility,
 				user: this.$store.state.i,
