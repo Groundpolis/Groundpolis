@@ -330,8 +330,6 @@ export default Vue.extend({
 				return;
 			}
 			if (document.visibilityState === 'visible') {
-				this.$root.stream.send('readNotification', { id: notification.id });
-
 				if (this.$store.state.device.showToast) {
 					this.$root.new(await import('./components/toast.vue').then(m => m.default), { notification });
 				}
