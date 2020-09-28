@@ -615,6 +615,13 @@ export default Vue.extend({
 		},
 
 		async post() {
+			if (this.reply && this.reply.user.host !== null && this.localOnly) {
+				await this.$root.dialog({
+					type: 'error',
+					text: this.$t('errorLocalOnlyToRemote'),
+				});
+				return;
+			}
 			const canceled = this.$store.state.device.showNoteConfirm && (await this.$root.dialog({
 				type: 'question',
 				text: this.$t('noteConfirm'),
