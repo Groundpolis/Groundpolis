@@ -74,7 +74,7 @@ module.exports = {
 	output: {
 		path: __dirname + '/built/client/assets',
 		filename: `react.${meta.version}.js`,
-		publicPath: `/assets/`
+		publicPath: '/assets/'
 	},
 	plugins: [
 		new webpack.ProgressPlugin({}),

@@ -20,7 +20,8 @@ export const App = () => (
 				<Page exact path="/" name="Index" />
 				{ /* <Page exact path='/signup' name='Signup' /> */ }
 				{ /* <Page exact path='/signin' name='Signin' /> */ }
-				<Page path="*" name="NotFound"/>
+				<Page path="/my/settings" name="Settings" />
+				<Page path="*" name="NotFound" />
 			</Switch>
 		</Router>
 	</ErrorBoundary>

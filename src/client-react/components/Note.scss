@@ -4,7 +4,7 @@
 		width: 60px;
 		height: 60px;
 		border-radius: 100%;
-		margin-right: 16px;
+		margin-right: var(--margin);
 	}
 	> .right {
 		> header {

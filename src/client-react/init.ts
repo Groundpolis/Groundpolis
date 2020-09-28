@@ -32,7 +32,6 @@ import { setI18nContexts, setLocale } from './scripts/i18n';
 	//#endregion
 
 	await count(clientDb.i18n).then(async n => {
-		console.log(n);
 		if (n === 0) {
 			setI18nContexts(lang, version);
 			return;
