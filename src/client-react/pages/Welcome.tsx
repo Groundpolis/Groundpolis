@@ -12,6 +12,7 @@ import Spinner from '../components/Spinner';
 
 import '../styles/style.scss';
 import './Welcome.scss';
+import { Meta } from '../../models/entities/meta';
 
 function stopBeta() {
 	Cookies.remove('fe');
@@ -19,15 +20,16 @@ function stopBeta() {
 }
 
 export default function Welcome() {
-	const [meta, setMeta] = useState<Record<string, any> | null>(null);
+	const [meta, setMeta] = useState<Meta | null>(null);
 	const [stats, setStats] = useState<Record<string, any> | null>(null);
 	const [tl, setTl] = useState<any[] | null>(null);
 
 	useEffect(() => {
 		(async () => {
 			setStats(await api('stats'));
-			setMeta(await api('meta'));
-			setTl(await api('notes/featured'));
+			const m = await api('meta');
+			setMeta(m);
+			setTl(await api(m.disableFeatured ? 'notes/local-timeline' : 'notes/featured'));
 		})();
 	}, []);
 
@@ -66,7 +68,7 @@ export default function Welcome() {
 					</nav>
 				</article>
 				<article>
-					<header className="_bulk"><h2>{t('welcomeFeatured')}</h2></header>
+					<header className="_bulk"><h2>{t(meta.disableFeatured ? 'welcomeTimeline' : 'welcomeFeatured')}</h2></header>
 					<section className="_box">
 						<div className="_vstack">
 							{tl ? tl.map(note => <Note key={note.id} note={note} />) : <Spinner relative />}
