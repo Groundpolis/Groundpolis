@@ -7,7 +7,7 @@
 		<div :data-count="mediaList.filter(media => previewable(media)).length" :style="gridInnerStyle">
 			<template v-for="media in mediaList">
 				<x-video :video="media" :key="media.id" v-if="media.type.startsWith('video')"/>
-				<x-image :image="media" :key="media.id" v-else-if="media.type.startsWith('image')" :raw="raw"/>
+				<x-image :image="media" :key="media.id" v-else-if="media.type.startsWith('image')" :other="mediaList.filter(m => m.type.startsWith('image'))" :raw="raw"/>
 			</template>
 		</div>
 	</div>
@@ -40,6 +40,11 @@ export default Vue.extend({
 		return {
 			gridInnerStyle: {},
 			sizeWaiting: false
+		}
+	},
+	watch: {
+		parentElement() {
+			this.size();
 		}
 	},
 	mounted() {
@@ -80,11 +85,6 @@ export default Vue.extend({
 					this.gridInnerStyle = {};
 				}
 			});
-		}
-	},
-	watch: {
-		parentElement() {
-			this.size();
 		}
 	}
 });

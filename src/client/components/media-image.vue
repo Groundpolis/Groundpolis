@@ -37,6 +37,10 @@ export default Vue.extend({
 			type: Object,
 			required: true
 		},
+		other: {
+			type: Array,
+			required: false,
+		},
 		raw: {
 			default: false
 		}
@@ -72,7 +76,8 @@ export default Vue.extend({
 				window.open(this.image.url, '_blank');
 			} else {
 				const viewer = this.$root.new(ImageViewer, {
-					image: this.image
+					image: this.image,
+					other: this.other,
 				});
 				this.$once('hook:beforeDestroy', () => {
 					viewer.close();
