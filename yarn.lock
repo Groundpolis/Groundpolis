@@ -6110,6 +6110,11 @@ lodash.clonedeep@^4.3.2:
   resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
   integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
 
+lodash.debounce@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
+  integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
+
 lodash.defaults@^4.0.1, lodash.defaults@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/lodash.defaults/-/lodash.defaults-4.2.0.tgz#d09178716ffea4dde9e5fb7b37f6f0802274580c"
@@ -8385,6 +8390,13 @@ re2@1.15.4:
     install-artifact-from-github "^1.0.2"
     nan "^2.14.1"
     node-gyp "^7.0.0"
+
+react-bottom-scroll-listener@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-bottom-scroll-listener/-/react-bottom-scroll-listener-4.1.0.tgz#9a58b98d7004fa70a502045f6259f7fa9e56f221"
+  integrity sha512-r5rdOj1MvMv6cPCQiBg9bkmjyFuje/oFYzbb66awyGCxW3d95jyIVEcEPDw6/ajFAvg8xnkkf+gCUWxbVjHE+g==
+  dependencies:
+    lodash.debounce "^4.0.8"
 
 react-dom@16.13.1:
   version "16.13.1"

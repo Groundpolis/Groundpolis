@@ -19,6 +19,8 @@ export default function Settings() {
 }
 
 function optoutBeta() { 
-	Cookies.remove('fe');
-	location.href = '/';
+	if (confirm('Are you sure to opt out the beta client?')) {
+		Cookies.remove('fe');
+		location.href = '/';
+	}
 }

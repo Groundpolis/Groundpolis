@@ -18,6 +18,7 @@ import './Note.scss';
 export default function Note(props: { note: PackedNote }) {
 	const [ cwOpen, setCwOpen ] = useState(false);
 	const user = props.note.user as PackedUser;
+	const isMine = (reaction: string) => props.note.myReaction === reaction;
 	return (
 		<article className="_com note">
 			<img src={user.avatarUrl} className="avatar" alt={getAcct(user)} />
@@ -40,7 +41,7 @@ export default function Note(props: { note: PackedNote }) {
 					{
 						Object.entries(props.note.reactions as Record<string, number>)
 							.map(([ reaction, count ]) => (
-								<button key={reaction} className={ `_button reaction ${props.note.myReaction === reaction ? 'primary' : ''}`}>
+								<button key={reaction} className={ `_button reaction ${isMine(reaction) ? 'primary' : ''}`}>
 									{reaction} {count}
 								</button>
 							))
@@ -53,8 +54,8 @@ export default function Note(props: { note: PackedNote }) {
 					<button className="_button command">
 						<FontAwesomeIcon icon={faRetweet}/>
 					</button>
-					<button className="_button command">
-						<FontAwesomeIcon icon={faPlus}/>
+					<button className="_button command" style={{ color: props.note.myReaction ? 'var(--accent' : undefined }}>
+						<FontAwesomeIcon icon={props.note.myReaction ? faMinus : faPlus}/>
 					</button>
 					<button className="_button command">
 						<FontAwesomeIcon icon={faEllipsisV}/>

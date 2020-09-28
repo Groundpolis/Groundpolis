@@ -226,6 +226,7 @@
 		"ratelimiter": "3.4.1",
 		"re2": "1.15.4",
 		"react": "16.13.1",
+		"react-bottom-scroll-listener": "4.1.0",
 		"react-dom": "16.13.1",
 		"react-md-spinner": "1.0.0",
 		"react-router": "5.2.0",
