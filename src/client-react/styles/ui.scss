@@ -10,6 +10,12 @@
 	text-decoration: none;
 	cursor: pointer;
 
+	&:disabled {
+		pointer-events: none;
+		color: var(--fg);
+		opacity: 0.5;
+	}
+
 	&:not(:disabled):hover {
 		background: var(--buttonHoverBg);
 	}

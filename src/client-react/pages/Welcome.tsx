@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
-import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import { faUser, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Fa, FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faPencilAlt, faComments, faFireAlt } from '@fortawesome/free-solid-svg-icons';
 
 import Icon from '../components/Icon';
 import Note from '../components/Note';
@@ -68,8 +68,11 @@ export default function Welcome() {
 					</nav>
 				</article>
 				<article>
-					<header className="_bulk"><h2>{t(meta.disableFeatured ? 'welcomeTimeline' : 'welcomeFeatured')}</h2></header>
-					<section className="_box">
+					<header className="_bulk"><h2>
+						<FontAwesomeIcon icon={meta.disableFeatured ? faComments : faFireAlt} style={{ marginRight: '16px' }}/>
+						{t(meta.disableFeatured ? 'welcomeTimeline' : 'welcomeFeatured')}
+					</h2></header>
+					<section className="_box timeline">
 						<div className="_vstack">
 							{tl ? tl.map(note => <Note key={note.id} note={note} />) : <Spinner relative />}
 						</div>

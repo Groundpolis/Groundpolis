@@ -16,6 +16,12 @@
 	}
 	> footer {
 		margin-top: var(--margin);
+		padding: var(--margin);
+	}
+
+	.timeline {
+		height: 570px;
+		overflow: auto;
 	}
 }
 

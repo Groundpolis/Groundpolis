@@ -106,7 +106,7 @@
 			padding: 0 16px;
 			font-weight: normal;
 
-			&.disabled {
+			&.disabled, &:disabled {
 				pointer-events: none;
 				opacity: 0.5;
 			}

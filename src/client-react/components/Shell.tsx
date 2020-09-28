@@ -61,7 +61,7 @@ export default function Shell(props: {
 					{props.header ?? <DefaultHeader title={props.title ?? ''} icon={props.icon} />}
 				</div>
 				<div className="right">
-					<button className="_button command primary">
+					<button disabled className="_button command primary">
 						<FontAwesomeIcon icon={faSlidersH} />
 					</button>
 				</div>
@@ -80,10 +80,10 @@ export default function Shell(props: {
 				}
 				<div className="divider" />
 				{toggle ? <>
-					<button className="_button command item">
+					<button disabled className="_button command item">
 						<span className="label">{t('createAccount')}</span>
 					</button>
-					<button className="_button command item">
+					<button disabled className="_button command item">
 						<span className="label">{t('addAcount')}</span>
 					</button>
 					<button className="_button command item danger" onClick={logout}>{t('logout')}</button>
