@@ -50,9 +50,21 @@
 		border: none;
 		padding: 4px;
 		color: inherit;
-		width: 32px;
-		height: 32px;
+		min-width: 32px;
+		min-height: 32px;
 		border-radius: 100%;
+
+		&:not(:disabled):hover {
+			background: var(--buttonHoverBg);
+		}
+
+		&:not(:disabled):active {
+			background: var(--buttonHoverBg);
+		}
+
+		&.primary {
+			color: var(--accent);
+		}
 	}
 
 	&.static {

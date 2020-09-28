@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faBell, faBroadcastTower, faChevronCircleDown, faChevronCircleUp, faCloud, faCog, faComments, faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faBell, faBroadcastTower, faChevronCircleDown, faChevronCircleUp, faCloud, faCog, faComments, faHome, faSearch, faSlidersH } from '@fortawesome/free-solid-svg-icons';
 
 import './Shell.scss';
 import FAB from './FAB';
@@ -60,7 +60,9 @@ export default function Shell(props: {
 					{props.header ?? <DefaultHeader title={props.title ?? ''} icon={props.icon} />}
 				</div>
 				<div className="right">
-					<div className="_class"></div>
+					<button className="_button command primary">
+						<FontAwesomeIcon icon={faSlidersH} />
+					</button>
 				</div>
 			</header>
 			<div className="sidebar">
