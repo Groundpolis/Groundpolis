@@ -696,6 +696,7 @@ showUnlistedNotesInLTL: "未収載・ホーム・ダイレクトノートもLTL�
 showUnlistedNotesInLTLDesc: "フォローしているローカルユーザーのものであれば、パブリック公開範囲以外のノートをローカルタイムラインに流すようにします"
 getStarted: "アカウントを作成して、今すぐはじめよう。"
 returnHome: "ホームに戻る"
+optoutNewFE: "通常のウェブ クライアントに戻す"
 
 _labs:
   title: "ラボ"
@@ -770,7 +771,6 @@ _paint:
     rectFill: "四角塗りつぶし"
     circle: "円"
     circleFill: "円塗りつぶし"
-
 
 _theme:
   explore: "テーマを探す"
@@ -1438,7 +1438,7 @@ _pages:
       _for:
         arg1: "回数"
         arg2: "処理"
-    typeError: "スロット{slot}は\"{expect}\"を受け付けますが、\"{actual}\"が入れられています！"
+    typeError: 'スロット{slot}は"{expect}"を受け付けますが、"{actual}"が入れられています！'
     thereIsEmptySlot: "スロット{slot}が空です！"
     types:
       string: "テキスト"

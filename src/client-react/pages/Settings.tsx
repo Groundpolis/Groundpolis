@@ -5,6 +5,8 @@ import Cookies from 'js-cookie';
 import Shell from '../components/Shell';
 import { t } from '../scripts/i18n';
 import { applyTheme, builtinThemes } from '../scripts/theme';
+import { clientDb, set } from '../db';
+import { langs } from '../config';
 
 export default function Settings() {
 	const [themeId, setThemeId] = useState(localStorage['themeId']);
@@ -17,6 +19,15 @@ export default function Settings() {
 		}
 	};
 
+	const [lang, setLang] = useState(localStorage['lang']);
+	const langChanged = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setLang(e.target.value);
+		localStorage.setItem('lang', e.target.value);
+
+		return set('_version_', `changeLang-${(new Date()).toJSON()}`, clientDb.i18n)
+			.then(() => location.reload());
+	};
+
 	const darkThemes = builtinThemes.filter(t => t.base === 'dark');
 	const lightThemes = builtinThemes.filter(t => t.base === 'light');
 
@@ -27,8 +38,15 @@ export default function Settings() {
 				<div className="_box">
 					<h1 className="_bulk">{t('general')}</h1>
 					<div className="_vstack">
-						<button className="_button static" onClick={optoutBeta}>{t('optoutBeta')}</button>
+						<button className="_button static" onClick={optoutBeta}>{t('optoutNewFE')}</button>
 						<button className="_button static danger" onClick={logout}>{t('logout')}</button>
+						<select value={lang} onChange={langChanged}>
+							{
+								langs.map(lang => (
+									<option key={lang[0]} value={lang[0]}>{lang[1]}</option>
+								))
+							}
+						</select>
 					</div>
 				</div>
 

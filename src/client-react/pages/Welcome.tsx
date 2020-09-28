@@ -76,7 +76,7 @@ export default function Welcome() {
 			</div>
 			<footer className="_bulk _label _center">
 				<a href="https://github.com/Groundpolis/Groundpolis">Powered by Groundpolis</a>・
-				<a href="javascript:void(0)" onClick={() => stopBeta()}>{t('optoutBeta')}</a>
+				<a href="javascript:void(0)" onClick={() => stopBeta()}>{t('optoutNewFE')}</a>
 			</footer>
 		</article>
 	);

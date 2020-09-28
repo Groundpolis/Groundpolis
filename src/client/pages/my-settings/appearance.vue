@@ -107,12 +107,7 @@
 		<mk-radio v-model="fontSize" value="large"><span style="font-size: 18px;">Aa</span></mk-radio>
 		<mk-radio v-model="fontSize" value="veryLarge"><span style="font-size: 20px;">Aa</span></mk-radio>
 	</div>
-	<!-- <div class="_content">
-		<div>{{ $t('experimentalFeatures') }}</div>
-		<mk-info warn>{{ $t('experimentalFeaturesDescription') }}</mk-info>
-	</div> -->
 </section>
-	<!-- <mk-button @click="cacheClear()" primary style="margin: var(--margin) auto;">{{ $t('cacheClear') }}</mk-button> -->
 </template>
 
 <script lang="ts">

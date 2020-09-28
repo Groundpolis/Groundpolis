@@ -33,11 +33,11 @@ import { setI18nContexts, setLocale } from './scripts/i18n';
 
 	await count(clientDb.i18n).then(async n => {
 		if (n === 0) {
-			setI18nContexts(lang, version);
+			await setI18nContexts(lang, version);
 			return;
 		}
 		if ((await get('_version_', clientDb.i18n) !== version)) {
-			setI18nContexts(lang, version);
+			await setI18nContexts(lang, version);
 			return;
 		}
 
