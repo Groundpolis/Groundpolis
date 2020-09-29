@@ -175,8 +175,11 @@ export class NoteRepository extends Repository<Note> {
 				const tmp = await Promise.all(
 					accts
 						.map(acct => ({ acct, parsed: parseAcct(acct) }))
-						.map(async (pair) => ({ acct: pair.acct, user: await Users.pack(await resolveUser(pair.parsed.username.toLowerCase(), pair.parsed.host || note.userHost )) }))
-				).then(users => users.filter((u) => u.user !== undefined).map(u => {
+						.map(async ({ acct, parsed }) => {
+							const user = await resolveUser(parsed.username.toLowerCase(), parsed.host || note.userHost).catch(() => null);
+							return ({ acct, user: user ? await Users.pack(user) : undefined })
+						})
+				).then(users => users.filter((u) => u.user != null).map(u => {
 					const res = {
 						name: u.acct,
 						url: u.user?.avatarUrl || ''

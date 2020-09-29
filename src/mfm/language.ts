@@ -229,7 +229,7 @@ export const mfmLanguage = P.createLanguage({
 		});
 	},
 	emoji: () => {
-		const name = P.regexp(/:(@?[a-z0-9_+-]+):/i, 1).map(x => createLeaf('emoji', { name: x }));
+		const name = P.regexp(/:(@?[\w-]+(?:@[\w.-]+)?):/i, 1).map(x => createLeaf('emoji', { name: x }));
 		const code = P.regexp(emojiRegex).map(x => createLeaf('emoji', { emoji: x }));
 		return P.alt(name, code);
 	},
