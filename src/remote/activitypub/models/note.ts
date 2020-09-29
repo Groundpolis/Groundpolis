@@ -27,6 +27,8 @@ import { createMessage } from '../../../services/messages/create';
 import { parseAudience } from '../audience';
 import { extractApMentions } from './mention';
 import DbResolver from '../db-resolver';
+import extractEmojisFromMfm from '../../../misc/extract-emojis';
+import { parse } from '../../../mfm/parse';
 
 const logger = apLogger;
 
@@ -131,7 +133,7 @@ export async function createNote(value: string | IObject, resolver?: Resolver, s
 	const reply: Note | null = note.inReplyTo
 		? await resolveNote(note.inReplyTo, resolver).then(x => {
 			if (x == null) {
-				logger.warn(`Specified inReplyTo, but nout found`);
+				logger.warn('Specified inReplyTo, but nout found');
 				throw new Error('inReplyTo not found');
 			} else {
 				return x;
@@ -236,6 +238,13 @@ export async function createNote(value: string | IObject, resolver?: Resolver, s
 	});
 
 	const apEmojis = emojis.map(emoji => emoji.name);
+
+	const f = parse(text);
+
+	if (f) {
+		const avatarEmojis = extractEmojisFromMfm(f).filter(e => e.startsWith('@'));
+		apEmojis.push(...avatarEmojis);
+	}
 
 	const poll = await extractPollFromQuestion(note, resolver).catch(() => undefined);
 
