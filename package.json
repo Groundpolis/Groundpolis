@@ -13,7 +13,7 @@
 	"main": "./index.js",
 	"scripts": {
 		"bs": "npm run build && npm run start",
-		"build": "run-p rbuild vbuild",
+		"build": "run-s rwebpack vwebpack gulp",
 		"vbuild": "run-s vwebpack gulp",
 		"rbuild": "run-s rwebpack gulp",
 		"build-product": "cross-env NODE_ENV=production webpack && gulp build",
