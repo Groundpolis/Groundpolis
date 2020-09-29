@@ -80,7 +80,7 @@ export default function Settings() {
 
 function optoutBeta() { 
 	if (confirm('Are you sure to opt out the beta client?')) {
-		Cookies.remove('fe');
+		localStorage.removeItem('fe');
 		location.href = '/';
 	}
 }

@@ -15,7 +15,7 @@ import './Welcome.scss';
 import { Meta } from '../../models/entities/meta';
 
 function stopBeta() {
-	Cookies.remove('fe');
+	localStorage.removeItem('fe');
 	location.href = '/';
 }
 

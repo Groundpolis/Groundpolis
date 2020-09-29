@@ -367,7 +367,6 @@ router.get('/flush', async ctx => {
 router.get('(.*)', async ctx => {
 	const meta = await fetchMeta();
 	await ctx.render('base', {
-		fe: ctx.cookies.get('fe') === 'react' ? 'react' : 'app',
 		img: meta.bannerUrl,
 		title: meta.name || 'Groundpolis',
 		instanceName: meta.name || 'Groundpolis',
