@@ -28,15 +28,15 @@ html(style="--bg: #222222; --fg: white")
 
 		block og
 			meta(property='og:image' content=img)
-			if fe !== 'react'
-				style
-					include ../../../../built/client/assets/style.css
-			else
-				style.
-					html {
-						background: var(--bg);
-						color: var(--fg);
-					}
+		if fe !== 'react'
+			style
+				include ../../../../built/client/assets/style.css
+		else
+			style.
+				html {
+					background: var(--bg);
+					color: var(--fg);
+				}
 
 		script(src=`/assets/${fe}.${version}.js` async defer)
 		script.
