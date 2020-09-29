@@ -171,7 +171,6 @@ export class NoteRepository extends Repository<Note> {
 			}
 
 			if (accts.length > 0) { 
-				console.log(note.userHost);
 				const tmp = await Promise.all(
 					accts
 						.map(acct => ({ acct, parsed: parseAcct(acct) }))

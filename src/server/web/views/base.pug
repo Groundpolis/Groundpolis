@@ -28,10 +28,9 @@ html(style="--bg: #222222; --fg: white")
 
 		block og
 			meta(property='og:image' content=img)
-
 			if fe !== 'react'
 				style
-					include ./../../../../built/client/assets/style.css
+					include ../../../../built/client/assets/style.css
 			else
 				style.
 					html {
