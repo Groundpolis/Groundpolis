@@ -147,11 +147,8 @@ os.init(async () => {
 	});
 	//#endregion
 
-	console.log(store.state.i?.id);
-	console.log(localStorage['i']);
-
 	// vuex に i があるけど、ストレージに i がない場合用意する(React FE Beta 向け)
-	if (!localStorage['i'] !== store.state.i?.token) { 
+	if (!localStorage['i'] !== store.state.i?.token && store.state.i) { 
 		localStorage['i'] = store.state.i?.token;
 	}
 	

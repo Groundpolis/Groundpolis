@@ -64,7 +64,7 @@ export default class MiOS extends EventEmitter {
 			let me = null;
 
 			// Return when not signed in
-			if (token == null || token === 'null') {
+			if (token == null || token === 'null' || token === 'undefined') {
 				return done();
 			}
 
