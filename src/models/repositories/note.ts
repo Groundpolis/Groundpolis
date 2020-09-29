@@ -11,6 +11,7 @@ import { parse } from '../../mfm/parse';
 import { Emoji } from '../entities/emoji';
 import { concat } from '../../prelude/array';
 import parseAcct from '../../misc/acct/parse';
+import { resolveUser } from '../../remote/resolve-user';
 
 export type PackedNote = SchemaType<typeof packedNoteSchema>;
 
@@ -173,8 +174,11 @@ export class NoteRepository extends Repository<Note> {
 				const tmp = await Promise.all(
 					accts
 						.map(acct => ({ acct, parsed: parseAcct(acct) }))
-						.map(async (pair) => ({ acct: pair.acct, user: await Users.pack(await Users.findOne({ usernameLower: pair.parsed.username.toLowerCase(), host: pair.parsed.host })) }))
-				).then(users => users.filter((u) => u.user !== undefined).map(u => {
+						.map(async ({ acct, parsed }) => {
+							const user = await resolveUser(parsed.username.toLowerCase(), parsed.host || note.userHost).catch(() => null);
+							return ({ acct, user: user ? await Users.pack(user) : undefined })
+						})
+				).then(users => users.filter((u) => u.user != null).map(u => {
 					const res = {
 						name: u.acct,
 						url: u.user?.avatarUrl || ''

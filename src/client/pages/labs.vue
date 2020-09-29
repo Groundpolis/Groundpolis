@@ -18,10 +18,10 @@
 				<template #desc>{{ $t('showUnlistedNotesInLTLDesc') }}</template>
 			</mk-switch>
 
-			<mk-switch v-model="reactFrontend">
+			<!-- <mk-switch v-model="reactFrontend">
 				{{ $t('_labs.tryNewApp') }}
 				<template #desc>{{ $t('_labs.tryNewAppDesc') }}</template>
-			</mk-switch>
+			</mk-switch> -->
 		</div>
 	</div>
 </div>
