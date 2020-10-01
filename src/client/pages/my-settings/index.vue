@@ -40,6 +40,12 @@
 				{{ $t('chooseReaction') }}
 			</mk-button>
 		</div>
+		<div class="_content">
+			<div>{{ $t('renoteButtonMode') }}</div>
+			<mk-select v-model="renoteButtonMode">
+				<option :value="v" v-for="v in [ 'choose', 'renote', 'quote', 'renoteQuote' ]" :key="v">{{ $t(`_renoteButtonMode.${v}`) }}</option>
+			</mk-select>
+		</div>
 	</section>
 
 	<x-theme class=" _vMargin"/>
@@ -159,6 +165,10 @@ export default Vue.extend({
 		stealReaction: {
 			get() { return this.$store.state.settings.stealReaction; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'stealReaction', value }); }
+		},
+		renoteButtonMode: {
+			get() { return this.$store.state.settings.renoteButtonMode; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'renoteButtonMode', value }); }
 		},
 		deckAlwaysShowMainColumn: {
 			get() { return this.$store.state.device.deckAlwaysShowMainColumn; },

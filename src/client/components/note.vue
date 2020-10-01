@@ -531,37 +531,55 @@ export default Vue.extend({
 		},
 
 		renote(viaKeyboard = false) {
+			const renote = async () => {
+				const canceled = this.$store.state.device.showRenoteConfirm && (await this.$root.dialog({
+					type: 'question',
+					text: this.$t('renoteConfirm'),
+					showCancelButton: true
+				})).canceled;
+				if (canceled) return;
+
+				(this as any).$root.api('notes/create', {
+					renoteId: this.appearNote.id
+				});
+			};
+			const quote = () => {
+				this.$root.post({
+					renote: this.appearNote,
+				});
+			};
+
 			if (this.preview) return;
 			pleaseLogin(this.$root);
 			this.blur();
-			this.$root.menu({
-				items: [{
-					text: this.$t('renote'),
-					icon: faRetweet,
-					action: async () => {
-						const canceled = this.$store.state.device.showRenoteConfirm && (await this.$root.dialog({
-							type: 'question',
-							text: this.$t('renoteConfirm'),
-							showCancelButton: true
-						})).canceled;
-						if (canceled) return;
-
-						(this as any).$root.api('notes/create', {
-							renoteId: this.appearNote.id
-						});
-					}
-				}, {
-					text: this.$t('quote'),
-					icon: faQuoteRight,
-					action: () => {
-						this.$root.post({
-							renote: this.appearNote,
-						});
-					}
-				}],
-				source: this.$refs.renoteButton,
-				viaKeyboard
-			});
+			switch (this.$store.state.settings.renoteButtonMode) {
+				case 'choose':
+					this.$root.menu({
+						items: [{
+							text: this.$t('renote'),
+							icon: faRetweet,
+							action: renote,
+						}, {
+							text: this.$t('quote'),
+							icon: faQuoteRight,
+							action: quote,
+						}],
+						source: this.$refs.renoteButton,
+						viaKeyboard
+					});
+					break;
+				case 'renote':
+					renote();
+					break;
+				case 'quote':
+					quote();
+					break;
+				case 'renoteQuote':
+					renote();
+					quote();
+					break;
+			}
+			
 		},
 
 		renoteDirectly() {

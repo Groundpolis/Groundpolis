@@ -31,6 +31,7 @@ export const defaultSettings = {
 	stealRule: 1,
 	stealReaction: '⭐️',
 	injectUnlistedNoteInLTL: false,
+	renoteButtonMode: 'choose' as 'choose' | 'renote' | 'quote' | 'renoteQuote'
 };
 
 export const defaultDeviceUserSettings = {

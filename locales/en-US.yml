@@ -652,6 +652,13 @@ getStarted: "Create your account and get started now!"
 returnHome: "Return to Home"
 optoutNewFE: "Return to a stable web client"
 errorLocalOnlyToRemote: "You cannot make replies to remote users local only."
+renoteButtonMode: "Renote-Button Behavior"
+
+_renoteButtonMode:
+  choose: "Choose always"
+  renote: "Renote"
+  quote: "Open a form to quote"
+  renoteQuote: "Renote and open a form to quote"
 
 _serverDisconnectedBehavior:
   reload: "Automatically reload"
