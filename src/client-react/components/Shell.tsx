@@ -7,18 +7,11 @@ import './Shell.scss';
 import FAB from './FAB';
 import { api, isSignedIn } from '../utils/api';
 import { t } from '../utils/i18n';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import getAcct from '../../misc/acct/render';
 import { PackedUser } from '../../models/repositories/user';
-import Spinner from './Spinner';
 import Icon from './Icon';
-
-const DefaultHeader = (props: { title: string, icon?: IconProp }) => (
-	<span className="title">
-		{props.icon ? <FontAwesomeIcon icon={props.icon} /> : null}
-		{props.title}
-	</span >
-);
+import { ShellFAB, ShellHeader } from '../teleporters';
 
 function Item(props: { disabled?: boolean, exact?: boolean, to: string, icon?: IconProp, label: string }) { 
 	return (
@@ -30,12 +23,8 @@ function Item(props: { disabled?: boolean, exact?: boolean, to: string, icon?: I
 }
 
 export default function Shell(props: {
-	title?: string,
-	icon?: IconProp,
-	header?: React.ReactElement,
+	zenMode?: boolean,
 	children?: React.ReactElement,
-	fabIcon?: IconProp,
-	onFabClicked?: () => void,
 }) {
 	const [i, setI] = useState(null as PackedUser | null);
 	const [toggle, setToggle] = useState(false);
@@ -49,7 +38,7 @@ export default function Shell(props: {
 		})();
 	}, []);
 
-	return (
+	return props.zenMode ? props.children : (
 		<div className="_com shell">
 			<header className="header">
 				<div className="left">
@@ -58,7 +47,7 @@ export default function Shell(props: {
 					</button>
 				</div>
 				<div className="center">
-					{props.header ?? <DefaultHeader title={props.title ?? ''} icon={props.icon} />}
+					<ShellHeader.Target />
 				</div>
 				<div className="right">
 					<button disabled className="_button command primary">
@@ -105,7 +94,7 @@ export default function Shell(props: {
 			<div className="content _container">
 				{props.children}
 			</div>
-			{props.fabIcon ? <FAB icon={props.fabIcon} onClick={props.onFabClicked ?? (() => { })} /> : null}
+			<ShellFAB.Target/>
 		</div>
 	);
 }

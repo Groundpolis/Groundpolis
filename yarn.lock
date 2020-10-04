@@ -8449,6 +8449,11 @@ react-router@5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
+react-teleporter@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-teleporter/-/react-teleporter-2.1.1.tgz#55db07f4e917a209cae10647a5b1ce0bbede3c38"
+  integrity sha512-jfbKNYecyXFVG6kr7m4OS5c3cmvEf6gGpE0xvsRtfLsX5ET/fsx5Lsf9KbmqtmzAJopRcrgmYeHk0fmoW3VdgQ==
+
 react@16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"

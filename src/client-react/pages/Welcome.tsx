@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon as Fa, FontAwesomeIcon } from '@fortawesome/react-fontawesome';

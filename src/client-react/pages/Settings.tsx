@@ -1,12 +1,12 @@
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
-import Cookies from 'js-cookie';
 
-import Shell from '../components/Shell';
 import { t } from '../utils/i18n';
 import { applyTheme, builtinThemes } from '../utils/theme';
 import { clientDb, set } from '../db';
 import { langs } from '../config';
+import { ShellHeader } from '../teleporters';
+import { DefaultHeader } from '../components/DefaultHeader';
 
 export default function Settings() {
 	const [themeId, setThemeId] = useState(localStorage['themeId']);
@@ -32,7 +32,11 @@ export default function Settings() {
 	const lightThemes = builtinThemes.filter(t => t.base === 'light');
 
 	return (
-		<Shell title={t('settings')} icon={faCog}>
+		<>
+			<ShellHeader.Source>
+				<DefaultHeader title={t('settings')} icon={faCog} />
+			</ShellHeader.Source>
+
 			<article className="_vstack">
 
 				<article className="_box">
@@ -74,7 +78,7 @@ export default function Settings() {
 					<button className="_button static" onClick={optoutBeta}>{t('optoutNewFE')}</button>
 				</article>
 			</article>
-		</Shell>
+		</>
 	);
 }
 

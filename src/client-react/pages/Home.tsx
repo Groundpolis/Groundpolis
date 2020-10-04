@@ -4,12 +4,13 @@ import { faPencilAlt, faComments } from '@fortawesome/free-solid-svg-icons';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 
 import Note from '../components/Note';
-import Shell from '../components/Shell';
 import Spinner from '../components/Spinner';
 import { api } from '../utils/api';
 import { t } from '../utils/i18n';
-import { PackedNote } from '../../models/repositories/note';
 import { getStream } from '../utils/stream';
+import FAB from '../components/FAB';
+import { ShellFAB, ShellHeader } from '../teleporters';
+import { DefaultHeader } from '../components/DefaultHeader';
 
 const fabClicked = () => {
 	const placeholder = t('_postForm._placeholders.' + rndstr({ length: 1, chars: 'a-f' }));
@@ -57,8 +58,16 @@ export default function Home() {
 	};
 
 	return (
-		<Shell title={t('timeline')} icon={faComments} fabIcon={faPencilAlt} onFabClicked={fabClicked}>
-			{ tl ? <Timeline notes={tl} onBottom={onBottom} /> : <Spinner relative /> }
-		</Shell>
+		<>
+			<ShellHeader.Source>
+				<DefaultHeader title={t('timeline')} icon={faComments} />
+			</ShellHeader.Source>
+
+			{ tl ? <Timeline notes={tl} onBottom={onBottom} /> : <Spinner relative />}
+
+			<ShellFAB.Source>
+				<FAB icon={faPencilAlt} onClick={fabClicked} />
+			</ShellFAB.Source>
+		</>
 	);
 }
