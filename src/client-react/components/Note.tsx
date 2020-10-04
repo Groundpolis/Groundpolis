@@ -10,7 +10,7 @@ import {
 
 import { PackedNote } from '../../models/repositories/note';
 import getAcct from '../../misc/acct/render';
-import { t } from '../scripts/i18n';
+import { t } from '../utils/i18n';
 import { PackedUser } from '../../models/repositories/user';
 
 import './Note.scss';

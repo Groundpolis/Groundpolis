@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from '../scripts/i18n';
+import { t } from '../utils/i18n';
 
 import '../styles/style.scss';
 import Shell from './Shell';

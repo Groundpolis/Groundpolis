@@ -5,8 +5,8 @@ import { faBars, faBell, faBroadcastTower, faChevronCircleDown, faChevronCircleU
 
 import './Shell.scss';
 import FAB from './FAB';
-import { api, isSignedIn } from '../scripts/api';
-import { t } from '../scripts/i18n';
+import { api, isSignedIn } from '../utils/api';
+import { t } from '../utils/i18n';
 import { Link, NavLink } from 'react-router-dom';
 import getAcct from '../../misc/acct/render';
 import { PackedUser } from '../../models/repositories/user';

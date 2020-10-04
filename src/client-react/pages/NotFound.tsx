@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 import Shell from '../components/Shell';
-import { t } from '../scripts/i18n';
+import { t } from '../utils/i18n';
 
 export default function NotFound() {
 	return (

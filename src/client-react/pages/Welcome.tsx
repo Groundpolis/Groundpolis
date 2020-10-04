@@ -6,8 +6,8 @@ import { faUser, faPencilAlt, faComments, faFireAlt } from '@fortawesome/free-so
 
 import Icon from '../components/Icon';
 import Note from '../components/Note';
-import { api } from '../scripts/api';
-import { t } from '../scripts/i18n';
+import { api } from '../utils/api';
+import { t } from '../utils/i18n';
 import Spinner from '../components/Spinner';
 
 import '../styles/style.scss';

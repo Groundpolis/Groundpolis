@@ -6,9 +6,10 @@ import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import Note from '../components/Note';
 import Shell from '../components/Shell';
 import Spinner from '../components/Spinner';
-import { api } from '../scripts/api';
-import { t } from '../scripts/i18n';
+import { api } from '../utils/api';
+import { t } from '../utils/i18n';
 import { PackedNote } from '../../models/repositories/note';
+import { getStream } from '../utils/stream';
 
 const fabClicked = () => {
 	const placeholder = t('_postForm._placeholders.' + rndstr({ length: 1, chars: 'a-f' }));
@@ -31,9 +32,16 @@ function Timeline(props: { notes: any[], onBottom?: () => void }) {
 export default function Home() {
 	const [tl, setTl] = useState(null as any[] | null);
 
+	const prepend = (note: any) => { 
+		setTl([note, ...tl]);
+	};
+
 	useEffect(() => {
 		(async () => {
 			setTl(await api('notes/local-timeline'));
+			const stream = getStream();
+			const conn = stream.useSharedConnection('localTimeline');
+			conn.on('note', prepend);
 		})();
 	}, []);
 

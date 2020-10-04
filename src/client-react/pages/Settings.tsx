@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 
 import Shell from '../components/Shell';
-import { t } from '../scripts/i18n';
-import { applyTheme, builtinThemes } from '../scripts/theme';
+import { t } from '../utils/i18n';
+import { applyTheme, builtinThemes } from '../utils/theme';
 import { clientDb, set } from '../db';
 import { langs } from '../config';
 
