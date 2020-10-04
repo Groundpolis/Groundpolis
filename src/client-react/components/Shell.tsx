@@ -7,15 +7,15 @@ import './Shell.scss';
 import FAB from './FAB';
 import { api, isSignedIn } from '../utils/api';
 import { t } from '../utils/i18n';
-import { NavLink } from 'react-router-dom';
+import { NavLink, NavLinkProps } from 'react-router-dom';
 import getAcct from '../../misc/acct/render';
 import { PackedUser } from '../../models/repositories/user';
 import Icon from './Icon';
 import { ShellFAB, ShellHeader } from '../teleporters';
 
-function Item(props: { disabled?: boolean, exact?: boolean, to: string, icon?: IconProp, label: string }) { 
+function Item(props: { disabled?: boolean, icon?: IconProp, label: string } & NavLinkProps) { 
 	return (
-		<NavLink exact={props.exact} to={props.to} className={`item ${props.disabled ? ' disabled' : ''}`} activeClassName="active">
+		<NavLink {...props} className={`item ${props.disabled ? ' disabled' : ''}`} activeClassName="active">
 			{props.icon ? <FontAwesomeIcon icon={props.icon} fixedWidth /> : null}
 			<span className="label">{props.label}</span>
 		</NavLink>
@@ -58,7 +58,7 @@ export default function Shell(props: {
 			<div className={'backdrop' + (isOpen ? ' open' : '')} onClick={() => setIsOpen(false)}/>
 			<div className={'sidebar' + (isOpen ? ' open' : '')}>
 				{signedIn ?
-					<NavLink to={i ? '/@' + getAcct(i) : ''} className="item" activeClassName="active">
+					<NavLink to={i ? '/@' + getAcct(i) : ''} className="item" activeClassName="active" onClick={() => setIsOpen(false)}>
 						<img src={i?.avatarUrl} className="avatar" />
 						<span className="label">{i?.name || i?.username}</span>
 					</NavLink>
@@ -77,14 +77,14 @@ export default function Shell(props: {
 					</button>
 					<button className="_button command item danger" onClick={logout}>{t('logout')}</button>
 				</> : <>
-						<Item exact to="/" icon={faHome} label={t('home')} />
-						{signedIn ? <Item disabled to="/my/notifications" icon={faBell} label={t('notifications')} /> : null}
-						<Item disabled to="/explore" icon={faSearch} label={t('explore')} />
-						{signedIn ? <Item disabled to="/my/messaging" icon={faComments} label={t('messaging')} /> : null}
-						{signedIn ? <Item disabled to="/my/drive" icon={faCloud} label={t('drive')} /> : null}
+						<Item exact to="/" icon={faHome} label={t('home')} onClick={() => setIsOpen(false)} />
+						{signedIn ? <Item disabled to="/my/notifications" icon={faBell} label={t('notifications')} onClick={() => setIsOpen(false)} /> : null}
+						<Item disabled to="/explore" icon={faSearch} label={t('explore')} onClick={() => setIsOpen(false)} />
+						{signedIn ? <Item disabled to="/my/messaging" icon={faComments} label={t('messaging')} onClick={() => setIsOpen(false)} /> : null}
+						{signedIn ? <Item disabled to="/my/drive" icon={faCloud} label={t('drive')} onClick={() => setIsOpen(false)} /> : null}
 						<div className="divider" />
-						<Item disabled to="/announcements" icon={faBroadcastTower} label={t('announcements')} />
-						<Item to="/my/settings" icon={faCog} label={t('settings')} />
+						<Item disabled to="/announcements" icon={faBroadcastTower} label={t('announcements')} onClick={() => setIsOpen(false)} />
+						<Item to="/my/settings" icon={faCog} label={t('settings')} onClick={() => setIsOpen(false)} />
 					</>
 				}
 				{signedIn ? <button className="_button command toggler" onClick={() => setToggle(!toggle)}>
