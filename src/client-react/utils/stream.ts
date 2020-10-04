@@ -4,7 +4,7 @@ import ReconnectingWebsocket from 'reconnecting-websocket';
 import { wsUrl } from '../config';
 
 export interface StreamConfig { 
-	user?: Record<string, unknown>;
+	token?: string;
 }
 
 let stream: Stream | null = null;
@@ -34,9 +34,9 @@ export default class Stream extends EventEmitter {
 
 		this.state = 'initializing';
 
-		const user = conf.user;
+		const token = conf.token;
 
-		this.stream = new ReconnectingWebsocket(wsUrl + (user ? `?i=${user.token}` : ''), '', { minReconnectionDelay: 1 }); // https://github.com/pladaria/reconnecting-websocket/issues/91
+		this.stream = new ReconnectingWebsocket(wsUrl + (token ? `?i=${token}` : ''), '', { minReconnectionDelay: 1 }); // https://github.com/pladaria/reconnecting-websocket/issues/91
 		this.stream.addEventListener('open', this.onOpen);
 		this.stream.addEventListener('close', this.onClose);
 		this.stream.addEventListener('message', this.onMessage);

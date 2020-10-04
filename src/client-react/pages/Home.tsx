@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import rndstr from 'rndstr';
 import { faPencilAlt, faComments } from '@fortawesome/free-solid-svg-icons';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
@@ -32,9 +32,9 @@ function Timeline(props: { notes: any[], onBottom?: () => void }) {
 export default function Home() {
 	const [tl, setTl] = useState(null as any[] | null);
 
-	const prepend = (note: any) => { 
-		setTl([note, ...tl]);
-	};
+	const prepend = useCallback((note: any) => {
+		setTl(tl => tl === null ? [ note ] : [ note, ...tl ]);
+	}, []);
 
 	useEffect(() => {
 		(async () => {

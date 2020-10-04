@@ -12,8 +12,7 @@ import { api } from './utils/api';
 	await initializeI18n();
 
 	const token = localStorage['i'];
-	const user = token ? await api('i', { i: token }) : null;
-	initializeStream({ user });
+	initializeStream({ token });
 
 	// Detect the user agent
 	const ua = navigator.userAgent.toLowerCase();
