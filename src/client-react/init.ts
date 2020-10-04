@@ -5,7 +5,7 @@ import { App } from './App';
 import { initializeThemes } from './init/initializeThemes';
 import { initializeI18n } from './init/initializeI18n';
 import { initializeStream } from './utils/stream';
-import { api } from './utils/api';
+import deviceSetting from './settings/device';
 
 (async () => {
 	initializeThemes();
@@ -13,6 +13,11 @@ import { api } from './utils/api';
 
 	const token = localStorage['i'];
 	initializeStream({ token });
+
+	if (!deviceSetting.get('migratedFromVuex')) { 
+		deviceSetting.migrateFromVuex();
+		deviceSetting.set('migratedFromVuex', true);
+	}
 
 	// Detect the user agent
 	const ua = navigator.userAgent.toLowerCase();
