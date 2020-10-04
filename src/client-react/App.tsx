@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal, setGlobal } from 'reactn';
 import { BrowserRouter as Router, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -20,20 +20,14 @@ const Page = (props: any) => {
 
 function Inner() { 
 	const m = useRouteMatch();
-
-	const [meta, setMeta] = useGlobal('meta');
-	const [i, setI] = useGlobal('i');
-
 	useEffect(() => {
 		(async () => {
-			const m = await api('meta');
-			setMeta(m);
-			if (isSignedIn()) {
-				const i = await api('i');
-				setI(i);
-			}
+			setGlobal({
+				meta: await api('meta'),
+				i: isSignedIn() ? await api('i') : null
+			});
 		})();
-	}, []]);
+	}, []);
 
 	return (
 		<Shell zenMode={m.path === '/' && m.isExact && !isSignedIn()}>
@@ -42,6 +36,7 @@ function Inner() {
 					<Page exact path="/" name="Index" />
 					<Page path="/signin" name="SignIn" />
 					<Page path="/my/settings" name="Settings" />
+					<Page path="/uitest" name="UITest" />
 					<Page path="*" name="NotFound" />
 				</Switch>
 			</ErrorBoundary>

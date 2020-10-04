@@ -1,0 +1,19 @@
+._com.window {
+	position: relative;
+	max-width: 640px;
+	> .title {
+		> h1 {
+			font-size: 1rem;
+			margin-left: calc(48px - var(--margin));
+			margin-top: 1px;
+			> [data-icon] {
+				margin-right: 16px;
+			}
+		}
+	}
+	> .back {
+		position: absolute;
+		left: var(--margin);
+		top: var(--margin);
+	}
+}
