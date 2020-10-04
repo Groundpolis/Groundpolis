@@ -18,12 +18,11 @@ const Page = (props: any) => {
 function Inner() { 
 	const m = useRouteMatch();
 	return (
-		<Shell zenMode={m.path === '/' && !isSignedIn()}>
+		<Shell zenMode={m.path === '/' && m.isExact && !isSignedIn()}>
 			<ErrorBoundary>
 				<Switch>
 					<Page exact path="/" name="Index" />
-
-
+					<Page path="/signin" name="SignIn" />
 					<Page path="/my/settings" name="Settings" />
 					<Page path="*" name="NotFound" />
 				</Switch>

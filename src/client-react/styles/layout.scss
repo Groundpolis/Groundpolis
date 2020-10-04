@@ -48,6 +48,11 @@
 	padding: var(--margin);
 }
 
+._box._center, ._flat-box._center {
+	max-width: 640px;
+	margin: 0 auto;
+}
+
 ._error-box {
 	max-width: 640px;
 	margin: 0 auto;

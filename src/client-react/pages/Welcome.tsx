@@ -61,8 +61,8 @@ export default function Welcome() {
 					<nav className="_flat-box">
 						<p>{t('getStarted')}</p>
 						<div className="_hstack">
-							<Link to="/signup" className="_button primary">{t('signup')}</Link>
-							<Link to="/signin" className="_button">{t('login')}</Link>
+							<button className="_button primary" onClick={() => alert('coming soon')}>{t('signup')}</button>
+							<button className="_button" onClick={() => alert('coming soon')}>{t('login')}</button>
 						</div>
 					</nav>
 				</article>
