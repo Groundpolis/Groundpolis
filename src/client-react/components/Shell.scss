@@ -14,8 +14,8 @@
 		height: 64px;
 		padding: 0 var(--margin);
 		background: var(--header);
-		backdrop-filter: blur(16px);
-		-webkit-backdrop-filter: blur(16px);
+		backdrop-filter:  var(--blur);
+		-webkit-backdrop-filter:  var(--blur);
 		border-bottom: 1px solid var(--divider);
 		align-items: center;
 		z-index: 20;
@@ -43,8 +43,8 @@
 		transition: all 0.2s ease;
 		&.open {
 			background: rgba(black, 0.5);
-			backdrop-filter: blur(4px);
-			-webkit-backdrop-filter: blur(4px);
+			backdrop-filter: var(--blur);
+			-webkit-backdrop-filter: var(--blur);
 			pointer-events: all;
 		}
 	}

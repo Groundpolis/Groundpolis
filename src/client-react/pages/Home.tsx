@@ -38,12 +38,10 @@ export default function Home() {
 	}, []);
 
 	useEffect(() => {
-		(async () => {
-			setTl(await api('notes/local-timeline'));
-			const stream = getStream();
-			const conn = stream.useSharedConnection('localTimeline');
-			conn.on('note', prepend);
-		})();
+		api('notes/local-timeline').then(setTl);
+		const stream = getStream();
+		const conn = stream.useSharedConnection('localTimeline');
+		conn.on('note', prepend);
 	}, []);
 
 	const onBottom = async () => {

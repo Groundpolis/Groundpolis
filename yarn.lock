@@ -8463,6 +8463,13 @@ react@16.13.1:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
 
+reactn@2.2.7:
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/reactn/-/reactn-2.2.7.tgz#4d9a94ab0d8a540062666408e4bf1fae6892cecc"
+  integrity sha512-cqnt23kWN/ABqEZhW3OlpqI1DgTaaNDeHpSHtyd81qk0H1jd32zPTzJ69Hpzti2WakwNYveGFPIgI6i7E7nXOA==
+  dependencies:
+    use-force-update "^1.0.5"
+
 read-pkg-up@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/read-pkg-up/-/read-pkg-up-1.0.1.tgz#9d63c13276c065918d57f002a57f40a1b643fb02"
@@ -10477,6 +10484,11 @@ urlsafe-base64@^1.0.0, urlsafe-base64@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/urlsafe-base64/-/urlsafe-base64-1.0.0.tgz#23f89069a6c62f46cf3a1d3b00169cefb90be0c6"
   integrity sha1-I/iQaabGL0bPOh07ABac77kL4MY=
+
+use-force-update@^1.0.5:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/use-force-update/-/use-force-update-1.0.7.tgz#f5e672633f5a398b25c33b2287150918bcb3526b"
+  integrity sha512-k5dppYhO+I5X/cd7ildbrzeMZJkWwdAh5adaIk0qKN2euh7J0h2GBGBcB4QZ385eyHHnp7LIygvebdRx3XKdwA==
 
 use@^3.1.0:
   version "3.1.1"

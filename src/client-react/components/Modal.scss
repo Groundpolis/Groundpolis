@@ -1,0 +1,13 @@
+._com.modal {
+	display: flex;
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	backdrop-filter: var(--blur);
+	-webkit-backdrop-filter: var(--blur);
+	padding: var(--margin);
+	align-items: center;
+	justify-content: center;
+}

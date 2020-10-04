@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
+import { useGlobal } from 'reactn';
 import { FontAwesomeIcon as Fa, FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faPencilAlt, faComments, faFireAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,7 +11,6 @@ import Spinner from '../components/Spinner';
 
 import '../styles/style.scss';
 import './Welcome.scss';
-import { Meta } from '../../models/entities/meta';
 
 function stopBeta() {
 	localStorage.removeItem('fe');
@@ -19,16 +18,14 @@ function stopBeta() {
 }
 
 export default function Welcome() {
-	const [meta, setMeta] = useState<Meta | null>(null);
+	const [meta, setMeta] = useGlobal('meta');
 	const [stats, setStats] = useState<Record<string, any> | null>(null);
 	const [tl, setTl] = useState<any[] | null>(null);
 
 	useEffect(() => {
 		(async () => {
 			setStats(await api('stats'));
-			const m = await api('meta');
-			setMeta(m);
-			setTl(await api(m.disableFeatured ? 'notes/local-timeline' : 'notes/featured'));
+			setTl(await api(meta.disableFeatured ? 'notes/local-timeline' : 'notes/featured'));
 		})();
 	}, []);
 

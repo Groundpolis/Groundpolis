@@ -1,14 +1,17 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import { BrowserRouter as Router, Route, Switch, useRouteMatch } from 'react-router-dom';
+
 import { ErrorBoundary } from './components/ErrorBoundary';
 import Shell from './components/Shell';
-import { isSignedIn } from './utils/api';
+import Spinner from './components/Spinner';
+import { api, isSignedIn } from './utils/api';
 
 const Page = (props: any) => {
 	const Lazy = React.lazy(() => import('./pages/' + props.name));
 	return (
 		<Route exact={props.exact ?? false} path={props.path}>
-			<Suspense fallback={<></>}>
+			<Suspense fallback={<Spinner/>}>
 				<Lazy />
 			</Suspense>
 		</Route>
@@ -17,6 +20,21 @@ const Page = (props: any) => {
 
 function Inner() { 
 	const m = useRouteMatch();
+
+	const [meta, setMeta] = useGlobal('meta');
+	const [i, setI] = useGlobal('i');
+
+	useEffect(() => {
+		(async () => {
+			const m = await api('meta');
+			setMeta(m);
+			if (isSignedIn()) {
+				const i = await api('i');
+				setI(i);
+			}
+		})();
+	}, []]);
+
 	return (
 		<Shell zenMode={m.path === '/' && m.isExact && !isSignedIn()}>
 			<ErrorBoundary>

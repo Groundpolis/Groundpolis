@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useGlobal } from 'reactn';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faBell, faBroadcastTower, faChevronCircleDown, faChevronCircleUp, faCloud, faCog, faComments, faHome, faSearch, faSlidersH } from '@fortawesome/free-solid-svg-icons';
 
 import './Shell.scss';
-import FAB from './FAB';
 import { api, isSignedIn } from '../utils/api';
 import { t } from '../utils/i18n';
 import { NavLink, NavLinkProps } from 'react-router-dom';
@@ -26,17 +26,11 @@ export default function Shell(props: {
 	zenMode?: boolean,
 	children?: React.ReactElement,
 }) {
-	const [i, setI] = useState(null as PackedUser | null);
+	const [i, setI] = useGlobal('i');
 	const [toggle, setToggle] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 
 	const signedIn = isSignedIn();
-
-	useEffect(() => {
-		(async () => {
-			setI(await api('i'));
-		})();
-	}, []);
 
 	return props.zenMode ? props.children : (
 		<div className="_com shell">
