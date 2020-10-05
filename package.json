@@ -216,7 +216,7 @@
 		"rimraf": "3.0.2",
 		"rndstr": "1.0.0",
 		"s-age": "1.1.2",
-		"sass": "1.26.10",
+		"sass": "1.26.11",
 		"sass-loader": "9.0.3",
 		"seedrandom": "3.0.5",
 		"sharp": "0.25.4",
