@@ -177,7 +177,7 @@
 		"lookup-dns-cache": "2.1.0",
 		"markdown-it": "11.0.1",
 		"markdown-it-anchor": "5.3.0",
-		"mocha": "8.1.1",
+		"mocha": "8.1.3",
 		"moji": "0.5.1",
 		"ms": "2.1.2",
 		"multer": "1.4.2",
