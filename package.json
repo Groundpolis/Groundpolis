@@ -132,7 +132,7 @@
 		"escape-regexp": "0.0.1",
 		"eslint": "7.4.0",
 		"eslint-plugin-vue": "6.2.2",
-		"eventemitter3": "4.0.4",
+		"eventemitter3": "4.0.7",
 		"feed": "4.2.1",
 		"fibers": "5.0.0",
 		"file-type": "14.7.1",
