@@ -1,68 +1,89 @@
 ._com.note {
-	display: flex;
-	> .avatar {
-		width: 60px;
-		height: 60px;
-		border-radius: 100%;
-		margin-right: var(--margin);
+	> *:not(:last-child) {
+		margin-bottom: 16px;
 	}
-	> .right {
-		> header {
-			display: flex;
-			> .name {
-				font-weight: bold;
-			}
-			> .acct {
-				margin-left: 8px;
-				opacity: 0.8;
-			}
-			> .time {
-				margin-left: auto;
-				opacity: 0.8;
-			}
-		}
-		> .content {
-			> .cw-button {
-				border: none;
-				background: var(--cwBg);
-				color: var(--cwFg);
-				padding: 4px 8px;
-				font-size: 14px;
-				border-radius: 16px;
-				cursor: pointer;
-				outline: none;
-				&:not(:disabled):hover {
-					background: var(--cwHoverBg);
-				}
-			}
-		}
-		> .reactions {
-				margin-top: 8px;
-			> .reaction {
-				display: inline-block;
-				background: transparent;
-				border: none;
-				padding: 4px 8px;
-				color: inherit;
-				height: 36px;
-				border-radius: 18px;
+	> .renoted-by {
+		color: var(--renote);
+		display: flex;
+		align-items: center;
+		font-weight: bold;
 
-				&.primary {
-					color: white;
-					background: var(--accent);
-					&:hover {
-						background: var(--X8);
-					}
-					&:active {
-						background: var(--X9);
+		> .avatar {
+			width: 2em;
+			height: 2em;
+			border-radius: 100%;
+			margin-right: 8px;
+		}
+		> [data-icon] {
+			margin-right: 8px;
+		}
+	}
+	> .body {
+		display: flex;
+		> .avatar {
+			width: 60px;
+			height: 60px;
+			border-radius: 100%;
+			margin-right: var(--margin);
+		}
+		> .right {
+			> header {
+				display: flex;
+				> .name {
+					font-weight: bold;
+				}
+				> .acct {
+					margin-left: 8px;
+					opacity: 0.8;
+				}
+				> .time {
+					margin-left: auto;
+					opacity: 0.8;
+				}
+			}
+			> .content {
+				> .cw-button {
+					border: none;
+					background: var(--cwBg);
+					color: var(--cwFg);
+					padding: 4px 8px;
+					font-size: 14px;
+					border-radius: 16px;
+					cursor: pointer;
+					outline: none;
+					&:not(:disabled):hover {
+						background: var(--cwHoverBg);
 					}
 				}
 			}
-		}
-		> .commands {
-			margin-top: 8px;
-			> .command:not(:first-child) {
-				margin-left: 24px;
+			> .reactions {
+					margin-top: 8px;
+				> .reaction {
+					display: inline-block;
+					background: transparent;
+					border: none;
+					padding: 4px 8px;
+					color: inherit;
+					height: 36px;
+					border-radius: 18px;
+
+					&.primary {
+						color: white;
+						background: var(--accent);
+						&:hover {
+							background: var(--X8);
+						}
+						&:active {
+							background: var(--X9);
+						}
+					}
+				}
+			}
+			> .commands {
+				margin-top: 8px;
+				> .command:not(:first-child) {
+					margin-left: 24px;
+				}
 			}
 		}
 	}
