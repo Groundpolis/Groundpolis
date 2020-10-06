@@ -11,6 +11,7 @@
 				v-if="show"
 				:reply="reply"
 				:renote="renote"
+				:channel="channel"
 				:mention="mention"
 				:specified="specified"
 				:initial-text="initialText"
@@ -18,7 +19,8 @@
 				:instant="instant"
 				@posted="onPosted"
 				@cancel="onCanceled"
-				style="border-radius: var(--radius);"/>
+				style="border-radius: var(--radius);"
+/>
 		</transition>
 	</div>
 </div>
@@ -43,6 +45,10 @@ export default Vue.extend({
 			required: false
 		},
 		mention: {
+			type: Object,
+			required: false
+		},
+		channel: {
 			type: Object,
 			required: false
 		},

@@ -524,6 +524,7 @@ export default Vue.extend({
 			pleaseLogin(this.$root);
 			this.$root.post({
 				reply: this.appearNote,
+				channel: this.appearNote.channel,
 				animation: !viaKeyboard,
 			}, () => {
 				this.focus();
@@ -545,6 +546,7 @@ export default Vue.extend({
 			};
 			const quote = () => {
 				this.$root.post({
+					channel: this.appearNote.channel,
 					renote: this.appearNote,
 				});
 			};
@@ -663,7 +665,12 @@ export default Vue.extend({
 				noteId: this.appearNote.id
 			});
 
-			this.$root.post({ initialNote: this.appearNote, renote: this.appearNote.renote, reply: this.appearNote.reply });
+			this.$root.post({
+				initialNote: this.appearNote,
+				renote: this.appearNote.renote,
+				reply: this.appearNote.reply,
+				channel: this.appearNote.channel,
+			});
 		},
 
 		toggleFavorite(favorite: boolean) {

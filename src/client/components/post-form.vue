@@ -250,6 +250,7 @@ export default Vue.extend({
 	},
 
 	mounted() {
+		console.log(this.channel);
 		if (this.initialText) {
 			this.text = this.initialText;
 		}
