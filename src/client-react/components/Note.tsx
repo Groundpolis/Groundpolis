@@ -32,8 +32,11 @@ export default function Note(props: { note: PackedNote }) {
 					</span>
 				</header>
 				<div className="content">
-					{ props.note.cw ? (
-						<button className="cw-button" onClick={() => setCwOpen(!cwOpen)}>{ cwOpen ? t('_cw.hide') : t('_cw.show') }</button>
+					{props.note.cw ? (
+						<>
+							{ props.note.cw }
+							<button className="cw-button" onClick={() => setCwOpen(!cwOpen)}>{ cwOpen ? t('_cw.hide') : t('_cw.show') }</button>
+						</>
 					) : null }
 					{ !props.note.cw || cwOpen ? props.note.text : null }
 				</div>

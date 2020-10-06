@@ -93,6 +93,27 @@ export default function UITest() {
 			<Window title="Lorem ipsum" icon={faCat}>
 				<div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium dolor eum provident accusamus quis eligendi eos. Obcaecati fugit architecto odit provident quae deleniti non aperiam, dolore reprehenderit, iure eum perspiciatis id illo dolorum nesciunt quo, mollitia officiis! Debitis, sit suscipit? Laboriosam earum numquam vitae non minima enim, similique ab, porro error illum fuga tenetur. Enim fuga quo nam dolorem. Soluta impedit delectus molestiae amet, eaque nostrum adipisci a dolorem vero, itaque aspernatur iusto voluptatem aliquid ea debitis hic inventore. Perspiciatis recusandae itaque perferendis nulla nihil, dolorum, praesentium id voluptates, earum adipisci consequuntur corrupti cupiditate? Labore dolorem at odit eius molestias!</div>
 			</Window>
+			<h1>Dialog</h1>
+			<div className="_hstack">
+				<button className="_button primary">
+					Dialog
+				</button>
+				<button className="_button primary">
+					Confirm
+				</button>
+				<button className="_button primary">
+					Input Text
+				</button>
+				<button className="_button primary">
+					Select Value
+				</button>
+				<button className="_button command primary">
+					<FontAwesomeIcon icon={faCheck}/>
+				</button>
+				<button className="_button command primary">
+					<Spinner relative/>
+				</button>
+			</div>
 		</div>
 	);
 }

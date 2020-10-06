@@ -5,7 +5,7 @@ import './Modal.scss';
 
 export default function Modal(props: { children: React.ReactElement }) { 
 	return ReactDOM.createPortal(
-		<div className="_com.modal">
+		<div className="_com modal">
 			{props.children}
 		</div>
 	, document.getElementById('app'));

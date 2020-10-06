@@ -9,6 +9,7 @@
 @mixin hStack {
 	display: flex;
 	flex-wrap: wrap;
+	align-items: center;
 	> *:not(:last-child) {
 		margin-right: var(--margin);
 	}

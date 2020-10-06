@@ -5,12 +5,12 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import './Window.scss';
 
-export default function Window(props: { title: string, icon?: IconProp, children?: React.ReactElement, backButton?: IconProp, onClose?: () => void }) { 
+export default function Window(props: React.HTMLAttributes<HTMLDivElement> & { title: string, icon?: IconProp, children?: React.ReactElement, backButton?: IconProp, onClose?: () => void }) { 
 	return (
 		<div className="_box _com window">
 			<div className="_bulk title">
 				<h1>
-					<FontAwesomeIcon icon={props.icon} />
+					{props.icon ? <FontAwesomeIcon icon={props.icon} /> : null}
 					{props.title}
 				</h1>
 			</div>
