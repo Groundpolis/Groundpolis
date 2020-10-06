@@ -14,7 +14,7 @@
 					<template #header><fa :icon="faInfoCircle"/>{{ $t('instanceInfo') }}</template>
 
 					<div class="_content">
-						<div class="_keyValue"><b>Misskey</b><span>v{{ version }}</span></div>
+						<div class="_keyValue"><b>Groundpolis</b><span>v{{ version }}</span></div>
 					</div>
 					<div class="_content" v-if="serverInfo">
 						<div class="_keyValue"><b>Node.js</b><span>{{ serverInfo.node }}</span></div>

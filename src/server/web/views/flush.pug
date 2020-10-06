@@ -19,15 +19,15 @@ html
 						return Promise.all(registrations.map(registration => registration.unregister()));
 					})
 					.then(() => {
-						message('Success Flush! Please reopen Misskey.\n成功しました。Misskeyを開き直してください。');
+						message('Success Flush! Please reopen Groundpolis.\n成功しました。Groundpolisを開き直してください。');
 					})
 					.catch(e => { throw Error(e) });
 			} else {
-				message('Success Flush! Please reopen Misskey.\n成功しました。Misskeyを開き直してください。');
+				message('Success Flush! Please reopen Groundpolis.\n成功しました。Groundpolisを開き直してください。');
 			}
 		} catch (e) {
 			console.error(e);
-			message(`${e}¥n¥nFlush Failed. Please reopen Misskey.\n失敗しました。Misskeyを開き直してください。`);
+			message(`${e}¥n¥nFlush Failed. Please reopen Groundpolis.\n失敗しました。Groundpolisを開き直してください。`);
 			setTimeout(() => {
 				location = '/';
 			}, 10000)

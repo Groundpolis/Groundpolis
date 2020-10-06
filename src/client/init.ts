@@ -174,7 +174,7 @@ os.init(async () => {
 		i18n,
 		metaInfo: {
 			title: null,
-			titleTemplate: title => title ? `${title} | ${(instanceName || 'Misskey')}` : (instanceName || 'Groundpolis')
+			titleTemplate: title => title ? `${title} | ${(instanceName || 'Groundpolis')}` : (instanceName || 'Groundpolis')
 		},
 		data() {
 			return {
