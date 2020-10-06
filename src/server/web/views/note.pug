@@ -25,8 +25,7 @@ block meta
 
 	meta(name='twitter:card' content='summary')
 
-	// todo
-	if user.host
+	if user.host || user.cw
 		meta(name='robots' content='noindex')
 
 	if user.twitter
