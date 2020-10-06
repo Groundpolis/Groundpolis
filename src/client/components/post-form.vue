@@ -30,9 +30,9 @@
 		</div>
 	</header>
 	<div class="form" :class="{ fixed }">
+		<button v-if="quote" class="_textButton" style="padding-left: 8px" @click="quote = null">{{ $t('unrenote') }}</button>
 		<x-note-preview class="preview" v-if="reply" :note="reply"/>
-		<x-note-preview class="preview" v-if="renote" :note="renote"/>
-		<div class="with-quote" v-if="quoteId"><fa icon="quote-left"/> {{ $t('quoteAttached') }}<button @click="quoteId = null"><fa icon="times"/></button></div>
+		<x-note-preview class="preview" v-if="quote" :note="quote"/>
 		<div v-if="visibility === 'specified'" class="to-specified">
 			<span style="margin-right: 8px;">{{ $t('recipient') }}</span>
 			<div class="visibleUsers">
@@ -160,7 +160,7 @@ export default Vue.extend({
 			visibleUsers: [],
 			autocomplete: null,
 			draghover: false,
-			quoteId: null,
+			quote: null as Record<string, unknown> | null,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
 			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown, faEllipsisV
 		};
@@ -170,8 +170,8 @@ export default Vue.extend({
 		draftKey(): string {
 			let key = this.channel ? `channel:${this.channel.id}` : '';
 
-			if (this.renote) {
-				key += `renote:${this.renote.id}`;
+			if (this.quote && this.renote) {
+				key += `renote:${this.quote.id}`;
 			} else if (this.reply) {
 				key += `reply:${this.reply.id}`;
 			} else {
@@ -182,7 +182,7 @@ export default Vue.extend({
 		},
 
 		placeholder(): string {
-			if (this.renote) {
+			if (this.quote) {
 				return this.$t('_postForm.quotePlaceholder');
 			} else if (this.reply) {
 				return this.$t('_postForm.replyPlaceholder');
@@ -202,7 +202,7 @@ export default Vue.extend({
 		},
 
 		submitText(): string {
-			return this.renote
+			return this.quote
 				? this.$t('quote')
 				: this.reply
 					? this.$t('reply')
@@ -211,7 +211,7 @@ export default Vue.extend({
 
 		canPost(): boolean {
 			return !this.posting &&
-				(1 <= this.text.length || 1 <= this.files.length || this.poll || this.renote) &&
+				(1 <= this.text.length || 1 <= this.files.length || this.poll || this.quote) &&
 				(length(this.text.trim()) <= this.max) &&
 				(!this.poll || this.pollChoices.length >= 2);
 		},
@@ -257,6 +257,10 @@ export default Vue.extend({
 		if (this.mention) {
 			this.text = this.mention.host ? `@${this.mention.username}@${toASCII(this.mention.host)}` : `@${this.mention.username}`;
 			this.text += ' ';
+		}
+
+		if (this.renote) {
+			this.quote = this.renote;
 		}
 
 		if (this.reply && this.reply.user.host != null) {
@@ -335,6 +339,7 @@ export default Vue.extend({
 					this.applyVisibility(draft.data.visibility);
 					this.localOnly = draft.data.localOnly;
 					this.remoteFollowersOnly = draft.data.remoteFollowersOnly;
+					this.quote = draft.data.quote;
 					this.files = (draft.data.files || []).filter(e => e);
 					if (draft.data.poll) {
 						this.poll = true;
@@ -364,7 +369,7 @@ export default Vue.extend({
 				this.visibility = init.visibility;
 				this.localOnly = init.localOnly;
 				this.remoteFollowersOnly = init.remoteFollowersOnly;
-				this.quoteId = init.renote ? init.renote.id : null;
+				this.quote = init.renote;
 			}
 
 			this.$nextTick(() => this.watch());
@@ -373,16 +378,17 @@ export default Vue.extend({
 
 	methods: {
 		watch() {
-			this.$watch('text', () => this.saveDraft());
-			this.$watch('useCw', () => this.saveDraft());
-			this.$watch('cw', () => this.saveDraft());
-			this.$watch('useBroadcast', () => this.saveDraft());
-			this.$watch('broadcastText', () => this.saveDraft());
-			this.$watch('poll', () => this.saveDraft());
-			this.$watch('files', () => this.saveDraft());
-			this.$watch('visibility', () => this.saveDraft());
-			this.$watch('localOnly', () => this.saveDraft());
-			this.$watch('remoteFollowersOnly', () => this.saveDraft());
+			this.$watch('text', this.saveDraft);
+			this.$watch('quote', this.saveDraft);
+			this.$watch('useCw', this.saveDraft);
+			this.$watch('cw', this.saveDraft);
+			this.$watch('useBroadcast', this.saveDraft);
+			this.$watch('broadcastText', this.saveDraft);
+			this.$watch('poll', this.saveDraft);
+			this.$watch('files', this.saveDraft);
+			this.$watch('visibility', this.saveDraft);
+			this.$watch('localOnly', this.saveDraft);
+			this.$watch('remoteFollowersOnly', this.saveDraft);
 		},
 
 		trimmedLength(text: string) {
@@ -500,7 +506,7 @@ export default Vue.extend({
 			this.text = '';
 			this.files = [];
 			this.poll = false;
-			this.quoteId = null;
+			this.quote = null;
 		},
 
 		help() {
@@ -525,7 +531,7 @@ export default Vue.extend({
 
 			const paste = e.clipboardData.getData('text');
 
-			if (!this.renote && !this.quoteId && paste.startsWith(url + '/notes/')) {
+			if (!this.quote && paste.startsWith(url + '/notes/')) {
 				e.preventDefault();
 
 				this.$root.dialog({
@@ -538,7 +544,17 @@ export default Vue.extend({
 						return;
 					}
 
-					this.quoteId = paste.substr(url.length).match(/^\/notes\/(.+?)\/?$/)[1];
+					const quoteId = paste.substr(url.length).match(/^\/notes\/(.+?)\/?$/)![1];
+					this.$root.api('notes/show', {
+						noteId: quoteId,
+					}).then(note => {
+						this.quote = note;
+					}).catch(e => {
+						this.$root.dialog({
+							type: 'error',
+							text: e.message,
+						});
+					});
 				});
 			}
 		},
@@ -599,6 +615,7 @@ export default Vue.extend({
 					localOnly: this.localOnly,
 					remoteFollowersOnly: this.remoteFollowersOnly,
 					files: this.files,
+					quote: this.quote,
 					poll: this.poll && this.$refs.poll ? (this.$refs.poll as any).get() : undefined
 				}
 			};
@@ -633,16 +650,16 @@ export default Vue.extend({
 			let data = {
 				text: this.text == '' ? undefined : this.text + (this.useBroadcast ? ' ' + this.broadcastText : ''),
 				fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
-				replyId: this.reply ? this.reply.id : undefined,
-				renoteId: this.renote ? this.renote.id : this.quoteId ? this.quoteId : undefined,
-				channelId: this.channel ? this.channel.id : undefined,
+				replyId: this.reply?.id,
+				renoteId: this.quote?.id,
+				channelId: this.channel?.id,
 				poll: this.poll ? (this.$refs.poll as any).get() : undefined,
 				cw: this.useCw ? this.cw || '' : undefined,
 				localOnly: this.localOnly,
 				remoteFollowersOnly: this.remoteFollowersOnly,
 				visibility: this.visibility,
 				visibleUserIds: this.visibility == 'specified' ? this.visibleUsers.map(u => u.id) : undefined,
-				viaMobile: this.$root.isMobile
+				viaMobile: this.$root.isMobile,
 			};
 
 			// plugin
