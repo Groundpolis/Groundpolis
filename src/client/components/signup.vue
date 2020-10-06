@@ -38,7 +38,7 @@
 		</mk-input>
 		<mk-switch v-model="ToSAgreement" v-if="meta.tosUrl">
 			<i18n path="agreeTo">
-				<a :href="meta.tosUrl" class="_link" target="_blank">{{ $t('tos') }}</a>
+				<a :href="meta.tosUrl" @click.stop="() => {}" class="_link" target="_blank">{{ $t('tos') }}</a>
 			</i18n>
 		</mk-switch>
 		<captcha v-if="meta.enableHcaptcha" class="captcha" provider="hcaptcha" ref="hcaptcha" v-model="hCaptchaResponse" :sitekey="meta.hcaptchaSiteKey"/>
@@ -66,6 +66,22 @@ export default Vue.extend({
 		captcha: () => import('./captcha.vue').then(x => x.default),
 	},
 
+	props: {
+		autoSet: {
+			type: Boolean,
+			required: false,
+			default: false,
+		}
+	},
+
+	props: {
+		autoSet: {
+			type: Boolean,
+			required: false,
+			default: false,
+		}
+	},
+
 	data() {
 		return {
 			host: toUnicode(host),
@@ -82,22 +98,6 @@ export default Vue.extend({
 			hCaptchaResponse: null,
 			reCaptchaResponse: null,
 			faLock, faExclamationTriangle, faSpinner, faCheck, faKey
-		}
-	},
-
-	props: {
-		autoSet: {
-			type: Boolean,
-			required: false,
-			default: false,
-		}
-	},
-
-	props: {
-		autoSet: {
-			type: Boolean,
-			required: false,
-			default: false,
 		}
 	},
 
