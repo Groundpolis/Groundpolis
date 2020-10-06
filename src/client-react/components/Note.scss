@@ -1,4 +1,5 @@
 ._com.note {
+	width: 100%;
 	> *:not(:last-child) {
 		margin-bottom: 16px;
 	}
@@ -19,16 +20,19 @@
 		}
 	}
 	> .body {
-		display: flex;
-		> .avatar {
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: 60px 1fr;
+		gap: var(--margin);
+		> .avatar > img {
 			width: 60px;
 			height: 60px;
 			border-radius: 100%;
-			margin-right: var(--margin);
 		}
 		> .right {
 			> header {
 				display: flex;
+				align-items: center;
 				> .name {
 					font-weight: bold;
 				}
@@ -36,9 +40,32 @@
 					margin-left: 8px;
 					opacity: 0.8;
 				}
+				> .name, > .acct, > .time {
+					text-decoration: none;
+
+					&:hover {
+						text-decoration: underline;
+					}
+
+				}
+				> .admin {
+					color: var(--badge);
+					margin-left: 8px;
+				}
+				> .verified {
+					color: var(--accent);
+					margin-left: 8px;
+				}
+				> .premium {
+					color: var(--premium);
+					margin-left: 8px;
+				}
 				> .time {
 					margin-left: auto;
 					opacity: 0.8;
+				}
+				> .visibility {
+					margin-left: 8px;
 				}
 			}
 			> .content {
@@ -81,8 +108,14 @@
 			}
 			> .commands {
 				margin-top: 8px;
-				> .command:not(:first-child) {
-					margin-left: 24px;
+				> .command {
+					font-weight: normal;
+					> .count {
+						margin-left: 8px;
+					}
+					&:not(:first-child) {
+						margin-left: 24px;
+					}
 				}
 			}
 		}

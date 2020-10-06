@@ -52,9 +52,9 @@ export default function Home() {
 	const canNote = remaining >= 0 && text.length > 0;
 
 	useEffect(() => {
-		api('notes/local-timeline').then(setTl);
+		api('notes/timeline').then(setTl);
 		const stream = getStream();
-		const conn = stream.useSharedConnection('localTimeline');
+		const conn = stream.useSharedConnection('homeTimeline');
 		conn.on('note', prepend);
 	}, []);
 
