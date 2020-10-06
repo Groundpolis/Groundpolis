@@ -30,7 +30,7 @@
 		</div>
 	</header>
 	<div class="form" :class="{ fixed }">
-		<button v-if="quote" class="_textButton" style="padding-left: 8px" @click="quote = null">{{ $t('unrenote') }}</button>
+		<button v-if="quote && !renote" class="_textButton" style="padding-left: 8px" @click="quote = null">{{ $t('unrenote') }}</button>
 		<x-note-preview class="preview" v-if="reply" :note="reply"/>
 		<x-note-preview class="preview" v-if="quote" :note="quote"/>
 		<div v-if="visibility === 'specified'" class="to-specified">
