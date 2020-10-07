@@ -5,10 +5,56 @@
 	right: 0;
 	top: 0;
 	bottom: 0;
-	backdrop-filter: var(--blur);
-	-webkit-backdrop-filter: var(--blur);
 	padding: var(--margin);
 	align-items: center;
 	justify-content: center;
 	z-index: 20000;
+
+	> .backdrop {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		backdrop-filter: var(--blur);
+		-webkit-backdrop-filter: var(--blur);
+	}
+
+}
+
+.window-enter {
+	opacity: 0;
+	transform: translateY(32px);
+}
+.window-enter-active {
+  opacity: 1;
+	transform: translateY(0);
+  transition: all 300ms ease;
+}
+.window-exit {
+  opacity: 1;
+}
+.window-exit-active {
+  opacity: 0;
+	transform: translateY(32px);
+  transition: all 300ms ease;
+}
+
+.backdrop-enter {
+	opacity: 0;
+	backdrop-filter: blur(0);
+	-webkit-backdrop-filter: blur(0);
+}
+.backdrop-enter-active {
+	transition: all 300ms ease;
+	opacity: 1;
+}
+.backdrop-exit {
+  opacity: 1;
+}
+.backdrop-exit-active {
+	transition: all 300ms ease;
+	opacity: 0;
+	backdrop-filter: blur(0);
+	-webkit-backdrop-filter: blur(0);
 }

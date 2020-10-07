@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import './Window.scss';
-import { CSSTransition } from 'react-transition-group';
 
 export type WindowProps = {
 	title?: string;
@@ -16,12 +15,9 @@ export type WindowProps = {
 };
 
 export default function Window(props: React.HTMLAttributes<HTMLDivElement> & WindowProps) { 
-	const [opening, setOpening] = useState(false);
-	useLayoutEffect(() => setOpening(true), []);
 	const headerVisible = props.headerVisible ?? true;
 
 	return (
-		<CSSTransition in={opening} timeout={400} classNames="window" onExited={props.onClose}>
 			<div className="_box _com window">
 				{headerVisible ? <>
 					<div className="_bulk title">
@@ -30,7 +26,7 @@ export default function Window(props: React.HTMLAttributes<HTMLDivElement> & Win
 							{props.title}
 						</h1>
 					</div>
-					<button className="_button command back" onClick={() => setOpening(false)}>
+					<button className="_button command back" onClick={props.onClose}>
 						<FontAwesomeIcon icon={props.backButton || (faTimes as any)} />
 					</button>
 				</> : null}
@@ -38,6 +34,5 @@ export default function Window(props: React.HTMLAttributes<HTMLDivElement> & Win
 					{props.children}
 				</div>
 			</div>
-		</CSSTransition>
 	);
 }
