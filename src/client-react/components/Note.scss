@@ -74,9 +74,10 @@
 					border: none;
 					background: var(--cwBg);
 					color: var(--cwFg);
-					padding: 4px 8px;
+					padding: 0 8px;
 					font-size: 14px;
-					border-radius: 16px;
+					border-radius: 10px;
+					margin: 0 8px;
 					cursor: pointer;
 					outline: none;
 					&:not(:disabled):hover {

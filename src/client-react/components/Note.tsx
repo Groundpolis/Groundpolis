@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useIntersection } from 'use-intersection';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	faReply,
@@ -13,18 +14,18 @@ import {
 	faBookmark,
 	faCrown
 } from '@fortawesome/free-solid-svg-icons';
+import { length } from 'stringz';
 
 import { PackedNote } from '../../models/repositories/note';
 import getAcct from '../../misc/acct/render';
 import { t } from '../utils/i18n';
 import { PackedUser } from '../../models/repositories/user';
-
-import './Note.scss';
-import { Link } from 'react-router-dom';
 import { getNoteVisibilityIconOf } from '../utils/getNoteVisibilityIconOf';
 import { useWatch } from '../utils/useWatch';
-import { useRef } from 'reactn';
 import Mfm from './Mfm';
+import { concat } from '../../prelude/array';
+
+import './Note.scss';
 
 function RenotedBy({ user }: { user: PackedUser }) { 
 	return (
@@ -65,6 +66,12 @@ export default function Note(props: { note: PackedNote, pinned?: boolean }) {
 	const root = useRef(null);
 	useWatch(1000);
 
+	const cwLabel = concat([
+		note.text ? [t('_cw.chars', { count: length(note.text) })] : [],
+		note.files && note.files.length !== 0 ? [t('_cw.files', { count: note.files.length })] : [],
+		note.poll != null ? [t('poll')] : []
+	] as string[][]).join(' / ');
+
 	return (
 		<article className="_com note" ref={root}>
 			{ isPureRenote ? <RenotedBy user={renoter} /> : null }
@@ -98,7 +105,10 @@ export default function Note(props: { note: PackedNote, pinned?: boolean }) {
 						{note.cw ? (
 							<>
 								<Mfm text={note.cw}/>
-								<button className="cw-button" onClick={() => setCwOpen(!cwOpen)}>{cwOpen ? t('_cw.hide') : t('_cw.show')}</button>
+								<button className="cw-button" onClick={() => setCwOpen(!cwOpen)}>
+									{cwOpen ? t('_cw.hide') : t('_cw.show')}
+									{!cwOpen ? <span>({cwLabel})</span> : null}
+								</button>
 							</>
 						) : null}
 						{!note.cw || cwOpen ? <Mfm text={note.text}/> : null}

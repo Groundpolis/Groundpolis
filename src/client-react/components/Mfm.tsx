@@ -312,12 +312,9 @@ export default function Mfm(props: { text: string, plain?: boolean, isNote?: boo
 
 	if (props.text === null) return null;
 
-	const forest = props.plain ? parsePlain(props.text) : parse(props.text);
-
 	return (
-		<div className="_com mfm">
-			{ generate(forest) }
-		</div>
+		<span className="_com mfm">
+			{ generate(props.plain ? parsePlain(props.text) : parse(props.text))}
+		</span>
 	);
-	
 }
