@@ -24,6 +24,7 @@ import { Link } from 'react-router-dom';
 import { getNoteVisibilityIconOf } from '../utils/getNoteVisibilityIconOf';
 import { useWatch } from '../utils/useWatch';
 import { useRef } from 'reactn';
+import Mfm from './Mfm';
 
 function RenotedBy({ user }: { user: PackedUser }) { 
 	return (
@@ -86,7 +87,7 @@ export default function Note(props: { note: PackedNote, pinned: boolean }) {
 						</div> : null}
 						{user.isPremium ? <FontAwesomeIcon className="premium" icon={faCrown} /> : null}
 						<Link to={'/notes/' + note.id} className="time">
-							{relativeTime(new Date(note.createdAt))
+							{relativeTime(new Date(note.createdAt))}
 						</Link>
 						{note.visibility !== 'public'
 							? <FontAwesomeIcon className="visibility" icon={getNoteVisibilityIconOf(note.visibility)} />
@@ -96,11 +97,11 @@ export default function Note(props: { note: PackedNote, pinned: boolean }) {
 					<div className="content">
 						{note.cw ? (
 							<>
-								{note.cw}
+								<Mfm text={note.cw}/>
 								<button className="cw-button" onClick={() => setCwOpen(!cwOpen)}>{cwOpen ? t('_cw.hide') : t('_cw.show')}</button>
 							</>
 						) : null}
-						{!note.cw || cwOpen ? note.text : null}
+						{!note.cw || cwOpen ? <Mfm text={note.text}/> : null}
 					</div>
 					<div className="reactions">
 						{
