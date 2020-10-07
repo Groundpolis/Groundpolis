@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,7 +9,6 @@ import { api, isSignedIn } from '../utils/api';
 import { t } from '../utils/i18n';
 import { NavLink, NavLinkProps } from 'react-router-dom';
 import getAcct from '../../misc/acct/render';
-import { PackedUser } from '../../models/repositories/user';
 import Icon from './Icon';
 import { ShellFAB, ShellHeader } from '../teleporters';
 

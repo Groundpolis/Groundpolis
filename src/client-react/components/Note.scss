@@ -30,6 +30,7 @@
 			border-radius: 100%;
 		}
 		> .right {
+			overflow: auto;
 			> header {
 				display: flex;
 				align-items: center;

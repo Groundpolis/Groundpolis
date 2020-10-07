@@ -297,7 +297,7 @@ export default function Mfm(props: { text: string, plain?: boolean, isNote?: boo
 				return (
 					<div>
 						<span>{token.node.props.query}</span>
-						<a style={{ marginLeft: '8px', color:'var(--accent)' }} target="_blank" rel="nofollow noreferrer noopener" href={'https://google.com/search?q=' + encodeURIComponent(token.node.props.query)}>{t('search')}</a>
+						<a style={{ marginLeft: '8px', color: 'var(--accent)' }} target="_blank" rel="nofollow noreferrer noopener" href={'https://google.com/search?q=' + encodeURIComponent(token.node.props.query)}>{t('search')}</a>
 					</div>
 				);
 			}

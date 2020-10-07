@@ -18,3 +18,21 @@
 		top: var(--margin);
 	}
 }
+
+.window-enter {
+	opacity: 0;
+	transform: translateY(64px);
+}
+.window-enter-active {
+  opacity: 1;
+	transform: translateY(0);
+  transition: all 300ms ease;
+}
+.window-exit {
+  opacity: 1;
+}
+.window-exit-active {
+  opacity: 0;
+	transform: translateY(64px);
+  transition: all 300ms ease;
+}

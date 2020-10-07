@@ -7,6 +7,8 @@ import { initializeI18n } from './init/initializeI18n';
 import { initializeStream } from './utils/stream';
 import deviceSetting from './settings/device';
 
+import 'animate.css';
+
 (async () => {
 	initializeThemes();
 	await initializeI18n();

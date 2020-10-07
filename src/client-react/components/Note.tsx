@@ -50,7 +50,7 @@ function relativeTime(time: Date) {
 		t('_ago.unknown');
 }
 
-export default function Note(props: { note: PackedNote, pinned: boolean }) {
+export default function Note(props: { note: PackedNote, pinned?: boolean }) {
 	const isPureRenote = props.note.renote && !props.note.text;
 	const renoter = isPureRenote ? (props.note.user as PackedUser) : null;
 	const note = isPureRenote ? props.note.renote as PackedNote : props.note;

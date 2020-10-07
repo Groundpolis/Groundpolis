@@ -11,6 +11,7 @@ import Spinner from '../components/Spinner';
 
 import '../styles/style.scss';
 import './Welcome.scss';
+import { Timeline } from '../components/Timeline';
 
 function stopBeta() {
 	localStorage.removeItem('fe');
@@ -23,11 +24,12 @@ export default function Welcome() {
 	const [tl, setTl] = useState<any[] | null>(null);
 
 	useEffect(() => {
+		if (meta === null) return;
 		(async () => {
 			setStats(await api('stats'));
 			setTl(await api(meta.disableFeatured ? 'notes/local-timeline' : 'notes/featured'));
 		})();
-	}, []);
+	}, [meta]);
 
 	return meta === null || stats === null ? <Spinner /> : (
 		<article className="_page welcome _container">
@@ -68,10 +70,8 @@ export default function Welcome() {
 						<FontAwesomeIcon icon={meta.disableFeatured ? faComments : faFireAlt} style={{ marginRight: '16px' }}/>
 						{t(meta.disableFeatured ? 'welcomeTimeline' : 'welcomeFeatured')}
 					</h2></header>
-					<section className="_box timeline">
-						<div className="_vstack">
-							{tl ? tl.map(note => <Note key={note.id} note={note} />) : <Spinner relative />}
-						</div>
+					<section className="timeline">
+						{tl ? <Timeline notes={tl} /> : <Spinner relative />}
 					</section>
 				</article>
 			</div>

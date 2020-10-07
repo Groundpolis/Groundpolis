@@ -65,7 +65,15 @@ module.exports = {
 						}
 					}
 				],
-			},
+			}, {
+				test: /\.css$/,
+				use: [{
+					loader: 'css-loader',
+					options: {
+						esModule: false, // TODO: trueにすると壊れる。Vue3移行の折にはtrueにできるかもしれない
+					}
+				}]
+			}, 
 		]
 	},
 	resolve: {
