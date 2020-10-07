@@ -1,5 +1,5 @@
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import React, { useState } from 'react';
+import React, { Reducer, useReducer, useState } from 'react';
 
 import { t } from '../utils/i18n';
 import { applyTheme, builtinThemes } from '../utils/theme';
@@ -7,6 +7,7 @@ import { clientDb, set } from '../db';
 import { langs } from '../config';
 import { ShellHeader } from '../teleporters';
 import { DefaultHeader } from '../components/DefaultHeader';
+import { useDeviceSetting } from '../settings/device';
 
 export default function Settings() {
 	const [themeId, setThemeId] = useState(localStorage['themeId']);
@@ -30,6 +31,8 @@ export default function Settings() {
 
 	const darkThemes = builtinThemes.filter(t => t.base === 'dark');
 	const lightThemes = builtinThemes.filter(t => t.base === 'light');
+
+	const [deviceSetting, setDeviceSetting] = useDeviceSetting();
 
 	return (
 		<>
@@ -75,6 +78,12 @@ export default function Settings() {
 				</article>
 
 				<article className="_box _vstack">
+					<label>
+						<input type="checkbox"
+							checked={deviceSetting.showFixedPostForm}
+							onChange={e => setDeviceSetting({ showFixedPostForm: e.target.checked })} />
+						{t('showFixedPostForm')}
+					</label>
 					<button className="_button static" onClick={optoutBeta}>{t('optoutNewFE')}</button>
 				</article>
 			</article>

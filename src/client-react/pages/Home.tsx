@@ -10,6 +10,8 @@ import { ShellFAB, ShellHeader } from '../teleporters';
 import { DefaultHeader } from '../components/DefaultHeader';
 import { PostFormDialog } from '../components/PostFormDialog';
 import { Timeline } from '../components/Timeline';
+import PostForm from '../components/PostForm';
+import { useDeviceSetting } from '../settings/device';
 
 export default function Home() {
 	const [tl, setTl] = useState(null as any[] | null);
@@ -26,6 +28,8 @@ export default function Home() {
 		conn.on('note', prepend);
 	}, []);
 
+	const [deviceSetting, _] = useDeviceSetting();
+
 	const onBottom = async () => {
 		const untilId = tl[tl.length - 1]?.id as string | undefined;
 		if (!untilId) return;
@@ -38,10 +42,18 @@ export default function Home() {
 	};
 
 	return (
-		<>
+		<div className="_vstack">
 			<ShellHeader.Source>
 				<DefaultHeader title={t('timeline')} icon={faComments} />
 			</ShellHeader.Source>
+
+			{
+				deviceSetting.showFixedPostForm ?
+					<div className="_box">
+						<PostForm />
+					</div>
+				: null
+			}
 
 			{ tl ? <Timeline notes={tl} onBottom={onBottom} /> : <Spinner relative />}
 
@@ -52,6 +64,6 @@ export default function Home() {
 			<ShellFAB.Source>
 				<FAB icon={faPencilAlt} onClick={() => setPostFormVisible(true)} />
 			</ShellFAB.Source>
-		</>
+		</div>
 	);
 }

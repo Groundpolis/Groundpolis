@@ -2,14 +2,15 @@ import React, { CSSProperties, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { parse, parsePlain } from '../../mfm/parse';
 import { MfmForest, MfmTree } from '../../mfm/prelude';
-import DeviceSettingManager from '../settings/device';
+import { useDeviceSetting } from '../settings/device';
 import { t } from '../utils/i18n';
 
 
 
 export default function Mfm(props: { text: string, plain?: boolean, isNote?: boolean }) {
 	const isNote = props.isNote ?? true;
-	const useAnimation = DeviceSettingManager.get('animatedMfm');
+	const [deviceSetting, _] = useDeviceSetting();
+	const useAnimation = deviceSetting.animatedMfm;
 
 	const generate = (ast: MfmForest): ReactElement[] => ast.map((token) => {
 		switch (token.node.type) {

@@ -1,3 +1,5 @@
+import { Reducer, useReducer } from 'react';
+
 export interface DeviceSetting { 
 	loadRawImages: boolean;
 	alwaysShowNsfw: boolean;
@@ -157,9 +159,46 @@ export default class DeviceSettingManager {
 			});
 	}
 
-	static get(k: SettingKey): unknown {
-		const value = localStorage['deviceSetting:' + k];
-		return value !== undefined ? value : defaultSetting[k];
+	static get<V extends SettingKey>(k: V): DeviceSetting[V] {
+		const value = localStorage.getItem('deviceSetting:' + k);
+		if (value === undefined) return defaultSetting[k];
+		switch (typeof defaultSetting[k]) { 
+			case 'bigint':
+				return BigInt(value) as any;
+			case 'string':
+				return value as any;
+			case 'object':
+				return JSON.parse(value);
+			case 'boolean':
+				return (value.toLowerCase() === 'true') as any;
+			case 'number':
+				return Number(value) as any;
+			case 'undefined':
+				return undefined as any;
+			default:
+				throw new Error('Type mismatch! ' + typeof defaultSetting[k] + ' type required');
+			
+		}
+	}
+
+	static getAll(): DeviceSetting {
+		const set = <T extends SettingKey>(s: DeviceSetting, k: T, value: DeviceSetting[T]) => { s[k] = value; };
+
+		const a = { ...defaultSetting } as DeviceSetting;
+		for (const key of Object.keys(defaultSetting) as unknown as SettingKey[]) {
+			const value = DeviceSettingManager.get(key);
+			console.log(`${key}: ${value}`);
+			set(a, key, value);
+		}
+		console.log(a);
+		return a;
+	}
+
+	static setAll(opts: Partial<DeviceSetting>) { 
+		for (const key of Object.keys(opts) as unknown as SettingKey[]) {
+			const value = opts[key];
+			DeviceSettingManager.set(key, value);
+		}
 	}
 
 	static set(k: SettingKey, v: unknown) { 
@@ -172,4 +211,17 @@ export default class DeviceSettingManager {
 
 		localStorage['deviceSetting:' + k] = value;
 	}
+}
+
+export function useDeviceSetting() { 
+	const deviceSettingReducer: Reducer<DeviceSetting, Partial<DeviceSetting>> = (prev, partial) => {
+		const newState = {
+			...prev, ...partial
+		} as DeviceSetting;
+
+		DeviceSettingManager.setAll(partial);
+		return newState;
+	};
+
+	return useReducer(deviceSettingReducer, DeviceSettingManager.getAll());
 }
