@@ -1,4 +1,4 @@
-import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faEyeSlash, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
@@ -59,11 +59,13 @@ export default function PostForm(props: PostFormProps) {
 						submitNote();
 				}} />
 			<div className="_hstack">
-				<button className={'_button command' + (useCw ? ' primary' : '')} onClick={() => setUseCw(!useCw)}>
+				<button className={'_button command' + (useCw ? ' active' : '')} onClick={() => setUseCw(!useCw)}>
 					<FontAwesomeIcon icon={faEyeSlash} />
 				</button>
 				<span style={{ marginLeft: 'auto' }}>{remaining}</span>
-				<button className="_button primary" onClick={submitNote} disabled={!canNote}>{t('note')}</button>
+				<button className="_button command primary" onClick={submitNote} disabled={!canNote}>
+					<FontAwesomeIcon icon={faPaperPlane}/>
+				</button>
 			</div>
 		</div>
 	);

@@ -43,7 +43,7 @@ export default function Shell(props: {
 					<ShellHeader.Target />
 				</div>
 				<div className="right">
-					<button disabled className="_button command primary">
+					<button disabled className="_button command active">
 						<FontAwesomeIcon icon={faSlidersH} />
 					</button>
 				</div>

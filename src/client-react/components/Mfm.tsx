@@ -5,7 +5,7 @@ import { MfmForest, MfmTree } from '../../mfm/prelude';
 import { useDeviceSetting } from '../settings/device';
 import { t } from '../utils/i18n';
 
-
+import './Mfm.scss';
 
 export default function Mfm(props: { text: string, plain?: boolean, isNote?: boolean }) {
 	const isNote = props.isNote ?? true;

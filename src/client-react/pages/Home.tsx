@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { faPencilAlt, faComments } from '@fortawesome/free-solid-svg-icons';
+import { faPencilAlt, faComments, faHome, faShareAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 import Spinner from '../components/Spinner';
 import { api } from '../utils/api';
@@ -12,21 +12,38 @@ import { PostFormDialog } from '../components/PostFormDialog';
 import { Timeline } from '../components/Timeline';
 import PostForm from '../components/PostForm';
 import { useDeviceSetting } from '../settings/device';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+export type TimelineSrc = 'home' | 'local' | 'hybrid' | 'global';
 export default function Home() {
 	const [tl, setTl] = useState(null as any[] | null);
+	const [src, setSrc] = useState('home' as TimelineSrc);
 	const [postFormVisible, setPostFormVisible] = useState(false);
 
 	const prepend = useCallback((note: any) => {
 		setTl(tl => tl === null ? [ note ] : [ note, ...tl ]);
 	}, []);
 
+	const endpoint =
+		src === 'home' ? 'timeline' :
+		src === 'local' ? 'local-timeline' :
+				src === 'hybrid' ? 'hybrid-timeline' : 'global-timeline';
+
+	const streamId =
+		src === 'home' ? 'homeTimeline' :
+			src === 'local' ? 'localTimeline' :
+				src === 'hybrid' ? 'hybridTimeline' : 'globalTimeline';
+
 	useEffect(() => {
-		api('notes/timeline').then(setTl);
+		setTl(null);
+		api('notes/' + endpoint).then(setTl);
 		const stream = getStream();
-		const conn = stream.useSharedConnection('homeTimeline');
+		const conn = stream.useSharedConnection(streamId);
 		conn.on('note', prepend);
-	}, []);
+		return () => {
+			conn.off('note');
+		};
+	}, [src]);
 
 	const [deviceSetting, _] = useDeviceSetting();
 
@@ -35,7 +52,7 @@ export default function Home() {
 		if (!untilId) return;
 		setTl([
 			...tl,
-			...(await api('notes/local-timeline', {
+			...(await api('notes/' + src.ep, {
 				untilId, limit: 10,
 			})),
 		]);
@@ -44,7 +61,23 @@ export default function Home() {
 	return (
 		<div className="_vstack">
 			<ShellHeader.Source>
-				<DefaultHeader title={t('timeline')} icon={faComments} />
+				{ /* <DefaultHeader title={t('timeline')} icon={faComments} /> */}
+				<button className={ '_button static' +( src === 'home' ? ' primary' : '')} onClick={() => setSrc('home')}>
+					<FontAwesomeIcon icon={faHome} />
+					{src === 'home' ? t('_timelines.home') : undefined}
+				</button>
+				<button className={ '_button static' +( src === 'local' ? ' primary' : '')} onClick={() => setSrc('local')}>
+					<FontAwesomeIcon icon={faComments} />
+					{src === 'local' ? t('_timelines.local') : undefined}
+				</button>
+				<button className={ '_button static' +( src === 'hybrid' ? ' primary' : '')} onClick={() => setSrc('hybrid')}>
+					<FontAwesomeIcon icon={faShareAlt} />
+					{src === 'hybrid' ? t('_timelines.social') : undefined}
+				</button>
+				<button className={ '_button static' +( src === 'global' ? ' primary' : '')} onClick={() => setSrc('global')}>
+					<FontAwesomeIcon icon={faGlobe} />
+					{src === 'global' ? t('_timelines.global') : undefined}
+				</button>
 			</ShellHeader.Source>
 
 			{

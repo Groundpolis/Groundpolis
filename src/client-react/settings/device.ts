@@ -187,10 +187,8 @@ export default class DeviceSettingManager {
 		const a = { ...defaultSetting } as DeviceSetting;
 		for (const key of Object.keys(defaultSetting) as unknown as SettingKey[]) {
 			const value = DeviceSettingManager.get(key);
-			console.log(`${key}: ${value}`);
 			set(a, key, value);
 		}
-		console.log(a);
 		return a;
 	}
 

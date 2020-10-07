@@ -1,11 +1,12 @@
-import React, { Suspense, useEffect } from 'react';
-import { useGlobal, setGlobal } from 'reactn';
+import React, { Suspense, useEffect, useLayoutEffect } from 'react';
+import { setGlobal } from 'reactn';
 import { BrowserRouter as Router, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
 import Shell from './components/Shell';
 import Spinner from './components/Spinner';
 import { api, isSignedIn } from './utils/api';
+import { useDeviceSetting } from './settings/device';
 
 const Page = (props: any) => {
 	const Lazy = React.lazy(() => import('./pages/' + props.name));
@@ -28,6 +29,8 @@ function Inner() {
 			});
 		})();
 	}, []);
+
+	const [deviceSetting] = useDeviceSetting(); 
 
 	return (
 		<Shell zenMode={m.path === '/' && m.isExact && !isSignedIn()}>

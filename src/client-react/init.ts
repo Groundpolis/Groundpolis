@@ -21,6 +21,11 @@ import 'animate.css';
 		deviceSetting.set('migratedFromVuex', true);
 	}
 
+	const htmlClass = document.documentElement.classList;
+	if (!deviceSetting.get('useBlurEffectForModal')) {
+		htmlClass.add('noblur');
+	}
+
 	// Detect the user agent
 	const ua = navigator.userAgent.toLowerCase();
 	const isMobile = /mobile|iphone|ipad|android/.test(ua);

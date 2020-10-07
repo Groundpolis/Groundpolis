@@ -653,6 +653,7 @@ returnHome: "Return to Home"
 optoutNewFE: "Return to a stable web client"
 errorLocalOnlyToRemote: "You cannot make replies to remote users local only."
 renoteButtonMode: "Renote-Button Behavior"
+reduceBlur: "Reduce blur effect"
 
 _renoteButtonMode:
   choose: "Choose always"

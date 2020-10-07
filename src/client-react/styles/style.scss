@@ -3,6 +3,9 @@ html {
 	--margin: 16px;
 	--mobileThreshold: 640px;
 	--blur: blur(8px);
+	&.noblur {
+		--blur: none;
+	}
 }
 
 body {
@@ -25,20 +28,6 @@ a {
 
 h1, h2, h3, h4, h5, h6 {
 	margin: 0;
-}
-
-input, textarea {
-	font-size: 1rem;
-	background: transparent;
-	color: var(--fg);
-	border: 2px solid var(--inputBorder);
-	border-radius: var(--radius);
-	padding: calc(var(--margin) / 2) var(--margin);
-
-	&::placeholder {
-		color: var(--fg);
-		opacity: 0.5;
-	}
 }
 
 h1 { font-size: 1.6rem; }

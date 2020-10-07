@@ -117,25 +117,25 @@ export default function Note(props: { note: PackedNote, pinned?: boolean }) {
 						{
 							Object.entries(note.reactions as Record<string, number>)
 								.map(([reaction, count]) => (
-									<button key={reaction} className={`_button reaction ${isMine(reaction) ? 'primary' : ''}`}>
+									<button disabled key={reaction} className={`_button reaction ${isMine(reaction) ? 'primary' : ''}`}>
 										{reaction} {count}
 									</button>
 								))
 						}
 					</div>
 					<div className="commands">
-						<button className="_button command">
+						<button disabled className="_button command">
 							<FontAwesomeIcon icon={note.reply ? faReplyAll : faReply} />
 							{note.repliesCount ? <span className="count">{note.repliesCount}</span> : null}
 						</button>
-						<button className="_button command">
+						<button disabled className="_button command">
 							<FontAwesomeIcon icon={faRetweet} />
 							{note.renoteCount ? <span className="count">{note.renoteCount}</span> : null}
 						</button>
-						<button className="_button command" style={{ color: note.myReaction ? 'var(--accent' : undefined }}>
+						<button disabled className="_button command" style={{ color: note.myReaction ? 'var(--accent' : undefined }}>
 							<FontAwesomeIcon icon={note.myReaction ? faMinus : faPlus} />
 						</button>
-						<button className="_button command">
+						<button disabled className="_button command">
 							<FontAwesomeIcon icon={faEllipsisV} />
 						</button>
 					</div>

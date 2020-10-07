@@ -24,8 +24,11 @@
 
 		}
 		> .center {
-			margin-left: auto;
 			margin-right: auto;
+			margin-left: var(--margin);
+			@media screen and (max-width: 640px) {
+				margin-left: auto;
+			}
 		}
 		> .right {
 			

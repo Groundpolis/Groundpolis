@@ -1,5 +1,5 @@
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import React, { Reducer, useReducer, useState } from 'react';
+import React, { Reducer, useEffect, useLayoutEffect, useReducer, useState } from 'react';
 
 import { t } from '../utils/i18n';
 import { applyTheme, builtinThemes } from '../utils/theme';
@@ -33,6 +33,15 @@ export default function Settings() {
 	const lightThemes = builtinThemes.filter(t => t.base === 'light');
 
 	const [deviceSetting, setDeviceSetting] = useDeviceSetting();
+
+	useLayoutEffect(() => {
+		const htmlClass = document.documentElement.classList;
+		if (deviceSetting.useBlurEffectForModal) {
+			htmlClass.remove('noblur');
+		} else {
+			htmlClass.add('noblur');
+		}
+	}, [deviceSetting]);
 
 	return (
 		<>
@@ -83,6 +92,18 @@ export default function Settings() {
 							checked={deviceSetting.showFixedPostForm}
 							onChange={e => setDeviceSetting({ showFixedPostForm: e.target.checked })} />
 						{t('showFixedPostForm')}
+					</label>
+					<label>
+						<input type="checkbox"
+							checked={!deviceSetting.animation}
+							onChange={e => setDeviceSetting({ animation: !e.target.checked })} />
+						{t('reduceUiAnimation')}
+					</label>
+					<label>
+						<input type="checkbox"
+							checked={!deviceSetting.useBlurEffectForModal}
+							onChange={e => setDeviceSetting({ useBlurEffectForModal: !e.target.checked })} />
+						{t('reduceBlur')}
 					</label>
 					<button className="_button static" onClick={optoutBeta}>{t('optoutNewFE')}</button>
 				</article>
