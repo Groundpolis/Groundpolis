@@ -40,6 +40,7 @@ function Inner() {
 					<Page path="/signin" name="SignIn" />
 					<Page path="/my/settings" name="Settings" />
 					<Page path="/uitest" name="UITest" />
+					<Page path="/@:acct" name="User/Index" />
 					<Page path="*" name="NotFound" />
 				</Switch>
 			</ErrorBoundary>
