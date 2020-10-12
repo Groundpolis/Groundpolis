@@ -1,5 +1,7 @@
 ._com.note {
 	width: 100%;
+	transform-origin: top;
+	overflow: hidden;
 	> *:not(:last-child) {
 		margin-bottom: 16px;
 	}
@@ -120,6 +122,37 @@
 					}
 				}
 			}
+		}
+	}
+}
+
+.note {
+	--xCurrentNoteHeight: 120px;
+  @mixin transition {
+    transition: all 200ms linear;
+  }
+	&-enter {
+		opacity: 0;
+		height: 0;
+		padding: 0;
+
+		&-active {
+			@include transition;
+			padding: var(--margin);
+			opacity: 1;
+			height: var(--xCurrentNoteHeight);
+		}
+	}
+	&-exit {
+		opacity: 1;
+		height: var(--xCurrentNoteHeight);
+		padding: var(--margin);
+
+		&-active {
+			@include transition;
+			padding: 0;
+			opacity: 0;
+			height: 0;
 		}
 	}
 }
