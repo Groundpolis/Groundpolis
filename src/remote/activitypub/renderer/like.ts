@@ -8,7 +8,7 @@ export const renderLike = async (noteReaction: NoteReaction, note: Note) => {
 	const reaction = noteReaction.reaction;
 
 	const object =  {
-		type: 'Like',
+		type: noteReaction.dislike ? 'Dislike' : 'Like',
 		id: `${config.url}/likes/${noteReaction.id}`,
 		actor: `${config.url}/users/${noteReaction.userId}`,
 		object: note.uri ? note.uri : `${config.url}/notes/${noteReaction.noteId}`,

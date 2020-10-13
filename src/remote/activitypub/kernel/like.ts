@@ -11,6 +11,6 @@ export default async (actor: IRemoteUser, activity: ILike) => {
 
 	await extractEmojis(activity.tag || [], actor.host).catch(() => null);
 
-	await create(actor, note, activity._misskey_reaction || activity.content || activity.name);
-	return `ok`;
+	await create(actor, note, activity._misskey_reaction || activity.content || activity.name, activity.type === 'Dislike');
+	return 'ok';
 };

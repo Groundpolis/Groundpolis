@@ -30,7 +30,14 @@ export const meta = {
 			desc: {
 				'ja-JP': 'リアクションの種類'
 			}
-		}
+		},
+
+		dislike: {
+			validator: $.optional.bool,
+			desc: {
+				'ja-JP': 'きらい'
+			}
+		},
 	},
 
 	errors: {
@@ -53,7 +60,7 @@ export default define(meta, async (ps, user) => {
 		if (e.id === '9725d0ce-ba28-4dde-95a7-2cbb2c15de24') throw new ApiError(meta.errors.noSuchNote);
 		throw e;
 	});
-	await createReaction(user, note, ps.reaction).catch(e => {
+	await createReaction(user, note, ps.reaction, !!ps.dislike).catch(e => {
 		if (e.id === '51c42bb4-931a-456b-bff7-e5a8a70dd298') throw new ApiError(meta.errors.alreadyReacted);
 		throw e;
 	});

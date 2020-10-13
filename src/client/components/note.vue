@@ -599,10 +599,11 @@ export default Vue.extend({
 				source: this.$refs.reactButton,
 				showFocus: viaKeyboard,
 			});
-			picker.$once('chosen', reaction => {
+			picker.$once('chosen', ({ reaction, dislike }: { reaction: string, dislike: boolean, }) => {
 				this.$root.api('notes/reactions/create', {
 					noteId: this.appearNote.id,
-					reaction: reaction
+					reaction,
+					dislike,
 				}).then(() => {
 					picker.close();
 				});
