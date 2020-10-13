@@ -158,7 +158,10 @@ const getFeed = async (acct: string) => {
 		isSuspended: false
 	});
 
-	return user && await packFeed(user);
+	if (!user) return null;
+	if (user.noindex) return null;
+
+	return await packFeed(user);
 };
 
 // Atom

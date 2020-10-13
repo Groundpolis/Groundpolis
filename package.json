@@ -27,7 +27,7 @@
 		"gulpstart": "run-s gulp start",
 		"init": "npm run migrate",
 		"lint": "eslint --ext .js,.jsx,.ts,.tsx --fix 'src/**'",
-		"migrate": "ts-node ./node_modules/typeorm/cli.js migration:run",
+		"migrate": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run",
 		"migrateandstart": "npm run migrate && npm run start",
 		"ormconfig": "node ./built/ormconfig.js",
 		"start": "node ./index.js",

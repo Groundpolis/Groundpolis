@@ -24,7 +24,7 @@ block meta
 
 	meta(name='twitter:card' content='summary')
 
-	if user.host
+	if user.host || user.noindex
 		meta(name='robots' content='noindex')
 
 	if profile.twitter

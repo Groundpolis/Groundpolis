@@ -6,6 +6,7 @@
 		<mk-switch v-model="carefulBot" :disabled="isLocked" @change="save()">{{ $t('makeBotFollowManuallyApprove') }}</mk-switch>
 		<mk-switch v-model="autoAcceptFollowed" v-if="isLocked || carefulBot" @change="save()">{{ $t('autoAcceptFollowed') }}</mk-switch>
 		<mk-switch v-model="hideFF" @change="save()">{{ $t('hideFF') }}</mk-switch>
+		<mk-switch v-model="noindex" @change="save()">{{ $t('noindex') }}</mk-switch>
 	</div>
 	<div class="_content">
 		<mk-switch v-model="rememberNoteVisibility" @change="save()">{{ $t('rememberNoteVisibility') }}</mk-switch>
@@ -39,6 +40,7 @@ export default Vue.extend({
 			autoAcceptFollowed: false,
 			carefulBot: false,
 			hideFF: false,
+			noindex: false,
 			faLock
 		}
 	},
@@ -65,6 +67,7 @@ export default Vue.extend({
 		this.hideFF = this.$store.state.i.hideFF;
 		this.carefulBot = this.$store.state.i.carefulBot;
 		this.autoAcceptFollowed = this.$store.state.i.autoAcceptFollowed;
+		this.noindex = this.$store.state.i.noindex;
 	},
 
 	methods: {
@@ -74,6 +77,7 @@ export default Vue.extend({
 				hideFF: !!this.hideFF,
 				carefulBot: !!this.carefulBot,
 				autoAcceptFollowed: !!this.autoAcceptFollowed,
+				noindex: !!this.noindex,
 			});
 		}
 	}

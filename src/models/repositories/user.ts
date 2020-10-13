@@ -63,7 +63,7 @@ export class UserRepository extends Repository<User> {
 		const joinings = await UserGroupJoinings.find({ userId: userId });
 
 		const groupQs = Promise.all(joinings.map(j => MessagingMessages.createQueryBuilder('message')
-			.where(`message.groupId = :groupId`, { groupId: j.userGroupId })
+			.where('message.groupId = :groupId', { groupId: j.userGroupId })
 			.andWhere('message.userId != :userId', { userId: userId })
 			.andWhere('NOT (:userId = ANY(message.reads))', { userId: userId })
 			.andWhere('message.createdAt > :joinedAt', { joinedAt: j.createdAt }) // 自分が加入する前の会話については、未読扱いしない
@@ -193,6 +193,7 @@ export class UserRepository extends Repository<User> {
 				},
 				select: ['name', 'host', 'url', 'aliases']
 			}) : [],
+			noindex: user.noindex || falsy,
 
 			...(opts.detail ? {
 				url: profile!.url,

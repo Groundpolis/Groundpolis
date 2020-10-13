@@ -166,6 +166,13 @@ export const meta = {
 		includingNotificationTypes: {
 			validator: $.optional.arr($.str.or(notificationTypes as unknown as string[]))
 		},
+
+		noindex: {
+			validator: $.optional.bool,
+			desc: {
+				'ja-JP': 'ユーザーページおよび自分のノートページにて、クローラーを拒否するかどうか'
+			}
+		},
 	},
 
 	errors: {
@@ -225,6 +232,7 @@ export default define(meta, async (ps, user, token) => {
 	if (typeof ps.isLocked === 'boolean') updates.isLocked = ps.isLocked;
 	if (typeof ps.hideFF === 'boolean') updates.hideFF = ps.hideFF;
 	if (typeof ps.isBot === 'boolean') updates.isBot = ps.isBot;
+	if (typeof ps.noindex === 'boolean') updates.noindex = ps.noindex;
 	if (typeof ps.carefulBot === 'boolean') profileUpdates.carefulBot = ps.carefulBot;
 	if (typeof ps.autoAcceptFollowed === 'boolean') profileUpdates.autoAcceptFollowed = ps.autoAcceptFollowed;
 	if (typeof ps.isCat === 'boolean') updates.isCat = ps.isCat;
