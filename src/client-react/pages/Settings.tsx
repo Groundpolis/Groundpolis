@@ -1,12 +1,13 @@
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import React, { useState } from 'react';
-import Cookies from 'js-cookie';
+import React, { Reducer, useEffect, useLayoutEffect, useReducer, useState } from 'react';
 
-import Shell from '../components/Shell';
-import { t } from '../scripts/i18n';
-import { applyTheme, builtinThemes } from '../scripts/theme';
+import { t } from '../utils/i18n';
+import { applyTheme, builtinThemes } from '../utils/theme';
 import { clientDb, set } from '../db';
 import { langs } from '../config';
+import { ShellHeader } from '../teleporters';
+import { DefaultHeader } from '../components/DefaultHeader';
+import { useDeviceSetting } from '../settings/device';
 
 export default function Settings() {
 	const [themeId, setThemeId] = useState(localStorage['themeId']);
@@ -31,8 +32,23 @@ export default function Settings() {
 	const darkThemes = builtinThemes.filter(t => t.base === 'dark');
 	const lightThemes = builtinThemes.filter(t => t.base === 'light');
 
+	const [deviceSetting, setDeviceSetting] = useDeviceSetting();
+
+	useLayoutEffect(() => {
+		const htmlClass = document.documentElement.classList;
+		if (deviceSetting.useBlurEffectForModal) {
+			htmlClass.remove('noblur');
+		} else {
+			htmlClass.add('noblur');
+		}
+	}, [deviceSetting]);
+
 	return (
-		<Shell title={t('settings')} icon={faCog}>
+		<>
+			<ShellHeader.Source>
+				<DefaultHeader title={t('settings')} icon={faCog} />
+			</ShellHeader.Source>
+
 			<article className="_vstack">
 
 				<article className="_box">
@@ -71,16 +87,34 @@ export default function Settings() {
 				</article>
 
 				<article className="_box _vstack">
+					<label>
+						<input type="checkbox"
+							checked={deviceSetting.showFixedPostForm}
+							onChange={e => setDeviceSetting({ showFixedPostForm: e.target.checked })} />
+						{t('showFixedPostForm')}
+					</label>
+					<label>
+						<input type="checkbox"
+							checked={!deviceSetting.animation}
+							onChange={e => setDeviceSetting({ animation: !e.target.checked })} />
+						{t('reduceUiAnimation')}
+					</label>
+					<label>
+						<input type="checkbox"
+							checked={!deviceSetting.useBlurEffectForModal}
+							onChange={e => setDeviceSetting({ useBlurEffectForModal: !e.target.checked })} />
+						{t('reduceBlur')}
+					</label>
 					<button className="_button static" onClick={optoutBeta}>{t('optoutNewFE')}</button>
 				</article>
 			</article>
-		</Shell>
+		</>
 	);
 }
 
 function optoutBeta() { 
 	if (confirm('Are you sure to opt out the beta client?')) {
-		Cookies.remove('fe');
+		localStorage.removeItem('fe');
 		location.href = '/';
 	}
 }

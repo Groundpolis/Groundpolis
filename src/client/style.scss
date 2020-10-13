@@ -75,7 +75,7 @@ html {
 
 html.changing-theme {
 	&, * {
-		transition: background 1s ease !important;
+		transition: background 1s ease, color 1s ease !important;
 	}
 }
 

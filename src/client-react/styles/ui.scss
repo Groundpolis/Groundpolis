@@ -73,6 +73,19 @@
 		}
 
 		&.primary {
+			background: var(--accent);
+			color: white;
+
+			&:not(:disabled):hover {
+				background: var(--X8);
+			}
+		
+			&:not(:disabled):active {
+				background: var(--X9);
+			}
+		}
+
+		&.active {
 			color: var(--accent);
 		}
 	}
@@ -106,4 +119,18 @@
 ._label {
 	font-size: 0.7em;
 	opacity: 0.6;
+}
+
+input, textarea {
+	font-size: 1rem;
+	background: transparent;
+	color: var(--fg);
+	border: 2px solid var(--inputBorder);
+	border-radius: var(--radius);
+	padding: calc(var(--margin) / 2) var(--margin);
+
+	&::placeholder {
+		color: var(--fg);
+		opacity: 0.5;
+	}
 }

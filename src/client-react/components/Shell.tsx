@@ -1,28 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useGlobal } from 'reactn';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faBell, faBroadcastTower, faChevronCircleDown, faChevronCircleUp, faCloud, faCog, faComments, faHome, faSearch, faSlidersH } from '@fortawesome/free-solid-svg-icons';
 
 import './Shell.scss';
-import FAB from './FAB';
-import { api, isSignedIn } from '../scripts/api';
-import { t } from '../scripts/i18n';
-import { Link, NavLink } from 'react-router-dom';
+import { api, isSignedIn } from '../utils/api';
+import { t } from '../utils/i18n';
+import { NavLink, NavLinkProps } from 'react-router-dom';
 import getAcct from '../../misc/acct/render';
-import { PackedUser } from '../../models/repositories/user';
-import Spinner from './Spinner';
 import Icon from './Icon';
+import { ShellFAB, ShellHeader } from '../teleporters';
 
-const DefaultHeader = (props: { title: string, icon?: IconProp }) => (
-	<span className="title">
-		{props.icon ? <FontAwesomeIcon icon={props.icon} /> : null}
-		{props.title}
-	</span >
-);
-
-function Item(props: { disabled?: boolean, exact?: boolean, to: string, icon?: IconProp, label: string }) { 
+function Item(props: { disabled?: boolean, icon?: IconProp, label: string } & NavLinkProps) { 
 	return (
-		<NavLink exact={props.exact} to={props.to} className={`item ${props.disabled ? ' disabled' : ''}`} activeClassName="active">
+		<NavLink {...props} className={`item ${props.disabled ? ' disabled' : ''}`} activeClassName="active">
 			{props.icon ? <FontAwesomeIcon icon={props.icon} fixedWidth /> : null}
 			<span className="label">{props.label}</span>
 		</NavLink>
@@ -30,26 +22,16 @@ function Item(props: { disabled?: boolean, exact?: boolean, to: string, icon?: I
 }
 
 export default function Shell(props: {
-	title?: string,
-	icon?: IconProp,
-	header?: React.ReactElement,
+	zenMode?: boolean,
 	children?: React.ReactElement,
-	fabIcon?: IconProp,
-	onFabClicked?: () => void,
 }) {
-	const [i, setI] = useState(null as PackedUser | null);
+	const [i, setI] = useGlobal('i');
 	const [toggle, setToggle] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 
 	const signedIn = isSignedIn();
 
-	useEffect(() => {
-		(async () => {
-			setI(await api('i'));
-		})();
-	}, []);
-
-	return (
+	return props.zenMode ? props.children : (
 		<div className="_com shell">
 			<header className="header">
 				<div className="left">
@@ -58,10 +40,10 @@ export default function Shell(props: {
 					</button>
 				</div>
 				<div className="center">
-					{props.header ?? <DefaultHeader title={props.title ?? ''} icon={props.icon} />}
+					<ShellHeader.Target />
 				</div>
 				<div className="right">
-					<button disabled className="_button command primary">
+					<button disabled className="_button command active">
 						<FontAwesomeIcon icon={faSlidersH} />
 					</button>
 				</div>
@@ -69,7 +51,7 @@ export default function Shell(props: {
 			<div className={'backdrop' + (isOpen ? ' open' : '')} onClick={() => setIsOpen(false)}/>
 			<div className={'sidebar' + (isOpen ? ' open' : '')}>
 				{signedIn ?
-					<NavLink to={i ? '/@' + getAcct(i) : ''} className="item" activeClassName="active">
+					<NavLink to={i ? '/@' + getAcct(i) : ''} className="item" activeClassName="active" onClick={() => setIsOpen(false)}>
 						<img src={i?.avatarUrl} className="avatar" />
 						<span className="label">{i?.name || i?.username}</span>
 					</NavLink>
@@ -88,14 +70,14 @@ export default function Shell(props: {
 					</button>
 					<button className="_button command item danger" onClick={logout}>{t('logout')}</button>
 				</> : <>
-						<Item exact to="/" icon={faHome} label={t('home')} />
-						{signedIn ? <Item disabled to="/my/notifications" icon={faBell} label={t('notifications')} /> : null}
-						<Item disabled to="/explore" icon={faSearch} label={t('explore')} />
-						{signedIn ? <Item disabled to="/my/messaging" icon={faComments} label={t('messaging')} /> : null}
-						{signedIn ? <Item disabled to="/my/drive" icon={faCloud} label={t('drive')} /> : null}
+						<Item exact to="/" icon={faHome} label={t('home')} onClick={() => setIsOpen(false)} />
+						{signedIn ? <Item disabled to="/my/notifications" icon={faBell} label={t('notifications')} onClick={() => setIsOpen(false)} /> : null}
+						<Item disabled to="/explore" icon={faSearch} label={t('explore')} onClick={() => setIsOpen(false)} />
+						{signedIn ? <Item disabled to="/my/messaging" icon={faComments} label={t('messaging')} onClick={() => setIsOpen(false)} /> : null}
+						{signedIn ? <Item disabled to="/my/drive" icon={faCloud} label={t('drive')} onClick={() => setIsOpen(false)} /> : null}
 						<div className="divider" />
-						<Item disabled to="/announcements" icon={faBroadcastTower} label={t('announcements')} />
-						<Item to="/my/settings" icon={faCog} label={t('settings')} />
+						<Item disabled to="/announcements" icon={faBroadcastTower} label={t('announcements')} onClick={() => setIsOpen(false)} />
+						<Item to="/my/settings" icon={faCog} label={t('settings')} onClick={() => setIsOpen(false)} />
 					</>
 				}
 				{signedIn ? <button className="_button command toggler" onClick={() => setToggle(!toggle)}>
@@ -105,7 +87,7 @@ export default function Shell(props: {
 			<div className="content _container">
 				{props.children}
 			</div>
-			{props.fabIcon ? <FAB icon={props.fabIcon} onClick={props.onFabClicked ?? (() => { })} /> : null}
+			<ShellFAB.Target/>
 		</div>
 	);
 }

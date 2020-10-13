@@ -9,6 +9,7 @@
 @mixin hStack {
 	display: flex;
 	flex-wrap: wrap;
+	align-items: center;
 	> *:not(:last-child) {
 		margin-right: var(--margin);
 	}
@@ -46,6 +47,11 @@
 ._flat-box {
 	overflow: hidden;
 	padding: var(--margin);
+}
+
+._box._center, ._flat-box._center {
+	max-width: 640px;
+	margin: 0 auto;
 }
 
 ._error-box {

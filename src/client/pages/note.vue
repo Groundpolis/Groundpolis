@@ -83,6 +83,8 @@ export default Vue.extend({
 	methods: {
 		fetch() {
 			Progress.start();
+			this.showPrev = this.showNext = false;
+			this.hasPrev = this.hasNext = false;
 			this.$root.api('notes/show', {
 				noteId: this.$route.params.note
 			}).then(note => {

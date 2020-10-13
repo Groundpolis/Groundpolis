@@ -1,56 +1,97 @@
-import React, { useEffect, useState } from 'react';
-import rndstr from 'rndstr';
-import { faPencilAlt, faComments } from '@fortawesome/free-solid-svg-icons';
-import { useBottomScrollListener } from 'react-bottom-scroll-listener';
+import React, { useCallback, useEffect, useState } from 'react';
+import { faPencilAlt, faComments, faHome, faShareAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
 
-import Note from '../components/Note';
-import Shell from '../components/Shell';
 import Spinner from '../components/Spinner';
-import { api } from '../scripts/api';
-import { t } from '../scripts/i18n';
-import { PackedNote } from '../../models/repositories/note';
+import { api } from '../utils/api';
+import { t } from '../utils/i18n';
+import { getStream } from '../utils/stream';
+import FAB from '../components/FAB';
+import { ShellFAB, ShellHeader } from '../teleporters';
+import { PostFormDialog } from '../components/PostFormDialog';
+import { Timeline } from '../components/Timeline';
+import PostForm from '../components/PostForm';
+import { useDeviceSetting } from '../settings/device';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const fabClicked = () => {
-	const placeholder = t('_postForm._placeholders.' + rndstr({ length: 1, chars: 'a-f' }));
-	const text = window.prompt(placeholder);
-	if (!text) return;
-
-	api('notes/create', { text });
-};
-
-function Timeline(props: { notes: any[], onBottom?: () => void }) { 
-	useBottomScrollListener(props.onBottom ?? (() => { }));
-
-	return (
-		<div className="_vstack">
-			{props.notes.map(note => <div className="_box" key={note.id}><Note note={note} /></div>)}
-		</div>
-	);
-}
-
+export type TimelineSrc = 'home' | 'local' | 'hybrid' | 'global';
 export default function Home() {
 	const [tl, setTl] = useState(null as any[] | null);
+	const [src, setSrc] = useState('home' as TimelineSrc);
+	const [postFormVisible, setPostFormVisible] = useState(false);
+
+	const prepend = useCallback((note: any) => {
+		setTl(tl => tl === null ? [ note ] : [ note, ...tl ]);
+	}, []);
+
+	const endpoint =
+		src === 'home' ? 'timeline' :
+		src === 'local' ? 'local-timeline' :
+				src === 'hybrid' ? 'hybrid-timeline' : 'global-timeline';
+
+	const streamId =
+		src === 'home' ? 'homeTimeline' :
+			src === 'local' ? 'localTimeline' :
+				src === 'hybrid' ? 'hybridTimeline' : 'globalTimeline';
 
 	useEffect(() => {
-		(async () => {
-			setTl(await api('notes/local-timeline'));
-		})();
-	}, []);
+		setTl(null);
+		api('notes/' + endpoint).then(setTl);
+		const stream = getStream();
+		const conn = stream.useSharedConnection(streamId);
+		conn.on('note', prepend);
+		return () => {
+			conn.off('note');
+		};
+	}, [src]);
+
+	const [deviceSetting, _] = useDeviceSetting();
 
 	const onBottom = async () => {
 		const untilId = tl[tl.length - 1]?.id as string | undefined;
 		if (!untilId) return;
 		setTl([
 			...tl,
-			...(await api('notes/local-timeline', {
+			...(await api('notes/' + endpoint, {
 				untilId, limit: 10,
 			})),
 		]);
 	};
 
 	return (
-		<Shell title={t('timeline')} icon={faComments} fabIcon={faPencilAlt} onFabClicked={fabClicked}>
-			{ tl ? <Timeline notes={tl} onBottom={onBottom} /> : <Spinner relative /> }
-		</Shell>
+		<div className="_vstack">
+			<ShellHeader.Source>
+				{ /* <DefaultHeader title={t('timeline')} icon={faComments} /> */}
+				<button className={ '_button static' +( src === 'home' ? ' primary' : '')} onClick={() => setSrc('home')}>
+					<FontAwesomeIcon icon={faHome} />
+				</button>
+				<button className={ '_button static' +( src === 'local' ? ' primary' : '')} onClick={() => setSrc('local')}>
+					<FontAwesomeIcon icon={faComments} />
+				</button>
+				<button className={ '_button static' +( src === 'hybrid' ? ' primary' : '')} onClick={() => setSrc('hybrid')}>
+					<FontAwesomeIcon icon={faShareAlt} />
+				</button>
+				<button className={ '_button static' +( src === 'global' ? ' primary' : '')} onClick={() => setSrc('global')}>
+					<FontAwesomeIcon icon={faGlobe} />
+				</button>
+			</ShellHeader.Source>
+
+			{
+				deviceSetting.showFixedPostForm ?
+					<div className="_box">
+						<PostForm />
+					</div>
+				: null
+			}
+
+			{ tl ? <Timeline notes={tl} onBottom={onBottom} /> : <Spinner relative />}
+
+			{ postFormVisible ?
+				<PostFormDialog onClose={() => setPostFormVisible(!postFormVisible)}/>
+			: null }
+
+			<ShellFAB.Source>
+				<FAB icon={faPencilAlt} onClick={() => setPostFormVisible(true)} />
+			</ShellFAB.Source>
+		</div>
 	);
 }

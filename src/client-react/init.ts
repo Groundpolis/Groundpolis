@@ -1,48 +1,30 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { version, langs, instanceName, getLocale, deckmode } from './config';
+import { version } from './config';
 import { App } from './App';
-import { clientDb, get, count } from './db';
-import { applyTheme, oceanTheme } from './scripts/theme';
-import { setI18nContexts, setLocale } from './scripts/i18n';
+import { initializeThemes } from './init/initializeThemes';
+import { initializeI18n } from './init/initializeI18n';
+import { initializeStream } from './utils/stream';
+import deviceSetting from './settings/device';
+
+import 'animate.css';
 
 (async () => {
-	if (localStorage.getItem('theme') == null) {
-		applyTheme(oceanTheme);
+	initializeThemes();
+	await initializeI18n();
+
+	const token = localStorage['i'];
+	initializeStream({ token });
+
+	if (!deviceSetting.get('migratedFromVuex')) { 
+		deviceSetting.migrateFromVuex();
+		deviceSetting.set('migratedFromVuex', true);
 	}
 
-	//#region Detect the user language
-	let lang = localStorage.getItem('lang');
-
-	if (lang == null) {
-		if (langs.map(x => x[0]).includes(navigator.language)) {
-			lang = navigator.language;
-		} else {
-			lang = langs.map(x => x[0]).find(x => x.split('-')[0] == navigator.language);
-
-			if (lang == null) {
-				// Fallback
-				lang = 'en-US';
-			}
-		}
-
-		localStorage.setItem('lang', lang);
+	const htmlClass = document.documentElement.classList;
+	if (!deviceSetting.get('useBlurEffectForModal')) {
+		htmlClass.add('noblur');
 	}
-	//#endregion
-
-	await count(clientDb.i18n).then(async n => {
-		if (n === 0) {
-			await setI18nContexts(lang, version);
-			return;
-		}
-		if ((await get('_version_', clientDb.i18n) !== version)) {
-			await setI18nContexts(lang, version);
-			return;
-		}
-
-		setLocale(await getLocale());
-	});
 
 	// Detect the user agent
 	const ua = navigator.userAgent.toLowerCase();
@@ -59,14 +41,10 @@ import { setI18nContexts, setLocale } from './scripts/i18n';
 		head.appendChild(viewport);
 	}
 
-	//#region Set lang attr
-	const html = document.documentElement;
-	html.setAttribute('lang', lang);
-	//#endregion
-
 	// アプリ基底要素マウント
 	document.body.innerHTML = '<div id="app"></div>';
 	console.info(`Groundpolis v${version}`);
 
 	ReactDOM.render(App(), document.getElementById('app'));
+
 })();

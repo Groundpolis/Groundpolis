@@ -14,7 +14,7 @@ import { genId } from '../../../misc/gen-id';
 import { createNotification } from '../../create-notification';
 import deleteReaction from './delete';
 
-export default async (user: User, note: Note, reaction?: string) => {
+export default async (user: User, note: Note, reaction?: string, isDislike = false) => {
 	reaction = await toDbReaction(reaction, user.host);
 
 	const exist = await NoteReactions.findOne({
@@ -38,7 +38,8 @@ export default async (user: User, note: Note, reaction?: string) => {
 		createdAt: new Date(),
 		noteId: note.id,
 		userId: user.id,
-		reaction
+		reaction, 
+		dislike: isDislike,
 	});
 
 	// Increment reactions count
@@ -50,7 +51,9 @@ export default async (user: User, note: Note, reaction?: string) => {
 		.where('id = :id', { id: note.id })
 		.execute();
 
-	Notes.increment({ id: note.id }, 'score', 1);
+	if (!isDislike) {
+		Notes.increment({ id: note.id }, 'score', 1);
+	}
 
 	perUserReactionsChart.update(user, note);
 

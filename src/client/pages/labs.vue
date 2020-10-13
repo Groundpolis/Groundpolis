@@ -18,10 +18,10 @@
 				<template #desc>{{ $t('showUnlistedNotesInLTLDesc') }}</template>
 			</mk-switch>
 
-			<!-- <mk-switch v-model="reactFrontend">
+			<mk-switch v-model="reactFrontend">
 				{{ $t('_labs.tryNewApp') }}
 				<template #desc>{{ $t('_labs.tryNewAppDesc') }}</template>
-			</mk-switch> -->
+			</mk-switch>
 		</div>
 	</div>
 </div>
@@ -30,7 +30,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import { faFlask } from '@fortawesome/free-solid-svg-icons';
-import Cookies from 'js-cookie';
 
 import MkSwitch from '../components/ui/switch.vue';
 
@@ -47,7 +46,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			reactFrontend: Cookies.get('fe') === 'react',
+			reactFrontend: localStorage['fe'] === 'react',
 			faFlask
 		}
 	},
@@ -77,7 +76,7 @@ export default Vue.extend({
 				if (canceled) {
 					this.reactFrontend = false;
 				} else {
-					Cookies.set('fe', 'react');
+					localStorage['fe'] = 'react';
 					location.href = '/';
 				}
 			}

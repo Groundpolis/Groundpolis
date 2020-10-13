@@ -14,8 +14,8 @@
 		height: 64px;
 		padding: 0 var(--margin);
 		background: var(--header);
-		backdrop-filter: blur(16px);
-		-webkit-backdrop-filter: blur(16px);
+		backdrop-filter: var(--blur);
+		-webkit-backdrop-filter: var(--blur);
 		border-bottom: 1px solid var(--divider);
 		align-items: center;
 		z-index: 20;
@@ -24,15 +24,10 @@
 
 		}
 		> .center {
-			margin-left: auto;
 			margin-right: auto;
-			> .title {
-				font-weight: bold;
-				font-size: 1.2em;
-
-				> [data-icon] {
-					margin-right: 8px;
-				}
+			margin-left: var(--margin);
+			@media screen and (max-width: 640px) {
+				margin-left: auto;
 			}
 		}
 		> .right {
@@ -51,8 +46,8 @@
 		transition: all 0.2s ease;
 		&.open {
 			background: rgba(black, 0.5);
-			backdrop-filter: blur(4px);
-			-webkit-backdrop-filter: blur(4px);
+			backdrop-filter: var(--blur);
+			-webkit-backdrop-filter: var(--blur);
 			pointer-events: all;
 		}
 	}
@@ -63,9 +58,10 @@
 		top: 0;
 		width: 256px;
 		bottom: 0;
+		overflow: auto;
 
 		@media screen and (max-width: 640px) {
-			transition: left 0.2s ease;
+			transition: left 0.2s cubic-bezier(0.5, 0.3, 0.5, 1);
 			left: -256px;
 
 			&.open {

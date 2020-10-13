@@ -1,37 +1,35 @@
-import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
+import { useGlobal } from 'reactn';
 import { FontAwesomeIcon as Fa, FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faPencilAlt, faComments, faFireAlt } from '@fortawesome/free-solid-svg-icons';
 
 import Icon from '../components/Icon';
 import Note from '../components/Note';
-import { api } from '../scripts/api';
-import { t } from '../scripts/i18n';
+import { api } from '../utils/api';
+import { t } from '../utils/i18n';
 import Spinner from '../components/Spinner';
 
 import '../styles/style.scss';
 import './Welcome.scss';
-import { Meta } from '../../models/entities/meta';
+import { Timeline } from '../components/Timeline';
 
 function stopBeta() {
-	Cookies.remove('fe');
+	localStorage.removeItem('fe');
 	location.href = '/';
 }
 
 export default function Welcome() {
-	const [meta, setMeta] = useState<Meta | null>(null);
+	const [meta, setMeta] = useGlobal('meta');
 	const [stats, setStats] = useState<Record<string, any> | null>(null);
 	const [tl, setTl] = useState<any[] | null>(null);
 
 	useEffect(() => {
+		if (meta === null) return;
 		(async () => {
 			setStats(await api('stats'));
-			const m = await api('meta');
-			setMeta(m);
-			setTl(await api(m.disableFeatured ? 'notes/local-timeline' : 'notes/featured'));
+			setTl(await api(meta.disableFeatured ? 'notes/local-timeline' : 'notes/featured'));
 		})();
-	}, []);
+	}, [meta]);
 
 	return meta === null || stats === null ? <Spinner /> : (
 		<article className="_page welcome _container">
@@ -62,8 +60,8 @@ export default function Welcome() {
 					<nav className="_flat-box">
 						<p>{t('getStarted')}</p>
 						<div className="_hstack">
-							<Link to="/signup" className="_button primary">{t('signup')}</Link>
-							<Link to="/signin" className="_button">{t('login')}</Link>
+							<button className="_button primary" onClick={() => alert('coming soon')}>{t('signup')}</button>
+							<button className="_button" onClick={() => alert('coming soon')}>{t('login')}</button>
 						</div>
 					</nav>
 				</article>
@@ -72,10 +70,8 @@ export default function Welcome() {
 						<FontAwesomeIcon icon={meta.disableFeatured ? faComments : faFireAlt} style={{ marginRight: '16px' }}/>
 						{t(meta.disableFeatured ? 'welcomeTimeline' : 'welcomeFeatured')}
 					</h2></header>
-					<section className="_box timeline">
-						<div className="_vstack">
-							{tl ? tl.map(note => <Note key={note.id} note={note} />) : <Spinner relative />}
-						</div>
+					<section className="timeline">
+						{tl ? <Timeline notes={tl} /> : <Spinner relative />}
 					</section>
 				</article>
 			</div>

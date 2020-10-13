@@ -209,8 +209,9 @@ export default Vue.extend({
 			const picker = this.$root.new(MkReactionPicker, {
 				source: e.currentTarget || e.target,
 				showFocus: false,
+				showDislike: false,
 			});
-			picker.$once('chosen', (reaction: string) => {
+			picker.$once('chosen', ({ reaction } : { reaction: string }) => {
 				this.stealReaction = reaction;
 				picker.close();
 			});

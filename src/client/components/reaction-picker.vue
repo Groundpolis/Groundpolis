@@ -5,15 +5,20 @@
 			<button class="_button" v-for="(reaction, i) in rs" :key="reaction" @click="react(reaction)" :tabindex="i + 1" :title="reaction" v-particle><x-reaction-icon :reaction="reaction"/></button>
 		</div>
 		<button class="_button command" style="vertical-align: middle;" @click="openPicker" :tabindex="rs.length + 1"><fa :icon="faLaughSquint"/></button>
-		<input class="text" v-model.trim="text" :placeholder="$t('enterEmoji')" @keyup.enter="reactText" @input="tryReactText" v-autocomplete="{ model: 'text' }">
-		<button class="_button command" v-if="latest" @click="react(latest)" :tabindex="rs.length + 2" :title="latest" v-particle><x-reaction-icon :reaction="latest"/></button>
+		<input class="text" v-model.trim="text" :class="{ showDislike }" :placeholder="$t('enterEmoji')" @keyup.enter="reactText" @input="tryReactText" v-autocomplete="{ model: 'text' }">
+		<button v-if="showDislike" class="_button command" :class="{ active: dislike }" style="vertical-align: middle;" @click="dislike = !dislike" :tabindex="rs.length + 2" v-tooltip="$t('dislike')">
+			<fa :icon="faThumbsDown"/>
+		</button>
+		<button class="_button command" style="vertical-align: middle; overflow-wrap: normal" v-if="latest" @click="react(latest)" :tabindex="rs.length + 3" :title="latest" v-particle>
+			<x-reaction-icon :reaction="latest"/>
+		</button>
 	</div>
 </x-popup>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { faLaughSquint } from '@fortawesome/free-regular-svg-icons';
+import { faLaughSquint, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import { emojiRegex } from '../../misc/emoji-regex';
 import XReactionIcon from './reaction-icon.vue';
 import XPopup from './popup.vue';
@@ -33,6 +38,10 @@ export default Vue.extend({
 			required: false
 		},
 
+		showDislike: {
+			default: true
+		},
+
 		showFocus: {
 			type: Boolean,
 			required: false,
@@ -46,7 +55,8 @@ export default Vue.extend({
 			text: null,
 			focus: null,
 			latest: this.$store.state.deviceUser.latestReaction,
-			faLaughSquint
+			dislike: false,
+			faLaughSquint, faThumbsDown,
 		};
 	},
 
@@ -89,7 +99,7 @@ export default Vue.extend({
 		},
 	
 		react(reaction) {
-			this.$emit('chosen', reaction);
+			this.$emit('chosen', { reaction, dislike: this.dislike, });
 		},
 
 		reactText() {
@@ -201,6 +211,10 @@ export default Vue.extend({
 
 		&.command {
 			font-size: 20px;
+
+			&.active {
+				color: var(--accent);
+			}
 		}
 	}
 
@@ -217,9 +231,16 @@ export default Vue.extend({
 		background: transparent;
 		color: var(--fg);
 
+		&.showDislike {
+			width: 88px;
+		}
+
 		@media (max-width: 1025px) {
 			width: 152px;
 			margin: 4px 0 8px 0;
+			&.showDislike {
+				width: 112px;
+			}
 		}
 	}
 }

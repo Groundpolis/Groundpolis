@@ -39,4 +39,9 @@ export class NoteReaction {
 		length: 260
 	})
 	public reaction: string;
+
+	@Column('boolean', {
+		nullable: true
+	})
+	public dislike: boolean | null;
 }
