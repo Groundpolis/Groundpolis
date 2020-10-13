@@ -193,10 +193,6 @@ export default Vue.extend({
 
 			&.command {
 				font-size: 24px;
-
-				&.active {
-					color: var(--accent);
-				}
 			}
 		}
 
@@ -215,6 +211,10 @@ export default Vue.extend({
 
 		&.command {
 			font-size: 20px;
+
+			&.active {
+				color: var(--accent);
+			}
 		}
 	}
 
