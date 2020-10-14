@@ -65,6 +65,7 @@
 		"no-nested-switch": false,
 		"unified-signatures": false,
 		"no-all-duplicated-branches": false,
+		"no-unnecessary-initializer": false,
 		"semicolon": [true, "always"]
 	},
 	"rulesDirectory": []
