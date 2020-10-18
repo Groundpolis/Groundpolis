@@ -36,6 +36,7 @@ import copyToClipboard from '../scripts/copy-to-clipboard';
 //import updateAvatar from '../api/update-avatar';
 //import updateBanner from '../api/update-banner';
 import XFileThumbnail from './drive-file-thumbnail.vue';
+import ImageViewer from './image-viewer.vue';
 import { faDownload, faLink, faICursor, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default Vue.extend({
@@ -95,13 +96,17 @@ export default Vue.extend({
 						icon: faLink,
 						action: this.copyUrl
 					}, {
+						text: this.$t('preview'),
+						icon: faEye,
+						action: this.preview
+					}, {
 						type: 'a',
 						href: this.file.url,
 						target: '_blank',
 						text: this.$t('download'),
 						icon: faDownload,
 						download: this.file.name
-					}, null, {
+					},  null, {
 						text: this.$t('delete'),
 						icon: faTrashAlt,
 						action: this.deleteFile
@@ -181,7 +186,16 @@ export default Vue.extend({
 			this.$root.api('drive/files/delete', {
 				fileId: this.file.id
 			});
-		}
+		},
+
+		preview() {
+			const viewer = this.$root.new(ImageViewer, {
+				image: this.file,
+			});
+			this.$once('hook:beforeDestroy', () => {
+				viewer.close();
+			});
+		},
 	}
 });
 </script>
