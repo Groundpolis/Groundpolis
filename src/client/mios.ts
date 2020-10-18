@@ -86,7 +86,6 @@ export default class MiOS extends EventEmitter {
 
 				// Parse response
 				me = res.json;
-				console.log(res);
 				me.token = token;
 				done();
 			})

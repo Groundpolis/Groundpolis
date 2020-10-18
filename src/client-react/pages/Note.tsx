@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
-import { faPencilAlt, faComments, faHome, faShareAlt, faGlobe, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 import Spinner from '../components/Spinner';
 import { api } from '../utils/api';
 import { t } from '../utils/i18n';
-import { getStream } from '../utils/stream';
-import FAB from '../components/FAB';
-import { ShellFAB, ShellHeader } from '../teleporters';
-import { PostFormDialog } from '../components/PostFormDialog';
+import { ShellHeader } from '../teleporters';
 import { Timeline } from '../components/Timeline';
-import PostForm from '../components/PostForm';
-import { useDeviceSetting } from '../settings/device';
 import { PackedNote } from '../../models/repositories/note';
 import { AvatarHeader } from '../components/AvatarHeader';
 import { PackedUser } from '../../models/repositories/user';
