@@ -21,6 +21,11 @@
 				<span v-text="form[item].label || item"></span>
 				<template v-if="form[item].description" #desc>{{ form[item].description }}</template>
 			</mk-switch>
+			<mk-select v-else-if="form[item].type === 'enum'" v-model="values[item]">
+				<template #label>{{ form[item].label || item }}</template>
+				<option v-for="v in form[item].enum" :value="v" :key="v">{{ v }}</option>
+				<template v-if="form[item].description" #desc>{{ form[item].description }}</template>
+			</mk-select>
 		</label>
 	</div>
 </x-window>
@@ -32,6 +37,7 @@ import XWindow from './window.vue';
 import MkInput from './ui/input.vue';
 import MkTextarea from './ui/textarea.vue';
 import MkSwitch from './ui/switch.vue';
+import MkSelect from './ui/select.vue';
 
 export default Vue.extend({
 	components: {
@@ -39,6 +45,7 @@ export default Vue.extend({
 		MkInput,
 		MkTextarea,
 		MkSwitch,
+		MkSelect,
 	},
 
 	props: {
