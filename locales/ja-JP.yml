@@ -772,6 +772,9 @@ _paint:
   changeColor: "色を変更"
   zoomMinus: "- ズーム"
   zoomPlus: "+ ズーム"
+  width: "幅"
+  height: "高さ"
+  canvasColor: "キャンバスの色"
   tools:
     hand: "手"
     pen: "ペン"

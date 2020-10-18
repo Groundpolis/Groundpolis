@@ -2,9 +2,9 @@
 <div>
 	<portal to="icon"><fa :icon="faPaintBrush"/></portal>
 	<portal to="title">{{ $t('paint') }}</portal>
-	<section class="_card" ref="editor">
+	<section class="_card _vMargin" ref="editor">
 		<div class="tools">
-			<button class="_button" v-tooltip="$t('_paint.new')" @click="init(512, 512)">
+			<button class="_button" v-tooltip="$t('_paint.new')" @click="init">
 				<fa :icon="farFileAlt"></fa>
 			</button>
 			<button class="_button" v-tooltip="$t('_paint.open')" @click="open">
@@ -43,6 +43,11 @@
 			<button class="_button" v-for="tool in [ 'hand', 'pen', 'eraser' ]" v-tooltip="$t('_paint.tools.' + tool)" :key="tool" @click="currentTool = tool" :class="{ active: currentTool === tool }">
 				<fa :icon="getToolIconOf(tool)" />
 			</button>
+			<button class="_button" v-tooltip="$t('_paint.tools.pixel')" @click="currentTool = 'pixel'" :class="{ active: currentTool === 'pixel' }">
+				<svg xmlns="http://www.w3.org/2000/svg" data-icon="pixel" style="width: 1em; height: 1em;">
+					<path fill="currentColor" d="M16 6V4h-2V2h-2V0h-2v2H8v2H6v2H4v2H2v4h2v2h4v-2h2v-2h2V8h2V6M2 14H0v2h2"/>
+				</svg>
+			</button>
 			<button class="_button" v-tooltip="$t('_paint.tools.shapes')" @click="changeShape" :class="{ active: isShape(currentTool) }">
 				<fa :icon="isShape(currentTool) ? currentToolIcon : getToolIconOf('line')"></fa>
 			</button>
@@ -50,13 +55,13 @@
 			<button class="_button" :disabled="zoom <= 10" @click="zoom -= 10" v-tooltip="$t('_paint.zoomMinus')">
 				<fa :icon="faSearchMinus"></fa>
 			</button>
-			<div v-text="zoom + '%'"/>
-			<button class="_button" :disabled="zoom >= 400" @click="zoom += 10" v-tooltip="$t('_paint.zoomPlus')">
+			<div @click="chooseZoom" v-text="zoom + '%'"/>
+			<button class="_button" :disabled="zoom >= 1200" @click="zoom += 10" v-tooltip="$t('_paint.zoomPlus')">
 				<fa :icon="faSearchPlus"></fa>
 			</button>
 		</div>
 	</section>
-	<section class="_card">
+	<section class="_card _vMargin">
 		<div class="_content">
 			<div>
 				<mk-switch v-model="usePressure" style="display: inline-flex">{{ $t('usePressure') }}</mk-switch>
@@ -90,9 +95,15 @@ import MkSwitch from '../components/ui/switch.vue';
 import MkRange from '../components/ui/range.vue';
 import { apiUrl } from '../config';
 import { selectFile } from '../scripts/select-file';
+import { Form } from '../scripts/form';
 
+export const shapes = [ 'line', 'rect', 'circle', 'rectFill', 'circleFill' ] as const;
 
-export type ToolType = 'hand'| 'pen' | 'eraser' | 'line' | 'rect' | 'circle' | 'rectFill' | 'circleFill';
+export type ShapeType = typeof shapes[number];
+
+export type ToolType = 'hand'| 'pen' | 'eraser' | ShapeType;
+
+export type InitialColor = 'white' | 'black' | 'transparent';
 
 export const getToolIconOf = (type: ToolType) => {
 	switch (type) {
@@ -107,10 +118,60 @@ export const getToolIconOf = (type: ToolType) => {
 	}
 };
 
+function drawPixel(px: number, x: number, py: number, y: number, c: CanvasRenderingContext2D) {
+	let [x0, y0, x1, y1] = [px, py, x, y].map(Math.floor);
+
+	const [dx, dy] = [
+    Math.abs(x1 - x0),
+    Math.abs(y1 - y0),
+  ];
+
+	const [sx, sy] = [
+    x0 < x1 ? 1 : -1,
+    y0 < y1 ? 1 : -1,
+  ];
+
+  let err = dx - dy;
+  c.fillRect(x0, y0, 1, 1);
+
+  while (x0 !== x1 || y0 !== y1) {
+    c.fillRect(x0, y0, 1, 1);
+    const e2 = err * 2;
+
+		if (e2 > -dy) {
+      err -= dy;
+      x0 += sx;
+    }
+
+		if (e2 < dx) {
+      err += dx;
+      y0 += sy;
+    }
+  }
+}
+
 export default Vue.extend({
 	components: {
 		MkSwitch,
 		MkRange,
+	},
+
+	beforeRouteLeave(to, from, next) {
+		if (this.changed) {
+			this.$root.dialog({
+				type: 'warning',
+				text: this.$t('leaveConfirm'),
+				showCancelButton: true
+			}).then(({ canceled }: any) => {
+				if (canceled) {
+					next(false);
+				} else {
+					next();
+				}
+			});
+		} else {
+			next();
+		}
 	},
 	data() {
 		return {
@@ -173,7 +234,11 @@ export default Vue.extend({
 		this.ctx = this.canvas.getContext('2d');
 		this.ctxPreview = this.previewCanvas.getContext('2d');
 		if (!this.ctx || !this.ctxPreview) return;
-		this.init(512, 512);
+		this.init().then(res => {
+			if (!res) {
+				history.back();
+			}
+		});
 
 		// adjust editor size
 		const editor = this.$refs.editor as HTMLElement;
@@ -192,24 +257,6 @@ export default Vue.extend({
 		document.addEventListener('touchend', this.onTouchEnd);
 	},
 
-	beforeRouteLeave(to, from, next) {
-		if (this.changed) {
-			this.$root.dialog({
-				type: 'warning',
-				text: this.$t('leaveConfirm'),
-				showCancelButton: true
-			}).then(({ canceled }: any) => {
-				if (canceled) {
-					next(false);
-				} else {
-					next();
-				}
-			});
-		} else {
-			next();
-		}
-	},
-
 	beforeDestroy() {
 		window.removeEventListener('beforeunload', this.beforeunload);
 		window.removeEventListener('keydown', this.keydown);
@@ -223,32 +270,66 @@ export default Vue.extend({
 				action: () => this.currentTool = type 
 			}
 		},
+		genZoomMenuItem(num: Number)  {
+			return {
+				text: num + '%',
+				action: () => this.zoom = num,
+			}
+		},
 		isShape(type: ToolType) {
-			return [ 'line', 'rect', 'circle', 'rectFill', 'circleFill' ].includes(type);
+			return (shapes as readonly string[]).includes(type);
 		},
 		changeShape(ev: MouseEvent) {
 			this.$root.menu({
-				items: [
-					this.genToolMenuItem('line'),
-					this.genToolMenuItem('rect'),
-					this.genToolMenuItem('circle'),
-					this.genToolMenuItem('rectFill'),
-					this.genToolMenuItem('circleFill'),
-				],
+				items: shapes.map(this.genToolMenuItem),
 				fixed: true,
 				noCenter: true,
 				source: ev.currentTarget || ev.target,
 			});
 		},
-		async init(w: number, h: number, confirm = true) {
+		chooseZoom(ev: MouseEvent) {
+			this.$root.menu({
+				items: [10, 50, 100, 250, 500, 1000, 1200].map(this.genZoomMenuItem),
+				fixed: true,
+				noCenter: true,
+				source: ev.currentTarget || ev.target,
+			});
+		},
+		async init(confirm = true) {
 			if (this.changed && confirm) {
 				const { canceled } = await this.$root.dialog({
 					type: 'warning',
 					text: this.$t('initConfirm'),
 					showCancelButton: true
 				});
-				if (canceled) return;
+				if (canceled) return false;
 			}
+
+			const form: Form = {
+				width: {
+					type: 'number',
+					label: this.$t('_paint.width'),
+					default: 300,
+				},
+				height: {
+					type: 'number',
+					label: this.$t('_paint.height'),
+					default: 300,
+				},
+				fillColor: {
+					type: 'enum',
+					label: this.$t('_paint.canvasColor'),
+					default: 'white',
+					enum: [ 'white', 'black', 'transparent' ],
+				},
+			};
+			const { canceled, result } = await this.$root.form(this.$t('_paint.new'), form);
+
+			if (canceled) return false;
+			await this.createNew(result.width, result.height, result.fillColor);
+			return true;
+		},
+		async createNew(w: number, h: number, fill: InitialColor) {
 			this.previewCanvas.width = this.canvas.width = w;
 			this.previewCanvas.height = this.canvas.height = h;
 
@@ -256,7 +337,7 @@ export default Vue.extend({
 			this.redoStack = [];
 
 			if (!this.ctx) return;
-			this.ctx.fillStyle = '#ffffff';
+			this.ctx.fillStyle = fill;
 			this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 			this.ctx.fillStyle = 'transparent';
 			this.ctx.strokeStyle = this.currentColor;
@@ -273,6 +354,7 @@ export default Vue.extend({
 			}
 			const file = await selectFile(this, e.currentTarget || e.target, this.$t('selectFile'), false);
 			const img = new Image();
+			img.crossOrigin = '';
 			if (file.type.startsWith('image')) {
 				img.src = file.url;
 			} else if (file.thumbnailUrl) {
@@ -384,7 +466,7 @@ export default Vue.extend({
 			if (!this.ctx) return;
 			if (!this.ctxPreview) return;
 			if (!this.down) return;
-			const c = this.ctx;
+			const c = this.ctx as CanvasRenderingContext2D;
 			const cp = this.ctxPreview;
 			this.down = false;
 
@@ -435,7 +517,7 @@ export default Vue.extend({
 
 			if (!this.ctx) return;
 			if (!this.ctxPreview) return;
-			const c = this.ctx;
+			const c = this.ctx as CanvasRenderingContext2D;
 			const cp = this.ctxPreview;
 			// 色を当てる
 			c.strokeStyle =	cp.strokeStyle = this.currentColor;
@@ -474,14 +556,23 @@ export default Vue.extend({
 			};
 
 			if (!this.down) {
-				if (this.currentTool !== 'hand') {
-					cp.clearRect(0, 0, this.previewCanvas.width, this.previewCanvas.height);
-					cp.lineCap = 'round';
-					cp.lineJoin = 'round';
-					cp.beginPath();
-					cp.moveTo(x, y);
-					cp.lineTo(x, y);
-					cp.stroke();
+				switch (this.currentTool) {
+					case 'pen':
+					case 'eraser': {
+						cp.clearRect(0, 0, this.previewCanvas.width, this.previewCanvas.height);
+						cp.lineCap = 'round';
+						cp.lineJoin = 'round';
+						cp.beginPath();
+						cp.moveTo(x, y);
+						cp.lineTo(x, y);
+						cp.stroke();
+						break;
+					}
+					case 'pixel': {
+						cp.clearRect(0, 0, this.previewCanvas.width, this.previewCanvas.height);
+						drawPixel(x, x, y, y, cp);
+						break;
+					}
 				}
 				return;
 			}
@@ -498,6 +589,13 @@ export default Vue.extend({
 				case 'pen':
 				case 'eraser': {
 					drawPen();
+					break;
+				}
+
+				case 'pixel': {
+					// https://ja.wikipedia.org/wiki/%E3%83%96%E3%83%AC%E3%82%BC%E3%83%B3%E3%83%8F%E3%83%A0%E3%81%AE%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0#%E5%8D%98%E7%B4%94%E5%8C%96
+					drawPixel(px, x, py, y, c);
+					break;
 				}
 			}
 
