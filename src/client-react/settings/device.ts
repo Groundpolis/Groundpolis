@@ -160,8 +160,8 @@ export default class DeviceSettingManager {
 	}
 
 	static get<V extends SettingKey>(k: V): DeviceSetting[V] {
+		if (!Object.keys(localStorage).includes(k)) return defaultSetting[k];
 		const value = localStorage.getItem('deviceSetting:' + k);
-		if (value === undefined) return defaultSetting[k];
 		switch (typeof defaultSetting[k]) { 
 			case 'bigint':
 				return BigInt(value) as any;
