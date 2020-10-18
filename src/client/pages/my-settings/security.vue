@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faLock"/> {{ $t('password') }}</div>
+	<div class="_title">{{ $t('password') }}</div>
 	<div class="_content">
 		<mk-button primary @click="change()">{{ $t('changePassword') }}</mk-button>
 	</div>
@@ -9,18 +9,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faLock } from '@fortawesome/free-solid-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 
 export default Vue.extend({
 	components: {
 		MkButton,
-	},
-	
-	data() {
-		return {
-			faLock
-		}
 	},
 
 	methods: {

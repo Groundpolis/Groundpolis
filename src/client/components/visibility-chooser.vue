@@ -152,8 +152,7 @@ export default Vue.extend({
 		}
 
 		&.active {
-			color: #fff;
-			background: var(--accent);
+			color: var(--accent);
 		}
 
 		&.localOnly.active, &.remoteFollowersOnly.active {

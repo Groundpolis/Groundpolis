@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faCog"/> {{ $t('general') }}</div>
+	<div class="_title">{{ $t('general') }}</div>
 	<div class="_content">
 		<div>{{ $t('whenServerDisconnected') }}</div>
 		<mk-radio v-model="serverDisconnectedBehavior" value="reload">{{ $t('_serverDisconnectedBehavior.reload') }}</mk-radio>
@@ -19,7 +19,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faCog } from '@fortawesome/free-solid-svg-icons';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkRadio from '../../components/ui/radio.vue';
 
@@ -33,12 +32,6 @@ export default Vue.extend({
 	components: {
 		MkSwitch,
 		MkRadio,
-	},
-
-	data() {
-		return {
-			faCog,
-		}
 	},
 
 	computed: {

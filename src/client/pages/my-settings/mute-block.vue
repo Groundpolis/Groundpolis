@@ -1,6 +1,6 @@
 <template>
 <section class="rrfwjxfl _card">
-	<div class="_title"><fa :icon="faBan"/> {{ $t('muteAndBlock') }}</div>
+	<div class="_title">{{ $t('muteAndBlock') }}</div>
 	<div class="_content">
 		<span><b>{{ $t('mutedUsers') }}</b></span>
 		<mk-pagination :pagination="mutingPagination" class="muting">
@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faBan } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
 import MkPagination from '../../components/ui/pagination.vue';
 
@@ -51,7 +50,7 @@ export default Vue.extend({
 				endpoint: 'blocking/list',
 				limit: 10,
 			},
-			faBan, faSave,
+			faSave,
 		}
 	},
 });

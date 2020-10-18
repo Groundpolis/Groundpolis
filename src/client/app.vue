@@ -258,10 +258,10 @@ export default Vue.extend({
 
 	methods: {
 		adjustTitlePosition() {
-			const left = this.$refs.main.getBoundingClientRect().left - this.$refs.nav.$el.offsetWidth;
-			if (left >= 0) {
-				this.$refs.title.style.left = left + 'px';
-			}
+			// const left = this.$refs.main.getBoundingClientRect().left - this.$refs.nav.$el.offsetWidth;
+			// if (left >= 0) {
+			// 	this.$refs.title.style.left = left + 'px';
+			// }
 		},
 
 		calcHeaderWidth() {
@@ -450,7 +450,12 @@ export default Vue.extend({
 				height: $header-height;
 
 				> .default {
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 0;
 					padding: 0 $header-height;
+					height: 100%;
 
 					> .avatar {
 						$size: 32px;
@@ -482,7 +487,6 @@ export default Vue.extend({
 					height: 100%;
 
 					&.dense {
-						left: 16px - 1px;
 						padding: 0;
 					}
 				}
@@ -575,7 +579,7 @@ export default Vue.extend({
 	> .contents {
 		display: flex;
 		margin: 0 16px;
-		min-width: 0;
+		width: 100%;
 
 		&.navHidden {
 			margin: 0;
@@ -600,8 +604,8 @@ export default Vue.extend({
 		}
 
 		> main {
-			width: $main-width;
 			min-width: 0;
+			width: 100%;
 
 
 			> .content {
@@ -651,7 +655,7 @@ export default Vue.extend({
 
 		> .widgets {
 			padding: 0 var(--margin);
-			box-shadow: 1px 0 0 0 var(--divider), -1px 0 0 0 var(--divider);
+			// box-shadow: 1px 0 0 0 var(--divider), -1px 0 0 0 var(--divider);
 
 			&.fixed {
 				position: sticky;
@@ -709,6 +713,7 @@ export default Vue.extend({
 				> header {
 					position: relative;
 					line-height: 32px;
+					padding: 8px;
 
 					> .handle {
 						padding: 0 8px;
@@ -717,8 +722,8 @@ export default Vue.extend({
 
 					> .remove {
 						position: absolute;
-						top: 0;
-						right: 0;
+						top: 8px;
+						right: 8px;
 						padding: 0 8px;
 						line-height: 32px;
 					}

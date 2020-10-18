@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faPlug"/> {{ $t('plugins') }}</div>
+	<div class="_title">{{ $t('plugins') }}</div>
 	<div class="_content">
 		<details>
 			<summary><fa :icon="faDownload"/> {{ $t('install') }}</summary>
@@ -48,7 +48,7 @@ import Vue from 'vue';
 import { AiScript, parse } from '@syuilo/aiscript';
 import { serialize } from '@syuilo/aiscript/built/serializer';
 import { v4 as uuid } from 'uuid';
-import { faPlug, faSave, faTrashAlt, faFolderOpen, faDownload, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faTrashAlt, faFolderOpen, faDownload, faCog } from '@fortawesome/free-solid-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 import MkTextarea from '../../components/ui/textarea.vue';
 import MkSelect from '../../components/ui/select.vue';
@@ -68,7 +68,7 @@ export default Vue.extend({
 		return {
 			script: '',
 			selectedPluginId: null,
-			faPlug, faSave, faTrashAlt, faFolderOpen, faDownload, faCog
+			faSave, faTrashAlt, faFolderOpen, faDownload, faCog
 		}
 	},
 

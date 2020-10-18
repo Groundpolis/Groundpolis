@@ -1,6 +1,6 @@
 <template>
 <section class="uawsfosz _card">
-	<div class="_title"><fa :icon="faCloud"/> {{ $t('drive') }}</div>
+	<div class="_title">{{ $t('drive') }}</div>
 	<div class="_content">
 		<span>{{ $t('uploadFolder') }}: {{ uploadFolder ? uploadFolder.name : '-' }}</span>
 		<mk-button primary @click="chooseUploadFolder()"><fa :icon="faFolderOpen"/> {{ $t('selectFolder') }}</mk-button>
@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faCloud, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { faClock, faEyeSlash, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 import { selectDriveFolder } from '../../scripts/select-drive-folder';
@@ -23,7 +23,7 @@ export default Vue.extend({
 	data() {
 		return {
 			uploadFolder: null,
-			faCloud, faClock, faEyeSlash, faFolderOpen, faTrashAlt
+			faClock, faEyeSlash, faFolderOpen, faTrashAlt
 		}
 	},
 

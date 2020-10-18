@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faTv"/> {{ $t('appearance') }}</div>
+	<div class="_title">{{ $t('appearance') }}</div>
 
 	<div class="_content">
 		<mk-switch v-model="disableAnimatedMfm">{{ $t('disableAnimatedMfm') }}</mk-switch>
@@ -112,7 +112,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faTv, faQuestion } from '@fortawesome/free-solid-svg-icons';
+import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import MkSwitch from '../../components/ui/switch.vue';
 import MkSelect from '../../components/ui/select.vue';
@@ -142,7 +142,7 @@ export default Vue.extend({
 			langs,
 			lang: localStorage.getItem('lang'),
 			fontSize: localStorage.getItem('fontSize'),
-			faTv, faQuestion, faQuestionCircle
+			faQuestion, faQuestionCircle
 		}
 	},
 

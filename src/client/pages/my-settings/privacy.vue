@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faLock"/> {{ $t('privacy') }}</div>
+	<div class="_title">{{ $t('privacy') }}</div>
 	<div class="_content">
 		<mk-switch v-model="isLocked" :disabled="carefulBot" @change="save()">{{ $t('makeFollowManuallyApprove') }}</mk-switch>
 		<mk-switch v-model="carefulBot" :disabled="isLocked" @change="save()">{{ $t('makeBotFollowManuallyApprove') }}</mk-switch>
@@ -24,7 +24,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faLock } from '@fortawesome/free-solid-svg-icons';
 import MkSelect from '../../components/ui/select.vue';
 import MkSwitch from '../../components/ui/switch.vue';
 
@@ -41,7 +40,6 @@ export default Vue.extend({
 			carefulBot: false,
 			hideFF: false,
 			noindex: false,
-			faLock
 		}
 	},
 

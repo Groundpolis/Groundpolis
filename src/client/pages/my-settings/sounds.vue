@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faPlay"/> {{ $t('sounds') }}</div>
+	<div class="_title">{{ $t('sounds') }}</div>
 	<div class="_content">
 		<mk-range v-model="sfxVolume" :min="0" :max="1" :step="0.1">
 			<fa slot="icon" :icon="volumeIcon"/>
@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faImage, faCog, faPlay, faVolumeUp, faVolumeDown, faVolumeOff } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faCog, faVolumeUp, faVolumeDown, faVolumeOff } from '@fortawesome/free-solid-svg-icons';
 import MkSelect from '../../components/ui/select.vue';
 import MkRange from '../../components/ui/range.vue';
 import { langs } from '../../config';
@@ -97,7 +97,7 @@ export default Vue.extend({
 			lang: localStorage.getItem('lang'),
 			fontSize: localStorage.getItem('fontSize'),
 			sounds,
-			faImage, faCog, faPlay
+			faImage, faCog
 		}
 	},
 

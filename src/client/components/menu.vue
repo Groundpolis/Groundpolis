@@ -137,14 +137,12 @@ export default Vue.extend({
 		text-overflow: ellipsis;
 
 		&:hover {
-			color: #fff;
-			background: var(--accent);
+			color: var(--accent);
 			text-decoration: none;
 		}
 
 		&:active {
-			color: #fff;
-			background: var(--accentDarken);
+			color: var(--accentDarken);
 		}
 
 		&:not(:active):focus {

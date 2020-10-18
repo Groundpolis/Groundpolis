@@ -655,6 +655,7 @@ errorLocalOnlyToRemote: "You cannot make replies to remote users local only."
 renoteButtonMode: "Renote-Button Behavior"
 reduceBlur: "Reduce blur effect"
 noindex: "Deny search engine crawling"
+input: "Input..."
 
 _renoteButtonMode:
   choose: "Choose always"

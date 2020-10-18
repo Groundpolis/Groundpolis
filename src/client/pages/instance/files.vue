@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faCloud"/> {{ $t('files') }}</div>
+	<div class="_title">{{ $t('files') }}</div>
 	<div class="_content">
 		<mk-button primary @click="clear()"><fa :icon="faTrashAlt"/> {{ $t('clearCachedFiles') }}</mk-button>
 	</div>
@@ -9,7 +9,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faCloud } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 import MkPagination from '../../components/ui/pagination.vue';
@@ -28,7 +27,7 @@ export default Vue.extend({
 
 	data() {
 		return {
-			faTrashAlt, faCloud
+			faTrashAlt
 		}
 	},
 

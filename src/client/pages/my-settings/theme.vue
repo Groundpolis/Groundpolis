@@ -1,6 +1,6 @@
 <template>
 <section class="rfqxtzch _card">
-	<div class="_title"><fa :icon="faPalette"/> {{ $t('theme') }}</div>
+	<div class="_title">{{ $t('theme') }}</div>
 	<div class="_content">
 		<div class="darkMode" :class="{ disabled: syncDeviceDarkMode }">
 			<div class="toggleWrapper">
@@ -79,7 +79,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faPalette, faDownload, faFolderOpen, faCheck, faTrashAlt, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faFolderOpen, faCheck, faTrashAlt, faEye } from '@fortawesome/free-solid-svg-icons';
 import * as JSON5 from 'json5';
 import MkButton from '../../components/ui/button.vue';
 import MkSelect from '../../components/ui/select.vue';
@@ -104,7 +104,7 @@ export default Vue.extend({
 			installThemeCode: null,
 			selectedThemeId: null,
 			wallpaper: localStorage.getItem('wallpaper'),
-			faPalette, faDownload, faFolderOpen, faCheck, faTrashAlt, faEye
+			faDownload, faFolderOpen, faCheck, faTrashAlt, faEye
 		}
 	},
 	computed: {

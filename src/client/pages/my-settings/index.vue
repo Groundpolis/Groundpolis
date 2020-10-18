@@ -10,7 +10,7 @@
 	<x-reaction-setting class="_vMargin"/>
 
 	<section class="_card _vMargin">
-		<div class="_title"><fa :icon="faCog"/> {{ $t('general') }}</div>
+		<div class="_title">{{ $t('general') }}</div>
 		<div class="_content">
 			<mk-switch v-model="$store.state.i.autoWatch" @change="onChangeAutoWatch">
 				{{ $t('autoNoteWatch') }}<template #desc>{{ $t('autoNoteWatchDescription') }}</template>
@@ -55,7 +55,7 @@
 	<x-gacha class=" _vMargin"/>
 
 	<section class="_card _vMargin">
-		<div class="_title"><fa :icon="faColumns"/> {{ $t('deck') }}</div>
+		<div class="_title">{{ $t('deck') }}</div>
 		<div class="_content">
 			<mk-switch v-model="deckAlwaysShowMainColumn">
 				{{ $t('_deck.alwaysShowMainColumn') }}
@@ -94,7 +94,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faCog, faColumns } from '@fortawesome/free-solid-svg-icons';
 import XCacheClear from './cache-clear.vue';
 import XAppearance from './appearance.vue';
 import XClient from './client.vue';
@@ -149,12 +148,6 @@ export default Vue.extend({
 		MkSwitch,
 		MkSelect,
 		MkRadio
-	},
-
-	data() {
-		return {
-			faCog, faColumns
-		}
 	},
 
 	computed: {

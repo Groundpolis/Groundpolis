@@ -4,21 +4,23 @@
 		<div class="buttons" ref="buttons" :class="{ showFocus }">
 			<button class="_button" v-for="(reaction, i) in rs" :key="reaction" @click="react(reaction)" :tabindex="i + 1" :title="reaction" v-particle><x-reaction-icon :reaction="reaction"/></button>
 		</div>
-		<button class="_button command" style="vertical-align: middle;" @click="openPicker" :tabindex="rs.length + 1"><fa :icon="faLaughSquint"/></button>
-		<input class="text" v-model.trim="text" :class="{ showDislike }" :placeholder="$t('enterEmoji')" @keyup.enter="reactText" @input="tryReactText" v-autocomplete="{ model: 'text' }">
-		<button v-if="showDislike" class="_button command" :class="{ active: dislike }" style="vertical-align: middle;" @click="dislike = !dislike" :tabindex="rs.length + 2" v-tooltip="$t('dislike')">
-			<fa :icon="faThumbsDown"/>
-		</button>
-		<button class="_button command" style="vertical-align: middle; overflow-wrap: normal" v-if="latest" @click="react(latest)" :tabindex="rs.length + 3" :title="latest" v-particle>
-			<x-reaction-icon :reaction="latest"/>
-		</button>
+		<footer>
+			<button class="_button command" style="vertical-align: middle;" @click="openPicker" :tabindex="rs.length + 1"><fa :icon="faLaughSquint"/></button>
+			<input class="text" v-model.trim="text" :class="{ showDislike }" :placeholder="$t('input')" @keyup.enter="reactText" @input="tryReactText" v-autocomplete="{ model: 'text' }">
+			<button v-if="showDislike" class="_button command dislike" :class="{ active: dislike }" style="vertical-align: middle;" @click="dislike = !dislike" :tabindex="rs.length + 2" v-tooltip="$t('dislike')">
+				<fa :icon="faThumbsUp" :class="{ active: dislike }"/>
+			</button>
+			<button class="_button command" style="vertical-align: middle; overflow-wrap: normal" v-if="latest" @click="react(latest)" :tabindex="rs.length + 3" :title="latest" v-particle>
+				<x-reaction-icon :reaction="latest"/>
+			</button>
+		</footer>
 	</div>
 </x-popup>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { faLaughSquint, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
+import { faLaughSquint, faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 import { emojiRegex } from '../../misc/emoji-regex';
 import XReactionIcon from './reaction-icon.vue';
 import XPopup from './popup.vue';
@@ -56,7 +58,7 @@ export default Vue.extend({
 			focus: null,
 			latest: this.$store.state.deviceUser.latestReaction,
 			dislike: false,
-			faLaughSquint, faThumbsDown,
+			faLaughSquint, faThumbsUp,
 		};
 	},
 
@@ -149,6 +151,11 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .rdfaahpb {
+	--XReactionPickerButtonSize: 40px;
+		@media (max-width: 1025px) {
+			--XReactionPickerButtonSize: 48px;
+		}
+	
 	> .buttons {
 		padding: 6px 6px 0 6px;
 		width: 212px;
@@ -179,16 +186,44 @@ export default Vue.extend({
 		}
 	}
 
+	> footer {
+		padding: 0 6px 6px 6px;
+
+		> .text {
+			width: calc(var(--XReactionPickerButtonSize) * 3);
+			padding: 8px;
+			margin: 0 0 6px 0;
+			display: inline-block;
+			box-sizing: border-box;
+			text-align: left;
+			font-size: 16px;
+			outline: none;
+			border: none;
+			border-bottom: 1px solid var(--inputBorder);
+			background: transparent;
+			color: var(--fg);
+
+			&.showDislike {
+				width: calc(var(--XReactionPickerButtonSize) * 2);
+			}
+
+			@media (max-width: 1025px) {
+				margin: 4px 0 8px 0;
+			}
+		}
+	}
+
 	button {
 		padding: 0;
-		width: 40px;
-		height: 40px;
+		width: var(--XReactionPickerButtonSize);
+		height: var(--XReactionPickerButtonSize);
 		font-size: 24px;
-		border-radius: 2px;
+		border-radius: 100%;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
 
 		@media (max-width: 1025px) {
-			width: 48px;
-			height: 48px;
 			font-size: 26px;
 
 			&.command {
@@ -205,41 +240,24 @@ export default Vue.extend({
 		}
 
 		&:active {
-			background: var(--accent);
-			box-shadow: inset 0 0.15em 0.3em rgba(27, 31, 35, 0.15);
+			background: rgba(0, 0, 0, 0.1);
 		}
 
 		&.command {
 			font-size: 20px;
 
+			&.dislike > [data-icon] {
+				transform-origin: 50%;
+				transition: transform 0.2s ease;
+
+				&.active {
+					transform: rotateX(180deg);
+				}
+
+			}
+
 			&.active {
 				color: var(--accent);
-			}
-		}
-	}
-
-	> .text {
-		width: 128px;
-		padding: 8px;
-		margin: 0 0 6px 0;
-		display: inline-block;
-		box-sizing: border-box;
-		text-align: center;
-		font-size: 16px;
-		outline: none;
-		border: none;
-		background: transparent;
-		color: var(--fg);
-
-		&.showDislike {
-			width: 88px;
-		}
-
-		@media (max-width: 1025px) {
-			width: 152px;
-			margin: 4px 0 8px 0;
-			&.showDislike {
-				width: 112px;
 			}
 		}
 	}

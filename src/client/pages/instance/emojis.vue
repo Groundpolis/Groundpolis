@@ -3,13 +3,21 @@
 	<portal to="icon"><fa :icon="faLaugh"/></portal>
 	<portal to="title">{{ $t('customEmojis') }}</portal>
 
-	<section class="_card _vMargin local">
-		<div class="_title"><fa :icon="faLaugh"/> {{ $t('customEmojis') }}</div>
+	<mk-tab class="_section" v-model="tab" style="padding: 0" :items="[
+			{ label: $t('local'), value: 'local' }, 
+			{ label: $t('emojiSuggestion'), value: 'suggestion', icon: faHeart },
+			{ label: $t('remote'), value: 'remote' }, 
+		]"
+	/>
+
+	<section class="_section _vMargin local" v-if="tab === 'local'">
 		<div class="_content">
+			<mk-button inline primary @click="add"><fa :icon="faPlus"/> {{ $t('addEmoji') }}</mk-button>
+			<mk-input v-model="q" :debounce="true"><span>{{ $t('search') }}</span></mk-input>
 			<mk-pagination :pagination="pagination" class="emojis" ref="emojis">
 				<template #empty><span>{{ $t('noCustomEmojis') }}</span></template>
 				<template #default="{items}">
-					<div class="emoji" v-for="(emoji, i) in items" :key="emoji.id" @click="selected = emoji" :class="{ selected: selected && (selected.id === emoji.id) }">
+					<div class="emoji _card" v-for="(emoji, i) in items" :key="emoji.id" @click="edit(emoji)" :class="{ selected: selected && (selected.id === emoji.id) }">
 						<img :src="emoji.url" class="img" :alt="emoji.name"/>
 						<div class="body">
 							<span class="name">{{ emoji.name }}</span>
@@ -22,21 +30,16 @@
 				</template>
 			</mk-pagination>
 		</div>
-		<div class="_content" v-if="selected">
+		<!-- <div class="_content" v-if="selected">
 			<mk-input v-model="name"><span>{{ $t('name') }}</span></mk-input>
 			<mk-input v-model="category" :datalist="categories"><span>{{ $t('category') }}</span></mk-input>
 			<mk-input v-model="aliases"><span>{{ $t('tags') }}</span></mk-input>
 			<mk-button inline primary @click="update"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
 			<mk-button inline :disabled="selected == null" @click="del()"><fa :icon="faTrashAlt"/> {{ $t('delete') }}</mk-button>
-		</div>
-		<div class="_footer">
-			<mk-button inline primary @click="add"><fa :icon="faPlus"/> {{ $t('addEmoji') }}</mk-button>
-			<mk-switch v-model="autoReload">{{ $t('autoReloadAfterSaving') }}</mk-switch>
-			<mk-button v-if="!autoReload" @click="reload">{{ $t('reload') }}</mk-button>
-		</div>
+		</div> -->
 	</section>
-	<section class="_card _vMargin suggestions">
-		<div class="_title"><fa :icon="faLaugh"/> {{ $t('suggestedEmojis') }}</div>
+
+	<section class="_section _vMargin suggestions" v-else-if="tab === 'suggestion'">
 		<div class="_content">
 			<mk-switch v-model="pendingOnly">{{ $t('pendingOnly') }}</mk-switch>
 			<mk-pagination :pagination="suggestionPagination" class="emojis" ref="suggestions">
@@ -72,8 +75,8 @@
 			</mk-pagination>
 		</div>
 	</section>
-	<section class="_card _vMargin remote">
-		<div class="_title"><fa :icon="faLaugh"/> {{ $t('customEmojisOfRemote') }}</div>
+
+	<section class="_section _vMargin remote" v-else-if="tab === 'remote'">
 		<div class="_content">
 			<mk-input v-model="host" :debounce="true"><span>{{ $t('host') }}</span></mk-input>
 			<mk-pagination :pagination="remotePagination" class="emojis" ref="remoteEmojis">
@@ -106,6 +109,7 @@ import MkSwitch from '../../components/ui/switch.vue';
 import MkPagination from '../../components/ui/pagination.vue';
 import { selectFile } from '../../scripts/select-file';
 import { unique } from '../../../prelude/array';
+import MkTab from '../../components/tab.vue';
 
 export default Vue.extend({
 	metaInfo() {
@@ -118,7 +122,8 @@ export default Vue.extend({
 		MkButton,
 		MkInput,
 		MkPagination,
-		MkSwitch
+		MkSwitch,
+		MkTab,
 	},
 
 	data() {
@@ -129,6 +134,8 @@ export default Vue.extend({
 			category: null,
 			aliases: null,
 			host: '',
+			q: '',
+			tab: 'local',
 			pendingOnly: true,
 			pagination: {
 				endpoint: 'admin/emoji/list',
@@ -159,10 +166,6 @@ export default Vue.extend({
 			} else {
 				return [];
 			}
-		},
-		autoReload: {
-			get () { return this.$store.state.device.instanceEmojisAutoReloadAfterSaving },
-			set(value) { this.$store.commit('device/set', { key: 'instanceEmojisAutoReloadAfterSaving', value }) }
 		}
 	},
 
@@ -209,15 +212,17 @@ export default Vue.extend({
 			});
 		},
 
-		async update() {
-			await this.$root.api('admin/emoji/update', {
-				id: this.selected.id,
-				name: this.name,
-				category: this.category,
-				aliases: this.aliases.split(' '),
+		async edit(emoji: Record<string, any>) {
+			this.$root.new(await import('../../components/emoji-editor-window.vue').then(m => m.default), { emoji }).$once('done', result => {
+				if (result.updated) {
+					this.$refs.emojis.replaceItem(item => item.id === emoji.id, {
+						...emoji,
+						...result.updated
+					});
+				} else if (result.deleted) {
+					this.$refs.emojis.removeItem(item => item.id === emoji.id);
+				}
 			});
-
-			if (this.autoReload) this.$refs.emojis.reload();
 		},
 
 		async del() {
@@ -229,7 +234,6 @@ export default Vue.extend({
 			if (canceled) return;
 
 			await this.$root.api('admin/emoji/remove', { id: this.selected.id });
-			if (this.autoReload) this.$refs.emojis.reload();
 		},
 
 		async accept(suggestionId: string) {
@@ -278,23 +282,19 @@ export default Vue.extend({
 .mk-instance-emojis {
 	> .local {
 		> ._content {
-			max-height: 300px;
-			overflow: auto;
-			
 			> .emojis {
+				display: grid;
+				grid-template-columns: repeat(auto-fill,minmax(190px,1fr));
+				grid-gap: var(--margin);
 				> .emoji {
 					display: flex;
+					padding: 16px;
 					align-items: center;
-
-					&.selected {
-						background: var(--accent);
-						box-shadow: 0 0 0 8px var(--accent);
-						color: #fff;
-					}
+					cursor: pointer;
 
 					> .img {
-						width: 50px;
-						height: 50px;
+						width: 48px;
+						height: 48px;
 					}
 
 					> .body {

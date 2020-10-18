@@ -4,7 +4,7 @@
 	<portal to="title">{{ $t('settings') }}</portal>
 
 	<section class="_card _vMargin info">
-		<div class="_title"><fa :icon="faInfoCircle"/> {{ $t('basicInfo') }}</div>
+		<div class="_title">{{ $t('basicInfo') }}</div>
 		<div class="_content">
 			<mk-input v-model="name">{{ $t('instanceName') }}</mk-input>
 			<mk-textarea v-model="description">{{ $t('instanceDescription') }}</mk-textarea>
@@ -253,7 +253,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faPencilAlt, faShareAlt, faGhost, faCog, faPlus, faCloud, faInfoCircle, faBan, faSave, faServer, faLink, faThumbtack, faUser, faShieldAlt, faKey, faBolt, faArchway } from '@fortawesome/free-solid-svg-icons';
+import { faPencilAlt, faShareAlt, faGhost, faCog, faPlus, faCloud, faBan, faSave, faServer, faLink, faThumbtack, faUser, faShieldAlt, faKey, faBolt, faArchway } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
 import MkButton from '../../components/ui/button.vue';
@@ -349,7 +349,7 @@ export default Vue.extend({
 			smtpUser: '',
 			smtpPass: '',
 			summalyProxy: '',
-			faPencilAlt, faTwitter, faDiscord, faGithub, faShareAlt, faTrashAlt, faGhost, faCog, faPlus, faCloud, faInfoCircle, faBan, faSave, faServer, faLink, faEnvelope, faThumbtack, faUser, faShieldAlt, faKey, faBolt, faArchway
+			faPencilAlt, faTwitter, faDiscord, faGithub, faShareAlt, faTrashAlt, faGhost, faCog, faPlus, faCloud, faBan, faSave, faServer, faLink, faEnvelope, faThumbtack, faUser, faShieldAlt, faKey, faBolt, faArchway
 		}
 	},
 

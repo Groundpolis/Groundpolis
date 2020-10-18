@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 :root {
-	--radius: 3px;
+	--radius: 24px;
 	--marginFull: 16px;
 	--marginHalf: 10px;
 
@@ -332,8 +332,8 @@ hr {
 	> ._title {
 		margin: 0;
 		padding: 22px 32px;
-		font-size: 1.1em;
-		border-bottom: solid 1px var(--panelHeaderDivider);
+		padding-bottom: 0;
+		font-size: 1.6em;
 		font-weight: bold;
 		background: var(--panelHeaderBg);
 		color: var(--panelHeaderFg);
@@ -455,6 +455,43 @@ hr {
 	font-size: 14px;
 	line-height: 1.5;
 	padding: 5px;
+}
+
+._section {
+	padding: var(--section-padding, 32px);
+
+	&:empty {
+		display: none;
+	}
+
+	&:not(:empty) + ._section {
+		border-top: solid 1px var(--divider);
+	}
+
+	@media (max-width: 500px) {
+		padding: var(--section-padding, 10px);
+
+		> ._title {
+			font-size: 1.1em;
+			font-weight: bold;
+		}
+	}
+
+	> ._title,
+	> ._content {
+		max-width: var(--baseContentWidth, 750px);
+		margin: 0 auto;
+	}
+
+	> ._title {
+		margin-bottom: 24px;
+		font-size: 1.25em;
+		font-weight: bold;
+	}
+
+	&._fitBottom {
+		padding-bottom: 0;
+	}
 }
 
 .prism-editor__textarea:focus {

@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { onScrollTop, isTopVisible } from './scroll';
 
 const SECOND_FETCH_LIMIT = 30;
@@ -76,6 +77,16 @@ export default (opts) => ({
 		reload() {
 			this.items = [];
 			this.init();
+		},
+
+		replaceItem(finder, data) {
+			const i = this.items.findIndex(finder);
+			Vue.set(this.items, i, data);
+		},
+
+		removeItem(finder) {
+			const i = this.items.findIndex(finder);
+			this.items.splice(i, 1);
 		},
 
 		async init() {

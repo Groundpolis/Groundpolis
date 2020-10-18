@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faLock"/> {{ $t('twoStepAuthentication') }}</div>
+	<div class="_title">{{ $t('twoStepAuthentication') }}</div>
 	<div class="_content">
 		<p v-if="!data && !$store.state.i.twoFactorEnabled"><mk-button @click="register">{{ $t('_2fa.registerDevice') }}</mk-button></p>
 		<template v-if="$store.state.i.twoFactorEnabled">
@@ -51,7 +51,8 @@
 					</i18n>
 				</li>
 				<li>{{ $t('_2fa.step2') }}<br><img :src="data.qr"></li>
-				<li>{{ $t('_2fa.step3') }}<br>
+				<li>
+{{ $t('_2fa.step3') }}<br>
 					<mk-input v-model="token" type="text" pattern="^[0-9]{6}$" autocomplete="off" spellcheck="false">{{ $t('token') }}</mk-input>
 					<mk-button primary @click="submit">{{ $t('done') }}</mk-button>
 				</li>
@@ -64,7 +65,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { hostname } from '../../config';
 import { byteify, hexify, stringify } from '../../scripts/2fa';
 import MkButton from '../../components/ui/button.vue';
@@ -84,7 +84,6 @@ export default Vue.extend({
 			registration: null,
 			keyName: '',
 			token: null,
-			faLock
 		};
 	},
 	methods: {

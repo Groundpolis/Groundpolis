@@ -1,6 +1,6 @@
 <template>
 <section class="_card" v-if="enableTwitterIntegration || enableDiscordIntegration || enableGithubIntegration">
-	<div class="_title"><fa :icon="faShareAlt"/> {{ $t('integration') }}</div>
+	<div class="_title">{{ $t('integration') }}</div>
 
 	<div class="_content" v-if="enableTwitterIntegration">
 		<header><fa :icon="faTwitter"/> Twitter</header>
@@ -29,7 +29,6 @@
 import Vue from 'vue';
 import Cookies from 'js-cookie';
 
-import { faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { apiUrl } from '../../config';
 import MkButton from '../../components/ui/button.vue';
@@ -48,7 +47,7 @@ export default Vue.extend({
 			enableTwitterIntegration: false,
 			enableDiscordIntegration: false,
 			enableGithubIntegration: false,
-			faShareAlt, faTwitter, faDiscord, faGithub
+			faTwitter, faDiscord, faGithub
 		};
 	},
 

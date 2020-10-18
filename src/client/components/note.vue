@@ -25,7 +25,7 @@
 		</router-link>
 		<div class="info">
 			<button class="_button time" @click="showRenoteMenu()" ref="renoteTime">
-				<fa class="dropdownIcon" v-if="isMyRenote" :icon="faEllipsisH"/>
+				<fa class="dropdownIcon" v-if="isMyRenote" :icon="faEllipsisV"/>
 				<mk-time :time="note.createdAt"/>
 			</button>
 			<span class="visibility" v-if="note.visibility !== 'public'">
@@ -94,32 +94,32 @@
 				<x-reactions-viewer :note="appearNote" ref="reactionsViewer"/>
 					<template v-if="$store.getters.isSignedIn">
 						<button @click="reply()" class="button _button">
-							<template v-if="appearNote.reply"><fa :icon="faReplyAll"/></template>
-							<template v-else><fa :icon="faReply"/></template>
+							<template v-if="appearNote.reply"><fa :icon="faReplyAll" fixed-width/></template>
+							<template v-else><fa :icon="faReply" fixed-width/></template>
 							<p class="count" v-if="appearNote.repliesCount > 0">{{ appearNote.repliesCount }}</p>
 						</button>
 						<button v-if="canRenote" @click="renote()" class="button _button" ref="renoteButton">
-							<fa :icon="faRetweet"/><p class="count" v-if="!detail && appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
+							<fa :icon="faRetweet" fixed-width/><p class="count" v-if="!detail && appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
 						</button>
 						<button v-else class="button _button">
-							<fa :icon="faBan"/>
+							<fa :icon="faBan" fixed-width/>
 						</button>
 						<button v-if="appearNote.myReaction == null" class="button _button" @click="react()" ref="reactButton">
-							<fa :icon="faPlus"/>
+							<fa :icon="faPlus" fixed-width/>
 						</button>
 						<button v-else class="button _button reacted" @click="undoReact(appearNote)" ref="reactButton">
-							<fa :icon="faMinus"/>
+							<fa :icon="faMinus" fixed-width/>
 						</button>
 						<button class="button _button" @click="menu()" ref="menuButton">
-							<fa :icon="faEllipsisH"/>
+							<fa :icon="faEllipsisV" fixed-width/>
 						</button>
 					</template>
 					<template v-else>
 						<button class="button _button" @click="copyContent()">
-							<fa :icon="faCopy"/>
+							<fa :icon="faCopy" fixed-width/>
 						</button>
 						<button class="button _button" @click="copyLink()">
-							<fa :icon="faLink"/>
+							<fa :icon="faLink" fixed-width/>
 						</button>
 				</template>
 			</footer>
@@ -138,7 +138,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faInfoCircle, faHeart, faEllipsisH, faUsers, faHeartbeat, faPlug } from '@fortawesome/free-solid-svg-icons';
+import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faInfoCircle, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes, faClock } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
@@ -170,15 +170,15 @@ export default Vue.extend({
 		XPoll,
 		MkUrlPreview,
 	},
-	model: {
-		prop: 'note',
-		event: 'updated'
-	},
 
 	inject: {
 		inChannel: {
 			default: null
 		}
+	},
+	model: {
+		prop: 'note',
+		event: 'updated'
 	},
 
 	props: {
@@ -215,7 +215,7 @@ export default Vue.extend({
 			readMore: null as boolean | null,
 			instance: null as {} | null,
 			renoteState: null,
-			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock
+			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisV, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock
 		};
 	},
 

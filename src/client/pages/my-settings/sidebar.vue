@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faListUl"/> {{ $t('sidebar') }}</div>
+	<div class="_title">{{ $t('sidebar') }}</div>
 	<div class="_content">
 		<mk-textarea v-model="items" tall>
 			<span>{{ $t('sidebar') }}</span>
@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faListUl, faSave, faRedo } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faRedo } from '@fortawesome/free-solid-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 import MkTextarea from '../../components/ui/textarea.vue';
 import { defaultDeviceUserSettings } from '../../store';
@@ -31,7 +31,7 @@ export default Vue.extend({
 		return {
 			menuDef: this.$store.getters.nav({}),
 			items: '',
-			faListUl, faSave, faRedo
+			faSave, faRedo
 		}
 	},
 

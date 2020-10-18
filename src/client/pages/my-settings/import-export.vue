@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faBoxes"/> {{ $t('importAndExport') }}</div>
+	<div class="_title">{{ $t('importAndExport') }}</div>
 	<div class="_content">
 		<mk-select v-model="exportTarget">
 			<option value="notes">{{ $t('_exportOrImport.allNotes') }}</option>
@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faDownload, faUpload, faBoxes } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faUpload } from '@fortawesome/free-solid-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 import MkSelect from '../../components/ui/select.vue';
 import { apiUrl } from '../../config';
@@ -32,7 +32,7 @@ export default Vue.extend({
 	data() {
 		return {
 			exportTarget: 'notes',
-			faDownload, faUpload, faBoxes
+			faDownload, faUpload
 		}
 	},
 

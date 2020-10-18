@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faFish"/> {{ $t('gachaSettings') }}</div>
+	<div class="_title">{{ $t('gachaSettings') }}</div>
 	<div class="_content">
 		<mk-textarea v-model="faces">{{ $t('gachaFaces') }}<template #desc>{{ $t('gachaSettingDescription') }}</template></mk-textarea>
 	</div>
@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faFish, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
 import MkTextarea from '../../components/ui/textarea.vue';
 import MkButton from '../../components/ui/button.vue';
@@ -29,7 +29,7 @@ export default Vue.extend({
 		return {
 			faces: this.$store.state.settings.faces.join('\n'),
 			changed: false,
-			faFish, faSave, faUndo
+			faSave, faUndo
 		}
 	},
 

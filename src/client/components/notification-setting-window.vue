@@ -25,6 +25,7 @@ import MkSwitch from './ui/switch.vue';
 import MkInfo from './ui/info.vue';
 import MkButton from './ui/button.vue';
 import { notificationTypes } from '../../types';
+import { unique } from '../../prelude/array';
 
 export default Vue.extend({
 	components: {
@@ -54,6 +55,16 @@ export default Vue.extend({
 			useGlobalSetting: false,
 			notificationTypes,
 		};
+	},
+
+	computed: {
+		categories() {
+			if (this.$store.state.instance.meta) {
+				return unique(this.$store.state.instance.meta.emojis.map((x: any) => x.category || '').filter((x: string) => x !== ''));
+			} else {
+				return [];
+			}
+		}
 	},
 
 	created() {

@@ -11,15 +11,14 @@
 			<div class="tabs" v-else>
 				<button class="_button tab" v-for="(item, i) in tabItems" :key="i" :class="{ active: item.src === src }" v-tooltip="item.text" @click="item.action">
 					<fa :icon="item.icon" />
-					<span v-if="item.src === src" v-text="item.text" style="margin-left: 8px" />
+				</button>
+				<button class="_button tab _kjvfvyph_" @click="choose">
+					<fa :icon="faEllipsisH" />
 				</button>
 				<div class="_button tab active" v-if="!tabItems.map(i => i.src).includes(src)">
 					<fa :icon="getIconOfTimeline(src)"/>
 					<span style="margin-left: 8px;">{{ timelineTitle }}</span>
 				</div>
-				<button class="_button tab _kjvfvyph_" @click="choose">
-					<fa :icon="faEllipsisH" />
-				</button>
 			</div>
 		</portal>
 	</template>
@@ -350,20 +349,16 @@ export default Vue.extend({
 	display: flex;
 	align-items: center;
 	height: 100%;
+	margin-left: 24px;
 	> .tab {
 		display: block;
 		min-width: 64px;
 		padding: 0 16px;
 		height: 100%;
-		border-left: 1px solid var(--divider);
-
-		&:last-child {
-			border-right: 1px solid var(--divider);
-		}
 
 		&.active {
 			color: var(--accent);
-			background: var(--panel);
+			border-bottom: 2px solid var(--accent);
 		}
 	}
 }

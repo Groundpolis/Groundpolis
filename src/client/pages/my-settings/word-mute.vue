@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faCommentSlash"/> {{ $t('wordMute') }}</div>
+	<div class="_title">{{ $t('wordMute') }}</div>
 	<div class="_content">
 		<p v-text="$t('_wordMute.description')"/>
 	</div>
@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faCommentSlash, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faSave } from '@fortawesome/free-solid-svg-icons';
 import MkButton from '../../components/ui/button.vue';
 import MkTextarea from '../../components/ui/textarea.vue';
 import MkTab from '../../components/tab.vue';
@@ -51,7 +51,7 @@ export default Vue.extend({
 			hardMutedWords: '',
 			hardWordMutedNotesCount: null,
 			changed: false,
-			faCommentSlash, faSave,
+			faSave,
 		}
 	},
 

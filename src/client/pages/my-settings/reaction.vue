@@ -1,6 +1,6 @@
 <template>
 <section class="_card">
-	<div class="_title"><fa :icon="faLaugh"/> {{ $t('reaction') }}</div>
+	<div class="_title">{{ $t('reaction') }}</div>
 	<div class="_content">
 		<mk-input v-model="reactions" v-autocomplete="{ model: 'reactions' }" style="font-family: 'Segoe UI Emoji', 'Noto Color Emoji', Roboto, HelveticaNeue, Arial, sans-serif">
 			{{ $t('reaction') }}<template #desc>{{ $t('reactionSettingDescription') }} <button class="_textButton" @click="chooseEmoji">{{ $t('chooseEmoji') }}</button></template>
@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faLaugh, faSave, faEye } from '@fortawesome/free-regular-svg-icons';
+import { faSave, faEye } from '@fortawesome/free-regular-svg-icons';
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import MkInput from '../../components/ui/input.vue';
 import MkButton from '../../components/ui/button.vue';
@@ -34,7 +34,7 @@ export default Vue.extend({
 		return {
 			reactions: this.$store.state.settings.reactions.join(''),
 			changed: false,
-			faLaugh, faSave, faEye, faUndo
+			faSave, faEye, faUndo
 		}
 	},
 

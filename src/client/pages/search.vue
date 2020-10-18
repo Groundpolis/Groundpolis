@@ -5,7 +5,7 @@
 
 	<x-search v-model="query" @search="search"/>
 
-	<div class="tab _panel _noPad">
+	<div class="tab _section _noPad" style="padding: 0">
 		<mk-tab v-model="tab" :items="[{ label: $t('notes'), value: 'notes' }, { label: $t('users'), value: 'users' }]"/>
 	</div>
 
@@ -104,8 +104,8 @@ export default Vue.extend({
 				limit: 10,
 				params: () => ({
 					tag: query.trim().substring(1),
-					sort: "+updatedAt",
-					origin: "combined"
+					sort: '+updatedAt',
+					origin: 'combined'
 				})
 			} : {
 				endpoint: 'users/search-keyword',

@@ -9,14 +9,14 @@
 	</portal>
 
 	<div v-if="note">
-		<button class="_panel _button" v-if="hasNext && !showNext" @click="showNext = true" style="margin: 0 auto var(--margin) auto;"><fa :icon="faChevronUp"/></button>
+		<button class="_panel _button show" v-if="hasNext && !showNext" @click="showNext = true" style="margin: 0 auto var(--margin) auto;"><fa :icon="faChevronUp"/></button>
 		<x-notes v-if="showNext" ref="next" :pagination="next"/>
 		<hr v-if="showNext"/>
 
 		<mk-remote-caution v-if="note.user.host != null" :href="note.url || note.uri" style="margin-bottom: var(--margin)"/>
 		<x-note v-model="note" :key="note.id" :detail="true"/>
 
-		<button class="_panel _button" v-if="hasPrev && !showPrev" @click="showPrev = true" style="margin: var(--margin) auto 0 auto;"><fa :icon="faChevronDown"/></button>
+		<button class="_panel _button show" v-if="hasPrev && !showPrev" @click="showPrev = true" style="margin: var(--margin) auto 0 auto;"><fa :icon="faChevronDown"/></button>
 		<hr v-if="showPrev"/>
 		<x-notes v-if="showPrev" ref="prev" :pagination="prev" style="margin-top: var(--margin);"/>
 	</div>
@@ -113,3 +113,12 @@ export default Vue.extend({
 	}
 });
 </script>
+
+<style lang="scss" scoped>
+.mk-note-page {
+	.show {
+		width: 48px;
+		height: 48px;
+	}
+}
+</style>

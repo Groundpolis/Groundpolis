@@ -701,6 +701,7 @@ errorLocalOnlyToRemote: "リモートユーザー宛てのリプライをロー�
 renoteButtonMode: "リノートボタンを押した場合の挙動"
 reduceBlur: "ぼかし効果を無効化する"
 noindex: "検索エンジンにインデックスしない"
+input: "入力..."
 
 _renoteButtonMode:
   choose: "毎回選ぶ"
