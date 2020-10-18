@@ -41,6 +41,7 @@ function Inner() {
 					<Page path="/my/settings" name="Settings" />
 					<Page path="/uitest" name="UITest" />
 					<Page path="/@:acct" name="User/Index" />
+					<Page path="/notes/:noteId" name="Note" />
 					<Page path="*" name="NotFound" />
 				</Switch>
 			</ErrorBoundary>
