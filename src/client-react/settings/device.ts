@@ -160,7 +160,7 @@ export default class DeviceSettingManager {
 	}
 
 	static get<V extends SettingKey>(k: V): DeviceSetting[V] {
-		if (!Object.keys(localStorage).includes(k)) return defaultSetting[k];
+		if (!Object.keys(localStorage).includes('deviceSetting:' + k)) return defaultSetting[k];
 		const value = localStorage.getItem('deviceSetting:' + k);
 		switch (typeof defaultSetting[k]) { 
 			case 'bigint':
@@ -176,8 +176,7 @@ export default class DeviceSettingManager {
 			case 'undefined':
 				return undefined as any;
 			default:
-				throw new Error('Type mismatch! ' + typeof defaultSetting[k] + ' type required');
-			
+				throw new Error('Type mismatch! ' + typeof defaultSetting[k] + ' type required');	
 		}
 	}
 
