@@ -8,6 +8,7 @@ import { apiUrl, deckmode } from './config';
 import defaultFaces from './scripts/default-faces';
 import { erase } from '../prelude/array';
 import Cookies from 'js-cookie';
+import { fetchAsync } from './scripts/fetch-async';
 
 export const defaultSettings = {
 	tutorial: 0,
@@ -408,7 +409,7 @@ export default () => new Vuex.Store({
 			}
 		},
 
-		api(ctx, { endpoint, data, token }) {
+		api(ctx, { endpoint, data, token, sync, }) {
 			if (++ctx.state.pendingApiRequestsCount === 1) {
 				// TODO: spinnerの表示はstoreでやらない
 				ctx.state.spinner = document.createElement('div');
@@ -426,13 +427,13 @@ export default () => new Vuex.Store({
 				if (token !== undefined) (data as any).i = token;
 
 				// Send request
-				fetch(endpoint.indexOf('://') > -1 ? endpoint : `${apiUrl}/${endpoint}`, {
+				fetchAsync(endpoint.indexOf('://') > -1 ? endpoint : `${apiUrl}/${endpoint}`, {
 					method: 'POST',
 					body: JSON.stringify(data),
 					credentials: 'omit',
 					cache: 'no-cache'
 				}).then(async (res) => {
-					const body = res.status === 204 ? null : await res.json();
+					const body = res.status === 204 ? null : res.json;
 
 					if (res.status === 200) {
 						resolve(body);

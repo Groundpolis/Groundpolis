@@ -10,6 +10,7 @@ import Stream from './scripts/stream';
 import store from './store';
 
 import Cookies from 'js-cookie';
+import { fetchAsync } from './scripts/fetch-async';
 
 /**
  * Groundpolis Operating System
@@ -69,7 +70,7 @@ export default class MiOS extends EventEmitter {
 			}
 
 			// Fetch user
-			fetch(`${apiUrl}/i`, {
+			fetchAsync(`${apiUrl}/i`, {
 				method: 'POST',
 				body: JSON.stringify({
 					i: token
@@ -82,16 +83,17 @@ export default class MiOS extends EventEmitter {
 					return this.signout();
 				}
 
+
 				// Parse response
-				res.json().then(i => {
-					me = i;
-					me.token = token;
-					done();
-				});
+				me = res.json;
+				console.log(res);
+				me.token = token;
+				done();
 			})
 			// When failure
-			.catch(() => {
+			.catch((e) => {
 				// Render the error screen
+				console.error(e);
 				document.body.innerHTML = '<div id="err">Oops!</div>';
 
 				Progress.done();
