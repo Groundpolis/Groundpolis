@@ -225,12 +225,11 @@ os.init(async () => {
 				const vm = this.new(Form, { title, form });
 				return new Promise((res) => {
 					vm.$once('ok', result => res({ canceled: false, result }));
-					vm.$once('cancel', () => res({ canceled: true }));
+					vm.$once('closed', () => res({ canceled: true }));
 				});
 			},
 			post(opts, cb) {
 				if (!this.$store.getters.isSignedIn) return;
-				console.log(opts);
 				const vm = this.new(PostFormDialog, opts);
 				if (cb) vm.$once('closed', cb);
 				(vm as any).focus();
