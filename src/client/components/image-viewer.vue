@@ -47,10 +47,10 @@ export default Vue.extend({
 			return this.other[this.index];
 		},
 		hasPrev() {
-			return this.index > 0;
+			return this.other && this.index > 0;
 		},
 		hasNext() {
-			return this.index < this.other.length - 1;
+			return this.other && this.index < this.other.length - 1;
 		},
 	},
 
