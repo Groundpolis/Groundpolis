@@ -20,6 +20,9 @@
 			<button class="_button" v-tooltip="$t('_paint.redo')" @click="redo" :disabled="redoStack.length === 0">
 				<fa :icon="faRedo"></fa>
 			</button>
+			<button class="_button post" v-tooltip="$t('post')" @click="post">
+				<fa :icon="faEdit"></fa>
+			</button>
 		</div>
 		<div class="canvas-wrapper" ref="canvasWrapper" :class="{ animation: $store.state.device.animation }">
 			<canvas
@@ -88,7 +91,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { faPaintBrush, faPaw, faPen, faEraser, faSlash, faSquare, faCircle, faSearchMinus, faSearchPlus, faUndo, faRedo } from '@fortawesome/free-solid-svg-icons';
+import { faPaintBrush, faPaw, faPen, faEraser, faSlash, faSquare, faCircle, faSearchMinus, faSearchPlus, faUndo, faRedo, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { faSquare as farSquare, faCircle as farCircle, faSave as farSave, faFolderOpen as farFolderOpen, faFileAlt as farFileAlt, faQuestionCircle as farQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 
 import MkSwitch from '../components/ui/switch.vue';
@@ -96,6 +99,7 @@ import MkRange from '../components/ui/range.vue';
 import { apiUrl } from '../config';
 import { selectFile } from '../scripts/select-file';
 import { Form } from '../scripts/form';
+import { PackedDriveFile } from '../../models/repositories/drive-file';
 
 export const shapes = [ 'line', 'rect', 'circle', 'rectFill', 'circleFill' ] as const;
 
@@ -190,8 +194,9 @@ export default Vue.extend({
 			redoStack: [] as ImageData[],
 			changed: false,
 			fileName: '',
+			recentFile: null as PackedDriveFile,
 			uploadingProgress: null as number | null,
-			faPaintBrush, faPen, faEraser, faSearchMinus, faSearchPlus, faUndo, faRedo,
+			faPaintBrush, faPen, faEraser, faSearchMinus, faSearchPlus, faUndo, faRedo, faEdit,
 			farSquare, farCircle, farSave, farFolderOpen, farFileAlt, farQuestionCircle
 		}
 	},
@@ -199,7 +204,7 @@ export default Vue.extend({
 		return {
 			title: (this.$t('paint') as string) + (this.changed ? '*' : ''),
 		};
-},
+	},
 	computed: {
 		currentToolIcon () {
 			return getToolIconOf(this.currentTool);
@@ -229,6 +234,13 @@ export default Vue.extend({
 			get() { return this.$store.state.device.usePressure; },
 			set(value) { this.$store.commit('device/set', { key: 'usePressure',value }) }
 		},
+	},
+	watch: {
+		changed() {
+			if (this.changed) {
+				this.recentFile = null;
+			}
+		}
 	},
 	mounted() {
 		this.ctx = this.canvas.getContext('2d');
@@ -267,13 +279,13 @@ export default Vue.extend({
 			return {
 				text: this.$t('_paint.tools.' + type),
 				icon: getToolIconOf(type),
-				action: () => this.currentTool = type 
+				action: () => { this.currentTool = type; },
 			}
 		},
 		genZoomMenuItem(num: Number)  {
 			return {
 				text: num + '%',
-				action: () => this.zoom = num,
+				action: () => { this.zoom = num; },
 			}
 		},
 		isShape(type: ToolType) {
@@ -388,42 +400,44 @@ export default Vue.extend({
 			};
 		},
 		async save() {
-			const { canceled, result } = await this.$root.dialog({
-				title: this.$t('specifyFileName'),
-				input:  {
-					default: this.fileName
-				},
-				autoComplete: true
+			return new Promise<PackedDriveFile>((res, rej) => {
+				this.$root.dialog({
+					title: this.$t('specifyFileName'),
+					input:  {
+						default: this.fileName
+					},
+					autoComplete: true
+				}).then(({ canceled, result }) => {
+					if (canceled || !result) return;
+					this.fileName = result;
+
+					new Promise<Blob | null>(res => this.canvas.toBlob(res)).then((blob) => {
+						if (!blob) return;
+
+						const data = new FormData();
+						data.append('i', this.$store.state.i.token);
+						data.append('force', 'true');
+						data.append('file', blob);
+						data.append('name', this.fileName);
+
+						const xhr = new XMLHttpRequest();
+						xhr.open('POST', apiUrl + '/drive/files/create', true);
+						xhr.onload = (e: ProgressEvent) => {
+							this.uploadingProgress = 100;
+							setTimeout(() => this.uploadingProgress = null, 2000);
+							res(JSON.parse(xhr.responseText));
+						};
+
+						xhr.upload.onprogress = e => {
+							this.uploadingProgress = Math.floor(e.loaded / e.total * 100);
+						};
+
+						xhr.send(data);
+
+						this.changed = false;
+					});
+				});
 			});
-			if (canceled || !result) return;
-			this.fileName = result;
-
-			const blob = await new Promise<Blob | null>(res => this.canvas.toBlob(res));
-
-			if (!blob) return;
-
-			const data = new FormData();
-				data.append('i', this.$store.state.i.token);
-				data.append('force', 'true');
-				data.append('file', blob);
-				data.append('name', this.fileName);
-
-				const xhr = new XMLHttpRequest();
-				xhr.open('POST', apiUrl + '/drive/files/create', true);
-				xhr.onload = (e: any) => {
-					this.uploadingProgress = 100;
-					setTimeout(() => this.uploadingProgress = null, 2000);
-				};
-
-				xhr.upload.onprogress = e => {
-					this.uploadingProgress = Math.floor(e.loaded / e.total * 100);
-				};
-
-				xhr.send(data);
-
-
-			this.changed = false;
-				
 		},
 		undo() {
 			const data = this.undoStack.pop();
@@ -440,6 +454,23 @@ export default Vue.extend({
 			this.ctx!.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			this.ctx!.putImageData(data, 0, 0);
 			this.changed = true;
+		},
+		async post() {
+			if (this.recentFile === null) {
+				this.recentFile = await this.save();
+			}
+			this.$root.post({
+				initialNote: {
+					text: '#GroundpolisPaint',
+					files: [ this.recentFile ],
+					cw: null,
+					visibility: 'public',
+					localOnly: false,
+					remoteFollowersOnly: false,
+					renote: null,
+					reply: null,
+				}
+			});
 		},
 		onPointerDown(pointerX: number, pointerY: number, pressure = 0.5) {
 			this.down = true;
@@ -728,25 +759,20 @@ export default Vue.extend({
 		font-size: 16px;
 		min-width: 48px;
 		height: 48px;
-		border-radius: 6px;
+		border-radius: 24px;
 
 		&:hover {
-			background: var(--geavgsxy);
+			background: var(--buttonHoverBg);
+		}
+
+		&.post {
+			background: var(--accent);
+			color: white;
 		}
 
 		&.active {
 			color: var(--accent);
 		}
-	}
-
-	._buttonPrimary {
-		display: inline-block;
-		padding: 0;
-		margin: 0;
-		font-size: 16px;
-		width: 48px;
-		height: 48px;
-		border-radius: 6px;
 	}
 
 	> .color {
@@ -761,7 +787,6 @@ export default Vue.extend({
 		-webkit-appearance: none;
 		appearance: none;
 		cursor: pointer;
-		// border-radius: 24px;
 		> input[type="color"] {
 			display: none;
 		}
