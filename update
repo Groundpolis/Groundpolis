@@ -1,6 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 git pull
+
+export NODE_OPTIONS="--max-old-space-size=4096"
+
 npx yarn
 NODE_ENV=production npx yarn build
 if [ "$1" = '--migrate' ]; then
