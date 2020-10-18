@@ -52,21 +52,28 @@ export const meta = {
 
 export default define(meta, async (ps, me) => {
 	const trimmed = ps.query.trim();
-	const q = `%${trimmed}%`;
-	const parsed = trimmed.startsWith('@') ? parseAcct(trimmed) : null;
-	const query = makePaginationQuery(Users.createQueryBuilder('user'), ps.sinceId, ps.untilId)
-	.andWhere('user.isSuspended = FALSE')
-	.andWhere(new Brackets(qb => {
-		if (parsed) {
-			qb.where(`"user".username ILIKE :q`, {q: `%${parsed.username}%`});
-		} else {
-			qb.where(`user.username ILIKE :q`, { q })
-				.orWhere(`user.name ILIKE :q`, { q })
-				.orWhere(`(select "description" from "user_profile" where "userId" = user.id) ILIKE :q`, { q })
-				.orWhere(`(select "location" from "user_profile" where "userId" = user.id) ILIKE :q`, { q });
-		}
-	}))
-	.andWhere('user.updatedAt IS NOT NULL')
+	let query = makePaginationQuery(Users.createQueryBuilder('user'), ps.sinceId, ps.untilId)
+		.andWhere('user.isSuspended = FALSE');
+
+	for (const word of trimmed.split(/\s+/)) {
+		const q = `%${word}%`;
+		const parsed = word.startsWith('@') ? parseAcct(word) : null;
+
+
+		query = query.andWhere(new Brackets(qb => {
+			if (parsed) {
+				qb.where('"user".username ILIKE :q', { q: `%${parsed.username}%` });
+			} else {
+				qb.where('user.username ILIKE :q', { q })
+					.orWhere('user.name ILIKE :q', { q })
+					.orWhere('user.host ILIKE :q', { q })
+					.orWhere('(select "description" from "user_profile" where "userId" = user.id) ILIKE :q', { q })
+					.orWhere('(select "location" from "user_profile" where "userId" = user.id) ILIKE :q', { q });
+			}
+		}));
+	}
+
+	query.andWhere('user.updatedAt IS NOT NULL')
 	.orderBy('user.updatedAt', 'DESC');
 
 	if (me) generateMutedUserQueryForUsers(query, me);
