@@ -16,7 +16,7 @@
 				<p class="followed" v-if="user.isFollowed">{{ $t('followsYou') }}</p>
 			</div>
 			<div class="description" v-if="user.description" :title="user.description">
-				<mfm :text="user.description" :is-note="false" :author="user" :i="$store.state.i" :custom-emojis="user.emojis" :plain="true" :nowrap="true"/>
+				<mfm :text="user.description" :is-note="false" :author="user" :i="$store.state.i" :custom-emojis="user.emojis" :plain="true"/>
 			</div>
 			<mk-follow-button class="koudoku-button" v-if="$store.getters.isSignedIn && user.id != $store.state.i.id" :user="user" mini/>
 		</div>
