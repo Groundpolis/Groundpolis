@@ -30,13 +30,6 @@
 				</template>
 			</mk-pagination>
 		</div>
-		<!-- <div class="_content" v-if="selected">
-			<mk-input v-model="name"><span>{{ $t('name') }}</span></mk-input>
-			<mk-input v-model="category" :datalist="categories"><span>{{ $t('category') }}</span></mk-input>
-			<mk-input v-model="aliases"><span>{{ $t('tags') }}</span></mk-input>
-			<mk-button inline primary @click="update"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
-			<mk-button inline :disabled="selected == null" @click="del()"><fa :icon="faTrashAlt"/> {{ $t('delete') }}</mk-button>
-		</div> -->
 	</section>
 
 	<section class="_section _vMargin suggestions" v-else-if="tab === 'suggestion'">
@@ -140,6 +133,9 @@ export default Vue.extend({
 			pagination: {
 				endpoint: 'admin/emoji/list',
 				limit: 10,
+				params: () => ({
+					query: (this.q && this.q !== '') ? this.q : null
+				}),
 			},
 			suggestionPagination: {
 				endpoint: 'suggestions/emojis/list',
@@ -152,7 +148,7 @@ export default Vue.extend({
 				endpoint: 'admin/emoji/list-remote',
 				limit: 10,
 				params: () => ({
-					host: this.host ? this.host : null
+					host: this.host ? this.host : null,
 				})
 			},
 			faTrashAlt, faPlus, faLaugh, faSave, faCheck, faTimes
@@ -176,6 +172,10 @@ export default Vue.extend({
 
 		pendingOnly() {
 			this.$refs.suggestions.reload();
+		},
+
+		q() {
+			this.$refs.emojis.reload();
 		},
 
 		selected() {
