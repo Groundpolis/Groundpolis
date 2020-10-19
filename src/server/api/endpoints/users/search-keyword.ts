@@ -52,17 +52,20 @@ export const meta = {
 
 export default define(meta, async (ps, me) => {
 	const trimmed = ps.query.trim();
-	let query = makePaginationQuery(Users.createQueryBuilder('user'), ps.sinceId, ps.untilId)
+	const query = makePaginationQuery(Users.createQueryBuilder('user'), ps.sinceId, ps.untilId)
 		.andWhere('user.isSuspended = FALSE');
+	
+	console.log(`trimmed: ${trimmed}`);
 
 	for (const word of trimmed.split(/\s+/)) {
-		const q = `%${word}%`;
-		const parsed = word.startsWith('@') ? parseAcct(word) : null;
-
-
-		query = query.andWhere(new Brackets(qb => {
+		query.andWhere(new Brackets(qb => {
+			const q = `%${word}%`;
+			const parsed = word.startsWith('@') ? parseAcct(word) : null;
 			if (parsed) {
 				qb.where('"user".username ILIKE :q', { q: `%${parsed.username}%` });
+				if (parsed.host) { 
+					qb.andWhere('"user".host ILIKE :q', { q: `%${parsed.host}%` });
+				}
 			} else {
 				qb.where('user.username ILIKE :q', { q })
 					.orWhere('user.name ILIKE :q', { q })
@@ -74,7 +77,7 @@ export default define(meta, async (ps, me) => {
 	}
 
 	query.andWhere('user.updatedAt IS NOT NULL')
-	.orderBy('user.updatedAt', 'DESC');
+		.orderBy('user.updatedAt', 'DESC');
 
 	if (me) generateMutedUserQueryForUsers(query, me);
 
