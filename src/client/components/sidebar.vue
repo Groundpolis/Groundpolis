@@ -30,8 +30,8 @@
 						<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
 					</router-link>
 					<template v-if="$store.getters.isSignedIn">
-						<template v-for="item in menu">
-							<div v-if="item === '-'" :key="item" class="divider" />
+						<template v-for="(item, i) in menu">
+							<div v-if="item === '-'" :key="'divider' + i" class="divider" />
 							<component v-else-if="menuDef[item] && menuDef[item].show !== false" :is="menuDef[item].to ? 'router-link' : 'button'" class="item _button" :key="item" :class="item" active-class="active" @click="() => { if (menuDef[item].action) menuDef[item].action() }" :to="menuDef[item].to">
 								<fa :icon="menuDef[item].icon" fixed-width/><span class="text">{{ $t(menuDef[item].title) }}</span>
 								<i v-if="menuDef[item].indicated"><fa :icon="faCircle"/></i>
