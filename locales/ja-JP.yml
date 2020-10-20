@@ -785,6 +785,7 @@ _paint:
     rectFill: "四角塗りつぶし"
     circle: "円"
     circleFill: "円塗りつぶし"
+    pixel: "ドットペン"
 
 _theme:
   explore: "テーマを探す"
