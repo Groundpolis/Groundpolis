@@ -222,7 +222,7 @@ export default Vue.extend({
 				} else if (result.deleted) {
 					this.$refs.emojis.removeItem(item => item.id === emoji.id);
 				}
-			});136
+			});
 		},
 
 		async del() {

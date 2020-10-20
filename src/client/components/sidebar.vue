@@ -3,8 +3,8 @@
 	<transition name="nav-back">
 		<div class="nav-back _modalBg"
 			v-if="showing"
-			@click="showing = false"
-			@touchstart="showing = false"
+			@click="showing = isAccountMenuMode = false"
+			@touchstart="showing = isAccountMenuMode = false"
 		></div>
 	</transition>
 

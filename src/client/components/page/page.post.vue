@@ -64,9 +64,10 @@ export default Vue.extend({
 						method: 'POST',
 						body: data
 					})
-					.then(res => {
+					.then(response => response.json())
+					.then(f => {
 						dialog.close();
-						ok(res.json);
+						ok(f);
 					})
 				});
 			});

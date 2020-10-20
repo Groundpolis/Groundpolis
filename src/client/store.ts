@@ -432,7 +432,7 @@ export default () => new Vuex.Store({
 					credentials: 'omit',
 					cache: 'no-cache'
 				}).then(async (res) => {
-					const body = res.status === 204 ? null : res.json;
+					const body = res.status === 204 ? null : await res.json();
 
 					if (res.status === 200) {
 						resolve(body);

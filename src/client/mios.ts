@@ -84,9 +84,11 @@ export default class MiOS extends EventEmitter {
 
 
 				// Parse response
-				me = res.json;
-				me.token = token;
-				done();
+				res.json().then(i => {
+					me = i;
+					me.token = token;
+					done();
+				});
 			})
 			// When failure
 			.catch((e) => {
