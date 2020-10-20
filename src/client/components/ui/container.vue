@@ -10,16 +10,9 @@
 			</button>
 		</div>
 	</header>
-	<transition name="container-toggle"
-		@enter="enter"
-		@after-enter="afterEnter"
-		@leave="leave"
-		@after-leave="afterLeave"
-	>
-		<div v-show="showBody">
-			<slot></slot>
-		</div>
-	</transition>
+	<div v-show="showBody">
+		<slot></slot>
+	</div>
 </div>
 </template>
 
@@ -68,7 +61,7 @@ export default Vue.extend({
 		this.$watch('showBody', showBody => {
 			this.$el.style.minHeight = `${this.$refs.header.offsetHeight}px`;
 			if (showBody) {
-				this.$el.style.flexBasis = `auto`;
+				this.$el.style.flexBasis = 'auto';
 			} else {
 				this.$el.style.flexBasis = `${this.$refs.header.offsetHeight}px`;
 			}
