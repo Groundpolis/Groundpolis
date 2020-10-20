@@ -71,11 +71,12 @@
 
 	<section class="_section _vMargin remote" v-else-if="tab === 'remote'">
 		<div class="_content">
+			<mk-input v-model="q" :debounce="true"><span>{{ $t('search') }}</span></mk-input>
 			<mk-input v-model="host" :debounce="true"><span>{{ $t('host') }}</span></mk-input>
 			<mk-pagination :pagination="remotePagination" class="emojis" ref="remoteEmojis">
 				<template #empty><span>{{ $t('noCustomEmojis') }}</span></template>
 				<template #default="{items}">
-					<div class="emoji" v-for="(emoji, i) in items" :key="emoji.id" @click="selectedRemote = emoji" :class="{ selected: selectedRemote && (selectedRemote.id === emoji.id) }">
+					<div class="emoji _card" v-for="(emoji, i) in items" :key="emoji.id" @click="openRemoteEmojiMenu($event, emoji)">
 						<img :src="emoji.url" class="img" :alt="emoji.name"/>
 						<div class="body">
 							<span class="name">{{ emoji.name }}</span>
@@ -84,9 +85,6 @@
 					</div>
 				</template>
 			</mk-pagination>
-		</div>
-		<div class="_footer">
-			<mk-button inline primary :disabled="selectedRemote == null" @click="im()"><fa :icon="faPlus"/> {{ $t('import') }}</mk-button>
 		</div>
 	</section>
 </div>
@@ -178,6 +176,10 @@ export default Vue.extend({
 			this.$refs.emojis.reload();
 		},
 
+		tab() {
+			this.q = '';
+		},
+
 		selected() {
 			this.name = this.selected ? this.selected.name : null;
 			this.category = this.selected ? this.selected.category : null;
@@ -201,7 +203,7 @@ export default Vue.extend({
 				fileId: file.id,
 			})))
 			.then(() => {
-				if (this.autoReload) this.$refs.emojis.reload();
+				this.$refs.emojis.reload();
 				this.$root.dialog({
 					type: 'success',
 					iconOnly: true, autoClose: true
@@ -238,7 +240,7 @@ export default Vue.extend({
 
 		async accept(suggestionId: string) {
 			await this.$root.api('admin/suggestions/emojis/accept', { suggestionId });
-			if (this.autoReload) this.$refs.suggestions.reload();
+			this.$refs.suggestions.reload();
 		},
 
 		async reject(suggestionId: string) {
@@ -251,14 +253,24 @@ export default Vue.extend({
 			if (canceled) return;
 
 			await this.$root.api('admin/suggestions/emojis/reject', { suggestionId, comment });
-			if (this.autoReload) this.$refs.suggestions.reload();
+			this.$refs.suggestions.reload();
 		},
 
-		im() {
+		async openRemoteEmojiMenu(e, emoji) {
+			this.$root.menu({
+				items: [{
+					text: this.$t('import').toString(),
+					icon: faPlus,
+					action: () => this.import(emoji),
+				}],
+				source: e.currentTarget || e.target,
+			});
+		},
+
+		import(emoji) {
 			this.$root.api('admin/emoji/copy', {
-				emojiId: this.selectedRemote.id,
+				emojiId: emoji.id,
 			}).then(() => {
-				if (this.autoReload) this.$refs.emojis.reload();
 				this.$root.dialog({
 					type: 'success',
 					iconOnly: true, autoClose: true
@@ -280,7 +292,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .mk-instance-emojis {
-	> .local {
+	> .local, > .remote {
 		> ._content {
 			> .emojis {
 				display: grid;
@@ -358,43 +370,6 @@ export default Vue.extend({
 							opacity: 0.7;
 						}
 						> .state {
-							opacity: 0.5;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	> .remote {
-		> ._content {
-			max-height: 300px;
-			overflow: auto;
-			
-			> .emojis {
-				> .emoji {
-					display: flex;
-					align-items: center;
-
-					&.selected {
-						background: var(--accent);
-						box-shadow: 0 0 0 8px var(--accent);
-						color: #fff;
-					}
-
-					> .img {
-						width: 32px;
-						height: 32px;
-					}
-
-					> .body {
-						padding: 0 8px;
-
-						> .name {
-							display: block;
-						}
-
-						> .info {
 							opacity: 0.5;
 						}
 					}
