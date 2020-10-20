@@ -92,22 +92,24 @@
 		<div class="_title"><fa :icon="faEnvelope" /> {{ $t('emailConfig') }}</div>
 		<div class="_content">
 			<mk-switch v-model="enableEmail" @change="save()">{{ $t('enableEmail') }}<template #desc>{{ $t('emailConfigInfo') }}</template></mk-switch>
-			<mk-input v-model="email" type="email" :disabled="!enableEmail">{{ $t('email') }}</mk-input>
-			<div><b>{{ $t('smtpConfig') }}</b></div>
-			<div class="_inputs">
-				<mk-input v-model="smtpHost" :disabled="!enableEmail">{{ $t('smtpHost') }}</mk-input>
-				<mk-input v-model="smtpPort" type="number" :disabled="!enableEmail">{{ $t('smtpPort') }}</mk-input>
-			</div>
-			<div class="_inputs">
-				<mk-input v-model="smtpUser" :disabled="!enableEmail">{{ $t('smtpUser') }}</mk-input>
-				<mk-input v-model="smtpPass" type="password" :disabled="!enableEmail">{{ $t('smtpPass') }}</mk-input>
-			</div>
-			<mk-info>{{ $t('emptyToDisableSmtpAuth') }}</mk-info>
-			<mk-switch v-model="smtpSecure" :disabled="!enableEmail">{{ $t('smtpSecure') }}<template #desc>{{ $t('smtpSecureInfo') }}</template></mk-switch>
-			<div>
-				<mk-button :disabled="!enableEmail" inline @click="testEmail()">{{ $t('testEmail') }}</mk-button>
-				<mk-button :disabled="!enableEmail" primary inline @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
-			</div>
+			<template v-if="enableEmail">
+				<mk-input v-model="email" type="email" :disabled="!enableEmail">{{ $t('email') }}</mk-input>
+				<div><b>{{ $t('smtpConfig') }}</b></div>
+				<div class="_inputs">
+					<mk-input v-model="smtpHost" :disabled="!enableEmail">{{ $t('smtpHost') }}</mk-input>
+					<mk-input v-model="smtpPort" type="number" :disabled="!enableEmail">{{ $t('smtpPort') }}</mk-input>
+				</div>
+				<div class="_inputs">
+					<mk-input v-model="smtpUser" :disabled="!enableEmail">{{ $t('smtpUser') }}</mk-input>
+					<mk-input v-model="smtpPass" type="password" :disabled="!enableEmail">{{ $t('smtpPass') }}</mk-input>
+				</div>
+				<mk-info>{{ $t('emptyToDisableSmtpAuth') }}</mk-info>
+				<mk-switch v-model="smtpSecure" :disabled="!enableEmail">{{ $t('smtpSecure') }}<template #desc>{{ $t('smtpSecureInfo') }}</template></mk-switch>
+				<div>
+					<mk-button :disabled="!enableEmail" inline @click="testEmail()">{{ $t('testEmail') }}</mk-button>
+					<mk-button :disabled="!enableEmail" primary inline @click="save(true)"><fa :icon="faSave"/> {{ $t('save') }}</mk-button>
+				</div>
+			</template>
 		</div>
 	</section>
 
