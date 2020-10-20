@@ -43,13 +43,12 @@ import { faPlayCircle } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'; 
 import { url as local, lang } from '../config';
 
-import { fetchAsync } from '../scripts/fetch-async';
 
 export default Vue.extend({
 	props: {
 		url: {
 			type: String,
-			require: true
+			required: true,
 		},
 
 		detail: {
@@ -84,7 +83,7 @@ export default Vue.extend({
 			tweetExpanded: this.detail,
 			embedId: `embed${Math.random().toString().replace(/\D/,'')}`,
 			tweetHeight: 150,
- 			tweetLeft: 0,
+			tweetLeft: 0,
 			playerEnabled: false,
 			self: self,
 			attr: self ? 'to' : 'href',
@@ -109,7 +108,7 @@ export default Vue.extend({
 
 		requestUrl.hash = '';
 
-		fetchAsync(`/url?url=${encodeURIComponent(requestUrl.href)}&lang=${requestLang}`).then(res => {
+		fetch(`/url?url=${encodeURIComponent(requestUrl.href)}&lang=${requestLang}`).then(res => {
 			const info = res.json;
 			if (info._isBlocked) return;
 			if (info.url == null) return;

@@ -10,7 +10,6 @@ import Stream from './scripts/stream';
 import store from './store';
 
 import Cookies from 'js-cookie';
-import { fetchAsync } from './scripts/fetch-async';
 
 /**
  * Groundpolis Operating System
@@ -70,7 +69,7 @@ export default class MiOS extends EventEmitter {
 			}
 
 			// Fetch user
-			fetchAsync(`${apiUrl}/i`, {
+			fetch(`${apiUrl}/i`, {
 				method: 'POST',
 				body: JSON.stringify({
 					i: token

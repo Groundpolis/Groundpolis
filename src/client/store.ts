@@ -8,7 +8,6 @@ import { apiUrl, deckmode } from './config';
 import defaultFaces from './scripts/default-faces';
 import { erase } from '../prelude/array';
 import Cookies from 'js-cookie';
-import { fetchAsync } from './scripts/fetch-async';
 
 export const defaultSettings = {
 	tutorial: 0,
@@ -427,7 +426,7 @@ export default () => new Vuex.Store({
 				if (token !== undefined) (data as any).i = token;
 
 				// Send request
-				fetchAsync(endpoint.indexOf('://') > -1 ? endpoint : `${apiUrl}/${endpoint}`, {
+				fetch(endpoint.indexOf('://') > -1 ? endpoint : `${apiUrl}/${endpoint}`, {
 					method: 'POST',
 					body: JSON.stringify(data),
 					credentials: 'omit',
