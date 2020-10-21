@@ -31,7 +31,7 @@ export const defaultSettings = {
 	stealRule: 1,
 	stealReaction: '⭐️',
 	injectUnlistedNoteInLTL: false,
-	renoteButtonMode: 'choose' as 'choose' | 'renote' | 'quote' | 'renoteQuote'
+	renoteButtonMode: 'choose' as 'choose' | 'renote' | 'quote' | 'renoteQuote',
 };
 
 export const defaultDeviceUserSettings = {
@@ -142,6 +142,7 @@ export const defaultDeviceSettings = {
 	userHostDisplayMode: 0,
 	collapseLongNote: true,
 	useLegacyMobileView: true,
+	newAnnouncementUI: false,
 };
 
 function copy<T>(data: T): T {
@@ -207,6 +208,7 @@ export default () => new Vuex.Store({
 			announcements: {
 				title: 'announcements',
 				icon: faBullhorn,
+				get show() { return !state.device.newAnnouncementUI },
 				get indicated() { return getters.isSignedIn && state.i.hasUnreadAnnouncement; },
 				to: '/announcements',
 			},

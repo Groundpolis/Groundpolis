@@ -2,12 +2,11 @@
 <x-modal ref="modal" @closed="() => { $emit('closed'); destroyDom(); }" :can-close="canClose">
 	<div class="ebkgoccj" :class="{ noPadding }" @keydown="onKeydown" :style="{ width: `${width}px`, height: `${height}px` }">
 		<div class="header">
-			<button class="_button" v-if="withOkButton" @click="close()"><fa :icon="faTimes"/></button>
+			<button class="_button" @click="close()"><fa :icon="faTimes"/></button>
 			<span class="title">
 				<mk-avatar :user="avatar" v-if="avatar" class="avatar"/>
 				<slot name="header"></slot>
 			</span>
-			<button class="_button" v-if="!withOkButton" @click="close()"><fa :icon="faTimes"/></button>
 			<button class="_button" v-if="withOkButton" @click="() => { $emit('ok'); close(); }" :disabled="okButtonDisabled"><fa :icon="faCheck"/></button>
 		</div>
 		<div class="body">
@@ -147,6 +146,7 @@ export default Vue.extend({
 
 	> .body {
 		overflow: auto;
+		height: 100%;
 	}
 
 	&:not(.noPadding) > .body {
