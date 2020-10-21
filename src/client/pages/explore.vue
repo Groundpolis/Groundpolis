@@ -26,16 +26,16 @@
 		</div>
 
 		<template v-if="tag == null">
-			<x-user-list :pagination="pinnedUsers" :expanded="false">
+			<x-user-list class="_vMargin" :pagination="pinnedUsers" :expanded="false">
 				<fa :icon="faBookmark" fixed-width/>{{ $t('pinnedUsers') }}
 			</x-user-list>
-			<x-user-list :pagination="popularUsers" :expanded="false">
+			<x-user-list class="_vMargin" :pagination="popularUsers" :expanded="false">
 				<fa :icon="faChartLine" fixed-width/>{{ $t('popularUsers') }}
 			</x-user-list>
-			<x-user-list :pagination="recentlyUpdatedUsers" :expanded="false">
+			<x-user-list class="_vMargin" :pagination="recentlyUpdatedUsers" :expanded="false">
 				<fa :icon="faCommentAlt" fixed-width/>{{ $t('recentlyUpdatedUsers') }}
 			</x-user-list>
-			<x-user-list :pagination="recentlyRegisteredUsers" :expanded="false">
+			<x-user-list class="_vMargin" :pagination="recentlyRegisteredUsers" :expanded="false">
 				<fa :icon="faPlus" fixed-width/>{{ $t('recentlyRegisteredUsers') }}
 			</x-user-list>
 		</template>
@@ -44,17 +44,17 @@
 			<header><span>{{ $t('exploreFediverse') }}</span></header>
 		</div>
 
-		<x-user-list v-if="tag != null" :pagination="tagUsers" :key="`${tag}`">
+		<x-user-list class="_vMargin" v-if="tag != null" :pagination="tagUsers" :key="`${tag}`">
 			<fa :icon="faHashtag" fixed-width/>{{ tag }}
 		</x-user-list>
 		<template v-if="tag == null">
-			<x-user-list :pagination="popularUsersF" :expanded="false">
+			<x-user-list class="_vMargin" :pagination="popularUsersF" :expanded="false">
 				<fa :icon="faChartLine" fixed-width/>{{ $t('popularUsers') }}
 			</x-user-list>
-			<x-user-list :pagination="recentlyUpdatedUsersF" :expanded="false">
+			<x-user-list class="_vMargin" :pagination="recentlyUpdatedUsersF" :expanded="false">
 				<fa :icon="faCommentAlt" fixed-width/>{{ $t('recentlyUpdatedUsers') }}
 			</x-user-list>
-			<x-user-list :pagination="recentlyRegisteredUsersF" :expanded="false">
+			<x-user-list class="_vMargin" :pagination="recentlyRegisteredUsersF" :expanded="false">
 				<fa :icon="faRocket" fixed-width/>{{ $t('recentlyDiscoveredUsers') }}
 			</x-user-list>
 		</template>

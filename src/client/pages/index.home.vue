@@ -2,23 +2,21 @@
 <div class="mk-home" v-hotkey.global="keymap">
 	<template v-if="showTitle">
 		<portal to="header">
-			<button v-if="isMobile || deckMode" @click="choose" class="_button _kjvfvyph_">
-				<i><fa v-if="$store.state.i.hasUnreadAntenna" :icon="faCircle"/></i>
-				<fa :icon="getIconOfTimeline(src)"/>
-				<span style="margin-left: 8px;">{{ timelineTitle }}</span>
-				<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
-			</button>
-			<div class="tabs" v-else>
+			<div class="tabs">
 				<button class="_button tab" v-for="(item, i) in tabItems" :key="i" :class="{ active: item.src === src }" v-tooltip="item.text" @click="item.action">
 					<fa :icon="item.icon" />
 				</button>
-				<button class="_button tab _kjvfvyph_" @click="choose">
+				<button class="_button tab" @click="choose">
 					<fa :icon="faEllipsisH" />
+					<i><fa v-if="$store.state.i.hasUnreadAntenna" :icon="faCircle"/></i>
 				</button>
-				<div class="_button tab active" v-if="!tabItems.map(i => i.src).includes(src)">
+				<div class="_button tab active" v-tooltip="timelineTitle" v-if="!tabItems.map(i => i.src).includes(src)">
 					<fa :icon="getIconOfTimeline(src)"/>
-					<span style="margin-left: 8px;">{{ timelineTitle }}</span>
 				</div>
+				<button class="_button tab" v-tooltip="$t('announcements')" v-if="newAnnouncementUI && announcements && announcements.length > 0" @click="openAnnouncement">
+					<fa :icon="faBullhorn" />
+					<i><fa v-if="unreadAnnouncements && unreadAnnouncements.length > 0" :icon="faCircle"/></i>
+				</button>
 			</div>
 		</portal>
 	</template>
@@ -26,7 +24,7 @@
 	<div class="new" v-if="queue > 0" :style="{ width: width + 'px' }"><button class="_buttonPrimary" @click="top()">{{ $t('newNoteRecived') }}</button></div>
 
 	<x-tutorial class="tutorial" v-if="$store.state.settings.tutorial != -1"/>
-	<section class="_card announcements" v-else-if="$store.getters.isSignedIn && announcements.length > 0">
+	<section class="_card announcements" v-else-if="!newAnnouncementUI && $store.getters.isSignedIn && announcements.length > 0">
 		<div class="_title">{{ currentAnnouncement.title }}</div>
 		<div class="_content">
 			<mfm :text="currentAnnouncement.text"/>
@@ -51,7 +49,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faAngleDown, faAngleUp, faHome, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faEllipsisH, faSatelliteDish } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faListUl, faBroadcastTower, faCircle, faChevronLeft, faChevronRight, faCheck, faEllipsisH, faSatelliteDish, faBullhorn } from '@fortawesome/free-solid-svg-icons';
 import Progress from '../scripts/loading';
 import { getIconOfTimeline } from '../scripts/get-icon-of-timeline';
 import XTimeline from '../components/timeline.vue';
@@ -89,11 +87,11 @@ export default Vue.extend({
 			channel: null,
 			menuOpened: false,
 			announcements: [] as any[],
+			unreadAnnouncements: [] as any[],
 			queue: 0,
 			width: 0,
-			isMobile: window.innerWidth < 650,
 			currentAnnouncementIndex: 0,
-			faAngleDown, faAngleUp, faHome, faCircle, faChevronLeft, faChevronRight, faCheck, faEllipsisH, faSatelliteDish
+			faAngleDown, faAngleUp, faHome, faCircle, faChevronLeft, faChevronRight, faCheck, faEllipsisH, faSatelliteDish, faBullhorn
 		};
 	},
 
@@ -136,6 +134,11 @@ export default Vue.extend({
 							this.src === 'channel' ? this.channel.name :
 							this.$t('_timelines.' + this.src);
 		},
+
+		newAnnouncementUI() {
+			return this.$store.state.device.newAnnouncementUI;
+		},
+		
 	},
 
 	watch: {
@@ -171,17 +174,12 @@ export default Vue.extend({
 	},
 
 	activated() {
-		this.$root.api('announcements', { limit: 100, withUnreads: true }).then((a: any) => {
-			this.announcements = a
-		});
+		this.updateAnnouncements();
 	},
 
 	mounted() {
 		this.width = this.$el.offsetWidth;
-
-		window.addEventListener('resize', () => {
-			this.isMobile = window.innerWidth < 650;
-		}, { passive: true });
+		this.updateAnnouncements();
 	},
 
 	methods: {
@@ -192,6 +190,13 @@ export default Vue.extend({
 
 		after() {
 			Progress.done();
+		},
+
+		updateAnnouncements() {
+			this.$root.api('announcements', { limit: 100, withUnreads: !this.newAnnouncementUI }).then((a: any) => {
+				this.announcements = a;
+				this.unreadAnnouncements = a.filter(an => !an.isRead);
+			});
 		},
 
 		queueUpdated(q) {
@@ -264,7 +269,6 @@ export default Vue.extend({
 			
 			this.$root.menu({
 				items: [
-					...(this.isMobile || this.deckMode ? this.tabItems : [ undefined ]),
 					this.ifCTL(this.genItem('cat')),
 					this.genItem('remoteFollowing'),
 					this.genItem('followers'),
@@ -306,8 +310,18 @@ export default Vue.extend({
 		},
 
 		read(announcement: any) {
-			this.announcements = this.announcements.filter(a => a != announcement)
+			if (this.newAnnouncementUI) {
+				this.unreadAnnouncements = this.unreadAnnouncements.filter(a => a != announcement);
+			} else {
+				this.announcements = this.announcements.filter(a => a != announcement);
+			}
 			this.$root.api('i/read-announcement', { announcementId: announcement.id });
+		},
+		
+		async openAnnouncement() {
+			this.$root.new(await import('../components/announcements-window.vue').then(m => m.default), {
+				announcements: this.announcements,
+			}).$on('read', (announcement) => this.read(announcement));
 		},
 	}
 });
@@ -348,13 +362,23 @@ export default Vue.extend({
 .tabs {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	height: 100%;
-	margin-left: 24px;
 	> .tab {
 		display: block;
-		min-width: 64px;
+		position: relative;
 		padding: 0 16px;
 		height: 100%;
+
+		> i {
+			position: absolute;
+			top: initial;
+			right: 8px;
+			top: 8px;
+			color: var(--indicator);
+			font-size: 12px;
+			animation: blink 1s infinite;
+		}
 
 		&.active {
 			color: var(--accent);
@@ -383,22 +407,6 @@ export default Vue.extend({
 	> .post-form {
 		position: relative;
 		margin-bottom: var(--margin);
-	}
-}
-
-._kjvfvyph_ {
-	position: relative;
-	height: 100%;
-	padding: 0 16px;
-	font-weight: bold;
-
-	> i {
-		position: absolute;
-		top: initial;
-		right: 8px;
-		color: var(--indicator);
-		font-size: 12px;
-		animation: blink 1s infinite;
 	}
 }
 </style>

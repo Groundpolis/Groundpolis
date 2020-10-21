@@ -719,6 +719,8 @@ _labs:
   tryNewApp: "新しいウェブ クライアントを試す"
   tryNewAppDesc: "一から再設計された、軽量で高速なクライアントを体験しましょう。"
   tryNewAppConfirm: "このオプションを有効化すると、開発中の新しいウェブ クライアントに移行します。使用中に Groundpolis を利用できなくなるほどの重大な問題が発生する可能性がありますが、それでも続けますか？"
+  newAnnouncementUI: "新しい「お知らせ」UIを試す"
+  newAnnouncementUIDesc: "お知らせ UIを現在の専用ページ + タイムライン上部への強制表示から、タイムラインタブの最右へのボタン表示に切り替えます。未読のお知らせがある場合はバッジが付きます。"
 
 _serverDisconnectedBehavior:
   reload: "自動でリロード"
@@ -785,6 +787,7 @@ _paint:
     rectFill: "四角塗りつぶし"
     circle: "円"
     circleFill: "円塗りつぶし"
+    pixel: "ドットペン"
 
 _theme:
   explore: "テーマを探す"

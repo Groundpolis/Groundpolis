@@ -11,7 +11,6 @@ import { faCheck, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import MkTextarea from '../ui/textarea.vue';
 import MkButton from '../ui/button.vue';
 import { apiUrl } from '../../config';
-import { fetchAsync } from '../../scripts/fetch-async';
 
 export default Vue.extend({
 	components: {
@@ -61,13 +60,14 @@ export default Vue.extend({
 						data.append('folderId', this.$store.state.settings.uploadFolder);
 					}
 
-					fetchAsync(apiUrl + '/drive/files/create', {
+					fetch(apiUrl + '/drive/files/create', {
 						method: 'POST',
 						body: data
 					})
-					.then(res => {
+					.then(response => response.json())
+					.then(f => {
 						dialog.close();
-						ok(res.json);
+						ok(f);
 					})
 				});
 			});

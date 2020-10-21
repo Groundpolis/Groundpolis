@@ -13,7 +13,7 @@
 		</div>
 	</section>
 
-	<section class="_card _vMargin relays">
+	<section class="_card _vMargin relays" v-if="relays && relays.length > 0">
 		<div class="_title"><fa :icon="faProjectDiagram"/> {{ $t('addedRelays') }}</div>
 		<div class="_content relay" v-for="relay in relays" :key="relay.inbox">
 			<div>{{ relay.inbox }}</div>

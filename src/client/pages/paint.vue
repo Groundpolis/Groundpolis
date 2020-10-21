@@ -58,7 +58,7 @@
 			<button class="_button" :disabled="zoom <= 10" @click="zoom -= 10" v-tooltip="$t('_paint.zoomMinus')">
 				<fa :icon="faSearchMinus"></fa>
 			</button>
-			<div @click="chooseZoom" v-text="zoom + '%'"/>
+			<div @click="chooseZoom" class="_link" style="cursor: pointer" v-text="zoom + '%'"/>
 			<button class="_button" :disabled="zoom >= 1200" @click="zoom += 10" v-tooltip="$t('_paint.zoomPlus')">
 				<fa :icon="faSearchPlus"></fa>
 			</button>
@@ -246,11 +246,7 @@ export default Vue.extend({
 		this.ctx = this.canvas.getContext('2d');
 		this.ctxPreview = this.previewCanvas.getContext('2d');
 		if (!this.ctx || !this.ctxPreview) return;
-		this.init().then(res => {
-			if (!res) {
-				history.back();
-			}
-		});
+		this.createNew(300, 300, 'white');
 
 		// adjust editor size
 		const editor = this.$refs.editor as HTMLElement;
@@ -386,7 +382,7 @@ export default Vue.extend({
 
 			img.onload = async () => {
 				dialog.close();
-				await this.init(img.naturalWidth, img.naturalHeight, false);
+				await this.createNew(img.naturalWidth, img.naturalHeight, false);
 				this.ctx!.drawImage(img, 0, 0);			
 				this.fileName = file.name;
 				this.changed = false;
