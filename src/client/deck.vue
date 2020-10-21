@@ -296,6 +296,7 @@ export default Vue.extend({
 
 .iwnjqeul {
 	$header-height: 42px; // TODO: column.vueのそれを参照するようにしたい(出来るのか？)
+	position: relative;
 
 	> .default {
 		> .avatar {
@@ -321,6 +322,9 @@ export default Vue.extend({
 	> .custom {
 		position: absolute;
 		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
 	}
 }
 </style>

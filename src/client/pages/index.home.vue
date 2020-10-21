@@ -174,15 +174,12 @@ export default Vue.extend({
 	},
 
 	activated() {
-		this.$root.api('announcements', { limit: 100, withUnreads: !this.newAnnouncementUI }).then((a: any) => {
-			this.announcements = a;
-			this.unreadAnnouncements = a.filter(an => !an.isRead);
-		});
-		
+		this.updateAnnouncements();
 	},
 
 	mounted() {
 		this.width = this.$el.offsetWidth;
+		this.updateAnnouncements();
 	},
 
 	methods: {
@@ -193,6 +190,13 @@ export default Vue.extend({
 
 		after() {
 			Progress.done();
+		},
+
+		updateAnnouncements() {
+			this.$root.api('announcements', { limit: 100, withUnreads: !this.newAnnouncementUI }).then((a: any) => {
+				this.announcements = a;
+				this.unreadAnnouncements = a.filter(an => !an.isRead);
+			});
 		},
 
 		queueUpdated(q) {
