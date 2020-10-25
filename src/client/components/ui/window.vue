@@ -2,12 +2,16 @@
 <transition :name="$store.state.device.animation ? 'window' : ''" appear @after-leave="$emit('closed')">
 	<div class="ebkgocck" v-if="showing">
 		<div class="body _popup _shadow _narrow_" @mousedown="onBodyMousedown" @keydown="onKeydown">
-			<div class="header">
-				<button class="_button" @click="close()"><Fa :icon="faTimes"/></button>
+			<div class="header" @contextmenu.prevent.stop="onContextmenu">
+				<slot v-if="closeRight" name="buttons"><button class="_button" style="pointer-events: none;"></button></slot>
+				<button v-else class="_button" @click="close()"><Fa :icon="faTimes"/></button>
+
 				<span class="title" @mousedown.prevent="onHeaderMousedown" @touchstart.prevent="onHeaderMousedown">
 					<slot name="header"></slot>
 				</span>
-				<slot name="buttons"></slot>
+
+				<button v-if="closeRight" class="_button" @click="close()"><Fa :icon="faTimes"/></button>
+				<slot v-else name="buttons"><button class="_button" style="pointer-events: none;"></button></slot>
 			</div>
 			<div class="body" v-if="padding">
 				<div class="_section">
@@ -83,6 +87,15 @@ export default defineComponent({
 			required: false,
 			default: false,
 		},
+		closeRight: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		contextmenu: {
+			type: Array,
+			required: false,
+		}
 	},
 
 	emits: ['closed'],
@@ -124,6 +137,12 @@ export default defineComponent({
 				e.preventDefault();
 				e.stopPropagation();
 				this.close();
+			}
+		},
+
+		onContextmenu(e) {
+			if (this.contextmenu) {
+				os.contextMenu(this.contextmenu, e);
 			}
 		},
 
@@ -313,11 +332,13 @@ export default defineComponent({
 
 		// 高さを適用
 		applyTransformHeight(height) {
+			if (height > window.innerHeight) height = window.innerHeight;
 			(this.$el as any).style.height = height + 'px';
 		},
 
 		// 幅を適用
 		applyTransformWidth(width) {
+			if (width > window.innerWidth) width = window.innerWidth;
 			(this.$el as any).style.width = width + 'px';
 		},
 
@@ -371,15 +392,13 @@ export default defineComponent({
 		width: 100%;
     height: 100%;
 
-		--section-padding: 16px;
-
 		> .header {
 			$height: 50px;
 			display: flex;
 			position: relative;
+			z-index: 1;
 			flex-shrink: 0;
 			box-shadow: 0px 1px var(--divider);
-			cursor: move;
 			user-select: none;
 			height: $height;
 
@@ -399,6 +418,8 @@ export default defineComponent({
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
+				text-align: center;
+				cursor: move;
 			}
 		}
 

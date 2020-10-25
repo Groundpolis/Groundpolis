@@ -4,6 +4,8 @@ import Stream from '@/scripts/stream';
 import { store } from '@/store';
 import { apiUrl } from '@/config';
 import MkPostFormDialog from '@/components/post-form-dialog.vue';
+import MkWaitingDialog from '@/components/waiting-dialog.vue';
+import { resolve } from '@/router';
 
 const ua = navigator.userAgent.toLowerCase();
 export const isMobile = /mobile|iphone|ipad|android/.test(ua);
@@ -62,17 +64,39 @@ export function api(endpoint: string, data: Record<string, any> = {}, token?: st
 	return promise;
 }
 
-export function apiWithDialog(endpoint: string, data: Record<string, any> = {}, token?: string | null | undefined, onSuccess?: (res: any) => void, onFailure?: (e: Error) => void) {
-	const showing = ref(true);
-	const state = ref('waiting');
-
+export function apiWithDialog(
+	endpoint: string,
+	data: Record<string, any> = {},
+	token?: string | null | undefined,
+	onSuccess?: (res: any) => void,
+	onFailure?: (e: Error) => void,
+) {
 	const promise = api(endpoint, data, token);
+	promiseDialog(promise, onSuccess, onFailure ? onFailure : (e) => {
+		dialog({
+			type: 'error',
+			text: e.message + '<br>' + (e as any).id,
+		});
+	});
+
+	return promise;
+}
+
+export function promiseDialog<T extends Promise<any>>(
+	promise: T,
+	onSuccess?: (res: any) => void,
+	onFailure?: (e: Error) => void,
+	text?: string,
+): T {
+	const showing = ref(true);
+	const success = ref(false);
+
 	promise.then(res => {
 		if (onSuccess) {
 			showing.value = false;
 			onSuccess(res);
 		} else {
-			state.value = 'success';
+			success.value = true;
 			setTimeout(() => {
 				showing.value = false;
 			}, 1000);
@@ -89,9 +113,11 @@ export function apiWithDialog(endpoint: string, data: Record<string, any> = {}, 
 		}
 	});
 
-	popup(defineAsyncComponent(() => import('@/components/icon-dialog.vue')), {
-		type: state,
-		showing: showing
+	// NOTE: dynamic importすると挙動がおかしくなる(showingの変更が伝播しない)
+	popup(MkWaitingDialog, {
+		success: success,
+		showing: showing,
+		text: text,
 	}, {}, 'closed');
 
 	return promise;
@@ -137,7 +163,8 @@ export function popup(component: Component | typeof import('*.vue'), props: Reco
 	};
 }
 
-export function pageWindow(url: string, component: Component | typeof import('*.vue'), props: Record<string, any>) {
+export function pageWindow(url: string) {
+	const { component, props } = resolve(url);
 	popup(defineAsyncComponent(() => import('@/components/page-window.vue')), {
 		initialUrl: url,
 		initialComponent: markRaw(component),
@@ -161,8 +188,8 @@ export function success() {
 		setTimeout(() => {
 			showing.value = false;
 		}, 1000);
-		popup(defineAsyncComponent(() => import('@/components/icon-dialog.vue')), {
-			type: 'success',
+		popup(defineAsyncComponent(() => import('@/components/waiting-dialog.vue')), {
+			success: true,
 			showing: showing
 		}, {
 			done: () => resolve(),
@@ -173,8 +200,8 @@ export function success() {
 export function waiting() {
 	return new Promise((resolve, reject) => {
 		const showing = ref(true);
-		popup(defineAsyncComponent(() => import('@/components/icon-dialog.vue')), {
-			type: 'waiting',
+		popup(defineAsyncComponent(() => import('@/components/waiting-dialog.vue')), {
+			success: false,
 			showing: showing
 		}, {
 			done: () => resolve(),
@@ -278,6 +305,10 @@ export function contextMenu(items: any[], ev: MouseEvent) {
 export function post(props: Record<string, any>) {
 	return new Promise((resolve, reject) => {
 		// NOTE: MkPostFormDialogをdynamic importするとiOSでテキストエリアに自動フォーカスできない
+		// NOTE: ただ、dynamic importしない場合、MkPostFormDialogインスタンスが使いまわされ、
+		//       Vueが渡されたコンポーネントに内部的に__propsというプロパティを生やす影響で、
+		//       複数のpost formを開いたときに場合によってはエラーになる
+		//       もちろん複数のpost formを開けること自体Misskeyサイドのバグなのだが
 		const { dispose } = popup(MkPostFormDialog, props, {
 			closed: () => {
 				resolve();

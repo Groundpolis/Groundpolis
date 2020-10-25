@@ -8,8 +8,8 @@
 
 		<div class="_section">
 			<div class="_content">
-				<MkRemoteCaution v-if="note.user.host != null" :href="note.url || note.uri" style="margin-bottom: var(--margin)"/>
-				<XNote v-model:note="note" :key="note.id" :detail="true"/>
+				<MkRemoteCaution v-if="note.user.host != null" :href="note.url || note.uri" class="_vMargin"/>
+				<XNote v-model:note="note" :key="note.id" :detail="true" class="_vMargin"/>
 			</div>
 		</div>
 
@@ -41,6 +41,12 @@ export default defineComponent({
 		XNotes,
 		MkRemoteCaution,
 		MkButton,
+	},
+	props: {
+		noteId: {
+			type: String,
+			required: true
+		}
 	},
 	data() {
 		return {
@@ -77,7 +83,7 @@ export default defineComponent({
 		};
 	},
 	watch: {
-		$route: 'fetch'
+		noteId: 'fetch'
 	},
 	created() {
 		this.fetch();
@@ -86,7 +92,7 @@ export default defineComponent({
 		fetch() {
 			Progress.start();
 			os.api('notes/show', {
-				noteId: this.$route.params.note
+				noteId: this.noteId
 			}).then(note => {
 				Promise.all([
 					os.api('users/notes', {

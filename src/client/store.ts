@@ -61,7 +61,7 @@ export const defaultDeviceSettings = {
 	accounts: [],
 	recentEmojis: [],
 	themes: [],
-	darkTheme: '8c539dc1-0fab-4d47-9194-39c508e9bfe1',
+	darkTheme: '8050783a-7f63-445a-b270-36d0f6ba1677',
 	lightTheme: '4eea646f-7afa-4645-83e9-83af0333cd37',
 	darkMode: false,
 	deckMode: false,
@@ -70,6 +70,8 @@ export const defaultDeviceSettings = {
 	animatedMfm: true,
 	imageNewTab: false,
 	chatOpenBehavior: 'page',
+	defaultSideView: false,
+	deckNavWindow: true,
 	showFixedPostForm: false,
 	disablePagesScript: false,
 	enableInfiniteScroll: true,
@@ -202,6 +204,15 @@ export const store = createStore({
 			state: defaultDeviceSettings,
 
 			mutations: {
+				overwrite(state, x) {
+					for (const k of Object.keys(state)) {
+						if (x[k] === undefined) delete state[k];
+					}
+					for (const k of Object.keys(x)) {
+						state[k] = x[k];
+					}
+				},
+
 				set(state, x: { key: string; value: any }) {
 					state[x.key] = x.value;
 				},
@@ -218,6 +229,15 @@ export const store = createStore({
 			state: defaultDeviceUserSettings,
 
 			mutations: {
+				overwrite(state, x) {
+					for (const k of Object.keys(state)) {
+						if (x[k] === undefined) delete state[k];
+					}
+					for (const k of Object.keys(x)) {
+						state[k] = x[k];
+					}
+				},
+
 				init(state, x) {
 					for (const [key, value] of Object.entries(defaultDeviceUserSettings)) {
 						if (x[key]) {

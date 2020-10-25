@@ -4,14 +4,13 @@
 
 import '@/style.scss';
 
-import { createApp } from 'vue';
+import { createApp, defineAsyncComponent } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-import Root from './root.vue';
 import widgets from './widgets';
 import directives from './directives';
 import components from '@/components';
-import { version, apiUrl } from '@/config';
+import { version, apiUrl, deckmode } from '@/config';
 import { store } from './store';
 import { router } from './router';
 import { applyTheme } from '@/scripts/theme';
@@ -51,7 +50,7 @@ if (_DEV_) {
 document.addEventListener('touchend', () => {}, { passive: true });
 
 if (localStorage.getItem('theme') == null) {
-	applyTheme(require('@/themes/white.json5'));
+	applyTheme(require('@/themes/l-white.json5'));
 }
 
 //#region SEE: https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
@@ -152,7 +151,12 @@ store.dispatch('instance/fetch').then(() => {
 
 stream.init(store.state.i);
 
-const app = createApp(Root);
+const app = createApp(await (
+	window.location.search === '?zen' ? import('@/ui/zen.vue') :
+	!store.getters.isSignedIn         ? import('@/ui/visitor.vue') :
+	deckmode                          ? import('@/ui/deck.vue') :
+	import('@/ui/default.vue')
+).then(x => x.default));
 
 if (_DEV_) {
 	app.config.performance = true;

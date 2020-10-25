@@ -107,6 +107,14 @@
 		</div>
 
 		<div class="_card _vMargin">
+			<div class="_title">Waiting dialog</div>
+			<div class="_content">
+				<MkButton inline @click="openWaitingDialog()">icon only</MkButton>
+				<MkButton inline @click="openWaitingDialog('Doing')">with text</MkButton>
+			</div>
+		</div>
+
+		<div class="_card _vMargin">
 			<div class="_title">Messaging window</div>
 			<div class="_content">
 				<MkButton @click="messagingWindowOpen()">open</MkButton>
@@ -221,7 +229,14 @@ export default defineComponent({
 		},
 
 		messagingWindowOpen() {
-			os.pageWindow('/my/messaging', defineAsyncComponent(() => import('@/pages/messaging/index.vue')));
+			os.pageWindow('/my/messaging');
+		},
+
+		openWaitingDialog(text?) {
+			const promise = new Promise((resolve, reject) => {
+				setTimeout(resolve, 2000);
+			});
+			os.promiseDialog(promise, null, null, text);
 		},
 
 		resetTutorial() {

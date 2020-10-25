@@ -1,4 +1,4 @@
-import { faAt, faListUl, faEye, faEyeSlash, faBan, faPencilAlt, faComments, faUsers, faMicrophoneSlash, faPlug } from '@fortawesome/free-solid-svg-icons';
+import { faAt, faListUl, faEye, faEyeSlash, faBan, faPencilAlt, faComments, faUsers, faMicrophoneSlash, faPlug, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { faSnowflake, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { i18n } from '@/i18n';
 import copyToClipboard from '@/scripts/copy-to-clipboard';
@@ -7,7 +7,6 @@ import getAcct from '../../misc/acct/render';
 import * as os from '@/os';
 import { store, userActions } from '@/store';
 import { router } from '@/router';
-import { defineAsyncComponent } from 'vue';
 import { popout } from './popout';
 
 export function getUserMenu(user) {
@@ -102,6 +101,12 @@ export function getUserMenu(user) {
 		});
 	}
 
+	async function reportAbuse() {
+		os.popup(await import('@/components/abuse-report-window.vue'), {
+			user: user,
+		}, {}, 'closed');
+	}
+
 	async function getConfirmed(text: string): Promise<boolean> {
 		const confirm = await os.dialog({
 			type: 'warning',
@@ -131,7 +136,7 @@ export function getUserMenu(user) {
 		action: () => {
 			const acct = getAcct(user);
 			switch (store.state.device.chatOpenBehavior) {
-				case 'window': { os.pageWindow('/my/messaging/' + acct, defineAsyncComponent(() => import('@/pages/messaging/messaging-room.vue')), { userAcct: acct }); break; }
+				case 'window': { os.pageWindow('/my/messaging/' + acct); break; }
 				case 'popout': { popout('/my/messaging'); break; }
 				default: { router.push('/my/messaging'); break; }
 			}
@@ -155,6 +160,12 @@ export function getUserMenu(user) {
 			icon: faBan,
 			text: user.isBlocking ? i18n.global.t('unblock') : i18n.global.t('block'),
 			action: toggleBlock
+		}]);
+
+		menu = menu.concat([null, {
+			icon: faExclamationCircle,
+			text: i18n.global.t('reportAbuse'),
+			action: reportAbuse
 		}]);
 
 		if (store.getters.isSignedIn && (store.state.i.isAdmin || store.state.i.isModerator)) {

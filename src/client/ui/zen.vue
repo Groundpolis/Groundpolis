@@ -17,7 +17,7 @@
 		</main>
 	</div>
 
-	<StreamIndicator/>
+	<XCommon/>
 </div>
 </template>
 
@@ -28,10 +28,12 @@ import { faBell } from '@fortawesome/free-regular-svg-icons';
 import { host } from '@/config';
 import { search } from '@/scripts/search';
 import XHeader from './_common_/header.vue';
+import XCommon from './_common_/common.vue';
 import * as os from '@/os';
 
 export default defineComponent({
 	components: {
+		XCommon,
 		XHeader,
 	},
 
@@ -117,7 +119,6 @@ export default defineComponent({
 .mk-app {
 	$header-height: 52px;
 	$ui-font-size: 1em; // TODO: どこかに集約したい
-	$widgets-hide-threshold: 1090px;
 
 	// ほんとは単に 100vh と書きたいところだが... https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
 	min-height: calc(var(--vh, 1vh) * 100);
