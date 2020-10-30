@@ -10,7 +10,7 @@ import { faExpandAlt, faColumns, faExternalLinkAlt, faLink, faWindowMaximize } f
 import * as os from '@/os';
 import copyToClipboard from '@/scripts/copy-to-clipboard';
 import { router } from '@/router';
-import { deckmode } from '@/config';
+import { deckmode, url } from '@/config';
 
 export default defineComponent({
 	inject: {
@@ -28,6 +28,10 @@ export default defineComponent({
 			required: true,
 		},
 		activeClass: {
+			type: String,
+			required: false,
+		},
+		behavior: {
 			type: String,
 			required: false,
 		},
@@ -56,7 +60,7 @@ export default defineComponent({
 				action: () => {
 					os.pageWindow(this.to);
 				}
-			}, !this.navHook && this.sideViewHook ? {
+			}, this.sideViewHook ? {
 				icon: faColumns,
 				text: this.$t('openInSideView'),
 				action: () => {
@@ -78,12 +82,19 @@ export default defineComponent({
 				icon: faLink,
 				text: this.$t('copyLink'),
 				action: () => {
-					copyToClipboard(this.to);
+					copyToClipboard(`${url}${this.to}`);
 				}
 			}], e);
 		},
 
 		nav() {
+			if (this.behavior) {
+				if (this.behavior === 'window') {
+					os.pageWindow(this.to);
+					return;
+				}
+			}
+
 			if (this.navHook) {
 				this.navHook(this.to);
 			} else {
