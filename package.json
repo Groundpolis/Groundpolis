@@ -189,7 +189,7 @@
 		"p-cancelable": "2.0.0",
 		"parse5": "6.0.1",
 		"parsimmon": "1.16.0",
-		"pg": "8.4.1",
+		"pg": "8.4.2",
 		"portscanner": "2.2.0",
 		"postcss": "8.1.4",
 		"postcss-loader": "4.0.4",
