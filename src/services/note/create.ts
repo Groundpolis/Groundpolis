@@ -244,18 +244,18 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 	// Word mute
 	UserProfiles.find({
 		enableWordMute: true
-	}).then(us => {
+	}).then(async us => {
 		for (const u of us) {
-			checkWordMute(note, { id: u.userId }, u.mutedWords).then(shouldMute => {
+			await checkWordMute(note, { id: u.userId }, u.mutedWords).then(async shouldMute => {
 				if (shouldMute) {
-					MutedNotes.save({
+					await MutedNotes.insert({
 						id: genId(),
 						userId: u.userId,
 						noteId: note.id,
 						reason: 'word',
 					});
 				}
-			});
+			}).catch(() => {});
 		}
 	});
 
@@ -268,22 +268,22 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 		const followers = followings.map(f => f.followerId);
 
 		for (const antenna of antennas) {
-			checkHitAntenna(antenna, note, user, followers).then(hit => {
+			await checkHitAntenna(antenna, note, user, followers).then(async hit => {
 				if (hit) {
-					addNoteToAntenna(antenna, note, user);
+					await addNoteToAntenna(antenna, note, user);
 				}
-			});
+			}).catch(() => {});
 		}
 	});
 
 	// Channel
 	if (note.channelId) {
-		ChannelFollowings.find({ followeeId: note.channelId }).then(followings => {
+		ChannelFollowings.find({ followeeId: note.channelId }).then(async followings => {
 			for (const following of followings) {
-				insertNoteUnread(following.followerId, note, {
+				await insertNoteUnread(following.followerId, note, {
 					isSpecified: false,
 					isMentioned: false,
-				});
+				}).catch(() => {});
 			}
 		});
 	}
