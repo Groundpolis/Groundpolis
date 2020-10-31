@@ -311,6 +311,7 @@ export class UserRepository extends Repository<User> {
 	public validateRemoteUsername = $.str.match(/^\w([\w-.]*\w)?$/);
 	public validatePassword = $.str.min(1);
 	public validateName = $.str.min(1).max(50);
+	public validateRemoteName = $.str.min(1).max(128);
 	public validateDescription = $.str.min(1).max(500);
 	public validateLocation = $.str.min(1).max(50);
 	public validateBirthday = $.str.match(/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/);

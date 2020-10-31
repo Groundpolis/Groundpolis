@@ -59,7 +59,7 @@ function validatePerson(x: any, uri: string) {
 	}
 
 	if (x.name != null && x.name != '') {
-		if (!Users.validateName.ok(x.name)) {
+		if (!Users.validateRemoteName.ok(x.name)) {
 			return new Error('invalid person: invalid name');
 		}
 	}
