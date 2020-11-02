@@ -29,22 +29,14 @@ html(style="--bg: #222222; --fg: white")
 
 		block og
 			meta(property='og:image' content=img)
-		script.
-			const fe = localStorage.getItem('fe') || 'app';
-			
-			if (fe === 'react') {
-				const style = document.createElement('style');
-				style.innerText = 'html{background:var(--bg);color:var(--fg)}';
-				document.head.appendChild(style);
-			} else {
-				const link = document.createElement('link');
-				link.rel = 'stylesheet';
-				link.href = '/assets/style.css';
-				document.head.appendChild(link);
-			}
+		script.			
+			const link = document.createElement('link');
+			link.rel = 'stylesheet';
+			link.href = '/assets/style.css';
+			document.head.appendChild(link);
 
 			const script = document.createElement('script');
-			script.src = `/assets/${fe}.#{version}.js`;
+			script.src = `/assets/app.#{version}.js`;
 			script.async = script.defer = true;
 			document.head.appendChild(script);
 

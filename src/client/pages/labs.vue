@@ -22,11 +22,6 @@
 				{{ $t('_labs.newAnnouncementUI') }}
 				<template #desc>{{ $t('_labs.newAnnouncementUIDesc') }}</template>
 			</mk-switch>
-
-			<mk-switch v-model="reactFrontend">
-				{{ $t('_labs.tryNewApp') }}
-				<template #desc>{{ $t('_labs.tryNewAppDesc') }}</template>
-			</mk-switch>
 		</div>
 	</div>
 </div>
@@ -51,7 +46,6 @@ export default Vue.extend({
 
 	data() {
 		return {
-			reactFrontend: localStorage['fe'] === 'react',
 			faFlask
 		}
 	},
@@ -74,21 +68,6 @@ export default Vue.extend({
 	watch: {
 		injectUnlistedNoteInLTL() {
 			location.reload();
-		},
-		async reactFrontend() {
-			if (this.reactFrontend) {
-				const { canceled } = await this.$root.dialog({
-					type: 'warning',
-					showCancelButton: true,
-					text: this.$t('_labs.tryNewAppConfirm'),
-				});
-				if (canceled) {
-					this.reactFrontend = false;
-				} else {
-					localStorage['fe'] = 'react';
-					location.href = '/';
-				}
-			}
 		},
 	}
 });

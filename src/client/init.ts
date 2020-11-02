@@ -145,13 +145,7 @@ os.init(async () => {
 		i18n.locale = lang;
 		i18n.setLocaleMessage(lang, await getLocale());
 	});
-	//#endregion
-
-	// vuex に i があるけど、ストレージに i がない場合用意する(React FE Beta 向け)
-	if (!localStorage['i'] !== store.state.i?.token && store.state.i) { 
-		localStorage['i'] = store.state.i?.token;
-	}
-	
+	//#endregion	
 
 	const instances: Record<string, {
 		fetchedAt: number,
