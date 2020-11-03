@@ -1,26 +1,27 @@
 <template>
-<x-modal ref="modal" @closed="() => { $emit('closed'); destroyDom(); }">
-	<div class="vh83b2a9" @click="close">
-		<button class="k9cj3n2a" v-if="hasPrev" @click.stop="index--">
-			<fa :icon="faChevronLeft"/>
-		</button>
-		<img class="xubzgfga" ref="img" :src="current.url" :alt="current.name" :title="current.name" tabindex="-1"/>
-		<button class="uvv3m2na" v-if="hasNext" @click.stop="index++">
-			<fa :icon="faChevronRight"/>
-		</button>
+<MkModal ref="modal" @click="$refs.modal.close()" @closed="$emit('closed')">
+	<div class="xubzgfga">
+		<header>{{ image.name }}</header>
+		<img :src="image.url" :alt="image.name" :title="image.name" @click="$refs.modal.close()"/>
+		<footer>
+			<span>{{ image.type }}</span>
+			<span>{{ bytes(image.size) }}</span>
+			<span v-if="image.properties && image.properties.width">{{ number(image.properties.width) }}px × {{ number(image.properties.height) }}px</span>
+		</footer>
 	</div>
-</x-modal>
+</MkModal>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { faChevronLeft, faChevronRight, } from '@fortawesome/free-solid-svg-icons';
+// TODO: Groundpolis 拡張を再実装する
+import { defineComponent } from 'vue';
+import bytes from '@/filters/bytes';
+import number from '@/filters/number';
+import MkModal from '@/components/ui/modal.vue';
 
-import XModal from './modal.vue';
-
-export default Vue.extend({
+export default defineComponent({
 	components: {
-		XModal,
+		MkModal,
 	},
 
 	props: {
@@ -54,47 +55,51 @@ export default Vue.extend({
 		},
 	},
 
-	mounted() {
-		if (this.other) {
-			this.index = this.other.findIndex(img => img.id === this.image.id)
-		}
-		this.$nextTick(() => {
-			this.$refs.img.focus();
-		});
-	},
+	emits: ['closed'],
 
 	methods: {
-		close() {
-			this.$refs.modal.close();
-		},
+		bytes,
+		number,
 	}
 });
 </script>
 
 <style lang="scss" scoped>
-.vh83b2a9 {
-	position: fixed;
-	z-index: 2;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	max-width: 100%;
-	max-height: 100%;
-	margin: auto;
-	cursor: zoom-out;
-}
 .xubzgfga {
-	position: fixed;
-	z-index: 2;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	max-width: calc(100% - 128px);
-	max-height: 100%;
-	margin: auto;
-	image-orientation: from-image;
+	max-width: 1024px;
+
+	> header,
+	> footer {
+		display: inline-block;
+		padding: 6px 9px;
+		font-size: 90%;
+		background: rgba(0, 0, 0, 0.5);
+		border-radius: 6px;
+		color: #fff;
+	}
+
+	> header {
+		margin-bottom: 8px;
+		opacity: 0.9;
+	}
+
+	> img {
+		display: block;
+		max-width: 100%;
+		cursor: zoom-out;
+		image-orientation: from-image;
+	}
+
+	> footer {
+		margin-top: 8px;
+		opacity: 0.8;
+
+		> span + span {
+			margin-left: 0.5em;
+			padding-left: 0.5em;
+			border-left: solid 1px rgba(255, 255, 255, 0.5);
+		}
+	}
 }
 
 .k9cj3n2a, .uvv3m2na {

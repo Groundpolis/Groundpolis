@@ -1,8 +1,5 @@
 <template>
 <div class="ipledcug">
-	<portal to="icon"><fa :icon="faExclamationTriangle"/></portal>
-	<portal to="title">{{ $t('notFound') }}</portal>
-
 	<div class="_fullinfo">
 		<div>{{ $t('notFoundDescription') }}</div>
 	</div>
@@ -10,19 +7,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import * as os from '@/os';
 
-export default Vue.extend({
-	metaInfo() {
-		return {
-			title: this.$t('notFound') as string
-		};
-	},
-
+export default defineComponent({
 	data() {
 		return {
-			faExclamationTriangle
+			INFO: {
+				header: [{
+					title: this.$t('notFound'),
+					icon: faExclamationTriangle
+				}]
+			},
 		}
 	},
 });

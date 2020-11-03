@@ -163,7 +163,7 @@ export const meta = {
 			validator: $.optional.arr($.arr($.str))
 		},
 
-		includingNotificationTypes: {
+		mutingNotificationTypes: {
 			validator: $.optional.arr($.str.or(notificationTypes as unknown as string[]))
 		},
 
@@ -228,7 +228,7 @@ export default define(meta, async (ps, user, token) => {
 		profileUpdates.mutedWords = ps.mutedWords;
 		profileUpdates.enableWordMute = ps.mutedWords.length > 0;
 	}
-	if (ps.includingNotificationTypes !== undefined) profileUpdates.includingNotificationTypes = ps.includingNotificationTypes as typeof notificationTypes[number][];
+	if (ps.mutingNotificationTypes !== undefined) profileUpdates.mutingNotificationTypes = ps.mutingNotificationTypes as typeof notificationTypes[number][];
 	if (typeof ps.isLocked === 'boolean') updates.isLocked = ps.isLocked;
 	if (typeof ps.hideFF === 'boolean') updates.hideFF = ps.hideFF;
 	if (typeof ps.isBot === 'boolean') updates.isBot = ps.isBot;

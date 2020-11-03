@@ -4,7 +4,7 @@
 - [日本語](README-ja.md)
 - English
 
-**A forever evolving, sophisticated microblogging platform.**
+**A forever evolving, professional microblogging platform.**
 
 Groundpolis is a [Misskey](https://github.com/syuilo/misskey) based microblogging platform.
 

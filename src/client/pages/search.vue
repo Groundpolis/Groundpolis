@@ -1,37 +1,33 @@
 <template>
-<div>
-	<portal to="icon"><fa :icon="faSearch"/></portal>
-	<portal to="title">{{ $t('search') }}</portal>
-
-	<x-search v-model="query" @search="search"/>
-
-	<div class="tab _section _noPad" style="padding: 0">
-		<mk-tab v-model="tab" :items="[{ label: $t('notes'), value: 'notes' }, { label: $t('users'), value: 'users' }]"/>
+<div class="_section">
+	<div class="_content">
+		<XSearch v-model="query" @search="search"/>
+		<div class="tab _section _noPad" style="padding: 0">
+			<MkTab v-model="tab" :items="[{ label: $t('notes'), value: 'notes' }, { label: $t('users'), value: 'users' }]"/>
+		</div>
+		<template v-if="smartCard">
+				<XNote class="smart-card" :note="smartCard.note" v-if="smartCard.type === 'note'"/>
+				<XUser class="smart-card" :user="smartCard.user" v-else-if="smartCard.type === 'user'"/>
+				<div class="_panel smart-card" v-else-if="smartCard.type === 'custom'">
+					<Fa class="icon" :icon="smartCard.icon"/>
+					<h1 class="header" v-text="smartCard.header"/>
+					<div class="body" v-text="smartCard.body"/>
+				</div>
+				<div class="_panel smart-card" v-else-if="smartCard.type === 'apError'">
+					<Fa class="icon" :icon="faTimesCircle"/>
+					<div class="body" v-text="smartCard.message"/>
+				</div>
+		</template>
+		<XNotes v-if="tab === 'notes'" ref="notes" :pagination="notesPagination"/>
+		<XUsers v-if="tab === 'users'" ref="users" :pagination="usersPagination"/>
 	</div>
-
-	<template v-if="smartCard">
-			<x-note class="smart-card" :note="smartCard.note" v-if="smartCard.type === 'note'"/>
-			<x-user class="smart-card" :user="smartCard.user" v-else-if="smartCard.type === 'user'"/>
-			<div class="_panel smart-card" v-else-if="smartCard.type === 'custom'">
-				<fa class="icon" :icon="smartCard.icon"/>
-				<h1 class="header" v-text="smartCard.header"/>
-				<div class="body" v-text="smartCard.body"/>
-			</div>
-			<div class="_panel smart-card" v-else-if="smartCard.type === 'apError'">
-				<fa class="icon" :icon="faTimesCircle"/>
-				<div class="body" v-text="smartCard.message"/>
-			</div>
-	</template>
-
-	<x-notes v-if="tab === 'notes'" ref="notes" :pagination="notesPagination"/>
-	<x-users v-if="tab === 'users'" ref="users" :pagination="usersPagination"/>
 </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { faSearch, faSpinner, faTimesCircle, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import Progress from '../scripts/loading';
+import Progress from '@/scripts/loading';
 import parseAcct from '../../misc/acct/parse';
 import XNotes from '../components/notes.vue';
 import XNote from '../components/note.vue';
@@ -55,13 +51,7 @@ type SmartCard = {
 	body?: string,
 };
 
-export default Vue.extend({
-	metaInfo() {
-		return {
-			title: this.$t('searchWith', { q: this.$route.query.q }) as string
-		};
-	},
-
+export default defineComponent({
 	components: {
 		XNotes,
 		XUsers,
@@ -76,6 +66,12 @@ export default Vue.extend({
 			query: this.$route.query.q as string,
 			tab: this.$route.query.f || 'notes',
 			smartCard: null as SmartCard | null,
+			INFO: {
+				header: [{
+					title: this.$t('searchWith', { q: this.$route.query.q }),
+					icon: faSearch
+				}],
+			},
 			faSearch, faSpinner, faTimesCircle,
 		};
 	},

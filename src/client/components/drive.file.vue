@@ -1,7 +1,8 @@
 <template>
 <div class="ncvczrfv"
-	:data-is-selected="isSelected"
+	:class="{ isSelected }"
 	@click="onClick"
+	@contextmenu.stop="onContextmenu"
 	draggable="true"
 	@dragstart="onDragstart"
 	@dragend="onDragend"
@@ -20,7 +21,7 @@
 		<p>{{ $t('nsfw') }}</p>
 	</div>
 
-	<x-file-thumbnail class="thumbnail" :file="file" fit="contain"/>
+	<MkDriveFileThumbnail class="thumbnail" :file="file" fit="contain"/>
 
 	<p class="name">
 		<span>{{ file.name.lastIndexOf('.') != -1 ? file.name.substr(0, file.name.lastIndexOf('.')) : file.name }}</span>
@@ -30,18 +31,18 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
-import copyToClipboard from '../scripts/copy-to-clipboard';
-//import updateAvatar from '../api/update-avatar';
-//import updateBanner from '../api/update-banner';
-import XFileThumbnail from './drive-file-thumbnail.vue';
 import ImageViewer from './image-viewer.vue';
 import { faDownload, faLink, faICursor, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import copyToClipboard from '@/scripts/copy-to-clipboard';
+import MkDriveFileThumbnail from './drive-file-thumbnail.vue';
+import bytes from '../filters/bytes';
+import * as os from '@/os';
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
-		XFileThumbnail
+		MkDriveFileThumbnail
 	},
 
 	props: {
@@ -61,6 +62,8 @@ export default Vue.extend({
 		}
 	},
 
+	emits: ['chosen'],
+
 	data() {
 		return {
 			isDragging: false
@@ -73,52 +76,58 @@ export default Vue.extend({
 			return this.$parent;
 		},
 		title(): string {
-			return `${this.file.name}\n${this.file.type} ${Vue.filter('bytes')(this.file.size)}`;
+			return `${this.file.name}\n${this.file.type} ${bytes(this.file.size)}`;
 		}
 	},
 
 	methods: {
+		getMenu() {
+			return [{
+				text: this.$t('rename'),
+				icon: faICursor,
+				action: this.rename
+			}, {
+				text: this.file.isSensitive ? this.$t('unmarkAsSensitive') : this.$t('markAsSensitive'),
+				icon: this.file.isSensitive ? faEye : faEyeSlash,
+				action: this.toggleSensitive
+			}, null, {
+				text: this.$t('copyUrl'),
+				icon: faLink,
+				action: this.copyUrl
+			}, {
+				text: this.$t('preview'),
+				icon: faEye,
+				action: this.preview
+			}, {
+				type: 'a',
+				href: this.file.url,
+				target: '_blank',
+				text: this.$t('download'),
+				icon: faDownload,
+				download: this.file.name
+			}, null, {
+				text: this.$t('delete'),
+				icon: faTrashAlt,
+				danger: true,
+				action: this.deleteFile
+			}];
+		},
+
 		onClick(ev) {
 			if (this.selectMode) {
 				this.$emit('chosen', this.file);
 			} else {
-				this.$root.menu({
-					items: [{
-						text: this.$t('rename'),
-						icon: faICursor,
-						action: this.rename
-					}, {
-						text: this.file.isSensitive ? this.$t('unmarkAsSensitive') : this.$t('markAsSensitive'),
-						icon: this.file.isSensitive ? faEye : faEyeSlash,
-						action: this.toggleSensitive
-					}, null, {
-						text: this.$t('copyUrl'),
-						icon: faLink,
-						action: this.copyUrl
-					}, {
-						text: this.$t('preview'),
-						icon: faEye,
-						action: this.preview
-					}, {
-						type: 'a',
-						href: this.file.url,
-						target: '_blank',
-						text: this.$t('download'),
-						icon: faDownload,
-						download: this.file.name
-					},  null, {
-						text: this.$t('delete'),
-						icon: faTrashAlt,
-						action: this.deleteFile
-					}],
-					source: ev.currentTarget || ev.target,
-				});
+				os.modalMenu(this.getMenu(), ev.currentTarget || ev.target);
 			}
+		},
+
+		onContextmenu(e) {
+			os.contextMenu(this.getMenu(), e);
 		},
 
 		onDragstart(e) {
 			e.dataTransfer.effectAllowed = 'move';
-			e.dataTransfer.setData('mk_drive_file', JSON.stringify(this.file));
+			e.dataTransfer.setData(_DATA_TRANSFER_DRIVE_FILE_, JSON.stringify(this.file));
 			this.isDragging = true;
 
 			// 親ブラウザに対して、ドラッグが開始されたフラグを立てる
@@ -132,7 +141,7 @@ export default Vue.extend({
 		},
 
 		rename() {
-			this.$root.dialog({
+			os.dialog({
 				title: this.$t('renameFile'),
 				input: {
 					placeholder: this.$t('inputNewFileName'),
@@ -141,7 +150,7 @@ export default Vue.extend({
 				}
 			}).then(({ canceled, result: name }) => {
 				if (canceled) return;
-				this.$root.api('drive/files/update', {
+				os.api('drive/files/update', {
 					fileId: this.file.id,
 					name: name
 				});
@@ -149,7 +158,7 @@ export default Vue.extend({
 		},
 
 		toggleSensitive() {
-			this.$root.api('drive/files/update', {
+			os.api('drive/files/update', {
 				fileId: this.file.id,
 				isSensitive: !this.file.isSensitive
 			});
@@ -157,18 +166,15 @@ export default Vue.extend({
 
 		copyUrl() {
 			copyToClipboard(this.file.url);
-			this.$root.dialog({
-				type: 'success',
-				iconOnly: true, autoClose: true
-			});
+			os.success();
 		},
 
 		setAsAvatar() {
-			updateAvatar(this.$root)(this.file);
+			os.updateAvatar(this.file);
 		},
 
 		setAsBanner() {
-			updateBanner(this.$root)(this.file);
+			os.updateBanner(this.file);
 		},
 
 		addApp() {
@@ -176,19 +182,20 @@ export default Vue.extend({
 		},
 
 		async deleteFile() {
-			const canceled = this.$store.state.device.showDriveFileDeleteConfirm && (await this.$root.dialog({
+			const { canceled } = await os.dialog({
 				type: 'warning',
 				text: this.$t('driveFileDeleteConfirm', { name: this.file.name }),
 				showCancelButton: true
 			})).canceled;
 			if (canceled) return;
 
-			this.$root.api('drive/files/delete', {
+			os.api('drive/files/delete', {
 				fileId: this.file.id
 			});
 		},
 
 		preview() {
+			const viewer = os.
 			const viewer = this.$root.new(ImageViewer, {
 				image: this.file,
 			});
@@ -196,6 +203,7 @@ export default Vue.extend({
 				viewer.close();
 			});
 		},
+		bytes
 	}
 });
 </script>
@@ -209,6 +217,10 @@ export default Vue.extend({
 
 	&, * {
 		cursor: pointer;
+	}
+
+	> * {
+		pointer-events: none;
 	}
 
 	&:hover {
@@ -247,7 +259,7 @@ export default Vue.extend({
 		}
 	}
 
-	&[data-is-selected] {
+	&.isSelected {
 		background: var(--accent);
 
 		&:hover {

@@ -54,6 +54,10 @@ export default define(meta, async (ps) => {
 		q.andWhere('emoji.name like :query', { query: '%' + ps.query + '%' });
 	}
 
+	if (ps.query) {
+		q.andWhere('emoji.name like :query', { query: '%' + ps.query + '%' });
+	}
+
 	const emojis = await q
 		.orderBy('emoji.id', 'DESC')
 		.take(ps.limit!)

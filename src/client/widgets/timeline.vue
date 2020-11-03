@@ -1,28 +1,30 @@
 <template>
-<mk-container :show-header="props.showHeader" :style="`height: ${props.height}px;`" :scrollable="true">
+<MkContainer :show-header="props.showHeader" :style="`height: ${props.height}px;`" :scrollable="true">
 	<template #header>
 		<button @click="choose" class="_button">
-			<fa :icon="getIconOfTimeline(props.src)"/>
+			<Fa :icon="getIconOfTimeline(props.src)"/>
 			<span style="margin-left: 8px;">{{ timelineTitle }}</span>
-			<fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
+			<Fa :icon="menuOpened ? faAngleUp : faAngleDown" style="margin-left: 8px;"/>
 		</button>
 	</template>
 
 	<div>
-		<x-timeline :key="props.src === 'list' ? `list:${props.list.id}` : props.src === 'antenna' ? `antenna:${props.antenna.id}` : props.src" :src="props.src" :list="props.list ? props.list.id : null" :antenna="props.antenna ? props.antenna.id : null"/>
+		<XTimeline :key="props.src === 'list' ? `list:${props.list.id}` : props.src === 'antenna' ? `antenna:${props.antenna.id}` : props.src" :src="props.src" :list="props.list ? props.list.id : null" :antenna="props.antenna ? props.antenna.id : null"/>
 	</div>
-</mk-container>
+</MkContainer>
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faCat, faAt, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
 import { faComments, faEnvelope, faCommentAlt } from '@fortawesome/free-regular-svg-icons';
 import { getIconOfTimeline } from '../scripts/get-icon-of-timeline';
-import MkContainer from '../components/ui/container.vue';
-import XTimeline from '../components/timeline.vue';
+import MkContainer from '@/components/ui/container.vue';
+import XTimeline from '@/components/timeline.vue';
 import define from './define';
+import * as os from '@/os';
 
-export default define({
+const widget = define({
 	name: 'timeline',
 	props: () => ({
 		showHeader: {
@@ -44,7 +46,10 @@ export default define({
 			hidden: true,
 		},
 	})
-}).extend({
+});
+
+export default defineComponent({
+	extends: widget,
 	components: {
 		MkContainer,
 		XTimeline,
@@ -78,8 +83,8 @@ export default define({
 			if (this.meta == null) return;
 			this.menuOpened = true;
 			const [antennas, lists] = await Promise.all([
-				this.$root.api('antennas/list'),
-				this.$root.api('users/lists/list')
+				os.api('antennas/list'),
+				os.api('users/lists/list')
 			]);
 			const antennaItems = antennas.map(antenna => ({
 				text: antenna.name,
@@ -97,24 +102,27 @@ export default define({
 					this.setSrc('list');
 				}
 			}));
-			this.$root.menu({
-				items: [{
+			const isNotModerator = !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin;
+			const noLTL = this.meta.disableLocalTimeline && isNotModerator;
+			const noGTL = this.meta.disableGlobalTimeline && isNotModerator;
+			const noCTL = this.meta.disableGlobalTimeline && isNotModerator;
+			os.modalMenu([{
 					text: this.$t('_timelines.home'),
 					icon: faHome,
 					action: () => { this.setSrc('home') }
-				}, this.meta.disableLocalTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
+				}, noLTL ? undefined : {
 					text: this.$t('_timelines.local'),
 					icon: faComments,
 					action: () => { this.setSrc('local') }
-				}, this.meta.disableLocalTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
+				}, noLTL ? undefined : {
 					text: this.$t('_timelines.social'),
 					icon: faShareAlt,
 					action: () => { this.setSrc('social') }
-				}, this.meta.disableGlobalTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
+				}, noGTL ? undefined : {
 					text: this.$t('_timelines.global'),
 					icon: faGlobe,
 					action: () => { this.setSrc('global') }
-				}, this.meta.disableCatTimeline && !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin ? undefined : {
+				}, noCTL ? undefined : {
 					text: this.$t('_timelines.cat'),
 					icon: faCat,
 					action: () => { this.setSrc('cat') }
@@ -134,11 +142,7 @@ export default define({
 					text: this.$t('directNotes'),
 					icon: faEnvelope,
 					action: () => { this.setSrc('direct') }
-				}],
-				fixed: true,
-				noCenter: true,
-				source: ev.currentTarget || ev.target
-			}).then(() => {
+				}], ev.currentTarget || ev.target).then(() => {
 				this.menuOpened = false;
 			});
 		},
