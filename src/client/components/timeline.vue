@@ -119,16 +119,16 @@ export default defineComponent({
 			this.connection.on('note', prepend);
 		} else if (this.src == 'cat') {
 			endpoint = 'notes/cat-timeline';
-			this.connection = this.$root.stream.useSharedConnection('catTimeline');
+			this.connection = os.stream.useSharedConnection('catTimeline');
 			this.connection.on('note', prepend);
 		} else if (this.src == 'remoteFollowing') {
 			endpoint = 'notes/timeline';
 			this.query = { remoteOnly: true };
-			this.connection = this.$root.stream.useSharedConnection('remoteFollowingTimeline');
+			this.connection = os.stream.useSharedConnection('remoteFollowingTimeline');
 			this.connection.on('note', prepend);
 		} else if (this.src == 'followers') {
 			endpoint = 'notes/followers-timeline';
-			this.connection = this.$root.stream.useSharedConnection('followersTimeline');
+			this.connection = os.stream.useSharedConnection('followersTimeline');
 			this.connection.on('note', prepend);
 		} else if (this.src == 'mentions') {
 			endpoint = 'notes/mentions';

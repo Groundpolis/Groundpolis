@@ -182,7 +182,7 @@ export default defineComponent({
 		},
 
 		async deleteFile() {
-			const { canceled } = await os.dialog({
+			const canceled = (await os.dialog({
 				type: 'warning',
 				text: this.$t('driveFileDeleteConfirm', { name: this.file.name }),
 				showCancelButton: true
@@ -195,16 +195,12 @@ export default defineComponent({
 		},
 
 		preview() {
-			const viewer = os.
-			const viewer = this.$root.new(ImageViewer, {
+			os.popup(ImageViewer, {
 				image: this.file,
-			});
-			this.$once('hook:beforeDestroy', () => {
-				viewer.close();
-			});
+			}, {}, 'closed');
 		},
 		bytes
-	}
+	},
 });
 </script>
 

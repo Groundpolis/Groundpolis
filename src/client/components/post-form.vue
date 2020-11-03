@@ -55,13 +55,12 @@
 			<button class="_button" @click="useCw = !useCw" :class="{ active: useCw }" v-tooltip="$t('useCw')"><Fa :icon="faEyeSlash"/></button>
 			<button class="_button" @click="useBroadcast = !useBroadcast" :class="{ active: useBroadcast }" v-tooltip="$t('broadcastMode')"><Fa :icon="faBullhorn"/></button>
 			<button class="_button" @click="insertFace" v-tooltip="$t('gacha')"><Fa :icon="faFish"/></button>
-			<button class="_button" @click="showActions" v-tooltip="$t('plugin')" v-if="$store.state.postFormActions.length > 0"><Fa :icon="faPlug"/></button>
+			<button class="_button" @click="showActions" v-tooltip="$t('plugin')" v-if="postFormActions.length > 0"><Fa :icon="faPlug"/></button>
 			<span class="text-count" :class="{ over: trimmedLength(text) > max }">{{ max - trimmedLength(text) }}</span>
 			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">
 				<Fa :icon="faPaperPlane" />
 			</button>
 		</footer>
-		<input ref="file" class="file _button" type="file" multiple="multiple" @change="onChangeFile"/>
 		<details v-if="text" class="preview" :open="isPreviewOpened" @toggle="isPreviewOpened = $event.target.open">
 			<summary>{{ $t('preview') }}</summary>
 			<XNotePreview :note="previewNote"/>
@@ -524,12 +523,12 @@ export default defineComponent({
 					}
 
 					const quoteId = paste.substr(url.length).match(/^\/notes\/(.+?)\/?$/)![1];
-					this.$root.api('notes/show', {
+					os.api('notes/show', {
 						noteId: quoteId,
 					}).then(note => {
 						this.quote = note;
 					}).catch(e => {
-						this.$root.dialog({
+						os.dialog({
 							type: 'error',
 							text: e.message,
 						});
@@ -612,13 +611,13 @@ export default defineComponent({
 
 		async post() {
 			if (this.reply && this.reply.user.host !== null && this.localOnly) {
-				await this.$root.dialog({
+				await os.dialog({
 					type: 'error',
 					text: this.$t('errorLocalOnlyToRemote'),
 				});
 				return;
 			}
-			const canceled = this.$store.state.device.showNoteConfirm && (await this.$root.dialog({
+			const canceled = this.$store.state.device.showNoteConfirm && (await os.dialog({
 				type: 'question',
 				text: this.$t('noteConfirm'),
 				showCancelButton: true
@@ -707,7 +706,7 @@ export default defineComponent({
 					label: this.$t('description').toString(),
 				},
 			};
-			const { canceled, result } = await this.$root.form('挿入するリンクの設定', form);
+			const { canceled, result } = await os.form('挿入するリンクの設定', form);
 			if (canceled) return;
 			this.insert(`[${result.desc}](${result.url})`);
 		},

@@ -92,7 +92,7 @@ export default defineComponent({
 
 			try {
 				if (this.isFollowing) {
-					const canceled = this.$store.state.device.showUnfollowConfirm && await os.dialog({
+					const canceled = this.$store.state.device.showUnfollowConfirm && (await os.dialog({
 						type: 'warning',
 						text: this.$t('unfollowConfirm', { name: this.user.name || this.user.username }),
 						showCancelButton: true

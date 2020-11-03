@@ -2,6 +2,7 @@ import { Ref, ref } from 'vue';
 import * as getCaretCoordinates from 'textarea-caret';
 import { toASCII } from 'punycode';
 import { popup } from '@/os';
+import findChildByTag from './find-child-by-tag';
 
 export class Autocomplete {
 	private suggestion: {

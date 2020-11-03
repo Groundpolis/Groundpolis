@@ -21,6 +21,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Autocomplete } from '@/scripts/autocomplete';
 
 export default defineComponent({
 	props: {
@@ -61,6 +62,10 @@ export default defineComponent({
 			type: Function,
 			required: false,
 		},
+		useAutocomplete: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
@@ -72,6 +77,13 @@ export default defineComponent({
 		filled(): boolean {
 			return this.value != '' && this.value != null;
 		}
+	},
+	mounted () {
+		// TODO: なんとかしろ
+		// if (this.useAutocomplete) {
+		// 	// TODO: detach when unmount
+		// 	new Autocomplete(this.$refs.input, this, { model: 'value' });
+		// }
 	},
 	methods: {
 		focus() {

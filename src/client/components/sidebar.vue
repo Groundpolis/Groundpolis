@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram, faArrowLeft, faExclamationCircle, faArrowRight, faFlask, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram, faArrowLeft, faExclamationCircle, faArrowRight, faFlask, faChevronDown, faChevronUp, faStream } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { host, instanceName } from '@/config';
 import { search } from '@/scripts/search';
@@ -149,7 +149,7 @@ export default defineComponent({
 		},
 
 		async fetchAccounts() {
-			this.accounts = (await this.$root.api('users/show', { userIds: this.$store.state.device.accounts.map(x => x.id) })).filter(x => x.id !== this.$store.state.i.id);
+			this.accounts = (await os.api('users/show', { userIds: this.$store.state.device.accounts.map(x => x.id) })).filter(x => x.id !== this.$store.state.i.id);
 		},
 
 		toggleMenuMode() {

@@ -38,7 +38,7 @@ export default defineComponent({
 	data() {
 		return {
 			index: 0,
-			faChevronLeft, faChevronRight,
+			// faChevronLeft, faChevronRight,
 		};
 	},
 

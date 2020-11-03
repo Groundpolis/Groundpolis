@@ -74,7 +74,7 @@ export default Vue.extend({
 		async fetch() {
 			try {
 				Progress.start();
-				const state = this.renoteState = await this.$root.api('notes/is-renoted', { noteId: this.$route.params.note }) as { isRenoted: boolean, isQuoted: boolean };
+				const state = this.renoteState = await os.api('notes/is-renoted', { noteId: this.$route.params.note }) as { isRenoted: boolean, isQuoted: boolean };
 				if (state.isQuoted) {
 					this.tab = 'quotes';
 				}

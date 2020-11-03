@@ -61,7 +61,7 @@ data() {
 		},
 
 		async update() {
-			await this.$root.api('admin/emoji/update', {
+			await os.api('admin/emoji/update', {
 				id: this.emoji.id,
 				name: this.name,
 				category: this.category,
@@ -78,13 +78,13 @@ data() {
 		},
 
 		async del() {
-			const { canceled } = await this.$root.dialog({
+			const { canceled } = await os.dialog({
 				type: 'warning',
 				text: this.$t('removeAreYouSure', { x: this.emoji.name }),
 				showCancelButton: true
 			});
 			if (canceled) return;
-			this.$root.api('admin/emoji/remove', {
+			os.api('admin/emoji/remove', {
 				id: this.emoji.id
 			}).then(() => {
 				this.$emit('done', {

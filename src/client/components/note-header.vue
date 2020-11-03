@@ -59,7 +59,7 @@ export default defineComponent({
 
 	data() {
 		return {
-			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faCertificate, faCheck, faUsers, faHeart, faGlobeAmericas, faHeartbeat, faCrown, faProjectDiagram
+			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faCertificate, faCheck, faUsers, faHeart, faHeartbeat, faCrown
 		};
 	},
 

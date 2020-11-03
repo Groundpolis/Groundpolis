@@ -1,5 +1,5 @@
-import { faBell, faComments, faEnvelope } from '@fortawesome/free-regular-svg-icons';
-import { faAt, faBroadcastTower, faCloud, faColumns, faDoorClosed, faFileAlt, faFireAlt, faGamepad, faHashtag, faListUl, faSatellite, faSatelliteDish, faSearch, faStar, faTerminal, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faComments, faEnvelope, faLaugh } from '@fortawesome/free-regular-svg-icons';
+import { faAt, faBroadcastTower, faCloud, faColumns, faDoorClosed, faFileAlt, faFireAlt, faGamepad, faHashtag, faListUl, faPaintBrush, faSatellite, faSatelliteDish, faSearch, faStar, faTerminal, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { computed } from 'vue';
 import { store } from '@/store';
 import { deckmode } from '@/config';
@@ -38,14 +38,9 @@ export const sidebarDef = {
 	followRequests: {
 		title: 'followRequests',
 		icon: faUserClock,
-		show: computed(() => store.getters.isSignedIn && store.state.i.isLocked),
+		show: computed(() => store.getters.isSignedIn && store.state.i.hasPendingReceivedFollowRequest),
 		indicated: computed(() => store.getters.isSignedIn && store.state.i.hasPendingReceivedFollowRequest),
 		to: '/my/follow-requests',
-	},
-	featured: {
-		title: 'featured',
-		icon: faFireAlt,
-		to: '/featured',
 	},
 	explore: {
 		title: 'explore',
@@ -135,5 +130,16 @@ export const sidebarDef = {
 			localStorage.setItem('deckmode', (!deckmode).toString());
 			location.reload();
 		},
+	},
+	paint: {
+		title: 'paint',
+		icon: faPaintBrush,
+		show: computed(() => store.getters.isSignedIn),
+		to: '/paint',
+	},
+	emojiSuggestion: {
+		title: 'emojiSuggestion',
+		icon: faLaugh,
+		to: '/emoji-suggestion',
 	},
 };

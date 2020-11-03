@@ -73,7 +73,7 @@ import MkButton from '@/components/ui/button.vue';
 import MkInput from '@/components/ui/input.vue';
 import MkTextarea from '@/components/ui/textarea.vue';
 import MkSwitch from '@/components/ui/switch.vue';
-import MkSelect from '../../components/ui/select.vue';
+import MkSelect from '@/components/ui/select.vue';
 import { host } from '@/config';
 import { selectFile } from '@/scripts/select-file';
 import * as os from '@/os';
@@ -115,7 +115,7 @@ export default defineComponent({
 			isBot: false,
 			isCat: false,
 			saving: false,
-			gender: 'not-known'
+			gender: 'not-known',
 			faSave, faUnlockAlt, faCogs, faUser, faMapMarkerAlt, faBirthdayCake
 		}
 	},

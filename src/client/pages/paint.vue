@@ -1,8 +1,6 @@
 <template>
 <div>
-	<portal to="icon"><fa :icon="faPaintBrush"/></portal>
-	<portal to="title">{{ $t('paint') }}</portal>
-	<section class="_card _vMargin" ref="editor">
+	<section class="_section _vMargin" ref="editor">
 		<div class="tools">
 			<button class="_button" v-tooltip="$t('_paint.new')" @click="init">
 				<fa :icon="farFileAlt"></fa>
@@ -64,23 +62,23 @@
 			</button>
 		</div>
 	</section>
-	<section class="_card _vMargin">
+	<section class="_section _vMargin">
 		<div class="_content">
 			<div>
 				<mk-switch v-model="usePressure" style="display: inline-flex">{{ $t('usePressure') }}</mk-switch>
 				<a class="_link" @click="showUsePressureHint" style="margin-left: 8px"><fa :icon="farQuestionCircle"/></a>
 			</div>
 			<div>
-				<mk-range v-model="penWidth" :min="1" :max="256" :step="1" style="display: inline-block">
-					<fa slot="icon" :icon="faPen"/>
-					<span slot="title">{{ $t('penWidth') }}</span>
+				<mk-range v-model:value="penWidth" :min="1" :max="256" :step="1" style="display: inline-block">
+					<template #icon><fa :icon="faPen"/></template>
+					<template #title><span v-text="$t('penWidth')"/></template>
 				</mk-range>
 				<span v-text="penWidth + 'px'"/>
 			</div>
 			<div>
-				<mk-range v-model="eraserWidth" :min="1" :max="256" :step="1" style="display: inline-block">
-					<fa slot="icon" :icon="faEraser"/>
-					<span slot="title">{{ $t('eraserWidth') }}</span>
+				<mk-range v-model:value="eraserWidth" :min="1" :max="256" :step="1" style="display: inline-block">
+					<template #icon><fa :icon="faEraser"/></template>
+					<template #title><span v-text="$t('eraserWidth')"/></template>
 				</mk-range>
 				<span v-text="eraserWidth + 'px'"/>
 			</div>
@@ -90,7 +88,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue';
 import { faPaintBrush, faPaw, faPen, faEraser, faSlash, faSquare, faCircle, faSearchMinus, faSearchPlus, faUndo, faRedo, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { faSquare as farSquare, faCircle as farCircle, faSave as farSave, faFolderOpen as farFolderOpen, faFileAlt as farFileAlt, faQuestionCircle as farQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 
@@ -100,6 +98,7 @@ import { apiUrl } from '../config';
 import { selectFile } from '../scripts/select-file';
 import { Form } from '../scripts/form';
 import { PackedDriveFile } from '../../models/repositories/drive-file';
+import * as os from '@/os';
 
 export const shapes = [ 'line', 'rect', 'circle', 'rectFill', 'circleFill' ] as const;
 
@@ -154,7 +153,7 @@ function drawPixel(px: number, x: number, py: number, y: number, c: CanvasRender
   }
 }
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
 		MkSwitch,
 		MkRange,
@@ -162,7 +161,7 @@ export default Vue.extend({
 
 	beforeRouteLeave(to, from, next) {
 		if (this.changed) {
-			this.$root.dialog({
+			os.dialog({
 				type: 'warning',
 				text: this.$t('leaveConfirm'),
 				showCancelButton: true
@@ -179,6 +178,12 @@ export default Vue.extend({
 	},
 	data() {
 		return {
+			INFO: {
+				header: [{
+					title: this.$t('paint'),
+					icon: faPaintBrush
+				}],
+			},
 			currentTool: 'hand' as ToolType,
 			currentColor: '#000000',
 			zoom: 100,
@@ -288,24 +293,14 @@ export default Vue.extend({
 			return (shapes as readonly string[]).includes(type);
 		},
 		changeShape(ev: MouseEvent) {
-			this.$root.menu({
-				items: shapes.map(this.genToolMenuItem),
-				fixed: true,
-				noCenter: true,
-				source: ev.currentTarget || ev.target,
-			});
+			os.modalMenu(shapes.map(this.genToolMenuItem), ev.currentTarget || ev.target);
 		},
 		chooseZoom(ev: MouseEvent) {
-			this.$root.menu({
-				items: [10, 50, 100, 250, 500, 1000, 1200].map(this.genZoomMenuItem),
-				fixed: true,
-				noCenter: true,
-				source: ev.currentTarget || ev.target,
-			});
+			os.modalMenu([10, 50, 100, 250, 500, 1000, 1200].map(this.genZoomMenuItem), ev.currentTarget || ev.target);
 		},
 		async init(confirm = true) {
 			if (this.changed && confirm) {
-				const { canceled } = await this.$root.dialog({
+				const { canceled } = await os.dialog({
 					type: 'warning',
 					text: this.$t('initConfirm'),
 					showCancelButton: true
@@ -331,7 +326,7 @@ export default Vue.extend({
 					enum: [ 'white', 'black', 'transparent' ],
 				},
 			};
-			const { canceled, result } = await this.$root.form(this.$t('_paint.new'), form);
+			const { canceled, result } = await os.form(this.$t('_paint.new'), form);
 
 			if (canceled) return false;
 			await this.createNew(result.width, result.height, result.fillColor);
@@ -353,7 +348,7 @@ export default Vue.extend({
 		},
 		async open(e) {
 			if (this.changed) {
-				const { canceled } = await this.$root.dialog({
+				const { canceled } = await os.dialog({
 					type: 'warning',
 					text: this.$t('initConfirm'),
 					showCancelButton: true
@@ -368,13 +363,13 @@ export default Vue.extend({
 			} else if (file.thumbnailUrl) {
 				img.src = file.thumbnailUrl;
 			} else {
-				this.$root.dialog({
+				os.dialog({
 					type: 'error',
 					text: this.$t('theFileIsNotImage')
 				});
 				return;
 			}
-			const dialog = this.$root.dialog({
+			const dialog = os.dialog({
 				type: 'waiting',
 				iconOnly: true,
 				cancelableByBgClick: false
@@ -389,7 +384,7 @@ export default Vue.extend({
 			};
 			img.onerror = (err) => {
 				dialog.close();
-				this.$root.dialog({
+				os.dialog({
 					type: 'error',
 					text: this.$t('failedToLoadImage')
 				});				
@@ -397,7 +392,7 @@ export default Vue.extend({
 		},
 		async save() {
 			return new Promise<PackedDriveFile>((res, rej) => {
-				this.$root.dialog({
+				os.dialog({
 					title: this.$t('specifyFileName'),
 					input:  {
 						default: this.fileName
@@ -455,7 +450,7 @@ export default Vue.extend({
 			if (this.recentFile === null) {
 				this.recentFile = await this.save();
 			}
-			this.$root.post({
+			os.post({
 				initialNote: {
 					text: '#GroundpolisPaint',
 					files: [ this.recentFile ],
@@ -699,7 +694,7 @@ export default Vue.extend({
 			this.onPointerUp(x, y, this.prevPressure);
 		},
 		showUsePressureHint() {
-			this.$root.dialog({
+			os.dialog({
 				text: this.$t('usePressureDescription'),
 				type: 'info'
 			});

@@ -5,7 +5,7 @@
 import '@/style.scss';
 
 import { createApp, defineAsyncComponent } from 'vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome';
 
 import widgets from './widgets';
 import directives from './directives';
@@ -167,6 +167,7 @@ app.use(router);
 app.use(i18n);
 // eslint-disable-next-line vue/component-definition-name-casing
 app.component('Fa', FontAwesomeIcon);
+app.component('FaLayers', FontAwesomeLayers);
 
 widgets(app);
 directives(app);

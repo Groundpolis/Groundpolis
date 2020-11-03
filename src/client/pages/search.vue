@@ -162,7 +162,7 @@ export default defineComponent({
 
 			// ActivityPub Object
 			if (q.startsWith('https://')) {
-				const res = await this.$root.api('ap/show', { uri: q });
+				const res = await os.api('ap/show', { uri: q });
 				if (res.type === 'User') {
 					this.smartCard = {
 						type: 'user',
@@ -178,7 +178,7 @@ export default defineComponent({
 
 			// User
 			if (q.startsWith('@') && !q.includes(' ')) {
-				const user = await this.$root.api('users/show', parseAcct(q));
+				const user = await os.api('users/show', parseAcct(q));
 				this.smartCard = {
 					type: 'user',
 					user

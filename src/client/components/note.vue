@@ -128,8 +128,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineAsyncComponent, defineComponent, markRaw, ref } from 'vue';
-import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faInfoCircle, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { defineAsyncComponent, defineComponent, markRaw } from 'vue';
+import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes, faClock } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
@@ -149,13 +149,16 @@ import { userPage } from '@/filters/user';
 import * as os from '@/os';
 import { noteActions, noteViewInterruptors } from '@/store';
 
-function markRawAll(...xs) {
+function markRawAll(...xs: any[]) {
 	for (const x of xs) {
 		markRaw(x);
 	}
 }
 
-markRawAll(faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisV, faHome, faLock, faEnvelope, faThumbtack, faBan, faBiohazard, faPlug, faSatelliteDish);
+markRawAll(
+	faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle,
+	faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes, faClock,
+);
 
 export default defineComponent({
 	components: {
@@ -220,7 +223,7 @@ export default defineComponent({
 	},
 
 	computed: {
-		rs() {
+		rs(): string[] {
 			return this.$store.state.settings.reactions;
 		},
 		keymap(): any {
@@ -799,14 +802,15 @@ export default defineComponent({
 			return menu;
 		},
 
-		onContextmenu(e) {
-			const isLink = (el: HTMLElement) => {
+		onContextmenu(e: Event) {
+			const isLink = (el: HTMLElement): boolean => {
 				if (el.tagName === 'A') return true;
 				if (el.parentElement) {
 					return isLink(el.parentElement);
 				}
+				return false;
 			};
-			if (isLink(e.target)) return;
+			if (isLink(e.target as HTMLElement)) return;
 			if (window.getSelection().toString() !== '') return;
 			os.contextMenu(this.getMenu(), e).then(this.focus);
 		},
@@ -823,7 +827,7 @@ export default defineComponent({
 				text: this.$t('unrenote'),
 				icon: faTrashAlt,
 				danger: true,
-				action: () => {
+				action: async () => {
 					const canceled = this.$store.state.device.showUnrenoteConfirm && (await os.dialog({
 						type: 'warning',
 						text: this.$t('unrenoteConfirm'),
@@ -884,7 +888,7 @@ export default defineComponent({
 		async steal() {
 			if (!this.appearNote.text) return;
 
-			const canceled = this.$store.state.device.showStealConfirm && (await this.$root.dialog({
+			const canceled = this.$store.state.device.showStealConfirm && (await os.dialog({
 				type: 'question',
 				text: this.$t('stealConfirm'),
 				showCancelButton: true
@@ -901,7 +905,7 @@ export default defineComponent({
 			}
 			const u = this.appearNote.uri || this.appearNote.url || `${url}/notes/${this.appearNote.id}`;
 			const text = this.appearNote.text + (rule === 3 ? '\n\n' + u : '');
-			this.$root.createNoteInstantly(text, this.appearNote.cw, this.appearNote.visibility);
+			os.createNoteInstantly(text, this.appearNote.cw, this.appearNote.visibility);
 		},
 
 		focus() {
@@ -918,22 +922,6 @@ export default defineComponent({
 
 		focusAfter() {
 			focusNext(this.$el);
-		},
-
-		copyContent() {
-			copyToClipboard(this.note.text);
-			this.$root.dialog({
-				type: 'success',
-				iconOnly: true, autoClose: true
-			});
-		},
-
-		copyLink() {
-			copyToClipboard(`${url}/notes/${this.note.id}`);
-			this.$root.dialog({
-				type: 'success',
-				iconOnly: true, autoClose: true
-			});
 		},
 		userPage
 	}

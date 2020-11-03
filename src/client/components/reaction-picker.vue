@@ -129,7 +129,7 @@ export default defineComponent({
 		},
 
 		async openPicker(ev: Event) {
-			const vm = this.$root.new(await import('./emoji-picker.vue').then(m => m.default), {
+			const vm = os.new(await import('./emoji-picker.vue').then(m => m.default), {
 				source: ev.currentTarget || ev.target
 			}).$once('chosen', emoji => {
 				this.text = emoji;

@@ -3,7 +3,7 @@ import createPersistedState from 'vuex-persistedstate';
 import * as nestedProperty from 'nested-property';
 import { api } from '@/os';
 import { erase } from '../prelude/array';
-import Cookies from 'js-cookie';
+import defaultFaces from './scripts/default-faces';
 
 export const defaultSettings = {
 	tutorial: 0,

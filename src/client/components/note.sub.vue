@@ -17,7 +17,6 @@
 	</div>
 	<XSub v-for="reply in replies" :key="reply.id" :note="reply" class="reply" :detail="true" :children="true"/>
 </div>
-</div>
 </template>
 
 <script lang="ts">

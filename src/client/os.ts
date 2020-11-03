@@ -407,15 +407,18 @@ export function createNoteInstantly(text: string, cw ?: string, visibility ?: No
 	});
 }
 
-const instances: Record<string, {
+type Instance = {
 	fetchedAt: number,
 	instance: Record<string, any>
-}> = {};
+};
 
-export async function getInstance(host: string) {
+const instances: Record<string, Instance> = {};
+
+export async function getInstance(host?: string): Promise<Instance | null> {
+	if (!host) return null;
 	// キャッシュが無いか、前回取得時から5分以上たっていれば取得してくる
 	if (!instances[host] || new Date().getTime() - instances[host].fetchedAt > 1000 * 60 * 5) {
-		instances[host] = await api('federation/show-instance', { host });
+		instances[host] = await api('federation/show-instance', { host }) as Instance;
 	}
 	return instances[host];
 }

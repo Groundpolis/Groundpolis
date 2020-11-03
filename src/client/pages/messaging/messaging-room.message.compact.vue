@@ -65,7 +65,7 @@ export default Vue.extend({
 	},
 	methods: {
 		del() {
-			this.$root.api('messaging/messages/delete', {
+			os.api('messaging/messages/delete', {
 				messageId: this.message.id
 			});
 		}

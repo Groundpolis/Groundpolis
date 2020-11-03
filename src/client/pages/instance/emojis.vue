@@ -25,7 +25,7 @@
 		</div>
 
 		<div class="_content suggestion" v-else-if="tab === 'suggestion'">
-			<MkSwitch v-model="pendingOnly">{{ $t('pendingOnly') }}</mk-switch>
+			<MkSwitch v-model="pendingOnly">{{ $t('pendingOnly') }}</MkSwitch>
 			<MkPagination :pagination="suggestionPagination" class="emojis" ref="suggestions">
 				<template #empty><span>{{ $t('noSuggestions') }}</span></template>
 				<template #default="{items}">
