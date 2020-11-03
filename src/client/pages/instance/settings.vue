@@ -267,10 +267,8 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				header: [{
-					title: this.$t('instance'),
-					icon: faCog,
-				}],
+				title: this.$t('instance'),
+				icon: faCog,
 			},
 			url,
 			proxyAccount: null,

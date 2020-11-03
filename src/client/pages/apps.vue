@@ -50,10 +50,8 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				header: [{
-					title: this.$t('installedApps'),
-					icon: faPlug,
-				}],
+				title: this.$t('installedApps'),
+				icon: faPlug,
 			},
 			pagination: {
 				endpoint: 'i/apps',

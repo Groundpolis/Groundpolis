@@ -50,7 +50,7 @@ export const defaultDeviceUserSettings = {
 		'followRequests',
 		'announcements',
 		'-',
-		'deck',
+		'ui',
 	],
 	deck: {
 		columns: [],

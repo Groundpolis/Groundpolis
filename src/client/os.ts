@@ -148,7 +148,9 @@ export const popups = ref([]) as Ref<{
 	props: Record<string, any>;
 }[]>;
 
-export function popup(component: Component | typeof import('*.vue'), props: Record<string, any>, events = {}, disposeEvent?: string) {
+export async function popup(component: Component | typeof import('*.vue') | Promise<Component | typeof import('*.vue')>, props: Record<string, any>, events = {}, disposeEvent?: string) {
+	if (component.then) component = await component;
+
 	if (isModule(component)) component = component.default;
 	markRaw(component);
 
@@ -178,10 +180,10 @@ export function popup(component: Component | typeof import('*.vue'), props: Reco
 	};
 }
 
-export function pageWindow(url: string) {
-	const { component, props } = resolve(url);
-	popup(defineAsyncComponent(() => import('@/components/page-window.vue')), {
-		initialUrl: url,
+export function pageWindow(path: string) {
+	const { component, props } = resolve(path);
+	popup(import('@/components/page-window.vue'), {
+		initialPath: path,
 		initialComponent: markRaw(component),
 		initialProps: props,
 	}, {}, 'closed');
@@ -189,7 +191,7 @@ export function pageWindow(url: string) {
 
 export function dialog(props: Record<string, any>) {
 	return new Promise((resolve, reject) => {
-		popup(defineAsyncComponent(() => import('@/components/dialog.vue')), props, {
+		popup(import('@/components/dialog.vue'), props, {
 			done: result => {
 				resolve(result ? result : { canceled: true });
 			},
@@ -203,7 +205,7 @@ export function success() {
 		setTimeout(() => {
 			showing.value = false;
 		}, 1000);
-		popup(defineAsyncComponent(() => import('@/components/waiting-dialog.vue')), {
+		popup(import('@/components/waiting-dialog.vue'), {
 			success: true,
 			showing: showing
 		}, {
@@ -215,7 +217,7 @@ export function success() {
 export function waiting() {
 	return new Promise((resolve, reject) => {
 		const showing = ref(true);
-		popup(defineAsyncComponent(() => import('@/components/waiting-dialog.vue')), {
+		popup(import('@/components/waiting-dialog.vue'), {
 			success: false,
 			showing: showing
 		}, {
@@ -226,7 +228,7 @@ export function waiting() {
 
 export function form(title, form) {
 	return new Promise((resolve, reject) => {
-		popup(defineAsyncComponent(() => import('@/components/form-dialog.vue')), { title, form }, {
+		popup(import('@/components/form-dialog.vue'), { title, form }, {
 			done: result => {
 				resolve(result);
 			},
@@ -236,7 +238,7 @@ export function form(title, form) {
 
 export async function selectUser() {
 	return new Promise((resolve, reject) => {
-		popup(defineAsyncComponent(() => import('@/components/user-select-dialog.vue')), {}, {
+		popup(import('@/components/user-select-dialog.vue'), {}, {
 			ok: user => {
 				resolve(user);
 			},
@@ -246,7 +248,7 @@ export async function selectUser() {
 
 export async function selectDriveFile(multiple: boolean) {
 	return new Promise((resolve, reject) => {
-		popup(defineAsyncComponent(() => import('@/components/drive-window.vue')), {
+		popup(import('@/components/drive-select-dialog.vue'), {
 			type: 'file',
 			multiple
 		}, {
@@ -261,7 +263,7 @@ export async function selectDriveFile(multiple: boolean) {
 
 export async function selectDriveFolder(multiple: boolean) {
 	return new Promise((resolve, reject) => {
-		popup(defineAsyncComponent(() => import('@/components/drive-window.vue')), {
+		popup(import('@/components/drive-select-dialog.vue'), {
 			type: 'folder',
 			multiple
 		}, {
@@ -276,7 +278,7 @@ export async function selectDriveFolder(multiple: boolean) {
 
 export async function pickEmoji(src?: HTMLElement) {
 	return new Promise((resolve, reject) => {
-		popup(defineAsyncComponent(() => import('@/components/emoji-picker.vue')), {
+		popup(import('@/components/emoji-picker.vue'), {
 			src
 		}, {
 			done: emoji => {
@@ -288,7 +290,8 @@ export async function pickEmoji(src?: HTMLElement) {
 
 export function modalMenu(items: any[], src?: HTMLElement, options?: { align?: string; viaKeyboard?: boolean }) {
 	return new Promise((resolve, reject) => {
-		const { dispose } = popup(defineAsyncComponent(() => import('@/components/ui/modal-menu.vue')), {
+		let dispose;
+		popup(import('@/components/ui/modal-menu.vue'), {
 			items,
 			src,
 			align: options?.align,
@@ -298,6 +301,8 @@ export function modalMenu(items: any[], src?: HTMLElement, options?: { align?: s
 				resolve();
 				dispose();
 			},
+		}).then(res => {
+			dispose = res.dispose;
 		});
 	});
 }
@@ -305,7 +310,8 @@ export function modalMenu(items: any[], src?: HTMLElement, options?: { align?: s
 export function contextMenu(items: any[], ev: MouseEvent) {
 	ev.preventDefault();
 	return new Promise((resolve, reject) => {
-		const { dispose } = popup(defineAsyncComponent(() => import('@/components/ui/context-menu.vue')), {
+		let dispose;
+		popup(import('@/components/ui/context-menu.vue'), {
 			items,
 			ev,
 		}, {
@@ -313,6 +319,8 @@ export function contextMenu(items: any[], ev: MouseEvent) {
 				resolve();
 				dispose();
 			},
+		}).then(res => {
+			dispose = res.dispose;
 		});
 	});
 }
@@ -324,11 +332,14 @@ export function post(props: Record<string, any>) {
 		//       Vueが渡されたコンポーネントに内部的に__propsというプロパティを生やす影響で、
 		//       複数のpost formを開いたときに場合によってはエラーになる
 		//       もちろん複数のpost formを開けること自体Misskeyサイドのバグなのだが
-		const { dispose } = popup(MkPostFormDialog, props, {
+		let dispose;
+		popup(MkPostFormDialog, props, {
 			closed: () => {
 				resolve();
 				dispose();
 			},
+		}).then(res => {
+			dispose = res.dispose;
 		});
 	});
 }

@@ -735,6 +735,8 @@ instanceTicker: "ノートのインスタンス情報"
 waitingFor: "{x}を待っています"
 random: "ランダム"
 system: "システム"
+switchUi: "UI切り替え"
+desktop: "デスクトップ"
 
 _renoteButtonMode:
   choose: "毎回選ぶ"

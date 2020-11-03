@@ -67,10 +67,8 @@ export default defineComponent({
 			tab: this.$route.query.f || 'notes',
 			smartCard: null as SmartCard | null,
 			INFO: {
-				header: [{
-					title: this.$t('searchWith', { q: this.$route.query.q }),
-					icon: faSearch
-				}],
+				title: this.$t('searchWith', { q: this.$route.query.q }),
+				icon: faSearch
 			},
 			faSearch, faSpinner, faTimesCircle,
 		};

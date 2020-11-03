@@ -693,6 +693,8 @@ instanceTicker: "Instance information of notes"
 waitingFor: "Waiting for {x}"
 random: "Random"
 system: "System"
+switchUi: "Switch UI"
+desktop: "Desktop"
 
 _renoteButtonMode:
   choose: "Choose always"

@@ -31,10 +31,8 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				header: [{
-					title: this.$t('announcements'),
-					icon: faBullhorn
-				}]
+				title: this.$t('announcements'),
+				icon: faBullhorn
 			},
 			pagination: {
 				endpoint: 'announcements',
