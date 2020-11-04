@@ -11,30 +11,40 @@
 	<transition name="nav">
 		<nav class="nav" :class="{ iconOnly, hidden }" v-show="showing">
 			<div>
-				<button class="item _button account" @click="openAccountMenu">
-					<MkAvatar :user="$store.state.i" class="avatar"/><MkAcct class="text" :user="$store.state.i"/>
-				</button>
-				<MkA class="item index" active-class="active" to="/" exact>
-					<Fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>
+				<MkA class="item _button account" active-class="active" :to="userPage($store.state.i)">
+					<MkAvatar :user="$store.state.i" class="avatar"/>
+					<MkAcct class="text" :user="$store.state.i"/>
 				</MkA>
-				<template v-for="item in menu">
-					<div v-if="item === '-'" class="divider"></div>
-					<component v-else-if="menuDef[item] && (menuDef[item].show !== false)" :is="menuDef[item].to ? 'MkA' : 'button'" class="item _button" :class="item" active-class="active" v-on="menuDef[item].action ? { click: menuDef[item].action } : {}" :to="menuDef[item].to">
-						<Fa :icon="menuDef[item].icon" fixed-width/><span class="text">{{ $t(menuDef[item].title) }}</span>
-						<i v-if="menuDef[item].indicated"><Fa :icon="faCircle"/></i>
-					</component>
+				<template v-if="!isAccountMenuMode">
+					<button v-if="iconOnly" class="item _button" @click="openAccountMenu">
+						<Fa :icon="faEllipsisV"/>
+					</button>
+					<button v-else class="_button toggler" @click="toggleMenuMode">
+						<Fa v-if="isAccountMenuMode" :icon="faChevronUp"/>
+						<Fa v-else :icon="faChevronDown"/>
+					</button>
+					<MkA class="item index" active-class="active" to="/" exact>
+						<Fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>
+					</MkA>
+					<template v-for="item in menu">
+						<div v-if="item === '-'" class="divider"></div>
+						<component v-else-if="menuDef[item] && (menuDef[item].show !== false)" :is="menuDef[item].to ? 'MkA' : 'button'" class="item _button" :class="item" active-class="active" v-on="menuDef[item].action ? { click: menuDef[item].action } : {}" :to="menuDef[item].to">
+							<Fa :icon="menuDef[item].icon" fixed-width/><span class="text">{{ $t(menuDef[item].title) }}</span>
+							<i v-if="menuDef[item].indicated"><Fa :icon="faCircle"/></i>
+						</component>
+					</template>
+					<div class="divider"></div>
+					<button class="item _button" :class="{ active: $route.path === '/instance' || $route.path.startsWith('/instance/') }" v-if="$store.state.i.isAdmin || $store.state.i.isModerator" @click="oepnInstanceMenu">
+						<Fa :icon="faServer" fixed-width/><span class="text">{{ $t('instance') }}</span>
+					</button>
+					<MkA class="item" active-class="active" to="/settings">
+						<Fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
+					</MkA>
+					<button class="item _button" @click="more">
+						<Fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
+						<i v-if="otherNavItemIndicated"><Fa :icon="faCircle"/></i>
+					</button>
 				</template>
-				<div class="divider"></div>
-				<button class="item _button" :class="{ active: $route.path === '/instance' || $route.path.startsWith('/instance/') }" v-if="$store.state.i.isAdmin || $store.state.i.isModerator" @click="oepnInstanceMenu">
-					<Fa :icon="faServer" fixed-width/><span class="text">{{ $t('instance') }}</span>
-				</button>
-				<button class="item _button" @click="more">
-					<Fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
-					<i v-if="otherNavItemIndicated"><Fa :icon="faCircle"/></i>
-				</button>
-				<MkA class="item" active-class="active" to="/settings">
-					<Fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
-				</MkA>
 			</div>
 		</nav>
 	</transition>
@@ -43,12 +53,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram, faArrowLeft, faExclamationCircle, faArrowRight, faFlask, faChevronDown, faChevronUp, faStream } from '@fortawesome/free-solid-svg-icons';
+import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faEllipsisV, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram, faArrowLeft, faExclamationCircle, faArrowRight, faFlask, faChevronDown, faChevronUp, faStream } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { host, instanceName } from '@/config';
 import { search } from '@/scripts/search';
 import * as os from '@/os';
 import { sidebarDef } from '@/sidebar';
+import { userPage } from '@/filters/user';
 
 export default defineComponent({
 	data() {
@@ -63,7 +74,7 @@ export default defineComponent({
 			iconOnly: false,
 			hidden: false,
 			isTablet: false,
-			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faProjectDiagram, faArrowLeft, faArrowRight, faChevronDown, faChevronUp
+			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faEllipsisV, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faProjectDiagram, faArrowLeft, faArrowRight, faChevronDown, faChevronUp
 		};
 	},
 
@@ -146,6 +157,7 @@ export default defineComponent({
 
 		toggleMenuMode() {
 			this.isAccountMenuMode = !this.isAccountMenuMode;
+			console.log(this.isAccountMenuMode);
 			if (this.isAccountMenuMode) {
 				this.fetchAccounts();
 			}
@@ -308,6 +320,8 @@ export default defineComponent({
 				});
 			});
 		},
+
+		userPage
 	}
 });
 </script>
@@ -341,6 +355,7 @@ export default defineComponent({
 	$nav-width: 250px;
 	$nav-icon-only-width: 80px;
 	$right-widgets-hide-threshold: 1090px;
+	position: relative;
 
 	> .nav-back {
 		z-index: 1001;
@@ -376,6 +391,11 @@ export default defineComponent({
 
 						&.account {
 							flex-direction: column;
+							align-items: center;
+
+							&.active {
+								border: 2px solid var(--accent);
+							}
 						}
 
 						[data-icon],
@@ -384,7 +404,7 @@ export default defineComponent({
 						}
 
 						.text {
-						display: none;
+							display: none;
 						}
 
 						> .more {
@@ -465,10 +485,6 @@ export default defineComponent({
 				border-radius: var(--radius);
 				color: var(--navFg);
 
-				&:hover {
-					background: rgba(0, 0, 0, 0.05);
-				}
-
 				> [data-icon] {
 					width: ($header-height - ($avatar-margin * 2));
 				}
@@ -476,11 +492,16 @@ export default defineComponent({
 				&.account {
 					display: flex;
 					flex-direction: row;
+					align-items: center;
 
 					> .name {
 						overflow: hidden;
 						text-overflow: ellipsis;
 						width: 100%;
+					}
+
+					> .text {
+						line-height: initial;
 					}
 
 					a.active {
@@ -544,6 +565,15 @@ export default defineComponent({
 					bottom: 0;
 					margin-top: 16px;
 				}
+			}
+
+			.toggler {
+				position: absolute;
+				right: 16px;
+				top: 16px;
+				width: 24px;
+				height: 24px;
+				z-index: 400;
 			}
 		}
 	}

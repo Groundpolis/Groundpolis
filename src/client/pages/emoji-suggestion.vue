@@ -69,6 +69,7 @@ import MkPagination from '../components/ui/pagination.vue';
 import { PackedDriveFile } from '../../models/repositories/drive-file';
 import { selectFile } from '../scripts/select-file';
 import { PackedEmojiRequest } from '../../models/repositories/emoji-request';
+import * as os from '@/os';
 
 export default defineComponent({
 	components: {
@@ -133,7 +134,7 @@ export default defineComponent({
 			}
 		},
 		async selectFile(e: any) {
-			this.file = await selectFile(this, e.currentTarget || e.target, null, false) as PackedDriveFile;
+			this.file = await selectFile(e.currentTarget || e.target, null, false) as PackedDriveFile;
 			// 画像じゃなければエラー
 			if (!this.file.type.startsWith('image')) {
 				this.file = null;

@@ -39,10 +39,6 @@ export default defineComponent({
 			url: url,
 			enableAiScript: !this.$store.state.device.disablePagesScript
 		});
-
-		if (this.script.aoiScript.aiscript) this.script.aoiScript.aiscript.scope.opts.onUpdated = (name, value) => {
-			this.script.eval();
-		};
 	},
 
 	mounted() {

@@ -1,7 +1,11 @@
 <template>
 <div class="mk-instance-emojis">
 	<div class="_section" style="padding: 0;">
-		<MkTab v-model:value="tab" :items="[{ label: $t('local'), value: 'local' }, { label: $t('remote'), value: 'remote' }]"/>
+		<MkTab v-model:value="tab" :items="[
+			{ label: $t('local'), value: 'local' }, 
+			{ label: $t('emojiSuggestion'), value: 'suggestion' }, 
+			{ label: $t('remote'), value: 'remote' },
+		]"/>
 	</div>
 
 	<div class="_section">
@@ -24,8 +28,8 @@
 			</MkPagination>
 		</div>
 
-		<div class="suggestion" v-else-if="tab === 'suggestion'">
-			<MkSwitch v-model="pendingOnly">{{ $t('pendingOnly') }}</MkSwitch>
+		<div class="suggestions" v-else-if="tab === 'suggestion'">
+			<MkSwitch v-model:value="pendingOnly">{{ $t('pendingOnly') }}</MkSwitch>
 			<MkPagination :pagination="suggestionPagination" class="emojis" ref="suggestions">
 				<template #empty><span>{{ $t('noSuggestions') }}</span></template>
 				<template #default="{items}">
@@ -92,6 +96,7 @@ import MkPagination from '@/components/ui/pagination.vue';
 import MkTab from '@/components/tab.vue';
 import { selectFile } from '@/scripts/select-file';
 import * as os from '@/os';
+import { userPage } from '@/filters/user';
 
 export default defineComponent({
 	components: {
@@ -130,9 +135,9 @@ export default defineComponent({
 			suggestionPagination: {
 				endpoint: 'suggestions/emojis/list',
 				limit: 10,
-				params: () => ({
+				params: computed(() => ({
 					includingStates: this.pendingOnly ? [ 'pending' ] : [],
-				})
+				}))
 			},
 			remotePagination: {
 				endpoint: 'admin/emoji/list-remote',
@@ -209,7 +214,9 @@ export default defineComponent({
 				icon: faPlus,
 				action: () => { this.im(emoji) }
 			}], ev.currentTarget || ev.target);
-		}
+		},
+
+		userPage
 	}
 });
 </script>
@@ -255,6 +262,8 @@ export default defineComponent({
 
 		> .suggestions {
 			> .emojis {
+				display: flex;
+				flex-direction: column;
 				> .emoji {
 					display: flex;
 					align-items: center;

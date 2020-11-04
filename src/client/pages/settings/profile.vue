@@ -29,10 +29,10 @@
 
 			<MkSelect v-model:value="gender" :placeholder="$t('gender')">
 				<template #label>{{ $t('gender') }}</template>
-				<option v-text="$t('_gender.not-known')" />
-				<option v-text="$t('_gender.male')" />
-				<option v-text="$t('_gender.female')" />
-				<option v-text="$t('_gender.not-applicable')" />
+				<option value="not-known" v-text="$t('_gender.not-known')" />
+				<option value="male" v-text="$t('_gender.male')" />
+				<option value="female" v-text="$t('_gender.female')" />
+				<option value="not-applicable" v-text="$t('_gender.not-applicable')" />
 			</MkSelect>
 
 			<details class="fields">

@@ -33,7 +33,6 @@ import { faArrowCircleDown, faFlag, faUsers, faInfoCircle, faEllipsisH, faExtern
 import { faWindowMaximize } from '@fortawesome/free-regular-svg-icons';
 import XList from '@/components/date-separated-list.vue';
 import XMessage from './messaging-room.message.vue';
-import XMessageCompact from './messaging-room.message.compact.vue';
 import XForm from './messaging-room.form.vue';
 import parseAcct from '../../../misc/acct/parse';
 import { isBottom, onScrollBottom, scroll } from '@/scripts/scroll';
@@ -43,7 +42,6 @@ import { popout } from '@/scripts/popout';
 const Component = defineComponent({
 	components: {
 		XMessage,
-		XMessageCompact,
 		XForm,
 		XList,
 	},

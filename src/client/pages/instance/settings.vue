@@ -23,7 +23,7 @@
 		<div class="_content">
 			<MkSwitch v-model:value="enableLocalTimeline" @update:value="save()">{{ $t('enableLocalTimeline') }}</MkSwitch>
 			<MkSwitch v-model:value="enableGlobalTimeline" @update:value="save()">{{ $t('enableGlobalTimeline') }}</MkSwitch>
-			<MkSwitch v-model:value="enableCatTimeline" @update:value="save()">{{ $t('enableGlobalTimeline') }}</MkSwitch>
+			<MkSwitch v-model:value="enableCatTimeline" @update:value="save()">{{ $t('enableCatTimeline') }}</MkSwitch>
 			<MkInfo>{{ $t('disablingTimelinesInfo') }}</MkInfo>
 		</div>
 		<div class="_content">
@@ -87,22 +87,24 @@
 		<div class="_title"><Fa :icon="faEnvelope" /> {{ $t('emailConfig') }}</div>
 		<div class="_content">
 			<MkSwitch v-model:value="enableEmail" @update:value="save()">{{ $t('enableEmail') }}<template #desc>{{ $t('emailConfigInfo') }}</template></MkSwitch>
-			<MkInput v-model:value="email" type="email" :disabled="!enableEmail">{{ $t('email') }}</MkInput>
-			<div><b>{{ $t('smtpConfig') }}</b></div>
-			<div class="_inputs">
-				<MkInput v-model:value="smtpHost" :disabled="!enableEmail">{{ $t('smtpHost') }}</MkInput>
-				<MkInput v-model:value="smtpPort" type="number" :disabled="!enableEmail">{{ $t('smtpPort') }}</MkInput>
-			</div>
-			<div class="_inputs">
-				<MkInput v-model:value="smtpUser" :disabled="!enableEmail">{{ $t('smtpUser') }}</MkInput>
-				<MkInput v-model:value="smtpPass" type="password" :disabled="!enableEmail">{{ $t('smtpPass') }}</MkInput>
-			</div>
-			<MkInfo>{{ $t('emptyToDisableSmtpAuth') }}</MkInfo>
-			<MkSwitch v-model:value="smtpSecure" :disabled="!enableEmail">{{ $t('smtpSecure') }}<template #desc>{{ $t('smtpSecureInfo') }}</template></MkSwitch>
-			<div>
-			  <MkButton :disabled="!enableEmail" primary inline @click="save(true)"><Fa :icon="faSave"/> {{ $t('save') }}</MkButton>
-				<MkButton :disabled="!enableEmail" inline @click="testEmail()">{{ $t('testEmail') }}</MkButton>
-			</div>
+			<template v-if="enableEmail">
+				<MkInput v-model:value="email" type="email" :disabled="!enableEmail">{{ $t('email') }}</MkInput>
+				<div><b>{{ $t('smtpConfig') }}</b></div>
+				<div class="_inputs">
+					<MkInput v-model:value="smtpHost" :disabled="!enableEmail">{{ $t('smtpHost') }}</MkInput>
+					<MkInput v-model:value="smtpPort" type="number" :disabled="!enableEmail">{{ $t('smtpPort') }}</MkInput>
+				</div>
+				<div class="_inputs">
+					<MkInput v-model:value="smtpUser" :disabled="!enableEmail">{{ $t('smtpUser') }}</MkInput>
+					<MkInput v-model:value="smtpPass" type="password" :disabled="!enableEmail">{{ $t('smtpPass') }}</MkInput>
+				</div>
+				<MkInfo>{{ $t('emptyToDisableSmtpAuth') }}</MkInfo>
+				<MkSwitch v-model:value="smtpSecure" :disabled="!enableEmail">{{ $t('smtpSecure') }}<template #desc>{{ $t('smtpSecureInfo') }}</template></MkSwitch>
+				<div>
+					<MkButton :disabled="!enableEmail" primary inline @click="save(true)"><Fa :icon="faSave"/> {{ $t('save') }}</MkButton>
+					<MkButton :disabled="!enableEmail" inline @click="testEmail()">{{ $t('testEmail') }}</MkButton>
+				</div>
+			</template>
 		</div>
 	</section>
 

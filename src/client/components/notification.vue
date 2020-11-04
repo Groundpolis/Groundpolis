@@ -212,7 +212,7 @@ export default defineComponent({
 			display: block;
 			width: 100%;
 			height: 100%;
-			border-radius: 6px;
+			// border-radius: 6px;
 		}
 
 		> .sub-icon {

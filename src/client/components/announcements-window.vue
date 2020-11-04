@@ -1,5 +1,11 @@
 <template>
-<XWindow ref="window" :initial-width="400" :initial-height="500" :can-resize="true" @closed="$emit('closed')">
+<XModalWindow ref="window" 
+	:width="400"
+	:height="450"
+	:with-ok-button="false"
+	:canClose="true"
+	@close="$refs.window.close()"
+	@closed="$emit('closed')">
 	<template #header>{{ $t('announcements') }}</template>
 	<div class="vnue729s">
 		<div class="title">{{ currentAnnouncement.title }}</div>
@@ -17,18 +23,18 @@
 			</button>
 		</div>
 	</div>
-</XWindow>
+</XModalWindow>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { faChevronLeft, faChevronRight, faCheck } from '@fortawesome/free-solid-svg-icons';
-import XWindow from './ui/window.vue';
+import XModalWindow from './ui/modal-window.vue';
 import MkButton from './ui/button.vue';
 
 export default defineComponent({
 	components: {
-		XWindow,
+		XModalWindow,
 		MkButton,
 	},
 
@@ -39,6 +45,8 @@ export default defineComponent({
 			default: null
 		},
 	},
+
+	emits: ['closed'],
 
 	data() {
 		return {
@@ -102,6 +110,8 @@ export default defineComponent({
 		}
 		> .navigation {
 			margin-top: auto;
+			padding-top: 16px;
+			border-top: 1px solid var(--divider);
 			font-size: 24px;
 			> * {
 				margin-right: 16px;

@@ -35,7 +35,7 @@ export class Autocomplete {
 		for (const id of splitted) {
 			tmp = tmp[id];
 		}
-		this.vm[popped] = text;
+		tmp[popped] = text;
 	}
 
 	/**

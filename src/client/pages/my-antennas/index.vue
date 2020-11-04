@@ -41,7 +41,7 @@ export default defineComponent({
 				limit: 10,
 			},
 			draft: null,
-			faBroadcastTower, faPlus
+			faPlus
 		};
 	},
 

@@ -3,7 +3,7 @@
 	<template #header><Fa :icon="faAlignLeft"/> {{ $t('_pages.blocks.text') }}</template>
 
 	<section class="vckmsadr">
-		<textarea v-model="value.text" v-autocomplete="{ model: 'value.text' }"></textarea>
+		<textarea v-model="value.text" ref="text"></textarea>
 	</section>
 </XContainer>
 </template>
@@ -12,6 +12,7 @@
 import { defineComponent } from 'vue';
 import { faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import XContainer from '../page-editor.container.vue';
+import { Autocomplete } from '@/scripts/autocomplete';
 import * as os from '@/os';
 
 export default defineComponent({
@@ -33,6 +34,10 @@ export default defineComponent({
 
 	created() {
 		if (this.value.text == null) this.value.text = '';
+	},
+
+	mounted() {
+		new Autocomplete(this.$refs.text, this, { model: 'value.text' });
 	},
 });
 </script>
