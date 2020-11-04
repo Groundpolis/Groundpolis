@@ -5,7 +5,7 @@
 import '@/style.scss';
 
 import { createApp } from 'vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome';
 
 import widgets from './widgets';
 import directives from './directives';

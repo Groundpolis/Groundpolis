@@ -1,5 +1,5 @@
 <template>
-<x-window ref="window" :width="400" :height="450" :no-padding="true" @closed="() => { $emit('closed'); destroyDom(); }" :with-ok-button="false" :can-close="true">
+<XWindow ref="window" :initial-width="400" :initial-height="500" :can-resize="true" @closed="$emit('closed')">
 	<template #header>{{ $t('announcements') }}</template>
 	<div class="vnue729s">
 		<div class="title">{{ currentAnnouncement.title }}</div>
@@ -9,25 +9,24 @@
 		</div>
 		<div class="navigation">
 			<button class="_button arrow" @click="currentAnnouncementIndex--" :disabled="currentAnnouncementIndex == 0">
-				<fa :icon="faChevronLeft"/>
+				<Fa :icon="faChevronLeft"/>
 			</button>
 			<span>{{ currentAnnouncementIndex + 1 }} / {{ announcements.length }}</span>
 			<button class="_button arrow" @click="currentAnnouncementIndex++" :disabled="currentAnnouncementIndex == announcements.length - 1">
-				<fa :icon="faChevronRight"/>
+				<Fa :icon="faChevronRight"/>
 			</button>
 		</div>
 	</div>
-</x-window>
+</XWindow>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { faChevronLeft, faChevronRight, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { kinds } from '../../misc/api-permissions';
-import XWindow from './window.vue';
+import XWindow from './ui/window.vue';
 import MkButton from './ui/button.vue';
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
 		XWindow,
 		MkButton,

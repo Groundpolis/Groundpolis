@@ -22,8 +22,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, defineAsyncComponent, computed } from 'vue';
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faSatelliteDish, faCircle, faEllipsisH, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { defineComponent, defineAsyncComponent, computed, ComputedRef } from 'vue';
+import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faSatelliteDish, faCircle, faEllipsisH, faPencilAlt, faBullhorn } from '@fortawesome/free-solid-svg-icons';
 import { faComments } from '@fortawesome/free-regular-svg-icons';
 import Progress from '@/scripts/loading';
 import XTimeline from '@/components/timeline.vue';
@@ -49,14 +49,25 @@ export default defineComponent({
 			menuOpened: false,
 			queue: 0,
 			width: 0,
+			announcements: [],
+			hasUnreadAnnouncements: false,
 			INFO: computed(() => {
-				const tabs = [{
+				type Tab = {
+					id: string,
+					title?: string | null,
+					tooltip?: string | null,
+					icon?: any,
+					onClick?: () => void,
+					selected?: ComputedRef<boolean>,
+					indicate?: ComputedRef<boolean>,
+				};
+				const tabs: Tab[] = [{
 					id: 'home',
 					title: null,
 					tooltip: this.$t('_timelines.home'),
 					icon: faHome,
 					onClick: () => { this.src = 'home'; this.saveSrc(); },
-					selected: computed(() => this.src === 'home')
+					selected: computed(() => this.src === 'home'),
 				}];
 
 				if (!this.$store.state.instance.meta.disableLocalTimeline || this.$store.state.i.isModerator || this.$store.state.i.isAdmin) {
@@ -97,6 +108,31 @@ export default defineComponent({
 					onClick: this.choose,
 					indicate: computed(() => this.$store.state.i.hasUnreadAntenna || this.$store.state.i.hasUnreadChannel)
 				});
+
+				if (this.announcements.length > 0) {
+					tabs.push({
+						id: 'announcements',
+						title: null,
+						icon: faBullhorn,
+						onClick: () => {
+							os.popup(import('@/components/announcements-window.vue'), {
+								announcements: this.announcements
+							}, {
+								read: ann => {
+									this.announcements = this.announcements.map(a => {
+										const newA = a;
+										newA.isRead = newA.isRead || a.id === ann.id;
+										return newA;
+									});
+									this.hasUnreadAnnouncements = this.announcements.some(a => !a.isRead);
+
+									os.api('i/read-announcement', { announcementId: ann.id })
+								},
+							}, 'closed');
+						},
+						indicate: computed(() => this.hasUnreadAnnouncements)
+					});
+				};
 
 				return {
 					tabs,
@@ -156,6 +192,13 @@ export default defineComponent({
 
 	mounted() {
 		this.width = this.$el.offsetWidth;
+	},
+
+	async activated() {
+		this.announcements = (await os.api('announcements', {
+			limit: 100,
+		}));
+		this.hasUnreadAnnouncements = this.announcements.some(a => !a.isRead);
 	},
 
 	methods: {

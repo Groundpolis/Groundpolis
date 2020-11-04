@@ -1,9 +1,6 @@
 <template>
 <div class="ipledcug">
-	<portal to="icon"><fa :icon="faFlask"/></portal>
-	<portal to="title">{{ $t('_labs.title') }}</portal>
-
-	<div class="_card _vMargin">
+	<div class="_section _vMargin">
 		<div class="_content">
 			<p v-text="$t('_labs.description')"/>
 		</div>
@@ -28,25 +25,22 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { faFlask } from '@fortawesome/free-solid-svg-icons';
 
 import MkSwitch from '../components/ui/switch.vue';
 
-export default Vue.extend({
-	metaInfo() {
-		return {
-			title: this.$t('lab') as string
-		};
-	},
-
+export default defineComponent({
 	components: {
 		MkSwitch,
 	},
 
 	data() {
 		return {
-			faFlask
+			INFO: {
+				title: this.$t('directNotes'),
+				icon: faFlask,
+			},
 		}
 	},
 

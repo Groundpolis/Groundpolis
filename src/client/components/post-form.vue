@@ -245,7 +245,6 @@ export default defineComponent({
 	},
 
 	mounted() {
-		console.log(this.channel);
 		if (this.initialText) {
 			this.text = this.initialText;
 		}

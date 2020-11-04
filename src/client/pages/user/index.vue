@@ -28,7 +28,7 @@
 				<div class="actions" v-if="$store.getters.isSignedIn">
 					<button @click="menu" class="menu _button"><Fa :icon="faEllipsisH"/></button>
 					<MkFollowButton v-if="$store.state.i.id != user.id && !user.isBlocking && !user.isBlocked" :user="user" :inline="true" :transparent="false" :full="true" class="koudoku"/>
-					<button v-else-if="$store.state.i.id == user.id" @click="editProfile" class="edit-profile _button">{{ $t('editProfile') }}</button>
+					<MkA v-else-if="$store.state.i.id == user.id" to="/settings/profile" class="edit-profile _button">{{ $t('editProfile') }}</MkA>
 					<button v-else-if="user.isBlocking" @click="unblock" class="_button unblock">{{ $t('unblock') }}</button>
 				</div>
 			</div>
@@ -231,9 +231,6 @@ export default defineComponent({
 			const pos = -(top / z);
 			banner.style.backgroundPosition = `center calc(50% - ${pos}px)`;
 		},
-		editProfile() {
-			this.$router.push('/my/settings/profile');
-		},
 		getGenderIcon(gender: string) {
 			switch (gender) {
 				case 'male':
@@ -330,7 +327,7 @@ export default defineComponent({
 					}
 					> .edit-profile {
 						position: relative;
-						display: inline-block;
+						display: inline-flex;
 						font-weight: bold;
 						color: var(--accent);
 						background: transparent;
@@ -340,6 +337,11 @@ export default defineComponent({
 						font-size: 16px;
 						border-radius: 32px;
 						background: transparent;
+						align-items: center;
+						justify-content: center;
+						&:hover {
+							text-decoration: none;
+						}
 					}
 					> .unblock {
 						position: relative;
