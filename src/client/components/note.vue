@@ -373,7 +373,7 @@ export default defineComponent({
 			this.connection.on('_connected_', this.onStreamConnected);
 		}
 
-		this.instance = os.getInstance(this.appearNote.user.host);
+		this.instance = await os.getInstance(this.appearNote.user.host);
 	},
 
 	beforeUnmount() {
