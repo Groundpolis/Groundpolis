@@ -15,14 +15,14 @@
 					<MkAvatar :user="$store.state.i" class="avatar"/>
 					<MkAcct class="text" :user="$store.state.i"/>
 				</MkA>
+				<button v-if="iconOnly" class="item _button" @click="openAccountMenu">
+					<Fa :icon="faEllipsisV"/>
+				</button>
+				<button v-else class="_button toggler" @click="toggleMenuMode">
+					<Fa v-if="isAccountMenuMode" :icon="faChevronUp"/>
+					<Fa v-else :icon="faChevronDown"/>
+				</button>
 				<template v-if="!isAccountMenuMode">
-					<button v-if="iconOnly" class="item _button" @click="openAccountMenu">
-						<Fa :icon="faEllipsisV"/>
-					</button>
-					<button v-else class="_button toggler" @click="toggleMenuMode">
-						<Fa v-if="isAccountMenuMode" :icon="faChevronUp"/>
-						<Fa v-else :icon="faChevronDown"/>
-					</button>
 					<MkA class="item index" active-class="active" to="/" exact>
 						<Fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>
 					</MkA>

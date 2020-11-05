@@ -14,11 +14,6 @@
 				{{ $t('showUnlistedNotesInLTL') }}
 				<template #desc>{{ $t('showUnlistedNotesInLTLDesc') }}</template>
 			</mk-switch>
-
-			<mk-switch v-model="newAnnouncementUI">
-				{{ $t('_labs.newAnnouncementUI') }}
-				<template #desc>{{ $t('_labs.newAnnouncementUIDesc') }}</template>
-			</mk-switch>
 		</div>
 	</div>
 </div>
@@ -48,10 +43,6 @@ export default defineComponent({
 		newMobileView: {
 			get() { return !this.$store.state.device.useLegacyMobileView; },
 			set(value) { this.$store.commit('device/set', { key: 'useLegacyMobileView', value: !value }); }
-		},
-		newAnnouncementUI: {
-			get() { return this.$store.state.device.newAnnouncementUI; },
-			set(value) { this.$store.commit('device/set', { key: 'newAnnouncementUI', value }); }
 		},
 		injectUnlistedNoteInLTL: {
 			get() { return this.$store.state.settings.injectUnlistedNoteInLTL; },
