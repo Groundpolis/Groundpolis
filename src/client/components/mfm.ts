@@ -79,13 +79,13 @@ export default defineComponent({
 
 				case 'big': {
 					return h('strong', {
-						style: `display: inline-block; font-size: 150%;` + (this.$store.state.device.animatedMfm ? 'animation: anime-tada 1s linear infinite both;' : ''),
+						style: 'display: inline-block; font-size: 150%;' + (this.$store.state.device.animatedMfm ? 'animation: anime-tada 1s linear infinite both;' : ''),
 					}, genEl(token.children));
 				}
 
 				case 'bigger': {
 					return h('strong', {
-						style: `display: inline-block; font-size: 300%;` + (this.$store.state.device.animatedMfm ? 'animation: anime-tada 1s linear infinite both;' : ''),
+						style: 'display: inline-block; font-size: 300%;' + (this.$store.state.device.animatedMfm ? 'animation: anime-tada 1s linear infinite both;' : ''),
 					}, genEl(token.children));
 				}
 
@@ -176,6 +176,22 @@ export default defineComponent({
 				case 'vflip': {
 					return h('span', {
 						style: 'display: inline-block; transform: scaleY(-1);'
+					}, genEl(token.children));
+				}
+
+				case 'twitch': {
+					return (createElement as any)('span', {
+						attrs: {
+							style: this.$store.state.device.animatedMfm ? 'display: inline-block; animation: anime-twitch 0.5s ease infinite;' : 'display: inline-block;'
+						},
+					}, genEl(token.children));
+				}
+
+				case 'shake': {
+					return (createElement as any)('span', {
+						attrs: {
+							style: this.$store.state.device.animatedMfm ? 'display: inline-block; animation: anime-shake 0.5s ease infinite;' : 'display: inline-block;'
+						},
 					}, genEl(token.children));
 				}
 

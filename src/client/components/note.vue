@@ -47,14 +47,16 @@
 			</div>
 			<div class="body">
 				<p v-if="appearNote.cw != null" class="cw">
-					<Mfm v-if="appearNote.cw != ''" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis" :no-sticker="true"/>
+					<Mfm v-if="appearNote.cw != '' && !isPlainMode" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis" :no-sticker="true"/>
+					<span v-else-if="appearNote.cw != ''" class="text" v-text="appearNote.cw"/>
 					<XCwButton v-model:value="showContent" :note="appearNote"/>
 				</p>
 				<div class="content" v-show="appearNote.cw == null || showContent">
 					<div class="text" ref="text" :class="{ collapse: readMore === false }">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $t('private') }})</span>
 						<MkA class="reply" v-if="appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><Fa :icon="faReply"/></MkA>
-						<Mfm v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
+						<Mfm v-if="appearNote.text && !isPlainMode" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
+						<span v-else-if="appearNote.text" v-text="appearNote.text"/>
 					</div>
 					<button v-if="readMore !== null" class="read-more-button _button _link" @click="readMore = !readMore" v-text="$t(readMore ? 'hide' : 'readMore')"/>
 					<div class="files" v-if="appearNote.files.length > 0">
@@ -129,7 +131,7 @@
 
 <script lang="ts">
 import { defineAsyncComponent, defineComponent, markRaw } from 'vue';
-import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes, faClock } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
@@ -156,7 +158,7 @@ function markRawAll(...xs: any[]) {
 }
 
 markRawAll(
-	faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle,
+	faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle, faAlignLeft
 	faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes, faClock,
 );
 
@@ -217,7 +219,8 @@ export default defineComponent({
 			readMore: null as boolean | null,
 			instance: null as {} | null,
 			renoteState: null,
-			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisV, faHome, faLock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock
+			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisV, faHome, faLock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock, faAlignLeft,
+			isPlainMode: false,
 		};
 	},
 
@@ -753,6 +756,11 @@ export default defineComponent({
 					}]
 					: []
 				),
+				{
+					icon: faAlignLeft,
+					text: this.$t(this.isPlainMode ? 'showAsMfm' : 'showAsPlainText'),
+					action: () => this.isPlainMode = !this.isPlainMode,
+				},
 				...(this.appearNote.userId == this.$store.state.i.id || this.$store.state.i.isModerator || this.$store.state.i.isAdmin ? [
 					null,
 					this.appearNote.userId == this.$store.state.i.id ? {

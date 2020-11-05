@@ -695,6 +695,8 @@ random: "Random"
 system: "System"
 switchUi: "Switch UI"
 desktop: "Desktop"
+showAsMfm: "Display as MFM format"
+showAsPlainText: "Display as plain text"
 
 _renoteButtonMode:
   choose: "Choose always"
