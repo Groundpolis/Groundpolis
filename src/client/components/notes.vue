@@ -31,57 +31,43 @@ import { defineComponent } from 'vue';
 import paging from '@/scripts/paging';
 import XNote from './note.vue';
 import XList from './date-separated-list.vue';
-
 export default defineComponent({
 	components: {
 		XNote, XList,
 	},
-
 	mixins: [
 		paging({
 			before: (self) => {
 				self.$emit('before');
 			},
-
 			after: (self, e) => {
 				self.$emit('after', e);
 			}
 		}),
 	],
-
 	props: {
 		pagination: {
 			required: true
 		},
-
 		detail: {
 			type: Boolean,
 			required: false,
 			default: false
 		},
-
 		prop: {
 			type: String,
 			required: false
 		}
 	},
-
 	emits: ['before', 'after'],
-
 	computed: {
 		notes(): any[] {
 			return this.prop ? this.items.map(item => item[this.prop]) : this.items;
 		},
-
 		reversed(): boolean {
 			return this.pagination.reversed;
-		},
-
-		isCompactMode(): boolean {
-			return this.$store.state.device.postStyle === 'compact';
-		},
+		}
 	},
-
 	methods: {
 		updated(oldValue, newValue) {
 			const i = this.notes.findIndex(n => n === oldValue);
@@ -91,7 +77,6 @@ export default defineComponent({
 				this.items[i] = newValue;
 			}
 		},
-
 		focus() {
 			this.$refs.notes.focus();
 		}

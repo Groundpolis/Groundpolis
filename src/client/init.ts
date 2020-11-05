@@ -234,7 +234,7 @@ const reactions = store.state.settings.reactions.map(r => {
 store.dispatch('settings/set', { key: 'reactions', value: reactions });
 
 	//#region Sync dark mode
-window.matchMedia('(prefers-color-scheme: dark)').addListener(mql => {
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener(mql => {
 	if (store.state.device.syncDeviceDarkMode) {
 		store.commit('device/set', { key: 'darkMode', value: mql.matches });
 	}

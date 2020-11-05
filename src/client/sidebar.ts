@@ -39,12 +39,6 @@ export const sidebarDef = {
 		icon: faHashtag,
 		to: '/explore',
 	},
-	announcements: {
-		title: 'announcements',
-		icon: faBroadcastTower,
-		indicated: computed(() => store.getters.isSignedIn && store.state.i.hasUnreadAnnouncement),
-		to: '/announcements',
-	},
 	search: {
 		title: 'search',
 		icon: faSearch,

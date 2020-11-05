@@ -155,7 +155,7 @@ export default defineComponent({
 			poll: null,
 			useCw: false,
 			cw: null,
-			localOnly: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.localOnly : this.$store.state.settings.defaultNoteLocalOnly,
+			localOnly: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.localOnly : this.$store.state.settings.defaultNoteLocalOnlydefaultNoteLocalOnly,
 			remoteFollowersOnly: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.remoteFollowersOnly : this.$store.state.settings.defaultNoteRemoteFollowersOnly,
 			visibility: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.visibility : this.$store.state.settings.defaultNoteVisibility,
 			useBroadcast: false,
@@ -280,7 +280,7 @@ export default defineComponent({
 		}
 
 		// デフォルト公開範囲
-		if (this.channel == null) {
+		if (this.channel) {
 			this.visibility = 'public';
 			this.localOnly = true; // TODO: チャンネルが連合するようになった折には消す
 			this.remoteFollowersOnly = false;

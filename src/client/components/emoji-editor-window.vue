@@ -4,13 +4,13 @@
 
 	<div class="yigymqpb _section">
 		<img :src="emoji.url" class="img"/>
-		<mk-input v-model="name"><span>{{ $t('name') }}</span></mk-input>
-		<mk-input v-model="category" :datalist="categories"><span>{{ $t('category') }}</span></mk-input>
-		<mk-input v-model="aliases">
+		<MkInput v-model:value="name"><span>{{ $t('name') }}</span></MkInput>
+		<MkInput v-model:value="category" :datalist="categories"><span>{{ $t('category') }}</span></MkInput>
+		<MkInput v-model:value="aliases">
 			<span>{{ $t('tags') }}</span>
 			<template #desc>{{ $t('setMultipleBySeparatingWithSpace') }}</template>
-		</mk-input>
-		<mk-button @click="del()"><fa :icon="faTrashAlt"/> {{ $t('delete') }}</mk-button>
+		</MkInput>
+		<MkButton @click="del()"><fa :icon="faTrashAlt"/> {{ $t('delete') }}</MkButton>
 	</div>
 </x-window>
 </template>

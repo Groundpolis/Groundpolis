@@ -26,9 +26,9 @@
 					<MkA class="item index" active-class="active" to="/" exact>
 						<Fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>
 					</MkA>
-					<template v-for="item in menu">
-						<div v-if="item === '-'" class="divider"></div>
-						<component v-else-if="menuDef[item] && (menuDef[item].show !== false)" :is="menuDef[item].to ? 'MkA' : 'button'" class="item _button" :class="item" active-class="active" v-on="menuDef[item].action ? { click: menuDef[item].action } : {}" :to="menuDef[item].to">
+					<template v-for="(item, i) in menu">
+						<div :key="'divider-' + i" v-if="item === '-'" class="divider"></div>
+						<component :key="item" v-else-if="menuDef[item] && (menuDef[item].show !== false)" :is="menuDef[item].to ? 'MkA' : 'button'" class="item _button" :class="item" active-class="active" v-on="menuDef[item].action ? { click: menuDef[item].action } : {}" :to="menuDef[item].to">
 							<Fa :icon="menuDef[item].icon" fixed-width/><span class="text">{{ $t(menuDef[item].title) }}</span>
 							<i v-if="menuDef[item].indicated"><Fa :icon="faCircle"/></i>
 						</component>
