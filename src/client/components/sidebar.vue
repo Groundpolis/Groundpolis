@@ -15,13 +15,14 @@
 					<MkAvatar :user="$store.state.i" class="avatar"/>
 					<MkAcct class="text" :user="$store.state.i"/>
 				</MkA>
-				<button v-if="iconOnly" class="item _button" @click="openAccountMenu">
+				<button v-if="iconOnly && !hidden" class="item _button" @click="openAccountMenu">
 					<Fa :icon="faEllipsisV"/>
 				</button>
 				<button v-else class="_button toggler" @click="toggleMenuMode">
 					<Fa v-if="isAccountMenuMode" :icon="faChevronUp"/>
 					<Fa v-else :icon="faChevronDown"/>
 				</button>
+				<div class="divider" />
 				<template v-if="!isAccountMenuMode">
 					<MkA class="item index" active-class="active" to="/" exact>
 						<Fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>
@@ -44,6 +45,18 @@
 						<Fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
 						<i v-if="otherNavItemIndicated"><Fa :icon="faCircle"/></i>
 					</button>
+				</template>
+				<template v-else>
+					<button v-for="acct in accounts" :key="acct.id" @click="switchAccount(acct)" class="item account _button">
+						<div class="name">
+							<mk-avatar :user="acct" class="avatar" :disable-preview="true"/>
+							<mk-user-name class="text" :user="acct" :nowrap="true"/>
+						</div>
+					</button>
+					<div class="divider" v-if="accounts.length > 0"></div>
+					<button class="item _button" @click="addAcount" v-text="$t('addAcount')"/>
+					<button class="item _button" @click="createAccount" v-text="$t('createAccount')"/>
+					<button class="item danger _button" @click="os.signout()" v-text="$t('logout')"/>
 				</template>
 			</div>
 		</nav>
@@ -106,6 +119,7 @@ export default defineComponent({
 		},
 
 		iconOnly() {
+			this.isAccountMenuMode = false;
 			this.$nextTick(() => {
 				this.$emit('change-view-mode');
 			});
@@ -172,24 +186,17 @@ export default defineComponent({
 				action: () => { this.switchAccount(account); }
 			}));
 
-			os.modalMenu([...[{
-				type: 'link',
-				text: this.$t('profile'),
-				to: `/@${ this.$store.state.i.username }`,
-				avatar: this.$store.state.i,
-			}, null, ...accountItems, {
-				icon: faPlus,
-				text: this.$t('addAcount'),
-				action: () => {
-					os.modalMenu([{
-						text: this.$t('existingAcount'),
+			os.modalMenu([...[...accountItems, {
+						text: this.$t('addAcount'),
 						action: () => { this.addAcount(); },
 					}, {
 						text: this.$t('createAccount'),
 						action: () => { this.createAccount(); },
-					}], ev.currentTarget || ev.target);
-				},
-			}]], ev.currentTarget || ev.target, {
+					}, {
+						text: this.$t('logout'),
+						action: () => { os.signout() },
+						danger: true,
+					}]], ev.currentTarget || ev.target, {
 				align: 'left'
 			});
 		},
@@ -569,8 +576,8 @@ export default defineComponent({
 
 			.toggler {
 				position: absolute;
-				right: 16px;
-				top: 16px;
+				right: 24px;
+				top: 20px;
 				width: 24px;
 				height: 24px;
 				z-index: 400;

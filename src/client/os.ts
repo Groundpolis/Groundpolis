@@ -434,6 +434,11 @@ export async function getInstance(host?: string): Promise<Instance | null> {
 	return instances[host];
 }
 
+export function signout() { 
+		store.dispatch('logout');
+		location.href = '/';
+}
+
 /*
 export function checkExistence(fileData: ArrayBuffer): Promise<any> {
 	return new Promise((resolve, reject) => {

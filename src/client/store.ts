@@ -212,7 +212,7 @@ export const store = createStore({
 				ctx.commit('settings/init', {});
 				ctx.commit('deviceUser/init', {});
 				localStorage.removeItem('i');
-				Cookies.remove('igi');
+				document.cookie = 'igi=; path=/';
 			}
 		},
 
@@ -223,7 +223,7 @@ export const store = createStore({
 			ctx.commit('settings/init', {});
 			ctx.commit('deviceUser/init', {});
 			localStorage.removeItem('i');
-			Cookies.remove('igi');
+			document.cookie = 'igi=; path=/';
 		},
 
 		async switchAccount(ctx, i) {

@@ -42,7 +42,7 @@
 import { computed, defineAsyncComponent, defineComponent, onMounted, ref } from 'vue';
 import { faCog, faPalette, faPlug, faUser, faListUl, faLock, faCommentSlash, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell } from '@fortawesome/free-regular-svg-icons';
-import { store } from '@/store';
+import * as os from 'os';
 import { i18n } from '@/i18n';
 
 export default defineComponent({
@@ -98,10 +98,7 @@ export default defineComponent({
 			el,
 			onInfo,
 			component,
-			logout: () => {
-				store.dispatch('logout');
-				location.href = '/';
-			},
+			logout: () => os.signout(),
 			faPalette, faPlug, faUser, faListUl, faLock, faLaugh, faCommentSlash, faMusic, faBell, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes,
 		};
 	},
