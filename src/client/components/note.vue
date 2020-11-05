@@ -49,14 +49,16 @@
 			</div>
 			<div class="body" ref="noteBody">
 				<p v-if="appearNote.cw != null" class="cw">
-				<mfm v-if="appearNote.cw != ''" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis" :no-sticker="true"/>
+					<mfm v-if="appearNote.cw != '' && !isPlainMode" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis" :no-sticker="true"/>
+					<span v-else-if="appearNote.cw != ''" class="text" v-text="appearNote.cw"/>
 					<x-cw-button v-model="showContent" :note="appearNote"/>
 				</p>
 				<div class="content" v-show="appearNote.cw == null || showContent">
 					<div class="text" ref="text" :class="{ collapse: readMore === false }">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $t('private') }})</span>
 						<router-link class="reply" v-if="!isCompactMode && appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><fa :icon="faReply"/></router-link>
-						<mfm v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
+						<mfm v-if="appearNote.text && !isPlainMode" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
+						<span v-else-if="appearNote.text" v-text="appearNote.text"/>
 						<router-link class="rp" v-if="isCompactMode && appearNote.reply != null" :to="appearNote.reply | notePage">
 							<fa :icon="faReply" fixed-width size="xs" style="margin: 0 4px" />
 							<span><mk-acct :user="appearNote.reply.user"/>: {{ appearNote.reply.text }}</span>
@@ -138,7 +140,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faInfoCircle, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug } from '@fortawesome/free-solid-svg-icons';
+import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faInfoCircle, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes, faClock } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
@@ -215,6 +217,7 @@ export default Vue.extend({
 			readMore: null as boolean | null,
 			instance: null as {} | null,
 			renoteState: null,
+			isPlainMode: false,
 			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisV, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock
 		};
 	},
@@ -770,6 +773,11 @@ export default Vue.extend({
 					}]
 					: []
 				),
+				{
+					icon: faAlignLeft,
+					text: this.$t(this.isPlainMode ? 'showAsMfm' : 'showAsPlainText'),
+					action: () => this.isPlainMode = !this.isPlainMode,
+				},
 				...(this.appearNote.userId == this.$store.state.i.id || this.$store.state.i.isModerator || this.$store.state.i.isAdmin ? [
 					null,
 					this.appearNote.userId == this.$store.state.i.id ? {

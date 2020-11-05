@@ -656,6 +656,8 @@ renoteButtonMode: "Renote-Button Behavior"
 reduceBlur: "Reduce blur effect"
 noindex: "Deny search engine crawling"
 input: "Input..."
+showAsMfm: "Display as MFM format"
+showAsPlainText: "Display as plain text"
 
 _renoteButtonMode:
   choose: "Choose always"

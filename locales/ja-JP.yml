@@ -702,6 +702,8 @@ renoteButtonMode: "リノートボタンを押した場合の挙動"
 reduceBlur: "ぼかし効果を無効化する"
 noindex: "検索エンジンにインデックスしない"
 input: "入力..."
+showAsMfm: "MFM 記法で表示"
+showAsPlainText: "プレーン テキストで表示"
 
 _renoteButtonMode:
   choose: "毎回選ぶ"

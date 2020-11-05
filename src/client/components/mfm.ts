@@ -205,6 +205,22 @@ export default Vue.component('misskey-flavored-markdown', {
 					}, genEl(token.children));
 				}
 
+				case 'twitch': {
+					return (createElement as any)('span', {
+						attrs: {
+							style: this.$store.state.device.animatedMfm ? 'display: inline-block; animation: anime-twitch 0.5s ease infinite;' : 'display: inline-block;'
+						},
+					}, genEl(token.children));
+				}
+
+				case 'shake': {
+					return (createElement as any)('span', {
+						attrs: {
+							style: this.$store.state.device.animatedMfm ? 'display: inline-block; animation: anime-shake 0.5s ease infinite;' : 'display: inline-block;'
+						},
+					}, genEl(token.children));
+				}
+
 				case 'sup': {
 					return (createElement as any)('sup', genEl(token.children));
 				}
@@ -214,7 +230,7 @@ export default Vue.component('misskey-flavored-markdown', {
 				}
 
 				case 'marquee': {
-					if (this.$store.state.settings.disableAnimatedMfm) {
+					if (!this.$store.state.settings.disableAnimatedMfm) {
 						return genEl(token.children) as any;
 					}
 
