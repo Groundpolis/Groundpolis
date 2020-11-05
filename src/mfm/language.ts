@@ -92,6 +92,8 @@ export const mfmLanguage = P.createLanguage({
 		r.yspin,
 		r.blink,
 		r.spin,
+		r.twitch,
+		r.shake,
 		r.jump,
 		r.vflip,
 		r.flip,
@@ -161,6 +163,8 @@ export const mfmLanguage = P.createLanguage({
 		}).map(x => createTree('yspin', r.inline.atLeast(1).tryParse(x.content), { attr: x.attr }));
 	},
 	jump: r => P.regexp(/<jump>(.+?)<\/jump>/, 1).map(x => createTree('jump', r.inline.atLeast(1).tryParse(x), {})),
+	twitch: r => P.regexp(/<twitch>(.+?)<\/twitch>/, 1).map(x => createTree('twitch', r.inline.atLeast(1).tryParse(x), {})),
+	shake: r => P.regexp(/<shake>(.+?)<\/shake>/, 1).map(x => createTree('shake', r.inline.atLeast(1).tryParse(x), {})),
 	flip: r => P.regexp(/<flip>(.+?)<\/flip>/, 1).map(x => createTree('flip', r.inline.atLeast(1).tryParse(x), {})),
 	sup: r => P.regexp(/<sup>(.+?)<\/sup>/, 1).map(x => createTree('sup', r.inline.atLeast(1).tryParse(x), {})),
 	sub: r => P.regexp(/<sub>(.+?)<\/sub>/, 1).map(x => createTree('sub', r.inline.atLeast(1).tryParse(x), {})),
