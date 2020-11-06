@@ -1,9 +1,9 @@
 <template>
 <div class="_section">
 	<div class="_content">
-		<XSearch v-model="query" @search="search"/>
+		<XSearch v-model:value="query" @search="search"/>
 		<div class="tab _section _noPad" style="padding: 0">
-			<MkTab v-model="tab" :items="[{ label: $t('notes'), value: 'notes' }, { label: $t('users'), value: 'users' }]"/>
+			<MkTab v-model:value="tab" :items="[{ label: $t('notes'), value: 'notes' }, { label: $t('users'), value: 'users' }]"/>
 		</div>
 		<template v-if="smartCard">
 				<XNote class="smart-card" :note="smartCard.note" v-if="smartCard.type === 'note'"/>
@@ -12,10 +12,6 @@
 					<Fa class="icon" :icon="smartCard.icon"/>
 					<h1 class="header" v-text="smartCard.header"/>
 					<div class="body" v-text="smartCard.body"/>
-				</div>
-				<div class="_panel smart-card" v-else-if="smartCard.type === 'apError'">
-					<Fa class="icon" :icon="faTimesCircle"/>
-					<div class="body" v-text="smartCard.message"/>
 				</div>
 		</template>
 		<XNotes v-if="tab === 'notes'" ref="notes" :pagination="notesPagination"/>
@@ -37,6 +33,7 @@ import XSearch from '../components/search.vue';
 import MkTab from '../components/tab.vue';
 import { PackedNote } from '../../models/repositories/note';
 import { PackedUser } from '../../models/repositories/user';
+import * as os from '@/os';
 
 type SmartCard = {
 	type: 'note',
@@ -70,7 +67,6 @@ export default defineComponent({
 				title: this.$t('searchWith', { q: this.$route.query.q }),
 				icon: faSearch
 			},
-			faSearch, faSpinner, faTimesCircle,
 		};
 	},
 
@@ -138,13 +134,7 @@ export default defineComponent({
 		search() {
 			if (this.$route.query.q === this.query) return;
 
-			this.$router.push({
-				path: this.$route.path,
-				query: {
-					q: this.query,
-					f: this.tab,
-				}
-			});
+			this.$router.push(`${this.$route.path}?q=${encodeURIComponent(this.query)}&f=${encodeURIComponent(this.tab)}`);
 		},
 
 		fetch() {
@@ -155,22 +145,34 @@ export default defineComponent({
 		async generateSmartCard() {
 			this.smartCard = null;
 
-			if (this.tab !== 'notes') return;
 			const q = (this.$route.query.q as string || '').trim();
 
 			// ActivityPub Object
 			if (q.startsWith('https://')) {
-				const res = await os.api('ap/show', { uri: q });
-				if (res.type === 'User') {
-					this.smartCard = {
-						type: 'user',
-						user: res.object
-					};
-				} else if (res.type === 'Note') {
-					this.smartCard = {
-						type: 'note',
-						note: res.object
-					};
+				this.smartCard = {
+					type: 'custom',
+					body: this.$t('fetchingAsApObject'),
+					icon: faSpinner,
+				};
+				try {
+					const res = await os.api('ap/show', { uri: q });
+					if (res.type === 'User') {
+						this.smartCard = {
+							type: 'user',
+							user: res.object
+						};
+					} else if (res.type === 'Note') {
+						this.smartCard = {
+							type: 'note',
+							note: res.object
+						};
+					}
+				} catch (e) {
+						this.smartCard = {
+							type: 'custom',
+							icon: faTimesCircle,
+							body: e.info || e.message,
+						};
 				}
 			}
 

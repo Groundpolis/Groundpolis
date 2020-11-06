@@ -1,77 +1,63 @@
 <template>
-<div>
-	<portal v-if="!meta.disableFeatured" to="header">
-		<mk-tab v-model="tab" style="height: 100%" :items="[{ label: $t('explore'), value: '/explore', icon: faHashtag }, { label: $t('featured'), value: '/featured', icon: faFireAlt }]"/>
-	</portal>
-	<template v-else>
-		<portal to="icon"><fa :icon="faHashtag"/></portal>
-		<portal to="title">{{ $t('explore') }}</portal>
-	</template>
-
-	<x-search v-model="query" @search="search"/>
+<div class="_section">
+	<XSearch v-model:value="query" @search="search"/>
+	<MkTab v-if="!meta.disableFeatured" v-model:value="tab" style="height: 100%" :items="[{ label: $t('explore'), value: '/explore', icon: faHashtag }, { label: $t('featured'), value: '/featured', icon: faFireAlt }]"/>
 
 	<template v-if="tab === '/explore'">
-		<div class="_section">
-			<MkInput v-model:value="query" :debounce="true" type="search"><template #icon><Fa :icon="faSearch"/></template><span>{{ $t('searchUser') }}</span></MkInput>
-			<XUserList v-if="query" class="_vMargin" :pagination="searchPagination" ref="search"/>
-
-			<div class="localfedi7 _panel _vMargin" v-if="meta && stats && tag == null" :style="{ backgroundImage: meta.bannerUrl ? `url(${meta.bannerUrl})` : null }">
-				<header><span>{{ $t('explore', { host: meta.name || 'Misskey' }) }}</span></header>
-				<div><span>{{ $t('exploreUsersCount', { count: num(stats.originalUsersCount) }) }}</span></div>
+		<MkFolder :body-togglable="true" :expanded="false" ref="tags" class="_vMargin">
+			<template #header><Fa :icon="faHashtag" fixed-width style="margin-right: 0.5em;"/>{{ $t('popularTags') }}</template>
+			<div class="vxjfqztj">
+				<MkA v-for="tag in tagsLocal" :to="`/search?q=${encodeURIComponent('#' + tag.tag)}`" :key="'local:' + tag.tag" class="local">{{ tag.tag }}</MkA>
+				<MkA v-for="tag in tagsRemote" :to="`/search?q=${encodeURIComponent('#' + tag.tag)}`" :key="'remote:' + tag.tag">{{ tag.tag }}</MkA>
 			</div>
+		</MkFolder>
 
-			<template v-if="tag == null">
-				<MkFolder class="_vMargin" persist-key="explore-pinned-users">
-					<template #header><Fa :icon="faBookmark" fixed-width style="margin-right: 0.5em;"/>{{ $t('pinnedUsers') }}</template>
-					<XUserList :pagination="pinnedUsers"/>
-				</MkFolder>
-				<MkFolder class="_vMargin" persist-key="explore-popular-users">
-					<template #header><Fa :icon="faChartLine" fixed-width style="margin-right: 0.5em;"/>{{ $t('popularUsers') }}</template>
-					<XUserList :pagination="popularUsers"/>
-				</MkFolder>
-				<MkFolder class="_vMargin" persist-key="explore-recently-updated-users">
-					<template #header><Fa :icon="faCommentAlt" fixed-width style="margin-right: 0.5em;"/>{{ $t('recentlyUpdatedUsers') }}</template>
-					<XUserList :pagination="recentlyUpdatedUsers"/>
-				</MkFolder>
-				<MkFolder class="_vMargin" persist-key="explore-recently-registered-users">
-					<template #header><Fa :icon="faPlus" fixed-width style="margin-right: 0.5em;"/>{{ $t('recentlyRegisteredUsers') }}</template>
-					<XUserList :pagination="recentlyRegisteredUsers"/>
-				</MkFolder>
-			</template>
+		<div class="localfedi7 _panel _vMargin" v-if="meta && stats && tag == null" :style="{ backgroundImage: meta.bannerUrl ? `url(${meta.bannerUrl})` : null }">
+			<header><span>{{ $t('explore', { host: meta.name || 'Groundpolis' }) }}</span></header>
+			<div><span>{{ $t('exploreUsersCount', { count: num(stats.originalUsersCount) }) }}</span></div>
 		</div>
-		<div class="_section">
-			<div class="localfedi7 _panel _vMargin" v-if="tag == null" :style="{ backgroundImage: `url(/assets/fedi.jpg)` }">
-				<header><span>{{ $t('exploreFediverse') }}</span></header>
-			</div>
 
-			<MkFolder :body-togglable="true" :expanded="false" ref="tags" class="_vMargin">
-				<template #header><Fa :icon="faHashtag" fixed-width style="margin-right: 0.5em;"/>{{ $t('popularTags') }}</template>
-				<div class="vxjfqztj">
-					<MkA v-for="tag in tagsLocal" :to="`/explore/tags/${tag.tag}`" :key="'local:' + tag.tag" class="local">{{ tag.tag }}</MkA>
-					<MkA v-for="tag in tagsRemote" :to="`/explore/tags/${tag.tag}`" :key="'remote:' + tag.tag">{{ tag.tag }}</MkA>
-				</div>
+		<template v-if="tag == null">
+			<MkFolder class="_vMargin" persist-key="explore-pinned-users">
+				<template #header><Fa :icon="faBookmark" fixed-width style="margin-right: 0.5em;"/>{{ $t('pinnedUsers') }}</template>
+				<XUserList :pagination="pinnedUsers"/>
 			</MkFolder>
-
-			<MkFolder v-if="tag != null" :key="`${tag}`" class="_vMargin">
-				<template #header><Fa :icon="faHashtag" fixed-width style="margin-right: 0.5em;"/>{{ tag }}</template>
-				<XUserList :pagination="tagUsers"/>
+			<MkFolder class="_vMargin" persist-key="explore-popular-users">
+				<template #header><Fa :icon="faChartLine" fixed-width style="margin-right: 0.5em;"/>{{ $t('popularUsers') }}</template>
+				<XUserList :pagination="popularUsers"/>
 			</MkFolder>
-
-			<template v-if="tag == null">
-				<MkFolder class="_vMargin">
-					<template #header><Fa :icon="faChartLine" fixed-width style="margin-right: 0.5em;"/>{{ $t('popularUsers') }}</template>
-					<XUserList :pagination="popularUsersF"/>
-				</MkFolder>
-				<MkFolder class="_vMargin">
-					<template #header><Fa :icon="faCommentAlt" fixed-width style="margin-right: 0.5em;"/>{{ $t('recentlyUpdatedUsers') }}</template>
-					<XUserList :pagination="recentlyUpdatedUsersF"/>
-				</MkFolder>
-				<MkFolder class="_vMargin">
-					<template #header><Fa :icon="faRocket" fixed-width style="margin-right: 0.5em;"/>{{ $t('recentlyDiscoveredUsers') }}</template>
-					<XUserList :pagination="recentlyRegisteredUsersF"/>
-				</MkFolder>
-			</template>
+			<MkFolder class="_vMargin" persist-key="explore-recently-updated-users">
+				<template #header><Fa :icon="faCommentAlt" fixed-width style="margin-right: 0.5em;"/>{{ $t('recentlyUpdatedUsers') }}</template>
+				<XUserList :pagination="recentlyUpdatedUsers"/>
+			</MkFolder>
+			<MkFolder class="_vMargin" persist-key="explore-recently-registered-users">
+				<template #header><Fa :icon="faPlus" fixed-width style="margin-right: 0.5em;"/>{{ $t('recentlyRegisteredUsers') }}</template>
+				<XUserList :pagination="recentlyRegisteredUsers"/>
+			</MkFolder>
+		</template>
+		<div class="localfedi7 _panel _vMargin" v-if="tag == null" :style="{ backgroundImage: `url(/assets/fedi.jpg)` }">
+			<header><span>{{ $t('exploreFediverse') }}</span></header>
 		</div>
+
+		<MkFolder v-if="tag != null" :key="`${tag}`" class="_vMargin">
+			<template #header><Fa :icon="faHashtag" fixed-width style="margin-right: 0.5em;"/>{{ tag }}</template>
+			<XUserList :pagination="tagUsers"/>
+		</MkFolder>
+
+		<template v-if="tag == null">
+			<MkFolder class="_vMargin">
+				<template #header><Fa :icon="faChartLine" fixed-width style="margin-right: 0.5em;"/>{{ $t('popularUsers') }}</template>
+				<XUserList :pagination="popularUsersF"/>
+			</MkFolder>
+			<MkFolder class="_vMargin">
+				<template #header><Fa :icon="faCommentAlt" fixed-width style="margin-right: 0.5em;"/>{{ $t('recentlyUpdatedUsers') }}</template>
+				<XUserList :pagination="recentlyUpdatedUsersF"/>
+			</MkFolder>
+			<MkFolder class="_vMargin">
+				<template #header><Fa :icon="faRocket" fixed-width style="margin-right: 0.5em;"/>{{ $t('recentlyDiscoveredUsers') }}</template>
+				<XUserList :pagination="recentlyRegisteredUsersF"/>
+			</MkFolder>
+		</template>
 	</template>
 
 	<template v-if="tab === '/featured'">
@@ -81,16 +67,16 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 import { faChartLine, faPlus, faHashtag, faRocket, faFireAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark, faCommentAlt } from '@fortawesome/free-regular-svg-icons';
 import XUserList from '@/components/user-list.vue';
 import XSearch from '../components/search.vue';
 import XNotes from '../components/notes.vue';
 import MkFolder from '@/components/ui/folder.vue';
-import MkInput from '@/components/ui/input.vue';
 import MkTab from '../components/tab.vue';
 import number from '@/filters/number';
+import Progress from '@/scripts/loading';
 import * as os from '@/os';
 
 export default defineComponent({
@@ -100,7 +86,6 @@ export default defineComponent({
 		XSearch,
 		MkTab,
 		MkFolder,
-		MkInput,
 	},
 
 	props: {
@@ -148,13 +133,6 @@ export default defineComponent({
 				endpoint: 'notes/featured',
 				limit: 10,
 				offsetMode: true
-			},
-			searchPagination: {
-				endpoint: 'users/search',
-				limit: 10,
-				params: computed(() => (this.query && this.query !== '') ? {
-					query: this.query
-				} : null)
 			},
 			tagsLocal: [],
 			tagsRemote: [],

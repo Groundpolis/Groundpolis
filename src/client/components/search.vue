@@ -1,5 +1,5 @@
 <template>
-	<mk-input :value="value" type="search" @keydown="searchKeypress" @input="$emit('input', $event)">
+	<mk-input :value="value" type="search" @keydown="searchKeypress" @input="$emit('update:value', $event.target.value)">
 		<span>{{ $t('search') }}</span>
 		<template #prefix><fa :icon="faSearch" /></template>
 	</mk-input>
@@ -20,6 +20,7 @@ export default defineComponent({
 			default: '',
 		}
 	},
+	emits: ['update:value', 'search'],
 	data() {
 		return {
 			faSearch,
