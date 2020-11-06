@@ -439,6 +439,11 @@ export function signout() {
 		location.href = '/';
 }
 
+export function signoutAll() {
+	store.dispatch('logoutAll');
+	location.href = '/';
+}
+
 /*
 export function checkExistence(fileData: ArrayBuffer): Promise<any> {
 	return new Promise((resolve, reject) => {

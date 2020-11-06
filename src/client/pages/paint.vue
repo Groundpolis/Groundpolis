@@ -179,10 +179,8 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				header: [{
-					title: this.$t('paint'),
-					icon: faPaintBrush
-				}],
+				title: this.$t('paint'),
+				icon: faPaintBrush
 			},
 			currentTool: 'hand' as ToolType,
 			currentColor: '#000000',

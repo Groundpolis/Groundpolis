@@ -74,7 +74,7 @@
 					</div>
 					<div class="renotes" v-if="renoteState">
 						<MkA :to="`/notes/${appearNote.id}/renotes`">
-							<i18n-t :path="renoteState.isQuoted && renoteState.isRenoted ? 'renoteQuoteCount' : renoteState.isQuoted ? 'quoteCount' : 'renoteCount'" tag="span">
+							<i18n-t :keypath="renoteState.isQuoted && renoteState.isRenoted ? 'renoteQuoteCount' : renoteState.isQuoted ? 'quoteCount' : 'renoteCount'" tag="span">
 								<template #count><strong v-text="appearNote.renoteCount" /></template>
 							</i18n-t>
 						</MkA>

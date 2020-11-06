@@ -3,7 +3,7 @@
 		<mk-avatar class="avatar" :user="user"/>
 			<div class="body">
 				<div class="name">
-					<router-link class="name" :to="user | userPage" v-user-preview="user.id"><mk-user-name :user="user"/></router-link>
+					<router-link class="name" :to="userPage(user)" v-user-preview="user.id"><mk-user-name :user="user"/></router-link>
 					<span class="username"><mk-acct :user="user"/></span>
 				</div>
 				<div class="description">
@@ -16,10 +16,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import MkFollowButton from './follow-button.vue';
+import { userPage } from '@/filters/user';
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
 		MkFollowButton,
 	},
@@ -29,6 +30,9 @@ export default Vue.extend({
 			required: true
 		},
 	},
+	methods: {
+		userPage,
+	}
 });
 </script>
 

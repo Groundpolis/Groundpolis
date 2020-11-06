@@ -28,12 +28,11 @@
 		</div>
 		<div class="menu">
 			<button class="_button item" @click="logout">{{ $t('logout') }}</button>
+			<button class="_button item" @click="logoutAll">{{ $t('logoutAll') }}</button>
 		</div>
 	</div>
 	<div class="main">
-		<transition :name="($store.state.device.animation && !narrow) ? 'view-slide' : ''" appear mode="out-in">
-			<component :is="component" @info="onInfo"/>
-		</transition>
+		<component :is="component" @info="onInfo"/>
 	</div>
 </div>
 </template>
@@ -42,7 +41,7 @@
 import { computed, defineAsyncComponent, defineComponent, onMounted, ref } from 'vue';
 import { faCog, faPalette, faPlug, faUser, faListUl, faLock, faCommentSlash, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell } from '@fortawesome/free-regular-svg-icons';
-import * as os from 'os';
+import * as os from '@/os';
 import { i18n } from '@/i18n';
 
 export default defineComponent({
@@ -91,6 +90,17 @@ export default defineComponent({
 			narrow.value = el.value.offsetWidth < 650;
 		});
 
+		const logoutAll = () => {
+			os.dialog({
+				type: 'warning',
+				text: i18n.global.t('logoutAllConfirm'),
+				showCancelButton: true
+			}).then(({ canceled }) => {
+				if (canceled) return;
+				os.signoutAll();
+			});
+		};
+
 		return {
 			INFO,
 			narrow,
@@ -99,6 +109,7 @@ export default defineComponent({
 			onInfo,
 			component,
 			logout: () => os.signout(),
+			logoutAll,
 			faPalette, faPlug, faUser, faListUl, faLock, faLaugh, faCommentSlash, faMusic, faBell, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes,
 		};
 	},

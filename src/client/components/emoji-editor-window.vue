@@ -16,14 +16,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import XWindow from './window.vue';
 import MkButton from './ui/button.vue';
 import MkInput from './ui/input.vue';
 import { unique } from '../../prelude/array';
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
 		XWindow,
 		MkButton,

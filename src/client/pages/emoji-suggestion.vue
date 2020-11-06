@@ -11,7 +11,7 @@
 					<span>{{ $t('tags') }}</span>
 					<template #desc>{{ $t('tagsDescription') }}</template>
 				</mk-input>
-				<mk-textarea v-model:value="description" :useAutocomplete="true" :max="500">
+				<mk-textarea v-model:value="description" :use-autocomplete="true" :max="500">
 					<span>{{ $t('emojiSuggestionMessage') }}</span>
 					<template #desc>{{ $t('emojiSuggestionMessageDescription') }}</template>
 				</mk-textarea>
@@ -82,10 +82,8 @@ export default defineComponent({
 	data() {
 			return {
 				INFO: {
-					header: [{
-						title: this.$t('emojiSuggestion'),
-						icon: faLaugh,
-					}],
+					title: this.$t('emojiSuggestion'),
+					icon: faLaugh,
 				},
 				name: '',
 				aliases: '',
