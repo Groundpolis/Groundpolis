@@ -2,16 +2,14 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"noEmitOnError": false,
-		"noImplicitAny": true,
+		"noImplicitAny": false,
 		"noImplicitReturns": true,
 		"noUnusedParameters": false,
 		"noUnusedLocals": true,
 		"noFallthroughCasesInSwitch": true,
-		"esModuleInterop": true,
 		"declaration": false,
 		"sourceMap": false,
-		"target": "es6",
-		"jsx": "react",
+		"target": "es2017",
 		"module": "esnext",
 		"moduleResolution": "node",
 		"removeComments": false,
@@ -20,9 +18,16 @@
 		"strictNullChecks": false,
 		"experimentalDecorators": true,
 		"resolveJsonModule": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": [
+				"./*"
+			]
+		},
 		"typeRoots": [
 			"node_modules/@types",
-			"src/@types"
+			"src/@types",
+			"src/client/@types"
 		],
 		"lib": [
 			"esnext",
@@ -30,5 +35,9 @@
 			"webworker"
 		]
 	},
-	"compileOnSave": false
+	"compileOnSave": false,
+	"include": [
+		"./**/*.ts",
+		"./**/*.vue"
+	]
 }

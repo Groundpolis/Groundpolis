@@ -1,14 +1,14 @@
 <template>
 <div class="tdflqwzn" :class="{ isMe }">
-	<x-reaction v-for="(count, reaction) in note.reactions" :preview="preview" :reaction="reaction" :count="count" :is-initial="initialReactions.has(reaction)" :note="note" :key="reaction"/>
+	<XReaction v-for="(count, reaction) in note.reactions" :preview="preview" :reaction="reaction" :count="count" :is-initial="initialReactions.has(reaction)" :note="note" :key="reaction"/>
 </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import XReaction from './reactions-viewer.reaction.vue';
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
 		XReaction
 	},

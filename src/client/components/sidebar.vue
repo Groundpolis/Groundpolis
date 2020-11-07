@@ -4,66 +4,59 @@
 		<div class="nav-back _modalBg"
 			v-if="showing"
 			@click="showing = isAccountMenuMode = false"
-			@touchstart="showing = isAccountMenuMode = false"
+			@touchstart.passive="showing = isAccountMenuMode = false"
 		></div>
 	</transition>
 
 	<transition name="nav">
 		<nav class="nav" :class="{ iconOnly, hidden }" v-show="showing">
 			<div>
-				<div class="item account" v-if="$store.getters.isSignedIn">
-					<router-link active-class="active" class="name" :to="`/@${ $store.state.i.username }`" exact>
-						<mk-avatar :user="$store.state.i" class="avatar" :disable-preview="true"/>
-						<mk-user-name class="text" :user="$store.state.i" :nowrap="true"/>
-					</router-link>
-					<button class="_button more" @click="toggleMenuMode">
-						<fa :icon="isAccountMenuMode ? faChevronUp : faChevronDown" fixed-width/>
-					</button>
-				</div>
+				<MkA class="item _button account" active-class="active" :to="userPage($store.state.i)">
+					<MkAvatar :user="$store.state.i" class="avatar"/>
+					<MkAcct class="text" :user="$store.state.i"/>
+				</MkA>
+				<button v-if="iconOnly && !hidden" class="item _button" @click="openAccountMenu">
+					<Fa :icon="faEllipsisV"/>
+				</button>
+				<button v-else class="_button toggler" @click="toggleMenuMode">
+					<Fa v-if="isAccountMenuMode" :icon="faChevronUp"/>
+					<Fa v-else :icon="faChevronDown"/>
+				</button>
 				<div class="divider" />
-
-				<template v-if="!isAccountMenuMode">				
-					<button class="item _button index active" @click="top()" v-if="$route.name === 'index'">
-						<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
-					</button>
-					<router-link class="item index" active-class="active" to="/" exact v-else>
-						<fa :icon="faHome" fixed-width/><span class="text">{{ $store.getters.isSignedIn ? $t('timeline') : $t('home') }}</span>
-					</router-link>
-					<template v-if="$store.getters.isSignedIn">
-						<template v-for="(item, i) in menu">
-							<div v-if="item === '-'" :key="'divider' + i" class="divider" />
-							<component v-else-if="menuDef[item] && menuDef[item].show !== false" :is="menuDef[item].to ? 'router-link' : 'button'" class="item _button" :key="item" :class="item" active-class="active" @click="() => { if (menuDef[item].action) menuDef[item].action() }" :to="menuDef[item].to">
-								<fa :icon="menuDef[item].icon" fixed-width/><span class="text">{{ $t(menuDef[item].title) }}</span>
-								<i v-if="menuDef[item].indicated"><fa :icon="faCircle"/></i>
-							</component>
-						</template>
-						<div class="divider"></div>
-						<router-link class="item" active-class="active" to="/my/settings">
-							<fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
-						</router-link>
-						<button class="item _button" :class="{ active: $route.path === '/instance' || $route.path.startsWith('/instance/') }" v-if="$store.getters.isSignedIn && ($store.state.i.isAdmin || $store.state.i.isModerator)" @click="oepnInstanceMenu">
-							<fa :icon="faServer" fixed-width/><span class="text">{{ $t('instance') }}</span>
-						</button>
-						<button class="item _button" @click="more">
-							<fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
-							<i v-if="$store.getters.isSignedIn && ($store.state.i.hasUnreadMentions || $store.state.i.hasUnreadSpecifiedNotes)"><fa :icon="faCircle"/></i>
-						</button>
-						<button v-if="!isTablet" class="item _button" @click="$store.commit('device/set', { key: 'sidebarDisplay', value: iconOnly ? 'full' : 'icon' })">
-							<fa :icon="iconOnly ? faArrowRight : faArrowLeft" fixed-width/><span class="text">{{ $t('collapse') }}</span>
-						</button>
+				<template v-if="!isAccountMenuMode">
+					<MkA class="item index" active-class="active" to="/" exact>
+						<Fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>
+					</MkA>
+					<template v-for="(item, i) in menu">
+						<div :key="'divider-' + i" v-if="item === '-'" class="divider"></div>
+						<component :key="item" v-else-if="menuDef[item] && (menuDef[item].show !== false)" :is="menuDef[item].to ? 'MkA' : 'button'" class="item _button" :class="item" active-class="active" v-on="menuDef[item].action ? { click: menuDef[item].action } : {}" :to="menuDef[item].to">
+							<Fa :icon="menuDef[item].icon" fixed-width/><span class="text">{{ $t(menuDef[item].title) }}</span>
+							<i v-if="menuDef[item].indicated"><Fa :icon="faCircle"/></i>
+						</component>
 					</template>
+					<div class="divider"></div>
+					<button class="item _button" :class="{ active: $route.path === '/instance' || $route.path.startsWith('/instance/') }" v-if="$store.state.i.isAdmin || $store.state.i.isModerator" @click="oepnInstanceMenu">
+						<Fa :icon="faServer" fixed-width/><span class="text">{{ $t('instance') }}</span>
+					</button>
+					<MkA class="item" active-class="active" to="/settings">
+						<Fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
+					</MkA>
+					<button class="item _button" @click="more">
+						<Fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
+						<i v-if="otherNavItemIndicated"><Fa :icon="faCircle"/></i>
+					</button>
 				</template>
 				<template v-else>
 					<button v-for="acct in accounts" :key="acct.id" @click="switchAccount(acct)" class="item account _button">
 						<div class="name">
-							<mk-avatar :user="acct" class="avatar" :disable-preview="true"/>
-							<mk-user-name class="text" :user="acct" :nowrap="true"/>
+							<MkAvatar :user="acct" class="avatar" :disable-preview="true"/>
+							<MkUser-name class="text" :user="acct" :nowrap="true"/>
 						</div>
 					</button>
 					<div class="divider" v-if="accounts.length > 0"></div>
 					<button class="item _button" @click="addAcount" v-text="$t('addAcount')"/>
 					<button class="item _button" @click="createAccount" v-text="$t('createAccount')"/>
-					<button class="item danger _button" @click="$root.signout()" v-text="$t('logout')"/>
+					<button class="item danger _button" @click="os.signout()" v-text="$t('logout')"/>
 				</template>
 			</div>
 		</nav>
@@ -72,13 +65,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram, faArrowLeft, faArrowRight, faFlask, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { defineComponent } from 'vue';
+import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faEllipsisV, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram, faArrowLeft, faExclamationCircle, faArrowRight, faFlask, faChevronDown, faChevronUp, faStream } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
-import { host, instanceName } from '../config';
-import { search } from '../scripts/search';
+import { host, instanceName } from '@/config';
+import { search } from '@/scripts/search';
+import * as os from '@/os';
+import { sidebarDef } from '@/sidebar';
+import { userPage } from '@/filters/user';
 
-export default Vue.extend({
+export default defineComponent({
 	data() {
 		return {
 			host: host,
@@ -87,13 +83,11 @@ export default Vue.extend({
 			searching: false,
 			accounts: [],
 			connection: null,
-			menuDef: this.$store.getters.nav({
-				search: this.search
-			}),
+			menuDef: sidebarDef,
 			iconOnly: false,
 			hidden: false,
 			isTablet: false,
-			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faProjectDiagram, faArrowLeft, faArrowRight, faChevronDown, faChevronUp
+			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faEllipsisV, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faProjectDiagram, faArrowLeft, faArrowRight, faChevronDown, faChevronUp
 		};
 	},
 
@@ -103,7 +97,6 @@ export default Vue.extend({
 		},
 
 		otherNavItemIndicated(): boolean {
-			if (!this.$store.getters.isSignedIn) return false;
 			for (const def in this.menuDef) {
 				if (this.menu.includes(def)) continue;
 				if (this.menuDef[def].indicated) return true;
@@ -126,6 +119,7 @@ export default Vue.extend({
 		},
 
 		iconOnly() {
+			this.isAccountMenuMode = false;
 			this.$nextTick(() => {
 				this.$emit('change-view-mode');
 			});
@@ -154,14 +148,10 @@ export default Vue.extend({
 			this.showing = true;
 		},
 
-		top() {
-			window.scroll({ top: 0, behavior: 'smooth' });
-		},
-
 		search() {
 			if (this.searching) return;
 
-			this.$root.dialog({
+			os.dialog({
 				title: this.$t('search'),
 				input: true,
 				autoComplete: true
@@ -176,18 +166,19 @@ export default Vue.extend({
 		},
 
 		async fetchAccounts() {
-			this.accounts = (await this.$root.api('users/show', { userIds: this.$store.state.device.accounts.map(x => x.id) })).filter(x => x.id !== this.$store.state.i.id);
+			this.accounts = (await os.api('users/show', { userIds: this.$store.state.device.accounts.map(x => x.id) })).filter(x => x.id !== this.$store.state.i.id);
 		},
 
 		toggleMenuMode() {
 			this.isAccountMenuMode = !this.isAccountMenuMode;
+			console.log(this.isAccountMenuMode);
 			if (this.isAccountMenuMode) {
 				this.fetchAccounts();
 			}
 		},
 
 		async openAccountMenu(ev) {
-			const accounts = (await this.$root.api('users/show', { userIds: this.$store.state.device.accounts.map(x => x.id) })).filter(x => x.id !== this.$store.state.i.id);
+			const accounts = (await os.api('users/show', { userIds: this.$store.state.device.accounts.map(x => x.id) })).filter(x => x.id !== this.$store.state.i.id);
 
 			const accountItems = accounts.map(account => ({
 				type: 'user',
@@ -195,80 +186,78 @@ export default Vue.extend({
 				action: () => { this.switchAccount(account); }
 			}));
 
-			this.$root.menu({
-				items: [{
-					type: 'item',
-					text: this.$t('addAcount'),
-					action: () => { this.addAcount() },
-				}, (!this.meta || (this.meta.disableRegistration && this.meta.disableInvitation)) ? undefined : {
-					type: 'item',
-					text: this.$t('createAccount'),
-					action: () => { this.createAccount() },
-				}, accountItems.length > 0 ? null : undefined, ...accountItems, {
-					type: 'item',
-					text: this.$t('logout'),
-					action: () => { this.$root.signout() },
-				}].filter(m => m !== undefined),
-				align: 'left',
-				fixed: true,
-				width: 240,
-				source: ev.currentTarget || ev.target,
+			os.modalMenu([...[...accountItems, {
+						text: this.$t('addAcount'),
+						action: () => { this.addAcount(); },
+					}, {
+						text: this.$t('createAccount'),
+						action: () => { this.createAccount(); },
+					}, {
+						text: this.$t('logout'),
+						action: () => { os.signout() },
+						danger: true,
+					}]], ev.currentTarget || ev.target, {
+				align: 'left'
 			});
 		},
 
 		oepnInstanceMenu(ev) {
-			this.$root.menu({
-				items: [{
-					type: 'link',
-					text: this.$t('dashboard'),
-					to: '/instance',
-					icon: faTachometerAlt,
-				}, null, {
-					type: 'link',
-					text: this.$t('settings'),
-					to: '/instance/settings',
-					icon: faCog,
-				}, {
-					type: 'link',
-					text: this.$t('customEmojis'),
-					to: '/instance/emojis',
-					icon: faLaugh,
-				}, {
-					type: 'link',
-					text: this.$t('users'),
-					to: '/instance/users',
-					icon: faUsers,
-				}, {
-					type: 'link',
-					text: this.$t('files'),
-					to: '/instance/files',
-					icon: faCloud,
-				}, {
-					type: 'link',
-					text: this.$t('jobQueue'),
-					to: '/instance/queue',
-					icon: faExchangeAlt,
-				}, {
-					type: 'link',
-					text: this.$t('federation'),
-					to: '/instance/federation',
-					icon: faGlobe,
-				}, {
-					type: 'link',
-					text: this.$t('relays'),
-					to: '/instance/relays',
-					icon: faProjectDiagram,
-				}, {
-					type: 'link',
-					text: this.$t('announcements'),
-					to: '/instance/announcements',
-					icon: faBroadcastTower,
-				}],
-				align: 'left',
-				fixed: true,
-				width: 200,
-				source: ev.currentTarget || ev.target,
-			});
+			os.modalMenu([{
+				type: 'link',
+				text: this.$t('dashboard'),
+				to: '/instance',
+				icon: faTachometerAlt,
+			}, null, this.$store.state.i.isAdmin ? {
+				type: 'link',
+				text: this.$t('settings'),
+				to: '/instance/settings',
+				icon: faCog,
+			} : undefined, {
+				type: 'link',
+				text: this.$t('customEmojis'),
+				to: '/instance/emojis',
+				icon: faLaugh,
+			}, {
+				type: 'link',
+				text: this.$t('users'),
+				to: '/instance/users',
+				icon: faUsers,
+			}, {
+				type: 'link',
+				text: this.$t('files'),
+				to: '/instance/files',
+				icon: faCloud,
+			}, {
+				type: 'link',
+				text: this.$t('jobQueue'),
+				to: '/instance/queue',
+				icon: faExchangeAlt,
+			}, {
+				type: 'link',
+				text: this.$t('federation'),
+				to: '/instance/federation',
+				icon: faGlobe,
+			}, {
+				type: 'link',
+				text: this.$t('relays'),
+				to: '/instance/relays',
+				icon: faProjectDiagram,
+			}, {
+				type: 'link',
+				text: this.$t('announcements'),
+				to: '/instance/announcements',
+				icon: faBroadcastTower,
+			}, {
+				type: 'link',
+				text: this.$t('abuseReports'),
+				to: '/instance/abuses',
+				icon: faExclamationCircle,
+			}, {
+				type: 'link',
+				text: this.$t('logs'),
+				to: '/instance/logs',
+				icon: faStream,
+			}], ev.currentTarget || ev.target);
 		},
 
 		more(ev) {
@@ -280,61 +269,51 @@ export default Vue.extend({
 				action: def.action,
 				indicate: def.indicated,
 			}));
-			this.$root.menu({
-				items: [...items, null, {
-					type: 'link',
-					text: this.$t('_labs.title'),
-					to: '/labs',
-					icon: faFlask,
-				}, {
-					type: 'link',
-					text: this.$t('help'),
-					to: '/docs',
-					icon: faQuestionCircle,
-				}, {
-					type: 'link',
-					text: this.$t('aboutX', { x: instanceName || host }),
-					to: '/about',
-					icon: faInfoCircle,
-				}, {
-					type: 'link',
-					text: this.$t('aboutMisskey'),
-					to: '/about-misskey',
-					icon: faInfoCircle,
-				}],
-				align: 'left',
-				fixed: true,
-				width: 200,
-				source: ev.currentTarget || ev.target,
-			});
+			os.modalMenu([...items, null, {
+				type: 'link',
+				text: this.$t('help'),
+				to: '/docs',
+				icon: faQuestionCircle,
+			}, {
+				type: 'link',
+				text: this.$t('aboutX', { x: instanceName }),
+				to: '/about',
+				icon: faInfoCircle,
+			}, {
+				type: 'link',
+				text: this.$t('aboutMisskey'),
+				to: '/about-misskey',
+				icon: faInfoCircle,
+			}], ev.currentTarget || ev.target);
 		},
 
-		async addAcount() {
-			this.$root.new(await import('./signin-dialog.vue').then(m => m.default)).$once('login', res => {
-				this.$store.dispatch('addAcount', res);
-				this.switchAccountWithToken(res.i);
-			});
+		addAcount() {
+			os.popup(import('./signin-dialog.vue'), {}, {
+				done: res => {
+					this.$store.dispatch('addAcount', res);
+					this.switchAccountWithToken(res.i);
+				},
+			}, 'closed');
 		},
 
-		async createAccount() {
-			this.$root.new(await import('./signup-dialog.vue').then(m => m.default)).$once('signup', res => {
-				this.$store.dispatch('addAcount', res);
-				this.switchAccountWithToken(res.i);
-			});
+		createAccount() {
+			os.popup(import('./signup-dialog.vue'), {}, {
+				done: res => {
+					this.$store.dispatch('addAcount', res);
+					this.switchAccountWithToken(res.i);
+				},
+			}, 'closed');
 		},
 
-		async switchAccount(account: any) {
+		switchAccount(account: any) {
 			const token = this.$store.state.device.accounts.find((x: any) => x.id === account.id).token;
 			this.switchAccountWithToken(token);
 		},
 
 		switchAccountWithToken(token: string) {
-			this.$root.dialog({
-				type: 'waiting',
-				iconOnly: true
-			});
+			os.waiting();
 
-			this.$root.api('i', {}, token).then((i: any) => {
+			os.api('i', {}, token).then((i: any) => {
 				this.$store.dispatch('switchAccount', {
 					...i,
 					token: token
@@ -343,6 +322,8 @@ export default Vue.extend({
 				});
 			});
 		},
+
+		userPage
 	}
 });
 </script>
@@ -354,7 +335,7 @@ export default Vue.extend({
 	transform: translateX(0);
 	transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
-.nav-enter,
+.nav-enter-from,
 .nav-leave-active {
 	opacity: 0;
 	transform: translateX(-240px);
@@ -365,7 +346,7 @@ export default Vue.extend({
 	opacity: 1;
 	transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
-.nav-back-enter,
+.nav-back-enter-from,
 .nav-back-leave-active {
 	opacity: 0;
 }
@@ -376,6 +357,7 @@ export default Vue.extend({
 	$nav-width: 250px;
 	$nav-icon-only-width: 80px;
 	$right-widgets-hide-threshold: 1090px;
+	position: relative;
 
 	> .nav-back {
 		z-index: 1001;
@@ -411,6 +393,11 @@ export default Vue.extend({
 
 						&.account {
 							flex-direction: column;
+							align-items: center;
+
+							&.active {
+								border: 2px solid var(--accent);
+							}
 						}
 
 						[data-icon],
@@ -419,7 +406,7 @@ export default Vue.extend({
 						}
 
 						.text {
-						display: none;
+							display: none;
 						}
 
 						> .more {
@@ -488,9 +475,9 @@ export default Vue.extend({
 			> .item {
 				position: relative;
 				display: block;
-				padding-left: 16px;
+				padding-left: 24px;
 				font-size: $ui-font-size;
-				line-height: 3.2rem;
+				line-height: 3rem;
 				text-overflow: ellipsis;
 				overflow: hidden;
 				white-space: nowrap;
@@ -500,10 +487,6 @@ export default Vue.extend({
 				border-radius: var(--radius);
 				color: var(--navFg);
 
-				&:hover {
-					background: rgba(0, 0, 0, 0.05);
-				}
-
 				> [data-icon] {
 					width: ($header-height - ($avatar-margin * 2));
 				}
@@ -511,11 +494,16 @@ export default Vue.extend({
 				&.account {
 					display: flex;
 					flex-direction: row;
+					align-items: center;
 
 					> .name {
 						overflow: hidden;
 						text-overflow: ellipsis;
 						width: 100%;
+					}
+
+					> .text {
+						line-height: initial;
 					}
 
 					a.active {
@@ -579,6 +567,15 @@ export default Vue.extend({
 					bottom: 0;
 					margin-top: 16px;
 				}
+			}
+
+			.toggler {
+				position: absolute;
+				right: 24px;
+				top: 20px;
+				width: 24px;
+				height: 24px;
+				z-index: 400;
 			}
 		}
 	}

@@ -1,17 +1,19 @@
 <template>
-<span class="eiwwqkts" :class="[{ cat }, $store.state.device.iconShape]" :title="user | acct" v-if="disableLink" v-user-preview="disablePreview ? undefined : user.id" @click="onClick">
+<span class="eiwwqkts" :class="[$store.state.device.iconShape, { cat } ]" :title="acct(user)" v-if="disableLink" v-user-preview="disablePreview ? undefined : user.id" @click="onClick">
 	<img class="inner" :class="$store.state.device.iconShape" :src="url"/>
 </span>
-<router-link class="eiwwqkts" :class="[{ cat }, $store.state.device.iconShape]" :to="user | userPage" :title="user | acct" :target="target" v-else v-user-preview="disablePreview ? undefined : user.id">
+<MkA class="eiwwqkts" :class="[$store.state.device.iconShape, { cat } ]" :to="userPage(user)" :title="acct(user)" :target="target" v-else v-user-preview="disablePreview ? undefined : user.id">
 	<img class="inner" :class="$store.state.device.iconShape" :src="url"/>
-</router-link>
+</MkA>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { getStaticImageUrl } from '../scripts/get-static-image-url';
+import { defineComponent } from 'vue';
+import { getStaticImageUrl } from '@/scripts/get-static-image-url';
+import { extractAvgColorFromBlurhash } from '@/scripts/extract-avg-color-from-blurhash';
+import { acct, userPage } from '../filters/user';
 
-export default Vue.extend({
+export default defineComponent({
 	props: {
 		user: {
 			type: Object,
@@ -22,14 +24,17 @@ export default Vue.extend({
 			default: null
 		},
 		disableLink: {
+			type: Boolean,
 			required: false,
 			default: false
 		},
 		disablePreview: {
+			type: Boolean,
 			required: false,
 			default: false
 		}
 	},
+	emits: ['click'],
 	computed: {
 		cat(): boolean {
 			return this.user.isCat;
@@ -42,25 +47,19 @@ export default Vue.extend({
 	},
 	watch: {
 		'user.avatarBlurhash'() {
-			this.$el.style.color = this.getBlurhashAvgColor(this.user.avatarBlurhash);
+			if (this.$el == null) return;
+			this.$el.style.color = extractAvgColorFromBlurhash(this.user.avatarBlurhash);
 		}
 	},
 	mounted() {
-		this.$el.style.color = this.getBlurhashAvgColor(this.user.avatarBlurhash);
+		this.$el.style.color = extractAvgColorFromBlurhash(this.user.avatarBlurhash);
 	},
 	methods: {
-		getBlurhashAvgColor(s) {
-			return typeof s == 'string'
-				? '#' + [...s.slice(2, 6)]
-						.map(x => '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz#$%*+,-.:;=?@[]^_{|}~'.indexOf(x))
-						.reduce((a, c) => a * 83 + c, 0)
-						.toString(16)
-						.padStart(6, '0')
-				: undefined;
-		},
 		onClick(e) {
 			this.$emit('click', e);
-		}
+		},
+		acct,
+		userPage
 	}
 });
 </script>
@@ -72,6 +71,7 @@ export default Vue.extend({
 	vertical-align: bottom;
 	flex-shrink: 0;
 	line-height: 16px;
+	transition: border-radius 0.2s ease;
 
 	&.cat {
 		&:before, &:after {
@@ -94,7 +94,7 @@ export default Vue.extend({
 			transform: rotate(-37.5deg) skew(-30deg);
 		}
 	}
-	
+
 	.inner {
 		position: absolute;
 		bottom: 0;
@@ -106,6 +106,7 @@ export default Vue.extend({
 		object-fit: cover;
 		width: 100%;
 		height: 100%;
+		transition: border-radius 0.8s ease-out;
 	}
 }
 

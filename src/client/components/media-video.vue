@@ -1,26 +1,31 @@
 <template>
 <div class="icozogqfvdetwohsdglrbswgrejoxbdj" v-if="hide" @click="hide = false">
 	<div>
-		<b><fa :icon="faExclamationTriangle"/> {{ $t('sensitive') }}</b>
+		<b><Fa :icon="faExclamationTriangle"/> {{ $t('sensitive') }}</b>
 		<span>{{ $t('clickToShow') }}</span>
 	</div>
 </div>
 <div class="kkjnbbplepmiyuadieoenjgutgcmtsvu" v-else>
-	<i><fa :icon="faEyeSlash" @click="hide = isPreview = true"/></i>
-	<div class="preview" v-if="isPreview" @click="isPreview = false;" :style="imageStyle">
-		<fa :icon="faPlayCircle" />
-	</div>
-	<video-player class="mnhepr3u8r3u9crjciandiivrrnvivjg" ref="videoPlayer" :options="playerOptions"/>
-	<!-- <video :src="video.url" class="player" /> -->
+	<i><Fa :icon="faEyeSlash" @click="hide = true"/></i>
+	<a
+		:href="video.url"
+		rel="nofollow noopener"
+		target="_blank"
+		:style="imageStyle"
+		:title="video.name"
+	>
+		<Fa :icon="faPlayCircle"/>
+	</a>
 </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { faPlayCircle } from '@fortawesome/free-regular-svg-icons';
 import { faExclamationTriangle, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import * as os from '@/os';
 
-export default Vue.extend({
+export default defineComponent({
 	props: {
 		video: {
 			type: Object,

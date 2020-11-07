@@ -1,5 +1,11 @@
 <template>
-<x-window ref="window" :width="400" :height="450" :no-padding="true" @closed="() => { $emit('closed'); destroyDom(); }" :with-ok-button="false" :can-close="true">
+<XModalWindow ref="window" 
+	:width="400"
+	:height="450"
+	:with-ok-button="false"
+	:canClose="true"
+	@close="$refs.window.close()"
+	@closed="$emit('closed')">
 	<template #header>{{ $t('announcements') }}</template>
 	<div class="vnue729s">
 		<div class="title">{{ currentAnnouncement.title }}</div>
@@ -9,27 +15,26 @@
 		</div>
 		<div class="navigation">
 			<button class="_button arrow" @click="currentAnnouncementIndex--" :disabled="currentAnnouncementIndex == 0">
-				<fa :icon="faChevronLeft"/>
+				<Fa :icon="faChevronLeft"/>
 			</button>
 			<span>{{ currentAnnouncementIndex + 1 }} / {{ announcements.length }}</span>
 			<button class="_button arrow" @click="currentAnnouncementIndex++" :disabled="currentAnnouncementIndex == announcements.length - 1">
-				<fa :icon="faChevronRight"/>
+				<Fa :icon="faChevronRight"/>
 			</button>
 		</div>
 	</div>
-</x-window>
+</XModalWindow>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { faChevronLeft, faChevronRight, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { kinds } from '../../misc/api-permissions';
-import XWindow from './window.vue';
+import XModalWindow from './ui/modal-window.vue';
 import MkButton from './ui/button.vue';
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
-		XWindow,
+		XModalWindow,
 		MkButton,
 	},
 
@@ -40,6 +45,8 @@ export default Vue.extend({
 			default: null
 		},
 	},
+
+	emits: ['closed'],
 
 	data() {
 		return {
@@ -103,6 +110,8 @@ export default Vue.extend({
 		}
 		> .navigation {
 			margin-top: auto;
+			padding-top: 16px;
+			border-top: 1px solid var(--divider);
 			font-size: 24px;
 			> * {
 				margin-right: 16px;

@@ -1,41 +1,36 @@
 <template>
 <div class="mk-instance-emojis">
-	<portal to="icon"><fa :icon="faLaugh"/></portal>
-	<portal to="title">{{ $t('customEmojis') }}</portal>
-
-	<mk-tab class="_section" v-model="tab" style="padding: 0" :items="[
+	<div class="_section" style="padding: 0;">
+		<MkTab v-model:value="tab" :items="[
 			{ label: $t('local'), value: 'local' }, 
-			{ label: $t('emojiSuggestion'), value: 'suggestion', icon: faHeart },
-			{ label: $t('remote'), value: 'remote' }, 
-		]"
-	/>
+			{ label: $t('emojiSuggestion'), value: 'suggestion' }, 
+			{ label: $t('remote'), value: 'remote' },
+		]"/>
+	</div>
 
-	<section class="_section _vMargin local" v-if="tab === 'local'">
-		<div class="_content">
-			<mk-button inline primary @click="add"><fa :icon="faPlus"/> {{ $t('addEmoji') }}</mk-button>
-			<mk-input v-model="q" :debounce="true"><span>{{ $t('search') }}</span></mk-input>
-			<mk-pagination :pagination="pagination" class="emojis" ref="emojis">
+	<div class="_section">
+		<div class="local" v-if="tab === 'local'">
+			<MkButton primary @click="add" style="margin: 0 auto var(--margin) auto;"><Fa :icon="faPlus"/> {{ $t('addEmoji') }}</MkButton>
+			<MkInput v-model:value="query" :debounce="true" type="search"><template #icon><Fa :icon="faSearch"/></template><span>{{ $t('search') }}</span></MkInput>
+			<MkPagination :pagination="pagination" ref="emojis">
 				<template #empty><span>{{ $t('noCustomEmojis') }}</span></template>
 				<template #default="{items}">
-					<div class="emoji _card" v-for="(emoji, i) in items" :key="emoji.id" @click="edit(emoji)" :class="{ selected: selected && (selected.id === emoji.id) }">
-						<img :src="emoji.url" class="img" :alt="emoji.name"/>
-						<div class="body">
-							<span class="name">{{ emoji.name }}</span>
-							<span class="info">
-								<b class="category">{{ emoji.category }}</b>
-								<span class="aliases">{{ emoji.aliases.join(' ') }}</span>
-							</span>
-						</div>
+					<div class="emojis">
+						<button class="emoji _panel _button" v-for="emoji in items" :key="emoji.id" @click="edit(emoji)">
+							<img :src="emoji.url" class="img" :alt="emoji.name"/>
+							<div class="body">
+								<div class="name">{{ emoji.name }}</div>
+								<div class="info">{{ emoji.category }}</div>
+							</div>
+						</button>
 					</div>
 				</template>
-			</mk-pagination>
+			</MkPagination>
 		</div>
-	</section>
 
-	<section class="_section _vMargin suggestions" v-else-if="tab === 'suggestion'">
-		<div class="_content">
-			<mk-switch v-model="pendingOnly">{{ $t('pendingOnly') }}</mk-switch>
-			<mk-pagination :pagination="suggestionPagination" class="emojis" ref="suggestions">
+		<div class="suggestions" v-else-if="tab === 'suggestion'">
+			<MkSwitch v-model:value="pendingOnly">{{ $t('pendingOnly') }}</MkSwitch>
+			<MkPagination :pagination="suggestionPagination" class="emojis" ref="suggestions">
 				<template #empty><span>{{ $t('noSuggestions') }}</span></template>
 				<template #default="{items}">
 					<div class="emoji" v-for="req in items" :key="req.id">
@@ -47,69 +42,65 @@
 							</div>
 							<div class="proposer">
 								{{ $t('proposer') }}: 
-								<router-link :to="req.proposer | userPage"><mk-acct :user="req.proposer"/></router-link>
+								<MkA :to="userPage(req.proposer)"><MkAcct :user="req.proposer"/></MkA>
 							</div>
-							<mfm class="description" :text="req.description" />
+							<Mfm class="description" :text="req.description" />
 							<span class="state" v-if="req.state !== 'pending'">
-								<fa :icon="req.state === 'accepted' ? faCheck : faTimes" />
+								<Fa :icon="req.state === 'accepted' ? faCheck : faTimes" />
 								{{ $t(req.state) }}
 							</span>
-							<mk-button inline primary v-if="req.state !== 'accepted'" @click="accept(req.id)">
-								<fa :icon="faCheck" />
+							<MkButton inline primary v-if="req.state !== 'accepted'" @click="accept(req.id)">
+								<Fa :icon="faCheck" />
 								{{ $t('accept') }}
-							</mk-button>
-							<mk-button inline v-if="req.state === 'pending'" @click="reject(req.id)">
-								<fa :icon="faTimes" />
+							</MkButton>
+							<MkButton inline v-if="req.state === 'pending'" @click="reject(req.id)">
+								<Fa :icon="faTimes" />
 								{{ $t('reject') }}
-							</mk-button>
+							</MkButton>
 						</div>
 					</div>
 				</template>
-			</mk-pagination>
+			</MkPagination>
 		</div>
-	</section>
 
-	<section class="_section _vMargin remote" v-else-if="tab === 'remote'">
-		<div class="_content">
-			<mk-input v-model="q" :debounce="true"><span>{{ $t('search') }}</span></mk-input>
-			<mk-input v-model="host" :debounce="true"><span>{{ $t('host') }}</span></mk-input>
-			<mk-pagination :pagination="remotePagination" class="emojis" ref="remoteEmojis">
+		<div class="remote" v-else-if="tab === 'remote'">
+			<MkInput v-model:value="queryRemote" :debounce="true" type="search"><template #icon><Fa :icon="faSearch"/></template><span>{{ $t('search') }}</span></MkInput>
+			<MkInput v-model:value="host" :debounce="true"><span>{{ $t('host') }}</span></MkInput>
+			<MkPagination :pagination="remotePagination" ref="remoteEmojis">
 				<template #empty><span>{{ $t('noCustomEmojis') }}</span></template>
 				<template #default="{items}">
-					<div class="emoji _card" v-for="(emoji, i) in items" :key="emoji.id" @click="openRemoteEmojiMenu($event, emoji)">
-						<img :src="emoji.url" class="img" :alt="emoji.name"/>
-						<div class="body">
-							<span class="name">{{ emoji.name }}</span>
-							<span class="info">{{ emoji.host }}</span>
+					<div class="emojis">
+						<div class="emoji _panel _button" v-for="emoji in items" :key="emoji.id" @click="remoteMenu(emoji, $event)">
+							<img :src="emoji.url" class="img" :alt="emoji.name"/>
+							<div class="body">
+								<div class="name">{{ emoji.name }}</div>
+								<div class="info">{{ emoji.host }}</div>
+							</div>
 						</div>
 					</div>
 				</template>
-			</mk-pagination>
+			</MkPagination>
 		</div>
-	</section>
+	</div>
 </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { faPlus, faSave, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { computed, defineComponent } from 'vue';
+import { faPlus, faSave, faCheck, faTimes, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faLaugh } from '@fortawesome/free-regular-svg-icons';
-import MkButton from '../../components/ui/button.vue';
-import MkInput from '../../components/ui/input.vue';
-import MkSwitch from '../../components/ui/switch.vue';
-import MkPagination from '../../components/ui/pagination.vue';
-import { selectFile } from '../../scripts/select-file';
-import { unique } from '../../../prelude/array';
-import MkTab from '../../components/tab.vue';
+import MkButton from '@/components/ui/button.vue';
+import MkInput from '@/components/ui/input.vue';
+import MkSwitch from '@/components/ui/switch.vue';
+import MkPagination from '@/components/ui/pagination.vue';
+import MkTab from '@/components/tab.vue';
+import { selectFile } from '@/scripts/select-file';
+import * as os from '@/os';
+import { userPage } from '@/filters/user';
 
-export default Vue.extend({
-	metaInfo() {
-		return {
-			title: `${this.$t('customEmojis')} | ${this.$t('instance')}`
-		};
-	},
-
+export default defineComponent({
 	components: {
+		MkTab,
 		MkButton,
 		MkInput,
 		MkPagination,
@@ -119,132 +110,84 @@ export default Vue.extend({
 
 	data() {
 		return {
-			selected: null,
-			selectedRemote: null,
-			name: null,
-			category: null,
-			aliases: null,
+			INFO: {
+				title: this.$t('customEmojis'),
+				icon: faLaugh,
+				action: {
+					icon: faPlus,
+					handler: this.add
+				}
+			},
+			tab: 'local',
+			query: null,
+			queryRemote: null,
 			host: '',
 			q: '',
 			tab: 'local',
 			pendingOnly: true,
 			pagination: {
 				endpoint: 'admin/emoji/list',
-				limit: 10,
-				params: () => ({
-					query: (this.q && this.q !== '') ? this.q : null
-				}),
+				limit: 30,
+				params: computed(() => ({
+					query: (this.query && this.query !== '') ? this.query : null
+				}))
 			},
 			suggestionPagination: {
 				endpoint: 'suggestions/emojis/list',
 				limit: 10,
-				params: () => ({
+				params: computed(() => ({
 					includingStates: this.pendingOnly ? [ 'pending' ] : [],
-				})
+				}))
 			},
 			remotePagination: {
 				endpoint: 'admin/emoji/list-remote',
-				limit: 10,
-				params: () => ({
-					host: this.host ? this.host : null,
-				})
+				limit: 30,
+				params: computed(() => ({
+					query: (this.queryRemote && this.queryRemote !== '') ? this.queryRemote : null,
+					host: (this.host && this.host !== '') ? this.host : null
+				}))
 			},
-			faTrashAlt, faPlus, faLaugh, faSave, faCheck, faTimes
-		}
-	},
-
-	computed: {
-		categories() {
-			if (this.$store.state.instance.meta) {
-				return unique(this.$store.state.instance.meta.emojis.map((x: any) => x.category || '').filter((x: string) => x !== ''));
-			} else {
-				return [];
-			}
-		}
-	},
-
-	watch: {
-		host() {
-			this.$refs.remoteEmojis.reload();
-		},
-
-		pendingOnly() {
-			this.$refs.suggestions.reload();
-		},
-
-		q() {
-			this.$refs.emojis.reload();
-		},
-
-		tab() {
-			this.q = '';
-		},
-
-		selected() {
-			this.name = this.selected ? this.selected.name : null;
-			this.category = this.selected ? this.selected.category : null;
-			this.aliases = this.selected ? this.selected.aliases.join(' ') : null;
+			faTrashAlt, faPlus, faLaugh, faSave, faSearch, faCheck, faTimes,
 		}
 	},
 
 	methods: {
 		async add(e) {
-			const files = await selectFile(this, e.currentTarget || e.target, null, true);
+			const files = await selectFile(e.currentTarget || e.target, null, true);
 
-			const dialog = this.$root.dialog({
-				type: 'waiting',
-				text: this.$t('doing') + '...',
-				showOkButton: false,
-				showCancelButton: false,
-				cancelableByBgClick: false
-			});
-			
-			Promise.all(files.map(file => this.$root.api('admin/emoji/add', {
+			const promise = Promise.all(files.map(file => os.api('admin/emoji/add', {
 				fileId: file.id,
-			})))
-			.then(() => {
+			})));
+			promise.then(() => {
 				this.$refs.emojis.reload();
-				this.$root.dialog({
-					type: 'success',
-					iconOnly: true, autoClose: true
-				});
-			})
-			.finally(() => {
-				dialog.close();
 			});
+			os.promiseDialog(promise);
 		},
 
-		async edit(emoji: Record<string, any>) {
-			this.$root.new(await import('../../components/emoji-editor-window.vue').then(m => m.default), { emoji }).$once('done', result => {
-				if (result.updated) {
-					this.$refs.emojis.replaceItem(item => item.id === emoji.id, {
-						...emoji,
-						...result.updated
-					});
-				} else if (result.deleted) {
-					this.$refs.emojis.removeItem(item => item.id === emoji.id);
-				}
-			});
-		},
-
-		async del() {
-			const { canceled } = await this.$root.dialog({
-				type: 'warning',
-				text: this.$t('removeAreYouSure', { x: this.selected.name }),
-				showCancelButton: true
-			});
-			if (canceled) return;
-
-			await this.$root.api('admin/emoji/remove', { id: this.selected.id });
+		edit(emoji) {
+			os.popup(import('./emoji-edit-dialog.vue'), {
+				emoji: emoji
+			}, {
+				done: result => {
+					if (result.updated) {
+						this.$refs.emojis.replaceItem(item => item.id === emoji.id, {
+							...emoji,
+							...result.updated
+						});
+					} else if (result.deleted) {
+						this.$refs.emojis.removeItem(item => item.id === emoji.id);
+					}
+				},
+			}, 'closed');
 		},
 
 		async accept(suggestionId: string) {
-			await this.$root.api('admin/suggestions/emojis/accept', { suggestionId });
+			await os.api('admin/suggestions/emojis/accept', { suggestionId });
 			this.$refs.suggestions.reload();
 		},
 
 		async reject(suggestionId: string) {
-			const { canceled, result: comment } = await this.$root.dialog({
+			const { canceled, result: comment } = await os.dialog({
 				title: this.$t('writeRejectReason'),
 				input: true,
 				autoComplete: true
@@ -252,101 +195,82 @@ export default Vue.extend({
 
 			if (canceled) return;
 
-			await this.$root.api('admin/suggestions/emojis/reject', { suggestionId, comment });
+			await os.api('admin/suggestions/emojis/reject', { suggestionId, comment });
 			this.$refs.suggestions.reload();
 		},
-
-		async openRemoteEmojiMenu(e, emoji) {
-			this.$root.menu({
-				items: [{
-					text: this.$t('import').toString(),
-					icon: faPlus,
-					action: () => this.import(emoji),
-				}],
-				source: e.currentTarget || e.target,
-			});
-		},
-
-		import(emoji) {
-			this.$root.api('admin/emoji/copy', {
+		
+		im(emoji) {
+			os.apiWithDialog('admin/emoji/copy', {
 				emojiId: emoji.id,
-			}).then(() => {
-				this.$root.dialog({
-					type: 'success',
-					iconOnly: true, autoClose: true
-				});
-			}).catch(e => {
-				this.$root.dialog({
-					type: 'error',
-					text: e
-				});
 			});
 		},
 
-		reload() {
-			this.$refs.emojis.reload();
-		}
+		remoteMenu(emoji, ev) {
+			os.modalMenu([{
+				type: 'label',
+				text: ':' + emoji.name + ':',
+			}, {
+				text: this.$t('import'),
+				icon: faPlus,
+				action: () => { this.im(emoji) }
+			}], ev.currentTarget || ev.target);
+		},
+
+		userPage
 	}
 });
 </script>
 
 <style lang="scss" scoped>
 .mk-instance-emojis {
-	> .local, > .remote {
-		> ._content {
-			> .emojis {
+	> ._section {
+		> .local {
+			.emojis {
 				display: grid;
-				grid-template-columns: repeat(auto-fill,minmax(190px,1fr));
+				grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
 				grid-gap: var(--margin);
+		
 				> .emoji {
 					display: flex;
-					padding: 16px;
 					align-items: center;
-					cursor: pointer;
-
-					> .img {
-						width: 48px;
-						height: 48px;
+					padding: 12px;
+					text-align: left;
+					&:hover {
+						color: var(--accent);
 					}
-
+					> .img {
+						width: 42px;
+						height: 42px;
+					}
 					> .body {
-						padding: 8px;
-
+						padding: 0 0 0 8px;
+						white-space: nowrap;
+						overflow: hidden;
 						> .name {
-							display: block;
+							text-overflow: ellipsis;
+							overflow: hidden;
 						}
-
 						> .info {
 							opacity: 0.5;
-
-							> .category {
-								margin-right: 16px;
-							}
-
-							> .aliases {
-								font-style: oblique;
-							}
+							text-overflow: ellipsis;
+							overflow: hidden;
 						}
 					}
 				}
 			}
 		}
-	}
 
-	> .suggestions {
-		> ._content {
-			max-height: 300px;
-			overflow: auto;
+		> .suggestions {
 			> .emojis {
+				display: flex;
+				flex-direction: column;
 				> .emoji {
 					display: flex;
 					align-items: center;
-
 					> .img {
 						width: 50px;
 						height: 50px;
 					}
-
 					> .body {
 						padding: 8px;
 						div {
@@ -372,6 +296,38 @@ export default Vue.extend({
 						> .state {
 							opacity: 0.5;
 						}
+					}
+				}
+			}
+		}
+		> .remote .emojis {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+			grid-gap: var(--margin);
+			> .emoji {
+				display: flex;
+				align-items: center;
+				padding: 12px;
+				text-align: left;
+				&:hover {
+					color: var(--accent);
+				}
+				> .img {
+					width: 32px;
+					height: 32px;
+				}
+				> .body {
+					padding: 0 0 0 8px;
+					white-space: nowrap;
+					overflow: hidden;
+					> .name {
+						text-overflow: ellipsis;
+						overflow: hidden;
+					}
+					> .info {
+						opacity: 0.5;
+						text-overflow: ellipsis;
+						overflow: hidden;
 					}
 				}
 			}

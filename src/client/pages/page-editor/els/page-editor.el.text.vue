@@ -1,19 +1,21 @@
 <template>
-<x-container @remove="() => $emit('remove')" :draggable="true">
-	<template #header><fa :icon="faAlignLeft"/> {{ $t('_pages.blocks.text') }}</template>
+<XContainer @remove="() => $emit('remove')" :draggable="true">
+	<template #header><Fa :icon="faAlignLeft"/> {{ $t('_pages.blocks.text') }}</template>
 
 	<section class="vckmsadr">
-		<textarea v-model="value.text" v-autocomplete="{ model: 'value.text' }"></textarea>
+		<textarea v-model="value.text" ref="text"></textarea>
 	</section>
-</x-container>
+</XContainer>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import XContainer from '../page-editor.container.vue';
+import { Autocomplete } from '@/scripts/autocomplete';
+import * as os from '@/os';
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
 		XContainer
 	},
@@ -31,7 +33,11 @@ export default Vue.extend({
 	},
 
 	created() {
-		if (this.value.text == null) Vue.set(this.value, 'text', '');
+		if (this.value.text == null) this.value.text = '';
+	},
+
+	mounted() {
+		new Autocomplete(this.$refs.text, this, { model: 'value.text' });
 	},
 });
 </script>

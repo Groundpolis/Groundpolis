@@ -1,13 +1,11 @@
 <template>
 <div class="mk-media-list">
-	<template v-for="media in mediaList.filter(media => !previewable(media))">
-		<x-banner :media="media" :key="media.id"/>
-	</template>
+	<XBanner v-for="media in mediaList.filter(media => !previewable(media))" :media="media" :key="media.id"/>
 	<div v-if="mediaList.filter(media => previewable(media)).length > 0" class="gird-container" ref="gridOuter">
 		<div :data-count="mediaList.filter(media => previewable(media)).length" :style="gridInnerStyle">
 			<template v-for="media in mediaList">
-				<x-video :video="media" :key="media.id" v-if="media.type.startsWith('video')"/>
-				<x-image :image="media" :key="media.id" v-else-if="media.type.startsWith('image')" :other="mediaList.filter(m => m.type.startsWith('image'))" :raw="raw"/>
+				<XVideo :video="media" :key="media.id" v-if="media.type.startsWith('video')"/>
+				<XImage :image="media" :key="media.id" v-else-if="media.type.startsWith('image')" :other="mediaList.filter(m => m.type.startsWith('image'))" :raw="raw"/>
 			</template>
 		</div>
 	</div>
@@ -15,12 +13,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import XBanner from './media-banner.vue';
 import XImage from './media-image.vue';
 import XVideo from './media-video.vue';
+import * as os from '@/os';
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
 		XBanner,
 		XImage,
@@ -33,8 +32,6 @@ export default Vue.extend({
 		raw: {
 			default: false
 		},
-		// specify the parent element
-		parentElement: {}
 	},
 	data() {
 		return {
@@ -51,7 +48,7 @@ export default Vue.extend({
 		this.size();
 		window.addEventListener('resize', this.size);
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('resize', this.size);
 	},
 	activated() {
@@ -72,7 +69,7 @@ export default Vue.extend({
 
 				if (this.$refs.gridOuter) {
 					let height = 287;
-					const parent = this.parentElement || this.$parent.$el;
+					const parent = this.$parent.$el;
 
 					if (this.$refs.gridOuter.clientHeight) {
 						height = this.$refs.gridOuter.clientHeight;
@@ -86,7 +83,7 @@ export default Vue.extend({
 				}
 			});
 		}
-	}
+	},
 });
 </script>
 

@@ -1,48 +1,48 @@
 <template>
 <header class="kkwtjztg">
-	<router-link class="name-set" :to="note.user | userPage" v-user-preview="note.user.id">
+	<MkA class="name-set" :to="userPage(note.user)" v-user-preview="note.user.id">
 		<template v-if="$store.state.device.noteNameDisplayMode === 0">
-			<mk-user-name class="name" :user="note.user"/>
-			<span class="username"><mk-acct :user="note.user"/></span>
+			<MkUserName class="name" :user="note.user"/>
+			<span class="username"><MkAcct :user="note.user"/></span>
 		</template>
 		<template v-else>
-			<span v-if="$store.state.device.noteNameDisplayMode !== 2" class="username"><mk-acct :user="note.user"/></span>
-			<mk-user-name v-if="$store.state.device.noteNameDisplayMode !== 3" class="name" :user="note.user"/>
+			<span v-if="$store.state.device.noteNameDisplayMode !== 2" class="username"><MkAcct :user="note.user"/></span>
+			<MkUserName class="name" v-if="$store.state.device.noteNameDisplayMode !== 3" :user="note.user"/>
 		</template>
-	</router-link>
+	</MkA>
 	<span class="is-bot" v-if="note.user.isBot">bot</span>
-	<span class="admin" v-if="note.user.isAdmin"><fa :icon="faBookmark"/></span>
-	<span class="moderator" v-if="!note.user.isAdmin && note.user.isModerator"><fa :icon="farBookmark"/></span>
-	<span class="verified" v-if="note.user.isVerified">
-		<fa-layers>
-			<fa :icon="faCertificate" :style="{ color: 'var(--accent)' }"/>
-			<fa :icon="faCheck" transform="shrink-6" size="xs" :style="{ color: 'var(--panel)' }"/>
-		</fa-layers>
-	</span>
-	<span class="premium" v-if="note.user.isPremium"><fa :icon="faCrown"/></span>
+	<span class="admin" v-if="note.user.isAdmin"><Fa :icon="faBookmark"/></span>
+	<GpVerified class="verified" v-if="note.user.isVerified" />
+	<span class="premium" v-if="note.user.isPremium"><Fa :icon="faCrown"/></span>
 	<div class="info">
-		<span class="mobile" v-if="note.viaMobile"><fa :icon="faMobileAlt"/></span>
-		<router-link v-if="!detail" class="created-at" :to="note | notePage">
-			<mk-time :time="note.createdAt"/>
-		</router-link>
+		<span class="mobile" v-if="note.viaMobile"><Fa :icon="faMobileAlt"/></span>
+		<MkA class="created-at" :to="notePage(note)">
+			<MkTime :time="note.createdAt"/>
+		</MkA>
 		<span class="visibility" v-if="note.visibility !== 'public'">
-			<fa v-if="note.visibility === 'home'" :icon="faHome"/>
-			<fa v-if="note.visibility === 'followers'" :icon="faUnlock"/>
-			<fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
-			<fa v-if="note.visibility === 'users'" :icon="faUsers"/>
+			<Fa v-if="note.visibility === 'home'" :icon="faHome"/>
+			<Fa v-if="note.visibility === 'followers'" :icon="faUnlock"/>
+			<Fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
+			<Fa v-if="note.visibility === 'users'" :icon="faUsers"/>
 		</span>
-		<span class="localOnly" v-if="note.localOnly"><fa :icon="faHeart"/></span>
-		<span class="remoteFollowersOnly" v-if="note.remoteFollowersOnly"><fa :icon="faHeartbeat"/></span>
+		<span class="localOnly" v-if="note.localOnly"><Fa :icon="faHeart"/></span>
+		<span class="remoteFollowersOnly" v-if="note.remoteFollowersOnly"><Fa :icon="faHeartbeat"/></span>
 	</div>
 </header>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faCertificate, faCheck, faUsers, faHeart, faGlobeAmericas, faHeartbeat, faCrown, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
+import { defineComponent } from 'vue';
+import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faUsers, faHeart, faHeartbeat, faCrown } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
+import notePage from '../filters/note';
+import { userPage } from '../filters/user';
+import GpVerified from './verified.vue';
 
-export default Vue.extend({
+export default defineComponent({
+	components: {
+		GpVerified,
+	},
 	props: {
 		note: {
 			type: Object,
@@ -56,8 +56,13 @@ export default Vue.extend({
 
 	data() {
 		return {
-			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faCertificate, faCheck, faUsers, faHeart, faGlobeAmericas, faHeartbeat, faCrown, faProjectDiagram
+			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faUsers, faHeart, faHeartbeat, faCrown
 		};
+	},
+
+	methods: {
+		notePage,
+		userPage
 	}
 });
 </script>

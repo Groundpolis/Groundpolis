@@ -99,7 +99,7 @@ export default define(meta, async (ps, me) => {
 		}
 	});
 
-	const hide = instance.hideServerInformation;
+	const proxyAccount = instance.proxyAccountId ? await Users.pack(instance.proxyAccountId).catch(() => null) : null;
 
 	const response: any = {
 		maintainerName: instance.maintainerName,
@@ -151,7 +151,7 @@ export default define(meta, async (ps, me) => {
 
 		enableServiceWorker: instance.enableServiceWorker,
 
-		hideServerInformation: hide,
+		proxyAccountName: proxyAccount ? proxyAccount.username : null,
 	};
 
 	if (ps.detail) {

@@ -1,29 +1,29 @@
 <template>
-<x-window ref="window" :width="400" :height="450" :no-padding="true" @closed="() => { $emit('closed'); destroyDom(); }" :with-ok-button="true" :ok-button-disabled="false" @ok="ok()">
+<XWindow ref="window" :width="400" :height="450" :no-padding="true" @closed="() => { $emit('closed'); destroyDom(); }" :with-ok-button="true" :ok-button-disabled="false" @ok="ok()">
 	<template #header>:{{ emoji.name }}:</template>
 
 	<div class="yigymqpb _section">
 		<img :src="emoji.url" class="img"/>
-		<mk-input v-model="name"><span>{{ $t('name') }}</span></mk-input>
-		<mk-input v-model="category" :datalist="categories"><span>{{ $t('category') }}</span></mk-input>
-		<mk-input v-model="aliases">
+		<MkInput v-model:value="name"><span>{{ $t('name') }}</span></MkInput>
+		<MkInput v-model:value="category" :datalist="categories"><span>{{ $t('category') }}</span></MkInput>
+		<MkInput v-model:value="aliases">
 			<span>{{ $t('tags') }}</span>
 			<template #desc>{{ $t('setMultipleBySeparatingWithSpace') }}</template>
-		</mk-input>
-		<mk-button @click="del()"><fa :icon="faTrashAlt"/> {{ $t('delete') }}</mk-button>
+		</MkInput>
+		<MkButton @click="del()"><fa :icon="faTrashAlt"/> {{ $t('delete') }}</MkButton>
 	</div>
-</x-window>
+</XWindow>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import XWindow from './window.vue';
 import MkButton from './ui/button.vue';
 import MkInput from './ui/input.vue';
 import { unique } from '../../prelude/array';
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
 		XWindow,
 		MkButton,
@@ -61,7 +61,7 @@ data() {
 		},
 
 		async update() {
-			await this.$root.api('admin/emoji/update', {
+			await os.api('admin/emoji/update', {
 				id: this.emoji.id,
 				name: this.name,
 				category: this.category,
@@ -78,13 +78,13 @@ data() {
 		},
 
 		async del() {
-			const { canceled } = await this.$root.dialog({
+			const { canceled } = await os.dialog({
 				type: 'warning',
 				text: this.$t('removeAreYouSure', { x: this.emoji.name }),
 				showCancelButton: true
 			});
 			if (canceled) return;
-			this.$root.api('admin/emoji/remove', {
+			os.api('admin/emoji/remove', {
 				id: this.emoji.id
 			}).then(() => {
 				this.$emit('done', {
