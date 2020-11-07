@@ -271,11 +271,6 @@ export default defineComponent({
 			}));
 			os.modalMenu([...items, null, {
 				type: 'link',
-				text: this.$t('_labs.title'),
-				to: '/labs',
-				icon: faFlask,
-			}, {
-				type: 'link',
 				text: this.$t('help'),
 				to: '/docs',
 				icon: faQuestionCircle,
