@@ -6,11 +6,6 @@
 		</div>
 		<div class="_card _vMargin">
 			<div class="_content">
-				<MkSwitch v-model="newMobileView">
-					{{ $t('_labs.newMobileView') }}
-					<template #desc>{{ $t('_labs.newMobileViewDescription') }}</template>
-				</MkSwitch>
-
 				<MkSwitch v-model="injectUnlistedNoteInLTL">
 					{{ $t('showUnlistedNotesInLTL') }}
 					<template #desc>{{ $t('showUnlistedNotesInLTLDesc') }}</template>
@@ -51,10 +46,6 @@ export default defineComponent({
 	},
 
 	computed: {
-		newMobileView: {
-			get() { return !this.$store.state.device.useLegacyMobileView; },
-			set(value) { this.$store.commit('device/set', { key: 'useLegacyMobileView', value: !value }); }
-		},
 		injectUnlistedNoteInLTL: {
 			get() { return this.$store.state.settings.injectUnlistedNoteInLTL; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'injectUnlistedNoteInLTL', value }); }
