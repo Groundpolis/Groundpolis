@@ -101,6 +101,7 @@ export const defaultDeviceSettings = {
 	disablePagesScript: false,
 	enableInfiniteScroll: true,
 	useBlurEffectForModal: true,
+	useFullReactionPicker: false,
 	sidebarDisplay: 'full', // full, icon, hide
 	instanceTicker: 'remote', // none, remote, always
 	roomGraphicsQuality: 'medium',
@@ -250,6 +251,16 @@ export const store = createStore({
 
 			state: {
 				meta: null
+			},
+
+			getters: {
+				emojiCategories: state => {
+					const categories = new Set();
+					for (const emoji of state.meta.emojis) {
+						categories.add(emoji.category);
+					}
+					return Array.from(categories);
+				},
 			},
 
 			mutations: {
