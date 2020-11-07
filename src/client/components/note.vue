@@ -41,7 +41,11 @@
 		<MkAvatar class="avatar" :user="appearNote.user"/>
 		<div class="main">
 			<XNoteHeader class="header" :note="appearNote" :mini="true" :detail="detail"/>
-			<div v-if="$store.state.device.userHostDisplayMode !== 0 && instance" class="ticker" :class="instance.softwareName">
+			<div v-if="showTicker && !appearNote.user.host" class="instance-ticker misskey">
+				<img src="/favicon.ico" alt="favicon" class="favicon"/>
+				<span v-text="meta.name && meta.name !== host ? `${meta.name} (${host})` : host"/>
+			</div>
+			<div v-else-if="showTicker && instance" class="instance-ticker" :class="instance.softwareName">
 				<img :src="instance.iconUrl" alt="favicon" class="favicon"/>
 				<span v-text="instance.name && instance.name !== instance.host ? `${instance.name} (${instance.host})` : instance.host"/>
 			</div>
@@ -144,7 +148,7 @@ import XCwButton from './cw-button.vue';
 import XPoll from './poll.vue';
 import { pleaseLogin } from '@/scripts/please-login';
 import { focusPrev, focusNext } from '@/scripts/focus';
-import { url } from '@/config';
+import { url, host } from '@/config';
 import copyToClipboard from '@/scripts/copy-to-clipboard';
 import { checkWordMute } from '@/scripts/check-word-mute';
 import { userPage } from '@/filters/user';
@@ -221,6 +225,7 @@ export default defineComponent({
 			renoteState: null,
 			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisV, faHome, faLock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock, faAlignLeft,
 			isPlainMode: false,
+			host,
 		};
 	},
 
@@ -314,10 +319,13 @@ export default defineComponent({
 		},
 
 		showTicker() {
-			if (this.$store.state.device.instanceTicker === 'always') return true;
-			if (this.$store.state.device.instanceTicker === 'remote' && this.appearNote.user.instance) return true;
-			return false;
-		}
+			const mode = this.$store.state.device.instanceTicker;
+			return mode === 'always' || (mode === 'remote' && this.appearNote.user.host);
+		},
+
+		meta() {
+			return this.$store.state.instance.meta;
+		},
 	},
 
 	async created() {
@@ -376,7 +384,8 @@ export default defineComponent({
 			this.connection.on('_connected_', this.onStreamConnected);
 		}
 
-		this.instance = await os.getInstance(this.appearNote.user.host);
+		if (this.showTicker)
+			this.instance = await os.getInstance(this.appearNote.user.host);
 	},
 
 	beforeUnmount() {
@@ -1174,7 +1183,7 @@ export default defineComponent({
 			flex: 1;
 			min-width: 0;
 
-			> .ticker {
+			> .instance-ticker {
 				display: flex;
 				@include ticker(var(--bg), var(--fg));
 				width: 100%;

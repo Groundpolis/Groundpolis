@@ -18,6 +18,9 @@
 import { defineComponent } from 'vue';
 import MkUserInfo from '@/components/user-info.vue';
 import MkPagination from '@/components/ui/pagination.vue';
+import { userPage, acct } from '../../filters/user';
+import parseAcct from '../../../misc/acct/parse';
+import * as os from '@/os';
 
 export default defineComponent({
 	components: {
@@ -60,15 +63,13 @@ export default defineComponent({
 	},
 
 	async mounted() {
-		const parsed = parseAcct(this.$route.params.user);
 		const i = this.$store.state.i;
-		if (i.username === parsed.username && i.host === parsed.host) {
+		if (i.username === this.user.username && i.host === this.user.host) {
 			// 自分自身であれば隠さない
 			this.hideFF = false;
 			return;
 		}
-		const u = await os.api('users/show', parsed);
-		this.hideFF = u.hideFF;
+		this.hideFF = this.user.hideFF;
 	}, 
 	methods: {
 		userPage,

@@ -125,10 +125,17 @@ export const pages: PageDefinition[] = [
 	},
 	{
 		name: 'mute-block',
-		icon: faCommentSlash,
+		icon: faBan,
 		title: t('muteAndBlock'),
 		type: 'other',
 		component: () => defineAsyncComponent(() => import('./mute-block.vue')),
+	},
+	{
+		name: 'word-mute',
+		icon: faCommentSlash,
+		title: t('wordMute'),
+		type: 'other',
+		component: () => defineAsyncComponent(() => import('./word-mute.vue')),
 	},
 	{
 		name: 'api',

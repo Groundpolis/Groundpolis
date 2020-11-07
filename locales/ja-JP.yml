@@ -790,6 +790,11 @@ _reversi:
   loopedMap: "ループマップ"
   canPutEverywhere: "どこでも置けるモード"
 
+_instanceTicker:
+  none: "表示しない"
+  remote: "リモートユーザーに表示"
+  always: "常に表示"
+
 _serverDisconnectedBehavior:
   reload: "自動でリロード"
   dialog: "ダイアログで警告"

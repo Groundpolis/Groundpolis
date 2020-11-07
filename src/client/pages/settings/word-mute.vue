@@ -1,6 +1,9 @@
 <template>
 <div class="_section">
 	<div class="_card">
+		<div class="_content">
+			<p v-text="$t('_wordMute.description')"/>
+		</div>
 		<MkTab v-model:value="tab" :items="[{ label: $t('_wordMute.soft'), value: 'soft' }, { label: $t('_wordMute.hard'), value: 'hard' }]"/>
 		<div class="_content">
 			<div v-show="tab === 'soft'">

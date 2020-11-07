@@ -1,7 +1,6 @@
 <template>
 <div class="_section">
 	<section class="_card _vMargin">
-		<div class="_title">{{ $t('appearance') }}</div>
 		<div class="_content">
 			<MkSwitch v-model:value="disableAnimatedMfm">{{ $t('disableAnimatedMfm') }}</MkSwitch>
 			<MkSwitch v-model:value="reduceAnimation">{{ $t('reduceUiAnimation') }}</MkSwitch>
@@ -10,6 +9,30 @@
 				{{ $t('useOsNativeEmojis') }}
 				<template #desc><Mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
 			</MkSwitch>
+			<MkSwitch v-model:value="useSticker">
+				{{ $t('useSticker') }}
+				<template #desc>{{$t('useStickerDesc')}}</template>
+			</MkSwitch>
+			<MkSwitch v-model:value="makeCustomEmojisBigger">
+				{{ $t('makeCustomEmojisBigger') }}
+				<template #desc>{{$t('makeCustomEmojisBiggerDesc')}}</template>
+			</MkSwitch>
+			<MkSwitch v-model:value="showFullAcct">{{ $t('showFullAcct') }}</MkSwitch>
+			<MkSwitch v-model:value="collapseLongNote">{{ $t('collapseLongNote') }}</MkSwitch>
+			<MkSelect v-model:value="noteNameDisplayMode">
+				<template #label>{{ $t('noteNameDisplayMode') }}</template>
+				<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $t(x) }}</option>
+			</MkSelect>
+		</div>
+		<div class="_content">
+			<MkSelect v-model:value="iconShape">
+				<template #label>{{ $t('iconShape') }}</template>
+				<option v-for="x in [ 'circle', 'square', 'rounded', 'droplet' ]" :value="x" :key="x">
+					{{ $t(`_iconShape.${x}`) }}
+				</option>
+			</MkSelect>
+			<div v-text="$t('preview')"/>
+			<MkAvatar disable-link disable-preview :user="$store.state.i" class="avatar"/>
 		</div>
 		<div class="_content">
 			<div>{{ $t('fontSize') }}</div>
@@ -32,6 +55,7 @@
 import { defineComponent } from 'vue';
 import MkButton from '@/components/ui/button.vue';
 import MkSwitch from '@/components/ui/switch.vue';
+import MkSelect from '@/components/ui/select.vue';
 import MkRadio from '@/components/ui/radio.vue';
 
 export default defineComponent({
@@ -39,6 +63,7 @@ export default defineComponent({
 		MkButton,
 		MkSwitch,
 		MkRadio,
+		MkSelect,
 	},
 
 	data() {
@@ -82,6 +107,36 @@ export default defineComponent({
 			get() { return this.$store.state.settings.renoteButtonMode; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'renoteButtonMode', value }); }
 		},
+		
+		makeCustomEmojisBigger: {
+			get() { return this.$store.state.device.makeCustomEmojisBigger; },
+			set(value) { this.$store.commit('device/set', { key: 'makeCustomEmojisBigger', value: value }); }
+		},
+
+		useSticker: {
+			get() { return this.$store.state.device.useSticker; },
+			set(value) { this.$store.commit('device/set', { key: 'useSticker', value: value }); }
+		},
+
+		collapseLongNote: {
+			get() { return this.$store.state.device.collapseLongNote },
+			set(value) { this.$store.commit('device/set', { key: 'collapseLongNote', value }); }
+		},
+
+		noteNameDisplayMode: {
+			get() { return this.$store.state.device.noteNameDisplayMode },
+			set(value) { this.$store.commit('device/set', { key: 'noteNameDisplayMode', value }) }
+		},
+
+		showFullAcct: {
+			get() { return this.$store.state.settings.showFullAcct },
+			set(value) { this.$store.dispatch('settings/set', { key: 'showFullAcct', value }) }
+		},
+
+		iconShape: {
+			get() { return this.$store.state.device.iconShape; },
+			set(value) { this.$store.commit('device/set', { key: 'iconShape', value }); }
+		},
 	},
 
 	watch: {
@@ -96,3 +151,12 @@ export default defineComponent({
 	},
 });
 </script>
+
+<style lang="scss" scoped>
+	.avatar {
+		// for NEKOMIMI
+		margin-top: 32px;
+		width: 64px;
+		height: 64px;
+	}
+</style>

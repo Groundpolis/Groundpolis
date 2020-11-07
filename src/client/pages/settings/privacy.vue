@@ -2,8 +2,11 @@
 <div class="_section">
 	<div class="_card">
 		<div class="_content">
-			<MkSwitch v-model:value="isLocked" @update:value="save()">{{ $t('makeFollowManuallyApprove') }}</MkSwitch>
-			<MkSwitch v-model:value="autoAcceptFollowed" v-if="isLocked" @update:value="save()">{{ $t('autoAcceptFollowed') }}</MkSwitch>
+			<MkSwitch v-model:value="isLocked" :disabled="carefulBot" @update:value="save()">{{ $t('makeFollowManuallyApprove') }}</MkSwitch>
+			<MkSwitch v-model:value="carefulBot" :disabled="isLocked" @update:value="save()">{{ $t('makeBotFollowManuallyApprove') }}</MkSwitch>
+			<MkSwitch v-model:value="autoAcceptFollowed" :disabled="!isLocked && !carefulBot" @update:value="save()">{{ $t('autoAcceptFollowed') }}</MkSwitch>
+			<MkSwitch v-model:value="hideFF" @update:value="save()">{{ $t('hideFF') }}</MkSwitch>
+			<MkSwitch v-model:value="noindex" @update:value="save()">{{ $t('noindex') }}</MkSwitch>
 		</div>
 		<div class="_content">
 			<MkSwitch v-model:value="rememberNoteVisibility" @update:value="save()">{{ $t('rememberNoteVisibility') }}</MkSwitch>
@@ -35,7 +38,10 @@ export default defineComponent({
 	data() {
 		return {
 			isLocked: false,
+			carefulBot: false,
 			autoAcceptFollowed: false,
+			hideFF: false,
+			noindex: false,
 		}
 	},
 
@@ -58,14 +64,20 @@ export default defineComponent({
 
 	created() {
 		this.isLocked = this.$store.state.i.isLocked;
+		this.hideFF = this.$store.state.i.hideFF;
+		this.carefulBot = this.$store.state.i.carefulBot;
 		this.autoAcceptFollowed = this.$store.state.i.autoAcceptFollowed;
+		this.noindex = this.$store.state.i.noindex;
 	},
 
 	methods: {
 		save() {
 			os.api('i/update', {
 				isLocked: !!this.isLocked,
+				hideFF: !!this.hideFF,
+				carefulBot: !!this.carefulBot,
 				autoAcceptFollowed: !!this.autoAcceptFollowed,
+				noindex: !!this.noindex,
 			});
 		}
 	}

@@ -24,10 +24,12 @@ export default defineComponent({
 			default: null
 		},
 		disableLink: {
+			type: Boolean,
 			required: false,
 			default: false
 		},
 		disablePreview: {
+			type: Boolean,
 			required: false,
 			default: false
 		}
@@ -69,6 +71,7 @@ export default defineComponent({
 	vertical-align: bottom;
 	flex-shrink: 0;
 	line-height: 16px;
+	transition: border-radius 0.2s ease;
 
 	&.cat {
 		&:before, &:after {
@@ -103,6 +106,7 @@ export default defineComponent({
 		object-fit: cover;
 		width: 100%;
 		height: 100%;
+		transition: border-radius 0.8s ease-out;
 	}
 }
 
