@@ -20,7 +20,6 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				title: instanceName || 'Misskey',
 				icon: null
 			},
 		}

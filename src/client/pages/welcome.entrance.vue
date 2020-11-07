@@ -9,9 +9,13 @@
 			</div>
 		</div>
 	</div>
-	<div class="_section">
+	<div class="_section" v-if="endpoint">
+		<div class="_content header">
+			<fa :icon="notesIcon"/>
+			<span style="margin-left: 0.5em" v-text="notesHeader" />
+		</div>
 		<div class="_content">
-			<XNotes :pagination="featuredPagination"/>
+			<XNotes :pagination="pagination"/>
 		</div>
 	</div>
 </div>
@@ -26,6 +30,8 @@ import MkButton from '@/components/ui/button.vue';
 import XNotes from '@/components/notes.vue';
 import { host } from '@/config';
 import * as os from '@/os';
+import { faFireAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { faComments } from '@fortawesome/free-regular-svg-icons';
 
 export default defineComponent({
 	components: {
@@ -35,11 +41,6 @@ export default defineComponent({
 
 	data() {
 		return {
-			featuredPagination: {
-				endpoint: 'notes/featured',
-				limit: 10,
-				noPaging: true,
-			},
 			host: toUnicode(host),
 		};
 	},
@@ -48,6 +49,30 @@ export default defineComponent({
 		meta() {
 			return this.$store.state.instance.meta;
 		},
+		endpoint() {
+			return  !this.meta.disableFeatured ? 'notes/featured' :
+							!this.meta.disableLocalTimeline ? 'notes/local-timeline' :
+							!this.meta.disableGlobalTimeline ? 'notes/global-timeline' : null;
+		},
+		notesIcon() {
+			switch (this.endpoint) {
+				case 'notes/featured': return faFireAlt;
+				case 'notes/local-timeline': return faComments;
+				case 'notes/global-timeline': return faGlobe;
+				default: return null;
+			}
+		},
+		notesHeader() {
+			return this.$t(this.endpoint === 'notes/featured' ? 'welcomeFeatured' : 'welcomeTimeline');
+		},
+		pagination() {
+			if (this.endpoint === null) return null;
+			return {
+				endpoint: this.endpoint,
+				limit: 10,
+				noPaging: true,
+			};
+		}
 	},
 
 	created() {
@@ -83,6 +108,11 @@ export default defineComponent({
 					padding: 16px;
 				}
 			}
+		}
+
+		> .header {
+			font-size: 20px;
+			margin-bottom: 16px;
 		}
 	}
 }
