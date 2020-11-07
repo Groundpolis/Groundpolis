@@ -13,12 +13,7 @@
 		</template>
 	</MkA>
 	<span class="admin" v-if="note.user.isAdmin"><Fa :icon="faBookmark"/></span>
-	<span class="verified" v-if="note.user.isVerified">
-		<FaLayers>
-			<Fa :icon="faCertificate" :style="{ color: 'var(--accent)' }"/>
-			<Fa :icon="faCheck" transform="shrink-6" size="xs" :style="{ color: 'var(--panel)' }"/>
-		</FaLayers>
-	</span>
+	<GpVerified class="verified" v-if="note.user.isVerified" />
 	<span class="premium" v-if="note.user.isPremium"><Fa :icon="faCrown"/></span>
 	<div class="info">
 		<span class="mobile" v-if="note.viaMobile"><Fa :icon="faMobileAlt"/></span>
@@ -43,9 +38,12 @@ import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faCertificate, f
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import notePage from '../filters/note';
 import { userPage } from '../filters/user';
-import * as os from '@/os';
+import GpVerified from './verified.vue';
 
 export default defineComponent({
+	components: {
+		GpVerified,
+	},
 	props: {
 		note: {
 			type: Object,
