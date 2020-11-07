@@ -9,32 +9,18 @@
 			</div>
 		</div>
 	</div>
-	<div class="_section">
-		<MkSwitch v-model:value="debug" @update:value="changeDebug">
-			DEBUG MODE
-		</MkSwitch>
-		<div v-if="debug">
-			<MkA to="/settings/regedit">RegEdit</MkA>
-			<MkButton @click="taskmanager">Task Manager</MkButton>
-		</div>
-	</div>
 </div>
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-import MkSelect from '@/components/ui/select.vue';
 import MkSwitch from '@/components/ui/switch.vue';
-import MkButton from '@/components/ui/button.vue';
 import * as os from '@/os';
-import { debug } from '@/config';
 
 export default defineComponent({
 	components: {
-		MkSelect,
 		MkSwitch,
-		MkButton,
 	},
 
 	emits: ['info'],
@@ -44,8 +30,7 @@ export default defineComponent({
 			INFO: {
 				title: this.$t('other'),
 				icon: faEllipsisH
-			},
-			debug
+			}
 		}
 	},
 
@@ -54,22 +39,11 @@ export default defineComponent({
 	},
 
 	methods: {
-		changeDebug(v) {
-			console.log(v);
-			localStorage.setItem('debug', v.toString());
-			location.reload();
-		},
-
 		onChangeInjectFeaturedNote(v) {
 			os.api('i/update', {
 				injectFeaturedNote: v
 			});
 		},
-
-		taskmanager() {
-			os.popup(import('@/components/taskmanager.vue'), {
-			}, {}, 'closed');
-		}
 	}
 });
 </script>
