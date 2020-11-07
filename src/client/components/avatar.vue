@@ -1,9 +1,9 @@
 <template>
 <span class="eiwwqkts" :class="[$store.state.device.iconShape, { cat } ]" :title="acct(user)" v-if="disableLink" v-user-preview="disablePreview ? undefined : user.id" @click="onClick">
-	<img class="inner" :src="url"/>
+	<img class="inner" :class="$store.state.device.iconShape" :src="url"/>
 </span>
 <MkA class="eiwwqkts" :class="[$store.state.device.iconShape, { cat } ]" :to="userPage(user)" :title="acct(user)" :target="target" v-else v-user-preview="disablePreview ? undefined : user.id">
-	<img class="inner" :src="url"/>
+	<img class="inner" :class="$store.state.device.iconShape" :src="url"/>
 </MkA>
 </template>
 
@@ -69,7 +69,6 @@ export default defineComponent({
 	vertical-align: bottom;
 	flex-shrink: 0;
 	line-height: 16px;
-	overflow: hidden;
 
 	&.cat {
 		&:before, &:after {
