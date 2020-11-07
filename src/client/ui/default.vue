@@ -350,8 +350,8 @@ export default defineComponent({
 		display: block;
 		position: fixed;
 		z-index: 1000;
-		bottom: 64px;
 		right: 32px;
+		bottom: 32px;
 		width: 64px;
 		height: 64px;
 		border-radius: 100%;
@@ -359,6 +359,10 @@ export default defineComponent({
 		font-size: 22px;
 		background: var(--accent);
 		color: white;
+
+		&.navHidden {
+			bottom: 64px;
+		}
 	}
 
 	> .buttons {
