@@ -1,6 +1,7 @@
 <template>
 <div class="_section">
 	<section class="_card _vMargin">
+		<div class="_title">{{$t('behavior')}}</div>
 		<div class="_content">
 			<div>{{ $t('defaultNavigationBehaviour') }}</div>
 			<MkSwitch v-model:value="defaultSideView">{{ $t('openInSideView') }}</MkSwitch>
@@ -29,6 +30,16 @@
 
 				<option v-for="x in langs" :value="x[0]" :key="x[0]">{{ x[1] }}</option>
 			</MkSelect>
+		</div>
+		<div class="_content">
+			<i18n-t keypath="renoteButtonMode" tag="div">
+				<template #renote>
+					<Fa :icon="faRetweet" />
+				</template>
+			</i18n-t>
+			<mk-select v-model:value="renoteButtonMode">
+				<option :value="v" v-for="v in [ 'choose', 'renote', 'quote', 'renoteQuote' ]" :key="v">{{ $t(`_renoteButtonMode.${v}`) }}</option>
+			</mk-select>
 		</div>
 	</section>
 
@@ -82,7 +93,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faImage, faCog, faColumns, faCogs } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faCog, faColumns, faCogs, faRetweet } from '@fortawesome/free-solid-svg-icons';
 import MkButton from '@/components/ui/button.vue';
 import MkSwitch from '@/components/ui/switch.vue';
 import MkSelect from '@/components/ui/select.vue';
@@ -112,7 +123,7 @@ export default defineComponent({
 			langs,
 			lang: localStorage.getItem('lang'),
 			fontSize: localStorage.getItem('fontSize'),
-			faImage, faCog, faColumns
+			faImage, faCog, faColumns, faRetweet
 		}
 	},
 
@@ -190,6 +201,11 @@ export default defineComponent({
 		deckColumnAlign: {
 			get() { return this.$store.state.device.deckColumnAlign; },
 			set(value) { this.$store.commit('device/set', { key: 'deckColumnAlign', value }); }
+		},
+		
+		renoteButtonMode: {
+			get() { return this.$store.state.settings.renoteButtonMode; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'renoteButtonMode', value }); }
 		},
 	},
 

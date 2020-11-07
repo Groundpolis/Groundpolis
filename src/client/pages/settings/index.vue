@@ -17,6 +17,7 @@
 			<MkA class="item" :class="{ active: page === 'sidebar' }" replace to="/settings/sidebar"><Fa :icon="faListUl" fixed-width class="icon"/>{{ $t('sidebar') }}</MkA>
 			<MkA class="item" :class="{ active: page === 'sounds' }" replace to="/settings/sounds"><Fa :icon="faMusic" fixed-width class="icon"/>{{ $t('sounds') }}</MkA>
 			<MkA class="item" :class="{ active: page === 'plugins' }" replace to="/settings/plugins"><Fa :icon="faPlug" fixed-width class="icon"/>{{ $t('plugins') }}</MkA>
+			<MkA class="item" :class="{ active: page === 'gacha' }" replace to="/settings/gacha"><Fa :icon="faFish" fixed-width class="icon"/>{{ $t('gacha') }}</MkA>
 		</div>
 		<div class="menu">
 			<div class="label">{{ $t('otherSettings') }}</div>
@@ -24,8 +25,8 @@
 			<MkA class="item" :class="{ active: page === 'mute-block' }" replace to="/settings/mute-block"><Fa :icon="faBan" fixed-width class="icon"/>{{ $t('muteAndBlock') }}</MkA>
 			<MkA class="item" :class="{ active: page === 'word-mute' }" replace to="/settings/word-mute"><Fa :icon="faCommentSlash" fixed-width class="icon"/>{{ $t('wordMute') }}</MkA>
 			<MkA class="item" :class="{ active: page === 'api' }" replace to="/settings/api"><Fa :icon="faKey" fixed-width class="icon"/>API</MkA>
-			<MkA class="item" :class="{ active: page === 'other' }" replace to="/settings/other"><Fa :icon="faEllipsisH" fixed-width class="icon"/>{{ $t('other') }}</MkA>
 			<MkA class="item" :class="{ active: page === 'labs' }" replace to="/settings/labs"><Fa :icon="faFlask" fixed-width class="icon"/>{{ $t('_labs.title') }}</MkA>
+			<MkA class="item" :class="{ active: page === 'other' }" replace to="/settings/other"><Fa :icon="faEllipsisH" fixed-width class="icon"/>{{ $t('other') }}</MkA>
 		</div>
 		<div class="menu">
 			<button class="_button item" @click="logout">{{ $t('logout') }}</button>
@@ -39,8 +40,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineAsyncComponent, defineComponent, nextTick, onActivated, onMounted, ref } from 'vue';
-import { faCog, faPalette, faPlug, faUser, faListUl, faLock, faCommentSlash, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask } from '@fortawesome/free-solid-svg-icons';
+import { computed, defineAsyncComponent, defineComponent, onMounted, ref } from 'vue';
+import { faCog, faPalette, faPlug, faUser, faListUl, faLock, faCommentSlash, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell } from '@fortawesome/free-regular-svg-icons';
 import * as os from '@/os';
 import { i18n } from '@/i18n';
@@ -84,6 +85,7 @@ export default defineComponent({
 				case 'import-export': return defineAsyncComponent(() => import('./import-export.vue'));
 				case 'regedit': return defineAsyncComponent(() => import('./regedit.vue'));
 				case 'labs': return defineAsyncComponent(() => import('./labs.vue'));
+				case 'gacha': return defineAsyncComponent(() => import('./gacha.vue'));
 				default: return null;
 			}
 		});
@@ -112,7 +114,7 @@ export default defineComponent({
 			component,
 			logout: () => os.signout(),
 			logoutAll,
-			faPalette, faPlug, faUser, faListUl, faLock, faLaugh, faCommentSlash, faMusic, faBell, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask
+			faPalette, faPlug, faUser, faListUl, faLock, faLaugh, faCommentSlash, faMusic, faBell, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish
 		};
 	},
 });

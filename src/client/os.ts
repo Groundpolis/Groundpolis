@@ -444,6 +444,20 @@ export function signoutAll() {
 	location.href = '/';
 }
 
+export function reactionPicker(opts: Record<string, unknown>) { 
+	return new Promise<{ reaction: string, dislike: boolean }>((res, rej) => {
+		if (store.state.device.useFullReactionPicker) {
+			popup(import('@/components/emoji-picker.vue'), opts, {
+				done: reaction => res({ reaction, dislike: false }),
+			}, 'closed');
+		} else {
+			popup(import('@/components/reaction-picker.vue'), opts, {
+				done: res,
+			}, 'closed');
+		}
+	});
+}
+
 /*
 export function checkExistence(fileData: ArrayBuffer): Promise<any> {
 	return new Promise((resolve, reject) => {
