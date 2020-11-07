@@ -19,8 +19,6 @@ import { defineComponent } from 'vue';
 import MkUserInfo from '@/components/user-info.vue';
 import MkPagination from '@/components/ui/pagination.vue';
 import { userPage, acct } from '../../filters/user';
-import parseAcct from '../../../misc/acct/parse';
-import * as os from '@/os';
 
 export default defineComponent({
 	components: {
