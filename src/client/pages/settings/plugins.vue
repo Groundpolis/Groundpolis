@@ -1,20 +1,18 @@
 <template>
 <div class="_section">
-	<section class="_card">
-		<div class="_title">{{ $t('plugins') }}</div>
+	<section class="_card _vMargin">
+		<div class="_title">{{ $t('install') }}</div>
 		<div class="_content">
-			<details>
-				<summary><Fa :icon="faDownload"/> {{ $t('install') }}</summary>
-				<MkInfo warn>{{ $t('pluginInstallWarn') }}</MkInfo>
-				<MkTextarea v-model:value="script" tall>
-					<span>{{ $t('script') }}</span>
-				</MkTextarea>
-				<MkButton @click="install()" primary><Fa :icon="faSave"/> {{ $t('install') }}</MkButton>
-			</details>
+			<MkInfo warn>{{ $t('pluginInstallWarn') }}</MkInfo>
+			<MkTextarea v-model:value="script" tall>
+				<span>{{ $t('script') }}</span>
+			</MkTextarea>
+			<MkButton @click="install()" primary><Fa :icon="faSave"/> {{ $t('install') }}</MkButton>
 		</div>
+	</section>
+	<section v-if="$store.state.deviceUser.plugins && $store.state.deviceUser.plugins.length > 0" class="_card _vMargin">
+		<div class="_title">{{ $t('manage') }}</div>
 		<div class="_content">
-			<details>
-				<summary><Fa :icon="faFolderOpen"/> {{ $t('manage') }}</summary>
 				<MkSelect v-model:value="selectedPluginId">
 					<option v-for="x in $store.state.deviceUser.plugins" :value="x.id" :key="x.id">{{ x.name }}</option>
 				</MkSelect>
@@ -39,7 +37,6 @@
 						<MkButton @click="uninstall()" inline><Fa :icon="faTrashAlt"/> {{ $t('uninstall') }}</MkButton>
 					</div>
 				</template>
-			</details>
 		</div>
 	</section>
 </div>

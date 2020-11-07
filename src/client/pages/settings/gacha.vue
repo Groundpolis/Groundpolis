@@ -1,7 +1,6 @@
 <template>
 <div class="_section">
 	<section class="_card">
-		<div class="_title">{{ $t('gachaSettings') }}</div>
 		<div class="_content">
 			<MkTextarea v-model:value="faces">{{ $t('gachaFaces') }}<template #desc>{{ $t('gachaSettingDescription') }}</template></MkTextarea>
 		</div>

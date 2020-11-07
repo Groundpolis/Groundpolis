@@ -1,7 +1,6 @@
 <template>
 <div class="_section">
 	<div class="_card">
-		<div class="_title">{{ $t('sounds') }}</div>
 		<div class="_content">
 			<MkRange v-model:value="sfxVolume" :min="0" :max="1" :step="0.1">
 				<Fa slot="icon" :icon="volumeIcon"/>

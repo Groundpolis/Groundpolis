@@ -1,7 +1,6 @@
 <template>
 <div class="_section">
 	<section class="_card _vMargin">
-		<div class="_title">{{$t('behavior')}}</div>
 		<div class="_content">
 			<div>{{ $t('defaultNavigationBehaviour') }}</div>
 			<MkSwitch v-model:value="defaultSideView">{{ $t('openInSideView') }}</MkSwitch>
