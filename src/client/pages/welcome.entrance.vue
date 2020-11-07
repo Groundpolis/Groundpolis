@@ -4,7 +4,13 @@
 		<div class="_content _panel about" v-if="meta">
 			<div class="body">
 				<div class="desc" v-html="meta.description || $t('introMisskey')"></div>
-				<MkButton @click="signup()" style="display: inline-block; margin-right: 16px;" primary>{{ $t('signup') }}</MkButton>
+
+				<div v-if="meta.disableRegistration && meta.disableInvitation" class="signup-disabled">
+					<h1><fa :icon="faExclamationTriangle" /> {{ $t('signupDisabled') }}</h1>
+					<p v-if="meta.disableInvitationReason" v-text="meta.disableInvitationReason"/>
+				</div>
+
+				<MkButton v-if="!(meta.disableRegistration && meta.disableInvitation)" @click="signup()" style="display: inline-block; margin-right: 16px;" primary>{{ $t('signup') }}</MkButton>
 				<MkButton @click="signin()" style="display: inline-block;">{{ $t('login') }}</MkButton>
 			</div>
 		</div>
@@ -30,7 +36,7 @@ import MkButton from '@/components/ui/button.vue';
 import XNotes from '@/components/notes.vue';
 import { host } from '@/config';
 import * as os from '@/os';
-import { faFireAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { faFireAlt, faGlobe, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { faComments } from '@fortawesome/free-regular-svg-icons';
 
 export default defineComponent({
@@ -42,6 +48,7 @@ export default defineComponent({
 	data() {
 		return {
 			host: toUnicode(host),
+			faExclamationTriangle,
 		};
 	},
 
@@ -106,6 +113,20 @@ export default defineComponent({
 
 				@media (max-width: 500px) {
 					padding: 16px;
+				}
+
+				> .signup-disabled {
+					color: var(--infoWarnFg);
+					background-color: var(--infoWarnBg);
+					padding: 8px;
+					margin: 8px 0;
+					h1 {
+						font-size: 1em;
+						margin: 0;
+					}
+					p {
+						margin: 8px 0 0 16px;
+					}
 				}
 			}
 		}
