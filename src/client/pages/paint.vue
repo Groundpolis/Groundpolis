@@ -65,8 +65,9 @@
 	<section class="_section _vMargin">
 		<div class="_content">
 			<div>
-				<MkSwitch v-model="usePressure" style="display: inline-flex">{{ $t('usePressure') }}</MkSwitch>
-				<a class="_link" @click="showUsePressureHint" style="margin-left: 8px"><fa :icon="farQuestionCircle"/></a>
+				<MkSwitch v-model="usePressure" style="display: inline-flex">{{ $t('usePressure') }}
+					<template #desc>{{ $t('usePressureDescription') }}</template>
+				</MkSwitch>
 			</div>
 			<div>
 				<MkRange v-model:value="penWidth" :min="1" :max="256" :step="1" style="display: inline-block">
@@ -690,12 +691,6 @@ export default defineComponent({
 		onTouchEnd(ev: TouchEvent) {
 			const { x, y } = this.prevPointerPos;
 			this.onPointerUp(x, y, this.prevPressure);
-		},
-		showUsePressureHint() {
-			os.dialog({
-				text: this.$t('usePressureDescription'),
-				type: 'info'
-			});
 		},
 		beforeunload(e: BeforeUnloadEvent) {
 			if (this.changed) {
