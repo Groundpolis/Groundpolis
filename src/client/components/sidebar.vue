@@ -291,7 +291,7 @@ export default defineComponent({
 			os.popup(import('./signin-dialog.vue'), {}, {
 				done: res => {
 					this.$store.dispatch('addAcount', res);
-					os.success();
+					this.switchAccountWithToken(res.i);
 				},
 			}, 'closed');
 		},
