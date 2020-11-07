@@ -6,7 +6,7 @@
 	"contributors": [
 		"syuilo <syuilotan@yahoo.co.jp>"
 	],
-	"codename": "reunion",
+	"codename": "sonic",
 	"main": "./index.js",
 	"repository": {
 		"type": "git",
