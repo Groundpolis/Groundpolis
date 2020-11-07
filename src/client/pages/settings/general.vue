@@ -1,7 +1,6 @@
 <template>
 <div class="_section">
 	<section class="_card _vMargin">
-		<div class="_title"><Fa :icon="faCog"/> {{ $t('general') }}</div>
 		<div class="_content">
 			<div>{{ $t('defaultNavigationBehaviour') }}</div>
 			<MkSwitch v-model:value="defaultSideView">{{ $t('openInSideView') }}</MkSwitch>
@@ -34,7 +33,7 @@
 	</section>
 
 	<section class="_card _vMargin">
-		<div class="_title"><Fa :icon="faCog"/> {{ $t('appearance') }}</div>
+		<div class="_title">{{ $t('appearance') }}</div>
 		<div class="_content">
 			<MkSwitch v-model:value="disableAnimatedMfm">{{ $t('disableAnimatedMfm') }}</MkSwitch>
 			<MkSwitch v-model:value="reduceAnimation">{{ $t('reduceUiAnimation') }}</MkSwitch>
@@ -60,7 +59,7 @@
 	</section>
 
 	<section class="_card _vMargin">
-		<div class="_title"><Fa :icon="faColumns"/> {{ $t('deck') }}</div>
+		<div class="_title">{{ $t('deck') }}</div>
 		<div class="_content">
 			<div>{{ $t('defaultNavigationBehaviour') }}</div>
 			<MkSwitch v-model:value="deckNavWindow">{{ $t('openInWindow') }}</MkSwitch>

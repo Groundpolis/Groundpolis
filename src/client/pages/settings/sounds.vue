@@ -1,7 +1,7 @@
 <template>
 <div class="_section">
 	<div class="_card">
-		<div class="_title"><Fa :icon="faMusic"/> {{ $t('sounds') }}</div>
+		<div class="_title">{{ $t('sounds') }}</div>
 		<div class="_content">
 			<MkRange v-model:value="sfxVolume" :min="0" :max="1" :step="0.1">
 				<Fa slot="icon" :icon="volumeIcon"/>
@@ -51,7 +51,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faMusic, faPlay, faVolumeUp, faVolumeMute } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faVolumeUp, faVolumeMute } from '@fortawesome/free-solid-svg-icons';
 import MkSelect from '@/components/ui/select.vue';
 import MkRange from '@/components/ui/range.vue';
 import * as os from '@/os';
@@ -86,7 +86,7 @@ export default defineComponent({
 	data() {
 		return {
 			sounds,
-			faMusic, faPlay, faVolumeUp, faVolumeMute,
+			faPlay, faVolumeUp, faVolumeMute,
 		}
 	},
 	computed: {

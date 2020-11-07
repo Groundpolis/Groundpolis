@@ -1,7 +1,6 @@
 <template>
 <div class="_section">
-	<div class="llvierxe _card">
-		<div class="_title"><Fa :icon="faUser"/> {{ $t('profile') }}<small style="display: block; font-weight: normal; opacity: 0.6;">@{{ $store.state.i.username }}@{{ host }}</small></div>
+	<div class="llvierxe _card _vMargin">
 		<div class="_content">
 			
 			<div class="header" :style="{ backgroundImage: $store.state.i.bannerUrl ? `url(${ $store.state.i.bannerUrl })` : null }" @click="changeBanner">
@@ -10,6 +9,9 @@
 		
 			<MkInput v-model:value="name" :max="30">
 				<span>{{ $t('_profile.name') }}</span>
+				<template #desc>
+					@{{ $store.state.i.username }}@{{ host }}
+				</template>
 			</MkInput>
 
 			<MkTextarea v-model:value="description" :max="500">
@@ -34,33 +36,37 @@
 				<option value="female" v-text="$t('_gender.female')" />
 				<option value="not-applicable" v-text="$t('_gender.not-applicable')" />
 			</MkSelect>
-
-			<details class="fields">
-				<summary>{{ $t('_profile.metadata') }}</summary>
-				<div class="row">
-					<MkInput v-model:value="fieldName0">{{ $t('_profile.metadataLabel') }}</MkInput>
-					<MkInput v-model:value="fieldValue0">{{ $t('_profile.metadataContent') }}</MkInput>
-				</div>
-				<div class="row">
-					<MkInput v-model:value="fieldName1">{{ $t('_profile.metadataLabel') }}</MkInput>
-					<MkInput v-model:value="fieldValue1">{{ $t('_profile.metadataContent') }}</MkInput>
-				</div>
-				<div class="row">
-					<MkInput v-model:value="fieldName2">{{ $t('_profile.metadataLabel') }}</MkInput>
-					<MkInput v-model:value="fieldValue2">{{ $t('_profile.metadataContent') }}</MkInput>
-				</div>
-				<div class="row">
-					<MkInput v-model:value="fieldName3">{{ $t('_profile.metadataLabel') }}</MkInput>
-					<MkInput v-model:value="fieldValue3">{{ $t('_profile.metadataContent') }}</MkInput>
-				</div>
-			</details>
-
+		</div>
+	</div>
+	<div class="_card _vMargin">
+		<div class="_title">{{ $t('_profile.metadata') }}</div>
+		<div class="_content">
+			<div class="_inputs">
+				<MkInput v-model:value="fieldName0">{{ $t('_profile.metadataLabel') }}</MkInput>
+				<MkInput v-model:value="fieldValue0">{{ $t('_profile.metadataContent') }}</MkInput>
+			</div>
+			<div class="_inputs">
+				<MkInput v-model:value="fieldName1">{{ $t('_profile.metadataLabel') }}</MkInput>
+				<MkInput v-model:value="fieldValue1">{{ $t('_profile.metadataContent') }}</MkInput>
+			</div>
+			<div class="_inputs">
+				<MkInput v-model:value="fieldName2">{{ $t('_profile.metadataLabel') }}</MkInput>
+				<MkInput v-model:value="fieldValue2">{{ $t('_profile.metadataContent') }}</MkInput>
+			</div>
+			<div class="_inputs">
+				<MkInput v-model:value="fieldName3">{{ $t('_profile.metadataLabel') }}</MkInput>
+				<MkInput v-model:value="fieldValue3">{{ $t('_profile.metadataContent') }}</MkInput>
+			</div>
+		</div>
+	</div>
+	<div class="_card _vMargin">
+		<div class="_content">
 			<MkSwitch v-model:value="isBot">{{ $t('flagAsBot') }}</MkSwitch>
 			<MkSwitch v-model:value="isCat">{{ $t('flagAsCat') }}</MkSwitch>
 		</div>
-		<div class="_footer">
-			<MkButton @click="save(true)" primary><Fa :icon="faSave"/> {{ $t('save') }}</MkButton>
-		</div>
+	</div>
+	<div class="_vMargin">
+		<MkButton @click="save(true)" primary><Fa :icon="faSave"/> {{ $t('save') }}</MkButton>
 	</div>
 </div>
 </template>
@@ -227,16 +233,6 @@ export default defineComponent({
 				margin: auto;
 				cursor: pointer;
 				box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.5);
-			}
-		}
-
-		> .fields {
-			> .row {
-				> * {
-					display: inline-block;
-					width: 50%;
-					margin-bottom: 0;
-				}
 			}
 		}
 	}

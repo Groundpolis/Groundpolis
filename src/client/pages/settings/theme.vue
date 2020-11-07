@@ -51,7 +51,7 @@
 		</div>
 	</div>
 	<div class="_card _vMargin">
-		<div class="_title"><Fa :icon="faDownload"/> {{ $t('_theme.install') }}</div>
+		<div class="_title">{{ $t('_theme.install') }}</div>
 		<div class="_content">
 			<MkTextarea v-model:value="installThemeCode">
 				<span>{{ $t('_theme.code') }}</span>
@@ -60,8 +60,8 @@
 			<MkButton @click="() => preview(installThemeCode)" :disabled="installThemeCode == null" inline><Fa :icon="faEye"/> {{ $t('preview') }}</MkButton>
 		</div>
 	</div>
-	<div class="_card _vMargin">
-		<div class="_title"><Fa :icon="faFolderOpen"/> {{ $t('_theme.manage') }}</div>
+	<div v-if="installedThemes && installedThemes.length > 0" class="_card _vMargin">
+		<div class="_title">{{ $t('_theme.manage') }}</div>
 		<div class="_content">
 			<MkSelect v-model:value="selectedThemeId">
 				<option v-for="x in installedThemes" :value="x.id" :key="x.id">{{ x.name }}</option>

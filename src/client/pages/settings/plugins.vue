@@ -1,46 +1,48 @@
 <template>
-<section class="_card">
-	<div class="_title">{{ $t('plugins') }}</div>
-	<div class="_content">
-		<details>
-			<summary><Fa :icon="faDownload"/> {{ $t('install') }}</summary>
-			<MkInfo warn>{{ $t('pluginInstallWarn') }}</MkInfo>
-			<MkTextarea v-model:value="script" tall>
-				<span>{{ $t('script') }}</span>
-			</MkTextarea>
-			<MkButton @click="install()" primary><Fa :icon="faSave"/> {{ $t('install') }}</MkButton>
-		</details>
-	</div>
-	<div class="_content">
-		<details>
-			<summary><Fa :icon="faFolderOpen"/> {{ $t('manage') }}</summary>
-			<MkSelect v-model:value="selectedPluginId">
-				<option v-for="x in $store.state.deviceUser.plugins" :value="x.id" :key="x.id">{{ x.name }}</option>
-			</MkSelect>
-			<template v-if="selectedPlugin">
-				<div style="margin: -8px 0 8px 0;">
-					<MkSwitch :value="selectedPlugin.active" @update:value="changeActive(selectedPlugin, $event)">{{ $t('makeActive') }}</MkSwitch>
-				</div>
-				<div class="_keyValue">
-					<div>{{ $t('version') }}:</div>
-					<div>{{ selectedPlugin.version }}</div>
-				</div>
-				<div class="_keyValue">
-					<div>{{ $t('author') }}:</div>
-					<div>{{ selectedPlugin.author }}</div>
-				</div>
-				<div class="_keyValue">
-					<div>{{ $t('description') }}:</div>
-					<div>{{ selectedPlugin.description }}</div>
-				</div>
-				<div style="margin-top: 8px;">
-					<MkButton @click="config()" inline v-if="selectedPlugin.config"><Fa :icon="faCog"/> {{ $t('settings') }}</MkButton>
-					<MkButton @click="uninstall()" inline><Fa :icon="faTrashAlt"/> {{ $t('uninstall') }}</MkButton>
-				</div>
-			</template>
-		</details>
-	</div>
-</section>
+<div class="_section">
+	<section class="_card">
+		<div class="_title">{{ $t('plugins') }}</div>
+		<div class="_content">
+			<details>
+				<summary><Fa :icon="faDownload"/> {{ $t('install') }}</summary>
+				<MkInfo warn>{{ $t('pluginInstallWarn') }}</MkInfo>
+				<MkTextarea v-model:value="script" tall>
+					<span>{{ $t('script') }}</span>
+				</MkTextarea>
+				<MkButton @click="install()" primary><Fa :icon="faSave"/> {{ $t('install') }}</MkButton>
+			</details>
+		</div>
+		<div class="_content">
+			<details>
+				<summary><Fa :icon="faFolderOpen"/> {{ $t('manage') }}</summary>
+				<MkSelect v-model:value="selectedPluginId">
+					<option v-for="x in $store.state.deviceUser.plugins" :value="x.id" :key="x.id">{{ x.name }}</option>
+				</MkSelect>
+				<template v-if="selectedPlugin">
+					<div style="margin: -8px 0 8px 0;">
+						<MkSwitch :value="selectedPlugin.active" @update:value="changeActive(selectedPlugin, $event)">{{ $t('makeActive') }}</MkSwitch>
+					</div>
+					<div class="_keyValue">
+						<div>{{ $t('version') }}:</div>
+						<div>{{ selectedPlugin.version }}</div>
+					</div>
+					<div class="_keyValue">
+						<div>{{ $t('author') }}:</div>
+						<div>{{ selectedPlugin.author }}</div>
+					</div>
+					<div class="_keyValue">
+						<div>{{ $t('description') }}:</div>
+						<div>{{ selectedPlugin.description }}</div>
+					</div>
+					<div style="margin-top: 8px;">
+						<MkButton @click="config()" inline v-if="selectedPlugin.config"><Fa :icon="faCog"/> {{ $t('settings') }}</MkButton>
+						<MkButton @click="uninstall()" inline><Fa :icon="faTrashAlt"/> {{ $t('uninstall') }}</MkButton>
+					</div>
+				</template>
+			</details>
+		</div>
+	</section>
+</div>
 </template>
 
 <script lang="ts">

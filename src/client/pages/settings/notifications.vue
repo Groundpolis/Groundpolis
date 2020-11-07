@@ -1,21 +1,19 @@
 <template>
-<div>
-	<div class="_section">
-		<MkButton full primary @click="configure"><Fa :icon="faCog"/> {{ $t('notificationSetting') }}</MkButton>
-	</div>
-	<div class="_section">
-		<div class="_card">
-			<div class="_content">
-				<MkSwitch v-model:value="$store.state.i.autoWatch" @update:value="onChangeAutoWatch">
-					{{ $t('autoNoteWatch') }}<template #desc>{{ $t('autoNoteWatchDescription') }}</template>
-				</MkSwitch>
-			</div>
+<div class="_section">
+	<div class="_card">
+		<div class="_content">
+			<MkButton full primary @click="configure"><Fa :icon="faCog"/> {{ $t('notificationSetting') }}</MkButton>
 		</div>
-	</div>
-	<div class="_section">
-		<MkButton full @click="readAllNotifications">{{ $t('markAsReadAllNotifications') }}</MkButton>
-		<MkButton full @click="readAllUnreadNotes">{{ $t('markAsReadAllUnreadNotes') }}</MkButton>
-		<MkButton full @click="readAllMessagingMessages">{{ $t('markAsReadAllTalkMessages') }}</MkButton>
+		<div class="_content">
+			<MkSwitch v-model:value="$store.state.i.autoWatch" @update:value="onChangeAutoWatch">
+				{{ $t('autoNoteWatch') }}<template #desc>{{ $t('autoNoteWatchDescription') }}</template>
+			</MkSwitch>
+		</div>
+		<div class="_content">
+			<MkButton full @click="readAllNotifications">{{ $t('markAsReadAllNotifications') }}</MkButton>
+			<MkButton full @click="readAllUnreadNotes">{{ $t('markAsReadAllUnreadNotes') }}</MkButton>
+			<MkButton full @click="readAllMessagingMessages">{{ $t('markAsReadAllTalkMessages') }}</MkButton>
+		</div>
 	</div>
 </div>
 </template>

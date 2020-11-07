@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineAsyncComponent, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineAsyncComponent, defineComponent, nextTick, onActivated, onMounted, ref } from 'vue';
 import { faCog, faPalette, faPlug, faUser, faListUl, faLock, faCommentSlash, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell } from '@fortawesome/free-regular-svg-icons';
 import * as os from '@/os';
