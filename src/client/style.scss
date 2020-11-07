@@ -315,6 +315,7 @@ hr {
 ._popup {
 	background: var(--panel);
 	border-radius: var(--radius);
+	overflow: hidden;
 }
 
 ._section {

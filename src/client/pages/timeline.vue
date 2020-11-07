@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { defineComponent, defineAsyncComponent, computed, ComputedRef } from 'vue';
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faSatelliteDish, faCircle, faEllipsisH, faPencilAlt, faBullhorn } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faSatelliteDish, faCircle, faEllipsisH, faPencilAlt, faBullhorn, faCat, faProjectDiagram, faCommentAlt } from '@fortawesome/free-solid-svg-icons';
 import { faComments } from '@fortawesome/free-regular-svg-icons';
 import Progress from '@/scripts/loading';
 import XTimeline from '@/components/timeline.vue';
@@ -70,7 +70,11 @@ export default defineComponent({
 					selected: computed(() => this.src === 'home'),
 				}];
 
-				if (!this.$store.state.instance.meta.disableLocalTimeline || this.$store.state.i.isModerator || this.$store.state.i.isAdmin) {
+				const isMod = this.$store.state.i.isModerator || this.$store.state.i.isAdmin;
+				const withLTL = !this.$store.state.instance.meta.disableLocalTimeline || isMod;
+				const withGTL = !this.$store.state.instance.meta.disableGlobalTimeline || isMod;
+
+				if (withLTL) {
 					tabs.push({
 						id: 'local',
 						title: null,
@@ -90,7 +94,7 @@ export default defineComponent({
 					});
 				}
 
-				if (!this.$store.state.instance.meta.disableGlobalTimeline || this.$store.state.i.isModerator || this.$store.state.i.isAdmin) {
+				if (withGTL) {
 					tabs.push({
 						id: 'global',
 						title: null,
@@ -221,6 +225,10 @@ export default defineComponent({
 
 		async choose(ev) {
 			if (this.meta == null) return;
+
+			const isMod = this.$store.state.i.isModerator || this.$store.state.i.isAdmin;
+			const withCTL = !this.$store.state.instance.meta.disableCatTimeline || isMod;
+			
 			const [antennas, lists, channels] = await Promise.all([
 				os.api('antennas/list'),
 				os.api('users/lists/list'),
@@ -257,7 +265,38 @@ export default defineComponent({
 					this.$router.push(`/channels/${channel.id}`);
 				}
 			}));
-			os.modalMenu([...antennaItems, listItems.length > 0 ? null : undefined, ...listItems, channelItems.length > 0 ? null : undefined, ...channelItems], ev.currentTarget || ev.target);
+
+			os.modalMenu([
+				(withCTL ? {
+					text: this.$t('_timelines.cat'),
+					icon: faCat,
+					action: () => {
+						this.src = 'cat';
+						this.saveSrc();
+					}
+				} : undefined),
+				{
+					text: this.$t('_timelines.remoteFollowing'),
+					icon: faProjectDiagram,
+					action: () => {
+						this.src = 'remoteFollowing';
+						this.saveSrc();
+					}
+				},
+				{
+					text: this.$t('_timelines.followers'),
+					icon: faCommentAlt,
+					action: () => {
+						this.src = 'followers';
+						this.saveSrc();
+					}
+				},
+				antennaItems.length > 0 ? null : undefined,
+				...antennaItems, 
+				listItems.length > 0 ? null : undefined,
+				...listItems,
+				channelItems.length > 0 ? null : undefined,
+				...channelItems], ev.currentTarget || ev.target);
 		},
 
 		saveSrc() {
