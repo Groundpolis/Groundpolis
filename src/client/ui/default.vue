@@ -4,7 +4,14 @@
 
 	<div class="contents" ref="contents" :class="{ wallpaper }">
 		<header class="header" ref="header" @contextmenu.prevent.stop="onContextmenu" @click="onHeaderClick">
-			<XHeader :info="pageInfo"/>
+			<XHeader main
+				:info="pageInfo"
+				:withWidgetButton="!isDesktop"
+				:withMenuButton="navHidden"
+				:menuButtonIndicate="navIndicated"
+				@menuButtonClicked="showNav"
+				@widgetButtonClicked="widgetsShowing = true"
+			/>
 		</header>
 		<main ref="main">
 			<div class="content">
@@ -27,15 +34,25 @@
 		<XWidgets @mounted="attachSticky"/>
 	</div>
 
-	<div class="buttons" :class="{ navHidden }">
-		<button class="button nav _button" @click="showNav" ref="navButton"><Fa :icon="faBars"/><i v-if="navIndicated"><Fa :icon="faCircle"/></i></button>
-		<button v-if="$route.name === 'index'" class="button home _button" @click="top()"><Fa :icon="faHome"/></button>
-		<button v-else class="button home _button" @click="$router.push('/')"><Fa :icon="faHome"/></button>
-		<button class="button notifications _button" @click="$router.push('/my/notifications')"><Fa :icon="faBell"/><i v-if="$store.state.i.hasUnreadNotification"><Fa :icon="faCircle"/></i></button>
-		<button class="button widget _button" @click="widgetsShowing = true"><Fa :icon="faLayerGroup"/></button>
+	<div class="bottom-bar" :class="{ navHidden }">
+		<button v-if="$route.name === 'index'" class="button home _button active" @click="top()">
+			<Fa :icon="faHome"/>
+		</button>
+		<button v-else class="button home _button" @click="$router.push('/')">
+			<Fa :icon="faHome"/>
+		</button>
+		<button class="button explore _button" :class="{ active: $route.name === 'explore' }" @click="$router.push('/explore')">
+			<Fa :icon="faHashtag"/>
+		</button>
+		<button class="button notifications _button" :class="{ active: $route.name === 'notifications' }" @click="$router.push('/my/notifications')">
+			<Fa :icon="faBell"/><i v-if="$store.state.i.hasUnreadNotification"><Fa :icon="faCircle"/></i>
+		</button>
+		<button class="button chat _button" :class="{ active: $route.name === 'messaging' }" @click="$router.push('/my/messaging')">
+			<Fa :icon="faComments"/><i v-if="$store.state.i.hasUnreadMessagingMessage"><Fa :icon="faCircle"/></i>
+		</button>
 	</div>
 
-	<button class="widgetButton _button" :class="{ navHidden }" @click="widgetsShowing = true"><Fa :icon="faLayerGroup"/></button>
+	<button class="fab _button" v-if="pageInfo && pageInfo.action" :class="{ navHidden }" @click="pageInfo.action.handler"><Fa :key="pageInfo.action.icon" :icon="pageInfo.action.icon"/></button>
 
 	<transition name="tray-back">
 		<div class="tray-back _modalBg"
@@ -55,8 +72,8 @@
 
 <script lang="ts">
 import { defineComponent, defineAsyncComponent, markRaw } from 'vue';
-import { faLayerGroup, faBars, faHome, faCircle, faWindowMaximize, faColumns } from '@fortawesome/free-solid-svg-icons';
-import { faBell } from '@fortawesome/free-regular-svg-icons';
+import { faLayerGroup, faBars, faHome, faCircle, faWindowMaximize, faColumns, faHashtag } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faComments } from '@fortawesome/free-regular-svg-icons';
 import { host } from '@/config';
 import { search } from '@/scripts/search';
 import { StickySidebar } from '@/scripts/sticky-sidebar';
@@ -96,7 +113,7 @@ export default defineComponent({
 			navHidden: false,
 			widgetsShowing: false,
 			wallpaper: localStorage.getItem('wallpaper') != null,
-			faLayerGroup, faBars, faBell, faHome, faCircle,
+			faLayerGroup, faBars, faBell, faHome, faCircle, faHashtag, faComments,
 		};
 	},
 
@@ -159,17 +176,12 @@ export default defineComponent({
 
 		const ro = new ResizeObserver((entries, observer) => {
 			this.adjustUI();
+			this.isDesktop = window.innerWidth >= DESKTOP_THRESHOLD;
 		});
 
 		ro.observe(this.$refs.contents);
 
 		window.addEventListener('resize', this.adjustUI, { passive: true });
-
-		if (!this.isDesktop) {
-			window.addEventListener('resize', () => {
-				if (window.innerWidth >= DESKTOP_THRESHOLD) this.isDesktop = true;
-			}, { passive: true });
-		}
 	},
 
 	methods: {
@@ -334,26 +346,19 @@ export default defineComponent({
 		}
 	}
 
-	> .widgetButton {
+	> .fab {
 		display: block;
 		position: fixed;
 		z-index: 1000;
-		bottom: 32px;
+		bottom: 64px;
 		right: 32px;
 		width: 64px;
 		height: 64px;
 		border-radius: 100%;
 		box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
 		font-size: 22px;
-		background: var(--panel);
-
-		&.navHidden {
-			display: none;
-		}
-
-		@media (min-width: ($widgets-hide-threshold + 1px)) {
-			display: none;
-		}
+		background: var(--accent);
+		color: white;
 	}
 
 	> .buttons {
@@ -413,6 +418,55 @@ export default defineComponent({
 			&:disabled {
 				cursor: default;
 
+				> * {
+					opacity: 0.5;
+				}
+			}
+		}
+	}
+
+	> .bottom-bar {
+		position: fixed;
+		z-index: 1000;
+		bottom: 0;
+		padding: 0 16px;
+		display: flex;
+		width: 100%;
+		box-sizing: border-box;
+		background: var(--panel);
+		box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
+		&:not(.navHidden) {
+			display: none;
+		}
+		> .button {
+			position: relative;
+			padding: 0;
+			margin: 0;
+			width: 100%;
+			height: 48px;
+			background: var(--panel);
+			color: var(--fg);
+
+			> i {
+				position: absolute;
+				top: 0;
+				left: 0;
+				color: var(--indicator);
+				font-size: 16px;
+				animation: blink 1s infinite;
+			}
+
+			> * {
+				font-size: 16px;
+			}
+
+			&.active {
+				background: var(--X2);
+				border-top: 2px solid var(--accent);
+			}
+
+			&:disabled {
+				cursor: default;
 				> * {
 					opacity: 0.5;
 				}

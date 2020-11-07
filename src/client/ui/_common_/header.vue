@@ -2,7 +2,9 @@
 <div class="fdidabkb">
 	<transition :name="$store.state.device.animation ? 'header' : ''" mode="out-in" appear>
 		<button class="_button back" v-if="withBack && canBack" @click.stop="back()"><Fa :icon="faChevronLeft"/></button>
+		<button class="_button menu" v-else-if="withMenuButton" @click.stop="onMenuButtonClicked"><Fa :icon="faBars"/></button>
 	</transition>
+	<i v-if="!canBack && withMenuButton && menuButtonIndicate"><Fa :icon="faCircle"/></i>
 	<template v-if="info">
 		<div class="titleContainer">
 			<template v-if="info.tabs">
@@ -21,14 +23,15 @@
 				</div>
 			</template>
 		</div>
-		<button class="_button action" v-if="info.action" @click.stop="info.action.handler"><Fa :icon="info.action.icon" :key="info.action.icon"/></button>
+		<button class="_button widget" v-if="withWidgetButton && main" @click.stop="onWidgetButtonClicked"><Fa :icon="faLayerGroup"/></button>
+		<button class="_button action" v-else-if="!main && info.action" @click.stop="info.action.handler"><Fa :icon="info.action.icon"/></button>
 	</template>
 </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faChevronLeft, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faCircle, faLayerGroup, faBars } from '@fortawesome/free-solid-svg-icons';
 
 export default defineComponent({
 	props: {
@@ -40,15 +43,40 @@ export default defineComponent({
 			required: false,
 			default: true,
 		},
+		main: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		withWidgetButton: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		withMenuButton: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		menuButtonIndicate: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 	},
 
 	data() {
 		return {
 			canBack: false,
 			height: 0,
-			faChevronLeft, faCircle
+			faChevronLeft, faCircle, faLayerGroup, faBars
 		};
 	},
+	
+	emits: [ 
+		'widgetButtonClicked',
+		'menuButtonClicked',
+	],
 
 	watch: {
 		$route: {
@@ -70,6 +98,12 @@ export default defineComponent({
 		back() {
 			if (this.canBack) this.$router.back();
 		},
+		onWidgetButtonClicked() {
+			this.$emit('widgetButtonClicked');
+		},
+		onMenuButtonClicked() {
+			this.$emit('menuButtonClicked');
+		},
 	}
 });
 </script>
@@ -78,12 +112,17 @@ export default defineComponent({
 .fdidabkb {
 	text-align: center;
 
-	> .back {
+	> .back, > .menu {
 		height: var(--height);
 		width: var(--height);
 	}
 
-	> .action {
+	> i {
+		top: -8px;
+		left: calc(var(--height) / 2 + 8px);
+	}
+
+	> .action, .widget {
 		height: var(--height);
 		width: var(--height);
 	}
@@ -106,14 +145,21 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .fdidabkb {
-	> .back {
+	> .back, > .menu {
 		position: absolute;
 		z-index: 1;
 		top: 0;
 		left: 0;
 	}
 
-	> .action {
+	> i {
+		position: absolute;
+		color: var(--indicator);
+		font-size: 8px;
+		animation: blink 1s infinite;
+	}
+
+	> .action, > .widget {
 		position: absolute;
 		z-index: 1;
 		top: 0;
