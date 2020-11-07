@@ -24,11 +24,13 @@ const meta = require('./package.json');
 const postcss = {
 	loader: 'postcss-loader',
 	options: {
-		plugins: [
-			require('cssnano')({
-				preset: 'default'
-			})
-		]
+		postcssOptions: {
+			plugins: [
+				require('cssnano')({
+					preset: 'default'
+				})
+			]
+		}
 	},
 };
 
@@ -49,8 +51,6 @@ module.exports = {
 						preserveWhitespace: false
 					}
 				}
-			}, {
-				loader: 'vue-svg-inline-loader-corejs3'
 			}]
 		}, {
 			test: /\.scss?$/,
@@ -133,7 +133,15 @@ module.exports = {
 		new webpack.DefinePlugin({
 			_VERSION_: JSON.stringify(meta.version),
 			_LANGS_: JSON.stringify(Object.entries(locales).map(([k, v]: [string, any]) => [k, v._lang_])),
-			_ENV_: JSON.stringify(process.env.NODE_ENV)
+			_ENV_: JSON.stringify(process.env.NODE_ENV),
+			_DEV_: process.env.NODE_ENV !== 'production',
+			_PERF_PREFIX_: JSON.stringify('Misskey:'),
+			_DATA_TRANSFER_DRIVE_FILE_: JSON.stringify('mk_drive_file'),
+			_DATA_TRANSFER_DRIVE_FOLDER_: JSON.stringify('mk_drive_folder'),
+			_DATA_TRANSFER_DECK_COLUMN_: JSON.stringify('mk_deck_column'),
+			__VUE_OPTIONS_API__: true,
+			__VUE_PROD_DEVTOOLS__: false,
+			__VUE_I18N_LEGACY_API__: false,
 		}),
 		new VueLoaderPlugin(),
 		new WebpackOnBuildPlugin((stats: any) => {
@@ -150,6 +158,7 @@ module.exports = {
 			'.js', '.ts', '.json'
 		],
 		alias: {
+			'@': __dirname + '/src/client',
 			'const.styl': __dirname + '/src/client/const.styl'
 		}
 	},
@@ -162,6 +171,9 @@ module.exports = {
 		})],
 	},
 	cache: true,
+	experiments: {
+		topLevelAwait: true
+	},
 	devtool: false, //'source-map',
 	mode: isProduction ? 'production' : 'development'
 };

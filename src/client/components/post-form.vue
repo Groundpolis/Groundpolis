@@ -1,103 +1,103 @@
 <template>
-<div class="gafaadew"
+<div class="gafaadew" :class="{ modal, _popup: modal }"
+	v-size="{ max: [500] }"
 	@dragover.stop="onDragover"
 	@dragenter="onDragenter"
 	@dragleave="onDragleave"
 	@drop.stop="onDrop"
 >
 	<header>
-		<button v-if="!fixed" class="cancel _button" @click="cancel"><fa :icon="faTimes"/></button>
+		<button v-if="!fixed" class="cancel _button" @click="cancel"><Fa :icon="faTimes"/></button>
 		<div>
-			<button class="_button" @click="insert('> ')" v-tooltip="$t('_mfmPad.quote')"><fa :icon="faQuoteRight"/></button>
-			<button class="_button" @click="link" v-tooltip="$t('_mfmPad.link')"><fa :icon="faLink"/></button>
-			<button class="_button" @click="insertMention" v-tooltip="$t('mention')"><fa :icon="faAt"/></button>
-			<button class="_button" @click="insertEmoji" v-tooltip="$t('emoji')"><fa :icon="faLaughSquint"/></button>
-			<!-- <button class="_button" @click="mfmPadMenu" v-tooltip="$t('_mfmPad.more')"><fa :icon="faEllipsisV"/></button> -->
+			<button class="_button" @click="insert('> ')" v-tooltip="$t('_mfmPad.quote')"><Fa :icon="faQuoteRight"/></button>
+			<button class="_button" @click="link" v-tooltip="$t('_mfmPad.link')"><Fa :icon="faLink"/></button>
+			<button class="_button" @click="insertMention" v-tooltip="$t('mention')"><Fa :icon="faAt"/></button>
+			<button class="_button" @click="insertEmoji" v-tooltip="$t('emoji')"><Fa :icon="faLaughSquint"/></button>
+			<!-- <button class="_button" @click="mfmPadMenu" v-tooltip="$t('_mfmPad.more')"><Fa :icon="faEllipsisV"/></button> -->
 			<div class="divider"></div>
 			<button class="_button help" v-tooltip="$t('help')" @click="help">
-				<fa :icon="faQuestionCircle" />
+				<Fa :icon="faQuestionCircle" />
 			</button>
 			<button class="_button visibility" @click="setVisibility" ref="visibilityButton" v-tooltip="$t('visibility')" v-if="channel == null">
-					<fa v-if="visibility === 'public'" :icon="faGlobe" />
-					<fa v-if="visibility === 'home'" :icon="faHome" />
-					<fa v-if="visibility === 'followers'" :icon="faUnlock" />
-					<fa v-if="visibility === 'specified'" :icon="faEnvelope" />
-					<fa v-if="visibility === 'users'" :icon="faUsers" />
-					<fa class="localOnly" v-if="localOnly" :icon="faHeart" />
-					<fa class="localOnly" v-if="remoteFollowersOnly" :icon="faHeartbeat" />
+					<Fa v-if="visibility === 'public'" :icon="faGlobe" />
+					<Fa v-if="visibility === 'home'" :icon="faHome" />
+					<Fa v-if="visibility === 'followers'" :icon="faUnlock" />
+					<Fa v-if="visibility === 'specified'" :icon="faEnvelope" />
+					<Fa v-if="visibility === 'users'" :icon="faUsers" />
+					<Fa class="localOnly" v-if="localOnly" :icon="faHeart" />
+					<Fa class="localOnly" v-if="remoteFollowersOnly" :icon="faHeartbeat" />
 			</button>
 			<!-- <div class="spacer"></div> -->
 		</div>
 	</header>
 	<div class="form" :class="{ fixed }">
 		<button v-if="quote && !renote" class="_textButton" style="padding-left: 8px" @click="quote = null">{{ $t('unrenote') }}</button>
-		<x-note-preview class="preview" v-if="reply" :note="reply"/>
-		<x-note-preview class="preview" v-if="quote" :note="quote"/>
+		<XNotePreview class="preview" v-if="reply" :note="reply"/>
+		<XNotePreview class="preview" v-if="quote" :note="quote"/>
 		<div v-if="visibility === 'specified'" class="to-specified">
 			<span style="margin-right: 8px;">{{ $t('recipient') }}</span>
 			<div class="visibleUsers">
 				<span v-for="u in visibleUsers" :key="u.id">
-					<mk-acct :user="u"/>
-					<button class="_button" @click="removeVisibleUser(u)"><fa :icon="faTimes"/></button>
+					<MkAcct :user="u"/>
+					<button class="_button" @click="removeVisibleUser(u)"><Fa :icon="faTimes"/></button>
 				</span>
-				<button @click="addVisibleUser" class="_buttonPrimary"><fa :icon="faPlus" fixed-width/></button>
+				<button @click="addVisibleUser" class="_buttonPrimary"><Fa :icon="faPlus" fixed-width/></button>
 			</div>
 		</div>
-		<input v-show="useCw" ref="cw" class="cw" v-model="cw" :placeholder="$t('annotation')" v-autocomplete="{ model: 'cw' }" @keydown="onKeydown">
-		<textarea v-model="text" class="text" :class="{ withCw: useCw }" ref="text" :disabled="posting" :placeholder="placeholder" v-autocomplete="{ model: 'text' }" @keydown="onKeydown" @paste="onPaste"></textarea>
-		<input v-show="useBroadcast" ref="broadcastText" class="broadcastText" v-model="broadcastText" :placeholder="$t('broadcastTextDescription')" v-autocomplete="{ model: 'broadcastText' }" @keydown="onKeydown">
-		<x-post-form-attaches class="attaches" :files="files"/>
-		<x-poll-editor class="poll-editor" v-if="poll" ref="poll" @destroyed="poll = false" @updated="onPollUpdate()"/>
-		<x-uploader ref="uploader" @uploaded="attachMedia" @change="onChangeUploadings"/>
+		<input v-show="useCw" ref="cw" class="cw" v-model="cw" :placeholder="$t('annotation')" @keydown="onKeydown">
+		<textarea v-model="text" class="text" :class="{ withCw: useCw }" ref="text" :disabled="posting" :placeholder="placeholder" @keydown="onKeydown" @paste="onPaste"></textarea>
+		<input v-show="useBroadcast" ref="broadcastText" class="broadcastText" v-model="broadcastText" :placeholder="$t('broadcastTextDescription')" @keydown="onKeydown">
+		<XPostFormAttaches class="attaches" :files="files" @updated="updateMedia" @detach="detachMedia"/>
+		<XPollEditor v-if="poll" :poll="poll" @destroyed="poll = null" @updated="onPollUpdate"/>
 		<footer>
-			<button class="_button" @click="chooseFileFrom" v-tooltip="$t('attachFile')"><fa :icon="faPhotoVideo"/></button>
-			<button class="_button" @click="poll = !poll" :class="{ active: poll }" v-tooltip="$t('poll')"><fa :icon="faPollH"/></button>
-			<button class="_button" @click="useCw = !useCw" :class="{ active: useCw }" v-tooltip="$t('useCw')"><fa :icon="faEyeSlash"/></button>
-			<button class="_button" @click="useBroadcast = !useBroadcast" :class="{ active: useBroadcast }" v-tooltip="$t('broadcastMode')"><fa :icon="faBullhorn"/></button>
-			<button class="_button" @click="insertFace" v-tooltip="$t('gacha')"><fa :icon="faFish"/></button>
-			<button class="_button" @click="showActions" v-tooltip="$t('plugin')" v-if="$store.state.postFormActions.length > 0"><fa :icon="faPlug"/></button>
+			<button class="_button" @click="chooseFileFrom" v-tooltip="$t('attachFile')"><Fa :icon="faPhotoVideo"/></button>
+			<button class="_button" @click="poll = !poll" :class="{ active: poll }" v-tooltip="$t('poll')"><Fa :icon="faPollH"/></button>
+			<button class="_button" @click="useCw = !useCw" :class="{ active: useCw }" v-tooltip="$t('useCw')"><Fa :icon="faEyeSlash"/></button>
+			<button class="_button" @click="useBroadcast = !useBroadcast" :class="{ active: useBroadcast }" v-tooltip="$t('broadcastMode')"><Fa :icon="faBullhorn"/></button>
+			<button class="_button" @click="insertFace" v-tooltip="$t('gacha')"><Fa :icon="faFish"/></button>
+			<button class="_button" @click="showActions" v-tooltip="$t('plugin')" v-if="postFormActions.length > 0"><Fa :icon="faPlug"/></button>
 			<span class="text-count" :class="{ over: trimmedLength(text) > max }">{{ max - trimmedLength(text) }}</span>
 			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">
-				<fa :icon="faPaperPlane" />
+				<Fa :icon="faPaperPlane" />
 			</button>
 		</footer>
-		<input ref="file" class="file _button" type="file" multiple="multiple" @change="onChangeFile"/>
 		<details v-if="text" class="preview" :open="isPreviewOpened" @toggle="isPreviewOpened = $event.target.open">
 			<summary>{{ $t('preview') }}</summary>
-			<x-note-preview :note="previewNote"/>
+			<XNotePreview :note="previewNote"/>
 		</details>
 	</div>
 </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, defineAsyncComponent } from 'vue';
 import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash, faLaughSquint } from '@fortawesome/free-regular-svg-icons';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
 import { toASCII } from 'punycode';
-import MkVisibilityChooser from './visibility-chooser.vue';
-import MkUserSelect from './user-select.vue';
 import XNotePreview from './note-preview.vue';
 import { parse } from '../../mfm/parse';
-import { host, url } from '../config';
+import { host, url } from '@/config';
 import { erase, unique } from '../../prelude/array';
 import extractMentions from '../../misc/extract-mentions';
 import getAcct from '../../misc/acct/render';
 import { formatTimeString } from '../../misc/format-time-string';
-import { selectDriveFile } from '../scripts/select-drive-file';
+import { Autocomplete } from '@/scripts/autocomplete';
 import { noteVisibilities } from '../../types';
-import { utils } from '@syuilo/aiscript';
+import * as os from '@/os';
+import { selectFile } from '@/scripts/select-file';
 import { FormItem } from '../scripts/form';
+import { notePostInterruptors, postFormActions } from '@/store';
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
 		XNotePreview,
-		XUploader: () => import('./uploader.vue').then(m => m.default),
-		XPostFormAttaches: () => import('./post-form-attaches.vue').then(m => m.default),
-		XPollEditor: () => import('./poll-editor.vue').then(m => m.default)
+		XPostFormAttaches: defineAsyncComponent(() => import('./post-form-attaches.vue')),
+		XPollEditor: defineAsyncComponent(() => import('./poll-editor.vue'))
 	},
+
+	inject: ['modal'],
 
 	props: {
 		reply: {
@@ -137,31 +137,35 @@ export default Vue.extend({
 			type: Boolean,
 			required: false,
 			default: false
-		}
+		},
+		autofocus: {
+			type: Boolean,
+			required: false,
+			default: true
+		},
 	},
+
+	emits: ['posted', 'cancel', 'esc'],
 
 	data() {
 		return {
 			posting: false,
 			text: '',
 			files: [],
-			uploadings: [],
-			poll: false,
-			pollChoices: [],
-			pollMultiple: false,
-			pollExpiration: [],
+			poll: null,
 			useCw: false,
 			cw: null,
-			localOnly: false,
-			remoteFollowersOnly: false,
+			localOnly: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.localOnly : this.$store.state.settings.defaultNoteLocalOnlydefaultNoteLocalOnly,
+			remoteFollowersOnly: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.remoteFollowersOnly : this.$store.state.settings.defaultNoteRemoteFollowersOnly,
+			visibility: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.visibility : this.$store.state.settings.defaultNoteVisibility,
 			useBroadcast: false,
 			broadcastText: '',
-			visibility: 'public',
 			visibleUsers: [],
 			autocomplete: null,
 			draghover: false,
 			quote: null as Record<string, unknown> | null,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
+			postFormActions,
 			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown, faEllipsisV
 		};
 	},
@@ -213,7 +217,7 @@ export default Vue.extend({
 			return !this.posting &&
 				(1 <= this.text.length || 1 <= this.files.length || this.poll || this.quote) &&
 				(length(this.text.trim()) <= this.max) &&
-				(!this.poll || this.pollChoices.length >= 2);
+				(!this.poll || this.poll.choices.length >= 2);
 		},
 
 		max(): number {
@@ -240,17 +244,7 @@ export default Vue.extend({
 		}
 	},
 
-	watch: {
-		localOnly() {
-			this.$store.commit('deviceUser/setLocalOnly', this.localOnly);
-		},
-		remoteFollowersOnly() {
-			this.$store.commit('deviceUser/setRemoteFollowersOnly', this.remoteFollowersOnly);
-		}
-	},
-
 	mounted() {
-		console.log(this.channel);
 		if (this.initialText) {
 			this.text = this.initialText;
 		}
@@ -286,24 +280,24 @@ export default Vue.extend({
 		}
 
 		// デフォルト公開範囲
-		if (this.channel == null) {
-			this.applyVisibility(this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.visibility : this.$store.state.settings.defaultNoteVisibility);
-			this.localOnly = this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.localOnly : this.$store.state.settings.defaultNoteLocalOnly;
-			this.remoteFollowersOnly = this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.remoteFollowersOnly : this.$store.state.settings.defaultNoteRemoteFollowersOnly;
+		if (this.channel) {
+			this.visibility = 'public';
+			this.localOnly = true; // TODO: チャンネルが連合するようになった折には消す
+			this.remoteFollowersOnly = false;
 		}
 
 		// 公開以外へのリプライ時は元の公開範囲を引き継ぐ
 		if (this.reply && ['home', 'followers', 'specified'].includes(this.reply.visibility)) {
 			this.visibility = this.reply.visibility;
 			if (this.reply.visibility === 'specified') {
-				this.$root.api('users/show', {
+				os.api('users/show', {
 					userIds: this.reply.visibleUserIds.filter(uid => uid !== this.$store.state.i.id && uid !== this.reply.userId)
 				}).then(users => {
 					this.visibleUsers.push(...users);
 				});
 
 				if (this.reply.userId !== this.$store.state.i.id) {
-					this.$root.api('users/show', { userId: this.reply.userId }).then(user => {
+					os.api('users/show', { userId: this.reply.userId }).then(user => {
 						this.visibleUsers.push(user);
 					});
 				}
@@ -321,15 +315,21 @@ export default Vue.extend({
 			this.cw = this.reply.cw;
 		}
 
-		this.focus();
-
-		this.$nextTick(() => {
+		if (this.autofocus) {
 			this.focus();
-		});
+
+			this.$nextTick(() => {
+				this.focus();
+			});
+		}
+
+		// TODO: detach when unmount
+		new Autocomplete(this.$refs.text, this, { model: 'text' });
+		new Autocomplete(this.$refs.cw, this, { model: 'cw' });
 
 		this.$nextTick(() => {
 			// 書きかけの投稿を復元
-			if (!this.instant && !this.mention) {
+			if (!this.instant && !this.mention && !this.specified) {
 				const draft = JSON.parse(localStorage.getItem('drafts') || '{}')[this.draftKey];
 				if (draft) {
 					this.text = draft.data.text;
@@ -337,16 +337,13 @@ export default Vue.extend({
 					this.cw = draft.data.cw;
 					this.useBroadcast = draft.data.useBroadcast;
 					this.broadcastText = draft.data.broadcastText;
-					this.applyVisibility(draft.data.visibility);
+					this.visibility = draft.data.visibility;
 					this.localOnly = draft.data.localOnly;
 					this.remoteFollowersOnly = draft.data.remoteFollowersOnly;
 					this.quote = draft.data.quote;
 					this.files = (draft.data.files || []).filter(e => e);
 					if (draft.data.poll) {
-						this.poll = true;
-						this.$nextTick(() => {
-							(this.$refs.poll as any).set(draft.data.poll);
-						});
+						this.poll = draft.data.poll;
 					}
 				}
 			}
@@ -359,13 +356,7 @@ export default Vue.extend({
 				this.cw = init.cw;
 				this.useCw = init.cw != null;
 				if (init.poll) {
-					this.poll = true;
-					this.$nextTick(() => {
-						(this.$refs.poll as any).set({
-							choices: init.poll.choices.map(c => c.text),
-							multiple: init.poll.multiple
-						});
-					});
+					this.poll = init.poll;
 				}
 				this.visibility = init.visibility;
 				this.localOnly = init.localOnly;
@@ -392,6 +383,19 @@ export default Vue.extend({
 			this.$watch('remoteFollowersOnly', this.saveDraft);
 		},
 
+		togglePoll() {
+			if (this.poll) {
+				this.poll = null;
+			} else {
+				this.poll = {
+					choices: ['', ''],
+					multiple: false,
+					expiresAt: null,
+					expiredAfter: null,
+				};
+			}
+		},
+
 		trimmedLength(text: string) {
 			return length(text.trim());
 		},
@@ -405,41 +409,11 @@ export default Vue.extend({
 		},
 
 		chooseFileFrom(ev) {
-			this.$root.menu({
-				items: [{
-					type: 'label',
-					text: this.$t('attachFile'),
-				}, {
-					text: this.$t('upload'),
-					icon: faUpload,
-					action: () => { this.chooseFileFromPc() }
-				}, {
-					text: this.$t('fromDrive'),
-					icon: faCloud,
-					action: () => { this.chooseFileFromDrive() }
-				}, {
-					text: this.$t('fromUrl'),
-					icon: faLink,
-					action: () => { this.chooseFileFromUrl() }
-				}],
-				source: ev.currentTarget || ev.target
-			});
-		},
-
-		chooseFileFromPc() {
-			(this.$refs.file as any).click();
-		},
-
-		chooseFileFromDrive() {
-			selectDriveFile(this.$root, true).then(files => {
+			selectFile(ev.currentTarget || ev.target, this.$t('attachFile'), true).then(files => {
 				for (const file of files) {
-					this.attachMedia(file);
+					this.files.push(file);
 				}
 			});
-		},
-
-		attachMedia(driveFile) {
-			this.files.push(driveFile);
 		},
 
 		detachMedia(id) {
@@ -447,26 +421,17 @@ export default Vue.extend({
 		},
 
 		updateMedia(file) {
-			Vue.set(this.files, this.files.findIndex(x => x.id === file.id), file);
-		},
-
-		onChangeFile() {
-			for (const x of Array.from((this.$refs.file as any).files)) this.upload(x);
+			this.files[this.files.findIndex(x => x.id === file.id)] = file;
 		},
 
 		upload(file: File, name?: string) {
-			(this.$refs.uploader as any).upload(file, this.$store.state.settings.uploadFolder, name);
+			os.upload(file, this.$store.state.settings.uploadFolder, name).then(res => {
+				this.files.push(res);
+			});
 		},
 
-		onChangeUploadings(uploads) {
-			this.$emit('change-uploadings', uploads);
-		},
-
-		onPollUpdate() {
-			const got = this.$refs.poll.get();
-			this.pollChoices = got.choices;
-			this.pollMultiple = got.multiple;
-			this.pollExpiration = [got.expiration, got.expiresAt || got.expiredAfter];
+		onPollUpdate(poll) {
+			this.poll = poll;
 			this.saveDraft();
 		},
 
@@ -475,26 +440,36 @@ export default Vue.extend({
 				// TODO: information dialog
 				return;
 			}
-			const w = this.$root.new(MkVisibilityChooser, {
-				source: this.$refs.visibilityButton,
+
+			os.popup(import('./visibility-picker.vue'), {
 				currentVisibility: this.visibility,
 				currentLocalOnly: this.localOnly,
 				currentRemoteFollowersOnly: this.remoteFollowersOnly,
-			});
-			w.$once('chosen', ({ visibility, localOnly, remoteFollowersOnly }) => {
-				this.applyVisibility(visibility);
-				this.localOnly = localOnly;
-				this.remoteFollowersOnly = remoteFollowersOnly;
-			});
-		},
-
-		applyVisibility(v: string) {
-			this.visibility = (noteVisibilities as unknown as string[]).includes(v) ? v : 'public'; // v11互換性のため
+				src: this.$refs.visibilityButton
+			}, {
+				changeVisibility: visibility => {
+					this.visibility = visibility;
+					if (this.$store.state.settings.rememberNoteVisibility) {
+						this.$store.commit('deviceUser/setVisibility', visibility);
+					}
+				},
+				changeLocalOnly: localOnly => {
+					this.localOnly = localOnly;
+					if (this.$store.state.settings.rememberNoteVisibility) {
+						this.$store.commit('deviceUser/setLocalOnly', localOnly);
+					}
+				},
+				changeRemoteFollowersOnly: remoteFollowersOnly => {
+					this.remoteFollowersOnly = remoteFollowersOnly;
+					if (this.$store.state.settings.rememberNoteVisibility) {
+						this.$store.commit('deviceUser/setRemoteFollowersOnly', remoteFollowersOnly);
+					}
+				}
+			}, 'closed');
 		},
 
 		addVisibleUser() {
-			const vm = this.$root.new(MkUserSelect, {});
-			vm.$once('selected', user => {
+			os.selectUser().then(user => {
 				this.visibleUsers.push(user);
 			});
 		},
@@ -506,7 +481,7 @@ export default Vue.extend({
 		clear() {
 			this.text = '';
 			this.files = [];
-			this.poll = false;
+			this.poll = null;
 			this.quote = null;
 		},
 
@@ -516,7 +491,8 @@ export default Vue.extend({
 		},
 
 		onKeydown(e) {
-			if ((e.which == 10 || e.which == 13) && (e.ctrlKey || e.metaKey) && this.canPost) this.post();
+			if ((e.which === 10 || e.which === 13) && (e.ctrlKey || e.metaKey) && this.canPost) this.post();
+			if (e.which === 27) this.$emit('esc');
 		},
 
 		async onPaste(e: ClipboardEvent) {
@@ -535,7 +511,7 @@ export default Vue.extend({
 			if (!this.quote && paste.startsWith(url + '/notes/')) {
 				e.preventDefault();
 
-				this.$root.dialog({
+				os.dialog({
 					type: 'info',
 					text: this.$t('quoteQuestion'),
 					showCancelButton: true
@@ -546,12 +522,12 @@ export default Vue.extend({
 					}
 
 					const quoteId = paste.substr(url.length).match(/^\/notes\/(.+?)\/?$/)![1];
-					this.$root.api('notes/show', {
+					os.api('notes/show', {
 						noteId: quoteId,
 					}).then(note => {
 						this.quote = note;
 					}).catch(e => {
-						this.$root.dialog({
+						os.dialog({
 							type: 'error',
 							text: e.message,
 						});
@@ -563,7 +539,7 @@ export default Vue.extend({
 		onDragover(e) {
 			if (!e.dataTransfer.items[0]) return;
 			const isFile = e.dataTransfer.items[0].kind == 'file';
-			const isDriveFile = e.dataTransfer.types[0] == 'mk_drive_file';
+			const isDriveFile = e.dataTransfer.types[0] == _DATA_TRANSFER_DRIVE_FILE_;
 			if (isFile || isDriveFile) {
 				e.preventDefault();
 				this.draghover = true;
@@ -590,7 +566,7 @@ export default Vue.extend({
 			}
 
 			//#region ドライブのファイル
-			const driveFile = e.dataTransfer.getData('mk_drive_file');
+			const driveFile = e.dataTransfer.getData(_DATA_TRANSFER_DRIVE_FILE_);
 			if (driveFile != null && driveFile != '') {
 				const file = JSON.parse(driveFile);
 				this.files.push(file);
@@ -617,7 +593,7 @@ export default Vue.extend({
 					remoteFollowersOnly: this.remoteFollowersOnly,
 					files: this.files,
 					quote: this.quote,
-					poll: this.poll && this.$refs.poll ? (this.$refs.poll as any).get() : undefined
+					poll: this.poll
 				}
 			};
 
@@ -634,13 +610,13 @@ export default Vue.extend({
 
 		async post() {
 			if (this.reply && this.reply.user.host !== null && this.localOnly) {
-				await this.$root.dialog({
+				await os.dialog({
 					type: 'error',
 					text: this.$t('errorLocalOnlyToRemote'),
 				});
 				return;
 			}
-			const canceled = this.$store.state.device.showNoteConfirm && (await this.$root.dialog({
+			const canceled = this.$store.state.device.showNoteConfirm && (await os.dialog({
 				type: 'question',
 				text: this.$t('noteConfirm'),
 				showCancelButton: true
@@ -651,40 +627,45 @@ export default Vue.extend({
 			let data = {
 				text: this.text == '' ? undefined : this.text + (this.useBroadcast ? ' ' + this.broadcastText : ''),
 				fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
-				replyId: this.reply?.id,
-				renoteId: this.quote?.id,
-				channelId: this.channel?.id,
-				poll: this.poll ? (this.$refs.poll as any).get() : undefined,
+				replyId: this.reply ? this.reply.id : undefined,
+				renoteId: this.renote ? this.renote.id : this.quoteId ? this.quoteId : undefined,
+				channelId: this.channel ? this.channel.id : undefined,
+				poll: this.poll,
 				cw: this.useCw ? this.cw || '' : undefined,
 				localOnly: this.localOnly,
 				remoteFollowersOnly: this.remoteFollowersOnly,
 				visibility: this.visibility,
 				visibleUserIds: this.visibility == 'specified' ? this.visibleUsers.map(u => u.id) : undefined,
-				viaMobile: this.$root.isMobile,
+				viaMobile: os.isMobile
 			};
 
 			// plugin
-			if (this.$store.state.notePostInterruptors.length > 0) {
-				for (const interruptor of this.$store.state.notePostInterruptors) {
-					data = utils.valToJs(await interruptor.handler(JSON.parse(JSON.stringify(data))));
+			if (notePostInterruptors.length > 0) {
+				for (const interruptor of notePostInterruptors) {
+					data = await interruptor.handler(JSON.parse(JSON.stringify(data)));
 				}
 			}
 
 			this.posting = true;
-			this.$root.api('notes/create', data).then(() => {
+			os.api('notes/create', data).then(() => {
 				this.clear();
-				this.deleteDraft();
-				this.$emit('posted');
+				this.$nextTick(() => {
+					this.deleteDraft();
+					this.$emit('posted');
+					if (this.text && this.text != '') {
+						const hashtags = parse(this.text).filter(x => x.node.type === 'hashtag').map(x => x.node.props.hashtag);
+						const history = JSON.parse(localStorage.getItem('hashtags') || '[]') as string[];
+						localStorage.setItem('hashtags', JSON.stringify(unique(hashtags.concat(history))));
+					}
+					this.posting = false;
+				});
 			}).catch(err => {
-			}).then(() => {
 				this.posting = false;
+				os.dialog({
+					type: 'error',
+					text: err.message + '\n' + (err as any).id,
+				});
 			});
-
-			if (this.text && this.text != '') {
-				const hashtags = parse(this.text).filter(x => x.node.type === 'hashtag').map(x => x.node.props.hashtag);
-				const history = JSON.parse(localStorage.getItem('hashtags') || '[]') as string[];
-				localStorage.setItem('hashtags', JSON.stringify(unique(hashtags.concat(history))));
-			}
 		},
 
 		cancel() {
@@ -696,18 +677,14 @@ export default Vue.extend({
 		},
 
 		insertMention() {
-			const vm = this.$root.new(MkUserSelect, {});
-			vm.$once('selected', user => {
-				insertTextAtCursor(this.$refs.text, getAcct(user) + ' ');
+			os.selectUser().then(user => {
+				insertTextAtCursor(this.$refs.text, '@' + getAcct(user) + ' ');
 			});
 		},
 
 		async insertEmoji(ev) {
-			const vm = this.$root.new(await import('./emoji-picker.vue').then(m => m.default), {
-				source: ev.currentTarget || ev.target
-			}).$once('chosen', emoji => {
+			os.pickEmoji(ev.currentTarget || ev.target).then(emoji => {
 				insertTextAtCursor(this.$refs.text, emoji);
-				vm.close();
 			});
 		},
 
@@ -728,7 +705,7 @@ export default Vue.extend({
 					label: this.$t('description').toString(),
 				},
 			};
-			const { canceled, result } = await this.$root.form('挿入するリンクの設定', form);
+			const { canceled, result } = await os.form('挿入するリンクの設定', form);
 			if (canceled) return;
 			this.insert(`[${result.desc}](${result.url})`);
 		},
@@ -738,19 +715,16 @@ export default Vue.extend({
 		},
 
 		showActions(ev) {
-			this.$root.menu({
-				items: this.$store.state.postFormActions.map(action => ({
-					text: action.title,
-					action: () => {
-						action.handler({
-							text: this.text
-						}, (key, value) => {
-							if (key === 'text') { this.text = value; }
-						});
-					}
-				})),
-				source: ev.currentTarget || ev.target,
-			});
+			os.modalMenu(postFormActions.map(action => ({
+				text: action.title,
+				action: () => {
+					action.handler({
+						text: this.text
+					}, (key, value) => {
+						if (key === 'text') { this.text = value; }
+					});
+				}
+			})), ev.currentTarget || ev.target);
 		}
 	}
 });
@@ -758,7 +732,12 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .gafaadew {
-	background: var(--panel);
+	position: relative;
+
+	&.modal {
+		width: 100%;
+		max-width: 520px;
+	}
 
 	-webkit-backdrop-filter: blur(4px);
 	backdrop-filter: blur(4px);
@@ -768,20 +747,11 @@ export default Vue.extend({
 		height: 66px;
 		position: relative;
 
-		@media (max-width: 500px) {
-			height: 50px;
-		}
-
 		> .cancel {
 			padding: 0;
 			font-size: 20px;
 			width: 64px;
 			line-height: 66px;
-
-			@media (max-width: 500px) {
-				width: 50px;
-				line-height: 50px;
-			}
 		}
 
 		> div {
@@ -836,13 +806,6 @@ export default Vue.extend({
 	}
 
 	> .form {
-		max-width: 500px;
-		margin: 0 auto;
-
-		&.fixed {
-			max-width: unset;
-		}
-
 		> .preview {
 			padding: 0 8px 8px 8px;
 
@@ -874,10 +837,6 @@ export default Vue.extend({
 			margin-bottom: 8px;
 			overflow: auto;
 			white-space: nowrap;
-
-			@media (max-width: 500px) {
-				padding: 6px 16px;
-			}
 
 			> .visibleUsers {
 				display: inline;
@@ -917,10 +876,6 @@ export default Vue.extend({
 			color: var(--fg);
 			font-family: inherit;
 
-			@media (max-width: 500px) {
-				padding: 0 16px;
-			}
-
 			&:focus {
 				outline: none;
 			}
@@ -952,32 +907,15 @@ export default Vue.extend({
 			min-width: 100%;
 			min-height: 90px;
 
-			@media (max-width: 500px) {
-				min-height: 80px;
-			}
-
 			&.withCw {
 				padding-top: 8px;
 			}
-		}
-
-		> .mk-uploader {
-			margin: 8px 0 0 0;
-			padding: 8px;
-		}
-
-		> .file {
-			display: none;
 		}
 
 		> footer {
 			display: flex;
 			padding: 0 16px;
 			align-items: center;
-
-			@media (max-width: 500px) {
-				padding: 0 8px 8px 8px;
-			}
 
 			> button {
 				display: block;
@@ -1026,6 +964,46 @@ export default Vue.extend({
 				&:hover {
 					background: var(--accentLighten);
 				}
+			}
+		}
+	}
+
+	&.max-width_500px {
+		> header {
+			height: 50px;
+
+			> .cancel {
+				width: 50px;
+				line-height: 50px;
+			}
+
+			> div {
+				> .text-count {
+					line-height: 50px;
+				}
+
+				> .submit {
+					margin: 8px;
+				}
+			}
+		}
+
+		> .form {
+			> .to-specified {
+				padding: 6px 16px;
+			}
+
+			> .cw,
+			> .text {
+				padding: 0 16px;
+			}
+
+			> .text {
+				min-height: 80px;
+			}
+
+			> footer {
+				padding: 0 8px 8px 8px;
 			}
 		}
 	}

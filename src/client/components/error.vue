@@ -1,18 +1,18 @@
 <template>
 <transition :name="$store.state.device.animation ? 'zoom' : ''" appear>
-	<div class="mjndxjcg _panel">
-		<p><fa :icon="faExclamationTriangle"/> {{ $t('error') }}</p>
-		<mk-button @click="() => $emit('retry')" class="button">{{ $t('retry') }}</mk-button>
+	<div class="mjndxjcg">
+		<p><Fa :icon="faExclamationTriangle"/> {{ $t('error') }}</p>
+		<MkButton @click="() => $emit('retry')" class="button">{{ $t('retry') }}</MkButton>
 	</div>
 </transition>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import MkButton from './ui/button.vue';
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
 		MkButton,
 	},

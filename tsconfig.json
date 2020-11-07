@@ -23,21 +23,19 @@
 		"isolatedModules": true,
 		"typeRoots": [
 			"node_modules/@types",
-			"src/@types",
-			"dom"
+			"src/@types"
 		],
 		"lib": [
 			"esnext",
-      "dom",
-      "webworker"
+			"dom",
 		]
 	},
 	"compileOnSave": false,
 	"include": [
-		"./src/**/*.ts", 
+		"./src/**/*.ts"
 	],
 	"exclude": [
 		"./src/client/**/*.ts",
-		"./src/client-react/**/*.ts"
+		"./src/client/**/*.vue"
 	]
 }

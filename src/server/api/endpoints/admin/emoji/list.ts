@@ -38,7 +38,7 @@ export const meta = {
 
 export default define(meta, async (ps) => {
 	const q = makePaginationQuery(Emojis.createQueryBuilder('emoji'), ps.sinceId, ps.untilId)
-		.andWhere('emoji.host IS NULL');
+		.andWhere(`emoji.host IS NULL`);
 
 	let emojis: Emoji[];
 

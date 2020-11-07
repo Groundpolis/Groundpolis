@@ -1,16 +1,16 @@
 <template>
 <span class="mk-acct" v-once>
 	<span class="name">@{{ user.username }}</span>
-	<span class="host" v-if="(user.host && $store.state.device.userHostDisplayMode !== 1) || detail || $store.state.settings.showFullAcct">@{{ user.host || host }}</span>
+	<span class="host" v-if="user.host || detail || $store.state.settings.showFullAcct">@{{ user.host || host }}</span>
 </span>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { toUnicode } from 'punycode';
-import { host } from '../config';
+import { host } from '@/config';
 
-export default Vue.extend({
+export default defineComponent({
 	props: ['user', 'detail'],
 	data() {
 		return {

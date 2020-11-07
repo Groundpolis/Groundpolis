@@ -1,25 +1,26 @@
 <template>
 	<div class="user _panel">
-		<mk-avatar class="avatar" :user="user"/>
+		<MkAvatar class="avatar" :user="user"/>
 			<div class="body">
 				<div class="name">
-					<router-link class="name" :to="user | userPage" v-user-preview="user.id"><mk-user-name :user="user"/></router-link>
-					<span class="username"><mk-acct :user="user"/></span>
+					<router-link class="name" :to="userPage(user)" v-user-preview="user.id"><MkUser-name :user="user"/></router-link>
+					<span class="username"><MkAcct :user="user"/></span>
 				</div>
 				<div class="description">
-					<mfm v-if="user.description" :text="user.description" :is-note="false" :author="user" :i="$store.state.i" :custom-emojis="user.emojis"/>
+					<Mfm v-if="user.description" :text="user.description" :is-note="false" :author="user" :i="$store.state.i" :custom-emojis="user.emojis"/>
 					<span v-else class="empty">{{ $t('noAccountDescription') }}</span>
 				</div>
 			</div>
-			<mk-follow-button class="koudoku-button" v-if="$store.getters.isSignedIn && user.id != $store.state.i.id" :user="user" mini/>
+			<MkFollowButton class="koudoku-button" v-if="$store.getters.isSignedIn && user.id != $store.state.i.id" :user="user" mini/>
 	</div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import MkFollowButton from './follow-button.vue';
+import { userPage } from '@/filters/user';
 
-export default Vue.extend({
+export default defineComponent({
 	components: {
 		MkFollowButton,
 	},
@@ -29,6 +30,9 @@ export default Vue.extend({
 			required: true
 		},
 	},
+	methods: {
+		userPage,
+	}
 });
 </script>
 
