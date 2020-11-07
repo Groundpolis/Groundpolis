@@ -455,43 +455,6 @@ hr {
 	padding: 5px;
 }
 
-._section {
-	padding: var(--section-padding, 32px);
-
-	&:empty {
-		display: none;
-	}
-
-	&:not(:empty) + ._section {
-		border-top: solid 1px var(--divider);
-	}
-
-	@media (max-width: 500px) {
-		padding: var(--section-padding, 10px);
-
-		> ._title {
-			font-size: 1.1em;
-			font-weight: bold;
-		}
-	}
-
-	> ._title,
-	> ._content {
-		max-width: var(--baseContentWidth, 750px);
-		margin: 0 auto;
-	}
-
-	> ._title {
-		margin-bottom: 24px;
-		font-size: 1.25em;
-		font-weight: bold;
-	}
-
-	&._fitBottom {
-		padding-bottom: 0;
-	}
-}
-
 .prism-editor__textarea:focus {
 	outline: none;
 }
