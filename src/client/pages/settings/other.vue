@@ -29,7 +29,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import MkSwitch from '@/components/ui/switch.vue';
 import MkSelect from '@/components/ui/select.vue';
 import MkButton from '@/components/ui/button.vue';
@@ -42,14 +41,9 @@ export default defineComponent({
 		MkButton,
 	},
 
-	emits: ['info'],
-	
 	data() {
 		return {
-			INFO: {
-				title: this.$t('other'),
-				icon: faEllipsisH
-			}
+			
 		}
 	},
 
@@ -62,10 +56,6 @@ export default defineComponent({
 			get() { return this.$store.state.settings.stealReaction; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'stealReaction', value }); }
 		},
-	},
-
-	mounted() {
-		this.$emit('info', this.INFO);
 	},
 
 	methods: {

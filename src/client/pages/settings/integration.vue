@@ -25,25 +25,17 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { apiUrl } from '@/config';
 import MkButton from '@/components/ui/button.vue';
-import * as os from '@/os';
 
 export default defineComponent({
 	components: {
 		MkButton
 	},
 
-	emits: ['info'],
-
 	data() {
 		return {
-			INFO: {
-				title: this.$t('integration'),
-				icon: faShareAlt
-			},
 			apiUrl,
 			twitterForm: null,
 			discordForm: null,
@@ -72,8 +64,6 @@ export default defineComponent({
 	},
 
 	mounted() {
-		this.$emit('info', this.INFO);
-
 		document.cookie = `igi=${this.$store.state.i.token}; path=/;` +
 			` max-age=31536000;` +
 			(document.location.protocol.startsWith('https') ? ' secure' : '');

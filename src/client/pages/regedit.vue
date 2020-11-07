@@ -40,8 +40,6 @@ export default defineComponent({
 		MkInfo, MkButton, MkTextarea, MkTab
 	},
 
-	emits: ['info'],
-
 	data() {
 		return {
 			INFO: {
@@ -54,10 +52,6 @@ export default defineComponent({
 			deviceSettings: JSON5.stringify(this.$store.state.device, null, '\t'),
 			deviceUserSettings: JSON5.stringify(this.$store.state.deviceUser, null, '\t'),
 		};
-	},
-
-	mounted() {
-		this.$emit('info', this.INFO);
 	},
 
 	methods: {

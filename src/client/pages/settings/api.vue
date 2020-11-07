@@ -13,7 +13,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faKey } from '@fortawesome/free-solid-svg-icons';
 import MkButton from '@/components/ui/button.vue';
 import MkInput from '@/components/ui/input.vue';
 import * as os from '@/os';
@@ -23,20 +22,10 @@ export default defineComponent({
 		MkButton, MkInput
 	},
 
-	emits: ['info'],
-
 	data() {
 		return {
-			INFO: {
-				title: 'API',
-				icon: faKey
-			},
 			isDesktop: window.innerWidth >= 1100,
 		};
-	},
-
-	mounted() {
-		this.$emit('info', this.INFO);
 	},
 
 	methods: {

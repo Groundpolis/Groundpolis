@@ -22,7 +22,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import MkSelect from '@/components/ui/select.vue';
 import MkSwitch from '@/components/ui/switch.vue';
 import * as os from '@/os';
@@ -33,14 +32,8 @@ export default defineComponent({
 		MkSwitch,
 	},
 
-	emits: ['info'],
-	
 	data() {
 		return {
-			INFO: {
-				title: this.$t('privacy'),
-				icon: faLockOpen
-			},
 			isLocked: false,
 			autoAcceptFollowed: false,
 		}
@@ -66,10 +59,6 @@ export default defineComponent({
 	created() {
 		this.isLocked = this.$store.state.i.isLocked;
 		this.autoAcceptFollowed = this.$store.state.i.autoAcceptFollowed;
-	},
-
-	mounted() {
-		this.$emit('info', this.INFO);
 	},
 
 	methods: {

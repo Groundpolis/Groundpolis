@@ -3,30 +3,21 @@
 	<div class="nav" v-if="!narrow || page == null">
 		<div class="menu">
 			<div class="label">{{ $t('basicSettings') }}</div>
-			<MkA class="item" :class="{ active: page === 'profile' }" replace to="/settings/profile"><Fa :icon="faUser" fixed-width class="icon"/>{{ $t('profile') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'privacy' }" replace to="/settings/privacy"><Fa :icon="faLockOpen" fixed-width class="icon"/>{{ $t('privacy') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'reaction' }" replace to="/settings/reaction"><Fa :icon="faLaugh" fixed-width class="icon"/>{{ $t('reaction') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'notifications' }" replace to="/settings/notifications"><Fa :icon="faBell" fixed-width class="icon"/>{{ $t('notifications') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'integration' }" replace to="/settings/integration"><Fa :icon="faShareAlt" fixed-width class="icon"/>{{ $t('integration') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'security' }" replace to="/settings/security"><Fa :icon="faLock" fixed-width class="icon"/>{{ $t('security') }}</MkA>
+			<MkA v-for="i in basicPages" :key="i.name" class="item" :class="{ active: page === i.name }" replace :to="`/settings/${i.name}`">
+				<Fa :icon="i.icon" fixed-width class="icon"/> {{ i.title }}
+			</MkA>
 		</div>
 		<div class="menu">
 			<div class="label">{{ $t('clientSettings') }}</div>
-			<MkA class="item" :class="{ active: page === 'general' }" replace to="/settings/general"><Fa :icon="faCogs" fixed-width class="icon"/>{{ $t('general') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'theme' }" replace to="/settings/theme"><Fa :icon="faPalette" fixed-width class="icon"/>{{ $t('theme') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'sidebar' }" replace to="/settings/sidebar"><Fa :icon="faListUl" fixed-width class="icon"/>{{ $t('sidebar') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'sounds' }" replace to="/settings/sounds"><Fa :icon="faMusic" fixed-width class="icon"/>{{ $t('sounds') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'plugins' }" replace to="/settings/plugins"><Fa :icon="faPlug" fixed-width class="icon"/>{{ $t('plugins') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'gacha' }" replace to="/settings/gacha"><Fa :icon="faFish" fixed-width class="icon"/>{{ $t('gacha') }}</MkA>
+			<MkA v-for="i in clientPages" :key="i.name" class="item" :class="{ active: page === i.name }" replace :to="`/settings/${i.name}`">
+				<Fa :icon="i.icon" fixed-width class="icon"/> {{ i.title }}
+			</MkA>
 		</div>
 		<div class="menu">
 			<div class="label">{{ $t('otherSettings') }}</div>
-			<MkA class="item" :class="{ active: page === 'import-export' }" replace to="/settings/import-export"><Fa :icon="faBoxes" fixed-width class="icon"/>{{ $t('importAndExport') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'mute-block' }" replace to="/settings/mute-block"><Fa :icon="faBan" fixed-width class="icon"/>{{ $t('muteAndBlock') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'word-mute' }" replace to="/settings/word-mute"><Fa :icon="faCommentSlash" fixed-width class="icon"/>{{ $t('wordMute') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'api' }" replace to="/settings/api"><Fa :icon="faKey" fixed-width class="icon"/>API</MkA>
-			<MkA class="item" :class="{ active: page === 'labs' }" replace to="/settings/labs"><Fa :icon="faFlask" fixed-width class="icon"/>{{ $t('_labs.title') }}</MkA>
-			<MkA class="item" :class="{ active: page === 'other' }" replace to="/settings/other"><Fa :icon="faEllipsisH" fixed-width class="icon"/>{{ $t('other') }}</MkA>
+			<MkA v-for="i in otherPages" :key="i.name" class="item" :class="{ active: page === i.name }" replace :to="`/settings/${i.name}`">
+				<Fa :icon="i.icon" fixed-width class="icon"/> {{ i.title }}
+			</MkA>
 		</div>
 		<div class="menu">
 			<button class="_button item" @click="logout">{{ $t('logout') }}</button>
@@ -34,17 +25,18 @@
 		</div>
 	</div>
 	<div class="main">
-		<component :is="component" @info="onInfo"/>
+		<component :is="component"/>
 	</div>
 </div>
 </template>
 
 <script lang="ts">
-import { computed, defineAsyncComponent, defineComponent, onMounted, ref } from 'vue';
-import { faCog, faPalette, faPlug, faUser, faListUl, faLock, faCommentSlash, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish } from '@fortawesome/free-solid-svg-icons';
+import { computed, defineComponent, onMounted, ref } from 'vue';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell } from '@fortawesome/free-regular-svg-icons';
 import * as os from '@/os';
 import { i18n } from '@/i18n';
+import { pages } from './index.pages';
 
 export default defineComponent({
 	props: {
@@ -55,39 +47,22 @@ export default defineComponent({
 	},
 
 	setup(props, context) {
-		const INFO = ref({
+		const page = computed(() => pages.find(p => p.name === props.page));
+
+		const INFO = computed(() => page.value ? {
+			title: page.value.title,
+			icon: page.value.icon,
+		} : {
 			title: i18n.global.t('settings'),
-			icon: faCog
+			icon: faCog,
 		});
+
 		const narrow = ref(false);
 		const view = ref(null);
 		const el = ref(null);
-		const onInfo = (viewInfo) => {
-			INFO.value = viewInfo;
-		};
+
 		const component = computed(() => {
-			switch (props.page) {
-				case 'profile': return defineAsyncComponent(() => import('./profile.vue'));
-				case 'privacy': return defineAsyncComponent(() => import('./privacy.vue'));
-				case 'reaction': return defineAsyncComponent(() => import('./reaction.vue'));
-				case 'notifications': return defineAsyncComponent(() => import('./notifications.vue'));
-				case 'mute-block': return defineAsyncComponent(() => import('./mute-block.vue'));
-				case 'word-mute': return defineAsyncComponent(() => import('./word-mute.vue'));
-				case 'integration': return defineAsyncComponent(() => import('./integration.vue'));
-				case 'security': return defineAsyncComponent(() => import('./security.vue'));
-				case 'api': return defineAsyncComponent(() => import('./api.vue'));
-				case 'other': return defineAsyncComponent(() => import('./other.vue'));
-				case 'general': return defineAsyncComponent(() => import('./general.vue'));
-				case 'theme': return defineAsyncComponent(() => import('./theme.vue'));
-				case 'sidebar': return defineAsyncComponent(() => import('./sidebar.vue'));
-				case 'sounds': return defineAsyncComponent(() => import('./sounds.vue'));
-				case 'plugins': return defineAsyncComponent(() => import('./plugins.vue'));
-				case 'import-export': return defineAsyncComponent(() => import('./import-export.vue'));
-				case 'regedit': return defineAsyncComponent(() => import('./regedit.vue'));
-				case 'labs': return defineAsyncComponent(() => import('./labs.vue'));
-				case 'gacha': return defineAsyncComponent(() => import('./gacha.vue'));
-				default: return null;
-			}
+			return page.value ? page.value.component() : null;
 		});
 
 		onMounted(() => {
@@ -110,11 +85,13 @@ export default defineComponent({
 			narrow,
 			view,
 			el,
-			onInfo,
+			basicPages: pages.filter(p => p.type === 'basic'),
+			clientPages: pages.filter(p => p.type === 'client'),
+			otherPages: pages.filter(p => p.type === 'other'),
 			component,
 			logout: () => os.signout(),
 			logoutAll,
-			faPalette, faPlug, faUser, faListUl, faLock, faLaugh, faCommentSlash, faMusic, faBell, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish
+			faLaugh, faBell
 		};
 	},
 });

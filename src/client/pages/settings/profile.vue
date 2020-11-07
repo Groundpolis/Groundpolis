@@ -93,14 +93,8 @@ export default defineComponent({
 		MkSelect,
 	},
 	
-	emits: ['info'],
-
 	data() {
 		return {
-			INFO: {
-				title: this.$t('profile'),
-				icon: faUser
-			},
 			host,
 			name: null,
 			description: null,
@@ -143,10 +137,6 @@ export default defineComponent({
 		this.fieldValue2 = this.$store.state.i.fields[2] ? this.$store.state.i.fields[2].value : null;
 		this.fieldName3 = this.$store.state.i.fields[3] ? this.$store.state.i.fields[3].name : null;
 		this.fieldValue3 = this.$store.state.i.fields[3] ? this.$store.state.i.fields[3].value : null;
-	},
-
-	mounted() {
-		this.$emit('info', this.INFO);
 	},
 
 	methods: {

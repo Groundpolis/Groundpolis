@@ -21,7 +21,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import { faBell } from '@fortawesome/free-regular-svg-icons';
 import MkButton from '@/components/ui/button.vue';
 import MkSwitch from '@/components/ui/switch.vue';
 import { notificationTypes } from '../../../types';
@@ -32,21 +31,11 @@ export default defineComponent({
 		MkButton,
 		MkSwitch,
 	},
-
-	emits: ['info'],
 	
 	data() {
 		return {
-			INFO: {
-				title: this.$t('notifications'),
-				icon: faBell
-			},
 			faCog
 		}
-	},
-
-	mounted() {
-		this.$emit('info', this.INFO);
 	},
 
 	methods: {

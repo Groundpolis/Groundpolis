@@ -30,7 +30,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faBan } from '@fortawesome/free-solid-svg-icons';
 import MkPagination from '@/components/ui/pagination.vue';
 import MkTab from '@/components/tab.vue';
 import MkInfo from '@/components/ui/info.vue';
@@ -44,14 +43,8 @@ export default defineComponent({
 		MkInfo,
 	},
 
-	emits: ['info'],
-
 	data() {
 		return {
-			INFO: {
-				title: this.$t('muteAndBlock'),
-				icon: faBan
-			},
 			tab: 'mute',
 			mutingPagination: {
 				endpoint: 'mute/list',
@@ -62,10 +55,6 @@ export default defineComponent({
 				limit: 10,
 			},
 		}
-	},
-
-	mounted() {
-		this.$emit('info', this.INFO);
 	},
 
 	methods: {

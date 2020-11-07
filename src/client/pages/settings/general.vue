@@ -43,62 +43,17 @@
 		</div>
 	</section>
 
-	<section class="_card _vMargin">
-		<div class="_title">{{ $t('appearance') }}</div>
-		<div class="_content">
-			<MkSwitch v-model:value="disableAnimatedMfm">{{ $t('disableAnimatedMfm') }}</MkSwitch>
-			<MkSwitch v-model:value="reduceAnimation">{{ $t('reduceUiAnimation') }}</MkSwitch>
-			<MkSwitch v-model:value="useBlurEffectForModal">{{ $t('useBlurEffectForModal') }}</MkSwitch>
-			<MkSwitch v-model:value="useOsNativeEmojis">
-				{{ $t('useOsNativeEmojis') }}
-				<template #desc><Mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
-			</MkSwitch>
-		</div>
-		<div class="_content">
-			<div>{{ $t('fontSize') }}</div>
-			<MkRadio v-model="fontSize" value="small"><span style="font-size: 14px;">Aa</span></MkRadio>
-			<MkRadio v-model="fontSize" :value="null"><span style="font-size: 16px;">Aa</span></MkRadio>
-			<MkRadio v-model="fontSize" value="large"><span style="font-size: 18px;">Aa</span></MkRadio>
-			<MkRadio v-model="fontSize" value="veryLarge"><span style="font-size: 20px;">Aa</span></MkRadio>
-		</div>
-		<div class="_content">
-			<div>{{ $t('instanceTicker') }}</div>
-			<MkRadio v-model="instanceTicker" value="none">{{ $t('_instanceTicker.none') }}</MkRadio>
-			<MkRadio v-model="instanceTicker" value="remote">{{ $t('_instanceTicker.remote') }}</MkRadio>
-			<MkRadio v-model="instanceTicker" value="always">{{ $t('_instanceTicker.always') }}</MkRadio>
-		</div>
-	</section>
-
-	<section class="_card _vMargin">
-		<div class="_title">{{ $t('deck') }}</div>
-		<div class="_content">
-			<div>{{ $t('defaultNavigationBehaviour') }}</div>
-			<MkSwitch v-model:value="deckNavWindow">{{ $t('openInWindow') }}</MkSwitch>
-		</div>
-		<div class="_content">
-			<MkSwitch v-model:value="deckAlwaysShowMainColumn">
-				{{ $t('_deck.alwaysShowMainColumn') }}
-			</MkSwitch>
-		</div>
-		<div class="_content">
-			<div>{{ $t('_deck.columnAlign') }}</div>
-			<MkRadio v-model="deckColumnAlign" value="left">{{ $t('left') }}</MkRadio>
-			<MkRadio v-model="deckColumnAlign" value="center">{{ $t('center') }}</MkRadio>
-		</div>
-	</section>
-
 	<MkButton @click="cacheClear()" primary style="margin: var(--margin) auto;">{{ $t('cacheClear') }}</MkButton>
 </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faImage, faCog, faColumns, faCogs, faRetweet } from '@fortawesome/free-solid-svg-icons';
+import { faRetweet } from '@fortawesome/free-solid-svg-icons';
 import MkButton from '@/components/ui/button.vue';
 import MkSwitch from '@/components/ui/switch.vue';
 import MkSelect from '@/components/ui/select.vue';
 import MkRadio from '@/components/ui/radio.vue';
-import MkRange from '@/components/ui/range.vue';
 import { langs } from '@/config';
 import { clientDb, set } from '@/db';
 import * as os from '@/os';
@@ -109,21 +64,13 @@ export default defineComponent({
 		MkSwitch,
 		MkSelect,
 		MkRadio,
-		MkRange,
 	},
-
-	emits: ['info'],
 
 	data() {
 		return {
-			INFO: {
-				title: this.$t('general'),
-				icon: faCogs
-			},
 			langs,
 			lang: localStorage.getItem('lang'),
-			fontSize: localStorage.getItem('fontSize'),
-			faImage, faCog, faColumns, faRetweet
+			faRetweet
 		}
 	},
 
@@ -131,26 +78,6 @@ export default defineComponent({
 		serverDisconnectedBehavior: {
 			get() { return this.$store.state.device.serverDisconnectedBehavior; },
 			set(value) { this.$store.commit('device/set', { key: 'serverDisconnectedBehavior', value }); }
-		},
-
-		reduceAnimation: {
-			get() { return !this.$store.state.device.animation; },
-			set(value) { this.$store.commit('device/set', { key: 'animation', value: !value }); }
-		},
-
-		useBlurEffectForModal: {
-			get() { return this.$store.state.device.useBlurEffectForModal; },
-			set(value) { this.$store.commit('device/set', { key: 'useBlurEffectForModal', value: value }); }
-		},
-
-		disableAnimatedMfm: {
-			get() { return !this.$store.state.device.animatedMfm; },
-			set(value) { this.$store.commit('device/set', { key: 'animatedMfm', value: !value }); }
-		},
-
-		useOsNativeEmojis: {
-			get() { return this.$store.state.device.useOsNativeEmojis; },
-			set(value) { this.$store.commit('device/set', { key: 'useOsNativeEmojis', value }); }
 		},
 
 		imageNewTab: {
@@ -173,34 +100,14 @@ export default defineComponent({
 			set(value) { this.$store.commit('device/set', { key: 'defaultSideView', value }); }
 		},
 
-		deckNavWindow: {
-			get() { return this.$store.state.device.deckNavWindow; },
-			set(value) { this.$store.commit('device/set', { key: 'deckNavWindow', value }); }
-		},
-
 		chatOpenBehavior: {
 			get() { return this.$store.state.device.chatOpenBehavior; },
 			set(value) { this.$store.commit('device/set', { key: 'chatOpenBehavior', value }); }
 		},
 
-		instanceTicker: {
-			get() { return this.$store.state.device.instanceTicker; },
-			set(value) { this.$store.commit('device/set', { key: 'instanceTicker', value }); }
-		},
-
 		enableInfiniteScroll: {
 			get() { return this.$store.state.device.enableInfiniteScroll; },
 			set(value) { this.$store.commit('device/set', { key: 'enableInfiniteScroll', value }); }
-		},
-
-		deckAlwaysShowMainColumn: {
-			get() { return this.$store.state.device.deckAlwaysShowMainColumn; },
-			set(value) { this.$store.commit('device/set', { key: 'deckAlwaysShowMainColumn', value }); }
-		},
-
-		deckColumnAlign: {
-			get() { return this.$store.state.device.deckColumnAlign; },
-			set(value) { this.$store.commit('device/set', { key: 'deckColumnAlign', value }); }
 		},
 		
 		renoteButtonMode: {
@@ -222,22 +129,9 @@ export default defineComponent({
 				});
 		},
 
-		fontSize() {
-			if (this.fontSize == null) {
-				localStorage.removeItem('fontSize');
-			} else {
-				localStorage.setItem('fontSize', this.fontSize);
-			}
-			location.reload();
-		},
-
 		enableInfiniteScroll() {
 			location.reload()
 		},
-	},
-
-	mounted() {
-		this.$emit('info', this.INFO);
 	},
 
 	methods: {

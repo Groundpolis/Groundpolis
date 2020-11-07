@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faLaugh, faSave, faEye } from '@fortawesome/free-regular-svg-icons';
+import { faSave, faEye } from '@fortawesome/free-regular-svg-icons';
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import MkInput from '@/components/ui/input.vue';
 import MkButton from '@/components/ui/button.vue';
@@ -34,17 +34,11 @@ export default defineComponent({
 		MkSwitch,
 	},
 
-	emits: ['info'],
-	
 	data() {
 		return {
-			INFO: {
-				title: this.$t('reaction'),
-				icon: faLaugh
-			},
 			reactions: this.$store.state.settings.reactions.join(''),
 			changed: false,
-			faLaugh, faSave, faEye, faUndo
+			faSave, faEye, faUndo
 		}
 	},
 

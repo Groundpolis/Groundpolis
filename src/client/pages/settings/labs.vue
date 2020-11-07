@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faFlask } from '@fortawesome/free-solid-svg-icons';
 
 import MkSwitch from '@/components/ui/switch.vue';
 import MkButton from '@/components/ui/button.vue';
@@ -45,14 +44,8 @@ export default defineComponent({
 		MkButton,
 	},
 
-	emits: [ 'info' ],
-
 	data() {
 		return {
-			INFO: {
-				title: this.$t('_labs.title'),
-				icon: faFlask,
-			},
 			debug
 		}
 	},
@@ -74,10 +67,6 @@ export default defineComponent({
 		},
 	},
 
-	mounted() {
-		this.$emit('info', this.INFO);
-	},
-
 	methods: {
 		changeDebug(v) {
 			localStorage.setItem('debug', v.toString());
@@ -85,7 +74,7 @@ export default defineComponent({
 		},
 
 		regedit() {
-			os.pageWindow('/settings/regedit');
+			os.pageWindow('/regedit');
 		},
 
 		taskmanager() {
