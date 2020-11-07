@@ -1,12 +1,21 @@
 <template>
 <MkModal ref="modal" @click="$refs.modal.close()" @closed="$emit('closed')">
 	<div class="xubzgfga">
-		<header>{{ image.name }}</header>
-		<img :src="image.url" :alt="image.name" :title="image.name" @click="$refs.modal.close()"/>
-		<footer>
-			<span>{{ image.type }}</span>
-			<span>{{ bytes(image.size) }}</span>
-			<span v-if="image.properties && image.properties.width">{{ number(image.properties.width) }}px × {{ number(image.properties.height) }}px</span>
+		<header v-if="hasPrev || hasNext">
+			<button class="_button command" @click="index--" :disabled="!hasPrev">
+				<Fa :icon="faChevronLeft" />
+			</button>
+			{{ index + 1 }} / {{ other.length }}
+			<button class="_button command" @click="index++" :disabled="!hasNext">
+				<Fa :icon="faChevronRight" />
+			</button>
+		</header>
+		<img :src="current.url" :alt="current.name" :title="current.name" @click="$refs.modal.close()"/>
+		<footer v-if="current.name || current.type || current.size || current.properties">
+			<span v-if="current.name">{{ current.name }}</span>
+			<span v-if="current.type">{{ current.type }}</span>
+			<span v-if="current.size">{{ bytes(current.size) }}</span>
+			<span v-if="current.properties && current.properties.width">{{ number(current.properties.width) }}px × {{ number(current.properties.height) }}px</span>
 		</footer>
 	</div>
 </MkModal>
@@ -15,6 +24,7 @@
 <script lang="ts">
 // TODO: Groundpolis 拡張を再実装する
 import { defineComponent } from 'vue';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import bytes from '@/filters/bytes';
 import number from '@/filters/number';
 import MkModal from '@/components/ui/modal.vue';
@@ -35,10 +45,12 @@ export default defineComponent({
 		},
 	},
 
+	emits: ['closed'],
+
 	data() {
 		return {
-			index: 0,
-			// faChevronLeft, faChevronRight,
+			index: this.other ? this.other.indexOf(this.image) : 0,
+			faChevronLeft, faChevronRight,
 		};
 	},
 
@@ -55,8 +67,6 @@ export default defineComponent({
 		},
 	},
 
-	emits: ['closed'],
-
 	methods: {
 		bytes,
 		number,
@@ -70,7 +80,8 @@ export default defineComponent({
 
 	> header,
 	> footer {
-		display: inline-block;
+		display: block;
+		width: fit-content;
 		padding: 6px 9px;
 		font-size: 90%;
 		background: rgba(0, 0, 0, 0.5);
@@ -81,6 +92,11 @@ export default defineComponent({
 	> header {
 		margin-bottom: 8px;
 		opacity: 0.9;
+		font-size: 24px;
+		> .command {
+			color: #fff;
+			width: 32px;
+		}
 	}
 
 	> img {
@@ -100,28 +116,5 @@ export default defineComponent({
 			border-left: solid 1px rgba(255, 255, 255, 0.5);
 		}
 	}
-}
-
-.k9cj3n2a, .uvv3m2na {
-	position: fixed;
-	z-index: 5;
-	background: none;
-	border: none;
-	color: var(--fg);
-	font-size: 48px;
-	width: 64px;
-	height: 64px;
-	margin: auto 0;
-	top: 100%;
-	bottom: 100%;
-	cursor: pointer;
-}
-
-.k9cj3n2a {
-	left: 0;
-} 
-
-.uvv3m2na {
-	right: 0;
 }
 </style>

@@ -65,21 +65,21 @@
 	<section class="_section _vMargin">
 		<div class="_content">
 			<div>
-				<mk-switch v-model="usePressure" style="display: inline-flex">{{ $t('usePressure') }}</mk-switch>
+				<MkSwitch v-model="usePressure" style="display: inline-flex">{{ $t('usePressure') }}</MkSwitch>
 				<a class="_link" @click="showUsePressureHint" style="margin-left: 8px"><fa :icon="farQuestionCircle"/></a>
 			</div>
 			<div>
-				<mk-range v-model:value="penWidth" :min="1" :max="256" :step="1" style="display: inline-block">
+				<MkRange v-model:value="penWidth" :min="1" :max="256" :step="1" style="display: inline-block">
 					<template #icon><fa :icon="faPen"/></template>
 					<template #title><span v-text="$t('penWidth')"/></template>
-				</mk-range>
+				</MkRange>
 				<span v-text="penWidth + 'px'"/>
 			</div>
 			<div>
-				<mk-range v-model:value="eraserWidth" :min="1" :max="256" :step="1" style="display: inline-block">
+				<MkRange v-model:value="eraserWidth" :min="1" :max="256" :step="1" style="display: inline-block">
 					<template #icon><fa :icon="faEraser"/></template>
 					<template #title><span v-text="$t('eraserWidth')"/></template>
-				</mk-range>
+				</MkRange>
 				<span v-text="eraserWidth + 'px'"/>
 			</div>
 		</div>

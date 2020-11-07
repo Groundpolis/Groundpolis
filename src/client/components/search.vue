@@ -1,8 +1,8 @@
 <template>
-	<mk-input :value="value" type="search" @keydown="searchKeypress" @input="$emit('update:value', $event.target.value)">
+	<MkInput :value="value" type="search" @keydown="searchKeypress" @input="$emit('update:value', $event.target.value)">
 		<span>{{ $t('search') }}</span>
 		<template #prefix><fa :icon="faSearch" /></template>
-	</mk-input>
+	</MkInput>
 </template>
 
 <script lang="ts">

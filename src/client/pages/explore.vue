@@ -61,7 +61,7 @@
 	</template>
 
 	<template v-if="tab === '/featured'">
-		<x-notes ref="notes" :pagination="featuredPagination" @before="before" @after="after"/>
+		<XNotes ref="notes" :pagination="featuredPagination" @before="before" @after="after"/>
 	</template>
 </div>
 </template>

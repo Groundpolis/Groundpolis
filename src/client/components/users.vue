@@ -1,10 +1,10 @@
 <template>
-<mk-pagination :pagination="pagination" class="users" ref="list">
+<MkPagination :pagination="pagination" class="users" ref="list">
 	<template #empty><span>{{ $t('noUsers') }}</span></template>
 	<template #default="{items}">
-		<x-user v-for="user in items" :user="user" :key="user.id" />
+		<XUser v-for="user in items" :user="user" :key="user.id" />
 	</template>
-</mk-pagination>
+</MkPagination>
 </template>
 
 <script lang="ts">

@@ -42,7 +42,7 @@
 							</div>
 							<div class="proposer">
 								{{ $t('proposer') }}: 
-								<MkA :to="userPage(req.proposer)"><mk-acct :user="req.proposer"/></MkA>
+								<MkA :to="userPage(req.proposer)"><MkAcct :user="req.proposer"/></MkA>
 							</div>
 							<Mfm class="description" :text="req.description" />
 							<span class="state" v-if="req.state !== 'pending'">

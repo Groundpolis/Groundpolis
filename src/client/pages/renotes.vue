@@ -1,7 +1,7 @@
 <template>
 <div class="mk-note-page">
 	<template v-if="renoteState">
-		<mk-tab v-if="renoteState.isRenoted && renoteState.isQuoted" style="height: 100%" v-model:value="tab" class="tab" :items="[
+		<MkTab v-if="renoteState.isRenoted && renoteState.isQuoted" style="height: 100%" v-model:value="tab" class="tab" :items="[
 			{ label: $t('quote'), value: 'quotes', icon: faQuoteRight },
 			{ label: $t('renote'), value: 'renotes', icon: faRetweet },
 		]"
@@ -11,12 +11,12 @@
 			{{ $t(renoteState.isQuoted ? 'quotes' : 'renotes') }}
 		</template>
 
-		<x-notes v-if="tab === 'quotes'" ref="quotes" :pagination="quotes"/>
-		<x-users v-else-if="tab === 'renotes'" ref="renotes" :pagination="renotedUsers"/>
+		<XNotes v-if="tab === 'quotes'" ref="quotes" :pagination="quotes"/>
+		<XUsers v-else-if="tab === 'renotes'" ref="renotes" :pagination="renotedUsers"/>
 	</template>
 
 	<div v-if="error">
-		<mk-error @retry="fetch()"/>
+		<MkError @retry="fetch()"/>
 	</div>
 </div>
 </template>

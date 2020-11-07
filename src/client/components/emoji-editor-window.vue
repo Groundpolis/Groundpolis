@@ -1,5 +1,5 @@
 <template>
-<x-window ref="window" :width="400" :height="450" :no-padding="true" @closed="() => { $emit('closed'); destroyDom(); }" :with-ok-button="true" :ok-button-disabled="false" @ok="ok()">
+<XWindow ref="window" :width="400" :height="450" :no-padding="true" @closed="() => { $emit('closed'); destroyDom(); }" :with-ok-button="true" :ok-button-disabled="false" @ok="ok()">
 	<template #header>:{{ emoji.name }}:</template>
 
 	<div class="yigymqpb _section">
@@ -12,7 +12,7 @@
 		</MkInput>
 		<MkButton @click="del()"><fa :icon="faTrashAlt"/> {{ $t('delete') }}</MkButton>
 	</div>
-</x-window>
+</XWindow>
 </template>
 
 <script lang="ts">

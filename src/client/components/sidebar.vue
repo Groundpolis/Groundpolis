@@ -49,8 +49,8 @@
 				<template v-else>
 					<button v-for="acct in accounts" :key="acct.id" @click="switchAccount(acct)" class="item account _button">
 						<div class="name">
-							<mk-avatar :user="acct" class="avatar" :disable-preview="true"/>
-							<mk-user-name class="text" :user="acct" :nowrap="true"/>
+							<MkAvatar :user="acct" class="avatar" :disable-preview="true"/>
+							<MkUser-name class="text" :user="acct" :nowrap="true"/>
 						</div>
 					</button>
 					<div class="divider" v-if="accounts.length > 0"></div>

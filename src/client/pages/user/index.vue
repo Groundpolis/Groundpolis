@@ -32,7 +32,7 @@
 					<button v-else-if="user.isBlocking" @click="unblock" class="_button unblock">{{ $t('unblock') }}</button>
 				</div>
 			</div>
-			<MkAvatar class="avatar" :user="user" :disable-preview="true" @click="onAvatarClicked"/>
+			<MkAvatar class="avatar" :user="user" :disable-preview="true" :disable-link="true" @click="onAvatarClicked"/>
 			<div class="title">
 				<MkUserName :user="user" :nowrap="false" class="name"/>
 				<div class="bottom">
@@ -140,6 +140,7 @@ import { getUserMenu } from '@/scripts/get-user-menu';
 import number from '../../filters/number';
 import { userPage, acct as getAcct } from '../../filters/user';
 import * as os from '@/os';
+import ImageViewer from '@/components/image-viewer.vue';
 export default defineComponent({
 	components: {
 		XUserTimeline,
@@ -244,6 +245,15 @@ export default defineComponent({
 		pinnedNoteUpdated(oldValue, newValue) {
 			const i = this.user.pinnedNotes.findIndex(n => n === oldValue);
 			this.user.pinnedNotes[i] = newValue;
+		},
+		onAvatarClicked () {
+			if (this.$store.state.device.imageNewTab) {
+				window.open(this.user!.avatarUrl, '_blank');
+			} else {
+				os.popup(ImageViewer, {
+					image: { url: this.user!.avatarUrl }
+				}, {}, 'closed');
+			}
 		},
 		number,
 		userPage

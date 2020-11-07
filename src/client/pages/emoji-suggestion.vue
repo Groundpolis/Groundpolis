@@ -3,32 +3,32 @@
 		<section class="_section">
 			<div class="_content">
 				<div class="preview">
-					<mk-button inline @click="selectFile">{{ $t('selectFile') }}</mk-button>
+					<MkButton inline @click="selectFile">{{ $t('selectFile') }}</MkButton>
 					<img v-if="file" :src="file.url" :alt="file.name" />
 				</div>
-				<mk-input v-model:value="name"><span>{{ $t('name') }}</span></mk-input>
-				<mk-input v-model:value="aliases">
+				<MkInput v-model:value="name"><span>{{ $t('name') }}</span></MkInput>
+				<MkInput v-model:value="aliases">
 					<span>{{ $t('tags') }}</span>
 					<template #desc>{{ $t('tagsDescription') }}</template>
-				</mk-input>
-				<mk-textarea v-model:value="description" :use-autocomplete="true" :max="500">
+				</MkInput>
+				<MkTextarea v-model:value="description" :use-autocomplete="true" :max="500">
 					<span>{{ $t('emojiSuggestionMessage') }}</span>
 					<template #desc>{{ $t('emojiSuggestionMessageDescription') }}</template>
-				</mk-textarea>
+				</MkTextarea>
 			</div>
 			<div class="_footer">
-				<mk-button inline primary :disabled="!canSend" @click="send"><fa :icon="faPaperPlane" fixed-width />{{ $t('sendSuggestion') }}</mk-button>
+				<MkButton inline primary :disabled="!canSend" @click="send"><fa :icon="faPaperPlane" fixed-width />{{ $t('sendSuggestion') }}</MkButton>
 			</div>
 		</section>
 		<section class="_section _vMargin">
 			<div class="_title"><fa :icon="faHistory"/> {{ $t('history') }}</div>
 			<div class="_content filter">
-				<mk-switch v-model:value="includesPending"><fa :icon="faClock" fixed-width />{{ $t('pending') }}</mk-switch>
-				<mk-switch v-model:value="includesRejected"><fa :icon="faTimesCircle" fixed-width />{{ $t('rejected') }}</mk-switch>
-				<mk-switch v-model:value="includesAccepted"><fa :icon="faCheckCircle" fixed-width />{{ $t('accepted') }}</mk-switch>
+				<MkSwitch v-model:value="includesPending"><fa :icon="faClock" fixed-width />{{ $t('pending') }}</MkSwitch>
+				<MkSwitch v-model:value="includesRejected"><fa :icon="faTimesCircle" fixed-width />{{ $t('rejected') }}</MkSwitch>
+				<MkSwitch v-model:value="includesAccepted"><fa :icon="faCheckCircle" fixed-width />{{ $t('accepted') }}</MkSwitch>
 			</div>
 			<div class="_content">
-				<mk-pagination :pagination="pagination" class="suggestions" ref="pagination">
+				<MkPagination :pagination="pagination" class="suggestions" ref="pagination">
 					<template #empty><span>{{ $t('noSuggestions') }}</span></template>
 					<template #default="{items}">
 						<div class="item" v-for="item in items" :key="item.id">
@@ -41,10 +41,10 @@
 								<div class="aliases" v-if="item.aliases.length > 0">
 									<span class="alias" v-for="a in item.aliases" :key="a" v-text="a"/>
 								</div>
-								<mfm class="description" :text="item.description"/>
+								<Mfm class="description" :text="item.description"/>
 								<div class="moderator-comment" v-if="item.moderatorComment">
 									<h1 v-text="$t('commentFromModerators')" />
-									<mfm class="description" :text="item.moderatorComment"/>
+									<Mfm class="description" :text="item.moderatorComment"/>
 								</div>
 							</div>
 							<button class="delete" @click.stop="del(item.id)">
@@ -52,7 +52,7 @@
 							</button>
 						</div>
 					</template>
-				</mk-pagination>
+				</MkPagination>
 			</div>
 		</section>
 	</div>

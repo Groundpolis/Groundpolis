@@ -1,19 +1,19 @@
 <template>
-<div class="ipledcug">
-	<div class="_section _vMargin">
+<div>
+	<div class="_section">
 		<div class="_content">
 			<p v-text="$t('_labs.description')"/>
 		</div>
 		<div class="_content">
-			<mk-switch v-model="newMobileView">
+			<MkSwitch v-model="newMobileView">
 				{{ $t('_labs.newMobileView') }}
 				<template #desc>{{ $t('_labs.newMobileViewDescription') }}</template>
-			</mk-switch>
+			</MkSwitch>
 
-			<mk-switch v-model="injectUnlistedNoteInLTL">
+			<MkSwitch v-model="injectUnlistedNoteInLTL">
 				{{ $t('showUnlistedNotesInLTL') }}
 				<template #desc>{{ $t('showUnlistedNotesInLTLDesc') }}</template>
-			</mk-switch>
+			</MkSwitch>
 		</div>
 	</div>
 </div>
@@ -23,17 +23,19 @@
 import { defineComponent } from 'vue';
 import { faFlask } from '@fortawesome/free-solid-svg-icons';
 
-import MkSwitch from '../components/ui/switch.vue';
+import MkSwitch from '@/components/ui/switch.vue';
 
 export default defineComponent({
 	components: {
 		MkSwitch,
 	},
 
+	emits: [ 'info' ],
+
 	data() {
 		return {
 			INFO: {
-				title: this.$t('directNotes'),
+				title: this.$t('_labs.title'),
 				icon: faFlask,
 			},
 		}
@@ -54,6 +56,10 @@ export default defineComponent({
 		injectUnlistedNoteInLTL() {
 			location.reload();
 		},
+	},
+
+	mounted() {
+		this.$emit('info', this.INFO);
 	}
 });
 </script>
