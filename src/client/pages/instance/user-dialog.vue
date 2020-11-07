@@ -18,6 +18,8 @@
 			<div class="status">
 				<span class="staff" v-if="user.isAdmin"><Fa :icon="faBookmark"/></span>
 				<span class="staff" v-if="user.isModerator"><Fa :icon="farBookmark"/></span>
+				<span class="premium" v-if="user.isPremium"><Fa :icon="faCrown"/></span>
+				<span class="verified" v-if="user.isVerified"><GpVerified/></span>
 				<span class="punished" v-if="user.isSilenced"><Fa :icon="faMicrophoneSlash"/></span>
 				<span class="punished" v-if="user.isSuspended"><Fa :icon="faSnowflake"/></span>
 			</div>
@@ -25,6 +27,8 @@
 		<div class="_section">
 			<div class="_content">
 				<MkSwitch v-if="user.host == null && $store.state.i.isAdmin && (this.moderator || !user.isAdmin)" @update:value="toggleModerator" v-model:value="moderator">{{ $t('moderator') }}</MkSwitch>
+				<MkSwitch @update:value="toggleVerify" v-model:value="verified">{{ $t('verify') }}</MkSwitch>
+				<MkSwitch @update:value="togglePremium" v-model:value="premium">{{ $t('premium') }}</MkSwitch>
 				<MkSwitch @update:value="toggleSilence" v-model:value="silenced">{{ $t('silence') }}</MkSwitch>
 				<MkSwitch @update:value="toggleSuspend" v-model:value="suspended">{{ $t('suspend') }}</MkSwitch>
 			</div>
@@ -47,11 +51,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
-import { faTimes, faBookmark, faKey, faSync, faMicrophoneSlash, faExternalLinkSquareAlt } from '@fortawesome/free-solid-svg-icons';
+import { defineComponent } from 'vue';
+import { faTimes, faBookmark, faKey, faSync, faMicrophoneSlash, faExternalLinkSquareAlt, faCrown, } from '@fortawesome/free-solid-svg-icons';
 import { faSnowflake, faTrashAlt, faBookmark as farBookmark  } from '@fortawesome/free-regular-svg-icons';
 import MkButton from '@/components/ui/button.vue';
 import MkSwitch from '@/components/ui/switch.vue';
+import GpVerified from '@/components/verified.vue';
 import XModalWindow from '@/components/ui/modal-window.vue';
 import Progress from '@/scripts/loading';
 import { acct, userPage } from '../../filters/user';
@@ -61,6 +66,7 @@ export default defineComponent({
 	components: {
 		MkButton,
 		MkSwitch,
+		GpVerified,
 		XModalWindow,
 	},
 
@@ -79,7 +85,9 @@ export default defineComponent({
 			moderator: false,
 			silenced: false,
 			suspended: false,
-			faTimes, faBookmark, farBookmark, faKey, faSync, faMicrophoneSlash, faSnowflake, faTrashAlt, faExternalLinkSquareAlt
+			verified: false,
+			premium: false,
+			faTimes, faBookmark, farBookmark, faKey, faSync, faMicrophoneSlash, faSnowflake, faTrashAlt, faExternalLinkSquareAlt, faCrown,
 		};
 	},
 
@@ -104,6 +112,8 @@ export default defineComponent({
 			this.moderator = this.info.isModerator;
 			this.silenced = this.info.isSilenced;
 			this.suspended = this.info.isSuspended;
+			this.verified = this.info.isVerified;
+			this.premium = this.info.isPremium;
 			Progress.done();
 		},
 
@@ -165,6 +175,16 @@ export default defineComponent({
 
 		async toggleModerator(v) {
 			await os.api(v ? 'admin/moderators/add' : 'admin/moderators/remove', { userId: this.user.id });
+			await this.refreshUser();
+		},
+
+		async toggleVerify(v) {
+			await os.api(v ? 'admin/verify-user' : 'admin/unverify-user', { userId: this.user.id });
+			await this.refreshUser();
+		},
+
+		async togglePremium(v) {
+			await os.api(v ? 'admin/set-premium' : 'admin/unset-premium', { userId: this.user.id });
 			await this.refreshUser();
 		},
 
