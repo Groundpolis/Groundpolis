@@ -1,29 +1,31 @@
 import { faBell, faComments, faLaugh } from '@fortawesome/free-regular-svg-icons';
-import { faCloud, faColumns, faDoorClosed, faFileAlt, faGamepad, faHashtag, faListUl, faPaperclip, faPaintBrush, faSatellite, faSatelliteDish, faSearch, faStar, faTerminal, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faCloud, faColumns, faDoorClosed, faFileAlt, faGamepad, faHashtag, faListUl, faPaperclip, faMusic, faPaintBrush, faSatellite, faSatelliteDish, faStar, faTerminal, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { computed } from 'vue';
 import { store } from '@/store';
 import * as os from '@/os';
 import { i18n } from '@/i18n';
 
+const whenSignedIn = computed(() => store.getters.isSignedIn);
+
 export const sidebarDef = {
 	notifications: {
 		title: 'notifications',
 		icon: faBell,
-		show: computed(() => store.getters.isSignedIn),
+		show: whenSignedIn,
 		indicated: computed(() => store.getters.isSignedIn && store.state.i.hasUnreadNotification),
 		to: '/my/notifications',
 	},
 	messaging: {
 		title: 'messaging',
 		icon: faComments,
-		show: computed(() => store.getters.isSignedIn),
+		show: whenSignedIn,
 		indicated: computed(() => store.getters.isSignedIn && store.state.i.hasUnreadMessagingMessage),
 		to: '/my/messaging',
 	},
 	drive: {
 		title: 'drive',
 		icon: faCloud,
-		show: computed(() => store.getters.isSignedIn),
+		show: whenSignedIn,
 		to: '/my/drive',
 	},
 	followRequests: {
@@ -41,25 +43,25 @@ export const sidebarDef = {
 	lists: {
 		title: 'lists',
 		icon: faListUl,
-		show: computed(() => store.getters.isSignedIn),
+		show: whenSignedIn,
 		to: '/my/lists',
 	},
 	groups: {
 		title: 'groups',
 		icon: faUsers,
-		show: computed(() => store.getters.isSignedIn),
+		show: whenSignedIn,
 		to: '/my/groups',
 	},
 	antennas: {
 		title: 'antennas',
 		icon: faSatellite,
-		show: computed(() => store.getters.isSignedIn),
+		show: whenSignedIn,
 		to: '/my/antennas',
 	},
 	favorites: {
 		title: 'favorites',
 		icon: faStar,
-		show: computed(() => store.getters.isSignedIn),
+		show: whenSignedIn,
 		to: '/my/favorites',
 	},
 	pages: {
@@ -70,7 +72,7 @@ export const sidebarDef = {
 	clips: {
 		title: 'clip',
 		icon: faPaperclip,
-		show: computed(() => store.getters.isSignedIn),
+		show: whenSignedIn,
 		to: '/my/clips',
 	},
 	channels: {
@@ -80,6 +82,7 @@ export const sidebarDef = {
 	},
 	games: {
 		title: 'games',
+		show: whenSignedIn,
 		icon: faGamepad,
 		to: '/games/reversi',
 	},
@@ -91,7 +94,7 @@ export const sidebarDef = {
 	rooms: {
 		title: 'rooms',
 		icon: faDoorClosed,
-		show: computed(() => store.getters.isSignedIn),
+		show: whenSignedIn,
 		to: computed(() => `/@${store.state.i.username}/room`),
 	},
 	ui: {
@@ -122,12 +125,19 @@ export const sidebarDef = {
 	paint: {
 		title: 'paint',
 		icon: faPaintBrush,
-		show: computed(() => store.getters.isSignedIn),
+		show: whenSignedIn,
 		to: '/paint',
 	},
 	emojiSuggestion: {
 		title: 'emojiSuggestion',
 		icon: faLaugh,
+		show: whenSignedIn,
 		to: '/emoji-suggestion',
+	},
+	composer: {
+		title: 'composer',
+		icon: faMusic,
+		show: whenSignedIn,
+		to: '/composer',
 	},
 };
