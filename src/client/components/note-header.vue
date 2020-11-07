@@ -2,16 +2,15 @@
 <header class="kkwtjztg">
 	<MkA class="name-set" :to="userPage(note.user)" v-user-preview="note.user.id">
 		<template v-if="$store.state.device.noteNameDisplayMode === 0">
-				<MkUserName class="name" :user="note.user"/>
-				<span class="is-bot" v-if="note.user.isBot">bot</span>
-				<span class="username"><MkAcct :user="note.user"/></span>
+			<MkUserName class="name" :user="note.user"/>
+			<span class="username"><MkAcct :user="note.user"/></span>
 		</template>
 		<template v-else>
-				<span v-if="$store.state.device.noteNameDisplayMode !== 2" class="username"><MkAcct :user="note.user"/></span>
-				<MkUserName class="name" v-if="$store.state.device.noteNameDisplayMode !== 3" :user="note.user"/>
-				<span class="is-bot" v-if="note.user.isBot">bot</span>
+			<span v-if="$store.state.device.noteNameDisplayMode !== 2" class="username"><MkAcct :user="note.user"/></span>
+			<MkUserName class="name" v-if="$store.state.device.noteNameDisplayMode !== 3" :user="note.user"/>
 		</template>
 	</MkA>
+	<span class="is-bot" v-if="note.user.isBot">bot</span>
 	<span class="admin" v-if="note.user.isAdmin"><Fa :icon="faBookmark"/></span>
 	<GpVerified class="verified" v-if="note.user.isVerified" />
 	<span class="premium" v-if="note.user.isPremium"><Fa :icon="faCrown"/></span>
@@ -34,7 +33,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faCertificate, faCheck, faUsers, faHeart, faHeartbeat, faCrown } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, faUsers, faHeart, faHeartbeat, faCrown } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import notePage from '../filters/note';
 import { userPage } from '../filters/user';
@@ -57,7 +56,7 @@ export default defineComponent({
 
 	data() {
 		return {
-			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faCertificate, faCheck, faUsers, faHeart, faHeartbeat, faCrown
+			faHome, faUnlock, faEnvelope, faMobileAlt, faBookmark, farBookmark, faUsers, faHeart, faHeartbeat, faCrown
 		};
 	},
 
