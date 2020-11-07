@@ -50,7 +50,7 @@ if (_DEV_) {
 document.addEventListener('touchend', () => {}, { passive: true });
 
 if (localStorage.getItem('theme') == null) {
-	applyTheme(require('@/themes/l-white.json5'));
+	applyTheme(require('@/themes/d-groundpolis.json5'));
 }
 
 //#region SEE: https://css-tricks.com/the-trick-to-viewport-units-on-mobile/

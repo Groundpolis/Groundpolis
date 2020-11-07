@@ -26,6 +26,7 @@ export const builtinThemes = [
 	require('../themes/d-green.json5'),
 	require('../themes/d-blue.json5'),
 	require('../themes/d-persimmon.json5'),
+	require('../themes/d-groundpolis.json5'),
 
 	require('../themes/d-battery-saver.json5'),
 ] as Theme[];
