@@ -2,8 +2,8 @@
 <MkTooltip :source="source" ref="tooltip" @closed="$emit('closed')">
 	<div class="bqxuuuey">
 		<div class="info">
-			<div>{{ reaction.replace('@.', '') }}</div>
-			<XReactionIcon :reaction="reaction" :custom-emojis="emojis" class="icon" :no-style="true"/>
+			<div v-if="reaction && reaction.startsWith(':')">{{ reaction.replace('@.', '') }}</div>
+			<XReactionIcon :reaction="reaction" :custom-emojis="emojis" class="icon" :noStyle="false"/>
 		</div>
 		<template v-if="users.length <= 10">
 			<b v-for="u in users" :key="u.id" style="margin-right: 12px;">
@@ -65,7 +65,7 @@ export default defineComponent({
 
 		> .icon {
 			display: block;
-			width: 60px;
+			font-size: 80px;
 			margin: 0 auto;
 		}
 	}
