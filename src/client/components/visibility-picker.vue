@@ -51,7 +51,7 @@
 				<span>{{ $t('_visibility.remoteFollowersOnly') }}</span>
 				<span>{{ $t('_visibility.remoteFollowersOnlyDescription') }}</span>
 			</div>
-			<div><Fa :icon="remoteFollowersOnly ? faToggleOn : faToggleOff"/></div>
+			<div><Fa :icon="remoteFollowersOnly ? faToggleOn : faToggleOff" :key="remoteFollowersOnly"/></div>
 		</button>
 	</div>
 </MkModal>
@@ -96,9 +96,17 @@ export default defineComponent({
 	watch: {
 		localOnly() {
 			this.$emit('change-local-only', this.localOnly);
+			if (this.localOnly && this.remoteFollowersOnly) {
+				this.remoteFollowersOnly = false;
+				this.$emit('change-remote-followers-only', this.remoteFollowersOnly);
+			}
 		},
 		remoteFollowersOnly() {
 			this.$emit('change-remote-followers-only', this.remoteFollowersOnly);
+			if (this.remoteFollowersOnly && this.localOnly) {
+				this.localOnly = false;
+				this.$emit('change-local-only', this.localOnly);
+			}
 		}
 	},
 	methods: {
