@@ -1,9 +1,9 @@
 <template>
 <div class="_section">
 	<XSearch v-model:value="query" @search="search"/>
-	<MkTab v-if="!meta.disableFeatured" v-model:value="tab" style="height: 100%" :items="[{ label: $t('explore'), value: '/explore', icon: faHashtag }, { label: $t('featured'), value: '/featured', icon: faFireAlt }]"/>
+	<MkTab v-if="!meta.disableFeatured" v-model:value="tab" style="height: 100%" :items="[{ label: $t('explore'), value: 'explore', icon: faHashtag }, { label: $t('featured'), value: 'featured', icon: faFireAlt }]"/>
 
-	<template v-if="tab === '/explore'">
+	<template v-if="tab === 'explore'">
 		<MkFolder :body-togglable="true" :expanded="false" ref="tags" class="_vMargin">
 			<template #header><Fa :icon="faHashtag" fixed-width style="margin-right: 0.5em;"/>{{ $t('popularTags') }}</template>
 			<div class="vxjfqztj">
@@ -60,14 +60,14 @@
 		</template>
 	</template>
 
-	<template v-if="tab === '/featured'">
+	<template v-if="tab === 'featured'">
 		<XNotes ref="notes" :pagination="featuredPagination" @before="before" @after="after"/>
 	</template>
 </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { faChartLine, faPlus, faHashtag, faRocket, faFireAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark, faCommentAlt } from '@fortawesome/free-regular-svg-icons';
 import XUserList from '@/components/user-list.vue';
@@ -92,7 +92,11 @@ export default defineComponent({
 		tag: {
 			type: String,
 			required: false
-		}
+		},
+		mode: {
+			type: String as PropType<'featured' | 'explore'>,
+			required: false
+		},
 	},
 
 	data() {
@@ -138,7 +142,7 @@ export default defineComponent({
 			tagsRemote: [],
 			stats: null,
 			num: number,
-			tab: this.$route.path,
+			tab: this.mode,
 			query: '',
 			faBookmark, faChartLine, faCommentAlt, faPlus, faHashtag, faRocket, faFireAlt, faSearch,
 		};
@@ -164,9 +168,6 @@ export default defineComponent({
 	watch: {
 		tag() {
 			if (this.$refs.tags) this.$refs.tags.toggleContent(this.tag == null);
-		},
-		tab() {
-			this.$router.push(this.tab);
 		}
 	},
 
