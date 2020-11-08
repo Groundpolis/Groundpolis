@@ -12,7 +12,7 @@
 		@click="goTop"
 		@dragstart="onDragstart"
 		@dragend="onDragend"
-		@contextmenu.prevent.stop="onContextmenu"
+		@contextmenu.stop="onContextmenu"
 	>
 		<button class="toggleActive _button" @click="toggleActive" v-if="isStacked">
 			<template v-if="active"><Fa :icon="faAngleUp"/></template>

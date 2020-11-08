@@ -3,7 +3,7 @@
 	<XSidebar ref="nav" class="sidebar"/>
 
 	<div class="contents" ref="contents" :class="{ wallpaper }">
-		<header class="header" ref="header" @contextmenu.prevent.stop="onContextmenu" @click="onHeaderClick">
+		<header class="header" ref="header" @contextmenu.stop="onContextmenu" @click="onHeaderClick">
 			<XHeader main
 				:info="pageInfo"
 				:withWidgetButton="!isDesktop"

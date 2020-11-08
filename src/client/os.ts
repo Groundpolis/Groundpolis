@@ -7,6 +7,7 @@ import MkPostFormDialog from '@/components/post-form-dialog.vue';
 import MkWaitingDialog from '@/components/waiting-dialog.vue';
 import { resolve } from '@/router';
 import { NoteVisibility } from '../types';
+import { isDeviceTouch } from './scripts/is-device-touch';
 
 const ua = navigator.userAgent.toLowerCase();
 const isMobileUA = /mobile|iphone|ipad|android/.test(ua);
@@ -311,8 +312,11 @@ export function modalMenu(items: any[], src?: HTMLElement, options?: { align?: s
 }
 
 export function contextMenu(items: any[], ev: MouseEvent) {
+	if (isDeviceTouch) { 
+		return new Promise(r => r());
+	}
 	ev.preventDefault();
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		let dispose;
 		popup(import('@/components/ui/context-menu.vue'), {
 			items,

@@ -1,5 +1,5 @@
 <template>
-<a :href="to" :class="active ? activeClass : null" @click.prevent="nav" @contextmenu.prevent.stop="onContextmenu">
+<a :href="to" :class="active ? activeClass : null" @click.prevent="nav" @contextmenu.stop="onContextmenu">
 	<slot></slot>
 </a>
 </template>

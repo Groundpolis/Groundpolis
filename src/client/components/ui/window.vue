@@ -2,7 +2,7 @@
 <transition :name="$store.state.device.animation ? 'window' : ''" appear @after-leave="$emit('closed')">
 	<div class="ebkgocck" v-if="showing">
 		<div class="body _popup _shadow _narrow_" @mousedown="onBodyMousedown" @keydown="onKeydown">
-			<div class="header" @contextmenu.prevent.stop="onContextmenu">
+			<div class="header" @contextmenu.stop="onContextmenu">
 				<slot v-if="closeRight" name="buttons"><button class="_button" style="pointer-events: none;"></button></slot>
 				<button v-else class="_button" @click="close()"><Fa :icon="faTimes"/></button>
 

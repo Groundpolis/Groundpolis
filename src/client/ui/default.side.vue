@@ -1,7 +1,7 @@
 <template>
 <div class="qvzfzxam _narrow_" v-if="component">
 	<div class="container">
-		<header class="header" @contextmenu.prevent.stop="onContextmenu">
+		<header class="header" @contextmenu.stop="onContextmenu">
 			<button class="_button" @click="back()" v-if="history.length > 0"><Fa :icon="faChevronLeft"/></button>
 			<button class="_button" style="pointer-events: none;" v-else><!-- マージンのバランスを取るためのダミー --></button>
 			<XHeader class="title" :info="pageInfo" :with-back="false"/>
