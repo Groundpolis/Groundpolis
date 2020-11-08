@@ -9,7 +9,10 @@ import { resolve } from '@/router';
 import { NoteVisibility } from '../types';
 
 const ua = navigator.userAgent.toLowerCase();
-export const isMobile = /mobile|iphone|ipad|android/.test(ua);
+const isMobileUA = /mobile|iphone|ipad|android/.test(ua);
+const pf = navigator.platform.toLowerCase();
+const isMobilePF = !pf ? null : /iphone|ipad|linux arm/.test(pf);
+export const isMobile = isMobilePF !== null ? isMobilePF : isMobileUA;
 
 export const stream = markRaw(new Stream());
 
