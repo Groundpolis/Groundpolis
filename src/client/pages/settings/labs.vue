@@ -6,7 +6,7 @@
 		</div>
 		<div class="_card _vMargin">
 			<div class="_content">
-				<MkSwitch v-model="injectUnlistedNoteInLTL">
+				<MkSwitch v-model:value="injectUnlistedNoteInLTL">
 					{{ $t('showUnlistedNotesInLTL') }}
 					<template #desc>{{ $t('showUnlistedNotesInLTLDesc') }}</template>
 				</MkSwitch>
