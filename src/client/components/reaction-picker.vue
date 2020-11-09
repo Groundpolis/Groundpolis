@@ -130,13 +130,8 @@ export default defineComponent({
 		},
 
 		async openPicker(ev: Event) {
-			const vm = os.new(await import('./emoji-picker.vue').then(m => m.default), {
-				source: ev.currentTarget || ev.target
-			}).$once('chosen', emoji => {
-				this.text = emoji;
-				this.reactText();
-				vm.close();
-			});
+			this.text = await os.pickEmoji(ev.currentTarget || ev.target);
+			this.reactText();
 		},
 
 		focusUp() {
