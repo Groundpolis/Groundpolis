@@ -9,30 +9,6 @@
 				{{ $t('useOsNativeEmojis') }}
 				<template #desc><Mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></template>
 			</MkSwitch>
-			<MkSwitch v-model:value="useSticker">
-				{{ $t('useSticker') }}
-				<template #desc>{{$t('useStickerDesc')}}</template>
-			</MkSwitch>
-			<MkSwitch v-model:value="makeCustomEmojisBigger">
-				{{ $t('makeCustomEmojisBigger') }}
-				<template #desc>{{$t('makeCustomEmojisBiggerDesc')}}</template>
-			</MkSwitch>
-			<MkSwitch v-model:value="showFullAcct">{{ $t('showFullAcct') }}</MkSwitch>
-			<MkSwitch v-model:value="collapseLongNote">{{ $t('collapseLongNote') }}</MkSwitch>
-			<MkSelect v-model:value="noteNameDisplayMode">
-				<template #label>{{ $t('noteNameDisplayMode') }}</template>
-				<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $t(x) }}</option>
-			</MkSelect>
-		</div>
-		<div class="_content">
-			<MkSelect v-model:value="iconShape">
-				<template #label>{{ $t('iconShape') }}</template>
-				<option v-for="x in [ 'circle', 'square', 'rounded', 'droplet' ]" :value="x" :key="x">
-					{{ $t(`_iconShape.${x}`) }}
-				</option>
-			</MkSelect>
-			<div v-text="$t('preview')"/>
-			<MkAvatar disable-link disable-preview :user="$store.state.i" class="avatar"/>
 		</div>
 		<div class="_content">
 			<div>{{ $t('fontSize') }}</div>
@@ -46,6 +22,49 @@
 			<MkRadio v-model="instanceTicker" value="none">{{ $t('_instanceTicker.none') }}</MkRadio>
 			<MkRadio v-model="instanceTicker" value="remote">{{ $t('_instanceTicker.remote') }}</MkRadio>
 			<MkRadio v-model="instanceTicker" value="always">{{ $t('_instanceTicker.always') }}</MkRadio>
+		</div>
+	</section>
+	<section class="_card _vMargin">
+		<div class="_content">
+			<MkSwitch v-model:value="collapseLongNote">{{ $t('collapseLongNote') }}</MkSwitch>
+			<MkSwitch v-model:value="useDisplayNameForSidebar">{{ $t('useDisplayNameForSidebar') }}</MkSwitch>
+			<MkSwitch v-model:value="useSticker">
+				{{ $t('useSticker') }}
+				<template #desc>{{$t('useStickerDesc')}}</template>
+			</MkSwitch>
+			<MkSwitch v-model:value="makeCustomEmojisBigger">
+				{{ $t('makeCustomEmojisBigger') }}
+				<template #desc>{{$t('makeCustomEmojisBiggerDesc')}}</template>
+			</MkSwitch>
+			<MkSwitch v-model:value="showFullAcct">
+				{{ $t('showFullAcct') }}
+				<template #desc><MkAcct :user="$store.state.i"/></template>
+			</MkSwitch>
+			<MkSelect v-model:value="noteNameDisplayMode">
+				<template #label>{{ $t('noteNameDisplayMode') }}</template>
+				<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $t(x) }}</option>
+				<template #text>
+					<span v-if="noteNameDisplayMode === 0">
+						<b style="margin-right: 1em">{{ $store.state.i.name || $store.state.i.username }}</b>
+						<MkAcct :user="$store.state.i"/>
+					</span>
+					<span v-else>
+						<MkAcct v-if="noteNameDisplayMode !== 2" style="margin-right: 1em" :user="$store.state.i"/>
+						<b v-if="noteNameDisplayMode !== 3">{{ $store.state.i.name || $store.state.i.username }}</b>
+					</span>
+				</template>
+			</MkSelect>
+		</div>
+	</section>
+	<section class="_card _vMargin">
+		<div class="_content">
+			<div>{{ $t('iconShape') }}</div>
+			<MkSelect v-model:value="iconShape">
+				<option v-for="x in [ 'circle', 'square', 'rounded', 'droplet' ]" :value="x" :key="x">
+					{{ $t(`_iconShape.${x}`) }}
+				</option>
+			</MkSelect>
+			<MkAvatar disable-link disable-preview :user="$store.state.i" class="avatar"/>
 		</div>
 	</section>
 </div>
@@ -102,11 +121,6 @@ export default defineComponent({
 			get() { return this.$store.state.device.enableInfiniteScroll; },
 			set(value) { this.$store.commit('device/set', { key: 'enableInfiniteScroll', value }); }
 		},
-
-		renoteButtonMode: {
-			get() { return this.$store.state.settings.renoteButtonMode; },
-			set(value) { this.$store.dispatch('settings/set', { key: 'renoteButtonMode', value }); }
-		},
 		
 		makeCustomEmojisBigger: {
 			get() { return this.$store.state.device.makeCustomEmojisBigger; },
@@ -136,6 +150,11 @@ export default defineComponent({
 		iconShape: {
 			get() { return this.$store.state.device.iconShape; },
 			set(value) { this.$store.commit('device/set', { key: 'iconShape', value }); }
+		},
+
+		useDisplayNameForSidebar: {
+			get() { return this.$store.state.settings.useDisplayNameForSidebar; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'useDisplayNameForSidebar', value }); }
 		},
 	},
 

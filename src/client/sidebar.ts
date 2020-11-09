@@ -39,11 +39,6 @@ export const sidebarDef = {
 		icon: faHashtag,
 		to: '/explore',
 	},
-	search: {
-		title: 'search',
-		icon: faSearch,
-		action: () => search(),
-	},
 	lists: {
 		title: 'lists',
 		icon: faListUl,
@@ -61,20 +56,6 @@ export const sidebarDef = {
 		icon: faSatellite,
 		show: computed(() => store.getters.isSignedIn),
 		to: '/my/antennas',
-	},
-	mentions: {
-		title: 'mentions',
-		icon: faAt,
-		show: computed(() => store.getters.isSignedIn),
-		indicated: computed(() => store.getters.isSignedIn && store.state.i.hasUnreadMentions),
-		to: '/my/mentions',
-	},
-	messages: {
-		title: 'directNotes',
-		icon: faEnvelope,
-		show: computed(() => store.getters.isSignedIn),
-		indicated: computed(() => store.getters.isSignedIn && store.state.i.hasUnreadSpecifiedNotes),
-		to: '/my/messages',
 	},
 	favorites: {
 		title: 'favorites',
