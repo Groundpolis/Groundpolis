@@ -740,6 +740,7 @@ showAsMfm: "MFM 記法で表示"
 showAsPlainText: "プレーン テキストで表示"
 behavior: "挙動"
 useDisplayNameForSidebar: "サイドバーに表示名を表示する"
+alwaysPlayMediaInWindow: "常にウィンドウでメディアを再生する"
 
 _renoteButtonMode:
   choose: "毎回選ぶ"

@@ -143,6 +143,7 @@ export const defaultDeviceSettings = {
 	collapseLongNote: true,
 	useLegacyMobileView: true,
 	newAnnouncementUI: false,
+	alwaysPlayMediaInWindow: false,
 };
 
 function copy<T>(data: T): T {

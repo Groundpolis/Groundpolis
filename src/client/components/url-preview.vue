@@ -1,6 +1,7 @@
 <template>
 <div v-if="playerEnabled" class="player" :style="`padding: ${(player.height || 0) / (player.width || 1) * 100}% 0 0`">
-	<button class="disablePlayer" @click="playerEnabled = false" :title="$t('disablePlayer')"><Fa icon="times"/></button>
+	<button class="disable-player" @click="playerEnabled = false" v-tooltip="$t('disablePlayer')"><Fa :icon="faTimes"/></button>
+	<button class="open-in-window" @click="openWindow" v-tooltip="$t('openInWindow')"><Fa :icon="faExternalLinkAlt"/></button>
 	<iframe :src="player.url + (player.url.match(/\?/) ? '&autoplay=1&auto_play=1' : '?autoplay=1&auto_play=1')" :width="player.width || '100%'" :heigth="player.height || 250" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen />
 </div>
 <div v-else-if="tweetId && tweetExpanded" class="twitter" ref="twitter">
@@ -15,7 +16,7 @@
 	<transition name="zoom" mode="out-in">
 		<component :is="self ? 'MkA' : 'a'" :class="{ compact }" :[attr]="self ? url.substr(local.length) : url" rel="nofollow noopener" :target="target" :title="url" v-if="!fetching">
 			<div class="thumbnail" v-if="thumbnail" :style="`background-image: url('${thumbnail}')`">
-				<button class="_button" v-if="!playerEnabled && player.url" @click.prevent="playerEnabled = true" :title="$t('enablePlayer')"><Fa :icon="faPlayCircle"/></button>
+				<button class="_button" v-if="!playerEnabled && player.url" @click.prevent="onPreviewPlayButtonClicked" :title="$t('enablePlayer')"><Fa :icon="faPlayCircle"/></button>
 			</div>
 			<article>
 				<header>
@@ -39,6 +40,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { faTimes, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { faPlayCircle } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'; 
 import { url as local, lang } from '@/config';
@@ -88,7 +90,7 @@ export default defineComponent({
 			self: self,
 			attr: self ? 'to' : 'href',
 			target: self ? null : '_blank',
-			faPlayCircle, faTwitter
+			faPlayCircle, faTwitter, faTimes, faExternalLinkAlt,
 		};
 	},
 
@@ -143,7 +145,22 @@ export default defineComponent({
 			if (embed?.id !== this.embedId) return;
 			const height = embed?.params[0]?.height;
 			if (height) this.tweetHeight = height;
- 		},
+		 },
+		 openWindow() {
+			 this.playerEnabled = false;
+			 os.popup(import('./url-preview.player-window.vue'), {
+				 player: this.player,
+				 icon: this.icon,
+				 title: this.title,
+			 }, {}, 'closed');
+		 },
+		 onPreviewPlayButtonClicked() {
+			 if (this.$store.state.device.alwaysPlayMediaInWindow) {
+				 this.openWindow();
+			 } else {
+				 this.playerEnabled = true;
+			 }
+		 },
 	},
 
 	beforeUnmount() {
@@ -156,23 +173,29 @@ export default defineComponent({
 .player {
 	position: relative;
 	width: 100%;
+	margin-top: 32px !important;
 
 	> button {
 		position: absolute;
-		top: -1.5em;
-		right: 0;
-		font-size: 1em;
-		width: 1.5em;
-		height: 1.5em;
+		font-size: 16px;
+		top: -24px;
 		padding: 0;
 		margin: 0;
-		color: var(--fg);
-		background: rgba(128, 128, 128, 0.2);
-		opacity: 0.7;
+		background: none;
+		border: none;
+		color: var(--accent);
 
 		&:hover {
 			opacity: 0.9;
 		}
+	}
+
+	> .disable-player {
+		left: 0;
+	}
+
+	> .open-in-window {
+		left: 24px;
 	}
 
 	> iframe {

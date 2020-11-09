@@ -16,6 +16,7 @@
 			<MkSwitch v-model:value="showFixedPostForm">{{ $t('showFixedPostForm') }}</MkSwitch>
 			<MkSwitch v-model:value="enableInfiniteScroll">{{ $t('enableInfiniteScroll') }}</MkSwitch>
 			<MkSwitch v-model:value="disablePagesScript">{{ $t('disablePagesScript') }}</MkSwitch>
+			<MkSwitch v-model:value="alwaysPlayMediaInWindow">{{ $t('alwaysPlayMediaInWindow') }}</MkSwitch>
 		</div>
 		<div class="_content">
 			<div>{{ $t('chatOpenBehavior') }}</div>
@@ -112,6 +113,11 @@ export default defineComponent({
 		renoteButtonMode: {
 			get() { return this.$store.state.settings.renoteButtonMode; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'renoteButtonMode', value }); }
+		},
+
+		alwaysPlayMediaInWindow: {
+			get() { return this.$store.state.device.alwaysPlayMediaInWindow; },
+			set(value) { this.$store.commit('device/set', { key: 'alwaysPlayMediaInWindow', value }); }
 		},
 	},
 

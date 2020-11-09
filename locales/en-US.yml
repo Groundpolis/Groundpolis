@@ -700,6 +700,7 @@ showAsMfm: "Display as MFM format"
 showAsPlainText: "Display as plain text"
 behavior: "Behavior"
 useDisplayNameForSidebar: "show DisplayName for sidebar"
+alwaysPlayMediaInWindow: "Always play media in window"
 
 _renoteButtonMode:
   choose: "Choose always"
