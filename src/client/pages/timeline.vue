@@ -23,8 +23,8 @@
 
 <script lang="ts">
 import { defineComponent, defineAsyncComponent, computed, ComputedRef } from 'vue';
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faSatelliteDish, faCircle, faEllipsisH, faPencilAlt, faBullhorn, faCat, faProjectDiagram, faCommentAlt } from '@fortawesome/free-solid-svg-icons';
-import { faComments } from '@fortawesome/free-regular-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faSatelliteDish, faCircle, faEllipsisH, faPencilAlt, faBullhorn, faCat, faProjectDiagram, faCommentAlt, faAt } from '@fortawesome/free-solid-svg-icons';
+import { faComments, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import Progress from '@/scripts/loading';
 import XTimeline from '@/components/timeline.vue';
 import XPostForm from '@/components/post-form.vue';
@@ -291,6 +291,24 @@ export default defineComponent({
 						this.saveSrc();
 					}
 				},
+				null,
+				{
+					text: this.$t('mentions'),
+					icon: faAt,
+					action: () => {
+						this.src = 'mentions';
+						this.saveSrc();
+					}
+				},
+				{
+					text: this.$t('directNotes'),
+					icon: faEnvelope,
+					action: () => {
+						this.src = 'direct';
+						this.saveSrc();
+					}
+				},
+
 				antennaItems.length > 0 ? null : undefined,
 				...antennaItems, 
 				listItems.length > 0 ? null : undefined,

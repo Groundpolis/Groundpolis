@@ -168,7 +168,7 @@ export default defineComponent({
 	},
 
 	beforeUnmount() {
-		this.connection.dispose();
+		if (this.connection) this.connection.dispose();
 		if (this.connection2) this.connection2.dispose();
 	},
 

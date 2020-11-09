@@ -84,7 +84,6 @@ export default defineComponent({
 			searching: false,
 			accounts: [],
 			connection: null,
-			menuDef: sidebarDef,
 			iconOnly: false,
 			hidden: false,
 			isTablet: false,
@@ -95,6 +94,16 @@ export default defineComponent({
 	computed: {
 		menu(): string[] {
 			return this.$store.state.deviceUser.menu;
+		},
+
+		menuDef() {
+			const d = { ...sidebarDef };
+			if (this.hidden) {
+				delete d.explore;
+				delete d.messaging;
+				delete d.notifications;
+			}
+			return d;
 		},
 
 		otherNavItemIndicated(): boolean {
