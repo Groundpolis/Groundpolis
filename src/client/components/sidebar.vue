@@ -13,7 +13,8 @@
 			<div>
 				<MkA class="item _button account" active-class="active" :to="userPage($store.state.i)">
 					<MkAvatar :user="$store.state.i" class="avatar"/>
-					<MkAcct class="text" :user="$store.state.i"/>
+					<MkAcct v-if="!$store.state.settings.useDisplayNameForSidebar" class="text" :user="$store.state.i"/>
+					<MkUserName v-else class="text" :user="$store.state.i"/>
 				</MkA>
 				<button v-if="iconOnly && !hidden" class="item _button" @click="openAccountMenu">
 					<Fa :icon="faEllipsisV"/>

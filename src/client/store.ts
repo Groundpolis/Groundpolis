@@ -29,6 +29,7 @@ export const defaultSettings = {
 	stealReaction: '⭐️',
 	injectUnlistedNoteInLTL: false,
 	renoteButtonMode: 'choose' as 'choose' | 'renote' | 'quote' | 'renoteQuote',
+	useDisplayNameForSidebar: true,
 };
 
 export const defaultDeviceUserSettings = {
@@ -548,7 +549,7 @@ export const store = createStore({
 
 				init(state, x) {
 					for (const [key, value] of Object.entries(defaultSettings)) {
-						if (x[key]) {
+						if (x[key] !== undefined) {
 							state[key] = x[key];
 						} else {
 							state[key] = value;

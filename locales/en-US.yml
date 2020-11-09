@@ -699,6 +699,7 @@ desktop: "Desktop"
 showAsMfm: "Display as MFM format"
 showAsPlainText: "Display as plain text"
 behavior: "Behavior"
+useDisplayNameForSidebar: "show DisplayName for sidebar"
 
 _renoteButtonMode:
   choose: "Choose always"
