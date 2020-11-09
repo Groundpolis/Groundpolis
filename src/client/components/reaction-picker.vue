@@ -25,6 +25,7 @@ import { emojiRegex } from '../../misc/emoji-regex';
 import XReactionIcon from '@/components/reaction-icon.vue';
 import MkModal from '@/components/ui/modal.vue';
 import { Autocomplete } from '@/scripts/autocomplete';
+import * as os from '@/os';
 
 export default defineComponent({
 	components: {

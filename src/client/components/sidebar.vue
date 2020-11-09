@@ -28,7 +28,7 @@
 					<MkA class="item index" active-class="active" to="/" exact>
 						<Fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>
 					</MkA>
-					<template v-for="(item, i) in menu">
+					<template v-for="(item, i) in (menu.filter(filterItem))">
 						<div :key="'divider-' + i" v-if="item === '-'" class="divider"></div>
 						<component :key="item" v-else-if="menuDef[item] && (menuDef[item].show !== false)" :is="menuDef[item].to ? 'MkA' : 'button'" class="item _button" :class="item" active-class="active" v-on="menuDef[item].action ? { click: menuDef[item].action } : {}" :to="menuDef[item].to">
 							<Fa :icon="menuDef[item].icon" fixed-width/><span class="text">{{ $t(menuDef[item].title) }}</span>
@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faEllipsisV, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram, faArrowLeft, faExclamationCircle, faArrowRight, faFlask, faChevronDown, faChevronUp, faStream } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { host, instanceName } from '@/config';
@@ -83,6 +83,7 @@ export default defineComponent({
 			showing: false,
 			searching: false,
 			accounts: [],
+			menuDef: sidebarDef,
 			connection: null,
 			iconOnly: false,
 			hidden: false,
@@ -94,16 +95,6 @@ export default defineComponent({
 	computed: {
 		menu(): string[] {
 			return this.$store.state.deviceUser.menu;
-		},
-
-		menuDef() {
-			const d = { ...sidebarDef };
-			if (this.hidden) {
-				delete d.explore;
-				delete d.messaging;
-				delete d.notifications;
-			}
-			return d;
 		},
 
 		otherNavItemIndicated(): boolean {
@@ -156,6 +147,15 @@ export default defineComponent({
 
 		show() {
 			this.showing = true;
+		},
+
+		filterItem(name: string) {
+			if (!this.hidden) return true;
+			return !([
+				'notifications',
+				'explore',
+				'messaging',
+			].includes(name));
 		},
 
 		search() {
