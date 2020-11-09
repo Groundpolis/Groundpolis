@@ -111,7 +111,7 @@ export default defineComponent({
 }
 
 .circle {
-	border-radius: 100%;
+	border-radius: 50%;
 }
 
 .square {
