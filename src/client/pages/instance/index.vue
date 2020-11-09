@@ -1,56 +1,58 @@
 <template>
-<div v-if="meta" v-show="page === 'index'" class="xhexznfu _section">
-	<MkFolder>
-		<template #header><Fa :icon="faTachometerAlt"/> {{ $t('overview') }}</template>
+<div>
+	<div v-if="meta" v-show="page === 'index'" class="xhexznfu _section">
+		<MkFolder>
+			<template #header><Fa :icon="faTachometerAlt"/> {{ $t('overview') }}</template>
 
-		<div class="sboqnrfi" :style="{ gridTemplateRows: overviewHeight }">
-			<MkInstanceStats :chart-limit="300" :detailed="true" class="_vMargin" ref="stats"/>
+			<div class="sboqnrfi" :style="{ gridTemplateRows: overviewHeight }">
+				<MkInstanceStats :chart-limit="300" :detailed="true" class="_vMargin" ref="stats"/>
 
-			<MkContainer :body-togglable="true" class="_vMargin">
-				<template #header><Fa :icon="faInfoCircle"/>{{ $t('instanceInfo') }}</template>
+				<MkContainer :body-togglable="true" class="_vMargin">
+					<template #header><Fa :icon="faInfoCircle"/>{{ $t('instanceInfo') }}</template>
 
-				<div class="_content">
-					<div class="_keyValue"><b>Misskey</b><span>v{{ version }}</span></div>
-				</div>
-				<div class="_content" v-if="serverInfo">
-					<div class="_keyValue"><b>Node.js</b><span>{{ serverInfo.node }}</span></div>
-					<div class="_keyValue"><b>PostgreSQL</b><span>v{{ serverInfo.psql }}</span></div>
-					<div class="_keyValue"><b>Redis</b><span>v{{ serverInfo.redis }}</span></div>
-				</div>
-			</MkContainer>
-			
-			<MkContainer :body-togglable="true" :scrollable="true" class="_vMargin" style="height: 300px;">
-				<template #header><Fa :icon="faDatabase"/>{{ $t('database') }}</template>
+					<div class="_content">
+						<div class="_keyValue"><b>Misskey</b><span>v{{ version }}</span></div>
+					</div>
+					<div class="_content" v-if="serverInfo">
+						<div class="_keyValue"><b>Node.js</b><span>{{ serverInfo.node }}</span></div>
+						<div class="_keyValue"><b>PostgreSQL</b><span>v{{ serverInfo.psql }}</span></div>
+						<div class="_keyValue"><b>Redis</b><span>v{{ serverInfo.redis }}</span></div>
+					</div>
+				</MkContainer>
+				
+				<MkContainer :body-togglable="true" :scrollable="true" class="_vMargin" style="height: 300px;">
+					<template #header><Fa :icon="faDatabase"/>{{ $t('database') }}</template>
 
-				<div class="_content" v-if="dbInfo">
-					<table style="border-collapse: collapse; width: 100%;">
-						<tr style="opacity: 0.7;">
-							<th style="text-align: left; padding: 0 8px 8px 0;">Table</th>
-							<th style="text-align: left; padding: 0 8px 8px 0;">Records</th>
-							<th style="text-align: left; padding: 0 0 8px 0;">Size</th>
-						</tr>
-						<tr v-for="table in dbInfo" :key="table[0]">
-							<th style="text-align: left; padding: 0 8px 0 0; word-break: break-all;">{{ table[0] }}</th>
-							<td style="padding: 0 8px 0 0;">{{ number(table[1].count) }}</td>
-							<td style="padding: 0; opacity: 0.7;">{{ bytes(table[1].size) }}</td>
-						</tr>
-					</table>
-				</div>
-			</MkContainer>
-		</div>
-	</MkFolder>
-</div>
-<div v-if="page === 'logs'" class="_section">
-	<MkFolder>
-		<template #header><Fa :icon="faStream"/> {{ $t('logs') }}</template>
+					<div class="_content" v-if="dbInfo">
+						<table style="border-collapse: collapse; width: 100%;">
+							<tr style="opacity: 0.7;">
+								<th style="text-align: left; padding: 0 8px 8px 0;">Table</th>
+								<th style="text-align: left; padding: 0 8px 8px 0;">Records</th>
+								<th style="text-align: left; padding: 0 0 8px 0;">Size</th>
+							</tr>
+							<tr v-for="table in dbInfo" :key="table[0]">
+								<th style="text-align: left; padding: 0 8px 0 0; word-break: break-all;">{{ table[0] }}</th>
+								<td style="padding: 0 8px 0 0;">{{ number(table[1].count) }}</td>
+								<td style="padding: 0; opacity: 0.7;">{{ bytes(table[1].size) }}</td>
+							</tr>
+						</table>
+					</div>
+				</MkContainer>
+			</div>
+		</MkFolder>
+	</div>
+	<div v-if="page === 'logs'" class="_section">
+		<MkFolder>
+			<template #header><Fa :icon="faStream"/> {{ $t('logs') }}</template>
 
-		<div class="_keyValue" v-for="log in modLogs">
-			<b>{{ log.type }}</b><span>by {{ log.user.username }}</span><MkTime :time="log.createdAt" style="opacity: 0.7;"/>
-		</div>
-	</MkFolder>
-</div>
-<div v-if="page === 'metrics'">
-	<XMetrics/>
+			<div class="_keyValue" v-for="log in modLogs">
+				<b>{{ log.type }}</b><span>by {{ log.user.username }}</span><MkTime :time="log.createdAt" style="opacity: 0.7;"/>
+			</div>
+		</MkFolder>
+	</div>
+	<div v-if="page === 'metrics'">
+		<!-- <XMetrics/> -->
+	</div>
 </div>
 </template>
 
