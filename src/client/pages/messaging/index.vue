@@ -1,7 +1,6 @@
 <template>
 <div class="_section">
 	<div class="mk-messaging _content" v-size="{ max: [400] }">
-		<MkButton @click="start" primary class="start"><Fa :icon="faPlus"/> {{ $t('startMessaging') }}</MkButton>
 
 		<div class="history" v-if="messages.length > 0">
 			<MkA v-for="(message, i) in messages"
@@ -54,7 +53,11 @@ export default defineComponent({
 		return {
 			INFO: {
 				title: this.$t('messaging'),
-				icon: faComments
+				icon: faComments,
+				action: {
+					icon: faPlus,
+					handler: this.start,
+				}
 			},
 			fetching: true,
 			moreFetching: false,
