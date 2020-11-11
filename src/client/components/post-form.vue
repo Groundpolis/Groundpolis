@@ -9,8 +9,8 @@
 	<header>
 		<button v-if="!fixed" class="cancel _button" @click="cancel"><Fa :icon="faTimes"/></button>
 		<div>
-			<button class="_button" @click="insert('> ')" v-tooltip="$t('_mfmPad.quote')"><Fa :icon="faQuoteRight"/></button>
-			<button class="_button" @click="link" v-tooltip="$t('_mfmPad.link')"><Fa :icon="faLink"/></button>
+			<button class="_button" @click="insert('> ')" v-tooltip="$t('_mfmpad.quote')"><Fa :icon="faQuoteRight"/></button>
+			<button class="_button" @click="link" v-tooltip="$t('_mfmpad.link')"><Fa :icon="faLink"/></button>
 			<button class="_button" @click="insertMention" v-tooltip="$t('mention')"><Fa :icon="faAt"/></button>
 			<button class="_button" @click="insertEmoji" v-tooltip="$t('emoji')"><Fa :icon="faLaughSquint"/></button>
 			<!-- <button class="_button" @click="mfmPadMenu" v-tooltip="$t('_mfmPad.more')"><Fa :icon="faEllipsisV"/></button> -->
@@ -84,7 +84,6 @@ import extractMentions from '../../misc/extract-mentions';
 import getAcct from '../../misc/acct/render';
 import { formatTimeString } from '../../misc/format-time-string';
 import { Autocomplete } from '@/scripts/autocomplete';
-import { noteVisibilities } from '../../types';
 import * as os from '@/os';
 import { selectFile } from '@/scripts/select-file';
 import { FormItem } from '../scripts/form';
@@ -704,10 +703,16 @@ export default defineComponent({
 					default: '',
 					label: this.$t('description').toString(),
 				},
+				noUrlPreview: {
+					type: 'boolean',
+					default: false,
+					label: this.$t('_mfmpad.noUrlPreview').toString(),
+					description: this.$t('_mfmpad.noUrlPreviewDesc').toString(),
+				},
 			};
 			const { canceled, result } = await os.form('挿入するリンクの設定', form);
 			if (canceled) return;
-			this.insert(`[${result.desc}](${result.url})`);
+			this.insert(`${result.noUrlPreview ? '?' : ''}[${result.desc}](${result.url})`);
 		},
 
 		async mfmPadMenu() {

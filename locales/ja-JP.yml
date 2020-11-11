@@ -742,6 +742,12 @@ behavior: "挙動"
 useDisplayNameForSidebar: "サイドバーに表示名を表示する"
 alwaysPlayMediaInWindow: "常にウィンドウでメディアを再生する"
 
+_mfmpad:
+  quote: "引用"
+  link: "リンク"
+  noUrlPreview: "URLプレビューに展開しない"
+  noUrlPreviewDesc: "オンにすると、このリンクをURLプレビューの対象としないよう設定します。リモートのインスタンスによっては無視される可能性があります。"
+
 _renoteButtonMode:
   choose: "毎回選ぶ"
   renote: "リノートする"

@@ -702,6 +702,12 @@ behavior: "Behavior"
 useDisplayNameForSidebar: "show DisplayName for sidebar"
 alwaysPlayMediaInWindow: "Always play media in window"
 
+_mfmpad:
+  quote: "Quote"
+  link: "Link"
+  noUrlPreview: "Do not expand as a URL preview"
+  noUrlPreviewDesc: "Mark this link as non-target of URL preview. Several remote instances may ignore this setting."
+
 _renoteButtonMode:
   choose: "Choose always"
   renote: "Renote"
