@@ -1,10 +1,6 @@
 <template>
 <div class="bgvwxkhb" v-if="!matching">
-	<h1>Misskey {{ $t('_reversi.reversi') }}</h1>
-
-	<div class="play">
-		<MkButton primary round @click="match" style="margin: var(--margin) auto 0 auto;">{{ $t('invite') }}</MkButton>
-	</div>
+	<h1>Groundpolis {{ $t('_reversi.reversi') }}</h1>
 
 	<div class="_section">
 		<MkFolder v-if="invitations.length > 0">
@@ -64,7 +60,7 @@ import { defineComponent } from 'vue';
 import * as os from '@/os';
 import MkButton from '@/components/ui/button.vue';
 import MkFolder from '@/components/ui/folder.vue';
-import { faGamepad } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 export default defineComponent({
 	components: {
@@ -77,7 +73,11 @@ export default defineComponent({
 		return {
 			INFO: {
 				title: this.$t('_reversi.reversi'),
-				icon: faGamepad
+				icon: faGamepad,
+				action: {
+					icon: faPaperPlane,
+					handler: this.match,
+				},
 			},
 			games: [],
 			gamesFetching: true,
