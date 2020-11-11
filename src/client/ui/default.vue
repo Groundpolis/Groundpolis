@@ -350,7 +350,7 @@ export default defineComponent({
 		display: block;
 		position: fixed;
 		z-index: 1000;
-		right: 32px;
+		right: calc(32px + var(--margin) * 2 + 300px);
 		bottom: 32px;
 		width: 64px;
 		height: 64px;
@@ -362,6 +362,10 @@ export default defineComponent({
 
 		&.navHidden {
 			bottom: 64px;
+		}
+
+		@media (max-width: $widgets-hide-threshold) {
+			right: 32px;
 		}
 	}
 
