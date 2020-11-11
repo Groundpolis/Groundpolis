@@ -45,6 +45,9 @@ glTF 2.0 に関する資料は [glTF 2.0 — Blender Manual]( https://docs.blend
 ### AP
 _**A**ctivity**P**ub_ の略。
 
+### GPFM
+_**G**round**P**olis **F**lavored **M**FM_ の略。
+
 ### MFM
 _**M**isskey **F**lavored **M**arkdown_ の略。
 

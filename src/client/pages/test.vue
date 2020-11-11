@@ -47,10 +47,10 @@
 		</div>
 
 		<div class="_card _vMargin">
-			<div class="_title">MFM</div>
+			<div class="_title">GPFM</div>
 			<div class="_content">
 				<MkTextarea v-model:value="mfm">
-					<span>MFM</span>
+					<span>GPFM</span>
 				</MkTextarea>
 			</div>
 			<div class="_content">

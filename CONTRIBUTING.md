@@ -50,6 +50,9 @@ Just execute `yarn` to fix it.
 ### AP
 Stands for _**A**ctivity**P**ub_.
 
+### GPFM
+Stands for _**G**round**P**olis **F**lavored **M**FM.
+
 ### MFM
 Stands for _**M**isskey **F**lavored **M**arkdown_.
 
