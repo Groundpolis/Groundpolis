@@ -65,7 +65,7 @@
 	<section class="_section _vMargin">
 		<div class="_content">
 			<div>
-				<MkSwitch v-model="usePressure" style="display: inline-flex">{{ $t('usePressure') }}
+				<MkSwitch v-model:value="usePressure" style="display: inline-flex">{{ $t('usePressure') }}
 					<template #desc>{{ $t('usePressureDescription') }}</template>
 				</MkSwitch>
 			</div>
