@@ -34,7 +34,7 @@
 			</div>
 			<div class="empty" v-if="files.length == 0 && folders.length == 0 && !fetching">
 				<p v-if="draghover">{{ $t('empty-draghover') }}</p>
-				<p v-if="!draghover && folder == null"><strong>{{ $t('emptyDrive') }}</strong><br/>{{ $t('empty-drive-description') }}</p>
+				<p v-if="!draghover && folder == null"><strong>{{ $t('emptyDrive') }}</strong></p>
 				<p v-if="!draghover && folder != null">{{ $t('emptyFolder') }}</p>
 			</div>
 		</div>
