@@ -18,7 +18,6 @@
 		</div>
 
 		<div class="_content grwlizim owned" v-if="tab === 'owned'">
-			<MkButton class="new" @click="create()"><Fa :icon="faPlus"/></MkButton>
 			<MkPagination :pagination="ownedPagination" #default="{items}">
 				<MkChannelPreview v-for="channel in items" class="uveselbe" :channel="channel" :key="channel.id"/>
 			</MkPagination>
@@ -44,7 +43,11 @@ export default defineComponent({
 		return {
 			INFO: {
 				title: this.$t('channel'),
-				icon: faSatelliteDish
+				icon: faSatelliteDish,
+				action: {
+					icon: faPlus,
+					handler: this.create,
+				},
 			},
 			tab: 'featured',
 			featuredPagination: {
