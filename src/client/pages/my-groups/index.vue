@@ -6,8 +6,6 @@
 
 	<div class="_section">
 		<div class="_content" v-if="tab === 'owned'">
-			<MkButton @click="create" primary style="margin: 0 auto var(--margin) auto;"><Fa :icon="faPlus"/> {{ $t('createGroup') }}</MkButton>
-
 			<MkPagination :pagination="ownedPagination" #default="{items}" ref="owned">
 				<div class="_card" v-for="group in items" :key="group.id">
 					<div class="_title"><MkA :to="`/my/groups/${ group.id }`" class="_link">{{ group.name }}</MkA></div>
@@ -64,7 +62,11 @@ export default defineComponent({
 		return {
 			INFO: {
 				title: this.$t('groups'),
-				icon: faUsers
+				icon: faUsers,
+				action: {
+					icon: faPlus,
+					handler: this.create,
+				},
 			},
 			tab: 'owned',
 			ownedPagination: {
@@ -79,7 +81,7 @@ export default defineComponent({
 				endpoint: 'i/user-group-invites',
 				limit: 10,
 			},
-			faUsers, faPlus, faEnvelopeOpenText
+			faUsers, faEnvelopeOpenText
 		};
 	},
 

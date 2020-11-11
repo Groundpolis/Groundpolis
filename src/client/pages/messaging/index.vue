@@ -63,7 +63,7 @@ export default defineComponent({
 			moreFetching: false,
 			messages: [],
 			connection: null,
-			faUser, faUsers, faComments, faPlus
+			faUser, faUsers, faComments
 		};
 	},
 

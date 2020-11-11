@@ -62,7 +62,7 @@ export default defineComponent({
 				endpoint: 'channels/owned',
 				limit: 5,
 			},
-			faSatelliteDish, faPlus, faEdit, faHeart, faFireAlt
+			faSatelliteDish, faEdit, faHeart, faFireAlt
 		};
 	},
 	methods: {
