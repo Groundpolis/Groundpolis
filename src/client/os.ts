@@ -6,7 +6,7 @@ import { apiUrl, debug } from '@/config';
 import MkPostFormDialog from '@/components/post-form-dialog.vue';
 import MkWaitingDialog from '@/components/waiting-dialog.vue';
 import { resolve } from '@/router';
-import { NoteVisibility } from '../types';
+import { NoteVisibility, notificationTypes } from '../types';
 import { isDeviceTouch } from './scripts/is-device-touch';
 
 const ua = navigator.userAgent.toLowerCase();
@@ -463,6 +463,23 @@ export function reactionPicker(opts: Record<string, unknown>) {
 			}, 'closed');
 		}
 	});
+}
+
+export function openGlobalNotificationSetting() { 
+	const includingTypes = notificationTypes.filter(x => !store.state.i.mutingNotificationTypes.includes(x));
+	popup(import('@/components/notification-setting-window.vue'), {
+		includingTypes,
+		showGlobalToggle: false,
+	}, {
+		done: async (res) => {
+			const { includingTypes: value } = res;
+			await api('i/update', {
+				mutingNotificationTypes: notificationTypes.filter(x => !value.includes(x)),
+			}).then((i: any) => {
+				store.state.i.mutingNotificationTypes = i.mutingNotificationTypes;
+			});
+		}
+	}, 'closed');
 }
 
 /*
