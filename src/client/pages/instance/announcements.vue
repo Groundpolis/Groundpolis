@@ -2,7 +2,6 @@
 <div class="ztgjmzrw">
 	<div class="_section">
 		<div class="_content">
-			<MkButton @click="add()" primary style="margin: 0 auto 16px auto;"><Fa :icon="faPlus"/> {{ $t('add') }}</MkButton>
 			<section class="_card _vMargin announcements" v-for="announcement in announcements">
 				<div class="_content announcement">
 					<MkInput v-model:value="announcement.title">
@@ -46,10 +45,14 @@ export default defineComponent({
 		return {
 			INFO: {
 				title: this.$t('announcements'),
-				icon: faBroadcastTower
+				icon: faBroadcastTower,
+				action: {
+					icon: faPlus,
+					handler: this.add,
+				},
 			},
 			announcements: [],
-			faBroadcastTower, faSave, faTrashAlt, faPlus
+			faBroadcastTower, faSave, faTrashAlt
 		}
 	},
 
