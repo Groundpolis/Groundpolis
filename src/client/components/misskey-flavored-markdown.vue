@@ -127,6 +127,10 @@ export default defineComponent({
 @keyframes mfm-blink {
   75% { opacity: 0.0; }
 }
+
+@keyframes mfm-rainbow {
+    0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); }
+}
 </style>
 
 <style lang="scss" scoped>
