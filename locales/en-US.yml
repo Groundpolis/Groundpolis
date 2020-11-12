@@ -379,6 +379,7 @@ lastUsed: "Last used"
 unregister: "Unregister"
 passwordLessLogin: "Set up password-less login"
 resetPassword: "Reset password"
+resetPasswordConfirm: "Are you sure that you want to reset password?"
 newPasswordIs: 'The new password is "{password}"'
 title: "Title"
 text: "Text"
