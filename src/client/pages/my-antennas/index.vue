@@ -1,6 +1,5 @@
 <template>
 <div class="ieepwinx _section">
-	<MkButton @click="create" primary class="add"><Fa :icon="faPlus"/> {{ $t('add') }}</MkButton>
 
 	<div class="_content">
 		<XAntenna v-if="draft" :antenna="draft" @created="onAntennaCreated" style="margin-bottom: var(--margin);"/>
@@ -41,7 +40,6 @@ export default defineComponent({
 				limit: 10,
 			},
 			draft: null,
-			faPlus
 		};
 	},
 

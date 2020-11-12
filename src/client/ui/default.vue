@@ -52,7 +52,7 @@
 		</button>
 	</div>
 
-	<button class="fab _button" v-if="pageInfo && pageInfo.action" :class="{ navHidden }" @click="pageInfo.action.handler"><Fa :key="pageInfo.action.icon" :icon="pageInfo.action.icon"/></button>
+	<button class="fab _button" :class="{ navHidden }" @click="onFabClicked"><Fa :key="fabIcon" :icon="fabIcon"/></button>
 
 	<transition name="tray-back">
 		<div class="tray-back _modalBg"
@@ -72,7 +72,7 @@
 
 <script lang="ts">
 import { defineComponent, defineAsyncComponent, markRaw } from 'vue';
-import { faLayerGroup, faBars, faHome, faCircle, faWindowMaximize, faColumns, faHashtag } from '@fortawesome/free-solid-svg-icons';
+import { faLayerGroup, faBars, faHome, faCircle, faWindowMaximize, faColumns, faHashtag, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faComments } from '@fortawesome/free-regular-svg-icons';
 import { host } from '@/config';
 import { search } from '@/scripts/search';
@@ -145,7 +145,11 @@ export default defineComponent({
 				if (this.menuDef[def].indicated) return true;
 			}
 			return false;
-		}
+		},
+
+		fabIcon() {
+			return this.pageInfo && this.pageInfo.action ? this.pageInfo.action.icon : faPencilAlt;
+		},
 	},
 
 	watch: {
@@ -245,6 +249,14 @@ export default defineComponent({
 					os.pageWindow(path);
 				}
 			}], e);
+		},
+
+		onFabClicked(e) {
+			if (this.pageInfo && this.pageInfo.action) {
+				this.pageInfo.action.handler(e);
+			} else {
+				os.post();
+			}
 		},
 	}
 });
@@ -350,7 +362,7 @@ export default defineComponent({
 		display: block;
 		position: fixed;
 		z-index: 1000;
-		right: 32px;
+		right: calc(32px + var(--margin) * 2 + 300px);
 		bottom: 32px;
 		width: 64px;
 		height: 64px;
@@ -362,6 +374,10 @@ export default defineComponent({
 
 		&.navHidden {
 			bottom: 64px;
+		}
+
+		@media (max-width: $widgets-hide-threshold) {
+			right: 32px;
 		}
 	}
 

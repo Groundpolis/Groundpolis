@@ -65,7 +65,7 @@
 	<section class="_section _vMargin">
 		<div class="_content">
 			<div>
-				<MkSwitch v-model="usePressure" style="display: inline-flex">{{ $t('usePressure') }}
+				<MkSwitch v-model:value="usePressure" style="display: inline-flex">{{ $t('usePressure') }}
 					<template #desc>{{ $t('usePressureDescription') }}</template>
 				</MkSwitch>
 			</div>
@@ -269,7 +269,7 @@ export default defineComponent({
 		document.addEventListener('touchend', this.onTouchEnd);
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('beforeunload', this.beforeunload);
 		window.removeEventListener('keydown', this.keydown);
 	},

@@ -6,7 +6,7 @@ import { apiUrl, debug } from '@/config';
 import MkPostFormDialog from '@/components/post-form-dialog.vue';
 import MkWaitingDialog from '@/components/waiting-dialog.vue';
 import { resolve } from '@/router';
-import { NoteVisibility } from '../types';
+import { NoteVisibility, notificationTypes } from '../types';
 import { isDeviceTouch } from './scripts/is-device-touch';
 
 const ua = navigator.userAgent.toLowerCase();
@@ -160,7 +160,6 @@ export async function popup(component: Component | typeof import('*.vue') | Prom
 
 	const id = ++popupIdCount;
 	const dispose = () => {
-		if (_DEV_) console.log('os:popup close', id, component, props, events);
 		// このsetTimeoutが無いと挙動がおかしくなる(autocompleteが閉じなくなる)。Vueのバグ？
 		setTimeout(() => {
 			popups.value = popups.value.filter(popup => popup.id !== id);
@@ -176,7 +175,6 @@ export async function popup(component: Component | typeof import('*.vue') | Prom
 		id,
 	};
 
-	if (_DEV_) console.log('os:popup open', id, component, props, events);
 	popups.value.push(state);
 
 	return {
@@ -454,7 +452,10 @@ export function signoutAll() {
 export function reactionPicker(opts: Record<string, unknown>) { 
 	return new Promise<{ reaction: string, dislike: boolean }>((res, rej) => {
 		if (store.state.device.useFullReactionPicker) {
-			popup(import('@/components/emoji-picker.vue'), opts, {
+			popup(import('@/components/emoji-picker.vue'), {
+				...opts,
+				overridePinned: opts ? opts.reaction : undefined,
+			}, {
 				done: reaction => res({ reaction, dislike: false }),
 			}, 'closed');
 		} else {
@@ -463,6 +464,23 @@ export function reactionPicker(opts: Record<string, unknown>) {
 			}, 'closed');
 		}
 	});
+}
+
+export function openGlobalNotificationSetting() { 
+	const includingTypes = notificationTypes.filter(x => !store.state.i.mutingNotificationTypes.includes(x));
+	popup(import('@/components/notification-setting-window.vue'), {
+		includingTypes,
+		showGlobalToggle: false,
+	}, {
+		done: async (res) => {
+			const { includingTypes: value } = res;
+			await api('i/update', {
+				mutingNotificationTypes: notificationTypes.filter(x => !value.includes(x)),
+			}).then((i: any) => {
+				store.state.i.mutingNotificationTypes = i.mutingNotificationTypes;
+			});
+		}
+	}, 'closed');
 }
 
 /*

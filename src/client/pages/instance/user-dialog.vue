@@ -135,6 +135,13 @@ export default defineComponent({
 		},
 
 		async resetPassword() {
+			const confirm = await os.dialog({
+				type: 'warning',
+				showCancelButton: true,
+				text: this.$t('resetPasswordConfirm')
+			});
+			if (confirm.canceled) return;
+
 			os.apiWithDialog('admin/reset-password', {
 				userId: this.user.id,
 			}, undefined, ({ password }) => {

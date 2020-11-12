@@ -11,6 +11,7 @@ import MkCode from './code.vue';
 import MkGoogle from './google.vue';
 import MkA from './ui/a.vue';
 import { host } from '@/config';
+import { mfmFunctions, MfmFunctionStyleProp } from './mfm.functions';
 
 export default defineComponent({
 	props: {
@@ -72,21 +73,20 @@ export default defineComponent({
 				}
 
 				case 'italic': {
-					return h('i', {
+					return [h('i', {
 						style: 'font-style: oblique;'
-					}, genEl(token.children));
+					}, genEl(token.children))];
 				}
 
-				case 'big': {
-					return h('strong', {
-						style: 'display: inline-block; font-size: 150%;' + (this.$store.state.device.animatedMfm ? 'animation: anime-tada 1s linear infinite both;' : ''),
-					}, genEl(token.children));
-				}
+				case 'fn': {
+					const { name, args } = token.node.props as { name: string, args: MfmFunctionStyleProp };
+					const fn = mfmFunctions[name];
+					const noAnimatedMfm = !this.$store.state.device.animatedMfm;
+					let style = !fn ? null : typeof fn === 'string' ? fn : (
+						noAnimatedMfm ? (fn.noAnimatedMfmStyle ? fn.noAnimatedMfmStyle(args) : '') : fn.style(args)
+					);
 
-				case 'bigger': {
-					return h('strong', {
-						style: 'display: inline-block; font-size: 300%;' + (this.$store.state.device.animatedMfm ? 'animation: anime-tada 1s linear infinite both;' : ''),
-					}, genEl(token.children));
+					return [h('span', { style: 'display: inline-block;' + style, }, genEl(token.children))];
 				}
 
 				case 'small': {
@@ -107,100 +107,12 @@ export default defineComponent({
 					}, genEl(token.children))];
 				}
 
-				case 'motion': {
-					return h('span', {
-						style: 'display: inline-block;' + (this.$store.state.device.animatedMfm ? 'animation: anime-rubberBand 1s linear infinite both;' : ''),
-					}, genEl(token.children));
-				}
-
-				case 'spin': {
-					const direction =
-						token.node.props.attr == 'left' ? 'reverse' :
-						token.node.props.attr == 'alternate' ? 'alternate' :
-						'normal';
-					const style = this.$store.state.device.animatedMfm
-						? `animation: anime-spin 1.5s linear infinite; animation-direction: ${direction};` : '';
-					return h('span', {
-						style: 'display: inline-block;' + style
-					}, genEl(token.children));
-				}
-
-				case 'xspin': {
-					const direction =
-						token.node.props.attr == 'left' ? 'reverse' :
-						token.node.props.attr == 'alternate' ? 'alternate' :
-						'normal';
-					const style = this.$store.state.device.animatedMfm
-						? `animation: anime-xspin 1.5s linear infinite; animation-direction: ${direction};` : '';
-					return h('span', {
-						style: 'display: inline-block;' + style
-					}, genEl(token.children));
-				}
-
-				case 'yspin': {
-					const direction =
-						token.node.props.attr == 'left' ? 'reverse' :
-						token.node.props.attr == 'alternate' ? 'alternate' :
-								'normal';
-					const style = this.$store.state.device.animatedMfm
-						? `animation: anime-yspin 1.5s linear infinite; animation-direction: ${direction};` : '';
-					return h('span', {
-						style: 'display: inline-block;' + style
-					}, genEl(token.children));
-				}
-
-				case 'jump': {
-					return h('span', {
-						style: this.$store.state.device.animatedMfm ? 'display: inline-block; animation: anime-jump 0.75s linear infinite;' : 'display: inline-block;'
-					}, genEl(token.children));
-				}
-
-				case 'flip': {
-					return h('span', {
-						style: 'display: inline-block; transform: scaleX(-1);'
-					}, genEl(token.children));
-				}
-
-				case 'twitch': {
-					return h('span', {
-						style: this.$store.state.device.animatedMfm ? 'display: inline-block; animation: anime-twitch 0.5s ease infinite;' : 'display: inline-block;'
-					}, genEl(token.children));
-				}
-
-				case 'shake': {
-					return h('span', {
-						style: this.$store.state.device.animatedMfm ? 'display: inline-block; animation: anime-shake 0.5s ease infinite;' : 'display: inline-block;'
-					}, genEl(token.children));
-				}
-
-				case 'vflip': {
-					return h('span', {
-						style: 'display: inline-block; transform: scaleY(-1);'
-					}, genEl(token.children));
-				}
-
-				case 'twitch': {
-					return (createElement as any)('span', {
-						attrs: {
-							style: this.$store.state.device.animatedMfm ? 'display: inline-block; animation: anime-twitch 0.5s ease infinite;' : 'display: inline-block;'
-						},
-					}, genEl(token.children));
-				}
-
-				case 'shake': {
-					return (createElement as any)('span', {
-						attrs: {
-							style: this.$store.state.device.animatedMfm ? 'display: inline-block; animation: anime-shake 0.5s ease infinite;' : 'display: inline-block;'
-						},
-					}, genEl(token.children));
-				}
-
 				case 'sup': {
-					return h('sup', genEl(token.children));
+					return [h('sup', genEl(token.children))];
 				}
 
 				case 'sub': {
-					return h('sub', genEl(token.children));
+					return [h('sub', genEl(token.children))];
 				}
 
 				case 'marquee': {
@@ -209,12 +121,6 @@ export default defineComponent({
 					}
 
 					return [h('marquee', { class: 'marquee' }, genEl(token.children) as any)];
-				}
-
-				case 'blink': {
-					return h('span', {
-						style: (this.$store.state.device.animatedMfm) ? 'display: inline-block; animation: blink 0.75s linear infinite;' : 'display: inline-block;'
-					}, genEl(token.children));
 				}
 
 				case 'url': {
@@ -278,17 +184,10 @@ export default defineComponent({
 					}
 				}
 
-				case 'title': {
-					return [h('div', {
-						class: 'title'
-					}, genEl(token.children))];
-				}
-
 				case 'emoji': {
 					return [h(MkEmoji, {
 						key: Math.random(),
-						emoji: token.node.props.emoji,
-						name: token.node.props.name,
+						emoji: token.node.props.name ? `:${token.node.props.name}:` : token.node.props.emoji,
 						customEmojis: this.customEmojis,
 						normal: this.plain
 					})];

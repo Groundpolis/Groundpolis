@@ -1,13 +1,12 @@
 {
 	"name": "groundpolis",
-	"version": "12.54.0-gp-4.1.0",
+	"version": "12.55.0-gp-4.1.0",
 	"private": true,
 	"author": "Xeltica <xeltica@gmail.com>",
 	"contributors": [
 		"syuilo <syuilotan@yahoo.co.jp>"
 	],
 	"codename": "sonic",
-	"main": "./index.js",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/groundpolis/groundpolis.git"

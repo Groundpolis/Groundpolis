@@ -11,11 +11,10 @@
 			</div>
 		</div>
 	</div>
-	<div class="_section like">
-		<div class="_content">
-			<button class="_button" @click="unlike()" v-if="page.isLiked" :title="$t('_pages.unlike')"><Fa :icon="faHeartS"/></button>
-			<button class="_button" @click="like()" v-else :title="$t('_pages.like')"><Fa :icon="faHeartR"/></button>
-			<span class="count" v-if="page.likedCount > 0">{{ page.likedCount }}</span>
+	<div class="_section like" v-if="page.likedCount > 0">
+		<div class="_content count">
+			<Fa :icon="faHeartS"/>
+			{{ page.likedCount }}
 		</div>
 	</div>
 	<div class="_section links">
@@ -23,8 +22,6 @@
 			<MkA :to="`./${page.name}/view-source`" class="link">{{ $t('_pages.viewSource') }}</MkA>
 			<template v-if="$store.getters.isSignedIn && $store.state.i.id === page.userId">
 				<MkA :to="`/my/pages/edit/${page.id}`" class="link">{{ $t('_pages.editThisPage') }}</MkA>
-				<button v-if="$store.state.i.pinnedPageId === page.id" @click="pin(false)" class="link _textButton">{{ $t('unpin') }}</button>
-				<button v-else @click="pin(true)" class="link _textButton">{{ $t('pin') }}</button>
 			</template>
 		</div>
 	</div>
@@ -33,8 +30,8 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { faHeart as faHeartS } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faHeartR } from '@fortawesome/free-regular-svg-icons';
+import { faBookmark as faBookmarkS, faEdit, faHeart as faHeartS } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartR, faBookmark as faBookmarkR } from '@fortawesome/free-regular-svg-icons';
 import XPage from '@/components/page/page.vue';
 import * as os from '@/os';
 
@@ -59,6 +56,13 @@ export default defineComponent({
 			INFO: computed(() => this.page ? {
 				title: computed(() => this.page.title || this.page.name),
 				avatar: this.page.user,
+				action: computed(() => this.page.user.id === this.$store.state.i.id ? {
+					icon: this.$store.state.i.pinnedPageId === this.page.id ? faBookmarkS : faBookmarkR,
+					handler: () => this.pin(this.$store.state.i.pinnedPageId !== this.page.id),
+				} : {
+					icon: this.page.isLiked ? faHeartS : faHeartR,
+					handler: this.page.isLiked ? this.unlike : this.like,
+				}),
 			} : null),
 			page: null,
 			faHeartS, faHeartR

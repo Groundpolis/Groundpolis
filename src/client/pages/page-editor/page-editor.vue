@@ -7,7 +7,6 @@
 				<div class="buttons">
 					<button class="_button" @click="del()" v-if="!readonly"><Fa :icon="faTrashAlt"/></button>
 					<button class="_button" @click="() => showOptions = !showOptions"><Fa :icon="faCog"/></button>
-					<button class="_button" @click="save()" v-if="!readonly"><Fa :icon="faSave"/></button>
 				</div>
 			</header>
 
@@ -132,6 +131,14 @@ export default defineComponent({
 
 	data() {
 		return {
+			INFO: {
+				title: this.$t('pages'),
+				icon: faStickyNote,
+				action: {
+					icon: faSave,
+					handler: this.save
+				},
+			},
 			author: this.$store.state.i,
 			readonly: false,
 			page: null,
@@ -151,7 +158,7 @@ export default defineComponent({
 			script: '',
 			showOptions: false,
 			url,
-			faPlus, faICursor, faSave, faStickyNote, faMagic, faCog, faTrashAlt, faExternalLinkSquareAlt, faCode
+			faPlus, faICursor, faStickyNote, faMagic, faCog, faTrashAlt, faExternalLinkSquareAlt, faCode
 		};
 	},
 

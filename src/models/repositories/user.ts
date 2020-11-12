@@ -232,7 +232,6 @@ export class UserRepository extends Repository<User> {
 			...(opts.detail && meId === user.id ? {
 				avatarId: user.avatarId,
 				bannerId: user.bannerId,
-				autoWatch: profile!.autoWatch,
 				injectFeaturedNote: profile!.injectFeaturedNote,
 				alwaysMarkNsfw: profile!.alwaysMarkNsfw,
 				carefulBot: profile!.carefulBot,

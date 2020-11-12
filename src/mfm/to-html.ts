@@ -25,18 +25,6 @@ export function toHtml(tokens: MfmForest | null, mentionedRemoteUsers: IMentione
 			return el;
 		},
 
-		big(token) {
-			const el = doc.createElement('strong');
-			appendChildren(token.children, el);
-			return el;
-		},
-
-		bigger(token) {
-			const el = doc.createElement('strong');
-			appendChildren(token.children, el);
-			return el;
-		},
-
 		small(token) {
 			const el = doc.createElement('small');
 			appendChildren(token.children, el);
@@ -66,63 +54,8 @@ export function toHtml(tokens: MfmForest | null, mentionedRemoteUsers: IMentione
 			appendChildren(token.children, el);
 			return el;
 		},
-
-		motion(token) {
+		fn(token) {
 			const el = doc.createElement('i');
-			appendChildren(token.children, el);
-			return el;
-		},
-
-		spin(token) {
-			const el = doc.createElement('i');
-			appendChildren(token.children, el);
-			return el;
-		},
-
-		xspin(token) {
-			const el = doc.createElement('i');
-			appendChildren(token.children, el);
-			return el;
-		},
-
-		yspin(token) {
-			const el = doc.createElement('i');
-			appendChildren(token.children, el);
-			return el;
-		},
-
-		jump(token) {
-			const el = doc.createElement('i');
-			appendChildren(token.children, el);
-			return el;
-		},
-
-		twitch(token) {
-			const el = doc.createElement('i');
-			appendChildren(token.children, el);
-			return el;
-		},
-
-		shake(token) {
-			const el = doc.createElement('i');
-			appendChildren(token.children, el);
-			return el;
-		},
-
-		flip(token) {
-			const el = doc.createElement('span');
-			appendChildren(token.children, el);
-			return el;
-		},
-
-		vflip(token) {
-			const el = doc.createElement('span');
-			appendChildren(token.children, el);
-			return el;
-		},
-
-		blink(token) {
-			const el = doc.createElement('span');
 			appendChildren(token.children, el);
 			return el;
 		},
@@ -207,12 +140,6 @@ export function toHtml(tokens: MfmForest | null, mentionedRemoteUsers: IMentione
 
 		quote(token) {
 			const el = doc.createElement('blockquote');
-			appendChildren(token.children, el);
-			return el;
-		},
-
-		title(token) {
-			const el = doc.createElement('h1');
 			appendChildren(token.children, el);
 			return el;
 		},

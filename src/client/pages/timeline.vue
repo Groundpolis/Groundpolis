@@ -228,13 +228,8 @@ export default defineComponent({
 
 			const isMod = this.$store.state.i.isModerator || this.$store.state.i.isAdmin;
 			const withCTL = !this.$store.state.instance.meta.disableCatTimeline || isMod;
-			
-			const [antennas, lists, channels] = await Promise.all([
-				os.api('antennas/list'),
-				os.api('users/lists/list'),
-				os.api('channels/followed'),
-			]);
-			const antennaItems = antennas.map(antenna => ({
+
+			const antennaPromise = os.api('antennas/list').then((antennas: any[]) => antennas.length === 0 ? [] : [null, ...antennas.map(antenna => ({
 				text: antenna.name,
 				icon: faSatellite,
 				indicate: antenna.hasUnreadNote,
@@ -243,8 +238,8 @@ export default defineComponent({
 					this.src = 'antenna';
 					this.saveSrc();
 				}
-			}));
-			const listItems = lists.map(list => ({
+			}))]);
+			const listPromise = os.api('users/lists/list').then((lists: any[]) => lists.length === 0 ? [] : [null, ...lists.map(list => ({
 				text: list.name,
 				icon: faListUl,
 				action: () => {
@@ -252,8 +247,8 @@ export default defineComponent({
 					this.src = 'list';
 					this.saveSrc();
 				}
-			}));
-			const channelItems = channels.map(channel => ({
+			}))]);
+			const channelPromise = os.api('channels/followed').then((channels: any[]) => channels.length === 0 ? [] : [null, ...channels.map(channel => ({
 				text: channel.name,
 				icon: faSatelliteDish,
 				indicate: channel.hasUnreadNote,
@@ -264,7 +259,7 @@ export default defineComponent({
 					//this.saveSrc();
 					this.$router.push(`/channels/${channel.id}`);
 				}
-			}));
+			}))]);
 
 			os.modalMenu([
 				(withCTL ? {
@@ -308,13 +303,10 @@ export default defineComponent({
 						this.saveSrc();
 					}
 				},
-
-				antennaItems.length > 0 ? null : undefined,
-				...antennaItems, 
-				listItems.length > 0 ? null : undefined,
-				...listItems,
-				channelItems.length > 0 ? null : undefined,
-				...channelItems], ev.currentTarget || ev.target);
+				antennaPromise,
+				listPromise,
+				channelPromise,
+				], ev.currentTarget || ev.target);
 		},
 
 		saveSrc() {

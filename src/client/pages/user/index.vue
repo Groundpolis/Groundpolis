@@ -124,7 +124,7 @@
 
 <script lang="ts">
 import { defineComponent, defineAsyncComponent, computed } from 'vue';
-import { faExclamationTriangle, faEllipsisH, faRobot, faLock, faBookmark, faChartBar, faImage, faBirthdayCake, faMapMarker, faMars, faVenus, faGenderless } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle, faEllipsisH, faRobot, faLock, faBookmark, faChartBar, faImage, faBirthdayCake, faMapMarker, faMars, faVenus, faGenderless, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { faCalendarAlt, faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import * as age from 's-age';
 import XUserTimeline from './index.timeline.vue';
@@ -170,8 +170,10 @@ export default defineComponent({
 				userName: this.user,
 				avatar: this.user,
 				action: {
-					icon: faEllipsisH,
-					handler: this.menu
+					icon: faPencilAlt,
+					handler: () => os.post({
+						mention: this.user,
+					}),
 				}
 			} : null),
 			user: null,

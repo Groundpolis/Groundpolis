@@ -54,6 +54,7 @@
 							<MkUser-name class="text" :user="acct" :nowrap="true"/>
 						</div>
 					</button>
+					<MkEllipsis v-if="loadingAccounts" class="item" />
 					<div class="divider" v-if="accounts.length > 0"></div>
 					<button class="item _button" @click="addAcount" v-text="$t('addAcount')"/>
 					<button class="item _button" @click="createAccount" v-text="$t('createAccount')"/>
@@ -88,6 +89,7 @@ export default defineComponent({
 			iconOnly: false,
 			hidden: false,
 			isTablet: false,
+			loadingAccounts: false,
 			faGripVertical, faChevronLeft, faComments, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faEllipsisV, faPencilAlt, faBars, faTimes, faBell, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faEnvelope, faListUl, faPlus, faUserClock, faLaugh, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faProjectDiagram, faArrowLeft, faArrowRight, faChevronDown, faChevronUp
 		};
 	},
@@ -176,7 +178,9 @@ export default defineComponent({
 		},
 
 		async fetchAccounts() {
+			this.loadingAccounts = true;
 			this.accounts = (await os.api('users/show', { userIds: this.$store.state.device.accounts.map(x => x.id) })).filter(x => x.id !== this.$store.state.i.id);
+			this.loadingAccounts = false;
 		},
 
 		toggleMenuMode() {
