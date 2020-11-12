@@ -11,6 +11,7 @@ import MkCode from './code.vue';
 import MkGoogle from './google.vue';
 import MkA from './ui/a.vue';
 import { host } from '@/config';
+import { mfmFunctions, MfmFunctionStyleProp } from './mfm.functions';
 
 export default defineComponent({
 	props: {
@@ -78,65 +79,14 @@ export default defineComponent({
 				}
 
 				case 'fn': {
-					// TODO: CSSを文字列で組み立てていくと token.node.props.args.~~~ 経由でCSSインジェクションできるのでよしなにやる
-					let style;
-					switch (token.node.props.name) {
-						case 'tada': {
-							style = `font-size: 150%;` + (this.$store.state.device.animatedMfm ? 'animation: tada 1s linear infinite both;' : '');
-							break;
-						}
-						case 'jelly': {
-							const speed = token.node.props.args.speed || '1s';
-							style = (this.$store.state.device.animatedMfm ? `animation: mfm-rubberBand ${speed} linear infinite both;` : '');
-							break;
-						}
-						case 'twitch': {
-							const speed = token.node.props.args.speed || '0.5s';
-							style = this.$store.state.device.animatedMfm ? `animation: mfm-twitch ${speed} ease infinite;` : '';
-							break;
-						}
-						case 'shake': {
-							const speed = token.node.props.args.speed || '0.5s';
-							style = this.$store.state.device.animatedMfm ? `animation: mfm-shake ${speed} ease infinite;` : '';
-							break;
-						}
-						case 'spin': {
-							const direction =
-								token.node.props.args.left ? 'reverse' :
-								token.node.props.args.alternate ? 'alternate' :
-								'normal';
-							const anime =
-								token.node.props.args.x ? 'mfm-spinX' :
-								token.node.props.args.y ? 'mfm-spinY' :
-								'mfm-spin';
-							const speed = token.node.props.args.speed || '1.5s';
-							style = this.$store.state.device.animatedMfm ? `animation: ${anime} ${speed} linear infinite; animation-direction: ${direction};` : '';
-							break;
-						}
-						case 'jump': {
-							style = this.$store.state.device.animatedMfm ? 'animation: mfm-jump 0.75s linear infinite;' : '';
-							break;
-						}
-						case 'bounce': {
-							style = this.$store.state.device.animatedMfm ? 'animation: mfm-bounce 0.75s linear infinite; transform-origin: center bottom;' : '';
-							break;
-						}
-						case 'wobble': {
-							style = this.$store.state.device.animatedMfm ? 'animation: mfm-wobble 0.75s linear infinite; transform-origin: center bottom;' : '';
-							break;
-						}
-						case 'flip': {
-							const transform =
-								(token.node.props.args.h && token.node.props.args.v) ? 'scale(-1, -1)' :
-								token.node.props.args.v ? 'scaleY(-1)' :
-								'scaleX(-1)';
-							style = `transform: ${transform};`;
-							break;
-						}
-					}
-					return h('span', {
-						style: 'display: inline-block;' + style,
-					}, genEl(token.children));
+					const { name, args } = token.node.props as { name: string, args: MfmFunctionStyleProp };
+					const fn = mfmFunctions[name];
+					const noAnimatedMfm = !this.$store.state.device.animatedMfm;
+					let style = !fn ? null : typeof fn === 'string' ? fn : (
+						noAnimatedMfm ? (fn.noAnimatedMfmStyle ? fn.noAnimatedMfmStyle(args) : '') : fn.style(args)
+					);
+
+					return [h('span', { style: 'display: inline-block;' + style, }, genEl(token.children))];
 				}
 
 				case 'small': {
@@ -158,11 +108,11 @@ export default defineComponent({
 				}
 
 				case 'sup': {
-					return h('sup', genEl(token.children));
+					return [h('sup', genEl(token.children))];
 				}
 
 				case 'sub': {
-					return h('sub', genEl(token.children));
+					return [h('sub', genEl(token.children))];
 				}
 
 				case 'marquee': {

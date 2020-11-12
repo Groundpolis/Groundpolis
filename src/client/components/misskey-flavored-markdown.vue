@@ -113,6 +113,16 @@ export default defineComponent({
 	75% { transform: scale3d(1.05, 0.95, 1); }
 	to { transform: scale3d(1, 1, 1); }
 }
+
+@keyframes mfm-wobble {
+  from { transform: translate3d(0, 0, 0); }
+  15% { transform: translate3d(-25%, 0, 0) rotate3d(0, 0, 1, -5deg); }
+  30% { transform: translate3d(20%, 0, 0) rotate3d(0, 0, 1, 3deg); }
+  45% { transform: translate3d(-15%, 0, 0) rotate3d(0, 0, 1, -3deg); }
+  60% { transform: translate3d(10%, 0, 0) rotate3d(0, 0, 1, 2deg); }
+  75% { transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg); }
+  to { transform: translate3d(0, 0, 0); }
+}
 </style>
 
 <style lang="scss" scoped>

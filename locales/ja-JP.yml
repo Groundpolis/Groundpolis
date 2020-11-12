@@ -746,6 +746,17 @@ _mfmpad:
   link: "リンク"
   noUrlPreview: "URLプレビューに展開しない"
   noUrlPreviewDesc: "オンにすると、このリンクをURLプレビューの対象としないよう設定します。リモートのインスタンスによっては無視される可能性があります。"
+  functions: "関数"
+  _functions:
+    kind: "種類"
+    args: "引数"
+    text: "テキスト"
+    speed: "速度"
+    xspin: "X軸方向に回転"
+    yspin: "Y軸方向に回転"
+    vflip: "縦に反転する"
+    spinLeft: "左回転"
+    spinAlternate: "反復回転"
 
 _renoteButtonMode:
   choose: "毎回選ぶ"
