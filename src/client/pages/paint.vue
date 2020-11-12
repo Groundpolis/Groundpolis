@@ -269,7 +269,7 @@ export default defineComponent({
 		document.addEventListener('touchend', this.onTouchEnd);
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('beforeunload', this.beforeunload);
 		window.removeEventListener('keydown', this.keydown);
 	},

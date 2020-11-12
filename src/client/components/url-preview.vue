@@ -133,7 +133,7 @@ export default defineComponent({
 		if (areaWidth && areaWidth < 300) this.tweetLeft = areaWidth - 241;
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		(window as any).removeEventListener('message', this.adjustTweetHeight);
 	},
 
