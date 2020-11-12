@@ -160,7 +160,6 @@ export async function popup(component: Component | typeof import('*.vue') | Prom
 
 	const id = ++popupIdCount;
 	const dispose = () => {
-		if (_DEV_) console.log('os:popup close', id, component, props, events);
 		// このsetTimeoutが無いと挙動がおかしくなる(autocompleteが閉じなくなる)。Vueのバグ？
 		setTimeout(() => {
 			popups.value = popups.value.filter(popup => popup.id !== id);
@@ -176,7 +175,6 @@ export async function popup(component: Component | typeof import('*.vue') | Prom
 		id,
 	};
 
-	if (_DEV_) console.log('os:popup open', id, component, props, events);
 	popups.value.push(state);
 
 	return {
