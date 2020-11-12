@@ -775,9 +775,9 @@ _labs:
   newAnnouncementUIDesc: "お知らせ UIを現在の専用ページ + タイムライン上部への強制表示から、タイムラインタブの最右へのボタン表示に切り替えます。未読のお知らせがある場合はバッジが付きます。"
 
 _mfm:
-  cheatSheet: "MFMチートシート"
-  intro: "MFMは、Misskey内の様々な場所で使用できる専用のマークアップ言語です。ここでは、MFMで使用可能な構文一覧が確認できます。"
-  dummy: "MisskeyでFediverseの世界が広がります"
+  cheatSheet: "GPFMチートシート"
+  intro: "GPFMは、Groundpolis内の様々な場所で使用できる専用のマークアップ言語です。ここでは、GPFMで使用可能な構文一覧が確認できます。"
+  dummy: "GroundpolisでFediverseの世界が広がります"
   mention: "メンション"
   mentionDescription: "アットマーク + ユーザー名で、特定のユーザーを示すことができます。"
   hashtag: "ハッシュタグ"
@@ -792,6 +792,10 @@ _mfm:
   smallDescription: "内容を小さく・薄く表示させることができます。"
   center: "中央寄せ"
   centerDescription: "内容を中央寄せで表示させることができます。"
+  sup: "上付き文字"
+  supDescription: "テキストを上寄りに小さく表示します。"
+  sub: "下付き文字"
+  subDescription: "テキストを下寄りに小さく表示します。"
   inlineCode: "コード(インライン)"
   inlineCodeDescription: "プログラムなどのコードをインラインでシンタックスハイライトします。"
   blockCode: "コード(ブロック)"
@@ -804,6 +808,8 @@ _mfm:
   quoteDescription: "内容が引用であることを示すことができます。"
   emoji: "カスタム絵文字"
   emojiDescription: "コロンでカスタム絵文字名を囲むと、カスタム絵文字を表示させることができます。"
+  userEmoji: "アバター絵文字"
+  userEmojiDescription: "コロンでメンションを囲むと、そのユーザーのアバターをカスタム絵文字として表示させることができます。"
   search: "検索"
   searchDescription: "入力済み検索ボックスを表示させることができます。"
   flip: "反転"
@@ -822,6 +828,10 @@ _mfm:
   twitchDescription: "激しくブレるアニメーションを与えます。"
   spin: "アニメーション(回転)"
   spinDescription: "回転するアニメーションを与えます。"
+  blink: "アニメーション(点滅)"
+  blinkDescription: "点滅するアニメーションを与えます。"
+  rainbow: "アニメーション(虹)"
+  rainbowDescription: "虹色のアニメーションを付えます。"
 
 _reversi:
   reversi: "リバーシ"
