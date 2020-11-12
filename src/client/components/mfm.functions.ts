@@ -76,7 +76,12 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 		}
 	},
 	jump: 'animation: mfm-jump 0.75s linear infinite',
-	blink: 'animation: mfm-blink 0.75s linear infinite',
+	blink: {
+		props: {
+			speed: genProp('_mfmpad._functions.speed'),
+		},
+		style: args => `animation: mfm-blink ${args.speed || '1s'} step-end infinite`,
+	},
 	bounce: 'animation: mfm-bounce 0.75s linear infinite; transform-origin: center bottom',
 	flip: {
 		props: {

@@ -123,6 +123,10 @@ export default defineComponent({
   75% { transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg); }
   to { transform: translate3d(0, 0, 0); }
 }
+
+@keyframes mfm-blink {
+  75% { opacity: 0.0; }
+}
 </style>
 
 <style lang="scss" scoped>
