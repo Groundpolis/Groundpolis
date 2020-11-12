@@ -380,7 +380,7 @@ unregister: "Unregister"
 passwordLessLogin: "Set up password-less login"
 resetPassword: "Reset password"
 resetPasswordConfirm: "Are you sure that you want to reset password?"
-newPasswordIs: 'The new password is "{password}"'
+newPasswordIs: "The new password is \"{password}\""
 title: "Title"
 text: "Text"
 revert-to-draft: "Revert to draft"
@@ -715,6 +715,14 @@ _renoteButtonMode:
   quote: "Open a form to quote"
   renoteQuote: "Renote and open a form to quote"
 
+_mfm:
+  mention: "Mention"
+  hashtag: "Hashtag"
+  link: "Link"
+  center: "Center elements"
+  quote: "Quote"
+  emoji: "Custom Emoji"
+  search: "Search"
 _reversi:
   reversi: "Reversi"
   gameSettings: "Game settings"
