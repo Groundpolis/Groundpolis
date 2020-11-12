@@ -53,6 +53,10 @@ export function toString(tokens: MfmForest | null, opts?: RestoreOptions): strin
 			return `<right>${appendChildren(token.children, opts)}</right>`;
 		},
 
+		marquee(token, opts) {
+			return `<marquee>${appendChildren(token.children, opts)}</marquee>`;
+		},
+
 		blockCode(token) {
 			return `\`\`\`${token.node.props.lang || ''}\n${token.node.props.code}\n\`\`\`\n`;
 		},
