@@ -10,6 +10,8 @@ import { defineComponent } from 'vue';
 import { getStaticImageUrl } from '@/scripts/get-static-image-url';
 import { twemojiSvgBase } from '../../misc/twemoji-base';
 
+import * as os from '@/os';
+
 export default defineComponent({
 	props: {
 		emoji: {
@@ -40,13 +42,17 @@ export default defineComponent({
 		return {
 			url: null,
 			char: null,
-			customEmoji: null
+			customEmoji: null as any,
 		}
 	},
 
 	computed: {
 		isCustom(): boolean {
 			return this.emoji.startsWith(':');
+		},
+
+		isUser(): boolean {
+			return this.emoji.startsWith(':@');
 		},
 
 		alt(): string {
@@ -85,6 +91,17 @@ export default defineComponent({
 	created() {
 		if (!this.isCustom) {
 			this.char = this.emoji;
+		}
+		const acct = this.emoji.slice(1, this.emoji.length - 1);
+
+		if (this.isUser && !this.customEmojis.some(c => c.name === acct)) {
+			os.getAvatar(acct).then(url => {
+				this.customEmoji = {
+					name: acct,
+					url
+				};
+				this.url = url;
+			});
 		}
 
 		if (this.char) {
