@@ -64,7 +64,7 @@ export default defineComponent({
 	emits: ['close'],
 	data() {
 		return {
-			_items: [],
+			_items: [] as unknown[],
 			faCircle,
 		};
 	},
@@ -78,20 +78,36 @@ export default defineComponent({
 		},
 	},
 	created() {
-		const items = ref(this.items.filter(item => item !== undefined));
+		const items = this.items.filter(item => item !== undefined);
 
-		for (let i = 0; i < items.value.length; i++) {
-			const item = items.value[i];
+		let _items = [ ...items ];
+
+		const queue: { i: number, promise: Promise<any> }[] = [];
+
+		for (let i = 0; i < items.length; i++) {
+			const item = items[i];
 			
-			if (item && item.then) { // if item is Promise
-				items.value[i] = { type: 'pending' };
-				item.then(actualItem => {
-					items.value[i] = actualItem;
+			if (item && item.then) { 
+				// もし Promise なら
+				// 一旦 pending アンカーを作って置いておく
+				items[i] = { type: 'pending' };
+
+				queue.push({
+					i, promise: item as Promise<any>,
 				});
 			}
 		}
 
 		this._items = items;
+
+		Promise.all(queue.map(o => o.promise.then(v => ({ i: o.i, value: v }))))
+			.then(q => {
+				q.forEach(({ i, value }) => {
+					_items[i] = value;
+				});
+				_items = _items.flat();
+				this._items = _items;
+			});
 	},
 	mounted() {
 		if (this.viaKeyboard) {
