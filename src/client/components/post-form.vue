@@ -340,6 +340,7 @@ export default defineComponent({
 					this.localOnly = draft.data.localOnly;
 					this.remoteFollowersOnly = draft.data.remoteFollowersOnly;
 					this.quote = draft.data.quote;
+					this.visibleUsers.push(...(draft.data.visibleUsers as []));
 					this.files = (draft.data.files || []).filter(e => e);
 					if (draft.data.poll) {
 						this.poll = draft.data.poll;
@@ -361,6 +362,16 @@ export default defineComponent({
 				this.localOnly = init.localOnly;
 				this.remoteFollowersOnly = init.remoteFollowersOnly;
 				this.quote = init.renote;
+				if (init.visibleUserIds && init.visibleUserIds.length > 0) {
+					os.api('users/show', {
+						userIds: init.visibleUserIds
+					}).then((users: []) => {
+						this.visibleUsers.push(...users);
+						this.saveDraft();
+					});
+				} else {
+					this.saveDraft();
+				}
 			}
 
 			this.$nextTick(() => this.watch());
@@ -378,6 +389,7 @@ export default defineComponent({
 			this.$watch('poll', this.saveDraft);
 			this.$watch('files', this.saveDraft);
 			this.$watch('visibility', this.saveDraft);
+			this.$watch('visibleUsers', this.saveDraft);
 			this.$watch('localOnly', this.saveDraft);
 			this.$watch('remoteFollowersOnly', this.saveDraft);
 		},
@@ -470,11 +482,13 @@ export default defineComponent({
 		addVisibleUser() {
 			os.selectUser().then(user => {
 				this.visibleUsers.push(user);
+				this.saveDraft();
 			});
 		},
 
 		removeVisibleUser(user) {
 			this.visibleUsers = erase(user, this.visibleUsers);
+			this.saveDraft();
 		},
 
 		clear() {
@@ -590,6 +604,7 @@ export default defineComponent({
 					visibility: this.visibility,
 					localOnly: this.localOnly,
 					remoteFollowersOnly: this.remoteFollowersOnly,
+					visibleUsers: [ ...this.visibleUsers ],
 					files: this.files,
 					quote: this.quote,
 					poll: this.poll
@@ -627,7 +642,7 @@ export default defineComponent({
 				text: this.text == '' ? undefined : this.text + (this.useBroadcast ? ' ' + this.broadcastText : ''),
 				fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
 				replyId: this.reply ? this.reply.id : undefined,
-				renoteId: this.renote ? this.renote.id : this.quoteId ? this.quoteId : undefined,
+				renoteId: this.renote ? this.renote.id : undefined,
 				channelId: this.channel ? this.channel.id : undefined,
 				poll: this.poll,
 				cw: this.useCw ? this.cw || '' : undefined,
@@ -652,7 +667,7 @@ export default defineComponent({
 					this.deleteDraft();
 					this.$emit('posted');
 					if (this.text && this.text != '') {
-						const hashtags = parse(this.text).filter(x => x.node.type === 'hashtag').map(x => x.node.props.hashtag);
+						const hashtags = parse(this.text)!.filter(x => x.node.type === 'hashtag').map(x => x.node.props.hashtag);
 						const history = JSON.parse(localStorage.getItem('hashtags') || '[]') as string[];
 						localStorage.setItem('hashtags', JSON.stringify(unique(hashtags.concat(history))));
 					}
