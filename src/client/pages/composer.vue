@@ -47,8 +47,8 @@ export default defineComponent({
 				icon: faMusic,
 				action: {
 					icon: faPlus,
-					action: () => {
-
+					handler: () => {
+						this.$router.push('/composer/new');
 					},
 				},
 			},
