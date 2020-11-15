@@ -432,7 +432,7 @@ type Instance = {
 
 const instances: Record<string, Instance> = {};
 
-export async function getInstance(host?: string): Promise<Instance | null> {
+export async function getInstance(host?: string): Promise<Instance['instance'] | null> {
 	if (!host) return null;
 	const now = Date.now();
 	// キャッシュが無いか、前回取得時から5分以上たっていれば取得してくる
@@ -442,7 +442,7 @@ export async function getInstance(host?: string): Promise<Instance | null> {
 			instance: await api('federation/show-instance', { host })
 		};
 	}
-	return instances[host];
+	return instances[host].instance;
 }
 
 type Avatar = {
