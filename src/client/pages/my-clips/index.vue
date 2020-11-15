@@ -1,13 +1,14 @@
 <template>
 <div class="_section qtcaoidl">
-	<MkButton @click="create" primary class="add"><Fa :icon="faPlus"/> {{ $t('add') }}</MkButton>
-
 	<div class="_content">
-		<MkPagination :pagination="pagination" #default="{items}" ref="list" class="list">
-			<MkA v-for="item in items" :key="item.id" :to="`/clips/${item.id}`" class="item _panel _vMargin">
-				<b>{{ item.name }}</b>
-				<div v-if="item.description" class="description">{{ item.description }}</div>
-			</MkA>
+		<MkPagination :pagination="pagination" ref="list" class="list">
+			<template #empty><div class="_emptyinfo">{{ $t('noClips') }}</div></template>
+			<template #default="{items}">
+				<MkA v-for="item in items" :key="item.id" :to="`/clips/${item.id}`" class="item _panel _vMargin">
+					<b>{{ item.name }}</b>
+					<div v-if="item.description" class="description">{{ item.description }}</div>
+				</MkA>
+			</template>
 		</MkPagination>
 	</div>
 </div>

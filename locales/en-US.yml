@@ -704,6 +704,9 @@ showAsPlainText: "Display as plain text"
 behavior: "Behavior"
 useDisplayNameForSidebar: "show DisplayName for sidebar"
 alwaysPlayMediaInWindow: "Always play media in window"
+noClips: "You haven't created any clips yet. Pick favorite notes and create a clip!"
+noPages: "You haven't created any pages yet. Create your own special page soon!"
+noPagesLike: "You haven't like any pages yet."
 
 _mfmpad:
   quote: "Quote"

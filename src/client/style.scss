@@ -430,6 +430,13 @@ hr {
 	}
 }
 
+._emptyinfo {
+	padding: 64px 32px;
+	text-align: center;
+	opacity: 0.5;
+	font-weight: bold;
+}
+
 ._keyValue {
 	display: flex;
 
