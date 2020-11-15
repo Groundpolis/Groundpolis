@@ -246,6 +246,7 @@ hr {
 		padding: 22px 32px;
 		padding-bottom: 0;
 		font-size: 1.6em;
+		border-bottom: solid 1px var(--panelHeaderDivider);
 		font-weight: bold;
 		background: var(--panelHeaderBg);
 		color: var(--panelHeaderFg);

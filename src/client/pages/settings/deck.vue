@@ -11,9 +11,11 @@
 			</MkSwitch>
 		</div>
 		<div class="_content">
-			<div>{{ $t('_deck.columnAlign') }}</div>
-			<MkRadio v-model="deckColumnAlign" value="left">{{ $t('left') }}</MkRadio>
-			<MkRadio v-model="deckColumnAlign" value="center">{{ $t('center') }}</MkRadio>
+			<MkRadios v-model="deckColumnAlign">
+				<template #desc>{{ $t('_deck.columnAlign') }}</template>
+				<option value="left">{{ $t('left') }}</option>
+				<option value="center">{{ $t('center') }}</option>
+			</MkRadios>
 		</div>
 	</section>
 </div>

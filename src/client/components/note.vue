@@ -135,7 +135,7 @@
 
 <script lang="ts">
 import { defineAsyncComponent, defineComponent, markRaw } from 'vue';
-import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
+import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle, faAlignLeft, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes, faClock } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
@@ -223,8 +223,8 @@ export default defineComponent({
 			readMore: null as boolean | null,
 			instance: null as {} | null,
 			renoteState: null,
-			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisV, faHome, faLock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock, faAlignLeft,
 			isPlainMode: false,
+			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisV, faHome, faLock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock, faAlignLeft,
 			host,
 		};
 	},
@@ -712,6 +712,11 @@ export default defineComponent({
 					text: this.$t('favorite'),
 					action: () => this.toggleFavorite(true)
 				}),
+				{
+					icon: faPaperclip,
+					text: this.$t('clip'),
+					action: () => this.clip()
+				},
 				(this.appearNote.userId != this.$store.state.i.id) ? statePromise.then(state => state.isWatching ? {
 					icon: faEyeSlash,
 					text: this.$t('unwatch'),
@@ -884,6 +889,44 @@ export default defineComponent({
 					});
 				}
 			});
+		},
+
+		async clip() {
+			const clips = await os.api('clips/list');
+			os.modalMenu([{
+				icon: faPlus,
+				text: this.$t('createNew'),
+				action: async () => {
+					const { canceled, result } = await os.form(this.$t('createNewClip'), {
+						name: {
+							type: 'string',
+							label: this.$t('name')
+						},
+						description: {
+							type: 'string',
+							required: false,
+							multiline: true,
+							label: this.$t('description')
+						},
+						isPublic: {
+							type: 'boolean',
+							label: this.$t('public'),
+							default: false
+						}
+					});
+					if (canceled) return;
+
+					const clip = await os.apiWithDialog('clips/create', result);
+
+					os.apiWithDialog('clips/add-note', { clipId: clip.id, noteId: this.appearNote.id });
+				}
+			}, null, ...clips.map(clip => ({
+				text: clip.name,
+				action: () => {
+					os.apiWithDialog('clips/add-note', { clipId: clip.id, noteId: this.appearNote.id });
+				}
+			}))], this.$refs.menuButton, {
+			}).then(this.focus);
 		},
 
 		async promote() {

@@ -11,17 +11,21 @@
 			</MkSwitch>
 		</div>
 		<div class="_content">
-			<div>{{ $t('fontSize') }}</div>
-			<MkRadio v-model="fontSize" value="small"><span style="font-size: 14px;">Aa</span></MkRadio>
-			<MkRadio v-model="fontSize" :value="null"><span style="font-size: 16px;">Aa</span></MkRadio>
-			<MkRadio v-model="fontSize" value="large"><span style="font-size: 18px;">Aa</span></MkRadio>
-			<MkRadio v-model="fontSize" value="veryLarge"><span style="font-size: 20px;">Aa</span></MkRadio>
+			<MkRadios v-model="fontSize">
+				<template #desc>{{ $t('fontSize') }}</template>
+				<option value="small"><span style="font-size: 14px;">Aa</span></option>
+				<option :value="null"><span style="font-size: 16px;">Aa</span></option>
+				<option value="large"><span style="font-size: 18px;">Aa</span></option>
+				<option value="veryLarge"><span style="font-size: 20px;">Aa</span></option>
+			</MkRadios>
 		</div>
 		<div class="_content">
-			<div>{{ $t('instanceTicker') }}</div>
-			<MkRadio v-model="instanceTicker" value="none">{{ $t('_instanceTicker.none') }}</MkRadio>
-			<MkRadio v-model="instanceTicker" value="remote">{{ $t('_instanceTicker.remote') }}</MkRadio>
-			<MkRadio v-model="instanceTicker" value="always">{{ $t('_instanceTicker.always') }}</MkRadio>
+			<MkRadios v-model="fontSize">
+				<template #desc>{{ $t('instanceTicker') }}</template>
+				<option value="none">{{ $t('_instanceTicker.none') }}</option>
+				<option value="remote">{{ $t('_instanceTicker.remote') }}</option>
+				<option value="always">{{ $t('_instanceTicker.always') }}</option>
+			</MkRadios>
 		</div>
 	</section>
 	<section class="_card _vMargin">
@@ -76,6 +80,7 @@ import MkButton from '@/components/ui/button.vue';
 import MkSwitch from '@/components/ui/switch.vue';
 import MkSelect from '@/components/ui/select.vue';
 import MkRadio from '@/components/ui/radio.vue';
+import MkRadios from '@/components/ui/radios.vue';
 
 export default defineComponent({
 	components: {
@@ -83,6 +88,7 @@ export default defineComponent({
 		MkSwitch,
 		MkRadio,
 		MkSelect,
+		MkRadios,
 	},
 
 	data() {
