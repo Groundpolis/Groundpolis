@@ -86,9 +86,17 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 	rainbow: 'color: var(--accent); animation: mfm-rainbow 1s linear infinite both',
 	flip: {
 		props: {
-			h: genProp('_mfmpad._functions.hflip'),
-			v: genProp('_mfmpad._functions.vflip'),
+			h: genFlagProp('_mfmpad._functions.hflip'),
+			v: genFlagProp('_mfmpad._functions.vflip'),
 		},
-		style: args => 'transform:' + args.h && args.v ? 'scale(-1, -1)' : args.v ? 'scaleY(-1)' : 'scaleX(-1)',
+		style: args => 'transform:' + (args.h && args.v ? 'scale(-1, -1)' : args.v ? 'scaleY(-1)' : 'scaleX(-1)'),
+		noAnimatedMfmStyle: args => 'transform:' + (args.h && args.v ? 'scale(-1, -1)' : args.v ? 'scaleY(-1)' : 'scaleX(-1)'),
+	},
+	rotate: {
+		props: {
+			angle: genProp('_mfmpad.rotateAngle'),
+		},
+		style: args => `transform: rotate(${args.angle || '90'}deg); transform-origin: center center`,
+		noAnimatedMfmStyle: args => `transform: rotate(${args.angle || '90'}deg); transform-origin: center center`,
 	},
 };

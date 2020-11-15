@@ -82,9 +82,8 @@ export default defineComponent({
 					const { name, args } = token.node.props as { name: string, args: MfmFunctionStyleProp };
 					const fn = mfmFunctions[name];
 					const noAnimatedMfm = !this.$store.state.device.animatedMfm;
-					let style = !fn ? null : typeof fn === 'string' ? fn : (
-						noAnimatedMfm ? (fn.noAnimatedMfmStyle ? fn.noAnimatedMfmStyle(args) : '') : fn.style(args)
-					);
+					const noAnimatedStyle = fn === null ? '' : typeof fn === 'string' ? '' : fn.noAnimatedMfmStyle ? fn.noAnimatedMfmStyle(args) : '';
+					const style = noAnimatedMfm ? noAnimatedStyle : fn === null ? '' : typeof fn === 'string' ? fn : fn.style(args);
 
 					return [h('span', { style: 'display: inline-block;' + style, }, genEl(token.children))];
 				}
