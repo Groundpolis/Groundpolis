@@ -62,12 +62,13 @@
 	</section>
 	<section class="_card _vMargin">
 		<div class="_content">
-			<div>{{ $t('iconShape') }}</div>
-			<MkSelect v-model:value="iconShape">
-				<option v-for="x in [ 'circle', 'square', 'rounded', 'droplet' ]" :value="x" :key="x">
-					{{ $t(`_iconShape.${x}`) }}
-				</option>
-			</MkSelect>
+			<MkRadios v-model="iconShape">
+				<template #desc>{{ $t('iconShape') }}</template>
+				<option value="circle">{{ $t('_iconShape.circle') }}</option>
+				<option value="square">{{ $t('_iconShape.square') }}</option>
+				<option value="rounded">{{ $t('_iconShape.rounded') }}</option>
+				<option value="droplet">{{ $t('_iconShape.droplet') }}</option>
+			</MkRadios>
 			<MkAvatar disable-link disable-preview :user="$store.state.i" class="avatar"/>
 		</div>
 	</section>
