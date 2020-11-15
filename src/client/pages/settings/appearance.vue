@@ -20,7 +20,7 @@
 			</MkRadios>
 		</div>
 		<div class="_content">
-			<MkRadios v-model="fontSize">
+			<MkRadios v-model="instanceTicker">
 				<template #desc>{{ $t('instanceTicker') }}</template>
 				<option value="none">{{ $t('_instanceTicker.none') }}</option>
 				<option value="remote">{{ $t('_instanceTicker.remote') }}</option>

@@ -26,15 +26,14 @@ import { defineComponent } from 'vue';
 import MkButton from '@/components/ui/button.vue';
 import MkSwitch from '@/components/ui/switch.vue';
 import MkRadio from '@/components/ui/radio.vue';
-import { langs } from '@/config';
-import { clientDb, set } from '@/db';
-import * as os from '@/os';
+import MkRadios from '@/components/ui/radios.vue';
 
 export default defineComponent({
 	components: {
 		MkButton,
 		MkSwitch,
 		MkRadio,
+		MkRadios,
 	},
 
 	data() {
