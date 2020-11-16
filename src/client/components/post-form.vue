@@ -11,7 +11,7 @@
 		<div>
 			<button class="_button" @click="insert('> ')" v-tooltip="$t('_mfmpad.quote')"><Fa :icon="faQuoteRight"/></button>
 			<button class="_button" @click="link" v-tooltip="$t('_mfmpad.link')"><Fa :icon="faLink"/></button>
-			<button class="_button" @click="insertFunction" v-tooltip="$t('_mfmpad.function')"><code>f(x)</code></button>
+			<button class="_button function" @click="insertFunction" v-tooltip="$t('_mfmpad.functions')"><code style="font-weight: bold">[]</code></button>
 			<button class="_button" @click="insertMention" v-tooltip="$t('mention')"><Fa :icon="faAt"/></button>
 			<button class="_button" @click="insertEmoji" v-tooltip="$t('emoji')"><Fa :icon="faLaughSquint"/></button>
 			<!-- <button class="_button" @click="mfmPadMenu" v-tooltip="$t('_mfmPad.more')"><Fa :icon="faEllipsisV"/></button> -->
@@ -413,7 +413,7 @@ export default defineComponent({
 		},
 
 		addTag(tag: string) {
-			insertTextAtCursor(this.$refs.text, ` #${tag} `);
+			this.insert(` #${tag} `);
 		},
 
 		focus() {
@@ -531,7 +531,7 @@ export default defineComponent({
 					showCancelButton: true
 				}).then(({ canceled }) => {
 					if (canceled) {
-						insertTextAtCursor(this.$refs.text, paste);
+						this.insert(paste);
 						return;
 					}
 
@@ -688,18 +688,18 @@ export default defineComponent({
 		},
 
 		insertFace() {
-			insertTextAtCursor(this.$refs.text, this.$store.getters['settings/getRandomFace']());
+			this.insert(this.$store.getters['settings/getRandomFace']());
 		},
 
 		insertMention() {
 			os.selectUser().then(user => {
-				insertTextAtCursor(this.$refs.text, '@' + getAcct(user) + ' ');
+				this.insert('@' + getAcct(user) + ' ');
 			});
 		},
 
 		async insertEmoji(ev) {
 			os.pickEmoji(ev.currentTarget || ev.target).then(emoji => {
-				insertTextAtCursor(this.$refs.text, emoji);
+				this.insert(emoji);
 			});
 		},
 
@@ -749,7 +749,8 @@ export default defineComponent({
 		},
 
 		insertFunction() {
-			
+			os.popup(import('./function-builder-window.vue'), {
+			}, { done: this.insert }, 'closed');
 		},
 	}
 });
@@ -789,6 +790,9 @@ export default defineComponent({
 
 			> button {
 				font-size: 16px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
 				padding: 8px;
 				margin: auto 0;
 				width: 32px;

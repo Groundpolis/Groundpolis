@@ -94,7 +94,7 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 	},
 	rotate: {
 		props: {
-			angle: genProp('_mfmpad.angle', '_mfmpad.angleDescription'),
+			angle: genProp('_mfmpad._functions.angle', '_mfmpad._functions.rotateAngleDescription'),
 		},
 		style: args => `transform: rotate(${args.angle || '90'}deg); transform-origin: center center`,
 		noAnimatedMfmStyle: args => `transform: rotate(${args.angle || '90'}deg); transform-origin: center center`,

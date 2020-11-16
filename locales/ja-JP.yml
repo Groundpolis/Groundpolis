@@ -758,6 +758,7 @@ _mfmpad:
   noUrlPreview: "URLプレビューに展開しない"
   noUrlPreviewDesc: "オンにすると、このリンクをURLプレビューの対象としないよう設定します。リモートのインスタンスによっては無視される可能性があります。"
   functions: "関数"
+  functionsBuilder: "関数ビルダー"
   _functions:
     kind: "種類"
     args: "引数"
