@@ -475,13 +475,17 @@ export function signoutAll() {
 }
 
 export function reactionPicker(opts: Record<string, unknown>) { 
-	return new Promise<{ reaction: string, dislike: boolean }>(done => {
+	return new Promise<{ reaction: string, dislike: boolean }>(res => {
 		const o = {
 			...opts,
 			overridePinned: opts ? opts.reaction : undefined,
 			compact: !store.state.device.useFullReactionPicker,
 		};
-		popup(import('@/components/emoji-picker.vue'), o, { done }, 'closed');
+		popup(import('@/components/emoji-picker.vue'), o, {
+			done: emoji => {
+				res({ reaction: emoji, dislike: false });
+			}
+		}, 'closed');
 	});
 }
 
