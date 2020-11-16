@@ -11,6 +11,7 @@
 		<div>
 			<button class="_button" @click="insert('> ')" v-tooltip="$t('_mfmpad.quote')"><Fa :icon="faQuoteRight"/></button>
 			<button class="_button" @click="link" v-tooltip="$t('_mfmpad.link')"><Fa :icon="faLink"/></button>
+			<button class="_button" @click="insertFunction" v-tooltip="$t('_mfmpad.function')"><code>f(x)</code></button>
 			<button class="_button" @click="insertMention" v-tooltip="$t('mention')"><Fa :icon="faAt"/></button>
 			<button class="_button" @click="insertEmoji" v-tooltip="$t('emoji')"><Fa :icon="faLaughSquint"/></button>
 			<!-- <button class="_button" @click="mfmPadMenu" v-tooltip="$t('_mfmPad.more')"><Fa :icon="faEllipsisV"/></button> -->
@@ -745,7 +746,11 @@ export default defineComponent({
 					});
 				}
 			})), ev.currentTarget || ev.target);
-		}
+		},
+
+		insertFunction() {
+			
+		},
 	}
 });
 </script>
