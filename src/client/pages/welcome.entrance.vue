@@ -38,20 +38,17 @@ import { host } from '@/config';
 import * as os from '@/os';
 import { faFireAlt, faGlobe, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { faComments } from '@fortawesome/free-regular-svg-icons';
-
 export default defineComponent({
 	components: {
 		MkButton,
 		XNotes,
 	},
-
 	data() {
 		return {
 			host: toUnicode(host),
 			faExclamationTriangle,
 		};
 	},
-
 	computed: {
 		meta() {
 			return this.$store.state.instance.meta;
@@ -81,20 +78,17 @@ export default defineComponent({
 			};
 		}
 	},
-
 	created() {
 		os.api('stats').then(stats => {
 			this.stats = stats;
 		});
 	},
-
 	methods: {
 		signin() {
 			os.popup(XSigninDialog, {
 				autoSet: true
 			}, {}, 'closed');
 		},
-
 		signup() {
 			os.popup(XSignupDialog, {
 				autoSet: true
@@ -110,11 +104,9 @@ export default defineComponent({
 		> .about {
 			> .body {
 				padding: 32px;
-
 				@media (max-width: 500px) {
 					padding: 16px;
 				}
-
 				> .signup-disabled {
 					color: var(--infoWarnFg);
 					background-color: var(--infoWarnBg);
@@ -130,7 +122,6 @@ export default defineComponent({
 				}
 			}
 		}
-
 		> .header {
 			font-size: 20px;
 			margin-bottom: 16px;

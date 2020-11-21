@@ -1,11 +1,11 @@
 <template>
 <div class="mk-instance-emojis">
 	<div class="_section" style="padding: 0;">
-		<MkTab v-model:value="tab" :items="[
-			{ label: $t('local'), value: 'local' }, 
-			{ label: $t('emojiSuggestion'), value: 'suggestion' }, 
-			{ label: $t('remote'), value: 'remote' },
-		]"/>
+		<MkTab v-model:value="tab">
+			<option value="local">{{ $t('local') }}</option>
+			<option value="suggestion">{{ $t('emojiSuggestion') }}</option>
+			<option value="remote">{{ $t('remote') }}</option>
+		</MkTab>
 	</div>
 
 	<div class="_section">

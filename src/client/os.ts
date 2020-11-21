@@ -479,7 +479,7 @@ export function reactionPicker(opts: Record<string, unknown>) {
 		const o = {
 			...opts,
 			overridePinned: opts ? opts.reaction : undefined,
-			compact: !store.state.device.useFullReactionPicker,
+			asReactionPicker: true,
 		};
 		popup(import('@/components/emoji-picker.vue'), o, {
 			done: emoji => {

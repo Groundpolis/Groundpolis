@@ -281,7 +281,7 @@ export default defineComponent({
 						type: 'success',
 						text: this.$t('_pages.created')
 					});
-					this.$router.push(`/my/pages/edit/${this.pageId}`);
+					this.$router.push(`/pages/edit/${this.pageId}`);
 				}).catch(onError);
 			}
 		},
@@ -300,7 +300,7 @@ export default defineComponent({
 						type: 'success',
 						text: this.$t('_pages.deleted')
 					});
-					this.$router.push(`/my/pages`);
+					this.$router.push(`/pages`);
 				});
 			});
 		},

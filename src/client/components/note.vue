@@ -602,7 +602,7 @@ export default defineComponent({
 			if (this.preview) return;
 			pleaseLogin();
 			this.blur();
-			const { reaction, dislike } = await os.reactionPicker({
+			const { reaction } = await os.reactionPicker({
 				reactions: this.splited,
 				showFocus: viaKeyboard,
 				src: this.$refs.reactButton,
@@ -611,7 +611,7 @@ export default defineComponent({
 			if (reaction) {
 				os.api('notes/reactions/create', {
 					noteId: this.appearNote.id,
-					reaction, dislike
+					reaction
 				});
 			}
 			this.focus();

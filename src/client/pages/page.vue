@@ -21,7 +21,7 @@
 		<div class="_content">
 			<MkA :to="`./${page.name}/view-source`" class="link">{{ $t('_pages.viewSource') }}</MkA>
 			<template v-if="$store.getters.isSignedIn && $store.state.i.id === page.userId">
-				<MkA :to="`/my/pages/edit/${page.id}`" class="link">{{ $t('_pages.editThisPage') }}</MkA>
+				<MkA :to="`/pages/edit/${page.id}`" class="link">{{ $t('_pages.editThisPage') }}</MkA>
 			</template>
 		</div>
 	</div>
@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { faBookmark as faBookmarkS, faEdit, faHeart as faHeartS } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark as faBookmarkS, faHeart as faHeartS } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartR, faBookmark as faBookmarkR } from '@fortawesome/free-regular-svg-icons';
 import XPage from '@/components/page/page.vue';
 import * as os from '@/os';

@@ -244,6 +244,10 @@ export const meta = {
 			}
 		},
 
+		pinnedPages: {
+			validator: $.optional.arr($.str),
+		},
+
 		langs: {
 			validator: $.optional.arr($.str),
 			desc: {
@@ -598,6 +602,10 @@ export default define(meta, async (ps, me) => {
 
 	if (Array.isArray(ps.langs)) {
 		set.langs = ps.langs.filter(Boolean);
+	}
+
+	if (Array.isArray(ps.pinnedPages)) {
+		set.pinnedPages = ps.pinnedPages.filter(Boolean);
 	}
 
 	if (ps.summalyProxy !== undefined) {
