@@ -29,7 +29,7 @@ function genFlagProp(label?: string, description?: string): MfmFunctionProp {
 export type MfmFunctionDefinition = string | {
 	props?: MfmFunctionProps,
 	style: (props: MfmFunctionStyleProp) => string,
-	noAnimatedMfmStyle?: (props: MfmFunctionStyleProp) => string,
+	noAnimatedMfmStyle?: true | ((props: MfmFunctionStyleProp) => string),
 };
 
 export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
@@ -65,7 +65,7 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 			alternate: genFlagProp('_mfmpad._functions.spinAlternate'),
 			x: genFlagProp('_mfmpad._functions.xspin'),
 			y: genFlagProp('_mfmpad._functions.yspin'),
-			speed: genProp('_mfmpad._functions.speed'),
+			speed: genProp('_mfmpad._functions.speed', '_mfmpad._functions.spinSpeedDescription'),
 		},
 		style: args => {
 			const direction = args.left ? 'reverse' : args.alternate ? 'alternate' :
@@ -90,13 +90,18 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 			v: genFlagProp('_mfmpad._functions.vflip'),
 		},
 		style: args => 'transform:' + (args.h && args.v ? 'scale(-1, -1)' : args.v ? 'scaleY(-1)' : 'scaleX(-1)'),
-		noAnimatedMfmStyle: args => 'transform:' + (args.h && args.v ? 'scale(-1, -1)' : args.v ? 'scaleY(-1)' : 'scaleX(-1)'),
+		noAnimatedMfmStyle: true,
 	},
 	rotate: {
 		props: {
 			angle: genProp('_mfmpad._functions.angle', '_mfmpad._functions.rotateAngleDescription'),
+			x: genFlagProp('_mfmpad._functions.xspin'),
+			y: genFlagProp('_mfmpad._functions.yspin'),
 		},
-		style: args => `transform: rotate(${args.angle || '90'}deg); transform-origin: center center`,
-		noAnimatedMfmStyle: args => `transform: rotate(${args.angle || '90'}deg); transform-origin: center center`,
+		style: args => {
+			const f = args.x ? 'perspective(128px) rotateX' : args.y ? 'perspective(128px) rotateY' : 'rotate';
+			return `transform: ${f}(${args.angle || '90'}deg); transform-origin: center center`;
+		},
+		noAnimatedMfmStyle: true,
 	},
 };
