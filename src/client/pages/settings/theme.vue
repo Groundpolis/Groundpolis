@@ -26,8 +26,6 @@
 		<div class="_content">
 			<MkSwitch v-model:value="syncDeviceDarkMode">{{ $t('syncDeviceDarkMode') }}</MkSwitch>
 		</div>
-	</div>
-	<div class="_card _vMargin">
 		<div class="_content">
 			<MkSelect v-model:value="lightTheme">
 				<template #label>{{ $t('themeForLightMode') }}</template>

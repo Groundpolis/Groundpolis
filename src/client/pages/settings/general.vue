@@ -27,6 +27,7 @@
 				<template #label>{{ $t('uiLanguage') }}</template>
 				<option v-for="x in langs" :value="x[0]" :key="x[0]">{{ x[1] }}</option>
 			</MkSelect>
+			<MkButton @click="reloadLanguage" full>{{ $t('reload') }}</MkButton>
 		</div>
 		<div class="_content">
 			<i18n-t keypath="renoteButtonMode" tag="div">
@@ -40,7 +41,7 @@
 		</div>
 	</section>
 
-	<MkButton @click="cacheClear()" primary style="margin: var(--margin) auto;">{{ $t('cacheClear') }}</MkButton>
+	<MkButton @click="cacheClear()" primary full style="margin: var(--margin) auto;">{{ $t('cacheClear') }}</MkButton>
 </div>
 </template>
 
@@ -155,6 +156,16 @@ export default defineComponent({
 
 			// Force reload
 			location.reload(true);
+		},
+
+		reloadLanguage() {
+			return set('_version_', `changeLang-${(new Date()).toJSON()}`, clientDb.i18n)
+				.then(() => location.reload())
+				.catch(() => {
+					os.dialog({
+						type: 'error',
+					});
+				});
 		}
 	}
 });

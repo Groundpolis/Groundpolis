@@ -751,6 +751,10 @@ public: "パブリック"
 noClips: "まだクリップを作成していません。好きなノートを選んで、クリップにまとめよう。"
 noPages: "まだページを作成していません。今すぐあなただけの特別なページを作ろう。"
 noPagesLike: "まだページをいいねしていません。気に入ったページがあったら、ぜひ「いいね」しましょう。"
+dangerousSettings: "危険な設定"
+discardPostFormDraft: "投稿フォームの下書きを削除"
+discardPostFormDraftDescription: "何らかの問題で投稿フォームに問題が発生した場合、この動作によって改善するかもしれません。"
+
 
 _mfmpad:
   quote: "引用"

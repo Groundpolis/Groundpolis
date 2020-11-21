@@ -2,6 +2,22 @@
 <div>
 	<div class="_section">
 		<div class="_card _vMargin">
+			<div class="_content">
+				<MkSwitch v-model:value="$store.state.i.injectFeaturedNote" @update:value="onChangeInjectFeaturedNote">
+					{{ $t('showFeaturedNotesInTimeline') }}
+				</MkSwitch>
+			</div>
+		</div>
+		<div class="_card _vMargin">
+			<div class="_content">
+				<MkSwitch v-model:value="debug" @update:value="changeDebug">
+					DEBUG MODE
+				</MkSwitch>
+				<MkButton full @click="regedit">Registry Editor</MkButton>
+				<MkButton full @click="taskmanager">Task Manager</MkButton>
+			</div>
+		</div>
+		<div class="_card _vMargin">
 			<div class="_title">{{$t('stealingRule')}}</div>
 			<div class="_content">
 				<MkSelect v-model:value="stealRule">
@@ -17,10 +33,10 @@
 			</div>
 		</div>
 		<div class="_card _vMargin">
+			<div class="_title">{{$t('dangerousSettings')}}</div>
 			<div class="_content">
-				<MkSwitch v-model:value="$store.state.i.injectFeaturedNote" @update:value="onChangeInjectFeaturedNote">
-					{{ $t('showFeaturedNotesInTimeline') }}
-				</MkSwitch>
+				<MkButton class="_vMargin" @click="discardPostFormDraft" full><Fa :icon="faTrashAlt"/> {{ $t('discardPostFormDraft') }}</MkButton>
+				<div class="_caption _vMargin" style="padding: 0 6px;">{{ $t('discardPostFormDraftDescription') }}</div>
 			</div>
 		</div>
 	</div>
@@ -29,10 +45,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import MkSwitch from '@/components/ui/switch.vue';
 import MkSelect from '@/components/ui/select.vue';
 import MkButton from '@/components/ui/button.vue';
 import * as os from '@/os';
+import { debug } from '@/config';
 
 export default defineComponent({
 	components: {
@@ -43,7 +61,8 @@ export default defineComponent({
 
 	data() {
 		return {
-			
+			debug,
+			faTrashAlt,
 		}
 	},
 
@@ -70,6 +89,23 @@ export default defineComponent({
 				showFocus: false,
 				showDislike: false,
 			})).reaction;
+		},
+		changeDebug(v) {
+			localStorage.setItem('debug', v.toString());
+			location.reload();
+		},
+
+		regedit() {
+			os.pageWindow('/regedit');
+		},
+
+		taskmanager() {
+			os.popup(import('@/components/taskmanager.vue'), {
+			}, {}, 'closed');
+		},
+		
+		discardPostFormDraft() {
+			localStorage.removeItem('drafts');
 		},
 	}
 });

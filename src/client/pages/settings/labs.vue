@@ -12,15 +12,6 @@
 				</MkSwitch>
 			</div>
 		</div>
-		<div class="_card _vMargin">
-			<div class="_content">
-				<MkSwitch v-model:value="debug" @update:value="changeDebug">
-					DEBUG MODE
-				</MkSwitch>
-				<MkButton full @click="regedit">Registry Editor</MkButton>
-				<MkButton full @click="taskmanager">Task Manager</MkButton>
-			</div>
-		</div>
 	</div>
 </div>
 </template>
@@ -30,19 +21,12 @@ import { defineComponent } from 'vue';
 
 import MkSwitch from '@/components/ui/switch.vue';
 import MkButton from '@/components/ui/button.vue';
-import { debug } from '@/config';
 import * as os from '@/os';
 
 export default defineComponent({
 	components: {
 		MkSwitch,
 		MkButton,
-	},
-
-	data() {
-		return {
-			debug
-		}
 	},
 
 	computed: {
@@ -59,19 +43,6 @@ export default defineComponent({
 	},
 
 	methods: {
-		changeDebug(v) {
-			localStorage.setItem('debug', v.toString());
-			location.reload();
-		},
-
-		regedit() {
-			os.pageWindow('/regedit');
-		},
-
-		taskmanager() {
-			os.popup(import('@/components/taskmanager.vue'), {
-			}, {}, 'closed');
-		}
 	},
 });
 </script>
