@@ -58,7 +58,7 @@
 					<div class="divider" v-if="accounts.length > 0"></div>
 					<button class="item _button" @click="addAcount" v-text="$t('addAcount')"/>
 					<button class="item _button" @click="createAccount" v-text="$t('createAccount')"/>
-					<button class="item danger _button" @click="os.signout()" v-text="$t('logout')"/>
+					<button class="item danger _button" @click="signout" v-text="$t('logout')"/>
 				</template>
 			</div>
 		</nav>
@@ -208,11 +208,15 @@ export default defineComponent({
 						action: () => { this.createAccount(); },
 					}, {
 						text: this.$t('logout'),
-						action: () => { os.signout() },
+						action: this.signout,
 						danger: true,
 					}]], ev.currentTarget || ev.target, {
 				align: 'left'
 			});
+		},
+
+		signout() {
+			os.signout();
 		},
 
 		oepnInstanceMenu(ev) {
