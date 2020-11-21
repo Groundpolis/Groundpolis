@@ -3,6 +3,7 @@
 	<div class="_section">
 		<div class="_content _panel about" v-if="meta">
 			<div class="body">
+				<h1>{{ instanceName }}</h1>
 				<div class="desc" v-html="meta.description || $t('introMisskey')"></div>
 
 				<div v-if="meta.disableRegistration && meta.disableInvitation" class="signup-disabled">
@@ -34,7 +35,7 @@ import XSigninDialog from '@/components/signin-dialog.vue';
 import XSignupDialog from '@/components/signup-dialog.vue';
 import MkButton from '@/components/ui/button.vue';
 import XNotes from '@/components/notes.vue';
-import { host } from '@/config';
+import { host, instanceName } from '@/config';
 import * as os from '@/os';
 import { faFireAlt, faGlobe, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { faComments } from '@fortawesome/free-regular-svg-icons';
@@ -46,6 +47,7 @@ export default defineComponent({
 	data() {
 		return {
 			host: toUnicode(host),
+			instanceName,
 			faExclamationTriangle,
 		};
 	},
@@ -106,6 +108,9 @@ export default defineComponent({
 				padding: 32px;
 				@media (max-width: 500px) {
 					padding: 16px;
+				}
+				h1 {
+					margin-top: 0;
 				}
 				> .signup-disabled {
 					color: var(--infoWarnFg);
