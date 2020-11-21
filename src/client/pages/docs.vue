@@ -3,7 +3,7 @@
 	<main class="_section">
 		<div class="_content">
 			<ul>
-				<li v-for="doc in docs" :key="doc.path">
+				<li class="_card doc _vMargin" v-for="doc in docs" :key="doc.path">
 					<MkA :to="`/docs/${doc.path}`">{{ doc.title }}</MkA>
 				</li>
 			</ul>
@@ -36,3 +36,9 @@ export default defineComponent({
 	},
 });
 </script>
+
+<style lang="scss" scoped>
+	.doc {
+		padding: 16px;
+	}
+</style>

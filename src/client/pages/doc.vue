@@ -1,7 +1,6 @@
 <template>
 <div>
 	<main class="_section">
-		<div class="_title"><Fa :icon="faFileAlt"/> {{ title }}</div>
 		<div class="_content">
 			<div v-html="body" class="qyqbqfal"></div>
 		</div>
@@ -13,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons'
 import MarkdownIt from 'markdown-it';
 import MarkdownItAnchor from 'markdown-it-anchor';
@@ -42,10 +41,6 @@ export default defineComponent({
 
 	data() {
 		return {
-			INFO: {
-				title: this.title,
-				icon: faFileAlt
-			},
 			faFileAlt,
 			title: '',
 			body: '',
@@ -60,6 +55,15 @@ export default defineComponent({
 			},
 			immediate: true,
 		}
+	},
+
+	computed: {
+		INFO() {
+			return {
+				title: this.title,
+				icon: faFileAlt
+			};
+		},
 	},
 
 	methods: {

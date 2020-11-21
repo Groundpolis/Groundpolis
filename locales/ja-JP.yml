@@ -781,6 +781,7 @@ _mfmpad:
     xspin: "X軸方向に回転"
     yspin: "Y軸方向に回転"
     vflip: "縦に反転する"
+    hflip: "横に反転する"
     spinLeft: "左回転"
     spinAlternate: "反復回転"
 
@@ -818,6 +819,8 @@ _mfm:
   smallDescription: "内容を小さく・薄く表示させることができます。"
   center: "中央寄せ"
   centerDescription: "内容を中央寄せで表示させることができます。"
+  right: "右寄せ"
+  rightDescription: "内容を右寄せで表示させることができます。"
   sup: "上付き文字"
   supDescription: "テキストを上寄りに小さく表示します。"
   sub: "下付き文字"
@@ -854,10 +857,14 @@ _mfm:
   twitchDescription: "激しくブレるアニメーションを与えます。"
   spin: "アニメーション(回転)"
   spinDescription: "回転するアニメーションを与えます。"
+  wobble: "アニメーション(グラグラ)"
+  wobbleDescription: "横に振動するようなアニメーションを与えます。"
   blink: "アニメーション(点滅)"
   blinkDescription: "点滅するアニメーションを与えます。"
   rainbow: "アニメーション(虹)"
   rainbowDescription: "虹色のアニメーションを付えます。"
+  rotate: "回転"
+  rotateDescription: "指定した角度だけ回転します。"
 
 _reversi:
   reversi: "リバーシ"
