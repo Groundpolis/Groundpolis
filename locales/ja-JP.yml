@@ -1391,6 +1391,11 @@ _pages:
     _if:
       variable: "変数"
 
+    _text:
+      chooseFormat: "使用するフォーマットを指定してください"
+      plainText: "プレーンテキスト"
+      htmlWarning: "HTML モードが有効です。安全のため、変数展開を使用することは避けてください。"
+
     post: "投稿フォーム"
     _post:
       text: "内容"

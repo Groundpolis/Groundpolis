@@ -1,6 +1,9 @@
 <template>
 <div class="mrdgzndn">
-	<Mfm :text="text" :is-note="false" :i="$store.state.i" :key="text"/>
+	<span v-if="value.format === 'plainText'" v-text="text"/>
+	<MkMarkdown v-else-if="value.format === 'markdown'" :text="text"/>
+	<span v-else-if="value.format === 'html'" v-html="text"/>
+	<Mfm v-else :text="text" :is-note="false" :i="$store.state.i" :key="text"/>
 	<MkUrlPreview v-for="url in urls" :url="url" :key="url" class="url"/>
 </div>
 </template>
@@ -13,6 +16,7 @@ import { unique } from '../../../prelude/array';
 export default defineComponent({
 	components: {
 		MkUrlPreview: defineAsyncComponent(() => import('@/components/url-preview.vue')),
+		MkMarkdown: defineAsyncComponent(() => import('@/components/markdown.vue')),
 	},
 	props: {
 		value: {

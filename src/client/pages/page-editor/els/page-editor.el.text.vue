@@ -1,8 +1,14 @@
 <template>
 <XContainer @remove="() => $emit('remove')" :draggable="true">
-	<template #header><Fa :icon="faAlignLeft"/> {{ $t('_pages.blocks.text') }}</template>
+	<template #header><Fa :icon="faAlignLeft"/> {{ $t('_pages.blocks.text') }} ({{ formatText }})</template>
+	<template #func>
+		<button @click="changeFormat()" class="_button">
+			<Fa :icon="faCog"/>
+		</button>
+	</template>
 
 	<section class="vckmsadr">
+		<MkInfo warn v-if="value.format === 'html'">{{ $t('_pages.blocks._text.htmlWarning') }}</MkInfo>
 		<textarea v-model="value.text" ref="text"></textarea>
 	</section>
 </XContainer>
@@ -10,14 +16,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faAlignLeft } from '@fortawesome/free-solid-svg-icons';
+import { faAlignLeft, faCog } from '@fortawesome/free-solid-svg-icons';
 import XContainer from '../page-editor.container.vue';
 import { Autocomplete } from '@/scripts/autocomplete';
 import * as os from '@/os';
+import MkInfo from '@/components/ui/info.vue';
 
 export default defineComponent({
 	components: {
-		XContainer
+		XContainer,
+		MkInfo,
 	},
 
 	props: {
@@ -28,16 +36,49 @@ export default defineComponent({
 
 	data() {
 		return {
-			faAlignLeft,
+			faAlignLeft, faCog,
 		};
+	},
+
+	computed: {
+		formatText(): string {
+			switch (this.value.format) {
+				case 'gpfm': return 'GPFM';
+				case 'plainText': return this.$t('_pages.blocks._text.plainText');
+				case 'markdown': return 'Markdown';
+				case 'html': return 'HTML';
+				default: return '謎';
+			}
+		},
 	},
 
 	created() {
 		if (this.value.text == null) this.value.text = '';
+		if (this.value.format == null) this.value.format = 'gpfm';
 	},
 
 	mounted() {
 		new Autocomplete(this.$refs.text, this, { model: 'value.text' });
+	},
+
+	methods: {
+		async changeFormat() {
+			const { canceled, result: item } = await os.dialog({
+				type: null,
+				title: this.$t('_pages.blocks._text.chooseFormat'),
+				select: {
+					items: [
+						{ value: 'gpfm', text: 'GPFM' },
+						{ value: 'markdown', text: 'Markdown' },
+						{ value: 'plainText', text: this.$t('_pages.blocks._text.plainText') },
+						{ value: 'html', text: 'HTML' },
+					],
+				},
+				showCancelButton: true
+			});
+			if (canceled) return;
+			this.value.format = item;
+		},
 	},
 });
 </script>
