@@ -643,7 +643,7 @@ export default defineComponent({
 				text: this.text == '' ? undefined : this.text + (this.useBroadcast ? ' ' + this.broadcastText : ''),
 				fileIds: this.files.length > 0 ? this.files.map(f => f.id) : undefined,
 				replyId: this.reply ? this.reply.id : undefined,
-				renoteId: this.renote ? this.renote.id : undefined,
+				renoteId: this.quote ? this.quote.id : this.renote ? this.renote.id : undefined,
 				channelId: this.channel ? this.channel.id : undefined,
 				poll: this.poll,
 				cw: this.useCw ? this.cw || '' : undefined,
