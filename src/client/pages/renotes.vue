@@ -1,11 +1,10 @@
 <template>
 <div class="mk-note-page">
 	<template v-if="renoteState">
-		<MkTab v-if="renoteState.isRenoted && renoteState.isQuoted" style="height: 100%" v-model:value="tab" class="tab" :items="[
-			{ label: $t('quote'), value: 'quotes', icon: faQuoteRight },
-			{ label: $t('renote'), value: 'renotes', icon: faRetweet },
-		]"
-		/>
+		<MkTab v-if="renoteState.isRenoted && renoteState.isQuoted" style="height: 100%" v-model:value="tab" class="tab">
+			<option value="quotes"><Fa :icon="faQuoteRight"/> {{$t('quote')}}</option>
+			<option value="renotes"><Fa :icon="faRetweet"/> {{$t('renote')}}</option>
+		</MkTab>
 		<template v-else>
 			<fa :icon="renoteState.isQuoted ? faQuoteRight : faRetweet"/>
 			{{ $t(renoteState.isQuoted ? 'quotes' : 'renotes') }}

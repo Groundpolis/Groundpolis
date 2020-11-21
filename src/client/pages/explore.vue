@@ -1,8 +1,10 @@
 <template>
 <div class="_section">
 	<XSearch v-model:value="query" @search="search"/>
-	<MkTab v-if="!meta.disableFeatured" v-model:value="tab" style="height: 100%" :items="[{ label: $t('explore'), value: 'explore', icon: faHashtag }, { label: $t('featured'), value: 'featured', icon: faFireAlt }]"/>
-
+	<MkTab v-if="!meta.disableFeatured" v-model:value="tab" style="height: 100%">
+		<option value="explore"><Fa :icon="faHashtag"/> {{$t('explore')}}</option>
+		<option value="featured"><Fa :icon="faFireAlt"/> {{$t('featured')}}</option>
+	</MkTab>
 	<template v-if="tab === 'explore'">
 		<MkFolder :body-togglable="true" :expanded="false" ref="tags" class="_vMargin">
 			<template #header><Fa :icon="faHashtag" fixed-width style="margin-right: 0.5em;"/>{{ $t('popularTags') }}</template>

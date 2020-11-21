@@ -3,7 +3,10 @@
 	<div class="_content">
 		<XSearch v-model:value="query" @search="search"/>
 		<div class="tab _section _noPad" style="padding: 0">
-			<MkTab v-model:value="tab" :items="[{ label: $t('notes'), value: 'notes' }, { label: $t('users'), value: 'users' }]"/>
+			<MkTab v-model:value="tab">
+				<option value="notes">{{$t('notes')}}</option>
+				<option value="users">{{$t('users')}}</option>
+			</MkTab>
 		</div>
 		<template v-if="smartCard">
 				<XNote class="smart-card" :note="smartCard.note" v-if="smartCard.type === 'note'"/>
