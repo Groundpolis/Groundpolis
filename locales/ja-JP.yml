@@ -761,6 +761,8 @@ noPagesLike: "まだページをいいねしていません。気に入ったペ
 dangerousSettings: "危険な設定"
 discardPostFormDraft: "投稿フォームの下書きを削除"
 discardPostFormDraftDescription: "何らかの問題で投稿フォームに問題が発生した場合、この動作によって改善するかもしれません。"
+emojiPickerShowPinnedEmojis: "好きな絵文字を固定する"
+emojiPickerShowRecentEmojis: "最近使った絵文字を表示"
 
 _mfmpad:
   quote: "引用"

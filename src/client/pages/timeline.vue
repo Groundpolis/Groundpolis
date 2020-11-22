@@ -63,7 +63,6 @@ export default defineComponent({
 				};
 				const tabs: Tab[] = [{
 					id: 'home',
-					title: null,
 					tooltip: this.$t('_timelines.home'),
 					icon: faHome,
 					onClick: () => { this.src = 'home'; this.saveSrc(); },

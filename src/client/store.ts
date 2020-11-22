@@ -147,6 +147,8 @@ export const defaultDeviceSettings = {
 	useLegacyMobileView: true,
 	newAnnouncementUI: false,
 	alwaysPlayMediaInWindow: false,
+	emojiPickerHidePinnedEmojis: false,
+	emojiPickerHideRecentEmojis: false,
 };
 
 function copy<T>(data: T): T {

@@ -30,7 +30,7 @@
 			</section>
 
 			<div class="index">
-				<section v-if="showPinned">
+				<section v-if="showPinned && !$store.state.device.emojiPickerHidePinnedEmojis">
 					<div>
 						<button v-for="emoji in pinned"
 							class="_button"
@@ -42,7 +42,7 @@
 					</div>
 				</section>
 
-				<section>
+				<section v-if="!$store.state.device.emojiPickerHideRecentEmojis">
 					<header class="_acrylic"><Fa :icon="faClock" fixed-width/> {{ $t('recentUsed') }}</header>
 					<div>
 						<button v-for="emoji in $store.state.device.recentlyUsedEmojis"
@@ -54,8 +54,6 @@
 						</button>
 					</div>
 				</section>
-
-				<div class="arrow"><Fa :icon="faChevronDown"/></div>
 			</div>
 
 			<section v-for="category in customEmojiCategories" :key="'custom:' + category" class="custom">
@@ -453,7 +451,7 @@ export default defineComponent({
 		}
 
 		> .index {
-			min-height: var(--height);
+			// min-height: var(--height);
 			position: relative;
 			border-bottom: solid 1px var(--divider);
 				

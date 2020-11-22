@@ -2,16 +2,20 @@
 <div class="_section">
 	<div class="_card">
 		<div class="_content">
-			<div class="_caption" style="padding: 0 8px 8px 8px;">{{ $t('reactionSettingDescription') }}</div>
-			<XDraggable class="zoaiodol" :list="reactions" animation="150" delay="100" delay-on-touch-only="true">
-				<button class="_button item" v-for="reaction in reactions" :key="reaction" @click="remove(reaction, $event)">
-					<MkEmoji :emoji="reaction" :normal="true"/>
-				</button>
-				<template #footer>
-					<button>a</button>
-				</template>
-			</XDraggable>
-			<div class="_caption" style="padding: 8px;">{{ $t('reactionSettingDescription2') }} <button class="_textButton" @click="chooseEmoji">{{ $t('chooseEmoji') }}</button></div>
+			<MkSwitch v-model:value="emojiPickerShowPinnedEmojis">{{ $t('emojiPickerShowPinnedEmojis') }}</MkSwitch>
+			<template v-if="emojiPickerShowPinnedEmojis">
+				<div class="_caption" style="padding: 0 8px 8px 8px;">{{ $t('reactionSettingDescription') }}</div>
+				<XDraggable class="zoaiodol" :list="reactions" animation="150" delay="100" delay-on-touch-only="true">
+					<button class="_button item" v-for="reaction in reactions" :key="reaction" @click="remove(reaction, $event)">
+						<MkEmoji :emoji="reaction" :normal="true"/>
+					</button>
+					<template #footer>
+						<button>a</button>
+					</template>
+				</XDraggable>
+				<div class="_caption" style="padding: 8px;">{{ $t('reactionSettingDescription2') }} <button class="_textButton" @click="chooseEmoji">{{ $t('chooseEmoji') }}</button></div>
+			</template>
+			<MkSwitch v-model:value="emojiPickerShowRecentEmojis">{{ $t('emojiPickerShowRecentEmojis') }}</MkSwitch>
 			<MkRadios v-model="reactionPickerWidth">
 				<template #desc>{{ $t('width') }}</template>
 				<option :value="1">{{ $t('small') }}</option>
@@ -75,6 +79,14 @@ export default defineComponent({
 		reactionPickerHeight: {
 			get() { return this.$store.state.device.reactionPickerHeight; },
 			set(value) { this.$store.commit('device/set', { key: 'reactionPickerHeight', value: value }); }
+		},
+		emojiPickerShowPinnedEmojis: {
+			get() { return !this.$store.state.device.emojiPickerHidePinnedEmojis; },
+			set(value) { this.$store.commit('device/set', { key: 'emojiPickerHidePinnedEmojis', value: !value }); }
+		},
+		emojiPickerShowRecentEmojis: {
+			get() { return !this.$store.state.device.emojiPickerHideRecentEmojis; },
+			set(value) { this.$store.commit('device/set', { key: 'emojiPickerHideRecentEmojis', value: !value }); }
 		},
 	},
 
