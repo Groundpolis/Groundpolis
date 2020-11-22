@@ -46,6 +46,9 @@
 						<Fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
 						<i v-if="otherNavItemIndicated"><Fa :icon="faCircle"/></i>
 					</button>
+					<button class="item _button" v-if="!isTablet && !hidden" @click="collapsed = !collapsed">
+						<Fa :icon="collapsed ? faArrowRight : faArrowLeft" :key="collapsed ? faArrowRight : faArrowLeft" fixed-width/><span class="text">{{ $t('collapse') }}</span>
+					</button>
 				</template>
 				<template v-else>
 					<button v-for="acct in accounts" :key="acct.id" @click="switchAccount(acct)" class="item account _button">
@@ -68,7 +71,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
-import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faEllipsisV, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faInfoCircle, faQuestionCircle, faProjectDiagram, faArrowLeft, faExclamationCircle, faArrowRight, faFlask, faChevronDown, faChevronUp, faStream } from '@fortawesome/free-solid-svg-icons';
+import { faGripVertical, faChevronLeft, faHashtag, faBroadcastTower, faFireAlt, faEllipsisH, faEllipsisV, faPencilAlt, faBars, faTimes, faSearch, faUserCog, faCog, faUser, faHome, faStar, faCircle, faAt, faListUl, faPlus, faUserClock, faUsers, faTachometerAlt, faExchangeAlt, faGlobe, faChartBar, faCloud, faServer, faProjectDiagram, faArrowLeft, faExclamationCircle, faArrowRight, faChevronDown, faChevronUp, faStream } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faEnvelope, faLaugh, faComments } from '@fortawesome/free-regular-svg-icons';
 import { host } from '@/config';
 import { search } from '@/scripts/search';
@@ -109,6 +112,11 @@ export default defineComponent({
 
 		meta() {
 			return this.$store.state.instance.meta;
+		},
+
+		collapsed: {
+			get() { return this.$store.state.device.sidebarDisplay === 'icon'; },
+			set(value) { this.$store.commit('device/set', { key: 'sidebarDisplay', value: value ? 'icon' : 'full' }); }
 		},
 	},
 
