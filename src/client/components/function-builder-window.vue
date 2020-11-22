@@ -1,7 +1,6 @@
 <template>
 <XModalWindow ref="dialog"
 	:width="400"
-	:height="450"
 	:with-ok-button="true"
 	:ok-button-disabled="!funcName || !body"
 	@ok="ok()"
