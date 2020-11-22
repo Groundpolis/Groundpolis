@@ -59,6 +59,7 @@ export default defineComponent({
 				[ 'spin', `[spin 🍮] [spin.left 🍮] [spin.alternate 🍮]\n[spin.x 🍮] [spin.x,left 🍮] [spin.x,alternate 🍮]\n[spin.y 🍮] [spin.y,left 🍮] [spin.y,alternate 🍮]` ],
 				[ 'flip', `[flip ${this.$t('_mfm.dummy')}]\n[flip.v ${this.$t('_mfm.dummy')}]\n[flip.h,v ${this.$t('_mfm.dummy')}]` ],
 				[ 'rotate', `[rotate.y,angle=-20 ${this.$t('_mfm.dummy')}]` ],
+				[ 'font', `[font.size=48px,color=red ${this.$t('_mfm.dummy')}]` ],
 			]),
 		}
 	},

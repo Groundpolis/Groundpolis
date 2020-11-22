@@ -104,4 +104,12 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 		},
 		noAnimatedMfmStyle: true,
 	},
+	font: {
+		props: {
+			size: genProp('_mfmpad._functions.size', '_mfmpad._functions.fontSizeDescription'),
+			color: genProp('_mfmpad._functions.color', '_mfmpad._functions.fontColorDescription'),
+		},
+		style: prop => `font-size: ${prop.size || 'unset'}; color: ${prop.color || 'unset'}`,
+		noAnimatedMfmStyle: true,
+	},
 };

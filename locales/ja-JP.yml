@@ -762,7 +762,6 @@ dangerousSettings: "危険な設定"
 discardPostFormDraft: "投稿フォームの下書きを削除"
 discardPostFormDraftDescription: "何らかの問題で投稿フォームに問題が発生した場合、この動作によって改善するかもしれません。"
 
-
 _mfmpad:
   quote: "引用"
   link: "リンク"
@@ -778,6 +777,10 @@ _mfmpad:
     spinSpeedDescription: "1回転に要する時間。単位にsを使うと秒, msを使うとミリ秒を意味します。"
     angle: "角度"
     rotateAngleDescription: "回転させる角度を数値で指定します。"
+    color: "カラー"
+    fontColorDescription: "フォントの色を指定します。HTML形式(例: #AABBCC)や、色名(例: red, blue)で指定できます。"
+    size: "サイズ"
+    fontSizeDescription: "フォントの大きさを指定します。単位にはpx, pt, emなどが使用できます。"
     xspin: "X軸方向に回転"
     yspin: "Y軸方向に回転"
     vflip: "縦に反転する"
@@ -865,6 +868,8 @@ _mfm:
   rainbowDescription: "虹色のアニメーションを付えます。"
   rotate: "回転"
   rotateDescription: "指定した角度だけ回転します。"
+  font: "フォント設定"
+  fontDescription: "文字フォントの色やサイズの設定を行います。"
 
 _reversi:
   reversi: "リバーシ"
