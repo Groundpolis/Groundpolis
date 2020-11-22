@@ -24,6 +24,8 @@ export const apiRequests = ref([]); // for debug
 
 export const windows = new Map();
 
+export const statusCode = (window as any).__groundpolis__status__ as number || 200;
+
 export function api(endpoint: string, data: Record<string, any> = {}, token?: string | null | undefined, lite?: boolean) {
 	if (!lite) pendingApiRequestsCount.value++;
 

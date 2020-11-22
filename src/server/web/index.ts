@@ -17,7 +17,7 @@ import packFeed from './feed';
 import { fetchMeta } from '../../misc/fetch-meta';
 import { genOpenapiSpec } from '../api/openapi/gen-spec';
 import config from '../../config';
-import { Users, Notes, Emojis, UserProfiles, Pages, Channels, Clips } from '../../models';
+import { Users, Notes, Emojis, UserProfiles, Pages, Channels, Clips, UsedUsernames } from '../../models';
 import parseAcct from '../../misc/acct/parse';
 import getNoteSummary from '../../misc/get-note-summary';
 import { ensure } from '../../prelude/ensure';
@@ -226,6 +226,10 @@ router.get(['/@:user', '/@:user/:sub'], async (ctx, next) => {
 			icon: meta.iconUrl
 		});
 		setCache(ctx, 'public, max-age=30');
+	} else if (!host) { 
+		const isExisted = await UsedUsernames.count({ username: username.toLowerCase() });
+		ctx.status = isExisted > 0 ? 410 : 404;
+		return;
 	} else {
 		// リモートユーザーなので
 		// モデレータがAPI経由で参照可能にするために404にはしない
@@ -399,17 +403,33 @@ router.get('/streaming', async ctx => {
 	ctx.set('Cache-Control', 'private, max-age=0');
 });
 
-// Render base html for all requests
-router.get('(.*)', async ctx => {
+const renderBase = async (ctx: Koa.Context) => {
 	const meta = await fetchMeta();
 	await ctx.render('base', {
 		img: meta.bannerUrl,
 		title: meta.name || 'Groundpolis',
 		instanceName: meta.name || 'Groundpolis',
 		desc: meta.description,
-		icon: meta.iconUrl
+		icon: meta.iconUrl,
+		status: ctx.status,
 	});
+}
+
+// Render base html for all requests
+router.get('(.*)', async ctx => {
+	await renderBase(ctx);
 	setCache(ctx, 'public, max-age=300');
+});
+
+app.use(async (ctx, next) => {
+	try {
+		await next();
+		if (ctx.status === 404) {
+			await renderBase(ctx);
+		}
+	} catch (err) {
+		await renderBase(ctx);
+	}
 });
 
 // Register router
