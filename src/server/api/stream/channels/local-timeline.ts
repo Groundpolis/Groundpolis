@@ -49,7 +49,8 @@ export default class extends Channel {
 		}
 
 		// 流れてきたNoteがミュートしているユーザーが関わるものだったら無視する
-		if (isMutedUserRelated(note, this.muting)) return;
+		if (isMutedUserRelated(note, this.muting, false)) return;
+		if (isMutedUserRelated(note, this.renoteMuting, true)) return;
 
 		// 流れてきたNoteがミュートすべきNoteだったら無視する
 		// TODO: 将来的には、単にMutedNoteテーブルにレコードがあるかどうかで判定したい(以下の理由により難しそうではある)

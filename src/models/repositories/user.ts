@@ -12,7 +12,7 @@ export type PackedUser = SchemaType<typeof packedUserSchema>;
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
 	public async getRelation(me: User['id'], target: User['id']) {
-		const [following1, following2, followReq1, followReq2, toBlocking, fromBlocked, mute] = await Promise.all([
+		const [following1, following2, followReq1, followReq2, toBlocking, fromBlocked, mute, renotemute] = await Promise.all([
 			Followings.findOne({
 				followerId: me,
 				followeeId: target
@@ -39,7 +39,13 @@ export class UserRepository extends Repository<User> {
 			}),
 			Mutings.findOne({
 				muterId: me,
-				muteeId: target
+				muteeId: target,
+				isRenoteOnly: false
+			}),
+			Mutings.findOne({
+				muterId: me,
+				muteeId: target,
+				isRenoteOnly: true
 			})
 		]);
 
@@ -51,13 +57,15 @@ export class UserRepository extends Repository<User> {
 			isFollowed: following2 != null,
 			isBlocking: toBlocking != null,
 			isBlocked: fromBlocked != null,
-			isMuted: mute != null
+			isMuted: mute != null,
+			isRenoteMuted: renotemute != null
 		};
 	}
 
 	public async getHasUnreadMessagingMessage(userId: User['id']): Promise<boolean> {
 		const mute = await Mutings.find({
-			muterId: userId
+			muterId: userId,
+			isRenoteOnly: false
 		});
 
 		const joinings = await UserGroupJoinings.find({ userId: userId });
@@ -277,6 +285,7 @@ export class UserRepository extends Repository<User> {
 				isBlocking: relation.isBlocking,
 				isBlocked: relation.isBlocked,
 				isMuted: relation.isMuted,
+				isRenoteMuted: relation.isRenoteMuted,
 			} : {})
 		};
 

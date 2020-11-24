@@ -25,8 +25,8 @@ export default class extends Channel {
 			const note = await Notes.pack(body.id, this.user, { detail: true });
 
 			// 流れてきたNoteがミュートしているユーザーが関わるものだったら無視する
-			if (isMutedUserRelated(note, this.muting)) return;
-
+			if (isMutedUserRelated(note, this.muting, false)) return;
+	
 			this.send('note', note);
 		} else {
 			this.send(type, body);
