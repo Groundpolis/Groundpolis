@@ -4,11 +4,11 @@
 		<MkInfo warn>{{ $t('editTheseSettingsMayBreakAccount') }}</MkInfo>
 	</div>
 
-	<MkTab v-model:value="tab" :items="[
-		{ label: 'Account (readonly)', value: 'settings' },
-		{ label: 'Device', value: 'device' },
-		{ label: 'Device (per account)', value: 'deviceUser' },
-	]"/>
+	<MkTab v-model:value="tab">
+		<option value="settings">Account (readonly)</option>
+		<option value="device">Device </option>
+		<option value="deviceUser">Device (per account)</option>
+	</MkTab>
 
 	<div v-if="tab ==='settings'" class="_content">
 		<MkTextarea readonly v-model:value="settings" code tall></MkTextarea>
