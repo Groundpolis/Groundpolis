@@ -81,7 +81,7 @@ export default defineComponent({
 					tabs.push({
 						id: this.src,
 						title: null,
-						icon: timelineMenuMap[this.src].icon,
+						icon: this.src === 'antenna' ? faSatellite : this.src === 'list' ? faListUl : timelineMenuMap[this.src] ? timelineMenuMap[this.src].icon : null,
 						selected: true,
 					});
 				}
