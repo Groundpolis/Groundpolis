@@ -769,6 +769,7 @@ emojiPickerShowRecentEmojis: "最近使った絵文字を表示"
 pinnedTimeline: "ピン留めするタイムライン"
 pinnedTimelineDescription: "ドラッグ&ドロップして、並び替えられます。"
 pinnedTimelineDescription2: "ここからピン留めしたいタイムラインをタップして追加できます。"
+pinnedTimelineEverything: "ほう、全部乗せですか…たいしたものですね"
 
 _mfmpad:
   quote: "引用"

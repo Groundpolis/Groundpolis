@@ -1,6 +1,11 @@
 <template>
 <div class="_section">
-	<div class="_card">
+	<div class="_card _vMargin">
+		<div class="_content">
+			<MkSwitch v-model:value="useDisplayNameForSidebar">{{ $t('useDisplayNameForSidebar') }}</MkSwitch>
+		</div>
+	</div>
+	<div class="_card _vMargin">
 		<div class="_content">
 			<MkTextarea v-model:value="items" tall>
 				<span>{{ $t('sidebar') }}</span>
@@ -19,6 +24,7 @@
 import { defineComponent } from 'vue';
 import { faListUl, faSave, faRedo } from '@fortawesome/free-solid-svg-icons';
 import MkButton from '@/components/ui/button.vue';
+import MkSwitch from '@/components/ui/switch.vue';
 import MkTextarea from '@/components/ui/textarea.vue';
 import { defaultDeviceUserSettings } from '@/store';
 import * as os from '@/os';
@@ -27,6 +33,7 @@ import { sidebarDef } from '@/sidebar';
 export default defineComponent({
 	components: {
 		MkButton,
+		MkSwitch,
 		MkTextarea,
 	},
 
@@ -47,6 +54,11 @@ export default defineComponent({
 	computed: {
 		splited(): string[] {
 			return this.items.trim().split('\n').filter(x => x.trim() !== '');
+		},
+
+		useDisplayNameForSidebar: {
+			get() { return this.$store.state.settings.useDisplayNameForSidebar; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'useDisplayNameForSidebar', value }); }
 		},
 	},
 

@@ -11,7 +11,6 @@
 			<MkSwitch v-model:value="imageNewTab">{{ $t('openImageInNewTab') }}</MkSwitch>
 			<MkSwitch v-model:value="showFixedPostForm">{{ $t('showFixedPostForm') }}</MkSwitch>
 			<MkSwitch v-model:value="enableInfiniteScroll">{{ $t('enableInfiniteScroll') }}</MkSwitch>
-			<MkSwitch v-model:value="disablePagesScript">{{ $t('disablePagesScript') }}</MkSwitch>
 			<MkSwitch v-model:value="alwaysPlayMediaInWindow">{{ $t('alwaysPlayMediaInWindow') }}</MkSwitch>
 		</div>
 		<div class="_content">
@@ -85,16 +84,6 @@ export default defineComponent({
 		imageNewTab: {
 			get() { return this.$store.state.device.imageNewTab; },
 			set(value) { this.$store.commit('device/set', { key: 'imageNewTab', value }); }
-		},
-
-		disablePagesScript: {
-			get() { return this.$store.state.device.disablePagesScript; },
-			set(value) { this.$store.commit('device/set', { key: 'disablePagesScript', value }); }
-		},
-
-		showFixedPostForm: {
-			get() { return this.$store.state.device.showFixedPostForm; },
-			set(value) { this.$store.commit('device/set', { key: 'showFixedPostForm', value }); }
 		},
 
 		defaultSideView: {

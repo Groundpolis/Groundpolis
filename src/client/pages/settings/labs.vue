@@ -6,10 +6,7 @@
 		</div>
 		<div class="_card _vMargin">
 			<div class="_content">
-				<MkSwitch v-model:value="injectUnlistedNoteInLTL">
-					{{ $t('showUnlistedNotesInLTL') }}
-					<template #desc>{{ $t('showUnlistedNotesInLTLDesc') }}</template>
-				</MkSwitch>
+				{{ $t('_labs.notAvailable') }}
 			</div>
 		</div>
 	</div>
@@ -21,7 +18,6 @@ import { defineComponent } from 'vue';
 
 import MkSwitch from '@/components/ui/switch.vue';
 import MkButton from '@/components/ui/button.vue';
-import * as os from '@/os';
 
 export default defineComponent({
 	components: {
@@ -37,9 +33,6 @@ export default defineComponent({
 	},
 
 	watch: {
-		injectUnlistedNoteInLTL() {
-			location.reload();
-		},
 	},
 
 	methods: {

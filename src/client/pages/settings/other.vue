@@ -3,13 +3,6 @@
 	<div class="_section">
 		<div class="_card _vMargin">
 			<div class="_content">
-				<MkSwitch v-model:value="$store.state.i.injectFeaturedNote" @update:value="onChangeInjectFeaturedNote">
-					{{ $t('showFeaturedNotesInTimeline') }}
-				</MkSwitch>
-			</div>
-		</div>
-		<div class="_card _vMargin">
-			<div class="_content">
 				<MkSwitch v-model:value="debug" @update:value="changeDebug">
 					DEBUG MODE
 				</MkSwitch>
@@ -78,11 +71,6 @@ export default defineComponent({
 	},
 
 	methods: {
-		onChangeInjectFeaturedNote(v) {
-			os.api('i/update', {
-				injectFeaturedNote: v
-			});
-		},
 		async chooseReaction(e) {
 			this.stealReaction = (await os.reactionPicker({
 				source: e.currentTarget || e.target,

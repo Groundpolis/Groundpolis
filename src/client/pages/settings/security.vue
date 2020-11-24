@@ -1,6 +1,13 @@
 <template>
 <div>
 	<div class="_section">
+		<div class="_card">
+			<div class="_content">
+				<MkSwitch v-model:value="disablePagesScript">{{ $t('disablePagesScript') }}</MkSwitch>
+			</div>
+		</div>
+	</div>
+	<div class="_section">
 		<X2fa/>
 	</div>
 	<div class="_section">
@@ -15,6 +22,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import MkSwitch from '@/components/ui/switch.vue';
 import { faLock, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import MkButton from '@/components/ui/button.vue';
 import X2fa from './security.2fa.vue';
@@ -23,6 +31,7 @@ import * as os from '@/os';
 export default defineComponent({
 	components: {
 		MkButton,
+		MkSwitch,
 		X2fa,
 	},
 	
@@ -36,6 +45,13 @@ export default defineComponent({
 			},
 			faLock, faSyncAlt
 		}
+	},
+
+	computed: {
+		disablePagesScript: {
+			get() { return this.$store.state.device.disablePagesScript; },
+			set(value) { this.$store.commit('device/set', { key: 'disablePagesScript', value }); }
+		},
 	},
 
 	mounted() {

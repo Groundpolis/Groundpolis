@@ -38,6 +38,13 @@ export const pages: PageDefinition[] = [
 		component: () => defineAsyncComponent(() => import('./reaction.vue')),
 	},
 	{
+		name: 'timeline',
+		icon: faStream,
+		title: t('timeline'),
+		type: 'basic',
+		component: () => defineAsyncComponent(() => import('./timeline.vue')),
+	},
+	{
 		name: 'notifications',
 		icon: faBell,
 		title: t('notifications'),
@@ -72,13 +79,6 @@ export const pages: PageDefinition[] = [
 		title: t('appearance'),
 		type: 'client',
 		component: () => defineAsyncComponent(() => import('./appearance.vue')),
-	},
-	{
-		name: 'timeline',
-		icon: faStream,
-		title: t('timeline'),
-		type: 'client',
-		component: () => defineAsyncComponent(() => import('./timeline.vue')),
 	},
 	{
 		name: 'deck',

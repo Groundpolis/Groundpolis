@@ -1,9 +1,20 @@
 <template>
 <div class="_section">
-	<div class="_card">
+	<div class="_card _vMargin">
+		<div class="_content">
+			<MkSwitch v-model:value="$store.state.i.injectFeaturedNote" @update:value="onChangeInjectFeaturedNote">
+				{{ $t('showFeaturedNotesInTimeline') }}
+			</MkSwitch>
+			<MkSwitch v-model:value="injectUnlistedNoteInLTL">
+				{{ $t('showUnlistedNotesInLTL') }}
+				<template #desc>{{ $t('showUnlistedNotesInLTLDesc') }}</template>
+			</MkSwitch>
+		</div>
+	</div>
+	<div class="_card _vMargin">
 		<div class="_title" v-text="$t('pinnedTimeline')"/>
 		<div class="_content">
-			<div class="_caption" style="padding-bottom: 8px;">{{ $t('pinnedTimelineDescription') }}</div>
+			<div class="_caption" v-if="items.length > 0" style="padding-bottom: 8px;">{{ $t('pinnedTimelineDescription') }}</div>
 			<XDraggable class="vmievna2" :list="items" animation="150" delay="100" delay-on-touch-only="true">
 				<div class="item" v-for="item in items" :key="item">
 					<Fa class="icon" :icon="timelineMenuMap[item].icon" />
@@ -11,7 +22,7 @@
 					<div class="del" @click="del(item)"><Fa :icon="faTimes" /></div>
 				</div>
 			</XDraggable>
-			<div class="_caption" style="padding: 8px 0;">{{ $t('pinnedTimelineDescription2') }}</div>
+			<div class="_caption" style="padding: 8px 0;">{{ $t(otherItems.length > 0 ? 'pinnedTimelineDescription2' : 'pinnedTimelineEverything') }}</div>
 			<div class="otherItem" v-for="item in otherItems" :key="item" @click="add(item)">
 				<Fa class="icon" :icon="timelineMenuMap[item].icon" />
 				{{ timelineMenuMap[item].name }}
@@ -34,6 +45,7 @@ import MkSwitch from '@/components/ui/switch.vue';
 import MkRadios from '@/components/ui/radios.vue';
 import { timelineMenuMap, timelineMenuSources } from '../../menus/timeline';
 import { defaultDeviceSettings } from '@/store';
+import * as os from '@/os';
 
 export default defineComponent({
 	components: {
@@ -56,7 +68,12 @@ export default defineComponent({
 	computed: {
 		otherItems() {
 			return timelineMenuSources.filter(m => !this.items.includes(m));
-		}
+		},
+
+		injectUnlistedNoteInLTL: {
+			get() { return this.$store.state.settings.injectUnlistedNoteInLTL; },
+			set(value) { this.$store.dispatch('settings/set', { key: 'injectUnlistedNoteInLTL', value }); }
+		},
 	},
 	
 	watch: {
@@ -64,9 +81,17 @@ export default defineComponent({
 			console.log('saved to vuex');
 			this.$store.commit('device/set', { key: 'timelineTabItems', value: [...this.items] });
 		},
+		injectUnlistedNoteInLTL() {
+			location.reload();
+		},
 	},
 
 	methods: {
+		onChangeInjectFeaturedNote(v) {
+			os.api('i/update', {
+				injectFeaturedNote: v
+			});
+		},
 		add(item: string) {
 			if (this.items.includes(item)) return;
 			console.log('added');
