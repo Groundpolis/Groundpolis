@@ -42,7 +42,6 @@ import { VueDraggableNext } from 'vue-draggable-next';
 import MkInput from '@/components/ui/input.vue';
 import MkButton from '@/components/ui/button.vue';
 import MkSwitch from '@/components/ui/switch.vue';
-import MkRadios from '@/components/ui/radios.vue';
 import { timelineMenuMap, timelineMenuSources } from '../../menus/timeline';
 import { defaultDeviceSettings } from '@/store';
 import * as os from '@/os';
@@ -52,7 +51,6 @@ export default defineComponent({
 		MkInput,
 		MkButton,
 		MkSwitch,
-		MkRadios,
 		XDraggable: VueDraggableNext,
 	},
 
@@ -77,9 +75,12 @@ export default defineComponent({
 	},
 	
 	watch: {
-		items() {
-			console.log('saved to vuex');
-			this.$store.commit('device/set', { key: 'timelineTabItems', value: [...this.items] });
+		items: {
+			handler() {
+				console.log('saved to vuex');
+				this.$store.commit('device/set', { key: 'timelineTabItems', value: [...this.items] });
+			},
+			deep: true,
 		},
 		injectUnlistedNoteInLTL() {
 			location.reload();

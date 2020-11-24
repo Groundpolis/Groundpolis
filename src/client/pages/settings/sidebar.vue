@@ -7,14 +7,18 @@
 	</div>
 	<div class="_card _vMargin">
 		<div class="_content">
-			<MkTextarea v-model:value="items" tall>
-				<span>{{ $t('sidebar') }}</span>
-				<template #desc><button class="_textButton" @click="addItem">{{ $t('addItem') }}</button></template>
-			</MkTextarea>
-		</div>
-		<div class="_footer">
-			<MkButton inline @click="save()" primary><Fa :icon="faSave"/> {{ $t('save') }}</MkButton>
-			<MkButton inline @click="reset()"><Fa :icon="faRedo"/> {{ $t('default') }}</MkButton>
+			<XDraggable class="mcc329a0" :list="items" animation="150" delay="100" delay-on-touch-only="true">
+				<div class="item" v-for="item in items" :key="item">
+					<Fa v-if="!item.startsWith('-:')" class="icon" :icon="menuDef[item].icon" />
+					<span v-if="item.startsWith('-:')">-----------------</span>
+					<span v-else v-text="$t(menuDef[item] ? menuDef[item].title : item)"/>
+					<div class="del" @click="del(item)"><Fa :icon="faTimes" /></div>
+				</div>
+			</XDraggable>
+			<div style="margin-top: var(--margin);">
+				<MkButton inline @click="addItem"><Fa :icon="faPlus"/> {{ $t('add') }}</MkButton>
+				<MkButton inline @click="reset()"><Fa :icon="faRedo"/> {{ $t('default') }}</MkButton>
+			</div>
 		</div>
 	</div>
 </div>
@@ -22,7 +26,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faListUl, faSave, faRedo } from '@fortawesome/free-solid-svg-icons';
+import { faListUl, faRedo, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { v4 as uuid } from 'uuid';
+import { VueDraggableNext } from 'vue-draggable-next';
 import MkButton from '@/components/ui/button.vue';
 import MkSwitch from '@/components/ui/switch.vue';
 import MkTextarea from '@/components/ui/textarea.vue';
@@ -35,6 +41,7 @@ export default defineComponent({
 		MkButton,
 		MkSwitch,
 		MkTextarea,
+		XDraggable: VueDraggableNext,
 	},
 
 	emits: ['info'],
@@ -46,16 +53,12 @@ export default defineComponent({
 				icon: faListUl
 			},
 			menuDef: sidebarDef,
-			items: '',
-			faSave, faRedo
+			items: [],
+			faRedo, faPlus, faTimes
 		}
 	},
 
 	computed: {
-		splited(): string[] {
-			return this.items.trim().split('\n').filter(x => x.trim() !== '');
-		},
-
 		useDisplayNameForSidebar: {
 			get() { return this.$store.state.settings.useDisplayNameForSidebar; },
 			set(value) { this.$store.dispatch('settings/set', { key: 'useDisplayNameForSidebar', value }); }
@@ -63,11 +66,17 @@ export default defineComponent({
 	},
 
 	created() {
-		this.items = this.$store.state.deviceUser.menu.join('\n');
+		this.items = this.$store.state.deviceUser.menu.map(it => it === '-' ? '-:' + uuid() : it);
 	},
 
-	mounted() {
-		this.$emit('info', this.INFO);
+	watch: {
+		items: {
+			handler() {
+				console.log('save');
+				this.save();
+			},
+			deep: true,
+		}
 	},
 
 	methods: {
@@ -80,23 +89,25 @@ export default defineComponent({
 					items: [...menu.map(k => ({
 						value: k, text: this.$t(this.menuDef[k].title)
 					})), ...[{
-						value: '-', text: this.$t('divider')
+						value: '-:' + uuid(), text: this.$t('divider')
 					}]]
 				},
 				showCancelButton: true
 			});
 			if (canceled) return;
-			this.items = [...this.splited, item].join('\n');
-			this.save();
+			this.items = [...this.items, item];
+		},
+
+		del(item) {
+			this.items = this.items.filter(it => it !== item);
 		},
 
 		save() {
-			this.$store.commit('deviceUser/setMenu', this.splited);
+			this.$store.commit('deviceUser/setMenu', this.items.map(it => it.startsWith('-:') ? '-' : it));
 		},
 
 		reset() {
-			this.$store.commit('deviceUser/setMenu', defaultDeviceUserSettings.menu);
-			this.items = this.$store.state.deviceUser.menu.join('\n');
+			this.items = defaultDeviceUserSettings.menu.map(it => it === '-' ? '-:' + uuid() : it);
 		},
 	},
 });
@@ -104,4 +115,35 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 
+.mcc329a0 {
+	display: flex;
+	flex-direction: column;
+}
+
+.item, .otherItem {
+	display: flex;
+	align-items: center;
+	border: solid 1px var(--divider);
+	border-bottom: none;
+	cursor: move;
+
+	> .icon {
+		margin: 0 8px;
+	}
+
+	> .del {
+		display: flex;
+		align-items: center;
+		color: var(--error);
+		justify-content: center;
+		margin-left: auto;
+		cursor: pointer;
+		width: 36px;
+		height: 36px;
+	}
+
+	&:last-child {
+		border-bottom: solid 1px var(--divider);
+	}
+}
 </style>
