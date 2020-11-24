@@ -763,6 +763,9 @@ discardPostFormDraft: "投稿フォームの下書きを削除"
 discardPostFormDraftDescription: "何らかの問題で投稿フォームに問題が発生した場合、この動作によって改善するかもしれません。"
 emojiPickerShowPinnedEmojis: "好きな絵文字を固定する"
 emojiPickerShowRecentEmojis: "最近使った絵文字を表示"
+pinnedTimeline: "ピン留めするタイムライン"
+pinnedTimelineDescription: "ドラッグ&ドロップして、並び替えられます。"
+pinnedTimelineDescription2: "ここからピン留めしたいタイムラインをタップして追加できます。"
 
 _mfmpad:
   quote: "引用"

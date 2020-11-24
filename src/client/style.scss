@@ -246,9 +246,9 @@ hr {
 		padding: 22px 32px;
 		padding-bottom: 0;
 		font-size: 1.6em;
-		border-bottom: solid 1px var(--panelHeaderDivider);
+		// border-bottom: solid 1px var(--panelHeaderDivider);
 		font-weight: bold;
-		background: var(--panelHeaderBg);
+		// background: var(--panelHeaderBg);
 		color: var(--panelHeaderFg);
 
 		@media (max-width: 500px) {

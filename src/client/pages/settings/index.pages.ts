@@ -1,7 +1,7 @@
 import { Component, defineAsyncComponent } from 'vue';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-import { faPalette, faPlug, faUser, faListUl, faLock, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish, faCommentSlash, faMagic, faColumns } from '@fortawesome/free-solid-svg-icons';
+import { faPalette, faPlug, faUser, faListUl, faLock, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish, faCommentSlash, faMagic, faColumns, faStream } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell } from '@fortawesome/free-regular-svg-icons';
 
 import { i18n } from '@/i18n';
@@ -74,6 +74,13 @@ export const pages: PageDefinition[] = [
 		component: () => defineAsyncComponent(() => import('./appearance.vue')),
 	},
 	{
+		name: 'timeline',
+		icon: faStream,
+		title: t('timeline'),
+		type: 'client',
+		component: () => defineAsyncComponent(() => import('./timeline.vue')),
+	},
+	{
 		name: 'deck',
 		icon: faColumns,
 		title: t('deck'),
@@ -115,7 +122,6 @@ export const pages: PageDefinition[] = [
 		type: 'client',
 		component: () => defineAsyncComponent(() => import('./gacha.vue')),
 	},
-
 	{
 		name: 'import-export',
 		icon: faBoxes,

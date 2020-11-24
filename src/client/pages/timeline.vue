@@ -23,13 +23,14 @@
 
 <script lang="ts">
 import { defineComponent, defineAsyncComponent, computed, ComputedRef } from 'vue';
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faSatelliteDish, faCircle, faEllipsisH, faPencilAlt, faBullhorn, faCat, faProjectDiagram, faCommentAlt, faAt } from '@fortawesome/free-solid-svg-icons';
-import { faComments, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faSatelliteDish, faCircle, faEllipsisH, faPencilAlt, faBullhorn } from '@fortawesome/free-solid-svg-icons';
+import { faComments } from '@fortawesome/free-regular-svg-icons';
 import Progress from '@/scripts/loading';
 import XTimeline from '@/components/timeline.vue';
 import XPostForm from '@/components/post-form.vue';
 import { scroll } from '@/scripts/scroll';
 import * as os from '@/os';
+import { timelineMenuItems, timelineMenuMap } from '../menus/timeline';
 
 export default defineComponent({
 	name: 'timeline',
@@ -58,49 +59,30 @@ export default defineComponent({
 					tooltip?: string | null,
 					icon?: any,
 					onClick?: () => void,
-					selected?: ComputedRef<boolean>,
-					indicate?: ComputedRef<boolean>,
+					selected?: ComputedRef<boolean> | boolean,
+					indicate?: ComputedRef<boolean> | boolean,
 				};
-				const tabs: Tab[] = [{
-					id: 'home',
-					tooltip: this.$t('_timelines.home'),
-					icon: faHome,
-					onClick: () => { this.src = 'home'; this.saveSrc(); },
-					selected: computed(() => this.src === 'home'),
-				}];
+				const tabs: Tab[] = [];
 
-				const isMod = this.$store.state.i.isModerator || this.$store.state.i.isAdmin;
-				const withLTL = !this.$store.state.instance.meta.disableLocalTimeline || isMod;
-				const withGTL = !this.$store.state.instance.meta.disableGlobalTimeline || isMod;
-
-				if (withLTL) {
+				for (const item of (this.$store.state.device.timelineTabItems as []).map(src => timelineMenuItems.find(it => it.src === src))) {
+					if (!item) continue;
+					if (item.show && !item.show()) continue;
 					tabs.push({
-						id: 'local',
+						id: item.src,
 						title: null,
-						tooltip: this.$t('_timelines.local'),
-						icon: faComments,
-						onClick: () => { this.src = 'local'; this.saveSrc(); },
-						selected: computed(() => this.src === 'local')
-					});
-
-					tabs.push({
-						id: 'social',
-						title: null,
-						tooltip: this.$t('_timelines.social'),
-						icon: faShareAlt,
-						onClick: () => { this.src = 'social'; this.saveSrc(); },
-						selected: computed(() => this.src === 'social')
+						tooltip: item.name,
+						icon: item.icon,
+						onClick: () => { this.src = item.src; this.saveSrc(); },
+						selected: computed(() => this.src === item.src),
 					});
 				}
 
-				if (withGTL) {
+				if (!this.$store.state.device.timelineTabItems.includes(this.src)) {
 					tabs.push({
-						id: 'global',
+						id: this.src,
 						title: null,
-						tooltip: this.$t('_timelines.global'),
-						icon: faGlobe,
-						onClick: () => { this.src = 'global'; this.saveSrc(); },
-						selected: computed(() => this.src === 'global')
+						icon: timelineMenuMap[this.src].icon,
+						selected: true,
 					});
 				}
 
@@ -225,9 +207,6 @@ export default defineComponent({
 		async choose(ev) {
 			if (this.meta == null) return;
 
-			const isMod = this.$store.state.i.isModerator || this.$store.state.i.isAdmin;
-			const withCTL = !this.$store.state.instance.meta.disableCatTimeline || isMod;
-
 			const antennaPromise = os.api('antennas/list').then((antennas: any[]) => antennas.length === 0 ? [] : [null, ...antennas.map(antenna => ({
 				text: antenna.name,
 				icon: faSatellite,
@@ -260,48 +239,17 @@ export default defineComponent({
 				}
 			}))]);
 
+			const timelines = timelineMenuItems
+				.filter(it => !(this.$store.state.device.timelineTabItems as string[]).includes(it.src))
+				.map(it => ({
+					text: it.name,
+					icon: it.icon,
+					action: () => { this.src = it.src; this.saveSrc(); },
+				}));
+
+
 			os.modalMenu([
-				(withCTL ? {
-					text: this.$t('_timelines.cat'),
-					icon: faCat,
-					action: () => {
-						this.src = 'cat';
-						this.saveSrc();
-					}
-				} : undefined),
-				{
-					text: this.$t('_timelines.remoteFollowing'),
-					icon: faProjectDiagram,
-					action: () => {
-						this.src = 'remoteFollowing';
-						this.saveSrc();
-					}
-				},
-				{
-					text: this.$t('_timelines.followers'),
-					icon: faCommentAlt,
-					action: () => {
-						this.src = 'followers';
-						this.saveSrc();
-					}
-				},
-				null,
-				{
-					text: this.$t('mentions'),
-					icon: faAt,
-					action: () => {
-						this.src = 'mentions';
-						this.saveSrc();
-					}
-				},
-				{
-					text: this.$t('directNotes'),
-					icon: faEnvelope,
-					action: () => {
-						this.src = 'direct';
-						this.saveSrc();
-					}
-				},
+				timelines,
 				antennaPromise,
 				listPromise,
 				channelPromise,

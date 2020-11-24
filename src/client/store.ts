@@ -149,6 +149,9 @@ export const defaultDeviceSettings = {
 	alwaysPlayMediaInWindow: false,
 	emojiPickerHidePinnedEmojis: false,
 	emojiPickerHideRecentEmojis: false,
+	timelineTabItems: [
+		'home', 'local',
+	],
 };
 
 function copy<T>(data: T): T {
