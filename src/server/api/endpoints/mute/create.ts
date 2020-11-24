@@ -27,6 +27,14 @@ export const meta = {
 				'en-US': 'Target user ID'
 			}
 		},
+		isRenoteOnly: {
+			validator: $.optional.boolean,
+			default: false,
+			desc: {
+				'ja-JP': 'リノートのみをミュートする',
+				'en-US': 'Mute only reposts'
+			}
+		}
 	},
 
 	errors: {
@@ -70,20 +78,23 @@ export default define(meta, async (ps, user) => {
 		muteeId: mutee.id
 	});
 
-	if (exist != null) {
+	if (exist != null && exist.isRenoteOnly === ps.isRenoteOnly) {
 		throw new ApiError(meta.errors.alreadyMuting);
 	}
 
 	// Create mute
 	await Mutings.save({
-		id: genId(),
+		id: (exist != null) ? exist.id : genId(),
 		createdAt: new Date(),
 		muterId: muter.id,
 		muteeId: mutee.id,
+		isRenoteOnly: ps.isRenoteOnly,
 	} as Muting);
 
-	NoteWatchings.delete({
-		userId: muter.id,
-		noteUserId: mutee.id
-	});
+	if (!ps.isRenoteOnly){
+		NoteWatchings.delete({
+			userId: muter.id,
+			noteUserId: mutee.id
+		});
+	}
 });

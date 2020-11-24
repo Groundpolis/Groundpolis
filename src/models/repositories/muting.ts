@@ -21,7 +21,8 @@ export class MutingRepository extends Repository<Muting> {
 			muteeId: muting.muteeId,
 			mutee: Users.pack(muting.muteeId, me, {
 				detail: true
-			})
+			}),
+			isRenoteOnly: muting.isRenoteOnly
 		});
 	}
 
@@ -61,5 +62,10 @@ export const packedMutingSchema = {
 			ref: 'User',
 			description: 'The mutee.'
 		},
+		isRenoteOnly: {
+			type: 'bool' as const,
+			optional: true as const, nullable: false as const,
+			description: 'Mutes renote only'
+		}
 	}
 };

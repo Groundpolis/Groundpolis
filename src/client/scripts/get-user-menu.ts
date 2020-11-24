@@ -65,11 +65,24 @@ export function getUserMenu(user) {
 
 	async function toggleMute() {
 		os.apiWithDialog(user.isMuted ? 'mute/delete' : 'mute/create', {
-			userId: user.id
+			userId: user.id,
+			isRenoteOnly: false
 		}).then(() => {
 			user.isMuted = !user.isMuted;
+			if (user.isMuted) user.isRenoteMuted = false;
 		});
 	}
+
+	async function toggleRenoteMute() {
+		os.apiWithDialog(user.isRenoteMuted ? 'mute/delete' : 'mute/create', {
+			userId: user.id,
+			isRenoteOnly: true
+		}).then(() => {
+			user.isRenoteMuted = !user.isRenoteMuted;
+			if (user.isRenoteMuted) user.isMuted = false;
+		});
+	}
+
 
 	async function toggleBlock() {
 		if (!await getConfirmed(user.isBlocking ? i18n.global.t('unblockConfirm') : i18n.global.t('blockConfirm'))) return;
@@ -150,6 +163,10 @@ export function getUserMenu(user) {
 			icon: user.isMuted ? faEye : faEyeSlash,
 			text: user.isMuted ? i18n.global.t('unmute') : i18n.global.t('mute'),
 			action: toggleMute
+		}, {
+			icon: user.isRenoteMuted ? faEye : faEyeSlash,
+			text: user.isRenoteMuted ? i18n.global.t('unRenoteMute') : i18n.global.t('renoteMute'),
+			action: toggleRenoteMute
 		}, {
 			icon: faBan,
 			text: user.isBlocking ? i18n.global.t('unblock') : i18n.global.t('block'),

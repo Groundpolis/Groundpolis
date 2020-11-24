@@ -29,6 +29,11 @@ export const meta = {
 		untilId: {
 			validator: $.optional.type(ID),
 		},
+
+		isRenoteOnly: {
+			validator: $.optional.bool,
+			default: false
+		}
 	},
 
 	res: {
@@ -44,7 +49,8 @@ export const meta = {
 
 export default define(meta, async (ps, me) => {
 	const query = makePaginationQuery(Mutings.createQueryBuilder('muting'), ps.sinceId, ps.untilId)
-		.andWhere(`muting.muterId = :meId`, { meId: me.id });
+		.andWhere(`muting.muterId = :meId`, { meId: me.id })
+		.andWhere(`muting.isRenoteOnly = :isRenoteOnly`, {isRenoteOnly: (ps.isRenoteOnly ? "TRUE" : "FALSE")}); //wip
 
 	const mutings = await query
 		.take(ps.limit!)

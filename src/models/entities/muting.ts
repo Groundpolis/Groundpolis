@@ -34,6 +34,11 @@ export class Muting {
 	})
 	public muterId: User['id'];
 
+	@Column({
+		comment: 'Mute only reposts'
+	})
+	public isRenoteOnly: boolean;
+	
 	@ManyToOne(type => User, {
 		onDelete: 'CASCADE'
 	})

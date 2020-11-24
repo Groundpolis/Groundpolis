@@ -21,6 +21,7 @@ export default class Connection {
 	public userProfile?: UserProfile;
 	public following: User['id'][] = [];
 	public muting: User['id'][] = [];
+	public renoteMuting: User['id'][] = [];
 	public followingChannels: ChannelModel['id'][] = [];
 	public token?: AccessToken;
 	private wsConnection: websocket.connection;
@@ -29,6 +30,7 @@ export default class Connection {
 	private subscribingNotes: any = {};
 	private followingClock: NodeJS.Timer;
 	private mutingClock: NodeJS.Timer;
+	private renoteMutingClock: NodeJS.Timer;
 	private followingChannelsClock: NodeJS.Timer;
 	private userProfileClock: NodeJS.Timer;
 
@@ -55,6 +57,9 @@ export default class Connection {
 
 			this.updateMuting();
 			this.mutingClock = setInterval(this.updateMuting, 5000);
+
+			this.updateRenoteMuting();
+			this.renoteMutingClock = setInterval(this.updateRenoteMuting, 5000);
 
 			this.updateFollowingChannels();
 			this.followingChannelsClock = setInterval(this.updateFollowingChannels, 5000);
@@ -274,12 +279,26 @@ export default class Connection {
 	private async updateMuting() {
 		const mutings = await Mutings.find({
 			where: {
-				muterId: this.user!.id
+				muterId: this.user!.id,
+				isRenoteOnly: false
 			},
 			select: ['muteeId']
 		});
 
 		this.muting = mutings.map(x => x.muteeId);
+	}
+
+	@autobind
+	private async updateRenoteMuting() {
+		const renoteMutings = await Mutings.find({
+			where: {
+				muterId: this.user!.id,
+				isRenoteOnly: true
+			},
+			select: ['muteeId']
+		});
+
+		this.renoteMuting = renoteMutings.map(x => x.muteeId);
 	}
 
 	@autobind
@@ -312,6 +331,7 @@ export default class Connection {
 
 		if (this.followingClock) clearInterval(this.followingClock);
 		if (this.mutingClock) clearInterval(this.mutingClock);
+		if (this.renoteMutingClock) clearInterval(this.renoteMutingClock);
 		if (this.followingChannelsClock) clearInterval(this.followingChannelsClock);
 		if (this.userProfileClock) clearInterval(this.userProfileClock);
 	}
