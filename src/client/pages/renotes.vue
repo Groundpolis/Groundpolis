@@ -1,18 +1,9 @@
 <template>
 <div class="mk-note-page">
-	<template v-if="renoteState">
-		<MkTab v-if="renoteState.isRenoted && renoteState.isQuoted" style="height: 100%" v-model:value="tab" class="tab">
-			<option value="quotes"><Fa :icon="faQuoteRight"/> {{$t('quote')}}</option>
-			<option value="renotes"><Fa :icon="faRetweet"/> {{$t('renote')}}</option>
-		</MkTab>
-		<template v-else>
-			<fa :icon="renoteState.isQuoted ? faQuoteRight : faRetweet"/>
-			{{ $t(renoteState.isQuoted ? 'quotes' : 'renotes') }}
-		</template>
-
+	<div class="_section" v-if="renoteState">
 		<XNotes v-if="tab === 'quotes'" ref="quotes" :pagination="quotes"/>
 		<XUsers v-else-if="tab === 'renotes'" ref="renotes" :pagination="renotedUsers"/>
-	</template>
+	</div>
 
 	<div v-if="error">
 		<MkError @retry="fetch()"/>
@@ -40,11 +31,34 @@ export default defineComponent({
 			required: true,
 		},
 	},
+	computed: {
+		INFO(): Record<string, unknown> {
+			if (!this.renoteState) {
+				return {};
+			} else if (this.renoteState.isRenoted && this.renoteState.isQuoted) {
+				return {
+					tabs: [{
+						title: this.$t('renote'),
+						icon: faRetweet,
+						selected: this.tab === 'renotes',
+						onClick: () => this.tab = 'renotes',
+					}, {
+						title: this.$t('quotes'),
+						icon: faQuoteRight,
+						selected: this.tab === 'quotes',
+						onClick: () => this.tab = 'quotes',
+					}],
+				};
+			} else {
+				return {
+					title: this.$t(this.renoteState.isQuoted ? 'quotes' : 'renote'),
+					icon: this.renoteState.isQuoted ? faQuoteRight : faRetweet,
+				};
+			}
+		},
+	},
 	data() {
 		return {
-			INFO: {
-				title: this.$t('renote')
-			},
 			error: null,
 			tab: 'renotes',
 			renoteState: null as { isRenoted: boolean, isQuoted: boolean } | null,
@@ -62,7 +76,6 @@ export default defineComponent({
 					noteId: this.noteId,
 				})),
 			},
-			faQuoteRight, faRetweet
 		};
 	},
 	watch: {
