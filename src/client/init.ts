@@ -16,7 +16,8 @@ import { router } from './router';
 import { applyTheme } from '@/scripts/theme';
 import { isDeviceDarkmode } from '@/scripts/is-device-darkmode';
 import { i18n, lang } from './i18n';
-import { stream, sound, isMobile, dialog } from '@/os';
+import { stream, isMobile, dialog } from '@/os';
+import * as sound from './scripts/sound';
 
 console.info(`Groundpolis v${version}`);
 
@@ -338,7 +339,7 @@ if (store.getters.isSignedIn) {
 			hasUnreadMessagingMessage: true
 		});
 
-		sound('chatBg');
+		sound.play('chatBg');
 	});
 
 	main.on('readAllAntennas', () => {
@@ -352,7 +353,7 @@ if (store.getters.isSignedIn) {
 			hasUnreadAntenna: true
 		});
 
-		sound('antenna');
+		sound.play('antenna');
 	});
 
 	main.on('readAllAnnouncements', () => {
@@ -372,7 +373,7 @@ if (store.getters.isSignedIn) {
 			hasUnreadChannel: true
 		});
 
-		sound('channel');
+		sound.play('channel');
 	});
 
 	main.on('readAllAnnouncements', () => {

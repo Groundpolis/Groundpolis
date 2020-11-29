@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 :root {
-	--baseContentWidth: 750px;
+	--baseContentWidth: 760px;
 	--radius: 24px;
 	--marginFull: 16px;
 	--marginHalf: 10px;
@@ -26,6 +26,9 @@ html {
 	background-position: center;
 	color: var(--fg);
 	overflow: auto;
+	font-family: "BIZ UDPGothic", Roboto, HelveticaNeue, Arial, sans-serif;
+	line-height: 1.35;
+	text-size-adjust: 100%;
 
 	&, * {
 		scrollbar-color: var(--scrollbarHandle) var(--panel);
@@ -72,6 +75,10 @@ html {
 	&.f-veryLarge {
 		font-size: 1.2em;
 	}
+
+	&.useSystemFont {
+		font-family: sans-serif;
+	}
 }
 
 html.changing-theme {
@@ -88,8 +95,6 @@ html, body {
 	margin: 0;
 	padding: 0;
 	scroll-behavior: smooth;
-	text-size-adjust: 100%;
-	font-family: Roboto, HelveticaNeue, Arial, sans-serif;
 }
 
 a {
@@ -160,6 +165,8 @@ hr {
 	tap-highlight-color: transparent;
 	-webkit-tap-highlight-color: transparent;
 	font-size: 1em;
+	font-family: inherit;
+	line-height: inherit;
 
 	&, * {
 		@extend ._noSelect;
@@ -454,10 +461,14 @@ hr {
 	opacity: 0.7;
 }
 
+._monospace {
+	font-family: Fira code, Fira Mono, Consolas, Menlo, Courier, monospace;
+}
+
 ._code {
+	@extend ._monospace;
 	background: #2d2d2d;
 	color: #ccc;
-	font-family: Fira code, Fira Mono, Consolas, Menlo, Courier, monospace;
 	font-size: 14px;
 	line-height: 1.5;
 	padding: 5px;

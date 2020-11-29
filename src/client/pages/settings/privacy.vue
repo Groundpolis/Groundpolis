@@ -1,38 +1,49 @@
 <template>
-<div class="_section">
-	<div class="_card">
-		<div class="_content">
-			<MkSwitch v-model:value="isLocked" :disabled="carefulBot" @update:value="save()">{{ $t('makeFollowManuallyApprove') }}</MkSwitch>
-			<MkSwitch v-model:value="carefulBot" :disabled="isLocked" @update:value="save()">{{ $t('makeBotFollowManuallyApprove') }}</MkSwitch>
-			<MkSwitch v-model:value="autoAcceptFollowed" :disabled="!isLocked && !carefulBot" @update:value="save()">{{ $t('autoAcceptFollowed') }}</MkSwitch>
-			<MkSwitch v-model:value="hideFF" @update:value="save()">{{ $t('hideFF') }}</MkSwitch>
-			<MkSwitch v-model:value="noindex" @update:value="save()">{{ $t('noindex') }}</MkSwitch>
-		</div>
-		<div class="_content">
-			<MkSwitch v-model:value="rememberNoteVisibility" @update:value="save()">{{ $t('rememberNoteVisibility') }}</MkSwitch>
-			<MkSelect v-model:value="defaultNoteVisibility" style="margin-bottom: 8px;" v-if="!rememberNoteVisibility">
-				<template #label>{{ $t('defaultNoteVisibility') }}</template>
-				<option value="public">{{ $t('_visibility.public') }}</option>
-				<option value="home">{{ $t('_visibility.home') }}</option>
-				<option value="followers">{{ $t('_visibility.followers') }}</option>
-				<option value="specified">{{ $t('_visibility.specified') }}</option>
-			</MkSelect>
-			<MkSwitch v-model:value="defaultNoteLocalOnly" v-if="!rememberNoteVisibility">{{ $t('_visibility.localOnly') }}</MkSwitch>
-		</div>
-	</div>
-</div>
+<FormBase>
+	<FormGroup>
+		<FormSwitch v-model:value="isLocked" @update:value="save()">{{ $t('makeFollowManuallyApprove') }}</FormSwitch>
+		<FormSwitch v-model:value="carefulBot" :disabled="isLocked" @update:value="save()">{{ $t('makeBotFollowManuallyApprove') }}</FormSwitch>
+		<FormSwitch v-model:value="autoAcceptFollowed" :disabled="!isLocked" @update:value="save()">{{ $t('autoAcceptFollowed') }}</FormSwitch>
+		<template #caption>{{ $t('lockedAccountInfo') }}</template>
+	</FormGroup>
+	<FormSwitch v-model:value="hideFF" @update:value="save()">
+		{{ $t('hideFF') }}
+		<template #desc>{{ $t('hideFFDescription') }}</template>
+	</FormSwitch>
+	<FormSwitch v-model:value="noCrawle" @update:value="save()">
+		{{ $t('noCrawle') }}
+		<template #desc>{{ $t('noCrawleDescription') }}</template>
+	</FormSwitch>
+	<FormSwitch v-model:value="rememberNoteVisibility" @update:value="save()">{{ $t('rememberNoteVisibility') }}</FormSwitch>
+	<FormGroup v-if="!rememberNoteVisibility">
+		<template #label>{{ $t('defaultNoteVisibility') }}</template>
+		<FormSelect v-model:value="defaultNoteVisibility">
+			<option value="public">{{ $t('_visibility.public') }}</option>
+			<option value="home">{{ $t('_visibility.home') }}</option>
+			<option value="followers">{{ $t('_visibility.followers') }}</option>
+			<option value="specified">{{ $t('_visibility.specified') }}</option>
+			<option value="users">{{ $t('_visibility.users') }}</option>
+		</FormSelect>
+		<FormSwitch v-model:value="defaultNoteLocalOnly">{{ $t('_visibility.localOnly') }}</FormSwitch>
+	</FormGroup>
+</FormBase>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import MkSelect from '@/components/ui/select.vue';
-import MkSwitch from '@/components/ui/switch.vue';
+import { faLockOpen } from '@fortawesome/free-solid-svg-icons';
+import FormSwitch from '@/components/form/switch.vue';
+import FormSelect from '@/components/form/select.vue';
+import FormBase from '@/components/form/base.vue';
+import FormGroup from '@/components/form/group.vue';
 import * as os from '@/os';
 
 export default defineComponent({
 	components: {
-		MkSelect,
-		MkSwitch,
+		FormBase,
+		FormSelect,
+		FormGroup,
+		FormSwitch,
 	},
 
 	data() {
@@ -41,7 +52,7 @@ export default defineComponent({
 			carefulBot: false,
 			autoAcceptFollowed: false,
 			hideFF: false,
-			noindex: false,
+			noCrawle: false,
 		}
 	},
 
@@ -67,7 +78,11 @@ export default defineComponent({
 		this.hideFF = this.$store.state.i.hideFF;
 		this.carefulBot = this.$store.state.i.carefulBot;
 		this.autoAcceptFollowed = this.$store.state.i.autoAcceptFollowed;
-		this.noindex = this.$store.state.i.noindex;
+		this.noCrawle = this.$store.state.i.noCrawle;
+	},
+
+	mounted() {
+		this.$emit('info', this.INFO);
 	},
 
 	methods: {
@@ -77,7 +92,7 @@ export default defineComponent({
 				hideFF: !!this.hideFF,
 				carefulBot: !!this.carefulBot,
 				autoAcceptFollowed: !!this.autoAcceptFollowed,
-				noindex: !!this.noindex,
+				noCrawle: !!this.noCrawle,
 			});
 		}
 	}

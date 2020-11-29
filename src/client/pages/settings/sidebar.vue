@@ -1,12 +1,9 @@
 <template>
-<div class="_section">
-	<div class="_card _vMargin">
-		<div class="_content">
-			<MkSwitch v-model:value="useDisplayNameForSidebar">{{ $t('useDisplayNameForSidebar') }}</MkSwitch>
-		</div>
-	</div>
-	<div class="_card _vMargin">
-		<div class="_content">
+<FormBase>
+	<FormSwitch v-model:value="useDisplayNameForSidebar">{{ $t('useDisplayNameForSidebar') }}</FormSwitch>
+	
+	<FormGroup>
+		<div class="rfqxtzch _formItem _formPanel">
 			<XDraggable class="mcc329a0" :list="items" animation="150" delay="100" delay-on-touch-only="true">
 				<div class="item" v-for="item in items" :key="item">
 					<Fa v-if="!item.startsWith('-:')" class="icon" :icon="menuDef[item].icon" />
@@ -15,13 +12,12 @@
 					<div class="del" @click="del(item)"><Fa :icon="faTimes" /></div>
 				</div>
 			</XDraggable>
-			<div style="margin-top: var(--margin);">
-				<MkButton inline @click="addItem"><Fa :icon="faPlus"/> {{ $t('add') }}</MkButton>
-				<MkButton inline @click="reset()"><Fa :icon="faRedo"/> {{ $t('default') }}</MkButton>
-			</div>
 		</div>
-	</div>
-</div>
+	</FormGroup>
+
+	<FormButton @click="additem" primary><Fa :icon="faPlus"/> {{ $t('add') }}</FormButton>
+	<FormButton @click="reset()" danger><Fa :icon="faRedo"/> {{ $t('default') }}</FormButton>
+</FormBase>
 </template>
 
 <script lang="ts">
@@ -29,19 +25,23 @@ import { defineComponent } from 'vue';
 import { faListUl, faRedo, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuid } from 'uuid';
 import { VueDraggableNext } from 'vue-draggable-next';
-import MkButton from '@/components/ui/button.vue';
-import MkSwitch from '@/components/ui/switch.vue';
-import MkTextarea from '@/components/ui/textarea.vue';
+import FormSwitch from '@/components/form/switch.vue';
+import FormTextarea from '@/components/form/textarea.vue';
+import FormRadios from '@/components/form/radios.vue';
+import FormBase from '@/components/form/base.vue';
+import FormGroup from '@/components/form/group.vue';
+import FormButton from '@/components/form/button.vue';
 import { defaultDeviceUserSettings } from '@/store';
 import * as os from '@/os';
 import { sidebarDef } from '@/sidebar';
 
 export default defineComponent({
 	components: {
-		MkButton,
-		MkSwitch,
-		MkTextarea,
 		XDraggable: VueDraggableNext,
+		FormBase,
+		FormButton,
+		FormTextarea,
+		FormRadios,
 	},
 
 	emits: ['info'],

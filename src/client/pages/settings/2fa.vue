@@ -74,14 +74,25 @@ import MkButton from '@/components/ui/button.vue';
 import MkInfo from '@/components/ui/info.vue';
 import MkInput from '@/components/ui/input.vue';
 import MkSwitch from '@/components/ui/switch.vue';
+import FormBase from '@/components/form/base.vue';
+import FormGroup from '@/components/form/group.vue';
+import FormButton from '@/components/form/button.vue';
 import * as os from '@/os';
 
 export default defineComponent({
 	components: {
+		FormBase,
 		MkButton, MkInfo, MkInput, MkSwitch
 	},
+
+	emits: ['info'],
+
 	data() {
 		return {
+			INFO: {
+				title: this.$t('twoStepAuthentication'),
+				icon: faLock
+			},
 			data: null,
 			supportsCredentials: !!navigator.credentials,
 			usePasswordLessLogin: this.$store.state.i.usePasswordLessLogin,
@@ -90,6 +101,7 @@ export default defineComponent({
 			token: null,
 		};
 	},
+
 	methods: {
 		register() {
 			os.dialog({
@@ -223,6 +235,7 @@ export default defineComponent({
 				});
 			});
 		},
+
 		updatePasswordLessLogin() {
 			os.api('i/2fa/password-less', {
 				value: !!this.usePasswordLessLogin

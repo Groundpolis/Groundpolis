@@ -9,6 +9,7 @@ import { resolve } from '@/router';
 import { NoteVisibility, notificationTypes } from '../types';
 import { isDeviceTouch } from './scripts/is-device-touch';
 import parseAcct from '../misc/acct/parse';
+import { device } from './cold-storage';
 
 const ua = navigator.userAgent.toLowerCase();
 const isMobileUA = /mobile|iphone|ipad|android/.test(ua);
@@ -351,15 +352,6 @@ export function post(props: Record<string, any>) {
 			dispose = res.dispose;
 		});
 	});
-}
-
-export function sound(type: string) {
-	if (store.state.device.sfxVolume === 0) return;
-	const sound = store.state.device['sfx' + type.substr(0, 1).toUpperCase() + type.substr(1)];
-	if (sound == null) return;
-	const audio = new Audio(`/assets/sounds/${sound}.mp3`);
-	audio.volume = store.state.device.sfxVolume;
-	audio.play();
 }
 
 export const deckGlobalEvents = new EventEmitter();

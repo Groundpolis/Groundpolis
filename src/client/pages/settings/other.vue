@@ -1,55 +1,59 @@
 <template>
-<div>
-	<div class="_section">
-		<div class="_card _vMargin">
-			<div class="_content">
-				<MkSwitch v-model:value="debug" @update:value="changeDebug">
-					DEBUG MODE
-				</MkSwitch>
-				<MkButton full @click="regedit">Registry Editor</MkButton>
-				<MkButton full @click="taskmanager">Task Manager</MkButton>
-			</div>
-		</div>
-		<div class="_card _vMargin">
-			<div class="_title">{{$t('stealingRule')}}</div>
-			<div class="_content">
-				<MkSelect v-model:value="stealRule">
-					<option :value="0">{{ $t('_steal.textOnly') }}</option>
-					<option :value="1">{{ $t('_steal.react') }}</option>
-					<option :value="2">{{ $t('_steal.renote') }}</option>
-					<option :value="3">{{ $t('_steal.url') }}</option>
-				</MkSelect>
-				<MkButton v-if="stealRule === 1" @click="chooseReaction">
-					<mfm :text="$store.state.settings.stealReaction" :plain="true" />
-					<span style="margin-left: 16px" v-text="$t('chooseReaction')" />
-				</MkButton>
-			</div>
-		</div>
-		<div class="_card _vMargin">
-			<div class="_title">{{$t('dangerousSettings')}}</div>
-			<div class="_content">
-				<MkButton class="_vMargin" @click="discardPostFormDraft" full><Fa :icon="faTrashAlt"/> {{ $t('discardPostFormDraft') }}</MkButton>
-				<div class="_caption _vMargin" style="padding: 0 6px;">{{ $t('discardPostFormDraftDescription') }}</div>
-			</div>
-		</div>
-	</div>
-</div>
+<FormBase>
+	<FormLink to="/settings/account-info">{{ $t('accountInfo') }}</FormLink>
+
+	<FormGroup>
+		<FormSwitch v-model:value="debug" @update:value="changeDebug">
+			DEBUG MODE
+		</FormSwitch>
+		<template>
+			<FormLink to="/regedit">RegEdit</FormLink>
+			<FormButton @click="taskmanager">Task Manager</FormButton>
+		</template>
+	</FormGroup>
+
+	<FormGroup>
+		<FormSelect v-model:value="stealRule">
+			<template #label>{{ $t('stealingRule') }}</template>
+			<option :value="0">{{ $t('_steal.textOnly') }}</option>
+			<option :value="1">{{ $t('_steal.react') }}</option>
+			<option :value="2">{{ $t('_steal.renote') }}</option>
+			<option :value="3">{{ $t('_steal.url') }}</option>
+		</FormSelect>
+		<FormButton v-if="stealRule === 1" @click="chooseReaction">
+			<mfm :text="$store.state.settings.stealReaction" :plain="true" />
+			<span style="margin-left: 16px" v-text="$t('chooseReaction')" />
+		</FormButton>
+	</FormGroup>
+
+	<FormGroup>
+		<template #label>{{ $t('dangerousSettings') }}</template>
+		<FormButton @click="discardPostFormDraft"><Fa :icon="faTrashAlt"/> {{ $t('discardPostFormDraft') }}</MkButton>
+		<template #caption>{{ $t('discardPostFormDraftDescription') }}</template>
+	</FormGroup>
+</FormBase>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import MkSwitch from '@/components/ui/switch.vue';
-import MkSelect from '@/components/ui/select.vue';
-import MkButton from '@/components/ui/button.vue';
+import { defineAsyncComponent, defineComponent } from 'vue';
+import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
+import FormSwitch from '@/components/form/switch.vue';
+import FormSelect from '@/components/form/select.vue';
+import FormLink from '@/components/form/link.vue';
+import FormBase from '@/components/form/base.vue';
+import FormGroup from '@/components/form/group.vue';
+import FormButton from '@/components/form/button.vue';
 import * as os from '@/os';
 import { debug } from '@/config';
 
 export default defineComponent({
 	components: {
-		MkSwitch,
-		MkSelect,
-		MkButton,
+		FormBase,
+		FormSelect,
+		FormSwitch,
+		FormButton,
+		FormLink,
+		FormGroup,
 	},
 
 	data() {

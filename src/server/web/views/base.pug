@@ -60,6 +60,11 @@ html(style="--bg: #222222; --fg: white")
 				document.documentElement.classList.add('f-' + fontSize);
 			}
 
+			const useSystemFont = localStorage.getItem('useSystemFont');
+			if (useSystemFont) {
+				document.documentElement.classList.add('useSystemFont');
+			}
+
 			const wallpaper = localStorage.getItem('wallpaper');
 			if (wallpaper) {
 				document.documentElement.style.backgroundImage = `url(${wallpaper})`;

@@ -173,11 +173,6 @@ export class User {
 	})
 	public isPremium: boolean;
 
-	@Column('boolean', {
-		default: false,
-	})
-	public noindex: boolean;
-
 	@Column('varchar', {
 		length: 128, array: true, default: '{}'
 	})

@@ -1,29 +1,29 @@
 <template>
 <div class="vvcocwet" :class="{ wide: !narrow }" ref="el">
-	<div class="nav" v-if="!narrow || page == null">
-		<div class="menu">
-			<div class="label">{{ $t('basicSettings') }}</div>
-			<MkA v-for="i in basicPages" :key="i.name" class="item" :class="{ active: page === i.name }" replace :to="`/settings/${i.name}`">
-				<Fa :icon="i.icon" fixed-width class="icon"/> {{ i.title }}
-			</MkA>
-		</div>
-		<div class="menu">
-			<div class="label">{{ $t('clientSettings') }}</div>
-			<MkA v-for="i in clientPages" :key="i.name" class="item" :class="{ active: page === i.name }" replace :to="`/settings/${i.name}`">
-				<Fa :icon="i.icon" fixed-width class="icon"/> {{ i.title }}
-			</MkA>
-		</div>
-		<div class="menu">
-			<div class="label">{{ $t('otherSettings') }}</div>
-			<MkA v-for="i in otherPages" :key="i.name" class="item" :class="{ active: page === i.name }" replace :to="`/settings/${i.name}`">
-				<Fa :icon="i.icon" fixed-width class="icon"/> {{ i.title }}
-			</MkA>
-		</div>
-		<div class="menu">
-			<button class="_button item" @click="logout">{{ $t('logout') }}</button>
-			<button class="_button item" @click="logoutAll">{{ $t('logoutAll') }}</button>
-		</div>
-	</div>
+	<FormBase class="nav" v-if="!narrow || page == null" :force-wide="!narrow">
+		<FormGroup>
+			<template #label>{{ $t('basicSettings') }}</template>
+			<FormLink v-for="i in basicPages" :key="i.name" :active="page === i.name" replace :to="`/settings/${i.name}`">
+				<template #icon><Fa :icon="i.icon"/></template>{{ i.title }}
+			</FormLink>
+		</FormGroup>
+		<FormGroup>
+			<template #label>{{ $t('clientSettings') }}</template>
+			<FormLink v-for="i in clientPages" :key="i.name" :active="page === i.name" replace :to="`/settings/${i.name}`">
+				<template #icon><Fa :icon="i.icon"/></template>{{ i.title }}
+			</FormLink>
+		</FormGroup>
+		<FormGroup>
+			<template #label>{{ $t('otherSettings') }}</template>
+			<FormLink v-for="i in clientPages" :key="i.name" :active="page === i.name" replace :to="`/settings/${i.name}`">
+				<template #icon><Fa :icon="i.icon"/></template>{{ i.title }}
+			</FormLink>
+		</FormGroup>
+		<FormGroup>
+			<FormButton @click="logout" danger>{{ $t('logout') }}</FormButton>
+			<FormButton @click="logoutAll" danger>{{ $t('logoutAll') }}</FormButton>
+		</FormGroup>
+	</FormBase>
 	<div class="main">
 		<component :is="component"/>
 	</div>
@@ -31,14 +31,27 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell } from '@fortawesome/free-regular-svg-icons';
 import * as os from '@/os';
+import { store } from '@/store';
 import { i18n } from '@/i18n';
 import { pages } from './index.pages';
+import FormLink from '@/components/form/link.vue';
+import FormGroup from '@/components/form/group.vue';
+import FormBase from '@/components/form/base.vue';
+import FormButton from '@/components/form/button.vue';
+import { scroll } from '../../scripts/scroll';
 
 export default defineComponent({
+	components: {
+		FormBase,
+		FormLink,
+		FormGroup,
+		FormButton,
+	},
+
 	props: {
 		page: {
 			type: String,
@@ -65,8 +78,14 @@ export default defineComponent({
 			return page.value ? page.value.component() : null;
 		});
 
+		watch(component, () => {
+			nextTick(() => {
+				scroll(el.value, 0);
+			});
+		});
+
 		onMounted(() => {
-			narrow.value = el.value.offsetWidth < 650;
+			narrow.value = el.value.offsetWidth < 1025;
 		});
 
 		const logoutAll = () => {
@@ -89,7 +108,10 @@ export default defineComponent({
 			clientPages: pages.filter(p => p.type === 'client'),
 			otherPages: pages.filter(p => p.type === 'other'),
 			component,
-			logout: () => os.signout(),
+			logout: () => {
+				store.dispatch('logout');
+				location.href = '/';
+			},
 			logoutAll,
 			faLaugh, faBell
 		};
@@ -99,63 +121,19 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .vvcocwet {
-	> .nav {
-		> .menu {
-			margin: 16px 0;
-
-			> .label {
-				padding: 8px 32px;
-				font-size: 80%;
-				opacity: 0.7;
-			}
-
-			> .item {
-				display: block;
-				width: 100%;
-				box-sizing: border-box;
-				padding: 0 32px;
-				line-height: 40px;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				//background: var(--panel);
-				//border-bottom: solid 1px var(--divider);
-				transition: padding 0.2s ease, color 0.1s ease;
-
-				&:first-of-type {
-					//border-top: solid 1px var(--divider);
-				}
-
-				&.active {
-					color: var(--accent);
-					padding-left: 42px;
-				}
-
-				&:hover {
-					text-decoration: none;
-					padding-left: 42px;
-				}
-
-				> .icon {
-					margin-right: 0.5em;
-				}
-			}
-		}
-	}
-
 	&.wide {
 		display: flex;
+		max-width: 1100px;
+		margin: 0 auto;
 
 		> .nav {
-			width: 30%;
-			max-width: 300px;
-			font-size: 0.95em;
-			border-right: solid 1px var(--divider);
+			width: 32%;
+			box-sizing: border-box;
+			border-right: solid 0.5px var(--divider);
 		}
 
 		> .main {
 			flex: 1;
-			padding: 32px;
 			--baseContentWidth: 100%;
 
 			::v-deep(._section) {
