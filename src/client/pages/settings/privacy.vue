@@ -1,19 +1,20 @@
 <template>
 <FormBase>
 	<FormGroup>
-		<FormSwitch v-model:value="isLocked" @update:value="save()">{{ $t('makeFollowManuallyApprove') }}</FormSwitch>
+		<FormSwitch v-model:value="isLocked" :disabled="carefulBot" @update:value="save()">{{ $t('makeFollowManuallyApprove') }}</FormSwitch>
 		<FormSwitch v-model:value="carefulBot" :disabled="isLocked" @update:value="save()">{{ $t('makeBotFollowManuallyApprove') }}</FormSwitch>
-		<FormSwitch v-model:value="autoAcceptFollowed" :disabled="!isLocked" @update:value="save()">{{ $t('autoAcceptFollowed') }}</FormSwitch>
+		<FormSwitch v-model:value="autoAcceptFollowed" :disabled="!isLocked && !carefulBot" @update:value="save()">{{ $t('autoAcceptFollowed') }}</FormSwitch>
 		<template #caption>{{ $t('lockedAccountInfo') }}</template>
 	</FormGroup>
-	<FormSwitch v-model:value="hideFF" @update:value="save()">
-		{{ $t('hideFF') }}
-		<template #desc>{{ $t('hideFFDescription') }}</template>
-	</FormSwitch>
-	<FormSwitch v-model:value="noCrawle" @update:value="save()">
-		{{ $t('noCrawle') }}
-		<template #desc>{{ $t('noCrawleDescription') }}</template>
-	</FormSwitch>
+	<FormGroup>
+		<FormSwitch v-model:value="hideFF" @update:value="save()">
+			{{ $t('hideFF') }}
+		</FormSwitch>
+		<FormSwitch v-model:value="noCrawle" @update:value="save()">
+			{{ $t('noCrawle') }}
+			<template #desc>{{ $t('noCrawleDescription') }}</template>
+		</FormSwitch>
+	</FormGroup>
 	<FormSwitch v-model:value="rememberNoteVisibility" @update:value="save()">{{ $t('rememberNoteVisibility') }}</FormSwitch>
 	<FormGroup v-if="!rememberNoteVisibility">
 		<template #label>{{ $t('defaultNoteVisibility') }}</template>

@@ -2,21 +2,21 @@
 <FormBase>
 	<FormSwitch v-model:value="useDisplayNameForSidebar">{{ $t('useDisplayNameForSidebar') }}</FormSwitch>
 	
-	<FormGroup>
-		<div class="rfqxtzch _formItem _formPanel">
-			<XDraggable class="mcc329a0" :list="items" animation="150" delay="100" delay-on-touch-only="true">
-				<div class="item" v-for="item in items" :key="item">
-					<Fa v-if="!item.startsWith('-:')" class="icon" :icon="menuDef[item].icon" />
-					<span v-if="item.startsWith('-:')">-----------------</span>
-					<span v-else v-text="$t(menuDef[item] ? menuDef[item].title : item)"/>
-					<div class="del" @click="del(item)"><Fa :icon="faTimes" /></div>
-				</div>
-			</XDraggable>
-		</div>
-	</FormGroup>
+	<div class="mcc329a0 _formItem _formPanel">
+		<XDraggable class="draggable" :list="items" animation="150" delay="100" delay-on-touch-only="true">
+			<div class="item" v-for="item in items" :key="item">
+				<Fa v-if="!item.startsWith('-:')" class="icon" :icon="menuDef[item].icon" />
+				<span v-if="item.startsWith('-:')">-----------------</span>
+				<span v-else v-text="$t(menuDef[item] ? menuDef[item].title : item)"/>
+				<div class="del" @click="del(item)"><Fa :icon="faTimes" /></div>
+			</div>
+		</XDraggable>
+	</div>
 
-	<FormButton @click="additem" primary><Fa :icon="faPlus"/> {{ $t('add') }}</FormButton>
-	<FormButton @click="reset()" danger><Fa :icon="faRedo"/> {{ $t('default') }}</FormButton>
+	<FormTuple>
+		<FormButton @click="addItem" primary><Fa :icon="faPlus"/> {{ $t('add') }}</FormButton>
+		<FormButton @click="reset()" danger><Fa :icon="faRedo"/> {{ $t('default') }}</FormButton>
+	</FormTuple>
 </FormBase>
 </template>
 
@@ -26,10 +26,9 @@ import { faListUl, faRedo, faPlus, faTimes } from '@fortawesome/free-solid-svg-i
 import { v4 as uuid } from 'uuid';
 import { VueDraggableNext } from 'vue-draggable-next';
 import FormSwitch from '@/components/form/switch.vue';
-import FormTextarea from '@/components/form/textarea.vue';
 import FormRadios from '@/components/form/radios.vue';
 import FormBase from '@/components/form/base.vue';
-import FormGroup from '@/components/form/group.vue';
+import FormTuple from '@/components/form/tuple.vue';
 import FormButton from '@/components/form/button.vue';
 import { defaultDeviceUserSettings } from '@/store';
 import * as os from '@/os';
@@ -39,9 +38,10 @@ export default defineComponent({
 	components: {
 		XDraggable: VueDraggableNext,
 		FormBase,
+		FormSwitch,
 		FormButton,
-		FormTextarea,
 		FormRadios,
+		FormTuple,
 	},
 
 	emits: ['info'],
@@ -116,8 +116,11 @@ export default defineComponent({
 <style lang="scss" scoped>
 
 .mcc329a0 {
-	display: flex;
-	flex-direction: column;
+	padding: 16px;
+	> .draggable {
+		display: flex;
+		flex-direction: column;
+	}
 }
 
 .item, .otherItem {

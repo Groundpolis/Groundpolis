@@ -1,24 +1,5 @@
 <template>
 <FormBase>
-	<FormSelect v-model:value="lightTheme" v-if="!darkMode">
-		<template #label>{{ $t('themeForLightMode') }}</template>
-		<optgroup :label="$t('lightThemes')">
-			<option v-for="x in lightThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
-		</optgroup>
-		<optgroup :label="$t('darkThemes')">
-			<option v-for="x in darkThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
-		</optgroup>
-	</FormSelect>
-	<FormSelect v-model:value="darkTheme" v-else>
-		<template #label>{{ $t('themeForDarkMode') }}</template>
-		<optgroup :label="$t('darkThemes')">
-			<option v-for="x in darkThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
-		</optgroup>
-		<optgroup :label="$t('lightThemes')">
-			<option v-for="x in lightThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
-		</optgroup>
-	</FormSelect>
-
 	<FormGroup>
 		<div class="rfqxtzch _formItem _formPanel">
 			<div class="darkMode" :class="{ disabled: syncDeviceDarkMode }">
@@ -44,6 +25,25 @@
 		</div>
 		<FormSwitch v-model:value="syncDeviceDarkMode">{{ $t('syncDeviceDarkMode') }}</FormSwitch>
 	</FormGroup>
+
+	<FormSelect v-model:value="lightTheme">
+		<template #label>{{ $t('themeForLightMode') }}</template>
+		<optgroup :label="$t('lightThemes')">
+			<option v-for="x in lightThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
+		</optgroup>
+		<optgroup :label="$t('darkThemes')">
+			<option v-for="x in darkThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
+		</optgroup>
+	</FormSelect>
+	<FormSelect v-model:value="darkTheme">
+		<template #label>{{ $t('themeForDarkMode') }}</template>
+		<optgroup :label="$t('darkThemes')">
+			<option v-for="x in darkThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
+		</optgroup>
+		<optgroup :label="$t('lightThemes')">
+			<option v-for="x in lightThemes" :value="x.id" :key="x.id">{{ x.name }}</option>
+		</optgroup>
+	</FormSelect>
 
 	<FormButton primary v-if="wallpaper == null" @click="setWallpaper">{{ $t('setWallpaper') }}</FormButton>
 	<FormButton primary v-else @click="wallpaper = null">{{ $t('removeWallpaper') }}</FormButton>

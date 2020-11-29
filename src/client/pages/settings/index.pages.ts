@@ -1,7 +1,7 @@
 import { Component, defineAsyncComponent } from 'vue';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-import { faPalette, faPlug, faUser, faListUl, faLock, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish, faCommentSlash, faMagic, faColumns, faStream } from '@fortawesome/free-solid-svg-icons';
+import { faPalette, faPlug, faUser, faListUl, faLock, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish, faCommentSlash, faMagic, faColumns, faStream, faDownload, faFolderOpen, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell } from '@fortawesome/free-regular-svg-icons';
 
 import { i18n } from '@/i18n';
@@ -9,9 +9,9 @@ import { i18n } from '@/i18n';
 export type PageDefinition = {
 	component: () => Component,
 	name: string,
-	type: 'basic' | 'client' | 'other',
-	title: string,
-	icon: IconProp,
+	type: 'basic' | 'client' | 'other' | 'hidden',
+	title?: string,
+	icon?: IconProp,
 };
 
 const t = i18n.global.t;
@@ -38,18 +38,18 @@ export const pages: PageDefinition[] = [
 		component: () => defineAsyncComponent(() => import('./reaction.vue')),
 	},
 	{
-		name: 'timeline',
-		icon: faStream,
-		title: t('timeline'),
-		type: 'basic',
-		component: () => defineAsyncComponent(() => import('./timeline.vue')),
-	},
-	{
 		name: 'notifications',
 		icon: faBell,
 		title: t('notifications'),
 		type: 'basic',
 		component: () => defineAsyncComponent(() => import('./notifications.vue')),
+	},
+	{
+		name: 'email',
+		icon: faUser,
+		title: t('email'),
+		type: 'basic',
+		component: () => defineAsyncComponent(() => import('./email.vue')),
 	},
 	{
 		name: 'integration',
@@ -65,27 +65,19 @@ export const pages: PageDefinition[] = [
 		type: 'basic',
 		component: () => defineAsyncComponent(() => import('./security.vue')),
 	},
-
 	{
-		name: 'behavior',
+		name: 'general',
 		icon: faCogs,
-		title: t('behavior'),
+		title: t('general'),
 		type: 'client',
 		component: () => defineAsyncComponent(() => import('./general.vue')),
 	},
 	{
-		name: 'appearance',
-		icon: faMagic,
-		title: t('appearance'),
+		name: 'timeline',
+		icon: faStream,
+		title: t('timeline'),
 		type: 'client',
-		component: () => defineAsyncComponent(() => import('./appearance.vue')),
-	},
-	{
-		name: 'deck',
-		icon: faColumns,
-		title: t('deck'),
-		type: 'client',
-		component: () => defineAsyncComponent(() => import('./deck.vue')),
+		component: () => defineAsyncComponent(() => import('./timeline.vue')),
 	},
 	{
 		name: 'theme',
@@ -163,5 +155,38 @@ export const pages: PageDefinition[] = [
 		title: t('other'),
 		type: 'other',
 		component: () => defineAsyncComponent(() => import('./other.vue')),
+	},
+	{
+		name: 'email/address',
+		type: 'hidden',
+		component: () => defineAsyncComponent(() => import('./email-address.vue')),
+	},
+	{
+		name: '2fa',
+		type: 'hidden',
+		title: t('twoStepAuthentication'),
+		icon: faLock,
+		component: () => defineAsyncComponent(() => import('./2fa.vue')),
+	},
+	{
+		name: 'theme/install',
+		type: 'hidden',
+		title: t('_theme.install'),
+		icon: faDownload,
+		component: () => defineAsyncComponent(() => import('./theme.install.vue')),
+	},
+	{
+		name: 'theme/manage',
+		type: 'hidden',
+		title: t('_theme.manage'),
+		icon: faFolderOpen,
+		component: () => defineAsyncComponent(() => import('./theme.manage.vue')),
+	},
+	{
+		name: 'account-info',
+		type: 'hidden',
+		title: t('accountInfo'),
+		icon: faInfoCircle,
+		component: () => defineAsyncComponent(() => import('./account-info.vue')),
 	},
 ];

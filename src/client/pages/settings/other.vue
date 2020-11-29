@@ -6,10 +6,8 @@
 		<FormSwitch v-model:value="debug" @update:value="changeDebug">
 			DEBUG MODE
 		</FormSwitch>
-		<template>
-			<FormLink to="/regedit">RegEdit</FormLink>
-			<FormButton @click="taskmanager">Task Manager</FormButton>
-		</template>
+		<FormLink to="/settings/regedit">RegEdit</FormLink>
+		<FormButton @click="taskmanager">Task Manager</FormButton>
 	</FormGroup>
 
 	<FormGroup>
@@ -28,7 +26,7 @@
 
 	<FormGroup>
 		<template #label>{{ $t('dangerousSettings') }}</template>
-		<FormButton @click="discardPostFormDraft"><Fa :icon="faTrashAlt"/> {{ $t('discardPostFormDraft') }}</MkButton>
+		<FormButton @click="discardPostFormDraft"><Fa :icon="faTrashAlt"/> {{ $t('discardPostFormDraft') }}</FormButton>
 		<template #caption>{{ $t('discardPostFormDraftDescription') }}</template>
 	</FormGroup>
 </FormBase>
@@ -36,7 +34,7 @@
 
 <script lang="ts">
 import { defineAsyncComponent, defineComponent } from 'vue';
-import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisH, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import FormSwitch from '@/components/form/switch.vue';
 import FormSelect from '@/components/form/select.vue';
 import FormLink from '@/components/form/link.vue';

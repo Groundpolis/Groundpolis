@@ -5,13 +5,6 @@
 	<FormSelect v-model:value="lang">
 		<template #label>{{ $t('uiLanguage') }}</template>
 		<option v-for="x in langs" :value="x[0]" :key="x[0]">{{ x[1] }}</option>
-		<template #caption>
-			<i18n-t keypath="i18nInfo" tag="span">
-				<template #link>
-					<MkLink url="https://crowdin.com/project/misskey">Crowdin</MkLink>
-				</template>
-			</i18n-t>
-		</template>
 	</FormSelect>
 
 	<FormGroup>
@@ -39,7 +32,22 @@
 		<FormSwitch v-model:value="useOsNativeEmojis">{{ $t('useOsNativeEmojis') }}
 			<div><Mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></div>
 		</FormSwitch>
+		<FormSwitch v-model:value="collapseLongNote">{{ $t('collapseLongNote') }}</FormSwitch>
+		<FormSwitch v-model:value="useDisplayNameForSidebar">{{ $t('useDisplayNameForSidebar') }}</FormSwitch>
+		<FormSwitch v-model:value="useSticker">
+			{{ $t('useSticker') }}
+			<template #desc>{{$t('useStickerDesc')}}</template>
+		</FormSwitch>
 	</FormGroup>
+
+	<FormSwitch v-model:value="makeCustomEmojisBigger">
+		{{ $t('makeCustomEmojisBigger') }}
+		<template #desc>{{$t('makeCustomEmojisBiggerDesc')}}</template>
+	</FormSwitch>
+	<FormSwitch v-model:value="showFullAcct">
+		{{ $t('showFullAcct') }}
+		<template #desc><MkAcct :user="$store.state.i"/></template>
+	</FormSwitch>
 
 	<FormRadios v-model="fontSize">
 		<template #desc>{{ $t('fontSize') }}</template>
@@ -62,6 +70,34 @@
 		<option value="ignore">{{ $t('_nsfw.ignore') }}</option>
 		<option value="force">{{ $t('_nsfw.force') }}</option>
 	</FormSelect>
+	
+	<FormSelect v-model:value="noteNameDisplayMode">
+		<template #label>{{ $t('noteNameDisplayMode') }}</template>
+		<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $t(x) }}</option>
+		<template #caption>
+			<span v-if="noteNameDisplayMode === 0">
+				<b style="margin-right: 1em">{{ $store.state.i.name || $store.state.i.username }}</b>
+				<MkAcct :user="$store.state.i"/>
+			</span>
+			<span v-else>
+				<MkAcct v-if="noteNameDisplayMode !== 2" style="margin-right: 1em" :user="$store.state.i"/>
+				<b v-if="noteNameDisplayMode !== 3">{{ $store.state.i.name || $store.state.i.username }}</b>
+			</span>
+		</template>
+	</FormSelect>
+
+	<FormGroup>
+		<FormRadios v-model="iconShape">
+			<template #desc>{{ $t('iconShape') }}</template>
+			<option value="circle">{{ $t('_iconShape.circle') }}</option>
+			<option value="square">{{ $t('_iconShape.square') }}</option>
+			<option value="rounded">{{ $t('_iconShape.rounded') }}</option>
+			<option value="droplet">{{ $t('_iconShape.droplet') }}</option>
+		</FormRadios>
+		<div class="_formItem _formPanel" style="padding: 16px;">
+			<MkAvatar disable-link disable-preview :user="$store.state.i" class="avatar"/>
+		</div>
+	</FormGroup>
 
 	<FormGroup>
 		<template #label>{{ $t('defaultNavigationBehaviour') }}</template>
@@ -199,6 +235,36 @@ export default defineComponent({
 			get() { return this.$store.state.device.enableInfiniteScroll; },
 			set(value) { this.$store.commit('device/set', { key: 'enableInfiniteScroll', value }); }
 		},
+		
+		makeCustomEmojisBigger: {
+			get() { return this.$store.state.device.makeCustomEmojisBigger; },
+			set(value) { this.$store.commit('device/set', { key: 'makeCustomEmojisBigger', value: value }); }
+		},
+
+		useSticker: {
+			get() { return this.$store.state.device.useSticker; },
+			set(value) { this.$store.commit('device/set', { key: 'useSticker', value: value }); }
+		},
+
+		collapseLongNote: {
+			get() { return this.$store.state.device.collapseLongNote },
+			set(value) { this.$store.commit('device/set', { key: 'collapseLongNote', value }); }
+		},
+
+		noteNameDisplayMode: {
+			get() { return this.$store.state.device.noteNameDisplayMode },
+			set(value) { this.$store.commit('device/set', { key: 'noteNameDisplayMode', value }) }
+		},
+
+		showFullAcct: {
+			get() { return this.$store.state.settings.showFullAcct },
+			set(value) { this.$store.dispatch('settings/set', { key: 'showFullAcct', value }) }
+		},
+
+		iconShape: {
+			get() { return this.$store.state.device.iconShape; },
+			set(value) { this.$store.commit('device/set', { key: 'iconShape', value }); }
+		},
 	},
 
 	watch: {
@@ -260,3 +326,12 @@ export default defineComponent({
 	}
 });
 </script>
+
+<style lang="scss" scoped>
+	.avatar {
+		// for NEKOMIMI
+		margin-top: 32px;
+		width: 64px;
+		height: 64px;
+	}
+</style>

@@ -1,28 +1,33 @@
 <template>
-<div class="_section">
-	<section class="_card">
-		<div class="_content">
-			<MkTextarea v-model:value="faces">{{ $t('gachaFaces') }}<template #desc>{{ $t('gachaSettingDescription') }}</template></MkTextarea>
-		</div>
-		<div class="_footer">
-			<MkButton @click="reset()" inline><fa :icon="faUndo"/> {{ $t('default') }}</MkButton>
-			<MkButton @click="save()" primary inline :disabled="!changed"><fa :icon="faSave"/> {{ $t('save') }}</MkButton>
-		</div>
-	</section>
-</div>
+<FormBase>
+	<FormTextarea v-model:value="faces" :max="500">
+		<span>{{ $t('gachaFaces') }}</span>
+		<template #desc>{{ $t('gachaSettingDescription') }}</template>
+	</FormTextarea>
+	<FormTuple>
+		<FormButton @click="reset()"><fa :icon="faUndo"/> {{ $t('default') }}</FormButton>
+		<FormButton @click="save()" primary :disabled="!changed"><fa :icon="faSave"/> {{ $t('save') }}</FormButton>
+	</FormTuple>
+</FormBase>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
-import MkTextarea from '../../components/ui/textarea.vue';
-import MkButton from '../../components/ui/button.vue';
+import FormTextarea from '../../components/form/textarea.vue';
+import FormBase from '../../components/form/base.vue';
+import FormGroup from '../../components/form/group.vue';
+import FormTuple from '../../components/form/tuple.vue';
+import FormButton from '../../components/form/button.vue';
 import defaultFaces from '../../scripts/default-faces';
 export default defineComponent({
 	components: {
-		MkTextarea,
-		MkButton,
+		FormTextarea,
+		FormBase,
+		FormButton,
+		FormGroup,
+		FormTuple,
 	},
 	
 	data() {

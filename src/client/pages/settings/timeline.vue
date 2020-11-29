@@ -1,19 +1,17 @@
 <template>
-<div class="_section">
-	<div class="_card _vMargin">
-		<div class="_content">
-			<MkSwitch v-model:value="$store.state.i.injectFeaturedNote" @update:value="onChangeInjectFeaturedNote">
-				{{ $t('showFeaturedNotesInTimeline') }}
-			</MkSwitch>
-			<MkSwitch v-model:value="injectUnlistedNoteInLTL">
-				{{ $t('showUnlistedNotesInLTL') }}
-				<template #desc>{{ $t('showUnlistedNotesInLTLDesc') }}</template>
-			</MkSwitch>
-		</div>
-	</div>
-	<div class="_card _vMargin">
-		<div class="_title" v-text="$t('pinnedTimeline')"/>
-		<div class="_content">
+<FormBase>
+	<FormGroup>
+		<FormSwitch v-model:value="$store.state.i.injectFeaturedNote" @update:value="onChangeInjectFeaturedNote">
+			{{ $t('showFeaturedNotesInTimeline') }}
+		</FormSwitch>
+		<FormSwitch v-model:value="injectUnlistedNoteInLTL">
+			{{ $t('showUnlistedNotesInLTL') }}
+			<template #desc>{{ $t('showUnlistedNotesInLTLDesc') }}</template>
+		</FormSwitch>
+	</FormGroup>
+	<FormGroup>
+		<div class="_formItem _formPanel" style="padding: 16px;">
+			<h2>{{ $t('pinnedTimeline') }}</h2>
 			<div class="_caption" v-if="items.length > 0" style="padding-bottom: 8px;">{{ $t('pinnedTimelineDescription') }}</div>
 			<XDraggable class="vmievna2" :list="items" animation="150" delay="100" delay-on-touch-only="true">
 				<div class="item" v-for="item in items" :key="item">
@@ -28,29 +26,29 @@
 				{{ timelineMenuMap[item].name }}
 			</div>
 		</div>
-		<div class="_footer">
-			<MkButton inline @click="reset"><Fa :icon="faUndo"/> {{ $t('default') }}</MkButton>
-		</div>
-	</div>
-</div>
+	</FormGroup>
+	<FormButton @click="reset" danger><Fa :icon="faRedo"/> {{ $t('default') }}</FormButton>
+</FormBase>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { faTimes, faBars, faUndo, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { VueDraggableNext } from 'vue-draggable-next';
-import MkInput from '@/components/ui/input.vue';
-import MkButton from '@/components/ui/button.vue';
-import MkSwitch from '@/components/ui/switch.vue';
+import FormGroup from '@/components/form/group.vue';
+import FormSwitch from '@/components/form/switch.vue';
+import FormBase from '@/components/form/base.vue';
+import FormButton from '@/components/form/button.vue';
 import { timelineMenuMap, timelineMenuSources } from '../../menus/timeline';
 import { defaultDeviceSettings } from '@/store';
 import * as os from '@/os';
 
 export default defineComponent({
 	components: {
-		MkInput,
-		MkButton,
-		MkSwitch,
+		FormBase,
+		FormSwitch,
+		FormGroup,
+		FormButton,
 		XDraggable: VueDraggableNext,
 	},
 

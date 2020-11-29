@@ -18,7 +18,7 @@
 			</MkRadios>
 		</div>
 	</section>
-</div>
+</FormBase>
 </template>
 
 <script lang="ts">

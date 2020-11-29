@@ -1,35 +1,25 @@
 <template>
-<div>
-	<div class="_section _vMargin">
-		<div class="_content">
-			<p v-text="$t('_labs.description')"/>
-		</div>
-		<div class="_card _vMargin">
-			<div class="_content">
-				{{ $t('_labs.notAvailable') }}
-			</div>
-		</div>
+<FormBase>
+	<div class="_formItem">
+		{{ $t('_labs.description') }}
 	</div>
-</div>
+	<div class="_formItem _formPanel" style="padding: 16px;">
+		{{ $t('_labs.notAvailable') }}
+	</div>
+</FormBase>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import MkSwitch from '@/components/ui/switch.vue';
-import MkButton from '@/components/ui/button.vue';
+import FormBase from '@/components/form/base.vue';
 
 export default defineComponent({
 	components: {
-		MkSwitch,
-		MkButton,
+		FormBase,
 	},
 
 	computed: {
-		injectUnlistedNoteInLTL: {
-			get() { return this.$store.state.settings.injectUnlistedNoteInLTL; },
-			set(value) { this.$store.dispatch('settings/set', { key: 'injectUnlistedNoteInLTL', value }); }
-		},
 	},
 
 	watch: {

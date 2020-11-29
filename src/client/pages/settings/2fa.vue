@@ -78,6 +78,7 @@ import FormBase from '@/components/form/base.vue';
 import FormGroup from '@/components/form/group.vue';
 import FormButton from '@/components/form/button.vue';
 import * as os from '@/os';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
 
 export default defineComponent({
 	components: {

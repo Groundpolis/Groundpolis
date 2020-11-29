@@ -15,7 +15,7 @@
 		</FormGroup>
 		<FormGroup>
 			<template #label>{{ $t('otherSettings') }}</template>
-			<FormLink v-for="i in clientPages" :key="i.name" :active="page === i.name" replace :to="`/settings/${i.name}`">
+			<FormLink v-for="i in otherPages" :key="i.name" :active="page === i.name" replace :to="`/settings/${i.name}`">
 				<template #icon><Fa :icon="i.icon"/></template>{{ i.title }}
 			</FormLink>
 		</FormGroup>

@@ -37,9 +37,30 @@
 	</FormSelect>
 
 	<FormGroup>
-		<FormButton @click="editMetadata" primary>{{ $t('_profile.metadataEdit') }}</FormButton>
+		<template #label>{{ $t('_profile.metadata') }}</template>
+		<FormTuple>
+			<FormInput :placeholder="$t('_profile.metadataLabel')" v-model:value="fieldName0" />
+			<FormInput :placeholder="$t('_profile.metadataContent')" v-model:value="fieldValue0" />
+		</FormTuple>
+		<FormTuple>
+			<FormInput :placeholder="$t('_profile.metadataLabel')" v-model:value="fieldName1" />
+			<FormInput :placeholder="$t('_profile.metadataContent')" v-model:value="fieldValue1" />
+		</FormTuple>
+		<FormTuple>
+			<FormInput :placeholder="$t('_profile.metadataLabel')" v-model:value="fieldName2" />
+			<FormInput :placeholder="$t('_profile.metadataContent')" v-model:value="fieldValue2" />
+		</FormTuple>
+		<FormTuple>
+			<FormInput :placeholder="$t('_profile.metadataLabel')" v-model:value="fieldName3" />
+			<FormInput :placeholder="$t('_profile.metadataContent')" v-model:value="fieldValue3" />
+		</FormTuple>
 		<template #caption>{{ $t('_profile.metadataDescription') }}</template>
 	</FormGroup>
+
+	<!-- <FormGroup>
+		<FormButton @click="editMetadata" primary>{{ $t('_profile.metadataEdit') }}</FormButton>
+		<template #caption>{{ $t('_profile.metadataDescription') }}</template>
+	</FormGroup> -->
 
 	<FormSwitch v-model:value="isCat">{{ $t('flagAsCat') }}<template #desc>{{ $t('flagAsCatDescription') }}</template></FormSwitch>
 
@@ -91,6 +112,7 @@ export default defineComponent({
 			name: null,
 			description: null,
 			birthday: null,
+			gender: null,
 			location: null,
 			fieldName0: null,
 			fieldValue0: null,
@@ -115,6 +137,7 @@ export default defineComponent({
 		this.description = this.$store.state.i.description;
 		this.location = this.$store.state.i.location;
 		this.birthday = this.$store.state.i.birthday;
+		this.gender = this.$store.state.i.sex;
 		this.avatarId = this.$store.state.i.avatarId;
 		this.bannerId = this.$store.state.i.bannerId;
 		this.isBot = this.$store.state.i.isBot;
@@ -228,14 +251,23 @@ export default defineComponent({
 		save(notify) {
 			this.saving = true;
 
+			const fields = [
+				{ name: this.fieldName0, value: this.fieldValue0 },
+				{ name: this.fieldName1, value: this.fieldValue1 },
+				{ name: this.fieldName2, value: this.fieldValue2 },
+				{ name: this.fieldName3, value: this.fieldValue3 },
+			];
+
 			os.api('i/update', {
 				name: this.name || null,
 				description: this.description || null,
 				location: this.location || null,
 				birthday: this.birthday || null,
+				sex: this.gender || null,
 				isBot: !!this.isBot,
 				isCat: !!this.isCat,
 				alwaysMarkNsfw: !!this.alwaysMarkNsfw,
+				fields,
 			}).then(i => {
 				this.saving = false;
 				this.$store.state.i.avatarId = i.avatarId;
