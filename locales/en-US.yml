@@ -753,7 +753,20 @@ noteFavoritesCount: "Amount of favorite notes"
 pageLikesCount: "Amount of received Page likes"
 pageLikedCount: "Amount of liked Pages"
 reversiCount: "Number of Reversi matches"
-
+contact: "Contact"
+useSystemFont: "Use the system's default font"
+clips: "Clip"
+_aboutMisskey:
+  about: "Groundpolis is open-source software being developed based on Misskey since 2019."
+  contributors: "Main contributors"
+  contributorsMisskey: "Main contributors of Misskey"
+  allContributors: "All contributors"
+  source: "Source code"
+  sourceMisskey: "Source code of Misskey"
+  translation: "Groundpolis Misskey"
+  donate: "Donate to Misskey"
+  morePatrons: "We really appreciate the support of many other helpers not listed here. Thank you! 🥰"
+  patrons: "Backers of the Misskey Project"
 _nsfw:
   respect: "Hide NSFW media"
   ignore: "Don't hide NSFW media"
@@ -764,12 +777,37 @@ _mfmpad:
   link: "Link"
   noUrlPreview: "Do not expand as a URL preview"
   noUrlPreviewDesc: "Mark this link as non-target of URL preview. Several remote instances may ignore this setting."
+  functions: "Functions"
+  functionsBuilder: "Functions Builder"
+  _functions:
+    kind: "Kind"
+    args: "Arguments"
+    text: "Text"
+    speed: "Speed"
+    spinSpeedDescription: "Specify the time to rotate one."
+    angle: "Angle"
+    rotateAngleDescription: "Specify the angle of rotation as a number."
+    color: "Color"
+    fontColorDescription: "Specify the font color by HTML color (e.g. #AABBCC), or color name(e.g. red, blue)."
+    size: "Size"
+    fontSizeDescription: "Specify the font size. You can use px, pt, em, etc as unit."
+    xspin: "X-axis"
+    yspin: "Y-axis"
+    vflip: "Flip virtically"
+    hflip: "Flip horizontally"
+    spinLeft: "Left"
+    spinAlternate: "Alternate"
 
 _renoteButtonMode:
   choose: "Choose always"
   renote: "Renote"
   quote: "Open a form to quote"
   renoteQuote: "Renote and open a form to quote"
+
+_labs:
+  title: "Labs"
+  description: "Why don't you test Groundpolis' new features in development? You can enable new features and improvements in development."
+  notAvailable: "There are no available features now."
 
 _mfm:
   cheatSheet: "GPFM Cheatsheet"
@@ -902,6 +940,7 @@ _paint:
     rectFill: "Rectangle Fill"
     circle: "Circle"
     circleFill: "Circle Fill"
+    pixel: "Pixel Pen"
 _wordMute:
   muteWords: "Word to mute"
   muteWordsDescription: "Separate with spaces for AND condition. Separate with line breaks for OR."
@@ -1179,6 +1218,8 @@ _profile:
   metadataDescription: "You can display up to four additional information sections in your profile."
   metadataLabel: "Label"
   metadataContent: "Content"
+  changeAvatar: "Change avatar"
+  changeBanner: "Change banner"
 _exportOrImport:
   allNotes: "All notes"
   followingList: "Following"

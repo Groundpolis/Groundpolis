@@ -801,6 +801,9 @@ pageLikedCount: "Pageにいいねされた数"
 reversiCount: "リバーシの対局数"
 contact: "連絡先"
 useSystemFont: "システムのデフォルトのフォントを使う"
+clips: "クリップ"
+experimentalFeatures: "実験的機能"
+developer: "開発者"
 
 _aboutMisskey:
   about: "Groundpolis は、Misskeyをベースに2019年から開発中のミニブログソフトウェアです。"
@@ -854,12 +857,7 @@ _renoteButtonMode:
 _labs:
   title: "ラボ"
   description: "Groundpolis の開発中の新機能をテストしてみませんか。このページでは、開発中の新機能や仕様変更を有効化し、体験することができます。"
-  feedback: "使用中に問題が発生したり、不便な点などがあった場合は、{xeltica} にご連絡ください。"
   notAvailable: "現在利用可能な機能はありません。"
-  newMobileView: "新しいモバイル インターフェイス"
-  newMobileViewDescription: "生まれ変わったモバイル版のビューに切り替えましょう。このスイッチをオンにすると、モバイル版の新しいユーザーインターフェイスをいち早く体験できます。"
-  newAnnouncementUI: "新しい「お知らせ」UIを試す"
-  newAnnouncementUIDesc: "お知らせ UIを現在の専用ページ + タイムライン上部への強制表示から、タイムラインタブの最右へのボタン表示に切り替えます。未読のお知らせがある場合はバッジが付きます。"
 
 _mfm:
   cheatSheet: "GPFMチートシート"
@@ -1320,6 +1318,8 @@ _profile:
   metadataDescription: "プロフィールに表として4つまでの追加情報を表示することができます。"
   metadataLabel: "ラベル"
   metadataContent: "内容"
+  changeAvatar: "アバター画像を変更"
+  changeBanner: "バナー画像を変更"
 
 _exportOrImport:
   allNotes: "全てのノート"
