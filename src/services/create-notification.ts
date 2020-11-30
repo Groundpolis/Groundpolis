@@ -41,7 +41,8 @@ export async function createNotification(
 		if (!fresh.isRead) {
 			//#region ただしミュートしているユーザーからの通知なら無視
 			const mutings = await Mutings.find({
-				muterId: notifieeId
+				muterId: notifieeId,
+				isRenoteOnly: false,
 			});
 			if (data.notifierId && mutings.map(m => m.muteeId).includes(data.notifierId)) {
 				return;
