@@ -2,7 +2,7 @@ import { publishNoteStream } from '../../stream';
 import { renderLike } from '../../../remote/activitypub/renderer/like';
 import DeliverManager from '../../../remote/activitypub/deliver-manager';
 import { renderActivity } from '../../../remote/activitypub/renderer';
-import { toDbReaction, decodeReaction } from '../../../misc/reaction-lib';
+import { toDbReaction, decodeReaction, getFallbackReaction } from '../../../misc/reaction-lib';
 import { User, IRemoteUser } from '../../../models/entities/user';
 import { Note } from '../../../models/entities/note';
 import { NoteReactions, Users, NoteWatchings, Notes, Emojis } from '../../../models';
@@ -13,7 +13,9 @@ import { createNotification } from '../../create-notification';
 import deleteReaction from './delete';
 
 export default async (user: User, note: Note, reaction?: string, isDislike = false) => {
-	reaction = await toDbReaction(reaction, user.host);
+	const dbReaction = await toDbReaction(reaction, user.host);
+	reaction = dbReaction ? dbReaction : await getFallbackReaction();
+	const isFallback = !dbReaction;
 
 	const exist = await NoteReactions.findOne({
 		noteId: note.id,
@@ -104,7 +106,7 @@ export default async (user: User, note: Note, reaction?: string, isDislike = fal
 
 	//#region 配信
 	if (Users.isLocalUser(user) && !note.localOnly) {
-		const content = renderActivity(await renderLike(inserted, note));
+		const content = renderActivity(await renderLike(inserted, note, isFallback));
 		const dm = new DeliverManager(user, content);
 		if (note.userHost !== null) {
 			const reactee = await Users.findOne(note.userId);

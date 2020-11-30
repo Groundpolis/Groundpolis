@@ -26,7 +26,7 @@ export const meta = {
 		},
 
 		reaction: {
-			validator: $.str,
+			validator: $.optional.str,
 			desc: {
 				'ja-JP': 'リアクションの種類'
 			}

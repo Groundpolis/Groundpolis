@@ -4,7 +4,7 @@ import { Note } from '../../../models/entities/note';
 import { Emojis } from '../../../models';
 import renderEmoji from './emoji';
 
-export const renderLike = async (noteReaction: NoteReaction, note: Note) => {
+export const renderLike = async (noteReaction: NoteReaction, note: Note, isFallback: boolean = false) => {
 	const reaction = noteReaction.reaction;
 
 	const object =  {
@@ -12,9 +12,11 @@ export const renderLike = async (noteReaction: NoteReaction, note: Note) => {
 		id: `${config.url}/likes/${noteReaction.id}`,
 		actor: `${config.url}/users/${noteReaction.userId}`,
 		object: note.uri ? note.uri : `${config.url}/notes/${noteReaction.noteId}`,
-		content: reaction,
-		_misskey_reaction: reaction
 	} as any;
+
+	if (!isFallback) {
+		object.content = object._misskey_reaction = reaction;
+	}
 
 	if (reaction.startsWith(':')) {
 		const name = reaction.replace(/:/g, '');
