@@ -38,7 +38,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-	.doc {
+	.doc > a {
+		display: block;
 		padding: 16px;
 	}
 </style>
