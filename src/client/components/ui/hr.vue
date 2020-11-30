@@ -9,8 +9,8 @@ export default defineComponent({});
 </script>
 
 <style lang="scss" scoped>
-.evrzpitu
-	margin 16px 0
-	border-bottom solid var(--lineWidth) var(--faceDivider)
-
+.evrzpitu {
+	margin: 16px 0;
+	border-bottom: solid var(--lineWidth) var(--faceDivider);
+}
 </style>

@@ -189,4 +189,17 @@ export const pages: PageDefinition[] = [
 		icon: faInfoCircle,
 		component: () => defineAsyncComponent(() => import('./account-info.vue')),
 	},
+	{
+		name: 'deck',
+		type: 'hidden',
+		title: t('deck'),
+		icon: faColumns,
+		component: () => defineAsyncComponent(() => import('./deck.vue')),
+	},
+	{
+		name: 'regedit',
+		type: 'hidden',
+		title: 'Registry Editor',
+		component: () => defineAsyncComponent(() => import('../regedit.vue')),
+	},
 ];

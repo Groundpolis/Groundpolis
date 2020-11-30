@@ -34,19 +34,17 @@
 		</FormSwitch>
 		<FormSwitch v-model:value="collapseLongNote">{{ $t('collapseLongNote') }}</FormSwitch>
 		<FormSwitch v-model:value="useDisplayNameForSidebar">{{ $t('useDisplayNameForSidebar') }}</FormSwitch>
-		<FormSwitch v-model:value="useSticker">
-			{{ $t('useSticker') }}
-			<template #desc>{{$t('useStickerDesc')}}</template>
+		<FormSwitch v-model:value="useSticker">{{ $t('useSticker') }}
+			<div>{{$t('useStickerDesc')}}</div>
+		</FormSwitch>
+		<FormSwitch v-model:value="showFullAcct">{{ $t('showFullAcct') }}
+			<div><MkAcct :user="$store.state.i"/></div>
 		</FormSwitch>
 	</FormGroup>
 
 	<FormSwitch v-model:value="makeCustomEmojisBigger">
 		{{ $t('makeCustomEmojisBigger') }}
 		<template #desc>{{$t('makeCustomEmojisBiggerDesc')}}</template>
-	</FormSwitch>
-	<FormSwitch v-model:value="showFullAcct">
-		{{ $t('showFullAcct') }}
-		<template #desc><MkAcct :user="$store.state.i"/></template>
 	</FormSwitch>
 
 	<FormRadios v-model="fontSize">
