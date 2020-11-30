@@ -1,7 +1,7 @@
 <template>
 <FormBase>
 	<FormLink to="/settings/account-info">{{ $t('accountInfo') }}</FormLink>
-	<FormLink to="/settings/experimental-features">{{ $t('experimentalFeatures') }}</FormLink>
+	<FormLink to="/settings/labs">Groundpolis {{ $t('_labs.title') }}</FormLink>
 
 	<FormGroup>
 		<template #label>{{ $t('developer') }}</template>

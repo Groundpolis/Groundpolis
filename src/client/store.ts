@@ -30,6 +30,7 @@ export const defaultSettings = {
 	injectUnlistedNoteInLTL: false,
 	renoteButtonMode: 'choose' as 'choose' | 'renote' | 'quote' | 'renoteQuote',
 	useDisplayNameForSidebar: true,
+	disableReactions: false,
 };
 
 export const defaultDeviceUserSettings = {

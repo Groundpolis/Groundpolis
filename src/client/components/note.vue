@@ -33,7 +33,7 @@
 				<Fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
 				<Fa v-if="note.visibility === 'users'" :icon="faUsers"/>
 			</span>
-			<span class="localOnly" v-if="note.localOnly"><Fa :icon="faBiohazard"/></span>
+			<span class="localOnly" v-if="note.localOnly"><Fa :icon="faHeartS"/></span>
 			<span class="localOnly" v-if="note.remoteFollowersOnly"><Fa :icon="faHeartbeat"/></span>
 		</div>
 	</div>
@@ -86,7 +86,7 @@
 				</div>
 			</div>
 			<footer class="footer">
-				<XReactionsViewer :note="appearNote" ref="reactionsViewer"/>
+				<XReactionsViewer v-if="!disableReactions" :note="appearNote" ref="reactionsViewer"/>
 				<template v-if="$store.getters.isSignedIn">
 					<button @click="reply()" class="button _button">
 						<template v-if="appearNote.reply"><Fa :icon="faReplyAll"/></template>
@@ -99,12 +99,21 @@
 					<button v-else class="button _button">
 						<Fa :icon="faBan"/>
 					</button>
-					<button v-if="appearNote.myReaction == null" class="button _button" @click="react()" ref="reactButton">
-						<Fa :icon="faPlus"/>
-					</button>
-					<button v-if="appearNote.myReaction != null" class="button _button reacted" @click="undoReact(appearNote)" ref="reactButton">
-						<Fa :icon="faMinus"/>
-					</button>
+					<template v-if="disableReactions">
+						<button class="button _button" @click="toggleLike()" :class="{ reacted: hasMyReaction }">
+							<Fa v-if="hasMyReaction" :icon="faHeartS"/>
+							<Fa v-else :icon="faHeartR"/>
+							<p class="count" v-if="reactionsCount > 0">{{ reactionsCount }}</p>
+						</button>
+					</template>
+					<template v-else>
+						<button v-if="!hasMyReaction" class="button _button" @click="react()" ref="reactButton">
+							<Fa :icon="faPlus"/>
+						</button>
+						<button v-else class="button _button reacted" @click="undoReact(appearNote)" ref="reactButton">
+							<Fa :icon="faMinus"/>
+						</button>
+					</template>
 					<button class="button _button" @click="menu()" ref="menuButton">
 						<Fa :icon="faEllipsisV"/>
 					</button>
@@ -135,8 +144,8 @@
 
 <script lang="ts">
 import { defineAsyncComponent, defineComponent, markRaw } from 'vue';
-import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle, faAlignLeft, faPaperclip } from '@fortawesome/free-solid-svg-icons';
-import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes, faClock } from '@fortawesome/free-regular-svg-icons';
+import { faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faHeart as faHeartS, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle, faAlignLeft, faPaperclip } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes, faClock, faHeart as faHeartR } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
 import XSub from './note.sub.vue';
@@ -162,7 +171,7 @@ function markRawAll(...xs: any[]) {
 }
 
 markRawAll(
-	faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faHeart, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle, faAlignLeft,
+	faSatelliteDish, faFireAlt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faHome, faLock, faEnvelope, faThumbtack, faBan, faQuoteLeft, faQuoteRight, faHeartS, faHeartR, faEllipsisV, faUsers, faHeartbeat, faPlug, faExclamationCircle, faAlignLeft,
 	faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faMehRollingEyes, faClock,
 );
 
@@ -224,19 +233,22 @@ export default defineComponent({
 			instance: null as {} | null,
 			renoteState: null,
 			isPlainMode: false,
-			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisV, faHome, faLock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeart, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock, faAlignLeft,
+			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisV, faHome, faLock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeartS, faHeartR, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock, faAlignLeft,
 			host,
 		};
 	},
 
 	computed: {
+		disableReactions() {
+			return this.$store.state.settings.disableReactions;
+		},
 		rs(): string[] {
 			return this.$store.state.settings.reactions;
 		},
 		keymap(): any {
 			return this.preview ? {} : {
 				'r': () => this.reply(true),
-				'e|a|plus': () => this.react(true),
+				'e|a|plus': () => this.disableReactions ? this.toggleLike() : this.react(true),
 				'q': () => this.renote(true),
 				'f|b': this.favorite,
 				'delete|ctrl+d': this.del,
@@ -268,6 +280,15 @@ export default defineComponent({
 
 		isCompactMode(): boolean {
 			return this.$store.state.device.postStyle === 'compact';
+		},
+
+		hasMyReaction() {
+			return this.appearNote.myReaction != null;
+		},
+
+		reactionsCount() {
+			const r = Object.values(this.appearNote.reactions) as number[];
+			return r.length === 0 ? 0 : r.reduce((p, c) => p + c);
 		},
 
 		appearNote(): any {
@@ -615,6 +636,15 @@ export default defineComponent({
 				});
 			}
 			this.focus();
+		},
+
+		async toggleLike() {
+			if (this.preview) return;
+			pleaseLogin();
+
+			os.apiWithDialog('notes/reactions/' + (this.hasMyReaction ? 'delete' : 'create'), {
+				noteId: this.appearNote.id,
+			});
 		},
 
 		reactDirectly(reaction: string) {

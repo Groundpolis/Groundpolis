@@ -3,7 +3,7 @@
 	<div class="head">
 		<MkAvatar v-if="notification.user" class="icon" :user="notification.user"/>
 		<img v-else-if="notification.icon" class="icon" :src="notification.icon" alt=""/>
-		<div class="sub-icon" :class="notification.type">
+		<div class="sub-icon" :class="notification.type !== 'reaction' || !$store.state.settings.disableReactions ? notification.type : 'like'">
 			<Fa :icon="faPlus" v-if="notification.type === 'follow'"/>
 			<Fa :icon="faClock" v-else-if="notification.type === 'receiveFollowRequest'"/>
 			<Fa :icon="faCheck" v-else-if="notification.type === 'followRequestAccepted'"/>
@@ -13,7 +13,10 @@
 			<Fa :icon="faAt" v-else-if="notification.type === 'mention'"/>
 			<Fa :icon="faQuoteLeft" v-else-if="notification.type === 'quote'"/>
 			<Fa :icon="faPollH" v-else-if="notification.type === 'pollVote'"/>
-			<XReactionIcon v-else-if="notification.type === 'reaction'" :reaction="notification.reaction" :custom-emojis="notification.note.emojis" :no-style="true"/>
+			<template v-else-if="notification.type === 'reaction'">
+				<XReactionIcon v-if="!$store.state.settings.disableReactions" :reaction="notification.reaction" :custom-emojis="notification.note.emojis" :no-style="true"/>
+				<Fa v-else :icon="faHeart"/>
+			</template>
 		</div>
 	</div>
 	<div class="tail">
@@ -59,7 +62,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faIdCardAlt, faPlus, faQuoteLeft, faQuoteRight, faRetweet, faReply, faAt, faCheck, faPollH } from '@fortawesome/free-solid-svg-icons';
+import { faIdCardAlt, faPlus, faQuoteLeft, faQuoteRight, faRetweet, faReply, faAt, faCheck, faPollH, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import noteSummary from '../../misc/get-note-summary';
 import XReactionIcon from './reaction-icon.vue';
@@ -97,7 +100,7 @@ export default defineComponent({
 			groupInviteDone: false,
 			connection: null,
 			readObserver: null,
-			faIdCardAlt, faPlus, faQuoteLeft, faQuoteRight, faRetweet, faReply, faAt, faClock, faCheck, faPollH
+			faIdCardAlt, faPlus, faQuoteLeft, faQuoteRight, faRetweet, faReply, faAt, faClock, faCheck, faPollH, faHeart
 		};
 	},
 
@@ -267,6 +270,11 @@ export default defineComponent({
 			&.pollVote {
 				padding: 3px;
 				background: #88a6b7;
+			}
+
+			&.like {
+				padding: 3px;
+				background: #f06292;
 			}
 		}
 	}
