@@ -1,8 +1,13 @@
 <template>
+<span v-if="disableIfFollowing && isFollowing">
+	{{ $t('following2') }}
+</span>
 <button class="kpoogebi _button"
 	:class="{ wait, active: isFollowing || hasPendingFollowRequestFromYou, full, large }"
 	@click="onClick"
 	:disabled="wait"
+	v-else
+	v-cloak
 >
 	<template v-if="!wait">
 		<template v-if="hasPendingFollowRequestFromYou && user.isLocked">
@@ -39,6 +44,11 @@ export default defineComponent({
 			required: true
 		},
 		full: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		disableIfFollowing: {
 			type: Boolean,
 			required: false,
 			default: false,

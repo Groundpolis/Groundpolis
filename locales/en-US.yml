@@ -757,6 +757,7 @@ contact: "Contact"
 useSystemFont: "Use the system's default font"
 clips: "Clips"
 developer: "Developer"
+following2: "Following"
 _aboutMisskey:
   about: "Groundpolis is open-source software being developed based on Misskey since 2019."
   contributors: "Main contributors"

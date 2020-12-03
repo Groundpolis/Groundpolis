@@ -192,6 +192,7 @@ export class UserRepository extends Repository<User> {
 			sex: user.sex,
 			isVerified: user.isVerified || falsy,
 			isPremium: user.isPremium || falsy,
+			isLocked: user.isLocked,
 
 			// カスタム絵文字添付
 			emojis: user.emojis.length > 0 ? Emojis.find({
@@ -210,7 +211,6 @@ export class UserRepository extends Repository<User> {
 				bannerUrl: user.bannerUrl,
 				bannerBlurhash: user.bannerBlurhash,
 				bannerColor: null, // 後方互換性のため
-				isLocked: user.isLocked,
 				hideFF: user.hideFF,
 				isModerator: user.isModerator || falsy,
 				isSilenced: user.isSilenced || falsy,

@@ -801,6 +801,7 @@ contact: "連絡先"
 useSystemFont: "システムのデフォルトのフォントを使う"
 clips: "クリップ"
 developer: "開発者"
+following2: "フォローしています"
 
 _aboutMisskey:
   about: "Groundpolis は、Misskeyをベースに2019年から開発中のミニブログソフトウェアです。"
