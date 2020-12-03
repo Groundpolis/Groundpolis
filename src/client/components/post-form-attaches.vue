@@ -17,6 +17,7 @@ import { defineComponent, defineAsyncComponent } from 'vue';
 import { faTimesCircle, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { faExclamationTriangle, faICursor } from '@fortawesome/free-solid-svg-icons';
 import MkDriveFileThumbnail from './drive-file-thumbnail.vue'
+import ImageViewer from './image-viewer.vue';
 import * as os from '@/os';
 
 export default defineComponent({
@@ -94,6 +95,14 @@ export default defineComponent({
 				text: this.$t('attachCancel'),
 				icon: faTimesCircle,
 				action: () => { this.detachMedia(file.id) }
+			}, {
+				text: this.$t('preview'),
+				icon: faEye,
+				action: () => {
+					os.popup(ImageViewer, {
+						image: file,
+					}, {}, 'closed');
+				},
 			}], ev.currentTarget || ev.target).then(() => this.menu = null);
 		}
 	}
