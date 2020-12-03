@@ -8,12 +8,19 @@
 		</div>
 		<div class="contents">
 			<div class="side _forceContainerFull_">
-				<MkAvatar class="avatar" :user="user" :disable-preview="true"/>
+				<MkAvatar class="avatar" :user="user" :disable-preview="true" :disable-link="true" @click="onAvatarClicked"/>
 				<div class="name">
 					<MkUserName :user="user" :nowrap="false" class="name"/>
 					<MkAcct :user="user" :detail="true" class="acct"/>
 				</div>
 				<div class="followed" v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && user.isFollowed"><span>{{ $t('followsYou') }}</span></div>
+
+				<div class="blocked" v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && user.isBlocking || user.isBlocked">
+					<span>
+						{{ $t(user.isBlocking && user.isBlocked ? 'blocksEach' : user.isBlocked ? 'blocksYou' : 'blockedByYou') }}
+					</span>
+				</div>
+
 				<div class="status">
 					<MkA :to="userPage(user)" :class="{ active: page === 'index' }">
 						<b>{{ number(user.notesCount) }}</b>
@@ -33,6 +40,10 @@
 					<p v-else class="empty">{{ $t('noAccountDescription') }}</p>
 				</div>
 				<div class="fields system">
+					<dl class="field" v-if="user.sex !== 'not-known'">
+						<dt class="name"><fa :icon="getGenderIcon(user.sex)" fixed-width/> {{ $t('gender') }}</dt>
+						<dd class="value">{{ $t(`_gender.${user.sex}`) }}</dd>
+					</dl>
 					<dl class="field" v-if="user.location">
 						<dt class="name"><Fa :icon="faMapMarker" fixed-width/> {{ $t('location') }}</dt>
 						<dd class="value">{{ user.location }}</dd>
@@ -75,12 +86,13 @@
 					</MkA>
 					<div class="actions">
 						<button @click="menu" class="menu _button"><Fa :icon="faEllipsisH"/></button>
-						<MkFollowButton v-if="!$store.getters.isSignedIn || $store.state.i.id != user.id" :user="user" :inline="true" :transparent="false" :full="true" large class="koudoku"/>
+						<MkFollowButton v-if="$store.state.i.id != user.id && !user.isBlocking && !user.isBlocked" :user="user" :inline="true" :transparent="false" :full="true" large class="koudoku"/>
+						<MkA v-else-if="$store.state.i.id == user.id" to="/settings/profile" class="edit-profile _button">{{ $t('editProfile') }}</MkA>
 					</div>
 				</div>
 				<template v-if="page === 'index'">
 					<div v-if="user.pinnedNotes.length > 0" class="_vMargin">
-						<XNote v-for="note in user.pinnedNotes" class="note _vMargin" :note="note" @update:note="pinnedNoteUpdated(note, $event)" :key="note.id" :detail="true" :pinned="true"/>
+						<XNote v-for="note in user.pinnedNotes" class="note _vMargin" :note="note" @update:note="pinnedNoteUpdated(note, $event)" :key="note.id" :pinned="true"/>
 					</div>
 					<div class="_vMargin">
 						<XUserTimeline :user="user"/>
@@ -116,12 +128,16 @@
 						</div>
 					</div>
 					<span class="followed" v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && user.isFollowed">{{ $t('followsYou') }}</span>
+					<span class="blocked" v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && user.isBlocking || user.isBlocked">
+						{{ $t(user.isBlocking && user.isBlocked ? 'blocksEach' : user.isBlocked ? 'blocksYou' : 'blockedByYou') }}
+					</span>
 					<div class="actions" v-if="$store.getters.isSignedIn">
 						<button @click="menu" class="menu _button"><Fa :icon="faEllipsisH"/></button>
-						<MkFollowButton v-if="$store.state.i.id != user.id" :user="user" :inline="true" :transparent="false" :full="true" class="koudoku"/>
+						<MkFollowButton v-if="$store.state.i.id != user.id && !user.isBlocking && !user.isBlocked" :user="user" :inline="true" :transparent="false" :full="true" class="koudoku"/>
+						<MkA v-else-if="$store.state.i.id == user.id" to="/settings/profile" class="edit-profile _button">{{ $t('editProfile') }}</MkA>
 					</div>
 				</div>
-				<MkAvatar class="avatar" :user="user" :disable-preview="true"/>
+				<MkAvatar class="avatar" :user="user" :disable-preview="true" :disable-link="true" @click="onAvatarClicked"/>
 				<div class="title">
 					<MkUserName :user="user" :nowrap="false" class="name"/>
 					<div class="bottom">
@@ -137,6 +153,10 @@
 					<p v-else class="empty">{{ $t('noAccountDescription') }}</p>
 				</div>
 				<div class="fields system">
+					<dl class="field" v-if="user.sex !== 'not-known'">
+						<dt class="name"><fa :icon="getGenderIcon(user.sex)" fixed-width/> {{ $t('gender') }}</dt>
+						<dd class="value">{{ $t(`_gender.${user.sex}`) }}</dd>
+					</dl>
 					<dl class="field" v-if="user.location">
 						<dt class="name"><Fa :icon="faMapMarker" fixed-width/> {{ $t('location') }}</dt>
 						<dd class="value">{{ user.location }}</dd>
@@ -195,7 +215,7 @@
 		<template v-if="page === 'index'">
 			<div class="_content _vMargin">
 				<div v-if="user.pinnedNotes.length > 0" class="_vMargin">
-					<XNote v-for="note in user.pinnedNotes" class="note _vMargin" :note="note" @update:note="pinnedNoteUpdated(note, $event)" :key="note.id" :detail="true" :pinned="true"/>
+					<XNote v-for="note in user.pinnedNotes" class="note _vMargin" :note="note" @update:note="pinnedNoteUpdated(note, $event)" :key="note.id" :pinned="true"/>
 				</div>
 				<XPhotos :user="user" :key="user.id" class="_vMargin"/>
 				<XActivity :user="user" :key="user.id" class="_vMargin"/>
@@ -217,7 +237,7 @@
 
 <script lang="ts">
 import { defineComponent, defineAsyncComponent, computed } from 'vue';
-import { faExclamationTriangle, faEllipsisH, faRobot, faLock, faBookmark, faChartBar, faImage, faBirthdayCake, faMapMarker, faPaperclip, faFileAlt } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle, faEllipsisH, faRobot, faLock, faBookmark, faChartBar, faImage, faBirthdayCake, faMapMarker, faPaperclip, faFileAlt, faPencilAlt, faMars, faVenus, faGenderless } from '@fortawesome/free-solid-svg-icons';
 import { faCalendarAlt, faBookmark as farBookmark, faCommentAlt } from '@fortawesome/free-regular-svg-icons';
 import * as age from 's-age';
 import XUserTimeline from './index.timeline.vue';
@@ -234,6 +254,7 @@ import { getUserMenu } from '@/scripts/get-user-menu';
 import number from '../../filters/number';
 import { userPage, acct as getAcct } from '../../filters/user';
 import * as os from '@/os';
+import ImageViewer from '@/components/image-viewer.vue';
 
 export default defineComponent({
 	components: {
@@ -269,8 +290,10 @@ export default defineComponent({
 				userName: this.user,
 				avatar: this.user,
 				action: {
-					icon: faEllipsisH,
-					handler: this.menu
+					icon: faPencilAlt,
+					handler: () => os.post({
+						mention: this.user,
+					}),
 				}
 			} : null),
 			user: null,
@@ -348,6 +371,27 @@ export default defineComponent({
 			banner.style.backgroundPosition = `center calc(50% - ${pos}px)`;
 		},
 
+		getGenderIcon(gender: string) {
+			switch (gender) {
+				case 'male':
+					return faMars;
+				case 'female':
+					return faVenus;
+				default:
+					return faGenderless;
+			}
+		},
+
+		onAvatarClicked () {
+			if (this.$store.state.device.imageNewTab) {
+				window.open(this.user!.avatarUrl, '_blank');
+			} else {
+				os.popup(ImageViewer, {
+					image: { url: this.user!.avatarUrl }
+				}, {}, 'closed');
+			}
+		},
+
 		pinnedNoteUpdated(oldValue, newValue) {
 			const i = this.user.pinnedNotes.findIndex(n => n === oldValue);
 			this.user.pinnedNotes[i] = newValue;
@@ -416,6 +460,21 @@ export default defineComponent({
 					padding: 8px 12px;
 					margin-bottom: 20px;
 					border: solid 1px var(--divider);
+					border-radius: 999px;
+				}
+			}
+
+			> .blocked {
+				text-align: center;
+
+				> span {
+					display: inline-block;
+					font-size: 80%;
+					padding: 8px 12px;
+					margin-bottom: 20px;
+					background: var(--error);
+					font-weight: bold;
+					color: white;
 					border-radius: 999px;
 				}
 			}
@@ -533,6 +592,25 @@ export default defineComponent({
 					> .menu {
 						padding: 12px 16px;
 					}
+
+					> .edit-profile {
+						position: relative;
+						display: inline-flex;
+						font-weight: bold;
+						color: var(--accent);
+						background: transparent;
+						border: solid 1px var(--accent);
+						padding: 0 16px;
+						height: 31px;
+						font-size: 16px;
+						border-radius: 32px;
+						background: transparent;
+						align-items: center;
+						justify-content: center;
+						&:hover {
+							text-decoration: none;
+						}
+					}
 				}
 			}
 		}
@@ -591,6 +669,17 @@ export default defineComponent({
 					border-radius: 6px;
 				}
 
+				> .blocked {
+					position: absolute;
+					top: 12px;
+					left: 12px;
+					padding: 4px 8px;
+					color: #fff;
+					background: #f44336;
+					font-size: 0.7em;
+					border-radius: 6px;
+				}
+
 				> .actions {
 					position: absolute;
 					top: 12px;
@@ -613,6 +702,25 @@ export default defineComponent({
 					> .koudoku {
 						margin-left: 4px;
 						vertical-align: bottom;
+					}
+
+					> .edit-profile {
+						position: relative;
+						display: inline-flex;
+						font-weight: bold;
+						color: var(--accent);
+						background: transparent;
+						border: solid 1px var(--accent);
+						padding: 0 16px;
+						height: 31px;
+						font-size: 16px;
+						border-radius: 32px;
+						background: transparent;
+						align-items: center;
+						justify-content: center;
+						&:hover {
+							text-decoration: none;
+						}
 					}
 				}
 

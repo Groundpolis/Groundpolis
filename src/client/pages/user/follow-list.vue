@@ -1,7 +1,7 @@
 <template>
 <div class="_section">
 	<div v-if="hideFF === null" />
-	<section v-else-if="hideFF" class="_card">
+	<section v-else-if="hideFF" class="_section">
 		<div class="_content">
 			{{ $t('thisInformationIsNotAvailable') }}
 		</div>
