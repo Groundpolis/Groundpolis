@@ -16,7 +16,10 @@
 		</div>
 		<div class="_formCaption">{{ $t('reactionSettingDescription2') }} <button class="_textButton" @click="chooseEmoji">{{ $t('chooseEmoji') }}</button></div>
 	</div>
-	<FormSwitch v-model:value="emojiPickerShowRecentEmojis">{{ $t('emojiPickerShowRecentEmojis') }}</FormSwitch>
+	<FormGroup>
+		<FormSwitch v-model:value="emojiPickerShowRecentEmojis">{{ $t('emojiPickerShowRecentEmojis') }}</FormSwitch>
+		<FormButton v-if="emojiPickerShowRecentEmojis" @click="clearRecent" danger><Fa :icon="faTrashAlt"/> {{ $t('clearHistories') }}</FormButton>
+	</FormGroup>
 	<FormRadios v-model="reactionPickerWidth">
 		<template #desc>{{ $t('width') }}</template>
 		<option :value="1">{{ $t('small') }}</option>
@@ -41,6 +44,7 @@ import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import { VueDraggableNext } from 'vue-draggable-next';
 import FormInput from '@/components/form/input.vue';
 import FormSwitch from '@/components/form/switch.vue';
+import FormGroup from '@/components/form/group.vue';
 import FormRadios from '@/components/form/radios.vue';
 import FormBase from '@/components/form/base.vue';
 import FormButton from '@/components/form/button.vue';
@@ -54,6 +58,7 @@ export default defineComponent({
 		FormBase,
 		FormRadios,
 		FormSwitch,
+		FormGroup,
 		XDraggable: VueDraggableNext,
 	},
 
@@ -131,6 +136,17 @@ export default defineComponent({
 			if (canceled) return;
 
 			this.reactions = JSON.parse(JSON.stringify(defaultSettings.reactions));
+		},
+
+		async clearRecent() {
+			const { canceled } = await os.dialog({
+				type: 'warning',
+				text: this.$t('resetAreYouSure'),
+				showCancelButton: true
+			});
+			if (canceled) return;
+
+			this.$store.commit('device/set', { key: 'recentlyUsedEmojis', value: [] });
 		},
 
 		chooseEmoji(ev) {
