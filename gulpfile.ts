@@ -50,9 +50,10 @@ gulp.task('build:copy', gulp.parallel('build:copy:views', 'build:copy:locales', 
 	]).pipe(gulp.dest('./built/'))
 ));
 
-gulp.task('clean', cb =>
-	rimraf('./built', cb)
-);
+gulp.task('clean', gulp.parallel(
+	cb => rimraf('./built', cb),
+	cb => rimraf('./node_modules/.cache', cb)
+));
 
 gulp.task('cleanall', gulp.parallel('clean', cb =>
 	rimraf('./node_modules', cb)
