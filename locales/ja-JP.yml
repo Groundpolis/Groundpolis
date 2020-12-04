@@ -803,6 +803,7 @@ clips: "クリップ"
 developer: "開発者"
 following2: "フォローしています"
 clearHistories: "履歴を消去する"
+switchUser: "ユーザー切り替え"
 
 _aboutMisskey:
   about: "Groundpolis は、Misskeyをベースに2019年から開発中のミニブログソフトウェアです。"

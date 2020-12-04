@@ -16,7 +16,7 @@ import { router } from './router';
 import { applyTheme } from '@/scripts/theme';
 import { isDeviceDarkmode } from '@/scripts/is-device-darkmode';
 import { i18n, lang } from './i18n';
-import { stream, isMobile, dialog } from '@/os';
+import * as os from '@/os';
 import * as sound from './scripts/sound';
 
 console.info(`Groundpolis v${version}`);
@@ -68,7 +68,7 @@ window.addEventListener('resize', () => {
 const head = document.getElementsByTagName('head')[0];
 
 // If mobile, insert the viewport meta tag
-if (isMobile || window.innerWidth <= 1024) {
+if (os.isMobile || window.innerWidth <= 1024) {
 	const viewport = document.getElementsByName('viewport').item(0);
 	viewport.setAttribute('content',
 		`${viewport.getAttribute('content')},minimum-scale=1,maximum-scale=1,user-scalable=no`);
@@ -150,7 +150,9 @@ store.dispatch('instance/fetch').then(() => {
 	//if (this.store.state.instance.meta.swPublickey) this.registerSw(this.store.state.instance.meta.swPublickey);
 });
 
-stream.init(store.state.i);
+os.stream.init(store.state.i);
+
+await os.getAccounts();
 
 const app = createApp(await (
 	window.location.search === '?zen' ? import('@/ui/zen.vue') :
@@ -247,13 +249,13 @@ store.watch(state => state.device.useBlurEffectForModal, v => {
 }, { immediate: true });
 
 let reloadDialogShowing = false;
-stream.on('_disconnected_', async () => {
+os.stream.on('_disconnected_', async () => {
 	if (store.state.device.serverDisconnectedBehavior === 'reload') {
 		location.reload();
 	} else if (store.state.device.serverDisconnectedBehavior === 'dialog') {
 		if (reloadDialogShowing) return;
 		reloadDialogShowing = true;
-		const { canceled } = await dialog({
+		const { canceled } = await os.dialog({
 			type: 'warning',
 			title: i18n.global.t('disconnectedFromServer'),
 			text: i18n.global.t('reloadConfirm'),
@@ -266,7 +268,7 @@ stream.on('_disconnected_', async () => {
 	}
 });
 
-stream.on('emojiAdded', data => {
+os.stream.on('emojiAdded', data => {
 	// TODO
 	//store.commit('instance/set', );
 });
@@ -285,7 +287,7 @@ if (store.getters.isSignedIn) {
 		}
 	}
 
-	const main = stream.useSharedConnection('main', 'System');
+	const main = os.stream.useSharedConnection('main', 'System');
 
 	// 自分の情報が更新されたとき
 	main.on('meUpdated', i => {

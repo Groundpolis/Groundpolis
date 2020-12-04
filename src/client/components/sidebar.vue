@@ -187,22 +187,21 @@ export default defineComponent({
 
 		async fetchAccounts() {
 			this.loadingAccounts = true;
-			this.accounts = (await os.api('users/show', { userIds: this.$store.state.device.accounts.map(x => x.id) })).filter(x => x.id !== this.$store.state.i.id);
+			this.accounts = await os.getAccounts();
 			this.loadingAccounts = false;
 		},
 
 		toggleMenuMode() {
 			this.isAccountMenuMode = !this.isAccountMenuMode;
-			console.log(this.isAccountMenuMode);
 			if (this.isAccountMenuMode) {
 				this.fetchAccounts();
 			}
 		},
 
 		async openAccountMenu(ev) {
-			const accounts = (await os.api('users/show', { userIds: this.$store.state.device.accounts.map(x => x.id) })).filter(x => x.id !== this.$store.state.i.id);
+			await this.fetchAccounts();
 
-			const accountItems = accounts.map(account => ({
+			const accountItems = this.accounts.map(account => ({
 				type: 'user',
 				user: account,
 				action: () => { this.switchAccount(account); }

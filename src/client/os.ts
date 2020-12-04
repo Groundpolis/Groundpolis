@@ -1,4 +1,4 @@
-import { Component, defineAsyncComponent, markRaw, reactive, Ref, ref } from 'vue';
+import { Component, markRaw, reactive, Ref, ref } from 'vue';
 import { EventEmitter } from 'eventemitter3';
 import Stream from '@/scripts/stream';
 import { store } from '@/store';
@@ -9,7 +9,6 @@ import { resolve } from '@/router';
 import { NoteVisibility, notificationTypes } from '../types';
 import { isDeviceTouch } from './scripts/is-device-touch';
 import parseAcct from '../misc/acct/parse';
-import { device } from './cold-storage';
 
 const ua = navigator.userAgent.toLowerCase();
 const isMobileUA = /mobile|iphone|ipad|android/.test(ua);
@@ -498,6 +497,24 @@ export function openGlobalNotificationSetting() {
 			});
 		}
 	}, 'closed');
+}
+
+let accounts: Record<string, object>[] = [];
+let lastAccountsFetchedAt: number = 0;
+
+export async function getAccounts() {
+	// 前回取得時から5分以上経っている
+	const expired = Date.now() - lastAccountsFetchedAt > 1000 * 60 * 5;
+	// キャッシュが不一致
+	// TODO 現状は配列の長さで判定しているが、よりディープに判定したい
+	const cacheMismatch = accounts.length !== store.state.device.accounts.length;
+	if (cacheMismatch || expired) {
+		accounts = (await api('users/show', { userIds: store.state.device.accounts.map(x => x.id) }) as Record<string, object>[])
+			.map((x, i) => ({ ...x, token: store.state.device.accounts[i].token  }))
+			.filter(x => x.id !== store.state.i.id);
+	}
+	
+	return Object.freeze([...accounts]);
 }
 
 /*

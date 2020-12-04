@@ -759,6 +759,7 @@ clips: "Clips"
 developer: "Developer"
 following2: "Following"
 clearHistories: "Clear histories"
+switchUser: "Switch User"
 _aboutMisskey:
   about: "Groundpolis is open-source software being developed based on Misskey since 2019."
   contributors: "Main contributors"

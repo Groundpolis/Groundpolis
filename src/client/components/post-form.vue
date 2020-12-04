@@ -51,7 +51,10 @@
 		<XPostFormAttaches class="attaches" :files="files" @updated="updateMedia" @detach="detachMedia"/>
 		<XPollEditor v-if="poll" :poll="poll" @destroyed="poll = null" @updated="onPollUpdate"/>
 		<footer>
-			<button class="_button" @click="chooseFileFrom" v-tooltip="$t('attachFile')"><Fa :icon="faPhotoVideo"/></button>
+			<button v-if="currentAccount" class="_button switch-user" @click="switchUser" v-tooltip="$t('switchUser')">
+				<MkAvatar class="avatar" :user="currentAccount" disable-link disable-preview />
+			</button>
+			<button v-if="currentAccountIsMyself" class="_button" @click="chooseFileFrom" v-tooltip="$t('attachFile')"><Fa :icon="faPhotoVideo"/></button>
 			<button class="_button" @click="togglePoll" :class="{ active: poll }" v-tooltip="$t('poll')"><Fa :icon="faPollH"/></button>
 			<button class="_button" @click="useCw = !useCw" :class="{ active: useCw }" v-tooltip="$t('useCw')"><Fa :icon="faEyeSlash"/></button>
 			<button class="_button" @click="useBroadcast = !useBroadcast" :class="{ active: useBroadcast }" v-tooltip="$t('broadcastMode')"><Fa :icon="faBullhorn"/></button>
@@ -78,6 +81,7 @@ import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
 import { toASCII } from 'punycode';
 import XNotePreview from './note-preview.vue';
+import MkAvatar from './avatar.vue';
 import { parse } from '../../mfm/parse';
 import { host, url } from '@/config';
 import { erase, unique } from '../../prelude/array';
@@ -92,6 +96,7 @@ import { notePostInterruptors, postFormActions } from '@/store';
 
 export default defineComponent({
 	components: {
+		MkAvatar,
 		XNotePreview,
 		XPostFormAttaches: defineAsyncComponent(() => import('./post-form-attaches.vue')),
 		XPollEditor: defineAsyncComponent(() => import('./poll-editor.vue'))
@@ -158,6 +163,8 @@ export default defineComponent({
 			localOnly: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.localOnly : this.$store.state.settings.defaultNoteLocalOnlydefaultNoteLocalOnly,
 			remoteFollowersOnly: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.remoteFollowersOnly : this.$store.state.settings.defaultNoteRemoteFollowersOnly,
 			visibility: this.$store.state.settings.rememberNoteVisibility ? this.$store.state.deviceUser.visibility : this.$store.state.settings.defaultNoteVisibility,
+			currentAccount: {} as Record<string, unknown>,
+			accounts: [] as Record<string, unknown>[],
 			useBroadcast: false,
 			broadcastText: '',
 			visibleUsers: [],
@@ -215,7 +222,7 @@ export default defineComponent({
 
 		canPost(): boolean {
 			return !this.posting &&
-				(1 <= this.text.length || 1 <= this.files.length || this.poll || this.quote) &&
+				(1 <= this.text.length || 1 <= this.files.length || !!this.poll || !!this.quote) &&
 				(length(this.text.trim()) <= this.max) &&
 				(!this.poll || this.poll.choices.length >= 2);
 		},
@@ -231,7 +238,7 @@ export default defineComponent({
 				text: this.text + (this.useBroadcast ? ' ' + this.broadcastText : ''),
 				cw: this.useCw ? this.cw : undefined,
 				visibility: this.visibility,
-				user: this.$store.state.i,
+				user: this.currentAccount,
 				localOnly: this.localOnly,
 				remoteFollowersOnly: this.remoteFollowersOnly,
 				files: [],
@@ -241,10 +248,22 @@ export default defineComponent({
 		isPreviewOpened: {
 			get() { return this.$store.state.device.showPostPreview },
 			set(value) { this.$store.commit('device/set', { key: 'showPostPreview', value }); }
-		}
+		},
+
+		currentAccountIsMyself(): boolean {
+			return this.$store.state.i.id === this.currentAccount.id;
+		},
 	},
 
 	mounted() {
+		this.currentAccount = this.$store.state.i;
+		os.getAccounts().then(accts => {
+			this.accounts = [
+				this.currentAccount,
+				...accts
+			];
+		});
+
 		if (this.initialText) {
 			this.text = this.initialText;
 		}
@@ -510,6 +529,7 @@ export default defineComponent({
 		},
 
 		async onPaste(e: ClipboardEvent) {
+			if (!this.currentAccountIsMyself) return;
 			for (const { item, i } of Array.from(e.clipboardData.items).map((item, i) => ({item, i}))) {
 				if (item.kind == 'file') {
 					const file = item.getAsFile();
@@ -551,6 +571,12 @@ export default defineComponent({
 		},
 
 		onDragover(e) {
+			if (!this.currentAccountIsMyself) {
+				e.preventDefault();
+				this.draghover = true;
+				e.dataTransfer.dropEffect = 'none';
+				return;
+			};
 			if (!e.dataTransfer.items[0]) return;
 			const isFile = e.dataTransfer.items[0].kind == 'file';
 			const isDriveFile = e.dataTransfer.types[0] == _DATA_TRANSFER_DRIVE_FILE_;
@@ -570,6 +596,7 @@ export default defineComponent({
 		},
 
 		onDrop(e): void {
+			if (!this.currentAccountIsMyself) return;
 			this.draghover = false;
 
 			// ファイルだったら
@@ -660,9 +687,13 @@ export default defineComponent({
 					data = await interruptor.handler(JSON.parse(JSON.stringify(data)));
 				}
 			}
+			// get token
+
+			const token = this.currentAccountIsMyself ? undefined : this.currentAccount.token;
 
 			this.posting = true;
-			os.api('notes/create', data).then(() => {
+			
+			os.api('notes/create', data, token).then(() => {
 				this.clear();
 				this.$nextTick(() => {
 					this.deleteDraft();
@@ -731,8 +762,14 @@ export default defineComponent({
 			this.insert(`${result.noUrlPreview ? '?' : ''}[${result.desc}](${result.url})`);
 		},
 
-		async mfmPadMenu() {
+		async switchUser(ev) {
+			const accountItems = this.accounts.map(account => ({
+				type: 'user',
+				user: account,
+				action: () => this.currentAccount = account,
+			}));
 
+			os.modalMenu(accountItems, ev.currentTarget || ev.target, { align: 'left' });
 		},
 
 		showActions(ev) {
@@ -945,6 +982,13 @@ export default defineComponent({
 			display: flex;
 			padding: 0 16px;
 			align-items: center;
+
+			> .switch-user {
+				> .avatar {
+					width: 24px;
+					height: 24px;
+				}
+			}
 
 			> button {
 				display: block;
