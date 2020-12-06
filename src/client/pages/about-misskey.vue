@@ -4,10 +4,10 @@
 		<section class="_formItem">
 			<div class="_formPanel" style="text-align: center; padding: 16px;" ref="about">
 				<div class="icon" ref="icon" draggable="false">
-					<img src="/assets/icon_transparent.svg" @load="iconLoaded" alt="" draggable="false"/>
+					<img src="/assets/icon_transparent.svg" :class="{awesome}" @load="iconLoaded" alt="" draggable="false"/>
 				</div>
-				<div style="margin: 0.75em auto 0 auto; width: max-content;">Groundpolis</div>
-				<div style="margin: 0 auto; opacity: 0.5; width: max-content;">v{{ version }}</div>
+				<div class="title" :class="{awesome}">Groundpolis</div>
+				<div class="version" :class="{awesome}">v{{ version }}</div>
 				<span v-for="emoji in easterEggEmojis" :key="emoji.emoji" :class="{ _physics_circle_: !emoji.emoji.startsWith(':') }" :style="{ position: 'absolute', top: emoji.top, left: emoji.left, userSelect: 'none' }"><MkEmoji style="pointer-events: none; font-size: 24px; width: 24px;" :emoji="emoji.emoji" :custom-emojis="$store.state.instance.meta.emojis" :is-reaction="false" :normal="true" :no-style="true"/></span>
 			</div>
 		</section>
@@ -130,6 +130,7 @@ export default defineComponent({
 			easterEggReady: false,
 			easterEggEmojis: [],
 			easterEggEngine: null,
+			awesome: false,
 			faInfoCircle, faCode, faLanguage, faHandHoldingMedical,
 		}
 	},
@@ -169,13 +170,16 @@ export default defineComponent({
 
 		gravity() {
 			if (!this.easterEggReady) return;
+			this.awesome = true;
 			this.easterEggReady = false;
-			this.$refs.icon.vanillaTilt.destroy();
-			this.easterEggEngine = physics(this.$refs.about);
+			this.$nextTick(() => {
+				this.$refs.icon.vanillaTilt.destroy();
+				this.easterEggEngine = physics(this.$refs.about);
 
-			setTimeout(() => {
-				this.easterEggEngine.stop();
-			}, 1000 * 60 * 3);
+				setTimeout(() => {
+					this.easterEggEngine.stop();
+				}, 1000 * 60 * 3);
+			});
 		}
 	}
 });
@@ -202,5 +206,24 @@ export default defineComponent({
 		height: 100%;
 		transform: translate3d(0, 4px, 32px) scale(0.9);
 	}
+}
+
+.title {
+	margin: 0.75em auto 0.3em auto;
+	width: max-content;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.version {
+	margin: 0 auto;
+	opacity: 0.5;
+	width: max-content;
+}
+
+.awesome {
+	animation: mfm-rainbow 1s linear infinite both;
+	opacity: 1;
+	color: var(--accent);
 }
 </style>
