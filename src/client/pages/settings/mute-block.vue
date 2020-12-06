@@ -1,62 +1,66 @@
 <template>
-<section class="rrfwjxfl _section">
-	<MkTab v-model:value="tab" style="margin-bottom: var(--margin);">
-		<option value="mute">{{ $t('mutedUsers') }}</option>
-		<option value="renote">{{ $t('renoteMutedUsers') }}</option>
-		<option value="block">{{ $t('blockedUsers') }}</option>
-	</MkTab>
-	<div class="_content" v-if="tab === 'mute'">
-		<MkPagination :pagination="mutingPagination" class="muting">
-			<template #empty><MkInfo>{{ $t('noUsers') }}</MkInfo></template>
-			<template #default="{items}">
-				<div class="user" v-for="mute in items" :key="mute.id">
-					<MkA class="name" :to="userPage(mute.mutee)">
-						<MkAcct :user="mute.mutee"/>
-					</MkA>
-				</div>
-			</template>
-		</MkPagination>
-	</div>
-		<div class="_content" v-if="tab === 'renote'">
-		<MkPagination :pagination="renoteMutingPagination" class="muting">
-			<template #empty><MkInfo>{{ $t('noUsers') }}</MkInfo></template>
-			<template #default="{items}">
-				<div class="user" v-for="mute in items" :key="mute.id">
-					<MkA class="name" :to="userPage(mute.mutee)">
-						<MkAcct :user="mute.mutee"/>
-					</MkA>
-				</div>
-			</template>
-		</MkPagination>
-	</div>
-	<div class="_content" v-if="tab === 'block'">
-		<MkPagination :pagination="blockingPagination" class="blocking">
-			<template #empty><MkInfo>{{ $t('noUsers') }}</MkInfo></template>
-			<template #default="{items}">
-				<div class="user" v-for="block in items" :key="block.id">
-					<MkA class="name" :to="userPage(block.blockee)">
-						<MkAcct :user="block.blockee"/>
-					</MkA>
-				</div>
-			</template>
-		</MkPagination>
-	</div>
-</section>
+<MkTab v-model:value="tab" style="margin-bottom: var(--margin);">
+	<option value="mute">{{ $t('mutedUsers') }}</option>
+	<option value="renote">{{ $t('renoteMutedUsers') }}</option>
+	<option value="block">{{ $t('blockedUsers') }}</option>
+</MkTab>
+<FormBase class="_content" v-if="tab === 'mute'">
+	<FormPagination :pagination="mutingPagination" class="muting">
+		<template #empty>{{ $t('noUsers') }}</template>
+		<template #default="{items}">
+			<FormLink v-for="mute in items" :key="mute.id" :to="userPage(mute.mutee)">
+				<MkAcct :user="mute.mutee"/>
+			</FormLink>
+		</template>
+	</FormPagination>
+</FormBase>
+<FormBase class="_content" v-if="tab === 'renote'">
+	<FormPagination :pagination="renoteMutingPagination" class="muting">
+		<template #empty>{{ $t('noUsers') }}</template>
+		<template #default="{items}">
+			<FormLink v-for="mute in items" :key="mute.id" :to="userPage(mute.mutee)">
+				<MkAcct :user="mute.mutee"/>
+			</FormLink>
+		</template>
+	</FormPagination>
+</FormBase>
+<FormBase class="_content" v-if="tab === 'block'">
+	<FormPagination :pagination="blockingPagination" class="blocking">
+		<template #empty>{{ $t('noUsers') }}</template>
+		<template #default="{items}">
+			<FormLink class="user" v-for="block in items" :key="block.id" :to="userPage(block.blockee)">
+				<MkAcct :user="block.blockee"/>
+			</FormLink>
+		</template>
+	</FormPagination>
+</FormBase>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import MkPagination from '@/components/ui/pagination.vue';
 import MkTab from '@/components/tab.vue';
-import MkInfo from '@/components/ui/info.vue';
+
+import FormBase from '@/components/form/base.vue';
+import FormPagination from '@/components/form/pagination.vue';
+import FormSwitch from '@/components/form/switch.vue';
+import FormSelect from '@/components/form/select.vue';
+import FormLink from '@/components/form/link.vue';
+import FormGroup from '@/components/form/group.vue';
+import FormButton from '@/components/form/button.vue';
+
 import { userPage } from '@/filters/user';
-import * as os from '@/os';
 
 export default defineComponent({
 	components: {
-		MkPagination,
+		FormPagination,
 		MkTab,
 		MkInfo,
+		FormSwitch,
+		FormSelect,
+		FormLink,
+		FormBase,
+		FormGroup,
+		FormButton,
 	},
 
 	data() {

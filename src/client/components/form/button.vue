@@ -1,7 +1,7 @@
 <template>
 <div class="yzpgjkxe _formItem">
 	<div class="_formLabel"><slot name="label"></slot></div>
-	<button class="main _button _formPanel _formClickable" :class="{ center, primary, danger }">
+	<button class="main _button _formPanel _formClickable" :disabled="disabled" :class="{ center, primary, danger }">
 		<slot></slot>
 		<div class="suffix">
 			<slot name="suffix"></slot>

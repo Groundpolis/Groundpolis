@@ -5,7 +5,7 @@
 	<div class="empty" v-if="empty" key="_empty_">
 		<slot name="empty"></slot>
 	</div>
-	<FormButton v-show="more" class="button" @click="fetchMore" :disabled="moreFetching" :style="{ cursor: moreFetching ? 'wait' : 'pointer' }" primary>
+	<FormButton v-if="more" class="button" @click="fetchMore" :disabled="moreFetching" :style="{ cursor: moreFetching ? 'wait' : 'pointer' }" primary>
 		<template v-if="!moreFetching">{{ $t('loadMore') }}</template>
 		<template v-if="moreFetching"><MkLoading inline/></template>
 	</FormButton>
