@@ -259,7 +259,8 @@ export class NoteRepository extends Repository<Note> {
 			tags: note.tags.length > 0 ? note.tags : undefined,
 			emojis: populateEmojis(note.emojis, host, Object.keys(note.reactions)),
 			fileIds: note.fileIds,
-			files: DriveFiles.packMany(note.fileIds),
+			// groundpolis.appでぬるぽをやらかしているのでとりあえずなんとかする
+			files: DriveFiles.packMany(note.fileIds).catch(_ => []),
 			replyId: note.replyId,
 			renoteId: note.renoteId,
 			channelId: note.channelId || undefined,

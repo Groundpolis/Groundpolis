@@ -130,13 +130,13 @@ export class DriveFileRepository extends Repository<DriveFile> {
 	}
 
 	public packMany(
-		files: any[],
+		files: (DriveFile['id'] | DriveFile)[],
 		options?: {
 			detail?: boolean
 			self?: boolean,
 			withUser?: boolean,
 		}
-	) {
+	): Promise<PackedDriveFile[]> {
 		return Promise.all(files.map(f => this.pack(f, options)));
 	}
 }
