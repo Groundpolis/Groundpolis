@@ -5,14 +5,14 @@ if type yarn >> /dev/null; then
 	yarn
 	NODE_ENV=production yarn build
 else
-	echo "yarn is not installed! using npm."
-	npm i
-	NODE_ENV=production npm run build
+	echo "yarn is not installed! using npx."
+	npx yarn
+	NODE_ENV=production npx yarn build
 fi
 
 test
 
 if [ $? -eq 0 ]; then
 	rm built.zip
-	zip -r built.zip ./built
+	zip -r built.zip built
 fi
