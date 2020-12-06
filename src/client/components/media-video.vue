@@ -1,21 +1,24 @@
 <template>
-<div class="icozogqfvdetwohsdglrbswgrejoxbdj" v-if="hide" @click="hide = false">
+<div class="media-video-mask" v-if="hide" @click="hide = false" @contextmenu.stop>
 	<div>
 		<b><Fa :icon="faExclamationTriangle"/> {{ $t('sensitive') }}</b>
 		<span>{{ $t('clickToShow') }}</span>
 	</div>
 </div>
-<div class="kkjnbbplepmiyuadieoenjgutgcmtsvu" v-else>
+<div class="media-video" v-else @contextmenu.stop>
 	<i><Fa :icon="faEyeSlash" @click="hide = true"/></i>
 	<a
-		:href="video.url"
-		rel="nofollow noopener"
-		target="_blank"
+		v-if="isPreview"
+		class="preview"
 		:style="imageStyle"
 		:title="video.name"
+		@click="isPreview = false"
 	>
 		<Fa :icon="faPlayCircle"/>
 	</a>
+	<video class="player" v-else :src="video.url" controls autoplay>
+		Your browser is not supported.
+	</video>
 </div>
 </template>
 
@@ -58,11 +61,6 @@ export default defineComponent({
 		}
 	},
 	watch: {
-		isPreview() {
-			if (!this.isPreview) {
-				(this.$refs.videoPlayer as any).player.play();
-			}
-		},
 	},
 	created() {
 		this.hide = (this.$store.state.device.nsfw === 'force') ? true : this.video.isSensitive && (this.$store.state.device.nsfw !== 'ignore');
@@ -71,8 +69,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.kkjnbbplepmiyuadieoenjgutgcmtsvu {
+.media-video {
 	position: relative;
+	width: 100%;
+	height: 100%;
 
 	> i {
 		display: block;
@@ -101,14 +101,23 @@ export default defineComponent({
 		background-size: cover;
 		width: 100%;
 		height: 100%;
+
+		> [data-icon] {
+			border-radius: 50%;
+			background: var(--panel);
+			color: var(--fg);
+			opacity: 1;
+		}
 	}
 
 	> .player {
 		width: 100%;
+		height: 100%;
+		background: #000;
 	}
 }
 
-.icozogqfvdetwohsdglrbswgrejoxbdj {
+.media-video-mask {
 	display: flex;
 	justify-content: center;
 	align-items: center;
