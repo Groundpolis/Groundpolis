@@ -642,7 +642,7 @@ export default defineComponent({
 			if (this.preview) return;
 			pleaseLogin();
 
-			os.apiWithDialog('notes/reactions/' + (this.hasMyReaction ? 'delete' : 'create'), {
+			os.api('notes/reactions/' + (this.hasMyReaction ? 'delete' : 'create'), {
 				noteId: this.appearNote.id,
 			});
 		},

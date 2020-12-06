@@ -9,10 +9,10 @@
 	</div> -->
 
 	<FormSwitch v-model:value="disableReactions">
-		Disable Reactions 
+		Use "Like" instead of Reactions
 		<template #desc>
-			Turning on this setting replaces the reaction feature to "like" feature.
-			All reactions will be rendered as a "like" count, and your "like" will be transformed to fallback reaction.
+			Turning on this setting replaces the reaction feature to "Like" feature.
+			All reactions will be rendered as a "Like" count, and your "Like" will be transformed to the instance's fallback reaction.
 		</template>
 	</FormSwitch>
 </FormBase>
