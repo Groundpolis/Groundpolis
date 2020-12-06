@@ -2,10 +2,13 @@
 <FormBase>
 	<FormSwitch v-model:value="showFixedPostForm">{{ $t('showFixedPostForm') }}</FormSwitch>
 
-	<FormSelect v-model:value="lang">
-		<template #label>{{ $t('uiLanguage') }}</template>
-		<option v-for="x in langs" :value="x[0]" :key="x[0]">{{ x[1] }}</option>
-	</FormSelect>
+	<FormGroup>
+		<FormSelect v-model:value="lang">
+			<template #label>{{ $t('uiLanguage') }}</template>
+			<option v-for="x in langs" :value="x[0]" :key="x[0]">{{ x[1] }}</option>
+		</FormSelect>
+		<FormButton @click="cacheClear()">{{ $t('reload') }}</FormButton>
+	</FormGroup>
 
 	<FormGroup>
 		<template #label>{{ $t('behavior') }}</template>
@@ -320,6 +323,16 @@ export default defineComponent({
 
 			// Force reload
 			location.reload(true);
+		},
+
+		reloadLang() {
+			return set('_version_', `changeLang-${(new Date()).toJSON()}`, clientDb.i18n)
+				.then(() => location.reload())
+				.catch(() => {
+					os.dialog({
+						type: 'error',
+					});
+				});
 		}
 	}
 });

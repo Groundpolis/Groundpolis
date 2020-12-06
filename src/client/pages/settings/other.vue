@@ -28,7 +28,7 @@
 
 	<FormGroup>
 		<template #label>{{ $t('dangerousSettings') }}</template>
-		<FormButton @click="discardPostFormDraft"><Fa :icon="faTrashAlt"/> {{ $t('discardPostFormDraft') }}</FormButton>
+		<FormButton danger @click="discardPostFormDraft"><Fa :icon="faTrashAlt"/> {{ $t('discardPostFormDraft') }}</FormButton>
 		<template #caption>{{ $t('discardPostFormDraftDescription') }}</template>
 	</FormGroup>
 </FormBase>

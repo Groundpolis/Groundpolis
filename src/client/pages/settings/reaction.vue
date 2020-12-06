@@ -15,6 +15,7 @@
 			</XDraggable>
 		</div>
 		<div class="_formCaption">{{ $t('reactionSettingDescription2') }} <button class="_textButton" @click="chooseEmoji">{{ $t('chooseEmoji') }}</button></div>
+		<FormButton danger @click="setDefault"><Fa :icon="faUndo"/> {{ $t('default') }}</FormButton>
 	</div>
 	<FormGroup>
 		<FormSwitch v-model:value="emojiPickerShowRecentEmojis">{{ $t('emojiPickerShowRecentEmojis') }}</FormSwitch>
@@ -33,7 +34,6 @@
 		<option :value="3">{{ $t('large') }}</option>
 	</FormRadios>
 	<FormButton @click="preview"><Fa :icon="faEye"/> {{ $t('preview') }}</FormButton>
-	<FormButton danger @click="setDefault"><Fa :icon="faUndo"/> {{ $t('default') }}</FormButton>
 </FormBase>
 </template>
 

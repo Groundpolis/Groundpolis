@@ -202,4 +202,9 @@ export const pages: PageDefinition[] = [
 		title: 'Registry Editor',
 		component: () => defineAsyncComponent(() => import('../regedit.vue')),
 	},
+	{
+		name: 'apps',
+		type: 'hidden',
+		component: () => defineAsyncComponent(() => import('./apps.vue')),
+	},
 ];
