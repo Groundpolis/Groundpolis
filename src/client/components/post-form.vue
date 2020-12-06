@@ -48,7 +48,7 @@
 		<input v-show="useCw" ref="cw" class="cw" v-model="cw" :placeholder="$t('annotation')" @keydown="onKeydown">
 		<textarea v-model="text" class="text" :class="{ withCw: useCw }" ref="text" :disabled="posting" :placeholder="placeholder" @keydown="onKeydown" @paste="onPaste"></textarea>
 		<input v-show="useBroadcast" ref="broadcastText" class="broadcastText" v-model="broadcastText" :placeholder="$t('broadcastTextDescription')" @keydown="onKeydown">
-		<XPostFormAttaches class="attaches" :files="files" @updated="updateMedia" @detach="detachMedia"/>
+		<XPostFormAttaches class="attaches" :files="files" @updated="updateFiles" @detach="detachFile" @changeSensitive="updateFileSensitive" @changeName="updateFileName"/>
 		<XPollEditor v-if="poll" :poll="poll" @destroyed="poll = null" @updated="onPollUpdate"/>
 		<footer>
 			<button v-if="currentAccount" class="_button switch-user" @click="switchUser" v-tooltip="$t('switchUser')">
@@ -447,12 +447,20 @@ export default defineComponent({
 			});
 		},
 
-		detachMedia(id) {
+		detachFile(id) {
 			this.files = this.files.filter(x => x.id != id);
 		},
 
-		updateMedia(file) {
-			this.files[this.files.findIndex(x => x.id === file.id)] = file;
+		updateFiles(files) {
+			this.files = files;
+		},
+
+		updateFileSensitive(file, sensitive) {
+			this.files[this.files.findIndex(x => x.id === file.id)].isSensitive = sensitive;
+		},
+
+		updateFileName(file, name) {
+			this.files[this.files.findIndex(x => x.id === file.id)].name = name;
 		},
 
 		upload(file: File, name?: string) {

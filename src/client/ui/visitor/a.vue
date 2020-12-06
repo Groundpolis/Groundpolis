@@ -32,7 +32,7 @@
 			</main>
 			<div class="powered-by">
 				<b><MkA to="/">{{ host }}</MkA></b>
-				<small>Powered by <a href="https://github.com/syuilo/misskey" target="_blank">Misskey</a></small>
+				<small>Powered by <a href="https://github.com/groundpolis/groundpolis" target="_blank">Groundpolis</a></small>
 			</div>
 		</div>
 	</div>

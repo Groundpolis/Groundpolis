@@ -1,7 +1,6 @@
 <template>
-<div class="rwqkcmrc" :style="{ backgroundImage: `url(${ $store.state.instance.meta.backgroundImageUrl })` }">
-	<div class="back"></div>
-	<div class="fade" v-if="full"></div>
+<div class="rwqkcmrc" :style="{ backgroundImage: transparent ? 'none' : `url(${ $store.state.instance.meta.backgroundImageUrl })` }">
+	<div class="back" :class="{ transparent }"></div>
 	<div class="contents">
 		<div class="wrapper">
 			<h1 v-if="meta" :class="{ full }">
@@ -10,9 +9,14 @@
 			<template v-if="full">
 				<div class="about" v-if="meta">
 					<div class="desc" v-html="meta.description || $t('introMisskey')"></div>
+
+					<div v-if="meta && meta.disableRegistration && meta.disableInvitation" class="signup-disabled">
+						<h1><fa :icon="faExclamationTriangle" /> {{ $t('signupDisabled') }}</h1>
+						<p v-if="meta.disableInvitationReason" v-text="meta.disableInvitationReason"/>
+					</div>
 				</div>
 				<div class="action">
-					<button class="_buttonPrimary" @click="signup()">{{ $t('signup') }}</button>
+					<button v-if="meta && !(meta.disableRegistration && meta.disableInvitation)" class="_buttonPrimary" @click="signup()">{{ $t('signup') }}</button>
 					<button class="_button" @click="signin()">{{ $t('login') }}</button>
 				</div>
 				<div class="announcements panel">
@@ -26,6 +30,10 @@
 							</div>
 						</section>
 					</MkPagination>
+				</div>
+				<div class="powered-by" v-if="poweredBy">
+					<b><MkA to="/">{{ host }}</MkA></b>
+					<small>Powered by <a href="https://github.com/groundpolis/groundpolis" target="_blank">Groundpolis</a></small>
 				</div>
 			</template>
 		</div>
@@ -50,11 +58,21 @@ export default defineComponent({
 	},
 
 	props: {
-		full :{
+		full: {
 			type: Boolean,
 			required: false,
 			default: false,
-		}
+		},
+		transparent: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		poweredBy: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 	},
 
 	data() {
@@ -107,17 +125,12 @@ export default defineComponent({
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background: var(--bg);
-		opacity: 0.5;
-	}
+		background: rgba(0, 0, 0, 0.3);
 
-	> .fade {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 300px;
-		background: linear-gradient(rgba(#000, 0.5), transparent);
+		&.transparent {
+			-webkit-backdrop-filter: blur(12px);
+			backdrop-filter: blur(12px);
+		}
 	}
 
 	> .contents {
@@ -176,6 +189,20 @@ export default defineComponent({
 				box-sizing: border-box;
 				text-shadow: 0 0 8px black;
 				color: #fff;
+				
+				> .signup-disabled {
+					color: var(--infoWarnFg);
+					border: 2px dashed var(--infoWarnBg);
+					padding: 8px;
+					margin: 24px 0;
+					h1 {
+						font-size: 1em;
+						margin: 0;
+					}
+					p {
+						margin: 8px 0 0 16px;
+					}
+				}
 			}
 
 			> .action {
@@ -220,7 +247,27 @@ export default defineComponent({
 						> .title {
 							font-weight: bold;
 						}
+
+						> .content {
+							> img {
+								max-width: 100%;
+							}
+						}
 					}
+				}
+			}
+
+			> .powered-by {
+				padding: 28px;
+				font-size: 14px;
+				text-align: center;
+				border-top: 1px solid rgba(255, 255, 255, 0.5);
+				color: #fff;
+
+				> small {
+					display: block;
+					margin-top: 8px;
+					opacity: 0.5;
 				}
 			}
 		}

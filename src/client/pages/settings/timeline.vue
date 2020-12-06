@@ -13,12 +13,14 @@
 		<div class="_formItem _formPanel" style="padding: 16px;">
 			<h2>{{ $t('pinnedTimeline') }}</h2>
 			<div class="_caption" v-if="items.length > 0" style="padding-bottom: 8px;">{{ $t('pinnedTimelineDescription') }}</div>
-			<XDraggable class="vmievna2" :list="items" animation="150" delay="100" delay-on-touch-only="true">
-				<div class="item" v-for="item in items" :key="item">
-					<Fa class="icon" :icon="timelineMenuMap[item].icon" />
-					{{ timelineMenuMap[item].name }}
-					<div class="del" @click="del(item)"><Fa :icon="faTimes" /></div>
-				</div>
+			<XDraggable class="vmievna2" v-model="items" :item-key="item => item" animation="150" delay="100" delay-on-touch-only="true">
+				<template #item="{element: item}">
+					<div class="item">
+						<Fa class="icon" :icon="timelineMenuMap[item].icon" />
+						{{ timelineMenuMap[item].name }}
+						<div class="del" @click="del(item)"><Fa :icon="faTimes" /></div>
+					</div>
+				</template>
 			</XDraggable>
 			<div class="_caption" style="padding: 8px 0;">{{ $t(otherItems.length > 0 ? 'pinnedTimelineDescription2' : 'pinnedTimelineEverything') }}</div>
 			<div class="otherItem" v-for="item in otherItems" :key="item" @click="add(item)">
@@ -32,9 +34,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineAsyncComponent, defineComponent } from 'vue';
 import { faTimes, faBars, faUndo, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { VueDraggableNext } from 'vue-draggable-next';
 import FormGroup from '@/components/form/group.vue';
 import FormSwitch from '@/components/form/switch.vue';
 import FormBase from '@/components/form/base.vue';
@@ -49,7 +50,7 @@ export default defineComponent({
 		FormSwitch,
 		FormGroup,
 		FormButton,
-		XDraggable: VueDraggableNext,
+		XDraggable: defineAsyncComponent(() => import('vuedraggable').then(x => x.default)),
 	},
 
 	data() {

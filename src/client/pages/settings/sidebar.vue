@@ -3,13 +3,18 @@
 	<FormSwitch v-model:value="useDisplayNameForSidebar">{{ $t('useDisplayNameForSidebar') }}</FormSwitch>
 	
 	<div class="mcc329a0 _formItem _formPanel">
-		<XDraggable class="draggable" :list="items" animation="150" delay="100" delay-on-touch-only="true">
-			<div class="item" v-for="item in items" :key="item">
-				<Fa v-if="!item.startsWith('-:')" class="icon" :icon="menuDef[item].icon" />
-				<span v-if="item.startsWith('-:')">-----------------</span>
-				<span v-else v-text="$t(menuDef[item] ? menuDef[item].title : item)"/>
-				<div class="del" @click="del(item)"><Fa :icon="faTimes" /></div>
-			</div>
+		<XDraggable class="draggable" v-model="items" :item-key="item => item" animation="150" delay="100" delay-on-touch-only="true">
+			<template #item="{element: item}">
+				<div class="item">
+					<Fa v-if="!item.startsWith('-:')" class="icon" :icon="menuDef[item].icon" />
+					<template v-if="item.startsWith('-:')">
+						<Fa class="icon" :icon="faMinus" />
+						<span v-text="$t('divider')"/>
+					</template>
+					<span v-else v-text="$t(menuDef[item] ? menuDef[item].title : item)"/>
+					<div class="del" @click="del(item)"><Fa :icon="faTimes" /></div>
+				</div>
+			</template>
 		</XDraggable>
 	</div>
 
@@ -21,10 +26,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { faListUl, faRedo, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { defineAsyncComponent, defineComponent } from 'vue';
+import { faListUl, faRedo, faPlus, faTimes, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuid } from 'uuid';
-import { VueDraggableNext } from 'vue-draggable-next';
 import FormSwitch from '@/components/form/switch.vue';
 import FormRadios from '@/components/form/radios.vue';
 import FormBase from '@/components/form/base.vue';
@@ -36,12 +40,12 @@ import { sidebarDef } from '@/sidebar';
 
 export default defineComponent({
 	components: {
-		XDraggable: VueDraggableNext,
 		FormBase,
 		FormSwitch,
 		FormButton,
 		FormRadios,
 		FormTuple,
+		XDraggable: defineAsyncComponent(() => import('vuedraggable').then(x => x.default)),
 	},
 
 	emits: ['info'],
@@ -54,7 +58,7 @@ export default defineComponent({
 			},
 			menuDef: sidebarDef,
 			items: [],
-			faRedo, faPlus, faTimes
+			faRedo, faPlus, faTimes, faMinus
 		}
 	},
 
