@@ -86,8 +86,8 @@
 					</MkA>
 					<div class="actions">
 						<button @click="menu" class="menu _button"><Fa :icon="faEllipsisH"/></button>
-						<MkFollowButton v-if="$store.state.i.id != user.id && !user.isBlocking && !user.isBlocked" :user="user" :inline="true" :transparent="false" :full="true" large class="koudoku"/>
-						<MkA v-else-if="$store.state.i.id == user.id" to="/settings/profile" class="edit-profile _button">{{ $t('editProfile') }}</MkA>
+						<MkFollowButton v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && !user.isBlocking && !user.isBlocked" :user="user" :inline="true" :transparent="false" :full="true" large class="koudoku"/>
+						<MkA v-else-if="$store.getters.isSignedIn && $store.state.i.id == user.id" to="/settings/profile" class="edit-profile _button">{{ $t('editProfile') }}</MkA>
 					</div>
 				</div>
 				<template v-if="page === 'index'">
@@ -133,8 +133,8 @@
 					</span>
 					<div class="actions" v-if="$store.getters.isSignedIn">
 						<button @click="menu" class="menu _button"><Fa :icon="faEllipsisH"/></button>
-						<MkFollowButton v-if="$store.state.i.id != user.id && !user.isBlocking && !user.isBlocked" :user="user" :inline="true" :transparent="false" :full="true" class="koudoku"/>
-						<MkA v-else-if="$store.state.i.id == user.id" to="/settings/profile" class="edit-profile _button">{{ $t('editProfile') }}</MkA>
+						<MkFollowButton v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && !user.isBlocking && !user.isBlocked" :user="user" :inline="true" :transparent="false" :full="true" class="koudoku"/>
+						<MkA v-else-if="$store.getters.isSignedIn && $store.state.i.id == user.id" to="/settings/profile" class="edit-profile _button">{{ $t('editProfile') }}</MkA>
 					</div>
 				</div>
 				<MkAvatar class="avatar" :user="user" :disable-preview="true" :disable-link="true" @click="onAvatarClicked"/>
