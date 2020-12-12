@@ -18,6 +18,10 @@ export const meta = {
 export default define(meta, async (ps, me) => {
 	const instance = await Instances
 		.findOne({ host: toPuny(ps.host) });
+	
+	if (instance && instance.softwareName === 'misskey' && instance.softwareVersion && instance.softwareVersion.includes('-gp-')) { 
+		instance.softwareName = 'groundpolis';
+	}
 
 	return instance;
 });

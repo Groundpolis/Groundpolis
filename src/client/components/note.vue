@@ -1305,6 +1305,10 @@ export default defineComponent({
 					@include ticker(rgb(134, 179, 0), rgb(242, 242, 242));
 				}
 
+				&.groundpolis {
+					@include ticker(#251a10, rgb(110, 229, 0));
+				}
+
 				&.mastodon {
 					@include ticker(#2b90d9, #fff);
 				}
