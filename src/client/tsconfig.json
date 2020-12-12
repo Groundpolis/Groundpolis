@@ -37,7 +37,6 @@
 	},
 	"compileOnSave": false,
 	"include": [
-		"./**/*.ts",
-		"./**/*.vue"
+		"./**/*.ts"
 	]
 }
