@@ -26,7 +26,7 @@
 		</div>
 		<div class="_section">
 			<div class="_content">
-				<MkSwitch v-if="user.host == null && $store.state.i.isAdmin && (this.moderator || !user.isAdmin)" @update:value="toggleModerator" v-model:value="moderator">{{ $t('moderator') }}</MkSwitch>
+				<MkSwitch v-if="user.host == null && $store.state.i.isAdmin && (moderator || !user.isAdmin)" @update:value="toggleModerator" v-model:value="moderator">{{ $t('moderator') }}</MkSwitch>
 				<MkSwitch @update:value="toggleVerify" v-model:value="verified">{{ $t('verify') }}</MkSwitch>
 				<MkSwitch @update:value="togglePremium" v-model:value="premium">{{ $t('premium') }}</MkSwitch>
 				<MkSwitch @update:value="toggleSilence" v-model:value="silenced">{{ $t('silence') }}</MkSwitch>

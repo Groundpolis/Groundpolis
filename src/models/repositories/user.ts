@@ -245,6 +245,7 @@ export class UserRepository extends Repository<User> {
 				carefulBot: profile!.carefulBot,
 				autoAcceptFollowed: profile!.autoAcceptFollowed,
 				noCrawle: profile!.noCrawle,
+				isExplorable: user.isExplorable,
 				hasUnreadSpecifiedNotes: NoteUnreads.count({
 					where: { userId: user.id, isSpecified: true },
 					take: 1

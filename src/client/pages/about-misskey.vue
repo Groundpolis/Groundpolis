@@ -1,16 +1,21 @@
 <template>
 <div style="overflow: hidden;">
 	<FormBase class="znqjceqz">
-		<section class="_formItem">
-			<div class="_formPanel" style="text-align: center; padding: 16px;" ref="about">
-				<div class="icon" ref="icon" draggable="false">
-					<img src="/assets/icon_transparent.svg" :class="{awesome}" @load="iconLoaded" alt="" draggable="false"/>
+		<FormGroup>
+			<section class="_formItem about">
+				<div class="_formPanel panel" :class="{ playing: easterEggEngine != null }" ref="about">
+					<div class="icon" ref="icon" draggable="false">
+						<img src="/assets/icon_transparent.svg" :class="{awesome}" @load="iconLoaded" alt="" draggable="false"/>
+					</div>
+					<div class="groundpolis" :class="{awesome}">Groundpolis</div>
+					<div class="version" :class="{awesome}">v{{ version }}</div>
+					<span class="emoji" v-for="emoji in easterEggEmojis" :key="emoji.id" :data-physics-x="emoji.left" :data-physics-y="emoji.top" :class="{ _physics_circle_: !emoji.emoji.startsWith(':') }"><MkEmoji class="emoji" :emoji="emoji.emoji" :custom-emojis="$store.state.instance.meta.emojis" :is-reaction="false" :normal="true" :no-style="true"/></span>
 				</div>
-				<div class="title" :class="{awesome}">Groundpolis</div>
-				<div class="version" :class="{awesome}">v{{ version }}</div>
-				<span v-for="emoji in easterEggEmojis" :key="emoji.emoji" :class="{ _physics_circle_: !emoji.emoji.startsWith(':') }" :style="{ position: 'absolute', top: emoji.top, left: emoji.left, userSelect: 'none' }"><MkEmoji style="pointer-events: none; font-size: 24px; width: 24px;" :emoji="emoji.emoji" :custom-emojis="$store.state.instance.meta.emojis" :is-reaction="false" :normal="true" :no-style="true"/></span>
-			</div>
-		</section>
+			</section>
+			<FormLink :to="`https://github.com/Groundpolis/Groundpolis/releases/tag/${version}`" external>
+				{{ $t('_aboutMisskey.releaseNote') }}
+			</FormLink>
+		</FormGroup>
 		<section class="_formItem" style="text-align: center; padding: 0 16px;" @click="gravity">
 			{{ $t('_aboutMisskey.about') }}
 		</section>
@@ -18,17 +23,14 @@
 			<FormLink to="https://github.com/Groundpolis/Groundpolis" external>
 				<template #icon><Fa :icon="faCode"/></template>
 				{{ $t('_aboutMisskey.source') }}
-				<template #suffix>GitHub</template>
 			</FormLink>
 			<FormLink to="https://github.com/syuilo/misskey" external>
 				<template #icon><Fa :icon="faCode"/></template>
 				{{ $t('_aboutMisskey.sourceMisskey') }}
-				<template #suffix>GitHub</template>
 			</FormLink>
 			<FormLink to="https://www.patreon.com/syuilo" external>
 				<template #icon><Fa :icon="faHandHoldingMedical"/></template>
 				{{ $t('_aboutMisskey.donate') }}
-				<template #suffix>Patreon</template>
 			</FormLink>
 		</FormGroup>
 		<FormGroup>
@@ -135,17 +137,6 @@ export default defineComponent({
 		}
 	},
 
-	created() {
-		const emojis = this.$store.state.settings.reactions;
-		for (let i = 0; i < 60; i++) {
-			this.easterEggEmojis.push({
-				top: -(32 + (Math.random() * 256)) + 'px',
-				left: (Math.random() * 99) + '%',
-				emoji: emojis[Math.floor(Math.random() * emojis.length)],
-			});
-		}
-	},
-
 	mounted() {
 		VanillaTilt.init(this.$refs.icon, {
 			max: 30,
@@ -163,6 +154,17 @@ export default defineComponent({
 
 	methods: {
 		iconLoaded() {
+			const emojis = this.$store.state.settings.reactions;
+			const containerWidth = this.$refs.about.offsetWidth;
+			for (let i = 0; i < 64; i++) {
+				this.easterEggEmojis.push({
+					id: i.toString(),
+					top: -(128 + (Math.random() * 256)),
+					left: (Math.random() * containerWidth),
+					emoji: emojis[Math.floor(Math.random() * emojis.length)],
+				});
+			}
+
 			this.$nextTick(() => {
 				this.easterEggReady = true;
 			});
@@ -172,14 +174,8 @@ export default defineComponent({
 			if (!this.easterEggReady) return;
 			this.awesome = true;
 			this.easterEggReady = false;
-			this.$nextTick(() => {
-				this.$refs.icon.vanillaTilt.destroy();
-				this.easterEggEngine = physics(this.$refs.about);
-
-				setTimeout(() => {
-					this.easterEggEngine.stop();
-				}, 1000 * 60 * 3);
-			});
+			this.$refs.icon.vanillaTilt.destroy();
+			this.easterEggEngine = physics(this.$refs.about);
 		}
 	}
 });
@@ -190,40 +186,75 @@ export default defineComponent({
 	max-width: 800px;
 	box-sizing: border-box;
 	margin: 0 auto;
-}
 
-.icon {
-	display: block;
-	width: 100px;
-	margin: 0 auto;
-	border-radius: 16px;
-	background: #251a10;
-	transform-style: preserve-3d;
-	
+	.about {
+		> .panel {
+			position: relative;
+			text-align: center;
+			padding: 16px;
 
-	> img {
-		width: 100%;
-		height: 100%;
-		transform: translate3d(0, 4px, 32px) scale(0.9);
+			&.playing {
+				&, * {
+					user-select: none;
+				}
+
+				* {
+					will-change: transform;
+				}
+
+				> .emoji {
+					visibility: visible;
+				}
+			}
+
+			> .icon {
+				display: block;
+				width: 100px;
+				margin: 0 auto;
+				border-radius: 16px;
+				background: #251a10;
+				transform-style: preserve-3d;
+				
+
+				> img {
+					width: 100%;
+					height: 100%;
+					transform: translate3d(0, 4px, 32px) scale(0.9);
+				}
+			}
+
+			> .groundpolis {
+				margin: 0.75em auto 0.3em auto;
+				width: max-content;
+				font-size: 24px;
+				font-weight: bold;
+			}
+
+			> .version {
+				margin: 0 auto;
+				width: max-content;
+				opacity: 0.5;
+			}
+
+			> .awesome {
+				animation: mfm-rainbow 1s linear infinite both;
+				opacity: 1;
+				color: var(--accent);
+			}
+
+			> .emoji {
+				position: absolute;
+				top: 0;
+				left: 0;
+				visibility: hidden;
+
+				> .emoji {
+					pointer-events: none;
+					font-size: 24px;
+					width: 24px;
+				}
+			}
+		}
 	}
-}
-
-.title {
-	margin: 0.75em auto 0.3em auto;
-	width: max-content;
-	font-size: 24px;
-	font-weight: bold;
-}
-
-.version {
-	margin: 0 auto;
-	opacity: 0.5;
-	width: max-content;
-}
-
-.awesome {
-	animation: mfm-rainbow 1s linear infinite both;
-	opacity: 1;
-	color: var(--accent);
 }
 </style>

@@ -81,7 +81,6 @@ import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
 import { toASCII } from 'punycode';
 import XNotePreview from './note-preview.vue';
-import MkAvatar from './avatar.vue';
 import { parse } from '../../mfm/parse';
 import { host, url } from '@/config';
 import { erase, unique } from '../../prelude/array';
@@ -96,7 +95,6 @@ import { notePostInterruptors, postFormActions } from '@/store';
 
 export default defineComponent({
 	components: {
-		MkAvatar,
 		XNotePreview,
 		XPostFormAttaches: defineAsyncComponent(() => import('./post-form-attaches.vue')),
 		XPollEditor: defineAsyncComponent(() => import('./poll-editor.vue'))
