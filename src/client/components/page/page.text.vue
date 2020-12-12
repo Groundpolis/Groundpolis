@@ -1,6 +1,6 @@
 <template>
 <div class="mrdgzndn">
-	<span v-if="value.format === 'plainText'" v-text="text"/>
+	<MkPlainText v-if="value.format === 'plainText'" :text="text"/>
 	<MkMarkdown v-else-if="value.format === 'markdown'" :text="text"/>
 	<span v-else-if="value.format === 'html'" v-html="text"/>
 	<Mfm v-else :text="text" :is-note="false" :i="$store.state.i" :key="text"/>

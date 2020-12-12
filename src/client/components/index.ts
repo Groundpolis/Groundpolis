@@ -11,6 +11,7 @@ import time from './global/time.vue';
 import url from './global/url.vue';
 import loading from './global/loading.vue';
 import error from './global/error.vue';
+import plainText from './global/plain-text.vue';
 
 export default function(app: App) {
 	app.component('Mfm', mfm);
@@ -24,4 +25,5 @@ export default function(app: App) {
 	app.component('MkUrl', url);
 	app.component('MkLoading', loading);
 	app.component('MkError', error);
+	app.component('MkPlainText', plainText);
 }

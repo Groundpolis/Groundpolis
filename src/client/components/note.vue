@@ -52,7 +52,7 @@
 			<div class="body">
 				<p v-if="appearNote.cw != null" class="cw">
 					<Mfm v-if="appearNote.cw != '' && !isPlainMode" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis" :no-sticker="true"/>
-					<span v-else-if="appearNote.cw != ''" class="text" v-text="appearNote.cw"/>
+					<MkPlainText v-else-if="appearNote.cw != ''" class="text" :text="appearNote.cw"/>
 					<XCwButton v-model:value="showContent" :note="appearNote"/>
 				</p>
 				<div class="content" v-show="appearNote.cw == null || showContent">
@@ -60,7 +60,7 @@
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $t('private') }})</span>
 						<MkA class="reply" v-if="appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><Fa :icon="faReply"/></MkA>
 						<Mfm v-if="appearNote.text && !isPlainMode" :text="appearNote.text" :author="appearNote.user" :i="$store.state.i" :custom-emojis="appearNote.emojis"/>
-						<span v-else-if="appearNote.text" v-text="appearNote.text"/>
+						<MkPlainText v-else-if="appearNote.text" :text="appearNote.text"/>
 					</div>
 					<button v-if="readMore !== null" class="read-more-button _button _link" @click="readMore = !readMore" v-text="$t(readMore ? 'hide' : 'readMore')"/>
 					<div class="files" v-if="appearNote.files.length > 0">
