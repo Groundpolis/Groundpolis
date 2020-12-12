@@ -3,6 +3,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { faPalette, faPlug, faUser, faListUl, faLock, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish, faCommentSlash, faMagic, faColumns, faStream, faDownload, faFolderOpen, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell } from '@fortawesome/free-regular-svg-icons';
+import { faCss3Alt } from '@fortawesome/free-brands-svg-icons';
 
 import { i18n } from '@/i18n';
 
@@ -205,6 +206,15 @@ export const pages: PageDefinition[] = [
 	{
 		name: 'apps',
 		type: 'hidden',
+		title: t('installedApps'),
+		icon: faPlug,
 		component: () => defineAsyncComponent(() => import('./apps.vue')),
+	},
+	{
+		name: 'labs/custom-css',
+		type: 'hidden',
+		title: 'Custom CSS',
+		icon: faCss3Alt,
+		component: () => defineAsyncComponent(() => import('./labs.custom-css.vue')),
 	},
 ];

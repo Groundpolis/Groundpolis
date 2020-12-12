@@ -165,7 +165,7 @@ module.exports = {
 	resolveLoader: {
 		modules: ['node_modules']
 	},
-	cache: isProduction,
+	cache: !isProduction,
 	experiments: {
 		topLevelAwait: true
 	},

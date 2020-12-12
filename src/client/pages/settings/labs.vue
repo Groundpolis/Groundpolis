@@ -1,7 +1,7 @@
 <template>
 <FormBase>
 	<div class="_formItem">
-		{{ $t('_labs.description') }}
+		<div class="_formLabel" style="font-size: 100%">{{ $t('_labs.description') }}</div>
 	</div>
 
 	<!-- <div class="_formItem _formPanel" style="padding: 16px;">
@@ -15,6 +15,9 @@
 			All reactions will be rendered as a "Like" count, and your "Like" will be transformed to the instance's fallback reaction.
 		</template>
 	</FormSwitch>
+	<FormLink to="labs/custom-css">
+		Custom CSS
+	</FormLink>
 </FormBase>
 </template>
 
@@ -22,11 +25,13 @@
 import { defineComponent } from 'vue';
 
 import FormBase from '@/components/form/base.vue';
+import FormLink from '@/components/form/link.vue';
 import FormSwitch from '@/components/form/switch.vue';
 
 export default defineComponent({
 	components: {
 		FormBase,
+		FormLink,
 		FormSwitch,
 	},
 

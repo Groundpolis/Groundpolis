@@ -67,6 +67,15 @@ window.addEventListener('resize', () => {
 // Get the <head> element
 const head = document.getElementsByTagName('head')[0];
 
+const css = localStorage['css'];
+
+if (css) { 
+	const style = document.createElement('style');
+	style.innerText = css;
+
+	head.appendChild(style);
+}
+
 // If mobile, insert the viewport meta tag
 if (os.isMobile || window.innerWidth <= 1024) {
 	const viewport = document.getElementsByName('viewport').item(0);

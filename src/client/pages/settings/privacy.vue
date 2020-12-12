@@ -14,11 +14,11 @@
 			{{ $t('noCrawle') }}
 			<template #desc>{{ $t('noCrawleDescription') }}</template>
 		</FormSwitch>
-		<FormSwitch v-model:value="isExplorable" @update:value="save()">
-			{{ $t('makeExplorable') }}
-			<template #desc>{{ $t('makeExplorableDescription') }}</template>
-		</FormSwitch>
 	</FormGroup>
+	<FormSwitch v-model:value="isExplorable" @update:value="save()">
+		{{ $t('makeExplorable') }}
+		<template #desc>{{ $t('makeExplorableDescription') }}</template>
+	</FormSwitch>
 	<FormSwitch v-model:value="rememberNoteVisibility" @update:value="save()">{{ $t('rememberNoteVisibility') }}</FormSwitch>
 	<FormGroup v-if="!rememberNoteVisibility">
 		<template #label>{{ $t('defaultNoteVisibility') }}</template>
