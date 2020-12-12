@@ -28,6 +28,8 @@ export const meta = {
 };
 
 export default define(meta, async (ps, user) => {
+	// TODO とりあえずページ公開範囲実装までAPIを無効化
+	return [];
 	const query = makePaginationQuery(Pages.createQueryBuilder('page'), ps.sinceId, ps.untilId)
 		.andWhere(`page.userId = :userId`, { userId: ps.userId })
 		.andWhere('page.visibility = \'public\'');

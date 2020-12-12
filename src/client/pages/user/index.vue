@@ -80,10 +80,10 @@
 						<Fa :icon="faPaperclip" class="icon"/>
 						<span>{{ $t('clips') }}</span>
 					</MkA>
-					<MkA :to="userPage(user, 'pages')" :class="{ active: page === 'pages' }" class="link">
+					<!-- <MkA :to="userPage(user, 'pages')" :class="{ active: page === 'pages' }" class="link">
 						<Fa :icon="faFileAlt" class="icon"/>
 						<span>{{ $t('pages') }}</span>
-					</MkA>
+					</MkA> -->
 					<div class="actions">
 						<button @click="menu" class="menu _button"><Fa :icon="faEllipsisH"/></button>
 						<MkFollowButton v-if="$store.getters.isSignedIn && $store.state.i.id != user.id && !user.isBlocking && !user.isBlocked" :user="user" :inline="true" :transparent="false" :full="true" large class="koudoku"/>
@@ -101,7 +101,7 @@
 				<XFollowList v-else-if="page === 'following'" type="following" :user="user" class="_vMargin"/>
 				<XFollowList v-else-if="page === 'followers'" type="followers" :user="user" class="_vMargin"/>
 				<XClips v-else-if="page === 'clips'" :user="user" class="_vMargin"/>
-				<XPages v-else-if="page === 'pages'" :user="user" class="_vMargin"/>
+				<!-- <XPages v-else-if="page === 'pages'" :user="user" class="_vMargin"/> -->
 			</div>
 		</div>
 	</div>
@@ -206,10 +206,10 @@
 				<Fa :icon="faPaperclip" class="icon"/>
 				<span>{{ $t('clips') }}</span>
 			</MkA>
-			<MkA :to="userPage(user, 'pages')" :class="{ active: page === 'pages' }" class="link">
+			<!-- <MkA :to="userPage(user, 'pages')" :class="{ active: page === 'pages' }" class="link">
 				<Fa :icon="faFileAlt" class="icon"/>
 				<span>{{ $t('pages') }}</span>
-			</MkA>
+			</MkA> -->
 		</div>
 
 		<template v-if="page === 'index'">
@@ -227,7 +227,7 @@
 		<XFollowList v-else-if="page === 'following'" type="following" :user="user" class="_content _vMargin"/>
 		<XFollowList v-else-if="page === 'followers'" type="followers" :user="user" class="_content _vMargin"/>
 		<XClips v-else-if="page === 'clips'" :user="user" class="_vMargin"/>
-		<XPages v-else-if="page === 'pages'" :user="user" class="_vMargin"/>
+		<!-- <XPages v-else-if="page === 'pages'" :user="user" class="_vMargin"/> -->
 	</div>
 	<div v-else-if="error">
 		<MkError @retry="fetch()"/>
