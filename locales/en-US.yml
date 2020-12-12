@@ -781,6 +781,7 @@ _aboutMisskey:
   donate: "Donate to Misskey"
   morePatrons: "We really appreciate the support of many other helpers not listed here. Thank you! 🥰"
   patrons: "Backers of the Misskey Project"
+  releaseNote: "See Release Note"
 _nsfw:
   respect: "Hide NSFW media"
   ignore: "Don't hide NSFW media"

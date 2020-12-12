@@ -827,6 +827,7 @@ _aboutMisskey:
   donate: "Misskeyに寄付"
   morePatrons: "他にも多くの方が支援してくれています。ありがとうございます🥰"
   patrons: "Misskey プロジェクトのスポンサー"
+  releaseNote: "リリースノートを見る"
 
 _nsfw:
   respect: "閲覧注意のメディアは隠す"
