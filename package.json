@@ -14,7 +14,7 @@
 	"scripts": {
 		"bs": "npm run build && npm run start",
 		"build": "run-s webpack gulp",
-		"build-product": "cross-env NODE_ENV=production webpack && gulp build",
+		"build-product": "cross-env NODE_ENV=production run-s webpack gulp",
 		"clean": "gulp clean",
 		"cleanall": "gulp cleanall",
 		"dev": "run-p watch gulpstart",
