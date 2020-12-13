@@ -823,6 +823,11 @@ _labs:
   title: "Labs"
   description: "Why don't you test Groundpolis' new features in development? You can enable new features and improvements in development."
   notAvailable: "There are no available features now."
+  useLike: "Use \"Like\" instead of Reactions"
+  useLikeDesc: "Turning on this setting replaces the reaction feature to \"Like\" feature. All reactions will be rendered as a \"Like\" count, and your \"Like\" will be transformed to the instance's fallback reaction."
+  customCss: "Custom CSS"
+  customCssDesc: "Edit the CSS directly to create the look and feel you want."
+  customCssWarn: "If you are not familiar with CSS, never touch it."
 
 _mfm:
   cheatSheet: "GPFM Cheatsheet"

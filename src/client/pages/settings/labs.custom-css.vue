@@ -2,18 +2,16 @@
 <FormBase>
 	<div class="_formItem">
 		<div class="_formLabel" style="font-size: 100%">
-			Edit the CSS directly to create the look and feel you want.
-			<strong style="color: var(--error)">If you are not familiar with CSS, never touch it.</strong>
+			{{ $t('_labs.customCssDesc') }}
+			<strong style="color: var(--error)">{{$t('_labs.customCssWarn')}}</strong>
 		</div>
 	</div>
 	<div class="_formItem">
-		<div class="_formPanel">
+		<div class="_formPanel editor">
 			<PrismEditor class="_cvode code" v-model="css" :highlight="highlighter" line-numbers/>
 		</div>
 	</div>
-	<FormButton primary @click="save">
-		Save
-	</FormButton>
+	<FormButton primary @click="save">{{$t('save')}}</FormButton>
 </FormBase>
 </template>
 
@@ -27,7 +25,6 @@ import { PrismEditor } from 'vue-prism-editor';
 import 'vue-prism-editor/dist/prismeditor.min.css';
 import FormBase from '@/components/form/base.vue';
 import FormButton from '@/components/form/button.vue';
-import * as os from '@/os';
 
 export default defineComponent({
 	components: {
@@ -58,3 +55,9 @@ export default defineComponent({
 	},
 });
 </script>
+
+<style lang="scss" scoped>
+.editor {
+	padding: 14px 8px;
+}
+</style>

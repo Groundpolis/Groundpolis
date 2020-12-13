@@ -213,7 +213,7 @@ export const pages: PageDefinition[] = [
 	{
 		name: 'labs/custom-css',
 		type: 'hidden',
-		title: 'Custom CSS',
+		title: t('_labs.customCss'),
 		icon: faCss3Alt,
 		component: () => defineAsyncComponent(() => import('./labs.custom-css.vue')),
 	},

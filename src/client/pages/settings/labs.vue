@@ -9,14 +9,11 @@
 	</div> -->
 
 	<FormSwitch v-model:value="disableReactions">
-		Use "Like" instead of Reactions
-		<template #desc>
-			Turning on this setting replaces the reaction feature to "Like" feature.
-			All reactions will be rendered as a "Like" count, and your "Like" will be transformed to the instance's fallback reaction.
-		</template>
+		{{ $t('_labs.useLike') }}
+		<template #desc>{{ $t('_labs.useLikeDesc') }}</template>
 	</FormSwitch>
 	<FormLink to="labs/custom-css">
-		Custom CSS
+		{{ $t('_labs.customCss') }}
 	</FormLink>
 </FormBase>
 </template>
