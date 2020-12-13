@@ -1,13 +1,13 @@
 #!/bin/bash
 
-VERSION=2.0
+VERSION=2.0.1
 
 # ----- Locales
 
 lang_en() {
 	GUT_TITLE="Groundpolis Update Tools v${VERSION}"
 	GUT_ERROR="Error: "
-	GUT_NOENV="There is no environment config file! Copy update.default.env as update.env before running this!"
+	GUT_NOENV="There is no environment config file! Copy update.default.env as update.env and edit it before running this. Be sure to check it because it contains important settings!"
 	GUT_USAGE="Usage"
 	GUT_OPTS="Options"
 	GUT_OPTS_HELP="Show this help."
@@ -41,7 +41,7 @@ lang_en() {
 lang_ja() {
 	GUT_TITLE="Groundpolis 更新ツール v${VERSION}"
 	GUT_ERROR="エラー："
-	GUT_NOENV="環境設定ファイルが見つかりません。実行前に、update.default.env ファイルを、update.env という名前でコピーしてください。"
+	GUT_NOENV="環境設定ファイルが見つかりません。実行前に、update.default.env ファイルを、update.env という名前でコピーし、ファイルを編集してください。重要な設定項目が含まれるので、必ず確認してください。"
 	GUT_USAGE="使い方"
 	GUT_OPTS="オプション"
 	GUT_OPTS_HELP="このヘルプを表示します。"
