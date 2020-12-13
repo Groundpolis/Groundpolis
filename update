@@ -1,14 +1,253 @@
 #!/bin/bash
 
-git pull
+VERSION=2.0
 
-export NODE_OPTIONS="--max-old-space-size=4096"
+# ----- Locales
 
-npx yarn
-NODE_ENV=production npx yarn build
-if [ "$1" = '--migrate' ]; then
-	npx yarn migrate
+lang_en() {
+	GUT_TITLE="Groundpolis Update Tools v${VERSION}"
+	GUT_ERROR="Error: "
+	GUT_NOENV="There is no environment config file! Copy update.default.env as update.env before running this!"
+	GUT_USAGE="Usage"
+	GUT_OPTS="Options"
+	GUT_OPTS_HELP="Show this help."
+	GUT_OPTS_VERBOSE="Run the tool as verbose-mode, and will show more logs than usual."
+	GUT_MODE="You can specify mode to modify the behavior of the tool. If omitted, the tool will perform as default."
+	GUT_MODE_MIGRATE="Tool will migrate the Database after the build is finished."
+	GUT_MODE_NOGIT="Tool will skip \`git pull\`."
+	GUT_MODE_NOBUILD="Tool will not build Groundpolis."
+	GUT_MODE_NOINSTALL="Tool will skip \`yarn build\`."
+	GUT_INVALID_OPTION="Invalid option."
+	GUT_INVALID_MODE="Invalid mode"
+	GUT_VERBOSE="Running as verbose mode!"
+	GUT_USE_YARN="yarn is installed! using yarn."
+	GUT_USE_NPX="yarn is not installed! using npx."
+	GUT_GIT_SKIP="Git pull is skipped."
+	GUT_GIT_PULL="Pulling from the git remote repository..."
+	GUT_FAILED_GIT="Failed to run git. Use $0 -v to check the details."
+	GUT_INSTALL_SKIP="Installing dependencies is skipped."
+	GUT_INSTALL="Installing dependencies..."
+	GUT_FAILED_INSTALL="Failed to install. Use $0 -v to check the details."
+	GUT_BUILD="Building Groundpolis..."
+	GUT_BUILD_SKIP="Building Groundpolis is skipped."
+	GUT_FAILED_BUILD="Failed to build. Use $0 -v to check the details."
+	GUT_MIGRATE="Migrating Database..."
+	GUT_REBOOT_GROUNDPOLIS="Rebooting Groundpolis..."
+	GUT_REBOOT_NGINX="Rebooting nginx..."
+	GUT_REBOOT_ELASTICSEARCH="Rebooting Elasticsearch..."
+	GUT_FINISHED="Groundpolis has been successfully updated!"
+}
+
+lang_ja() {
+	GUT_TITLE="Groundpolis 更新ツール v${VERSION}"
+	GUT_ERROR="エラー："
+	GUT_NOENV="環境設定ファイルが見つかりません。実行前に、update.default.env ファイルを、update.env という名前でコピーしてください。"
+	GUT_USAGE="使い方"
+	GUT_OPTS="オプション"
+	GUT_OPTS_HELP="このヘルプを表示します。"
+	GUT_OPTS_VERBOSE="ツールを詳細モードとして実行します。通常より多くのログを出力します。"
+	GUT_MODE="モードを指定することで、ツールの挙動を変更できます。省略した場合、ツールは既定の振る舞いをします。"
+	GUT_MODE_MIGRATE="ビルド終了後、マイグレーションを行います。"
+	GUT_MODE_NOGIT="\`git pull\` をスキップします."
+	GUT_MODE_NOINSTALL="\`yarn build\` をスキップします。"
+	GUT_MODE_NOBUILD="Groundpolis をビルドしません。"
+	GUT_INVALID_OPTION="オプションが間違っています。"
+	GUT_INVALID_MODE="無効なモード"
+	GUT_VERBOSE="詳細モードで実行します。"
+	GUT_USE_YARN="yarn がインストールされているため、yarn を使用します。"
+	GUT_USE_NPX="yarn がインストールされていないため、npx を使用します。"
+	GUT_GIT_SKIP="Git pull をスキップします。"
+	GUT_GIT_PULL="Git リモートリポジトリから Pull しています..."
+	GUT_FAILED_GIT="Git の実行に失敗しました。 $0 -v を実行して詳細を確認してください。"
+	GUT_INSTALL_SKIP="依存するパッケージのインストールをスキップします。"
+	GUT_INSTALL="依存するパッケージをインストール中..."
+	GUT_FAILED_INSTALL="インストールに失敗しました。 $0 -v を実行して詳細を確認してください。"
+	GUT_BUILD_SKIP="Groundpolis のビルドをスキップします。"
+	GUT_BUILD="Groundpolis をビルド中..."
+	GUT_FAILED_BUILD="ビルドに失敗しました。$0 -v を実行して詳細を確認してください。"
+	GUT_MIGRATE="データベースのマイグレーションを実行中..."
+	GUT_REBOOT_GROUNDPOLIS="Groundpolis を再起動中..."
+	GUT_REBOOT_NGINX="nginx を再起動中..."
+	GUT_REBOOT_ELASTICSEARCH="Elasticsearch を再起動中..."
+	GUT_FINISHED="Groundpolis は無事にアップデートされました！"
+}
+
+# ----- Functions
+
+# https://qiita.com/ymdymd/items/51bf4145ec58654eaffc
+mode-migrate() {
+	[ "${MODE_MIGRATE+a}" ]
+}
+
+mode-nogit() {
+	[ "${MODE_NOGIT+a}" ]
+}
+
+mode-noinstall() {
+	[ "${MODE_NOINSTALL+a}" ]
+}
+
+mode-nobuild() {
+	[ "${MODE_NOBUILD+a}" ]
+}
+
+verbose() {
+	[ "${VERBOSE+a}" ]
+}
+
+echov() {
+	verbose && echo $@
+}
+
+systemd-groundpolis() {
+	[ "${SYSTEMD_GROUNDPOLIS:+a}" ]
+}
+
+systemd-nginx() {
+	[ "${SYSTEMD_NGINX:+a}" ]
+}
+
+systemd-elasticsearch() {
+	[ "${SYSTEMD_ELASTICSEARCH:+a}" ]
+}
+
+die() {
+	echo "${GUT_ERROR}: $@" >&2
+	exit 1
+}
+
+show-help() {
+	echo "${GUT_USAGE}: $0 [-vh] [...mode]"
+	echo "${GUT_OPTS}:"
+	echo "  -v: ${GUT_OPTS_VERBOSE}"
+	echo "  -h: ${GUT_OPTS_HELP}"
+	echo $GUT_MODE
+	echo "  migrate: ${GUT_MODE_MIGRATE}"
+	echo "  nogit: ${GUT_MODE_NOGIT}"
+	echo "  nobuild: ${GUT_MODE_NOBUILD}"
+	echo "  noinstall: ${GUT_MODE_NOINSTALL}"
+}
+
+# -----
+
+lang_en
+if [[ $LANG =~ ja_JP ]]; then
+	lang_ja
 fi
-systemctl restart gp
-sleep 7
-systemctl restart nginx
+
+echo $GUT_TITLE
+echo "(C)2020 Groundpolis HQ"
+echo
+
+source ./update.env 2>/dev/null || die $GUT_NOENV
+
+while getopts :hv OPT
+do
+	case $OPT in
+		h)
+			show-help
+			exit 0
+			;;
+		v) VERBOSE= ;;
+		*)
+			echo $GUT_INVALID_OPTION >&2
+			show-help
+			exit 1
+	esac
+done
+
+echov $GUT_VERBOSE
+
+for i in $@; do
+	case $i in
+		migrate)
+			MODE_MIGRATE=
+			;;
+		nogit)
+			MODE_NOGIT=
+			;;
+		noinstall)
+			MODE_NOINSTALL=
+			;;
+		nobuild)
+			MODE_NOBUILD=
+			;;
+		*)
+			if [[ ! "$i" =~ ^\- ]]; then
+				die $GUT_INVALID_MODE $i
+			fi
+			;;
+	esac
+done
+
+if type yarn >> /dev/null; then
+	echov $GUT_USE_YARN
+	YARN=yarn
+else
+	echov $GUT_USE_NPX
+	YARN=npx yarn
+fi
+
+if mode-nogit; then
+	echov $GUT_GIT_SKIP
+else
+	echo $GUT_GIT_PULL
+	if verbose; then
+		git pull
+	else
+		git pull >> /dev/null
+	fi
+
+	if [ $? -ne 0 ]; then
+		die $GUT_FAILED_GIT
+	fi
+fi
+
+if mode-noinstall; then
+	echov $GUT_INSTALL_SKIP
+else
+	echo $GUT_INSTALL
+	if verbose; then
+		$YARN install
+	else
+		$YARN install >> /dev/null 2>/dev/null
+	fi
+
+	if [ $? -ne 0 ]; then
+		die $GUT_FAILED_INSTALL
+	fi
+fi
+
+
+
+if mode-nobuild; then
+	echov $GUT_BUILD_SKIP
+else
+	echo $GUT_BUILD
+	$YARN build-product
+
+	if [ $? -ne 0 ]; then
+		die $GUT_FAILED_BUILD
+	fi
+fi
+
+if mode-migrate; then
+	echo $GUT_MIGRATE
+	$YARN migrate
+fi
+
+if systemd-elasticsearch; then
+	echo $GUT_REBOOT_ELASTICSEARCH
+	systemctl restart $SYSTEMD_ELASTICSEARCH
+fi
+if systemd-groundpolis; then
+	echo $GUT_REBOOT_GROUNDPOLIS
+	systemctl restart $SYSTEMD_GROUNDPOLIS
+	sleep 10
+fi
+if systemd-nginx; then
+	echo $GUT_REBOOT_NGINX
+	systemctl restart $SYSTEMD_NGINX
+fi
+
+echo $GUT_FINISHED

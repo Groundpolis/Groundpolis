@@ -40,3 +40,4 @@ ormconfig.json
 *.blend5
 
 built.zip
+update.env
