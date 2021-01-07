@@ -365,6 +365,14 @@ export default defineComponent({
 			}
 			this.$emit('update:note', Object.freeze(result));
 		}
+
+		const textElement = this.$refs.text as HTMLElement | null;
+		if (textElement) {
+			const h = textElement.getBoundingClientRect().height;
+			if (h > 192) {
+				this.readMore = false;
+			}
+		}
 	},
 
 	async mounted() {
