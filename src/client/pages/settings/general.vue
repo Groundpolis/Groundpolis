@@ -1,7 +1,9 @@
 <template>
 <FormBase>
-	<FormSwitch v-model:value="titlebar">{{ $ts.showTitlebar }}</FormSwitch>
-	<FormSwitch v-model:value="showFixedPostForm">{{ $ts.showFixedPostForm }}</FormSwitch>
+	<FormGroup>
+		<FormSwitch v-model:value="titlebar">{{ $ts.showTitlebar }}</FormSwitch>
+		<FormSwitch v-model:value="showFixedPostForm">{{ $ts.showFixedPostForm }}</FormSwitch>
+	</FormGroup>
 
 	<FormSelect v-model:value="lang">
 		<template #label>{{ $ts.uiLanguage }}</template>
