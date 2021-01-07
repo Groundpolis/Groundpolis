@@ -1,9 +1,9 @@
 <template>
 <FormBase>
-	<FormSwitch v-model:value="emojiPickerShowPinnedEmojis">{{ $t('emojiPickerShowPinnedEmojis') }}</FormSwitch>
+	<FormSwitch v-model:value="emojiPickerShowPinnedEmojis">{{ $ts.emojiPickerShowPinnedEmojis }}</FormSwitch>
 
 	<div class="_formItem" v-if="emojiPickerShowPinnedEmojis">
-		<div class="_formLabel">{{ $t('reactionSettingDescription') }}</div>
+		<div class="_formLabel">{{ $ts.reactionSettingDescription }}</div>
 		<div class="_formPanel">
 			<XDraggable class="zoaiodol" v-model="reactions" :item-key="item => item" animation="150" delay="100" delay-on-touch-only="true">
 				<template #item="{element}">
@@ -16,26 +16,26 @@
 				</template>
 			</XDraggable>
 		</div>
-		<div class="_formCaption" v-text="$t('reactionSettingDescription2')" />
-		<FormButton danger @click="setDefault"><Fa :icon="faUndo"/> {{ $t('default') }}</FormButton>
+		<div class="_formCaption" v-text="$ts.reactionSettingDescription2" />
+		<FormButton danger @click="setDefault"><Fa :icon="faUndo"/> {{ $ts.default }}</FormButton>
 	</div>
 	<FormGroup>
-		<FormSwitch v-model:value="emojiPickerShowRecentEmojis">{{ $t('emojiPickerShowRecentEmojis') }}</FormSwitch>
-		<FormButton v-if="emojiPickerShowRecentEmojis" @click="clearRecent" danger><Fa :icon="faTrashAlt"/> {{ $t('clearHistories') }}</FormButton>
+		<FormSwitch v-model:value="emojiPickerShowRecentEmojis">{{ $ts.emojiPickerShowRecentEmojis }}</FormSwitch>
+		<FormButton v-if="emojiPickerShowRecentEmojis" @click="clearRecent" danger><Fa :icon="faTrashAlt"/> {{ $ts.clearHistories }}</FormButton>
 	</FormGroup>
 	<FormRadios v-model="reactionPickerWidth">
-		<template #desc>{{ $t('width') }}</template>
-		<option :value="1">{{ $t('small') }}</option>
-		<option :value="2">{{ $t('medium') }}</option>
-		<option :value="3">{{ $t('large') }}</option>
+		<template #desc>{{ $ts.width }}</template>
+		<option :value="1">{{ $ts.small }}</option>
+		<option :value="2">{{ $ts.medium }}</option>
+		<option :value="3">{{ $ts.large }}</option>
 	</FormRadios>
 	<FormRadios v-model="reactionPickerHeight">
-		<template #desc>{{ $t('height') }}</template>
-		<option :value="1">{{ $t('small') }}</option>
-		<option :value="2">{{ $t('medium') }}</option>
-		<option :value="3">{{ $t('large') }}</option>
+		<template #desc>{{ $ts.height }}</template>
+		<option :value="1">{{ $ts.small }}</option>
+		<option :value="2">{{ $ts.medium }}</option>
+		<option :value="3">{{ $ts.large }}</option>
 	</FormRadios>
-	<FormButton @click="preview"><Fa :icon="faEye"/> {{ $t('preview') }}</FormButton>
+	<FormButton @click="preview"><Fa :icon="faEye"/> {{ $ts.preview }}</FormButton>
 </FormBase>
 </template>
 
@@ -50,8 +50,8 @@ import FormGroup from '@/components/form/group.vue';
 import FormRadios from '@/components/form/radios.vue';
 import FormBase from '@/components/form/base.vue';
 import FormButton from '@/components/form/button.vue';
-import { defaultSettings } from '@/store';
 import * as os from '@/os';
+import { defaultStore } from '@/store';
 
 export default defineComponent({
 	components: {
@@ -66,32 +66,16 @@ export default defineComponent({
 
 	data() {
 		return {
-			reactions: JSON.parse(JSON.stringify(this.$store.state.settings.reactions)),
+			reactions: JSON.parse(JSON.stringify(this.$store.state.reactions)),
 			faLaugh, faSave, faEye, faUndo, faPlus
 		}
 	},
 
 	computed: {
-		useFullReactionPicker: {
-			get() { return this.$store.state.device.useFullReactionPicker; },
-			set(value) { this.$store.commit('device/set', { key: 'useFullReactionPicker', value: value }); }
-		},
-		reactionPickerWidth: {
-			get() { return this.$store.state.device.reactionPickerWidth; },
-			set(value) { this.$store.commit('device/set', { key: 'reactionPickerWidth', value: value }); }
-		},
-		reactionPickerHeight: {
-			get() { return this.$store.state.device.reactionPickerHeight; },
-			set(value) { this.$store.commit('device/set', { key: 'reactionPickerHeight', value: value }); }
-		},
-		emojiPickerShowPinnedEmojis: {
-			get() { return !this.$store.state.device.emojiPickerHidePinnedEmojis; },
-			set(value) { this.$store.commit('device/set', { key: 'emojiPickerHidePinnedEmojis', value: !value }); }
-		},
-		emojiPickerShowRecentEmojis: {
-			get() { return !this.$store.state.device.emojiPickerHideRecentEmojis; },
-			set(value) { this.$store.commit('device/set', { key: 'emojiPickerHideRecentEmojis', value: !value }); }
-		},
+		reactionPickerWidth: defaultStore.makeGetterSetter('reactionPickerWidth'),
+		reactionPickerHeight: defaultStore.makeGetterSetter('reactionPickerHeight'),
+		emojiPickerShowPinnedEmojis: defaultStore.makeGetterSetter('emojiPickerHidePinnedEmojis', v => !v, v => !v),
+		emojiPickerShowRecentEmojis: defaultStore.makeGetterSetter('emojiPickerHideRecentEmojis', v => !v, v => !v),
 	},
 
 	watch: {
@@ -109,12 +93,12 @@ export default defineComponent({
 
 	methods: {
 		save() {
-			this.$store.dispatch('settings/set', { key: 'reactions', value: this.reactions });
+			this.$store.set('reactions', this.reactions);
 		},
 
 		remove(reaction, ev) {
 			os.modalMenu([{
-				text: this.$t('remove'),
+				text: this.$ts.remove,
 				action: () => {
 					this.reactions = this.reactions.filter(x => x !== reaction)
 				}
@@ -131,23 +115,23 @@ export default defineComponent({
 		async setDefault() {
 			const { canceled } = await os.dialog({
 				type: 'warning',
-				text: this.$t('resetAreYouSure'),
+				text: this.$ts.resetAreYouSure,
 				showCancelButton: true
 			});
 			if (canceled) return;
 
-			this.reactions = JSON.parse(JSON.stringify(defaultSettings.reactions));
+			this.reactions = JSON.parse(JSON.stringify(this.$store.def.reactions.default));
 		},
 
 		async clearRecent() {
 			const { canceled } = await os.dialog({
 				type: 'warning',
-				text: this.$t('resetAreYouSure'),
+				text: this.$ts.resetAreYouSure,
 				showCancelButton: true
 			});
 			if (canceled) return;
 
-			this.$store.commit('device/set', { key: 'recentlyUsedEmojis', value: [] });
+			this.$store.set('recentlyUsedEmojis', []);
 		},
 
 		chooseEmoji(ev) {

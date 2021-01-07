@@ -1,10 +1,10 @@
 <template>
 <FormBase>
-	<FormLink to="/settings/account-info">{{ $t('accountInfo') }}</FormLink>
-	<FormLink to="/settings/labs">Groundpolis {{ $t('_labs.title') }}</FormLink>
+	<FormLink to="/settings/account-info">{{ $ts.accountInfo }}</FormLink>
+	<FormLink to="/settings/labs">Groundpolis {{ $ts._labs.title }}</FormLink>
 
 	<FormGroup>
-		<template #label>{{ $t('developer') }}</template>
+		<template #label>{{ $ts.developer }}</template>
 		<FormSwitch v-model:value="debug" @update:value="changeDebug">
 			DEBUG MODE
 		</FormSwitch>
@@ -14,22 +14,22 @@
 
 	<FormGroup>
 		<FormSelect v-model:value="stealRule">
-			<template #label>{{ $t('stealingRule') }}</template>
-			<option :value="0">{{ $t('_steal.textOnly') }}</option>
-			<option :value="1">{{ $t('_steal.react') }}</option>
-			<option :value="2">{{ $t('_steal.renote') }}</option>
-			<option :value="3">{{ $t('_steal.url') }}</option>
+			<template #label>{{ $ts.stealingRule }}</template>
+			<option :value="0">{{ $ts._steal.textOnly }}</option>
+			<option :value="1">{{ $ts._steal.react }}</option>
+			<option :value="2">{{ $ts._steal.renote }}</option>
+			<option :value="3">{{ $ts._steal.url }}</option>
 		</FormSelect>
 		<FormButton v-if="stealRule === 1" @click="chooseReaction">
-			<mfm :text="$store.state.settings.stealReaction" :plain="true" />
-			<span style="margin-left: 16px" v-text="$t('chooseReaction')" />
+			<mfm :text="$store.state.stealReaction" :plain="true" />
+			<span style="margin-left: 16px" v-text="$ts.chooseReaction" />
 		</FormButton>
 	</FormGroup>
 
 	<FormGroup>
-		<template #label>{{ $t('dangerousSettings') }}</template>
-		<FormButton danger @click="discardPostFormDraft"><Fa :icon="faTrashAlt"/> {{ $t('discardPostFormDraft') }}</FormButton>
-		<template #caption>{{ $t('discardPostFormDraftDescription') }}</template>
+		<template #label>{{ $ts.dangerousSettings }}</template>
+		<FormButton danger @click="discardPostFormDraft"><Fa :icon="faTrashAlt"/> {{ $ts.discardPostFormDraft }}</FormButton>
+		<template #caption>{{ $ts.discardPostFormDraftDescription }}</template>
 	</FormGroup>
 </FormBase>
 </template>
@@ -45,6 +45,7 @@ import FormGroup from '@/components/form/group.vue';
 import FormButton from '@/components/form/button.vue';
 import * as os from '@/os';
 import { debug } from '@/config';
+import { defaultStore } from '@/store';
 
 export default defineComponent({
 	components: {
@@ -59,19 +60,12 @@ export default defineComponent({
 	data() {
 		return {
 			debug,
-			faTrashAlt,
 		}
 	},
 
 	computed: {
-		stealRule: {
-			get() { return this.$store.state.settings.stealRule; },
-			set(value) { this.$store.dispatch('settings/set', { key: 'stealRule', value }); }
-		},
-		stealReaction: {
-			get() { return this.$store.state.settings.stealReaction; },
-			set(value) { this.$store.dispatch('settings/set', { key: 'stealReaction', value }); }
-		},
+		stealRule: defaultStore.makeGetterSetter('stealRule'),
+		stealReaction: defaultStore.makeGetterSetter('stealReaction'),
 	},
 
 	methods: {

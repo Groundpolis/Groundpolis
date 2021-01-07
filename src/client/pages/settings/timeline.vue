@@ -1,7 +1,7 @@
 <template>
 <FormBase>
 	<FormGroup>
-		<FormSwitch v-model:value="$store.state.i.injectFeaturedNote" @update:value="onChangeInjectFeaturedNote">
+		<FormSwitch v-model:value="$i.injectFeaturedNote" @update:value="onChangeInjectFeaturedNote">
 			{{ $t('showFeaturedNotesInTimeline') }}
 		</FormSwitch>
 		<FormSwitch v-model:value="injectUnlistedNoteInLTL">
@@ -41,8 +41,8 @@ import FormSwitch from '@/components/form/switch.vue';
 import FormBase from '@/components/form/base.vue';
 import FormButton from '@/components/form/button.vue';
 import { timelineMenuMap, timelineMenuSources } from '../../menus/timeline';
-import { defaultDeviceSettings } from '@/store';
 import * as os from '@/os';
+import { defaultStore } from '@/store';
 
 export default defineComponent({
 	components: {
@@ -55,7 +55,7 @@ export default defineComponent({
 
 	data() {
 		return {
-			items: this.$store.state.device.timelineTabItems.filter(it => it != null),
+			items: this.$store.state.timelineTabItems.filter(it => it != null),
 			changed: false,
 			timelineMenuMap,
 			faTimes, faBars, faUndo, faPlus
@@ -67,17 +67,13 @@ export default defineComponent({
 			return timelineMenuSources.filter(m => !this.items.includes(m));
 		},
 
-		injectUnlistedNoteInLTL: {
-			get() { return this.$store.state.settings.injectUnlistedNoteInLTL; },
-			set(value) { this.$store.dispatch('settings/set', { key: 'injectUnlistedNoteInLTL', value }); }
-		},
+		injectUnlistedNoteInLTL: defaultStore.makeGetterSetter('injectUnlistedNoteInLTL'),
 	},
 	
 	watch: {
 		items: {
 			handler() {
-				console.log('saved to vuex');
-				this.$store.commit('device/set', { key: 'timelineTabItems', value: [...this.items] });
+				this.$store.set('timelineTabItems', [...this.items]);
 			},
 			deep: true,
 		},
@@ -94,16 +90,14 @@ export default defineComponent({
 		},
 		add(item: string) {
 			if (this.items.includes(item)) return;
-			console.log('added');
 			this.items = [...this.items, item];
 		},
 		del(item: string) {
-			console.log('deleted');
 			this.items = this.items.filter(it => it !== item);
 		},
 		reset() {
-			console.log('reset');
-			this.items = defaultDeviceSettings.timelineTabItems;
+			this.$store.reset('timelineTabItems');
+			this.items = this.$store.state.timelineTabItems.filter(it => it != null);
 		},
 	}
 });

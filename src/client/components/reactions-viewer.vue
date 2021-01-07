@@ -29,7 +29,7 @@ export default defineComponent({
 	},
 	computed: {
 		isMe(): boolean {
-			return this.$store.getters.isSignedIn && this.$store.state.i.id === this.note.userId;
+			return this.$i && this.$i.id === this.note.userId;
 		},
 	},
 });

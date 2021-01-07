@@ -47,8 +47,8 @@ data() {
 
 	computed: {
 		categories() {
-			if (this.$store.state.instance.meta) {
-				return unique(this.$store.state.instance.meta.emojis.map((x: any) => x.category || '').filter((x: string) => x !== ''));
+			if (this.$instance) {
+				return unique(this.$instance.emojis.map((x: any) => x.category || '').filter((x: string) => x !== ''));
 			} else {
 				return [];
 			}

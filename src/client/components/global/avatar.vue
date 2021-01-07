@@ -1,9 +1,9 @@
 <template>
-<span class="eiwwqkts" :class="[$store.state.device.iconShape, { cat } ]" :title="acct(user)" v-if="disableLink" v-user-preview="disablePreview ? undefined : user.id" @click="onClick">
-	<img class="inner" :class="$store.state.device.iconShape" :src="url"/>
+<span class="eiwwqkts" :class="[$store.reactiveState.iconShape.value, { cat } ]" :title="acct(user)" v-if="disableLink" v-user-preview="disablePreview ? undefined : user.id" @click="onClick">
+	<img class="inner" :class="$store.reactiveState.iconShape.value" :src="url"/>
 </span>
-<MkA class="eiwwqkts" :class="[$store.state.device.iconShape, { cat } ]" :to="userPage(user)" :title="acct(user)" :target="target" v-else v-user-preview="disablePreview ? undefined : user.id">
-	<img class="inner" :class="$store.state.device.iconShape" :src="url"/>
+<MkA class="eiwwqkts" :class="[$store.reactiveState.iconShape.value, { cat } ]" :to="userPage(user)" :title="acct(user)" :target="target" v-else v-user-preview="disablePreview ? undefined : user.id">
+	<img class="inner" :class="$store.reactiveState.iconShape.value" :src="url"/>
 </MkA>
 </template>
 
@@ -40,7 +40,7 @@ export default defineComponent({
 			return this.user.isCat;
 		},
 		url(): string {
-			return this.$store.state.device.disableShowingAnimatedImages
+			return this.$store.state.disableShowingAnimatedImages
 				? getStaticImageUrl(this.user.avatarUrl)
 				: this.user.avatarUrl;
 		},

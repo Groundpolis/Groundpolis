@@ -19,9 +19,9 @@
 	</div>
 	<div class="_section links">
 		<div class="_content">
-			<MkA :to="`./${page.name}/view-source`" class="link">{{ $t('_pages.viewSource') }}</MkA>
-			<template v-if="$store.getters.isSignedIn && $store.state.i.id === page.userId">
-				<MkA :to="`/pages/edit/${page.id}`" class="link">{{ $t('_pages.editThisPage') }}</MkA>
+			<MkA :to="`./${page.name}/view-source`" class="link">{{ $ts._pages.viewSource }}</MkA>
+			<template v-if="$i && $i.id === page.userId">
+				<MkA :to="`/pages/edit/${page.id}`" class="link">{{ $ts._pages.editThisPage }}</MkA>
 			</template>
 		</div>
 	</div>
@@ -56,9 +56,9 @@ export default defineComponent({
 			INFO: computed(() => this.page ? {
 				title: computed(() => this.page.title || this.page.name),
 				avatar: this.page.user,
-				action: computed(() => this.page.user.id === this.$store.state.i.id ? {
-					icon: this.$store.state.i.pinnedPageId === this.page.id ? faBookmarkS : faBookmarkR,
-					handler: () => this.pin(this.$store.state.i.pinnedPageId !== this.page.id),
+				action: computed(() => this.page.user.id === this.$i.id ? {
+					icon: this.$i.pinnedPageId === this.page.id ? faBookmarkS : faBookmarkR,
+					handler: () => this.pin(this.$i.pinnedPageId !== this.page.id),
 				} : {
 					icon: this.page.isLiked ? faHeartS : faHeartR,
 					handler: this.page.isLiked ? this.unlike : this.like,

@@ -12,31 +12,31 @@
 	</ul>
 	<MkButton class="add" v-if="choices.length < 10" @click="add"><fa :icon="faPlus" /></MkButton>
 	<section>
-		<MkSwitch v-model:value="multiple">{{ $t('_poll.canMultipleVote') }}</MkSwitch>
+		<MkSwitch v-model:value="multiple">{{ $ts._poll.canMultipleVote }}</MkSwitch>
 		<div>
 			<MkSelect v-model:value="expiration">
-				<template #label>{{ $t('_poll.expiration') }}</template>
-				<option value="infinite">{{ $t('_poll.infinite') }}</option>
-				<option value="at">{{ $t('_poll.at') }}</option>
-				<option value="after">{{ $t('_poll.after') }}</option>
+				<template #label>{{ $ts._poll.expiration }}</template>
+				<option value="infinite">{{ $ts._poll.infinite }}</option>
+				<option value="at">{{ $ts._poll.at }}</option>
+				<option value="after">{{ $ts._poll.after }}</option>
 			</MkSelect>
 			<section class="_inputs" v-if="expiration === 'at'">
 				<MkInput v-model:value="atDate" type="date" class="input">
-					<span>{{ $t('_poll.deadlineDate') }}</span>
+					<span>{{ $ts._poll.deadlineDate }}</span>
 				</MkInput>
 				<MkInput v-model:value="atTime" type="time" class="input">
-					<span>{{ $t('_poll.deadlineTime') }}</span>
+					<span>{{ $ts._poll.deadlineTime }}</span>
 				</MkInput>
 			</section>
 			<section v-if="expiration === 'after'">
 				<MkInput v-model:value="after" type="number" class="input">
-					<span>{{ $t('_poll.duration') }}</span>
+					<span>{{ $ts._poll.duration }}</span>
 				</MkInput>
 				<MkSelect v-model:value="unit">
-					<option value="second">{{ $t('_time.second') }}</option>
-					<option value="minute">{{ $t('_time.minute') }}</option>
-					<option value="hour">{{ $t('_time.hour') }}</option>
-					<option value="day">{{ $t('_time.day') }}</option>
+					<option value="second">{{ $ts._time.second }}</option>
+					<option value="minute">{{ $ts._time.minute }}</option>
+					<option value="hour">{{ $ts._time.hour }}</option>
+					<option value="day">{{ $ts._time.day }}</option>
 				</MkSelect>
 			</section>
 		</div>

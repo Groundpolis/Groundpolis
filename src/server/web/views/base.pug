@@ -31,44 +31,11 @@ html(style="--bg: #222222; --fg: white")
 		block og
 			meta(property='og:image' content=img)
 
-		style.
-			html {
-				background-color: var(--bg);
-				color: var(--fg);
-			}
+		style
+			include ../style.css
 
-		script(src=`/assets/app.${version}.js` async defer)
-		script.
-			window.__groundpolis__status__ = #{status || 200};
-			const theme = localStorage.getItem('theme');
-			if (theme) {
-				for (const [k, v] of Object.entries(JSON.parse(theme))) {
-					document.documentElement.style.setProperty(`--${k}`, v.toString());
-					if (k === 'htmlThemeColor') {
-						for (const tag of document.head.children) {
-							if (tag.tagName === 'META' && tag.getAttribute('name') === 'theme-color') {
-								tag.setAttribute('content', v);
-								break;
-							}
-						}
-					}
-				}
-			}
-
-			const fontSize = localStorage.getItem('fontSize');
-			if (fontSize) {
-				document.documentElement.classList.add('f-' + fontSize);
-			}
-
-			const useSystemFont = localStorage.getItem('useSystemFont');
-			if (useSystemFont) {
-				document.documentElement.classList.add('useSystemFont');
-			}
-
-			const wallpaper = localStorage.getItem('wallpaper');
-			if (wallpaper) {
-				document.documentElement.style.backgroundImage = `url(${wallpaper})`;
-			}
+		script
+			include ../boot.js
 
 	body
 		noscript: p(style="text-align: center")

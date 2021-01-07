@@ -1,5 +1,5 @@
 <template>
-<XNotes :class="{ _noGap_: !$store.state.device.showGapBetweenNotesInTimeline }" ref="tl" :pagination="pagination" @before="$emit('before')" @after="e => $emit('after', e)" @queue="$emit('queue', $event)"/>
+<XNotes :class="{ _noGap_: !$store.state.showGapBetweenNotesInTimeline }" ref="tl" :pagination="pagination" @before="$emit('before')" @after="e => $emit('after', e)" @queue="$emit('queue', $event)"/>
 </template>
 
 <script lang="ts">
@@ -51,9 +51,9 @@ export default defineComponent({
 			connection2: null,
 			pagination: null,
 			baseQuery: {
-				includeMyRenotes: this.$store.state.settings.showMyRenotes,
-				includeRenotedMyNotes: this.$store.state.settings.showRenotedMyNotes,
-				includeLocalRenotes: this.$store.state.settings.showLocalRenotes
+				includeMyRenotes: this.$store.state.showMyRenotes,
+				includeRenotedMyNotes: this.$store.state.showRenotedMyNotes,
+				includeLocalRenotes: this.$store.state.showLocalRenotes
 			},
 			query: {},
 		};
@@ -66,7 +66,7 @@ export default defineComponent({
 			this.$emit('note');
 
 			if (this.sound) {
-				sound.play(note.userId === this.$store.state.i.id ? 'noteMy' : 'note');
+				sound.play(note.userId === this.$i.id ? 'noteMy' : 'note');
 			}
 		};
 
@@ -104,7 +104,7 @@ export default defineComponent({
 			this.connection2.on('follow', onChangeFollowing);
 			this.connection2.on('unfollow', onChangeFollowing);
 		} else if (this.src == 'local') {
-			const [ ep, con ] = this.$store.state.settings.injectUnlistedNoteInLTL
+			const [ ep, con ] = this.$store.state.injectUnlistedNoteInLTL
 				? [ 'notes/local-hybrid-timeline', 'localHybridTimeline' ]
 				: [ 'notes/local-timeline', 'localTimeline' ];
 			endpoint = ep;

@@ -1,12 +1,12 @@
 <template>
 <MkTab v-model:value="tab" style="margin-bottom: var(--margin);">
-	<option value="mute">{{ $t('mutedUsers') }}</option>
-	<option value="renote">{{ $t('renoteMutedUsers') }}</option>
-	<option value="block">{{ $t('blockedUsers') }}</option>
+	<option value="mute">{{ $ts.mutedUsers }}</option>
+	<option value="renote">{{ $ts.renoteMutedUsers }}</option>
+	<option value="block">{{ $ts.blockedUsers }}</option>
 </MkTab>
 <FormBase class="_content" v-if="tab === 'mute'">
 	<FormPagination :pagination="mutingPagination" class="muting">
-		<template #empty>{{ $t('noUsers') }}</template>
+		<template #empty>{{ $ts.noUsers }}</template>
 		<template #default="{items}">
 			<FormLink v-for="mute in items" :key="mute.id" :to="userPage(mute.mutee)">
 				<MkAcct :user="mute.mutee"/>
@@ -16,7 +16,7 @@
 </FormBase>
 <FormBase class="_content" v-if="tab === 'renote'">
 	<FormPagination :pagination="renoteMutingPagination" class="muting">
-		<template #empty>{{ $t('noUsers') }}</template>
+		<template #empty>{{ $ts.noUsers }}</template>
 		<template #default="{items}">
 			<FormLink v-for="mute in items" :key="mute.id" :to="userPage(mute.mutee)">
 				<MkAcct :user="mute.mutee"/>
@@ -26,7 +26,7 @@
 </FormBase>
 <FormBase class="_content" v-if="tab === 'block'">
 	<FormPagination :pagination="blockingPagination" class="blocking">
-		<template #empty>{{ $t('noUsers') }}</template>
+		<template #empty>{{ $ts.noUsers }}</template>
 		<template #default="{items}">
 			<FormLink class="user" v-for="block in items" :key="block.id" :to="userPage(block.blockee)">
 				<MkAcct :user="block.blockee"/>

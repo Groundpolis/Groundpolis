@@ -11,7 +11,7 @@
 		</div>
 	</div>
 	<template v-if="meta.pinnedClipId">
-		<h2># {{ $t('pinnedNotes') }}</h2>
+		<h2># {{ $ts.pinnedNotes }}</h2>
 		<MkPagination :pagination="clipPagination" #default="{items}">
 			<XNote class="kmkqjgkl" v-for="note in items" :note="note" :key="note.id"/>
 		</MkPagination>

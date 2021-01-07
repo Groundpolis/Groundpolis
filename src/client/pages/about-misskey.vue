@@ -9,38 +9,54 @@
 					</div>
 					<div class="groundpolis" :class="{awesome}">Groundpolis</div>
 					<div class="version" :class="{awesome}">v{{ version }}</div>
-					<span class="emoji" v-for="emoji in easterEggEmojis" :key="emoji.id" :data-physics-x="emoji.left" :data-physics-y="emoji.top" :class="{ _physics_circle_: !emoji.emoji.startsWith(':') }"><MkEmoji class="emoji" :emoji="emoji.emoji" :custom-emojis="$store.state.instance.meta.emojis" :is-reaction="false" :normal="true" :no-style="true"/></span>
+					<span
+						class="emoji"
+						v-for="emoji in easterEggEmojis"
+						:key="emoji.id"
+						:data-physics-x="emoji.left"
+						:data-physics-y="emoji.top"
+						:class="{ _physics_circle_: !emoji.emoji.startsWith(':') }"
+					>
+						<MkEmoji
+							class="emoji"
+							:emoji="emoji.emoji"
+							:custom-emojis="$instance.emojis"
+							:is-reaction="false"
+							:normal="true"
+							:no-style="true"
+						/>
+					</span>
 				</div>
 			</section>
 			<FormLink :to="`https://github.com/Groundpolis/Groundpolis/releases/tag/${version}`" external>
-				{{ $t('_aboutMisskey.releaseNote') }}
+				{{ $ts._aboutMisskey.releaseNote }}
 			</FormLink>
 		</FormGroup>
 		<section class="_formItem" style="text-align: center; padding: 0 16px;" @click="gravity">
-			{{ $t('_aboutMisskey.about') }}
+			{{ $ts._aboutMisskey.about }}
 		</section>
 		<FormGroup>
 			<FormLink to="https://github.com/Groundpolis/Groundpolis" external>
 				<template #icon><Fa :icon="faCode"/></template>
-				{{ $t('_aboutMisskey.source') }}
+				{{ $ts._aboutMisskey.source }}
 			</FormLink>
 			<FormLink to="https://github.com/syuilo/misskey" external>
 				<template #icon><Fa :icon="faCode"/></template>
-				{{ $t('_aboutMisskey.sourceMisskey') }}
+				{{ $ts._aboutMisskey.sourceMisskey }}
 			</FormLink>
 			<FormLink to="https://www.patreon.com/syuilo" external>
 				<template #icon><Fa :icon="faHandHoldingMedical"/></template>
-				{{ $t('_aboutMisskey.donate') }}
+				{{ $ts._aboutMisskey.donate }}
 			</FormLink>
 		</FormGroup>
 		<FormGroup>
-			<template #label>{{ $t('_aboutMisskey.contributors') }}</template>
+			<template #label>{{ $ts._aboutMisskey.contributors }}</template>
 			<FormLink to="https://github.com/Xeltica" external>@Xeltica</FormLink>
 			<FormLink to="https://github.com/m-hayabusa" external>@m-hayabusa</FormLink>
-			<template #caption><MkLink url="https://github.com/Groundpolis/Groundpolis/graphs/contributors">{{ $t('_aboutMisskey.allContributors') }}</MkLink></template>
+			<template #caption><MkLink url="https://github.com/Groundpolis/Groundpolis/graphs/contributors">{{ $ts._aboutMisskey.allContributors }}</MkLink></template>
 		</FormGroup>
 		<FormGroup>
-			<template #label>{{ $t('_aboutMisskey.contributorsMisskey') }}</template>
+			<template #label>{{ $ts._aboutMisskey.contributorsMisskey }}</template>
 			<FormLink to="https://github.com/syuilo" external>@syuilo</FormLink>
 			<FormLink to="https://github.com/AyaMorisawa" external>@AyaMorisawa</FormLink>
 			<FormLink to="https://github.com/mei23" external>@mei23</FormLink>
@@ -49,12 +65,12 @@
 			<FormLink to="https://github.com/rinsuki" external>@rinsuki</FormLink>
 			<FormLink to="https://github.com/Xeltica" external>@Xeltica</FormLink>
 			<FormLink to="https://github.com/u1-liquid" external>@u1-liquid</FormLink>
-			<template #caption><MkLink url="https://github.com/syuilo/misskey/graphs/contributors">{{ $t('_aboutMisskey.allContributors') }}</MkLink></template>
+			<template #caption><MkLink url="https://github.com/syuilo/misskey/graphs/contributors">{{ $ts._aboutMisskey.allContributors }}</MkLink></template>
 		</FormGroup>
 		<FormGroup>
-			<template #label><Mfm text="[jelly ❤]"/> {{ $t('_aboutMisskey.patrons') }}</template>
+			<template #label><Mfm text="[jelly ❤]"/> {{ $ts._aboutMisskey.patrons }}</template>
 			<FormKeyValueView v-for="patron in patrons" :key="patron"><template #key>{{ patron }}</template></FormKeyValueView>
-			<template #caption>{{ $t('_aboutMisskey.morePatrons') }}</template>
+			<template #caption>{{ $ts._aboutMisskey.morePatrons }}</template>
 		</FormGroup>
 	</FormBase>
 </div>
@@ -124,7 +140,7 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				title: this.$t('aboutMisskey'),
+				title: this.$ts.aboutMisskey,
 				icon: null
 			},
 			version,
@@ -154,7 +170,7 @@ export default defineComponent({
 
 	methods: {
 		iconLoaded() {
-			const emojis = this.$store.state.settings.reactions;
+			const emojis = this.$store.state.reactions;
 			const containerWidth = this.$refs.about.offsetWidth;
 			for (let i = 0; i < 64; i++) {
 				this.easterEggEmojis.push({

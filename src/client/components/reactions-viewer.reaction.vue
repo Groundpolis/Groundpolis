@@ -57,7 +57,7 @@ export default defineComponent({
 	},
 	computed: {
 		canToggle(): boolean {
-			return !this.reaction.match(/@\w/) && this.$store.getters.isSignedIn;
+			return !this.reaction.match(/@\w/) && this.$i;
 		},
 	},
 	watch: {

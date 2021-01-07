@@ -5,7 +5,7 @@
 		<div class="history" v-if="messages.length > 0">
 			<MkA v-for="(message, i) in messages"
 				class="message _panel"
-				:class="{ isMe: isMe(message), isRead: message.groupId ? message.reads.includes($store.state.i.id) : message.isRead }"
+				:class="{ isMe: isMe(message), isRead: message.groupId ? message.reads.includes($i.id) : message.isRead }"
 				:to="message.groupId ? `/my/messaging/group/${message.groupId}` : `/my/messaging/${getAcct(isMe(message) ? message.recipient : message.user)}`"
 				:data-index="i"
 				:key="message.id"
@@ -22,14 +22,14 @@
 						<MkTime :time="message.createdAt" class="time"/>
 					</header>
 					<div class="body">
-						<p class="text"><span class="me" v-if="isMe(message)">{{ $t('you') }}:</span>{{ message.text }}</p>
+						<p class="text"><span class="me" v-if="isMe(message)">{{ $ts.you }}:</span>{{ message.text }}</p>
 					</div>
 				</div>
 			</MkA>
 		</div>
 		<div class="_fullinfo" v-if="!fetching && messages.length == 0">
 			<img src="https://xn--931a.moe/assets/info.jpg" class="_ghost"/>
-			<div>{{ $t('noHistory') }}</div>
+			<div>{{ $ts.noHistory }}</div>
 		</div>
 		<MkLoading v-if="fetching"/>
 	</div>
@@ -52,7 +52,7 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				title: this.$t('messaging'),
+				title: this.$ts.messaging,
 				icon: faComments,
 				action: {
 					icon: faPlus,
@@ -91,7 +91,7 @@ export default defineComponent({
 		getAcct,
 
 		isMe(message) {
-			return message.userId == this.$store.state.i.id;
+			return message.userId == this.$i.id;
 		},
 
 		onMessage(message) {
@@ -114,7 +114,7 @@ export default defineComponent({
 					if (found.recipientId) {
 						found.isRead = true;
 					} else if (found.groupId) {
-						found.reads.push(this.$store.state.i.id);
+						found.reads.push(this.$i.id);
 					}
 				}
 			}
@@ -122,11 +122,11 @@ export default defineComponent({
 
 		start(ev) {
 			os.modalMenu([{
-				text: this.$t('messagingWithUser'),
+				text: this.$ts.messagingWithUser,
 				icon: faUser,
 				action: () => { this.startUser() }
 			}, {
-				text: this.$t('messagingWithGroup'),
+				text: this.$ts.messagingWithGroup,
 				icon: faUsers,
 				action: () => { this.startGroup() }
 			}], ev.currentTarget || ev.target);
@@ -144,14 +144,14 @@ export default defineComponent({
 			if (groups1.length === 0 && groups2.length === 0) {
 				os.dialog({
 					type: 'warning',
-					title: this.$t('youHaveNoGroups'),
-					text: this.$t('joinOrCreateGroup'),
+					title: this.$ts.youHaveNoGroups,
+					text: this.$ts.joinOrCreateGroup,
 				});
 				return;
 			}
 			const { canceled, result: group } = await os.dialog({
 				type: null,
-				title: this.$t('group'),
+				title: this.$ts.group,
 				select: {
 					items: groups1.concat(groups2).map(group => ({
 						value: group, text: group.name

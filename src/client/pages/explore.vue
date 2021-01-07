@@ -2,12 +2,12 @@
 <div class="_section">
 	<XSearch v-model:value="query" @search="search"/>
 	<MkTab v-if="!meta.disableFeatured" v-model:value="tab" style="height: 100%">
-		<option value="explore"><Fa :icon="faHashtag"/> {{$t('explore')}}</option>
-		<option value="featured"><Fa :icon="faFireAlt"/> {{$t('featured')}}</option>
+		<option value="explore"><Fa :icon="faHashtag"/> {{$ts.explore}}</option>
+		<option value="featured"><Fa :icon="faFireAlt"/> {{$ts.featured}}</option>
 	</MkTab>
 	<template v-if="tab === 'explore'">
 		<MkFolder :body-togglable="true" :expanded="false" ref="tags" class="_vMargin">
-			<template #header><Fa :icon="faHashtag" fixed-width style="margin-right: 0.5em;"/>{{ $t('popularTags') }}</template>
+			<template #header><Fa :icon="faHashtag" fixed-width style="margin-right: 0.5em;"/>{{ $ts.popularTags }}</template>
 			<div class="vxjfqztj">
 				<MkA v-for="tag in tagsLocal" :to="`/search?q=${encodeURIComponent('#' + tag.tag)}`" :key="'local:' + tag.tag" class="local">{{ tag.tag }}</MkA>
 				<MkA v-for="tag in tagsRemote" :to="`/search?q=${encodeURIComponent('#' + tag.tag)}`" :key="'remote:' + tag.tag">{{ tag.tag }}</MkA>
@@ -21,24 +21,24 @@
 
 		<template v-if="tag == null">
 			<MkFolder class="_vMargin" persist-key="explore-pinned-users">
-				<template #header><Fa :icon="faBookmark" fixed-width style="margin-right: 0.5em;"/>{{ $t('pinnedUsers') }}</template>
+				<template #header><Fa :icon="faBookmark" fixed-width style="margin-right: 0.5em;"/>{{ $ts.pinnedUsers }}</template>
 				<XUserList :pagination="pinnedUsers"/>
 			</MkFolder>
 			<MkFolder class="_vMargin" persist-key="explore-popular-users">
-				<template #header><Fa :icon="faChartLine" fixed-width style="margin-right: 0.5em;"/>{{ $t('popularUsers') }}</template>
+				<template #header><Fa :icon="faChartLine" fixed-width style="margin-right: 0.5em;"/>{{ $ts.popularUsers }}</template>
 				<XUserList :pagination="popularUsers"/>
 			</MkFolder>
 			<MkFolder class="_vMargin" persist-key="explore-recently-updated-users">
-				<template #header><Fa :icon="faCommentAlt" fixed-width style="margin-right: 0.5em;"/>{{ $t('recentlyUpdatedUsers') }}</template>
+				<template #header><Fa :icon="faCommentAlt" fixed-width style="margin-right: 0.5em;"/>{{ $ts.recentlyUpdatedUsers }}</template>
 				<XUserList :pagination="recentlyUpdatedUsers"/>
 			</MkFolder>
 			<MkFolder class="_vMargin" persist-key="explore-recently-registered-users">
-				<template #header><Fa :icon="faPlus" fixed-width style="margin-right: 0.5em;"/>{{ $t('recentlyRegisteredUsers') }}</template>
+				<template #header><Fa :icon="faPlus" fixed-width style="margin-right: 0.5em;"/>{{ $ts.recentlyRegisteredUsers }}</template>
 				<XUserList :pagination="recentlyRegisteredUsers"/>
 			</MkFolder>
 		</template>
 		<div class="localfedi7 _panel _vMargin" v-if="tag == null" :style="{ backgroundImage: `url(/assets/fedi.jpg)` }">
-			<header><span>{{ $t('exploreFediverse') }}</span></header>
+			<header><span>{{ $ts.exploreFediverse }}</span></header>
 		</div>
 
 		<MkFolder v-if="tag != null" :key="`${tag}`" class="_vMargin">
@@ -48,15 +48,15 @@
 
 		<template v-if="tag == null">
 			<MkFolder class="_vMargin">
-				<template #header><Fa :icon="faChartLine" fixed-width style="margin-right: 0.5em;"/>{{ $t('popularUsers') }}</template>
+				<template #header><Fa :icon="faChartLine" fixed-width style="margin-right: 0.5em;"/>{{ $ts.popularUsers }}</template>
 				<XUserList :pagination="popularUsersF"/>
 			</MkFolder>
 			<MkFolder class="_vMargin">
-				<template #header><Fa :icon="faCommentAlt" fixed-width style="margin-right: 0.5em;"/>{{ $t('recentlyUpdatedUsers') }}</template>
+				<template #header><Fa :icon="faCommentAlt" fixed-width style="margin-right: 0.5em;"/>{{ $ts.recentlyUpdatedUsers }}</template>
 				<XUserList :pagination="recentlyUpdatedUsersF"/>
 			</MkFolder>
 			<MkFolder class="_vMargin">
-				<template #header><Fa :icon="faRocket" fixed-width style="margin-right: 0.5em;"/>{{ $t('recentlyDiscoveredUsers') }}</template>
+				<template #header><Fa :icon="faRocket" fixed-width style="margin-right: 0.5em;"/>{{ $ts.recentlyDiscoveredUsers }}</template>
 				<XUserList :pagination="recentlyRegisteredUsersF"/>
 			</MkFolder>
 		</template>
@@ -104,7 +104,7 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				title: this.$t('explore'),
+				title: this.$ts.explore,
 				icon: faHashtag
 			},
 			pinnedUsers: { endpoint: 'pinned-users' },
@@ -152,7 +152,7 @@ export default defineComponent({
 
 	computed: {
 		meta() {
-			return this.$store.state.instance.meta;
+			return this.$instance;
 		},
 		tagUsers(): any {
 			return {

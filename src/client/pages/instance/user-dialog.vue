@@ -26,19 +26,19 @@
 		</div>
 		<div class="_section">
 			<div class="_content">
-				<MkSwitch v-if="user.host == null && $store.state.i.isAdmin && (moderator || !user.isAdmin)" @update:value="toggleModerator" v-model:value="moderator">{{ $t('moderator') }}</MkSwitch>
-				<MkSwitch @update:value="toggleVerify" v-model:value="verified">{{ $t('verify') }}</MkSwitch>
-				<MkSwitch @update:value="togglePremium" v-model:value="premium">{{ $t('premium') }}</MkSwitch>
-				<MkSwitch @update:value="toggleSilence" v-model:value="silenced">{{ $t('silence') }}</MkSwitch>
-				<MkSwitch @update:value="toggleSuspend" v-model:value="suspended">{{ $t('suspend') }}</MkSwitch>
+				<MkSwitch v-if="user.host == null && $i.isAdmin && (moderator || !user.isAdmin)" @update:value="toggleModerator" v-model:value="moderator">{{ $ts.moderator }}</MkSwitch>
+				<MkSwitch @update:value="toggleVerify" v-model:value="verified">{{ $ts.verify }}</MkSwitch>
+				<MkSwitch @update:value="togglePremium" v-model:value="premium">{{ $ts.premium }}</MkSwitch>
+				<MkSwitch @update:value="toggleSilence" v-model:value="silenced">{{ $ts.silence }}</MkSwitch>
+				<MkSwitch @update:value="toggleSuspend" v-model:value="suspended">{{ $ts.suspend }}</MkSwitch>
 			</div>
 		</div>
 		<div class="_section">
 			<div class="_content">
-				<MkButton full @click="openProfile"><Fa :icon="faExternalLinkSquareAlt"/> {{ $t('profile') }}</MkButton>
-				<MkButton full v-if="user.host != null" @click="updateRemoteUser"><Fa :icon="faSync"/> {{ $t('updateRemoteUser') }}</MkButton>
-				<MkButton full @click="resetPassword"><Fa :icon="faKey"/> {{ $t('resetPassword') }}</MkButton>
-				<MkButton full @click="deleteAllFiles" danger><Fa :icon="faTrashAlt"/> {{ $t('deleteAllFiles') }}</MkButton>
+				<MkButton full @click="openProfile"><Fa :icon="faExternalLinkSquareAlt"/> {{ $ts.profile }}</MkButton>
+				<MkButton full v-if="user.host != null" @click="updateRemoteUser"><Fa :icon="faSync"/> {{ $ts.updateRemoteUser }}</MkButton>
+				<MkButton full @click="resetPassword"><Fa :icon="faKey"/> {{ $ts.resetPassword }}</MkButton>
+				<MkButton full @click="deleteAllFiles" danger><Fa :icon="faTrashAlt"/> {{ $ts.deleteAllFiles }}</MkButton>
 			</div>
 		</div>
 		<div class="_section">
@@ -138,7 +138,7 @@ export default defineComponent({
 			const confirm = await os.dialog({
 				type: 'warning',
 				showCancelButton: true,
-				text: this.$t('resetPasswordConfirm')
+				text: this.$ts.resetPasswordConfirm
 			});
 			if (confirm.canceled) return;
 
@@ -156,7 +156,7 @@ export default defineComponent({
 			const confirm = await os.dialog({
 				type: 'warning',
 				showCancelButton: true,
-				text: v ? this.$t('silenceConfirm') : this.$t('unsilenceConfirm'),
+				text: v ? this.$ts.silenceConfirm : this.$ts.unsilenceConfirm,
 			});
 			if (confirm.canceled) {
 				this.silenced = !v;
@@ -170,7 +170,7 @@ export default defineComponent({
 			const confirm = await os.dialog({
 				type: 'warning',
 				showCancelButton: true,
-				text: v ? this.$t('suspendConfirm') : this.$t('unsuspendConfirm'),
+				text: v ? this.$ts.suspendConfirm : this.$ts.unsuspendConfirm,
 			});
 			if (confirm.canceled) {
 				this.suspended = !v;
@@ -199,7 +199,7 @@ export default defineComponent({
 			const confirm = await os.dialog({
 				type: 'warning',
 				showCancelButton: true,
-				text: this.$t('deleteAllFilesConfirm'),
+				text: this.$ts.deleteAllFilesConfirm,
 			});
 			if (confirm.canceled) return;
 			const process = async () => {

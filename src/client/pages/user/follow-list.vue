@@ -61,7 +61,7 @@ export default defineComponent({
 	},
 
 	async mounted() {
-		const i = this.$store.state.i;
+		const i = this.$i;
 		if (i.username === this.user.username && i.host === this.user.host) {
 			// 自分自身であれば隠さない
 			this.hideFF = false;

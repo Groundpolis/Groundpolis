@@ -1,14 +1,14 @@
 <template>
 <div v-if="playerEnabled" class="player" :style="`padding: ${(player.height || 0) / (player.width || 1) * 100}% 0 0`">
-	<button class="disable-player" @click="playerEnabled = false" v-tooltip="$t('disablePlayer')"><Fa :icon="faTimes"/></button>
-	<button class="open-in-window" @click="openWindow" v-tooltip="$t('openInWindow')"><Fa :icon="faExternalLinkAlt"/></button>
+	<button class="disable-player" @click="playerEnabled = false" v-tooltip="$ts.disablePlayer"><Fa :icon="faTimes"/></button>
+	<button class="open-in-window" @click="openWindow" v-tooltip="$ts.openInWindow"><Fa :icon="faExternalLinkAlt"/></button>
 	<iframe :src="player.url + (player.url.match(/\?/) ? '&autoplay=1&auto_play=1' : '?autoplay=1&auto_play=1')" :width="player.width || '100%'" :heigth="player.height || 250" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen />
 </div>
 <div v-else-if="tweetId && tweetExpanded" class="twitter" ref="twitter">
-	<iframe ref="tweet" scrolling="no" frameborder="no" :style="{ position: 'relative', left: `${tweetLeft}px`, width: `${tweetLeft < 0 ? 'auto' : '100%'}`, height: `${tweetHeight}px` }" :src="`https://platform.twitter.com/embed/index.html?embedId=${embedId}&amp;hideCard=false&amp;hideThread=false&amp;lang=en&amp;theme=${$store.state.device.darkMode ? 'dark' : 'light'}&amp;id=${tweetId}`"></iframe>
+	<iframe ref="tweet" scrolling="no" frameborder="no" :style="{ position: 'relative', left: `${tweetLeft}px`, width: `${tweetLeft < 0 ? 'auto' : '100%'}`, height: `${tweetHeight}px` }" :src="`https://platform.twitter.com/embed/index.html?embedId=${embedId}&amp;hideCard=false&amp;hideThread=false&amp;lang=en&amp;theme=${$store.state.darkMode ? 'dark' : 'light'}&amp;id=${tweetId}`"></iframe>
 	<div class="expandTweet" v-if="tweetId">
 		<a @click="tweetExpanded = false">
-			<fa :icon="faTwitter"/> {{ $t('hide') }}
+			<fa :icon="faTwitter"/> {{ $ts.hide }}
 		</a>
 	</div>
 </div>
@@ -16,7 +16,7 @@
 	<transition name="zoom" mode="out-in">
 		<component :is="self ? 'MkA' : 'a'" :class="{ compact }" :[attr]="self ? url.substr(local.length) : url" rel="nofollow noopener" :target="target" :title="url" v-if="!fetching">
 			<div class="thumbnail" v-if="thumbnail" :style="`background-image: url('${thumbnail}')`">
-				<button class="_button" v-if="!playerEnabled && player.url" @click.prevent="onPreviewPlayButtonClicked" :title="$t('enablePlayer')"><Fa :icon="faPlayCircle"/></button>
+				<button class="_button" v-if="!playerEnabled && player.url" @click.prevent="onPreviewPlayButtonClicked" :title="$ts.enablePlayer"><Fa :icon="faPlayCircle"/></button>
 			</div>
 			<article>
 				<header>
@@ -32,7 +32,7 @@
 	</transition>
 	<div class="expandTweet" v-if="tweetId">
 		<a @click="tweetExpanded = true">
-			<Fa :icon="faTwitter"/> {{ $t('expandTweet') }}
+			<Fa :icon="faTwitter"/> {{ $ts.expandTweet }}
 		</a>
 	</div>
 </div>
@@ -155,7 +155,7 @@ export default defineComponent({
 			 }, {}, 'closed');
 		 },
 		 onPreviewPlayButtonClicked() {
-			 if (this.$store.state.device.alwaysPlayMediaInWindow) {
+			 if (this.$store.state.alwaysPlayMediaInWindow) {
 				 this.openWindow();
 			 } else {
 				 this.playerEnabled = true;

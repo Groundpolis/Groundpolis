@@ -22,17 +22,17 @@
 				<fa :icon="faEdit"></fa>
 			</button>
 		</div>
-		<div class="canvas-wrapper" ref="canvasWrapper" :class="{ animation: $store.state.device.animation }">
+		<div class="canvas-wrapper" ref="canvasWrapper" :class="{ animation: $store.state.animation }">
 			<canvas
 				ref="canvas"
-				:class="{ animation: $store.state.device.animation }"
+				:class="{ animation: $store.state.animation }"
 				:style="canvasStyle"
 			>
 				Your browser doesn't support this feature.
 			</canvas>
 			<canvas
 				ref="previewCanvas"
-				:class="{ animation: $store.state.device.animation }"
+				:class="{ animation: $store.state.animation }"
 				:style="canvasStyle"
 				@mousedown="onMouseDown"
 				@touchstart="onTouchStart"
@@ -100,6 +100,7 @@ import { selectFile } from '../scripts/select-file';
 import { Form } from '../scripts/form';
 import { PackedDriveFile } from '../../models/repositories/drive-file';
 import * as os from '@/os';
+import { defaultStore } from '@/store';
 
 export const shapes = [ 'line', 'rect', 'circle', 'rectFill', 'circleFill' ] as const;
 
@@ -226,18 +227,9 @@ export default defineComponent({
 				top: this.canvasY + 'px' 
 			};
 		},
-		penWidth: {
-			get() { return parseInt(this.$store.state.device.penWidth); },
-			set(value) { this.$store.commit('device/set', { key: 'penWidth', value }) }
-		},
-		eraserWidth: {
-			get() { return parseInt(this.$store.state.device.eraserWidth); },
-			set(value) { this.$store.commit('device/set', { key: 'eraserWidth', value }) }
-		},
-		usePressure: {
-			get() { return this.$store.state.device.usePressure; },
-			set(value) { this.$store.commit('device/set', { key: 'usePressure',value }) }
-		},
+		penWidth: defaultStore.makeGetterSetter('penWidth'),
+		eraserWidth: defaultStore.makeGetterSetter('eraserWidth'),
+		usePressure: defaultStore.makeGetterSetter('usePressure'),
 	},
 	watch: {
 		changed() {
@@ -405,7 +397,7 @@ export default defineComponent({
 						if (!blob) return;
 
 						const data = new FormData();
-						data.append('i', this.$store.state.i.token);
+						data.append('i', this.$i.token);
 						data.append('force', 'true');
 						data.append('file', blob);
 						data.append('name', this.fileName);

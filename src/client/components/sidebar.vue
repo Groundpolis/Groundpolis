@@ -11,10 +11,10 @@
 	<transition name="nav">
 		<nav class="nav" :class="{ iconOnly, hidden }" v-show="showing">
 			<div>
-				<MkA class="item _button account" active-class="active" :to="userPage($store.state.i)">
-					<MkAvatar :user="$store.state.i" class="avatar"/>
-					<MkAcct v-if="!$store.state.settings.useDisplayNameForSidebar" class="text" :user="$store.state.i"/>
-					<MkUserName v-else class="text" :user="$store.state.i"/>
+				<MkA class="item _button account" active-class="active" :to="userPage($i)">
+					<MkAvatar :user="$i" class="avatar"/>
+					<MkAcct v-if="!$store.state.useDisplayNameForSidebar" class="text" :user="$i"/>
+					<MkUserName v-else class="text" :user="$i"/>
 				</MkA>
 				<button v-if="iconOnly && !hidden" class="item _button" @click="openAccountMenu">
 					<Fa :icon="faEllipsisV"/>
@@ -26,7 +26,7 @@
 				<div class="divider" />
 				<template v-if="!isAccountMenuMode">
 					<MkA class="item index" active-class="active" to="/" exact>
-						<Fa :icon="faHome" fixed-width/><span class="text">{{ $t('timeline') }}</span>
+						<Fa :icon="faHome" fixed-width/><span class="text">{{ $ts.timeline }}</span>
 					</MkA>
 					<template v-for="(item, i) in (menu.filter(filterItem))">
 						<div :key="'divider-' + i" v-if="item === '-'" class="divider"></div>
@@ -36,18 +36,18 @@
 						</component>
 					</template>
 					<div class="divider"></div>
-					<button class="item _button" :class="{ active: $route.path === '/instance' || $route.path.startsWith('/instance/') }" v-if="$store.state.i.isAdmin || $store.state.i.isModerator" @click="oepnInstanceMenu">
-						<Fa :icon="faServer" fixed-width/><span class="text">{{ $t('instance') }}</span>
+					<button class="item _button" :class="{ active: $route.path === '/instance' || $route.path.startsWith('/instance/') }" v-if="$i.isAdmin || $i.isModerator" @click="oepnInstanceMenu">
+						<Fa :icon="faServer" fixed-width/><span class="text">{{ $ts.instance }}</span>
 					</button>
 					<MkA class="item" active-class="active" to="/settings">
-						<Fa :icon="faCog" fixed-width/><span class="text">{{ $t('settings') }}</span>
+						<Fa :icon="faCog" fixed-width/><span class="text">{{ $ts.settings }}</span>
 					</MkA>
 					<button class="item _button" @click="more">
-						<Fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $t('more') }}</span>
+						<Fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $ts.more }}</span>
 						<i v-if="otherNavItemIndicated"><Fa :icon="faCircle"/></i>
 					</button>
 					<button class="item _button" v-if="!isTablet && !hidden" @click="collapsed = !collapsed">
-						<Fa :icon="collapsed ? faArrowRight : faArrowLeft" :key="collapsed ? faArrowRight : faArrowLeft" fixed-width/><span class="text">{{ $t('collapse') }}</span>
+						<Fa :icon="collapsed ? faArrowRight : faArrowLeft" :key="collapsed ? faArrowRight : faArrowLeft" fixed-width/><span class="text">{{ $ts.collapse }}</span>
 					</button>
 				</template>
 				<template v-else>
@@ -59,9 +59,9 @@
 					</button>
 					<MkEllipsis v-if="loadingAccounts" class="item" />
 					<div class="divider" v-if="accounts.length > 0"></div>
-					<button class="item _button" @click="addAcount" v-text="$t('addAcount')"/>
-					<button class="item _button" @click="createAccount" v-text="$t('createAccount')"/>
-					<button class="item danger _button" @click="signout" v-text="$t('logout')"/>
+					<button class="item _button" @click="addAcount" v-text="$ts.addAcount"/>
+					<button class="item _button" @click="createAccount" v-text="$ts.createAccount"/>
+					<button class="item danger _button" @click="signout" v-text="$ts.logout"/>
 				</template>
 			</div>
 		</nav>
@@ -78,6 +78,8 @@ import { search } from '@/scripts/search';
 import * as os from '@/os';
 import { sidebarDef } from '@/sidebar';
 import { userPage } from '@/filters/user';
+import { getAccounts, addAccount, login, signout } from '@/account';
+import { defaultStore } from '@/store';
 
 export default defineComponent({
 	data() {
@@ -99,7 +101,7 @@ export default defineComponent({
 
 	computed: {
 		menu(): string[] {
-			return this.$store.state.deviceUser.menu;
+			return this.$store.state.menu;
 		},
 
 		otherNavItemIndicated(): boolean {
@@ -111,13 +113,10 @@ export default defineComponent({
 		},
 
 		meta() {
-			return this.$store.state.instance.meta;
+			return this.$instance;
 		},
 
-		collapsed: {
-			get() { return this.$store.state.device.sidebarDisplay === 'icon'; },
-			set(value) { this.$store.commit('device/set', { key: 'sidebarDisplay', value: value ? 'icon' : 'full' }); }
-		},
+		collapsed: defaultStore.makeGetterSetter('sidebarDisplay', v => v === 'icon', v => v ? 'icon' : 'full'),
 	},
 
 	watch: {
@@ -125,7 +124,7 @@ export default defineComponent({
 			this.showing = false;
 		},
 
-		'$store.state.device.sidebarDisplay'() {
+		'$store.reactiveState.sidebarDisplay.value'() {
 			this.calcViewState();
 		},
 
@@ -151,8 +150,8 @@ export default defineComponent({
 	methods: {
 		calcViewState() {
 			this.isTablet = window.innerWidth <= 1279;
-			this.iconOnly = (this.isTablet) || (this.$store.state.device.sidebarDisplay === 'icon');
-			this.hidden = (window.innerWidth <= 650) || (this.$store.state.device.sidebarDisplay === 'hide');
+			this.iconOnly = (this.isTablet) || (this.$store.state.sidebarDisplay === 'icon');
+			this.hidden = (window.innerWidth <= 650) || (this.$store.state.sidebarDisplay === 'hide');
 		},
 
 		show() {
@@ -172,7 +171,7 @@ export default defineComponent({
 			if (this.searching) return;
 
 			os.dialog({
-				title: this.$t('search'),
+				title: this.$ts.search,
 				input: true,
 				autoComplete: true
 			}).then(async ({ canceled, result: query }) => {
@@ -208,13 +207,13 @@ export default defineComponent({
 			}));
 
 			os.modalMenu([...[...accountItems, {
-						text: this.$t('addAcount'),
+						text: this.$ts.addAcount,
 						action: () => { this.addAcount(); },
 					}, {
-						text: this.$t('createAccount'),
+						text: this.$ts.createAccount,
 						action: () => { this.createAccount(); },
 					}, {
-						text: this.$t('logout'),
+						text: this.$ts.logout,
 						action: this.signout,
 						danger: true,
 					}]], ev.currentTarget || ev.target, {
@@ -222,64 +221,62 @@ export default defineComponent({
 			});
 		},
 
-		signout() {
-			os.signout();
-		},
+		signout,
 
 		oepnInstanceMenu(ev) {
 			os.modalMenu([{
 				type: 'link',
-				text: this.$t('dashboard'),
+				text: this.$ts.dashboard,
 				to: '/instance',
 				icon: faTachometerAlt,
-			}, null, this.$store.state.i.isAdmin ? {
+			}, null, this.$i.isAdmin ? {
 				type: 'link',
-				text: this.$t('settings'),
+				text: this.$ts.settings,
 				to: '/instance/settings',
 				icon: faCog,
 			} : undefined, {
 				type: 'link',
-				text: this.$t('customEmojis'),
+				text: this.$ts.customEmojis,
 				to: '/instance/emojis',
 				icon: faLaugh,
 			}, {
 				type: 'link',
-				text: this.$t('users'),
+				text: this.$ts.users,
 				to: '/instance/users',
 				icon: faUsers,
 			}, {
 				type: 'link',
-				text: this.$t('files'),
+				text: this.$ts.files,
 				to: '/instance/files',
 				icon: faCloud,
 			}, {
 				type: 'link',
-				text: this.$t('jobQueue'),
+				text: this.$ts.jobQueue,
 				to: '/instance/queue',
 				icon: faExchangeAlt,
 			}, {
 				type: 'link',
-				text: this.$t('federation'),
+				text: this.$ts.federation,
 				to: '/instance/federation',
 				icon: faGlobe,
 			}, {
 				type: 'link',
-				text: this.$t('relays'),
+				text: this.$ts.relays,
 				to: '/instance/relays',
 				icon: faProjectDiagram,
 			}, {
 				type: 'link',
-				text: this.$t('announcements'),
+				text: this.$ts.announcements,
 				to: '/instance/announcements',
 				icon: faBroadcastTower,
 			}, {
 				type: 'link',
-				text: this.$t('abuseReports'),
+				text: this.$ts.abuseReports,
 				to: '/instance/abuses',
 				icon: faExclamationCircle,
 			}, {
 				type: 'link',
-				text: this.$t('logs'),
+				text: this.$ts.logs,
 				to: '/instance/logs',
 				icon: faStream,
 			}], ev.currentTarget || ev.target);
@@ -293,7 +290,7 @@ export default defineComponent({
 		addAcount() {
 			os.popup(import('./signin-dialog.vue'), {}, {
 				done: res => {
-					this.$store.dispatch('addAcount', res);
+					addAccount(res.id, res.i);
 					this.switchAccountWithToken(res.i);
 				},
 			}, 'closed');
@@ -302,28 +299,20 @@ export default defineComponent({
 		createAccount() {
 			os.popup(import('./signup-dialog.vue'), {}, {
 				done: res => {
-					this.$store.dispatch('addAcount', res);
+					addAccount(res.id, res.i);
 					this.switchAccountWithToken(res.i);
 				},
 			}, 'closed');
 		},
 
 		switchAccount(account: any) {
-			const token = this.$store.state.device.accounts.find((x: any) => x.id === account.id).token;
+			const storedAccounts = getAccounts();
+			const token = storedAccounts.find(x => x.id === account.id).token;
 			this.switchAccountWithToken(token);
 		},
 
 		switchAccountWithToken(token: string) {
-			os.waiting();
-
-			os.api('i', {}, token).then((i: any) => {
-				this.$store.dispatch('switchAccount', {
-					...i,
-					token: token
-				}).then(() => {
-					location.reload();
-				});
-			});
+			login(token);
 		},
 
 		userPage
@@ -358,7 +347,7 @@ export default defineComponent({
 	$header-height: 60px;
 	$ui-font-size: 1em; // TODO: どこかに集約したい
 	$nav-width: 250px;
-	$nav-icon-only-width: 80px;
+	$nav-icon-only-width: 86px;
 	$right-widgets-hide-threshold: 1090px;
 	position: relative;
 
@@ -443,7 +432,6 @@ export default defineComponent({
 			z-index: 1001;
 
 			> div {
-				> .index,
 				> .notifications {
 					display: none;
 				}
@@ -465,10 +453,6 @@ export default defineComponent({
 			box-sizing: border-box;
 			overflow: auto;
 			background: var(--navBg);
-			border-right: solid 1px var(--divider);
-			-webkit-backdrop-filter: blur(4px);
-			backdrop-filter: blur(4px);
-			padding: 16px;
 
 			> .divider {
 				margin: 16px 0;

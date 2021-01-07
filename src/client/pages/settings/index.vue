@@ -2,26 +2,26 @@
 <div class="vvcocwet" :class="{ wide: !narrow }" ref="el">
 	<FormBase class="nav" v-if="!narrow || page == null" :force-wide="!narrow">
 		<FormGroup>
-			<template #label>{{ $t('basicSettings') }}</template>
+			<template #label>{{ $ts.basicSettings }}</template>
 			<FormLink v-for="i in basicPages" :key="i.name" :active="page === i.name" replace :to="`/settings/${i.name}`">
 				<template #icon><Fa :icon="i.icon"/></template>{{ i.title }}
 			</FormLink>
 		</FormGroup>
 		<FormGroup>
-			<template #label>{{ $t('clientSettings') }}</template>
+			<template #label>{{ $ts.clientSettings }}</template>
 			<FormLink v-for="i in clientPages" :key="i.name" :active="page === i.name" replace :to="`/settings/${i.name}`">
 				<template #icon><Fa :icon="i.icon"/></template>{{ i.title }}
 			</FormLink>
 		</FormGroup>
 		<FormGroup>
-			<template #label>{{ $t('otherSettings') }}</template>
+			<template #label>{{ $ts.otherSettings }}</template>
 			<FormLink v-for="i in otherPages" :key="i.name" :active="page === i.name" replace :to="`/settings/${i.name}`">
 				<template #icon><Fa :icon="i.icon"/></template>{{ i.title }}
 			</FormLink>
 		</FormGroup>
 		<FormGroup>
-			<FormButton @click="logout" danger>{{ $t('logout') }}</FormButton>
-			<FormButton @click="logoutAll" danger>{{ $t('logoutAll') }}</FormButton>
+			<FormButton @click="logout" danger>{{ $ts.logout }}</FormButton>
+			<FormButton @click="logoutAll" danger>{{ $ts.logoutAll }}</FormButton>
 		</FormGroup>
 	</FormBase>
 	<div class="main">
@@ -34,15 +34,15 @@
 import { computed, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell } from '@fortawesome/free-regular-svg-icons';
-import * as os from '@/os';
-import { store } from '@/store';
 import { i18n } from '@/i18n';
 import { pages } from './index.pages';
 import FormLink from '@/components/form/link.vue';
 import FormGroup from '@/components/form/group.vue';
 import FormBase from '@/components/form/base.vue';
 import FormButton from '@/components/form/button.vue';
-import { scroll } from '../../scripts/scroll';
+import { scroll } from '@/scripts/scroll';
+import { signout, signoutAll } from '@/account';
+import { dialog } from '@/os';
 
 export default defineComponent({
 	components: {
@@ -66,7 +66,7 @@ export default defineComponent({
 			title: page.value.title,
 			icon: page.value.icon,
 		} : {
-			title: i18n.global.t('settings'),
+			title: i18n.locale.settings,
 			icon: faCog,
 		});
 
@@ -89,13 +89,13 @@ export default defineComponent({
 		});
 
 		const logoutAll = () => {
-			os.dialog({
+			dialog({
 				type: 'warning',
-				text: i18n.global.t('logoutAllConfirm'),
+				text: i18n.locale.logoutAllConfirm,
 				showCancelButton: true
 			}).then(({ canceled }) => {
 				if (canceled) return;
-				os.signoutAll();
+				signoutAll();
 			});
 		};
 
@@ -109,8 +109,7 @@ export default defineComponent({
 			otherPages: pages.filter(p => p.type === 'other'),
 			component,
 			logout: () => {
-				store.dispatch('logout');
-				location.href = '/';
+				signout();
 			},
 			logoutAll,
 			faLaugh, faBell
@@ -134,6 +133,7 @@ export default defineComponent({
 
 		> .main {
 			flex: 1;
+			min-width: 0;
 			--baseContentWidth: 100%;
 
 			::v-deep(._section) {

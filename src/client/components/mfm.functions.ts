@@ -13,16 +13,16 @@ export type MfmFunctionStyleProp = Record<string, string | undefined>;
 function genProp(label?: string, description?: string): MfmFunctionProp {
 	return {
 		hasValue: true,
-		label: label ? i18n.global.t(label) : undefined,
-		description: description ? i18n.global.t(description) : undefined,
+		label: label ? i18n.t(label) : undefined,
+		description: description ? i18n.t(description) : undefined,
 	};
 }
 
 function genFlagProp(label?: string, description?: string): MfmFunctionProp {
 	return {
 		hasValue: false,
-		label: label ? i18n.global.t(label) : undefined,
-		description: description ? i18n.global.t(description) : undefined,
+		label: label ? i18n.t(label) : undefined,
+		description: description ? i18n.t(description) : undefined,
 	};
 }
 

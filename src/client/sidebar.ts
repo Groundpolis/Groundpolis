@@ -1,36 +1,37 @@
 import { faBell, faComments, faLaugh } from '@fortawesome/free-regular-svg-icons';
 import { faCloud, faColumns, faDoorClosed, faFileAlt, faGamepad, faHashtag, faListUl, faPaperclip, faPaintBrush, faSatellite, faSatelliteDish, faSearch, faStar, faTerminal, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { computed } from 'vue';
-import { store } from '@/store';
+import { search } from '@/scripts/search';
 import * as os from '@/os';
 import { i18n } from '@/i18n';
+import { $i } from './account';
 
 export const sidebarDef = {
 	notifications: {
 		title: 'notifications',
 		icon: faBell,
-		show: computed(() => store.getters.isSignedIn),
-		indicated: computed(() => store.getters.isSignedIn && store.state.i.hasUnreadNotification),
+		show: computed(() => $i != null),
+		indicated: computed(() => $i != null && $i.hasUnreadNotification),
 		to: '/my/notifications',
 	},
 	messaging: {
 		title: 'messaging',
 		icon: faComments,
-		show: computed(() => store.getters.isSignedIn),
-		indicated: computed(() => store.getters.isSignedIn && store.state.i.hasUnreadMessagingMessage),
+		show: computed(() => $i != null),
+		indicated: computed(() => $i != null && $i.hasUnreadMessagingMessage),
 		to: '/my/messaging',
 	},
 	drive: {
 		title: 'drive',
 		icon: faCloud,
-		show: computed(() => store.getters.isSignedIn),
+		show: computed(() => $i != null),
 		to: '/my/drive',
 	},
 	followRequests: {
 		title: 'followRequests',
 		icon: faUserClock,
-		show: computed(() => store.getters.isSignedIn && store.state.i.hasPendingReceivedFollowRequest),
-		indicated: computed(() => store.getters.isSignedIn && store.state.i.hasPendingReceivedFollowRequest),
+		show: computed(() => $i != null && $i.hasPendingReceivedFollowRequest),
+		indicated: computed(() => $i != null && $i.hasPendingReceivedFollowRequest),
 		to: '/my/follow-requests',
 	},
 	explore: {
@@ -41,25 +42,25 @@ export const sidebarDef = {
 	lists: {
 		title: 'lists',
 		icon: faListUl,
-		show: computed(() => store.getters.isSignedIn),
+		show: computed(() => $i != null),
 		to: '/my/lists',
 	},
 	groups: {
 		title: 'groups',
 		icon: faUsers,
-		show: computed(() => store.getters.isSignedIn),
+		show: computed(() => $i != null),
 		to: '/my/groups',
 	},
 	antennas: {
 		title: 'antennas',
 		icon: faSatellite,
-		show: computed(() => store.getters.isSignedIn),
+		show: computed(() => $i != null),
 		to: '/my/antennas',
 	},
 	favorites: {
 		title: 'favorites',
 		icon: faStar,
-		show: computed(() => store.getters.isSignedIn),
+		show: computed(() => $i != null),
 		to: '/my/favorites',
 	},
 	pages: {
@@ -70,7 +71,7 @@ export const sidebarDef = {
 	clips: {
 		title: 'clip',
 		icon: faPaperclip,
-		show: computed(() => store.getters.isSignedIn),
+		show: computed(() => $i != null),
 		to: '/my/clips',
 	},
 	channels: {
@@ -91,27 +92,27 @@ export const sidebarDef = {
 	rooms: {
 		title: 'rooms',
 		icon: faDoorClosed,
-		show: computed(() => store.getters.isSignedIn),
-		to: computed(() => `/@${store.state.i.username}/room`),
+		show: computed(() => $i != null),
+		to: computed(() => `/@${$i.username}/room`),
 	},
 	ui: {
 		title: 'switchUi',
 		icon: faColumns,
 		action: (ev) => {
 			os.modalMenu([{
-				text: i18n.global.t('default'),
+				text: i18n.locale.default,
 				action: () => {
 					localStorage.setItem('ui', 'default');
 					location.reload();
 				}
 			}, {
-				text: i18n.global.t('deck'),
+				text: i18n.locale.deck,
 				action: () => {
 					localStorage.setItem('ui', 'deck');
 					location.reload();
 				}
 			}, {
-				text: i18n.global.t('desktop') + ' (β)',
+				text: i18n.locale.desktop + ' (β)',
 				action: () => {
 					localStorage.setItem('ui', 'desktop');
 					location.reload();
@@ -122,7 +123,7 @@ export const sidebarDef = {
 	paint: {
 		title: 'paint',
 		icon: faPaintBrush,
-		show: computed(() => store.getters.isSignedIn),
+		show: computed(() => $i != null),
 		to: '/paint',
 	},
 	emojiSuggestion: {

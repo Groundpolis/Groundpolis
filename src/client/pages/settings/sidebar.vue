@@ -1,6 +1,6 @@
 <template>
 <FormBase>
-	<FormSwitch v-model:value="useDisplayNameForSidebar">{{ $t('useDisplayNameForSidebar') }}</FormSwitch>
+	<FormSwitch v-model:value="useDisplayNameForSidebar">{{ $ts.useDisplayNameForSidebar }}</FormSwitch>
 	
 	<div class="mcc329a0 _formItem _formPanel">
 		<XDraggable class="draggable" v-model="items" :item-key="item => item" animation="150" delay="100" delay-on-touch-only="true">
@@ -9,7 +9,7 @@
 					<Fa v-if="!item.startsWith('-:')" class="icon" :icon="menuDef[item].icon" />
 					<template v-if="item.startsWith('-:')">
 						<Fa class="icon" :icon="faMinus" />
-						<span v-text="$t('divider')"/>
+						<span v-text="$ts.divider"/>
 					</template>
 					<span v-else v-text="$t(menuDef[item] ? menuDef[item].title : item)"/>
 					<div class="del" @click="del(item)"><Fa :icon="faTimes" /></div>
@@ -19,8 +19,8 @@
 	</div>
 
 	<FormTuple>
-		<FormButton @click="addItem" primary><Fa :icon="faPlus"/> {{ $t('add') }}</FormButton>
-		<FormButton @click="reset()" danger><Fa :icon="faRedo"/> {{ $t('default') }}</FormButton>
+		<FormButton @click="addItem" primary><Fa :icon="faPlus"/> {{ $ts.add }}</FormButton>
+		<FormButton @click="reset()" danger><Fa :icon="faRedo"/> {{ $ts.default }}</FormButton>
 	</FormTuple>
 </FormBase>
 </template>
@@ -34,9 +34,9 @@ import FormRadios from '@/components/form/radios.vue';
 import FormBase from '@/components/form/base.vue';
 import FormTuple from '@/components/form/tuple.vue';
 import FormButton from '@/components/form/button.vue';
-import { defaultDeviceUserSettings } from '@/store';
 import * as os from '@/os';
 import { sidebarDef } from '@/sidebar';
+import { defaultStore } from '@/store';
 
 export default defineComponent({
 	components: {
@@ -53,7 +53,7 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				title: this.$t('sidebar'),
+				title: this.$ts.sidebar,
 				icon: faListUl
 			},
 			menuDef: sidebarDef,
@@ -63,14 +63,11 @@ export default defineComponent({
 	},
 
 	computed: {
-		useDisplayNameForSidebar: {
-			get() { return this.$store.state.settings.useDisplayNameForSidebar; },
-			set(value) { this.$store.dispatch('settings/set', { key: 'useDisplayNameForSidebar', value }); }
-		},
+		useDisplayNameForSidebar: defaultStore.makeGetterSetter('useDisplayNameForSidebar')
 	},
 
 	created() {
-		this.items = this.$store.state.deviceUser.menu.map(it => it === '-' ? '-:' + uuid() : it);
+		this.items = this.$store.state.menu.map(it => it === '-' ? '-:' + uuid() : it);
 	},
 
 	watch: {
@@ -85,15 +82,15 @@ export default defineComponent({
 
 	methods: {
 		async addItem() {
-			const menu = Object.keys(this.menuDef).filter(k => !this.$store.state.deviceUser.menu.includes(k));
+			const menu = Object.keys(this.menuDef).filter(k => !this.$store.state.menu.includes(k));
 			const { canceled, result: item } = await os.dialog({
 				type: null,
-				title: this.$t('addItem'),
+				title: this.$ts.addItem,
 				select: {
 					items: [...menu.map(k => ({
-						value: k, text: this.$t(this.menuDef[k].title)
+						value: k, text: this.$ts[this.menuDef[k].title]
 					})), ...[{
-						value: '-:' + uuid(), text: this.$t('divider')
+						value: '-:' + uuid(), text: this.$ts.divider
 					}]]
 				},
 				showCancelButton: true
@@ -107,11 +104,12 @@ export default defineComponent({
 		},
 
 		save() {
-			this.$store.commit('deviceUser/setMenu', this.items.map(it => it.startsWith('-:') ? '-' : it));
+			this.$store.set('menu', this.items.map(it => it.startsWith('-:') ? '-' : it));
 		},
 
 		reset() {
-			this.items = defaultDeviceUserSettings.menu.map(it => it === '-' ? '-:' + uuid() : it);
+			this.$store.reset('menu');
+			this.items = this.$store.state.menu.map(it => it === '-' ? '-:' + uuid() : it);
 		},
 	},
 });

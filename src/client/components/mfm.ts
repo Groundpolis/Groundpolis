@@ -81,7 +81,7 @@ export default defineComponent({
 				case 'fn': {
 					const { name, args } = token.node.props as { name: string, args: MfmFunctionStyleProp };
 					const fn = mfmFunctions[name];
-					const noAnimatedMfm = !this.$store.state.device.animatedMfm;
+					const noAnimatedMfm = !this.$store.state.animatedMfm;
 					const noAnimatedStyle = !fn ? '' : typeof fn === 'string' ? '' : fn.noAnimatedMfmStyle ? (typeof fn.noAnimatedMfmStyle === 'boolean' ? fn.style(args) : fn.noAnimatedMfmStyle(args)) : '';
 					const style = noAnimatedMfm ? noAnimatedStyle : !fn ? '' : typeof fn === 'string' ? fn : fn.style(args);
 
@@ -115,7 +115,7 @@ export default defineComponent({
 				}
 
 				case 'marquee': {
-					if (!this.$store.state.device.animatedMfm) {
+					if (!this.$store.state.animatedMfm) {
 						return genEl(token.children) as any;
 					}
 

@@ -1,40 +1,37 @@
 <template>
 <FormBase>
-	<FormSwitch v-model:value="showFixedPostForm">{{ $t('showFixedPostForm') }}</FormSwitch>
+	<FormSwitch v-model:value="showFixedPostForm">{{ $ts.showFixedPostForm }}</FormSwitch>
 
-	<FormGroup>
-		<FormSelect v-model:value="lang">
-			<template #label>{{ $t('uiLanguage') }}</template>
-			<option v-for="x in langs" :value="x[0]" :key="x[0]">{{ x[1] }}</option>
-		</FormSelect>
-		<FormButton @click="cacheClear()">{{ $t('reload') }}</FormButton>
-	</FormGroup>
-
-	<FormGroup>
-		<template #label>{{ $t('behavior') }}</template>
-		<FormSwitch v-model:value="imageNewTab">{{ $t('openImageInNewTab') }}</FormSwitch>
-		<FormSwitch v-model:value="enableInfiniteScroll">{{ $t('enableInfiniteScroll') }}</FormSwitch>
-		<FormSwitch v-model:value="disablePagesScript">{{ $t('disablePagesScript') }}</FormSwitch>
-	</FormGroup>
-
-	<FormSelect v-model:value="serverDisconnectedBehavior">
-		<template #label>{{ $t('whenServerDisconnected') }}</template>
-		<option value="reload">{{ $t('_serverDisconnectedBehavior.reload') }}</option>
-		<option value="dialog">{{ $t('_serverDisconnectedBehavior.dialog') }}</option>
-		<option value="quiet">{{ $t('_serverDisconnectedBehavior.quiet') }}</option>
+	<FormSelect v-model:value="lang">
+		<template #label>{{ $ts.uiLanguage }}</template>
+		<option v-for="x in langs" :value="x[0]" :key="x[0]">{{ x[1] }}</option>
 	</FormSelect>
 
 	<FormGroup>
-		<template #label>{{ $t('appearance') }}</template>
-		<FormSwitch v-model:value="disableAnimatedMfm">{{ $t('disableAnimatedMfm') }}</FormSwitch>
-		<FormSwitch v-model:value="reduceAnimation">{{ $t('reduceUiAnimation') }}</FormSwitch>
-		<FormSwitch v-model:value="useBlurEffectForModal">{{ $t('useBlurEffectForModal') }}</FormSwitch>
-		<FormSwitch v-model:value="showGapBetweenNotesInTimeline">{{ $t('showGapBetweenNotesInTimeline') }}</FormSwitch>
-		<FormSwitch v-model:value="loadRawImages">{{ $t('loadRawImages') }}</FormSwitch>
-		<FormSwitch v-model:value="disableShowingAnimatedImages">{{ $t('disableShowingAnimatedImages') }}</FormSwitch>
-		<FormSwitch v-model:value="useSystemFont">{{ $t('useSystemFont') }}</FormSwitch>
-		<FormSwitch v-model:value="useOsNativeEmojis">{{ $t('useOsNativeEmojis') }}
-			<div><Mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></div>
+		<template #label>{{ $ts.behavior }}</template>
+		<FormSwitch v-model:value="imageNewTab">{{ $ts.openImageInNewTab }}</FormSwitch>
+		<FormSwitch v-model:value="enableInfiniteScroll">{{ $ts.enableInfiniteScroll }}</FormSwitch>
+		<FormSwitch v-model:value="disablePagesScript">{{ $ts.disablePagesScript }}</FormSwitch>
+	</FormGroup>
+
+	<FormSelect v-model:value="serverDisconnectedBehavior">
+		<template #label>{{ $ts.whenServerDisconnected }}</template>
+		<option value="reload">{{ $ts._serverDisconnectedBehavior.reload }}</option>
+		<option value="dialog">{{ $ts._serverDisconnectedBehavior.dialog }}</option>
+		<option value="quiet">{{ $ts._serverDisconnectedBehavior.quiet }}</option>
+	</FormSelect>
+
+	<FormGroup>
+		<template #label>{{ $ts.appearance }}</template>
+		<FormSwitch v-model:value="disableAnimatedMfm">{{ $ts.disableAnimatedMfm }}</FormSwitch>
+		<FormSwitch v-model:value="reduceAnimation">{{ $ts.reduceUiAnimation }}</FormSwitch>
+		<FormSwitch v-model:value="useBlurEffectForModal">{{ $ts.useBlurEffectForModal }}</FormSwitch>
+		<FormSwitch v-model:value="showGapBetweenNotesInTimeline">{{ $ts.showGapBetweenNotesInTimeline }}</FormSwitch>
+		<FormSwitch v-model:value="loadRawImages">{{ $ts.loadRawImages }}</FormSwitch>
+		<FormSwitch v-model:value="disableShowingAnimatedImages">{{ $ts.disableShowingAnimatedImages }}</FormSwitch>
+		<FormSwitch v-model:value="useSystemFont">{{ $ts.useSystemFont }}</FormSwitch>
+		<FormSwitch v-model:value="useOsNativeEmojis">{{ $ts.useOsNativeEmojis }}
+			<div><Mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪" :key="useOsNativeEmojis"/></div>
 		</FormSwitch>
 		<FormSwitch v-model:value="collapseLongNote">{{ $t('collapseLongNote') }}</FormSwitch>
 		<FormSwitch v-model:value="useSticker">{{ $t('useSticker') }}
@@ -43,7 +40,7 @@
 	</FormGroup>
 
 	<FormSwitch v-model:value="showFullAcct">{{ $t('showFullAcct') }}
-		<template #desc><MkAcct :user="$store.state.i"/></template>
+		<template #desc><MkAcct :user="$i"/></template>
 	</FormSwitch>
 
 	<FormSwitch v-model:value="makeCustomEmojisBigger">
@@ -52,7 +49,7 @@
 	</FormSwitch>
 
 	<FormRadios v-model="fontSize">
-		<template #desc>{{ $t('fontSize') }}</template>
+		<template #desc>{{ $ts.fontSize }}</template>
 		<option value="small"><span style="font-size: 14px;">Aa</span></option>
 		<option :value="null"><span style="font-size: 16px;">Aa</span></option>
 		<option value="large"><span style="font-size: 18px;">Aa</span></option>
@@ -60,17 +57,17 @@
 	</FormRadios>
 
 	<FormSelect v-model:value="instanceTicker">
-		<template #label>{{ $t('instanceTicker') }}</template>
-		<option value="none">{{ $t('_instanceTicker.none') }}</option>
-		<option value="remote">{{ $t('_instanceTicker.remote') }}</option>
-		<option value="always">{{ $t('_instanceTicker.always') }}</option>
+		<template #label>{{ $ts.instanceTicker }}</template>
+		<option value="none">{{ $ts._instanceTicker.none }}</option>
+		<option value="remote">{{ $ts._instanceTicker.remote }}</option>
+		<option value="always">{{ $ts._instanceTicker.always }}</option>
 	</FormSelect>
 
 	<FormSelect v-model:value="nsfw">
-		<template #label>{{ $t('nsfw') }}</template>
-		<option value="respect">{{ $t('_nsfw.respect') }}</option>
-		<option value="ignore">{{ $t('_nsfw.ignore') }}</option>
-		<option value="force">{{ $t('_nsfw.force') }}</option>
+		<template #label>{{ $ts.nsfw }}</template>
+		<option value="respect">{{ $ts._nsfw.respect }}</option>
+		<option value="ignore">{{ $ts._nsfw.ignore }}</option>
+		<option value="force">{{ $ts._nsfw.force }}</option>
 	</FormSelect>
 	
 	<FormSelect v-model:value="noteNameDisplayMode">
@@ -78,12 +75,12 @@
 		<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $t(x) }}</option>
 		<template #caption>
 			<span v-if="noteNameDisplayMode === 0">
-				<b style="margin-right: 1em">{{ $store.state.i.name || $store.state.i.username }}</b>
-				<MkAcct :user="$store.state.i"/>
+				<b style="margin-right: 1em">{{ $i.name || $i.username }}</b>
+				<MkAcct :user="$i"/>
 			</span>
 			<span v-else>
-				<MkAcct v-if="noteNameDisplayMode !== 2" style="margin-right: 1em" :user="$store.state.i"/>
-				<b v-if="noteNameDisplayMode !== 3">{{ $store.state.i.name || $store.state.i.username }}</b>
+				<MkAcct v-if="noteNameDisplayMode !== 2" style="margin-right: 1em" :user="$i"/>
+				<b v-if="noteNameDisplayMode !== 3">{{ $i.name || $i.username }}</b>
 			</span>
 		</template>
 	</FormSelect>
@@ -97,25 +94,23 @@
 			<option value="droplet">{{ $t('_iconShape.droplet') }}</option>
 		</FormRadios>
 		<div class="_formItem _formPanel" style="padding: 16px;">
-			<MkAvatar disable-link disable-preview :user="$store.state.i" class="avatar"/>
+			<MkAvatar disable-link disable-preview :user="$i" class="avatar"/>
 		</div>
 	</FormGroup>
 
 	<FormGroup>
-		<template #label>{{ $t('defaultNavigationBehaviour') }}</template>
-		<FormSwitch v-model:value="defaultSideView">{{ $t('openInSideView') }}</FormSwitch>
+		<template #label>{{ $ts.defaultNavigationBehaviour }}</template>
+		<FormSwitch v-model:value="defaultSideView">{{ $ts.openInSideView }}</FormSwitch>
 	</FormGroup>
 
 	<FormSelect v-model:value="chatOpenBehavior">
-		<template #label>{{ $t('chatOpenBehavior') }}</template>
-		<option value="page">{{ $t('showInPage') }}</option>
-		<option value="window">{{ $t('openInWindow') }}</option>
-		<option value="popout">{{ $t('popout') }}</option>
+		<template #label>{{ $ts.chatOpenBehavior }}</template>
+		<option value="page">{{ $ts.showInPage }}</option>
+		<option value="window">{{ $ts.openInWindow }}</option>
+		<option value="popout">{{ $ts.popout }}</option>
 	</FormSelect>
 
-	<FormLink to="/settings/deck">{{ $t('deck') }}</FormLink>
-
-	<FormButton @click="cacheClear()" danger>{{ $t('cacheClear') }}</FormButton>
+	<FormLink to="/settings/deck">{{ $ts.deck }}</FormLink>
 </FormBase>
 </template>
 
@@ -131,7 +126,8 @@ import FormLink from '@/components/form/link.vue';
 import FormButton from '@/components/form/button.vue';
 import MkLink from '@/components/link.vue';
 import { langs } from '@/config';
-import { clientDb, set } from '@/db';
+import { defaultStore } from '@/store';
+import { ColdDeviceStorage } from '@/store';
 import * as os from '@/os';
 
 export default defineComponent({
@@ -151,7 +147,7 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				title: this.$t('general'),
+				title: this.$ts.general,
 				icon: faCogs
 			},
 			langs,
@@ -163,128 +159,35 @@ export default defineComponent({
 	},
 
 	computed: {
-		serverDisconnectedBehavior: {
-			get() { return this.$store.state.device.serverDisconnectedBehavior; },
-			set(value) { this.$store.commit('device/set', { key: 'serverDisconnectedBehavior', value }); }
-		},
-
-		reduceAnimation: {
-			get() { return !this.$store.state.device.animation; },
-			set(value) { this.$store.commit('device/set', { key: 'animation', value: !value }); }
-		},
-
-		useBlurEffectForModal: {
-			get() { return this.$store.state.device.useBlurEffectForModal; },
-			set(value) { this.$store.commit('device/set', { key: 'useBlurEffectForModal', value: value }); }
-		},
-
-		showGapBetweenNotesInTimeline: {
-			get() { return this.$store.state.device.showGapBetweenNotesInTimeline; },
-			set(value) { this.$store.commit('device/set', { key: 'showGapBetweenNotesInTimeline', value: value }); }
-		},
-
-		disableAnimatedMfm: {
-			get() { return !this.$store.state.device.animatedMfm; },
-			set(value) { this.$store.commit('device/set', { key: 'animatedMfm', value: !value }); }
-		},
-
-		useOsNativeEmojis: {
-			get() { return this.$store.state.device.useOsNativeEmojis; },
-			set(value) { this.$store.commit('device/set', { key: 'useOsNativeEmojis', value }); }
-		},
-
-		imageNewTab: {
-			get() { return this.$store.state.device.imageNewTab; },
-			set(value) { this.$store.commit('device/set', { key: 'imageNewTab', value }); }
-		},
-
-		disablePagesScript: {
-			get() { return this.$store.state.device.disablePagesScript; },
-			set(value) { this.$store.commit('device/set', { key: 'disablePagesScript', value }); }
-		},
-
-		showFixedPostForm: {
-			get() { return this.$store.state.device.showFixedPostForm; },
-			set(value) { this.$store.commit('device/set', { key: 'showFixedPostForm', value }); }
-		},
-
-		defaultSideView: {
-			get() { return this.$store.state.device.defaultSideView; },
-			set(value) { this.$store.commit('device/set', { key: 'defaultSideView', value }); }
-		},
-
-		chatOpenBehavior: {
-			get() { return this.$store.state.device.chatOpenBehavior; },
-			set(value) { this.$store.commit('device/set', { key: 'chatOpenBehavior', value }); }
-		},
-
-		instanceTicker: {
-			get() { return this.$store.state.device.instanceTicker; },
-			set(value) { this.$store.commit('device/set', { key: 'instanceTicker', value }); }
-		},
-
-		loadRawImages: {
-			get() { return this.$store.state.device.loadRawImages; },
-			set(value) { this.$store.commit('device/set', { key: 'loadRawImages', value }); }
-		},
-
-		disableShowingAnimatedImages: {
-			get() { return this.$store.state.device.disableShowingAnimatedImages; },
-			set(value) { this.$store.commit('device/set', { key: 'disableShowingAnimatedImages', value }); }
-		},
-
-		nsfw: {
-			get() { return this.$store.state.device.nsfw; },
-			set(value) { this.$store.commit('device/set', { key: 'nsfw', value }); }
-		},
-
-		enableInfiniteScroll: {
-			get() { return this.$store.state.device.enableInfiniteScroll; },
-			set(value) { this.$store.commit('device/set', { key: 'enableInfiniteScroll', value }); }
-		},
-		
-		makeCustomEmojisBigger: {
-			get() { return this.$store.state.device.makeCustomEmojisBigger; },
-			set(value) { this.$store.commit('device/set', { key: 'makeCustomEmojisBigger', value: value }); }
-		},
-
-		useSticker: {
-			get() { return this.$store.state.device.useSticker; },
-			set(value) { this.$store.commit('device/set', { key: 'useSticker', value: value }); }
-		},
-
-		collapseLongNote: {
-			get() { return this.$store.state.device.collapseLongNote },
-			set(value) { this.$store.commit('device/set', { key: 'collapseLongNote', value }); }
-		},
-
-		noteNameDisplayMode: {
-			get() { return this.$store.state.device.noteNameDisplayMode },
-			set(value) { this.$store.commit('device/set', { key: 'noteNameDisplayMode', value }) }
-		},
-
-		showFullAcct: {
-			get() { return this.$store.state.settings.showFullAcct },
-			set(value) { this.$store.dispatch('settings/set', { key: 'showFullAcct', value }) }
-		},
-
-		iconShape: {
-			get() { return this.$store.state.device.iconShape; },
-			set(value) { this.$store.commit('device/set', { key: 'iconShape', value }); }
-		},
+		serverDisconnectedBehavior: defaultStore.makeGetterSetter('serverDisconnectedBehavior'),
+		reduceAnimation: defaultStore.makeGetterSetter('animation', v => !v, v => !v),
+		useBlurEffectForModal: defaultStore.makeGetterSetter('useBlurEffectForModal'),
+		showGapBetweenNotesInTimeline: defaultStore.makeGetterSetter('showGapBetweenNotesInTimeline'),
+		disableAnimatedMfm: defaultStore.makeGetterSetter('animatedMfm', v => !v, v => !v),
+		useOsNativeEmojis: defaultStore.makeGetterSetter('useOsNativeEmojis'),
+		disableShowingAnimatedImages: defaultStore.makeGetterSetter('disableShowingAnimatedImages'),
+		loadRawImages: defaultStore.makeGetterSetter('loadRawImages'),
+		imageNewTab: defaultStore.makeGetterSetter('imageNewTab'),
+		nsfw: defaultStore.makeGetterSetter('nsfw'),
+		disablePagesScript: defaultStore.makeGetterSetter('disablePagesScript'),
+		showFixedPostForm: defaultStore.makeGetterSetter('showFixedPostForm'),
+		defaultSideView: defaultStore.makeGetterSetter('defaultSideView'),
+		chatOpenBehavior: ColdDeviceStorage.makeGetterSetter('chatOpenBehavior'),
+		instanceTicker: defaultStore.makeGetterSetter('instanceTicker'),
+		enableInfiniteScroll: defaultStore.makeGetterSetter('enableInfiniteScroll'),
+		makeCustomEmojisBigger: defaultStore.makeGetterSetter('makeCustomEmojisBigger'),
+		useSticker: defaultStore.makeGetterSetter('useSticker'),
+		collapseLongNote: defaultStore.makeGetterSetter('collapseLongNote'),
+		noteNameDisplayMode: defaultStore.makeGetterSetter('noteNameDisplayMode'),
+		showFullAcct: defaultStore.makeGetterSetter('showFullAcct'),
+		iconShape: defaultStore.makeGetterSetter('iconShape'),
 	},
 
 	watch: {
 		lang() {
 			localStorage.setItem('lang', this.lang);
-
-			return set('_version_', `changeLang-${(new Date()).toJSON()}`, clientDb.i18n)
-				.then(() => location.reload())
-				.catch(() => {
-					os.dialog({
-						type: 'error',
-					});
-				});
+			localStorage.removeItem('locale');
+			this.reloadAsk();
 		},
 
 		fontSize() {
@@ -293,7 +196,7 @@ export default defineComponent({
 			} else {
 				localStorage.setItem('fontSize', this.fontSize);
 			}
-			location.reload();
+			this.reloadAsk();
 		},
 
 		useSystemFont() {
@@ -302,11 +205,23 @@ export default defineComponent({
 			} else {
 				localStorage.removeItem('useSystemFont');
 			}
-			location.reload();
+			this.reloadAsk();
 		},
 
 		enableInfiniteScroll() {
-			location.reload()
+			this.reloadAsk();
+		},
+
+		showGapBetweenNotesInTimeline() {
+			this.reloadAsk();
+		},
+
+		makeCustomEmojisBigger() {
+			this.reloadAsk();
+		},
+
+		useSticker() {
+			this.reloadAsk();
 		},
 	},
 
@@ -315,30 +230,15 @@ export default defineComponent({
 	},
 
 	methods: {
-		cacheClear() {
-			// Clear cache (service worker)
-			try {
-				navigator.serviceWorker.controller.postMessage('clear');
+		async reloadAsk() {
+			const { canceled } = await os.dialog({
+				type: 'info',
+				text: this.$ts.reloadToApplySetting,
+				showCancelButton: true
+			});
+			if (canceled) return;
 
-				navigator.serviceWorker.getRegistrations().then(registrations => {
-					for (const registration of registrations) registration.unregister();
-				});
-			} catch (e) {
-				console.error(e);
-			}
-
-			// Force reload
-			location.reload(true);
-		},
-
-		reloadLang() {
-			return set('_version_', `changeLang-${(new Date()).toJSON()}`, clientDb.i18n)
-				.then(() => location.reload())
-				.catch(() => {
-					os.dialog({
-						type: 'error',
-					});
-				});
+			location.reload();
 		}
 	}
 });

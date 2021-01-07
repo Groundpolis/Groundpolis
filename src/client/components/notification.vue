@@ -3,7 +3,7 @@
 	<div class="head">
 		<MkAvatar v-if="notification.user" class="icon" :user="notification.user"/>
 		<img v-else-if="notification.icon" class="icon" :src="notification.icon" alt=""/>
-		<div class="sub-icon" :class="notification.type !== 'reaction' || !$store.state.settings.disableReactions ? notification.type : 'like'">
+		<div class="sub-icon" :class="notification.type !== 'reaction' || !$store.state.disableReactions ? notification.type : 'like'">
 			<Fa :icon="faPlus" v-if="notification.type === 'follow'"/>
 			<Fa :icon="faClock" v-else-if="notification.type === 'receiveFollowRequest'"/>
 			<Fa :icon="faCheck" v-else-if="notification.type === 'followRequestAccepted'"/>
@@ -14,7 +14,7 @@
 			<Fa :icon="faQuoteLeft" v-else-if="notification.type === 'quote'"/>
 			<Fa :icon="faPollH" v-else-if="notification.type === 'pollVote'"/>
 			<template v-else-if="notification.type === 'reaction'">
-				<XReactionIcon v-if="!$store.state.settings.disableReactions" :reaction="notification.reaction" :custom-emojis="notification.note.emojis" :no-style="true"/>
+				<XReactionIcon v-if="!$store.state.disableReactions" :reaction="notification.reaction" :custom-emojis="notification.note.emojis" :no-style="true"/>
 				<Fa v-else :icon="faHeart"/>
 			</template>
 		</div>
@@ -50,14 +50,27 @@
 			<Fa :icon="faQuoteRight"/>
 		</MkA>
 		<span v-if="notification.type === 'follow'" class="text" style="opacity: 0.6;">
-			{{ $t('youGotNewFollower') }}
+			{{ $ts.youGotNewFollower }}
 			<div v-if="full">
 				<MkFollowButton :user="notification.user" full disableIfFollowing/>
 			</div>
 		</span>
-		<span v-if="notification.type === 'followRequestAccepted'" class="text" style="opacity: 0.6;">{{ $t('followRequestAccepted') }}</span>
-		<span v-if="notification.type === 'receiveFollowRequest'" class="text" style="opacity: 0.6;">{{ $t('receiveFollowRequest') }}<div v-if="full && !followRequestDone"><button class="_textButton" @click="acceptFollowRequest()">{{ $t('accept') }}</button> | <button class="_textButton" @click="rejectFollowRequest()">{{ $t('reject') }}</button></div></span>
-		<span v-if="notification.type === 'groupInvited'" class="text" style="opacity: 0.6;">{{ $t('groupInvited') }}: <b>{{ notification.invitation.group.name }}</b><div v-if="full && !groupInviteDone"><button class="_textButton" @click="acceptGroupInvitation()">{{ $t('accept') }}</button> | <button class="_textButton" @click="rejectGroupInvitation()">{{ $t('reject') }}</button></div></span>
+		<span v-if="notification.type === 'followRequestAccepted'" class="text" style="opacity: 0.6;">{{ $ts.followRequestAccepted }}</span>
+		<span v-if="notification.type === 'receiveFollowRequest'" class="text" style="opacity: 0.6;">{{ $ts.receiveFollowRequest }}
+			<div v-if="full && !followRequestDone">
+				<button class="_textButton" @click="acceptFollowRequest()">{{ $ts.accept }}</button>
+				|
+				<button class="_textButton" @click="rejectFollowRequest()">{{ $ts.reject }}</button>
+			</div>
+		</span>
+		<span v-if="notification.type === 'groupInvited'" class="text" style="opacity: 0.6;">
+			{{ $ts.groupInvited }}: <b>{{ notification.invitation.group.name }}</b>
+			<div v-if="full && !groupInviteDone">
+				<button class="_textButton" @click="acceptGroupInvitation()">{{ $ts.accept }}</button>
+				|
+				<button class="_textButton" @click="rejectGroupInvitation()">{{ $ts.reject }}</button>
+			</div>
+		</span>
 		<span v-if="notification.type === 'app'" class="text">
 			<Mfm :text="notification.body" :nowrap="!full"/>
 		</span>
@@ -74,8 +87,10 @@ import XReactionIcon from './reaction-icon.vue';
 import MkFollowButton from './follow-button.vue';
 import notePage from '../filters/note';
 import { userPage } from '../filters/user';
-import { locale } from '../i18n';
+import { i18n } from '@/i18n';
 import * as os from '@/os';
+
+const locale = i18n.locale;
 
 export default defineComponent({
 	components: {
@@ -111,7 +126,7 @@ export default defineComponent({
 
 	computed: {
 		isCompactMode(): boolean {
-			return this.$store.state.device.postStyle === 'compact';
+			return this.$store.state.postStyle === 'compact';
 		},
 	},
 

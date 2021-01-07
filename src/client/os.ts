@@ -1,7 +1,6 @@
 import { Component, markRaw, reactive, Ref, ref } from 'vue';
 import { EventEmitter } from 'eventemitter3';
 import Stream from '@/scripts/stream';
-import { store } from '@/store';
 import { apiUrl, debug } from '@/config';
 import MkPostFormDialog from '@/components/post-form-dialog.vue';
 import MkWaitingDialog from '@/components/waiting-dialog.vue';
@@ -9,6 +8,9 @@ import { resolve } from '@/router';
 import { NoteVisibility, notificationTypes } from '../types';
 import { isDeviceTouch } from './scripts/is-device-touch';
 import parseAcct from '../misc/acct/parse';
+import { $i } from './account';
+import * as Account from './account';
+import { defaultStore } from './store';
 
 const ua = navigator.userAgent.toLowerCase();
 const isMobileUA = /mobile|iphone|ipad|android/.test(ua);
@@ -47,7 +49,7 @@ export function api(endpoint: string, data: Record<string, any> = {}, token?: st
 
 	const promise = new Promise((resolve, reject) => {
 		// Append a credential
-		if (store.getters.isSignedIn) (data as any).i = store.state.i.token;
+		if ($i) (data as any).i = $i.token;
 		if (token !== undefined) (data as any).i = token;
 
 		// Send request
@@ -376,7 +378,7 @@ export function upload(file: File, folder?: any, name?: string) {
 			uploads.value.push(ctx);
 
 			const data = new FormData();
-			data.append('i', store.state.i.token);
+			data.append('i', $i.token);
 			data.append('force', 'true');
 			data.append('file', file);
 
@@ -407,13 +409,12 @@ export function upload(file: File, folder?: any, name?: string) {
 }
 
 export function createNoteInstantly(text: string, cw ?: string, visibility ?: NoteVisibility) {
-	const s = store.state.settings;
-	const d = store.state.device;
+	const s = defaultStore.state;
 	return api('notes/create', {
 		text, cw,
-		localOnly: s.rememberNoteVisibility ? d.localOnly : s.defaultNoteLocalOnly,
-		remoteFollowersOnly: s.rememberNoteVisibility ? false : d.localOnly,
-		visibility: visibility ? visibility : s.rememberNoteVisibility ? d.visibility : s.defaultNoteVisibility,
+		localOnly: s.rememberNoteVisibility ? s.localOnly : s.defaultNoteLocalOnly,
+		remoteFollowersOnly: s.rememberNoteVisibility ? false : s.localOnly,
+		visibility: visibility ? visibility : s.rememberNoteVisibility ? s.visibility : s.defaultNoteVisibility,
 		viaMobile: isMobile
 	});
 }
@@ -457,16 +458,6 @@ export async function getAvatar(acct: string): Promise<string> {
 	return avatars[acct].avatarUrl;
 }
 
-export function signout() { 
-		store.dispatch('logout');
-		location.href = '/';
-}
-
-export function signoutAll() {
-	store.dispatch('logoutAll');
-	location.href = '/';
-}
-
 export function reactionPicker(opts: Record<string, unknown>) { 
 	return new Promise<{ reaction: string, dislike: boolean }>(res => {
 		const o = {
@@ -483,7 +474,7 @@ export function reactionPicker(opts: Record<string, unknown>) {
 }
 
 export function openGlobalNotificationSetting() { 
-	const includingTypes = notificationTypes.filter(x => !store.state.i.mutingNotificationTypes.includes(x));
+	const includingTypes = notificationTypes.filter(x => !$i.mutingNotificationTypes.includes(x));
 	popup(import('@/components/notification-setting-window.vue'), {
 		includingTypes,
 		showGlobalToggle: false,
@@ -493,13 +484,13 @@ export function openGlobalNotificationSetting() {
 			await api('i/update', {
 				mutingNotificationTypes: notificationTypes.filter(x => !value.includes(x)),
 			}).then((i: any) => {
-				store.state.i.mutingNotificationTypes = i.mutingNotificationTypes;
+				$i.mutingNotificationTypes = i.mutingNotificationTypes;
 			});
 		}
 	}, 'closed');
 }
 
-let accounts: Record<string, object>[] = [];
+let accounts: Record<string, unknown>[] = [];
 let lastAccountsFetchedAt: number = 0;
 
 export async function getAccounts() {
@@ -507,11 +498,12 @@ export async function getAccounts() {
 	const expired = Date.now() - lastAccountsFetchedAt > 1000 * 60 * 5;
 	// キャッシュが不一致
 	// TODO 現状は配列の長さで判定しているが、よりディープに判定したい
-	const cacheMismatch = accounts.length !== store.state.device.accounts.length;
+	const tokens = Account.getAccounts();
+	const cacheMismatch = accounts.length !== tokens.length;
 	if (cacheMismatch || expired) {
-		accounts = (await api('users/show', { userIds: store.state.device.accounts.map(x => x.id) }) as Record<string, object>[])
-			.map((x, i) => ({ ...x, token: store.state.device.accounts[i].token  }))
-			.filter(x => x.id !== store.state.i.id);
+		accounts = (await api('users/show', { userIds: tokens.map(x => x.id) }) as Record<string, object>[])
+			.map((x, i) => ({ ...x, token: tokens[i].token  }))
+			.filter(x => x.id !== $i.id);
 	}
 	
 	return Object.freeze([...accounts]);

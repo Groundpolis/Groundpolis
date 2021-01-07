@@ -1,9 +1,8 @@
 <template>
 <time :title="absolute">
 	<template v-if="mode == 'relative'">{{ relative }}</template>
-	<template v-if="mode == 'absolute'">{{ absolute }}</template>
-	<template v-if="mode == 'time'">{{ onlyTime }}</template>
-	<template v-if="mode == 'detail'">{{ absolute }} ({{ relative }})</template>
+	<template v-else-if="mode == 'absolute'">{{ absolute }}</template>
+	<template v-else-if="mode == 'detail'">{{ absolute }} ({{ relative }})</template>
 </time>
 </template>
 
@@ -45,15 +44,9 @@ export default defineComponent({
 				ago >= 3600     ? this.$t('_ago.hoursAgo',   { n: (~~(ago / 3600)).toString() }) :
 				ago >= 60       ? this.$t('_ago.minutesAgo', { n: (~~(ago / 60)).toString() }) :
 				ago >= 10       ? this.$t('_ago.secondsAgo', { n: (~~(ago % 60)).toString() }) :
-				ago >= -1       ? this.$t('_ago.justNow') :
-				ago <  -1       ? this.$t('_ago.future') :
-				this.$t('_ago.unknown'));
-		},
-		onlyTime(): string {
-			const hour = ('0' + this._time.getHours()).slice(-2);
-			const minutes = ('0' + this._time.getMinutes()).slice(-2);
-
-			return hour + ':' + minutes;
+				ago >= -1       ? this.$ts._ago.justNow :
+				ago <  -1       ? this.$ts._ago.future :
+				this.$ts._ago.unknown);
 		}
 	},
 	created() {

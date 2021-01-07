@@ -1,8 +1,8 @@
 <template>
 <div class="media-video-mask" v-if="hide" @click="hide = false" @contextmenu.stop>
 	<div>
-		<b><Fa :icon="faExclamationTriangle"/> {{ $t('sensitive') }}</b>
-		<span>{{ $t('clickToShow') }}</span>
+		<b><Fa :icon="faExclamationTriangle"/> {{ $ts.sensitive }}</b>
+		<span>{{ $ts.clickToShow }}</span>
 	</div>
 </div>
 <div class="media-video" v-else @contextmenu.stop>
@@ -63,7 +63,7 @@ export default defineComponent({
 	watch: {
 	},
 	created() {
-		this.hide = (this.$store.state.device.nsfw === 'force') ? true : this.video.isSensitive && (this.$store.state.device.nsfw !== 'ignore');
+		this.hide = (this.$store.state.nsfw === 'force') ? true : this.video.isSensitive && (this.$store.state.nsfw !== 'ignore');
 	},
 });
 </script>

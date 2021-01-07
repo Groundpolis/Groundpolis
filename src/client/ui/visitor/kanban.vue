@@ -1,5 +1,5 @@
 <template>
-<div class="rwqkcmrc" :style="{ backgroundImage: transparent ? 'none' : `url(${ $store.state.instance.meta.backgroundImageUrl })` }">
+<div class="rwqkcmrc" :style="{ backgroundImage: transparent ? 'none' : `url(${ $instance.backgroundImageUrl })` }">
 	<div class="back" :class="{ transparent }"></div>
 	<div class="contents">
 		<div class="wrapper">
@@ -8,19 +8,19 @@
 			</h1>
 			<template v-if="full">
 				<div class="about" v-if="meta">
-					<div class="desc" v-html="meta.description || $t('introMisskey')"></div>
+					<div class="desc" v-html="meta.description || $ts.introMisskey"></div>
 
 					<div v-if="meta && meta.disableRegistration && meta.disableInvitation" class="signup-disabled">
-						<h1><fa :icon="faExclamationTriangle" /> {{ $t('signupDisabled') }}</h1>
+						<h1><fa :icon="faExclamationTriangle" /> {{ $ts.signupDisabled }}</h1>
 						<p v-if="meta.disableInvitationReason" v-text="meta.disableInvitationReason"/>
 					</div>
 				</div>
 				<div class="action">
-					<button v-if="meta && !(meta.disableRegistration && meta.disableInvitation)" class="_buttonPrimary" @click="signup()">{{ $t('signup') }}</button>
-					<button class="_button" @click="signin()">{{ $t('login') }}</button>
+					<button v-if="meta && !(meta.disableRegistration && meta.disableInvitation)" class="_buttonPrimary" @click="signup()">{{ $t.signup }}</button>
+					<button class="_button" @click="signin()">{{ $ts.login }}</button>
 				</div>
 				<div class="announcements panel">
-					<header>{{ $t('announcements') }}</header>
+					<header>{{ $ts.announcements }}</header>
 					<MkPagination :pagination="announcements" #default="{items}" class="list">
 						<section class="item" v-for="(announcement, i) in items" :key="announcement.id">
 							<div class="title">{{ announcement.title }}</div>

@@ -96,7 +96,7 @@ export default defineComponent({
 					endpoint: 'suggestions/emojis/list',
 					limit: 10,
 					params: () => ({
-						proposerId: this.$store.state.i.id,
+						proposerId: this.$i.id,
 						includingStates: this.includingStates,
 					})
 				},

@@ -1,8 +1,8 @@
 <template>
-<transition :name="$store.state.device.animation ? 'zoom' : ''" appear>
+<transition :name="$store.state.animation ? 'zoom' : ''" appear>
 	<div class="mjndxjcg">
-		<p><Fa :icon="faExclamationTriangle"/> {{ $t('error') }}</p>
-		<MkButton @click="() => $emit('retry')" class="button">{{ $t('retry') }}</MkButton>
+		<p><Fa :icon="faExclamationTriangle"/> {{ $ts.somethingHappened }}</p>
+		<MkButton @click="() => $emit('retry')" class="button">{{ $ts.retry }}</MkButton>
 	</div>
 </transition>
 </template>

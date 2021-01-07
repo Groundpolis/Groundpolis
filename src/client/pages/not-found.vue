@@ -1,7 +1,7 @@
 <template>
 <div class="ipledcug">
 	<div class="_fullinfo">
-		<div>{{ $t('notFoundDescription') }}</div>
+		<div>{{ $ts.notFoundDescription }}</div>
 	</div>
 </div>
 </template>
@@ -15,7 +15,7 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				title: this.$t('notFound'),
+				title: this.$ts.notFound,
 				icon: faExclamationTriangle
 			},
 		}

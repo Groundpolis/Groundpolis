@@ -78,7 +78,7 @@ export default defineComponent({
 		},
 		async rename(file) {
 			const { canceled, result } = await os.dialog({
-				title: this.$t('enterFileName'),
+				title: this.$ts.enterFileName,
 				input: {
 					default: file.name
 				},
@@ -96,15 +96,15 @@ export default defineComponent({
 		showFileMenu(file, ev: MouseEvent) {
 			if (this.menu) return;
 			this.menu = os.modalMenu([{
-				text: this.$t('renameFile'),
+				text: this.$ts.renameFile,
 				icon: faICursor,
 				action: () => { this.rename(file) }
 			}, {
-				text: file.isSensitive ? this.$t('unmarkAsSensitive') : this.$t('markAsSensitive'),
+				text: file.isSensitive ? this.$ts.unmarkAsSensitive : this.$ts.markAsSensitive,
 				icon: file.isSensitive ? faEyeSlash : faEye,
 				action: () => { this.toggleSensitive(file) }
 			}, {
-				text: this.$t('attachCancel'),
+				text: this.$ts.attachCancel,
 				icon: faTimesCircle,
 				action: () => { this.detachMedia(file.id) }
 			}, {

@@ -57,10 +57,10 @@ export default defineComponent({
 
 	data() {
 		return {
-			rs: this.reactions || this.$store.state.settings.reactions,
+			rs: this.reactions || this.$store.state.reactions,
 			text: null,
 			focus: null,
-			latest: this.$store.state.deviceUser.latestReaction,
+			latest: this.$store.state.latestReaction,
 			dislike: false,
 			faLaughSquint, faThumbsUp,
 		};
@@ -120,7 +120,6 @@ export default defineComponent({
 		reactText() {
 			if (!this.text) return;
 			this.react(this.text);
-			this.$store.commit('deviceUser/set', { key: 'latestReaction', value: this.text });
 		},
 
 		tryReactText() {

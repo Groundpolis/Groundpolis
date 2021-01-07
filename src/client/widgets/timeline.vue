@@ -64,14 +64,14 @@ export default defineComponent({
 
 	computed: {
 		meta() {
-			return this.$store.state.instance.meta;
+			return this.$instance;
 		},
 
 		timelineTitle() {
 			return 	this.props.src === 'list' ?  this.props.list.name : 
 							this.props.src === 'antenna' ? this.props.antenna.name : 
-							this.props.src === 'mentions' ? this.$t('mentions') :
-							this.props.src === 'direct' ? this.$t('directNotes') :
+							this.props.src === 'mentions' ? this.$ts.mentions :
+							this.props.src === 'direct' ? this.$ts.directNotes :
 							this.$t('_timelines.' + this.props.src);
 		}
 	},
@@ -102,44 +102,44 @@ export default defineComponent({
 					this.setSrc('list');
 				}
 			}));
-			const isNotModerator = !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin;
+			const isNotModerator = !this.$i.isModerator && !this.$i.isAdmin;
 			const noLTL = this.meta.disableLocalTimeline && isNotModerator;
 			const noGTL = this.meta.disableGlobalTimeline && isNotModerator;
 			const noCTL = this.meta.disableGlobalTimeline && isNotModerator;
 			os.modalMenu([{
-					text: this.$t('_timelines.home'),
+					text: this.$ts._timelines.home,
 					icon: faHome,
 					action: () => { this.setSrc('home') }
 				}, noLTL ? undefined : {
-					text: this.$t('_timelines.local'),
+					text: this.$ts._timelines.local,
 					icon: faComments,
 					action: () => { this.setSrc('local') }
 				}, noLTL ? undefined : {
-					text: this.$t('_timelines.social'),
+					text: this.$ts._timelines.social,
 					icon: faShareAlt,
 					action: () => { this.setSrc('social') }
 				}, noGTL ? undefined : {
-					text: this.$t('_timelines.global'),
+					text: this.$ts._timelines.global,
 					icon: faGlobe,
 					action: () => { this.setSrc('global') }
 				}, noCTL ? undefined : {
-					text: this.$t('_timelines.cat'),
+					text: this.$ts._timelines.cat,
 					icon: faCat,
 					action: () => { this.setSrc('cat') }
 				}, {
-					text: this.$t('_timelines.remoteFollowing'),
+					text: this.$ts._timelines.remoteFollowing,
 					icon: faProjectDiagram,
 					action: () => { this.setSrc('remoteFollowing') }
 				}, {
-					text: this.$t('_timelines.followers'),
+					text: this.$ts._timelines.followers,
 					icon: faCommentAlt,
 					action: () => { this.setSrc('followers') }
 				}, antennaItems.length > 0 ? null : undefined, ...antennaItems, listItems.length > 0 ? null : undefined, ...listItems, null, {
-					text: this.$t('mentions'),
+					text: this.$ts.mentions,
 					icon: faAt,
 					action: () => { this.setSrc('mentions') }
 				}, {
-					text: this.$t('directNotes'),
+					text: this.$ts.directNotes,
 					icon: faEnvelope,
 					action: () => { this.setSrc('direct') }
 				}], ev.currentTarget || ev.target).then(() => {

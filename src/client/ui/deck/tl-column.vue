@@ -1,5 +1,5 @@
 <template>
-<XColumn :menu="menu" :column="column" :is-stacked="isStacked" :indicated="indicated" @change-active-state="onChangeActiveState">
+<XColumn :func="{ handler: setType, title: $ts.timeline }" :column="column" :is-stacked="isStacked" :indicated="indicated" @change-active-state="onChangeActiveState">
 	<template #header>
 		<Fa :icon="getIconOfTimeline(column.tl)"/>
 		<span style="margin-left: 8px;">{{ column.name }}</span>
@@ -23,6 +23,7 @@ import XColumn from './column.vue';
 import { getIconOfTimeline } from '../../scripts/get-icon-of-timeline';
 import XTimeline from '@/components/timeline.vue';
 import * as os from '@/os';
+import { removeColumn, updateColumn } from './deck-store';
 
 export default defineComponent({
 	components: {
@@ -43,7 +44,6 @@ export default defineComponent({
 
 	data() {
 		return {
-			menu: null,
 			disabled: false,
 			indicated: false,
 			columnActive: true,
@@ -57,21 +57,13 @@ export default defineComponent({
 		}
 	},
 
-	created() {
-		this.menu = [{
-			icon: faCog,
-			text: this.$t('timeline'),
-			action: this.setType
-		}];
-	},
-
 	mounted() {
 		if (this.column.tl == null) {
 			this.setType();
 		} else {
-			this.disabled = !this.$store.state.i.isModerator && !this.$store.state.i.isAdmin && (
-				this.$store.state.instance.meta.disableLocalTimeline && ['local', 'social'].includes(this.column.tl) ||
-				this.$store.state.instance.meta.disableGlobalTimeline && ['global'].includes(this.column.tl));
+			this.disabled = !this.$i.isModerator && !this.$i.isAdmin && (
+				this.$instance.disableLocalTimeline && ['local', 'social'].includes(this.column.tl) ||
+				this.$instance.disableGlobalTimeline && ['global'].includes(this.column.tl));
 		}
 	},
 
@@ -79,7 +71,7 @@ export default defineComponent({
 		getIconOfTimeline,
 		async setType() {
 			const { canceled, result: src } = await os.dialog({
-				title: this.$t('timeline'),
+				title: this.$ts.timeline,
 				type: null,
 				select: {
 					items: [
@@ -95,12 +87,13 @@ export default defineComponent({
 			});
 			if (canceled) {
 				if (this.column.tl == null) {
-					this.$store.commit('deviceUser/removeDeckColumn', this.column.id);
+					removeColumn(this.column.id);
 				}
 				return;
 			}
-			this.column.tl = src;
-			this.$store.commit('deviceUser/updateDeckColumn', this.column);
+			updateColumn(this.column.id, {
+				tl: src
+			});
 		},
 
 		queueUpdated(q) {

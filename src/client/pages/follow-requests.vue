@@ -3,7 +3,7 @@
 	<MkPagination :pagination="pagination" class="mk-follow-requests" ref="list">
 		<template #empty>
 			<div class="_fullinfo">
-				<div>{{ $t('noFollowRequests') }}</div>
+				<div>{{ $ts.noFollowRequests }}</div>
 			</div>
 		</template>
 		<template #default="{items}">
@@ -15,7 +15,7 @@
 						<p class="acct">@{{ acct(req.follower) }}</p>
 					</div>
 					<div class="description" v-if="req.follower.description" :title="req.follower.description">
-						<Mfm :text="req.follower.description" :is-note="false" :author="req.follower" :i="$store.state.i" :custom-emojis="req.follower.emojis" :plain="true" :nowrap="true"/>
+						<Mfm :text="req.follower.description" :is-note="false" :author="req.follower" :i="$i" :custom-emojis="req.follower.emojis" :plain="true" :nowrap="true"/>
 					</div>
 					<div class="actions">
 						<button class="_button" @click="accept(req.follower)"><Fa :icon="faCheck"/></button>
@@ -43,7 +43,7 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				title: this.$t('followRequests'),
+				title: this.$ts.followRequests,
 				icon: faUserClock,
 			},
 			pagination: {

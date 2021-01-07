@@ -21,6 +21,8 @@ import FormGroup from '../../components/form/group.vue';
 import FormTuple from '../../components/form/tuple.vue';
 import FormButton from '../../components/form/button.vue';
 import defaultFaces from '../../scripts/default-faces';
+import * as os from '@/os';
+
 export default defineComponent({
 	components: {
 		FormTextarea,
@@ -32,7 +34,7 @@ export default defineComponent({
 	
 	data() {
 		return {
-			faces: this.$store.state.settings.faces.join('\n') as string,
+			faces: this.$store.state.faces.join('\n') as string,
 			changed: false,
 			faSave, faUndo
 		}
@@ -44,7 +46,7 @@ export default defineComponent({
 	},
 	methods: {
 		save() {
-			this.$store.dispatch('settings/set', { key: 'faces', value: this.faces.trim().split('\n') });
+			this.$store.set('faces', this.faces.trim().split('\n'));
 			this.changed = false;
 			os.dialog({
 				type: 'success',

@@ -24,6 +24,7 @@ import { defineComponent } from 'vue';
 import FormBase from '@/components/form/base.vue';
 import FormLink from '@/components/form/link.vue';
 import FormSwitch from '@/components/form/switch.vue';
+import { defaultStore } from '@/store';
 
 export default defineComponent({
 	components: {
@@ -33,10 +34,7 @@ export default defineComponent({
 	},
 
 	computed: {
-		disableReactions: {
-			get() { return this.$store.state.settings.disableReactions; },
-			set(value) { this.$store.dispatch('settings/set', { key: 'disableReactions', value: value }); }
-		},
+		disableReactions: defaultStore.makeGetterSetter('disableReactions'),
 	},
 
 	watch: {

@@ -1,9 +1,11 @@
 import { i18n } from "@/i18n";
-import { store } from "@/store";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faAt, faCat, faCommentAlt, faComments, faEnvelope, faGlobe, faHome, faProjectDiagram, faShareAlt } from "@fortawesome/free-solid-svg-icons";
+import { $i } from '@/account';
+import { instance } from '@/instance';
+import { defaultStore } from '@/store';
 
-const { t } = i18n.global;
+const ts = i18n.locale;
 
 export type TimelineMenuitem = {
 	src: string,
@@ -16,43 +18,43 @@ export const timelineMenuItems: TimelineMenuitem[] = [
 	{
 		src: 'home',
 		icon: faHome,
-		name: t('_timelines.home'),
+		name: ts._timelines.home,
 	}, {
 		src: 'local',
 		icon: faComments,
-		name: t('_timelines.local'),
-		show: () => !store.state.instance.meta.disableLocalTimeline || store.state.i.isModerator || store.state.i.isAdmin,
+		name: ts._timelines.local,
+		show: () => !instance.disableLocalTimeline || $i.isModerator || $i.isAdmin,
 	}, {
 		src: 'social',
 		icon: faShareAlt,
-		name: t('_timelines.social'),
-		show: () => !store.state.instance.meta.disableLocalTimeline || store.state.i.isModerator || store.state.i.isAdmin,
+		name: ts._timelines.social,
+		show: () => !instance.disableLocalTimeline || $i.isModerator || $i.isAdmin,
 	}, {
 		src: 'global',
 		icon: faGlobe,
-		name: t('_timelines.global'),
-		show: () => !store.state.instance.meta.disableGlobalTimeline || store.state.i.isModerator || store.state.i.isAdmin,
+		name: ts._timelines.global,
+		show: () => !instance.disableGlobalTimeline || $i.isModerator || $i.isAdmin,
 	}, {
 		src: 'cat',
 		icon: faCat,
-		name: t('_timelines.cat'),
-		show: () => !store.state.instance.meta.disableCatTimeline || store.state.i.isModerator || store.state.i.isAdmin,
+		name: ts._timelines.cat,
+		show: () => !instance.disableCatTimeline || $i.isModerator || $i.isAdmin,
 	}, {
 		src: 'remoteFollowing',
 		icon: faProjectDiagram,
-		name: t('_timelines.remoteFollowing'),
+		name: ts._timelines.remoteFollowing,
 	}, {
 		src: 'followers',
 		icon: faCommentAlt,
-		name: t('_timelines.followers'),
+		name: ts._timelines.followers,
 	}, {
 		src: 'mentions',
 		icon: faAt,
-		name: t('mentions'),
+		name: ts.mentions,
 	}, {
 		src: 'direct',
 		icon: faEnvelope,
-		name: t('directNotes'),
+		name: ts.directNotes,
 	},
 ];
 

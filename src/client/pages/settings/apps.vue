@@ -3,7 +3,7 @@
 	<FormPagination :pagination="pagination" ref="list">
 		<template #empty>
 			<div class="_fullinfo">
-				<div>{{ $t('nothing') }}</div>
+				<div>{{ $ts.nothing }}</div>
 			</div>
 		</template>
 		<template #default="{items}">
@@ -13,18 +13,18 @@
 					<div class="name">{{ token.name }}</div>
 					<div class="description">{{ token.description }}</div>
 					<div class="_keyValue">
-						<div>{{ $t('installedDate') }}:</div>
+						<div>{{ $ts.installedDate }}:</div>
 						<div><MkTime :time="token.createdAt"/></div>
 					</div>
 					<div class="_keyValue">
-						<div>{{ $t('lastUsedDate') }}:</div>
+						<div>{{ $ts.lastUsedDate }}:</div>
 						<div><MkTime :time="token.lastUsedAt"/></div>
 					</div>
 					<div class="actions">
 						<button class="_button" @click="revoke(token)"><Fa :icon="faTrashAlt"/></button>
 					</div>
 					<details>
-						<summary>{{ $t('details') }}</summary>
+						<summary>{{ $ts.details }}</summary>
 						<ul>
 							<li v-for="p in token.permission" :key="p">{{ $t(`_permissions.${p}`) }}</li>
 						</ul>
@@ -58,7 +58,7 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				title: this.$t('installedApps'),
+				title: this.$ts.installedApps,
 				icon: faPlug,
 			},
 			pagination: {

@@ -1,5 +1,5 @@
 <template>
-<div class="mk-app" v-hotkey.global="keymap" :class="{ wallpaper }">
+<div class="mk-app" :class="{ wallpaper }">
 	<XSidebar ref="nav" class="sidebar"/>
 
 	<div class="contents" ref="contents">
@@ -16,7 +16,7 @@
 		<main ref="main">
 			<div class="content">
 				<router-view v-slot="{ Component }">
-					<transition :name="$store.state.device.animation ? 'page' : ''" mode="out-in" @enter="onTransition">
+					<transition :name="$store.state.animation ? 'page' : ''" mode="out-in" @enter="onTransition">
 						<keep-alive :include="['timeline']">
 							<component :is="Component" :ref="changePage"/>
 						</keep-alive>
@@ -45,10 +45,10 @@
 			<Fa :icon="faHashtag"/>
 		</button>
 		<button class="button notifications _button" :class="{ active: $route.name === 'notifications' }" @click="$router.push('/my/notifications')">
-			<Fa :icon="faBell"/><i v-if="$store.state.i.hasUnreadNotification"><Fa :icon="faCircle"/></i>
+			<Fa :icon="faBell"/><i v-if="$i.hasUnreadNotification"><Fa :icon="faCircle"/></i>
 		</button>
 		<button class="button chat _button" :class="{ active: $route.name === 'messaging' }" @click="$router.push('/my/messaging')">
-			<Fa :icon="faComments"/><i v-if="$store.state.i.hasUnreadMessagingMessage"><Fa :icon="faCircle"/></i>
+			<Fa :icon="faComments"/><i v-if="$i.hasUnreadMessagingMessage"><Fa :icon="faCircle"/></i>
 		</button>
 	</div>
 
@@ -75,7 +75,6 @@ import { defineComponent, defineAsyncComponent, markRaw } from 'vue';
 import { faLayerGroup, faBars, faHome, faCircle, faWindowMaximize, faColumns, faHashtag, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faComments } from '@fortawesome/free-regular-svg-icons';
 import { host } from '@/config';
-import { search } from '@/scripts/search';
 import { StickySidebar } from '@/scripts/sticky-sidebar';
 import XSidebar from '@/components/sidebar.vue';
 import XCommon from './_common_/common.vue';
@@ -118,27 +117,6 @@ export default defineComponent({
 	},
 
 	computed: {
-		keymap(): any {
-			return {
-				'd': () => {
-					if (this.$store.state.device.syncDeviceDarkMode) return;
-					this.$store.commit('device/set', { key: 'darkMode', value: !this.$store.state.device.darkMode });
-				},
-				'p': os.post,
-				'n': os.post,
-				's': () => search(),
-				'h|/': this.help
-			};
-		},
-
-		widgets(): any {
-			return this.$store.state.deviceUser.widgets;
-		},
-
-		menu(): string[] {
-			return this.$store.state.deviceUser.menu;
-		},
-
 		navIndicated(): boolean {
 			for (const def in this.menuDef) {
 				if (def === 'notifications') continue; // 通知は下にボタンとして表示されてるから
@@ -161,8 +139,8 @@ export default defineComponent({
 	created() {
 		document.documentElement.style.overflowY = 'scroll';
 
-		if (this.$store.state.deviceUser.widgets.length === 0) {
-			this.$store.commit('deviceUser/setWidgets', [{
+		if (this.$store.state.widgets.length === 0) {
+			this.$store.set('widgets', [{
 				name: 'calendar',
 				id: 'a', place: 'right', data: {}
 			}, {
@@ -215,12 +193,12 @@ export default defineComponent({
 			}, { passive: true });
 		},
 
-		top() {
-			window.scroll({ top: 0, behavior: 'smooth' });
+		post() {
+			os.post();
 		},
 
-		help() {
-			this.$router.push('/docs/keyboard-shortcut');
+		top() {
+			window.scroll({ top: 0, behavior: 'smooth' });
 		},
 
 		onTransition() {
@@ -238,13 +216,13 @@ export default defineComponent({
 				text: path,
 			}, {
 				icon: faColumns,
-				text: this.$t('openInSideView'),
+				text: this.$ts.openInSideView,
 				action: () => {
 					this.$refs.side.navigate(path);
 				}
 			}, {
 				icon: faWindowMaximize,
-				text: this.$t('openInWindow'),
+				text: this.$ts.openInWindow,
 				action: () => {
 					os.pageWindow(path);
 				}

@@ -1,18 +1,18 @@
 <template>
 <FormBase>
 	<FormSelect v-model:value="exportTarget">
-		<option value="notes">{{ $t('_exportOrImport.allNotes') }}</option>
-		<option value="following">{{ $t('_exportOrImport.followingList') }}</option>
-		<option value="user-lists">{{ $t('_exportOrImport.userLists') }}</option>
-		<option value="mute">{{ $t('_exportOrImport.muteList') }}</option>
-		<option value="blocking">{{ $t('_exportOrImport.blockingList') }}</option>
+		<option value="notes">{{ $ts._exportOrImport.allNotes }}</option>
+		<option value="following">{{ $ts._exportOrImport.followingList }}</option>
+		<option value="user-lists">{{ $ts._exportOrImport.userLists }}</option>
+		<option value="mute">{{ $ts._exportOrImport.muteList }}</option>
+		<option value="blocking">{{ $ts._exportOrImport.blockingList }}</option>
 	</FormSelect>
 	<FormTuple>
 		<FormButton primary @click="doExport">
-			<Fa :icon="faDownload"/> {{ $t('export') }}
+			<Fa :icon="faDownload"/> {{ $ts.export }}
 		</FormButton>
 		<FormButton primary @click="doImport" :disabled="!['following', 'user-lists'].includes(exportTarget)">
-			<Fa :icon="faUpload"/> {{ $t('import') }}
+			<Fa :icon="faUpload"/> {{ $ts.import }}
 		</FormButton>
 	</FormTuple>
 </FormBase>
@@ -59,7 +59,7 @@ export default defineComponent({
 			.then(() => {
 				os.dialog({
 					type: 'info',
-					text: this.$t('exportRequested')
+					text: this.$ts.exportRequested
 				});
 			}).catch((e: any) => {
 				os.dialog({
@@ -80,7 +80,7 @@ export default defineComponent({
 			}).then(() => {
 				os.dialog({
 					type: 'info',
-					text: this.$t('importRequested')
+					text: this.$ts.importRequested
 				});
 			}).catch((e: any) => {
 				os.dialog({

@@ -1,6 +1,6 @@
 <template>
 <XContainer @remove="() => $emit('remove')" :draggable="true">
-	<template #header><Fa :icon="faAlignLeft"/> {{ $t('_pages.blocks.text') }} ({{ formatText }})</template>
+	<template #header><Fa :icon="faAlignLeft"/> {{ $ts._pages.blocks.text }} ({{ formatText }})</template>
 	<template #func>
 		<button @click="changeFormat()" class="_button">
 			<Fa :icon="faCog"/>
@@ -8,7 +8,7 @@
 	</template>
 
 	<section class="vckmsadr">
-		<MkInfo warn v-if="value.format === 'html'">{{ $t('_pages.blocks._text.htmlWarning') }}</MkInfo>
+		<MkInfo warn v-if="value.format === 'html'">{{ $ts._pages.blocks._text.htmlWarning }}</MkInfo>
 		<textarea v-model="value.text" ref="text"></textarea>
 	</section>
 </XContainer>
@@ -44,7 +44,7 @@ export default defineComponent({
 		formatText(): string {
 			switch (this.value.format) {
 				case 'gpfm': return 'GPFM';
-				case 'plainText': return this.$t('_pages.blocks._text.plainText');
+				case 'plainText': return this.$ts._pages.blocks._text.plainText;
 				case 'markdown': return 'Markdown';
 				case 'html': return 'HTML';
 				default: return '謎';
@@ -65,12 +65,12 @@ export default defineComponent({
 		async changeFormat() {
 			const { canceled, result: item } = await os.dialog({
 				type: null,
-				title: this.$t('_pages.blocks._text.chooseFormat'),
+				title: this.$ts._pages.blocks._text.chooseFormat,
 				select: {
 					items: [
 						{ value: 'gpfm', text: 'GPFM' },
 						{ value: 'markdown', text: 'Markdown' },
-						{ value: 'plainText', text: this.$t('_pages.blocks._text.plainText') },
+						{ value: 'plainText', text: this.$ts._pages.blocks._text.plainText },
 						{ value: 'html', text: 'HTML' },
 					],
 				},

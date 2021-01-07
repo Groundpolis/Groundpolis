@@ -1,13 +1,13 @@
 <template>
 <header class="kkwtjztg">
 	<MkA class="name-set" :to="userPage(note.user)" v-user-preview="note.user.id">
-		<template v-if="$store.state.device.noteNameDisplayMode === 0">
+		<template v-if="$store.state.noteNameDisplayMode === 0">
 			<MkUserName class="name" :user="note.user"/>
 			<span class="username"><MkAcct :user="note.user"/></span>
 		</template>
 		<template v-else>
-			<span v-if="$store.state.device.noteNameDisplayMode !== 2" class="username"><MkAcct :user="note.user"/></span>
-			<MkUserName class="name" v-if="$store.state.device.noteNameDisplayMode !== 3" :user="note.user"/>
+			<span v-if="$store.state.noteNameDisplayMode !== 2" class="username"><MkAcct :user="note.user"/></span>
+			<MkUserName class="name" v-if="$store.state.noteNameDisplayMode !== 3" :user="note.user"/>
 		</template>
 	</MkA>
 	<span class="is-bot" v-if="note.user.isBot">bot</span>

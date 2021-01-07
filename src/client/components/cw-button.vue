@@ -1,6 +1,6 @@
 <template>
 <button class="nrvgflfu _button" @click="toggle">
-	<b>{{ value ? $t('_cw.hide') : $t('_cw.show') }}</b>
+	<b>{{ value ? $ts._cw.hide : $ts._cw.show }}</b>
 	<span v-if="!value">{{ label }}</span>
 </button>
 </template>
@@ -27,11 +27,11 @@ export default defineComponent({
 			return concat([
 				this.note.text ? [this.$t('_cw.chars', { count: length(this.note.text) })] : [],
 				this.note.files && this.note.files.length !== 0 ? [this.$t('_cw.files', { count: this.note.files.length }) ] : [],
-				this.note.poll != null ? [this.$t('poll')] : []
+				this.note.poll != null ? [this.$ts.poll] : []
 			] as string[][]).join(' / ');
 		},
 		isCompactMode(): boolean {
-			return this.$store.state.device.postStyle === 'compact';
+			return this.$store.state.postStyle === 'compact';
 		},
 	},
 
