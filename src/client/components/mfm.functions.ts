@@ -28,7 +28,8 @@ function genFlagProp(label?: string, description?: string): MfmFunctionProp {
 
 export type MfmFunctionDefinition = string | {
 	props?: MfmFunctionProps,
-	style: (props: MfmFunctionStyleProp) => string,
+	style?: (props: MfmFunctionStyleProp) => string,
+	class?: string,
 	noAnimatedMfmStyle?: true | ((props: MfmFunctionStyleProp) => string),
 };
 
@@ -108,8 +109,30 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 		props: {
 			size: genProp('_mfmpad._functions.size', '_mfmpad._functions.fontSizeDescription'),
 			color: genProp('_mfmpad._functions.color', '_mfmpad._functions.fontColorDescription'),
+			serif: genFlagProp('_mfmpad.functions.serif'),
+			monospace: genFlagProp('_mfmpad.functions.monospace'),
+			cursive: genFlagProp('_mfmpad.functions.cursive'),
+			fantasy: genFlagProp('_mfmpad.functions.fantasy'),
+			emoji: genFlagProp('_mfmpad.functions.emoji'),
+			math: genFlagProp('_mfmpad.functions.math'),
 		},
-		style: prop => `font-size: ${prop.size || 'unset'}; color: ${prop.color || 'unset'}`,
+		style: prop => {
+			const family =
+				prop.serif ? 'font-family: serif' :
+				prop.monospace ? 'font-family: monospace' :
+				prop.cursive ? 'font-family: cursive' :
+				prop.fantasy ? 'font-family: fantasy' :
+				prop.emoji ? 'font-family: emoji' :
+				prop.math ? 'font-family: math' :
+				null;
+			return `font-size: ${prop.size || 'unset'}; color: ${prop.color || 'unset'}; ${family}`
+		},
 		noAnimatedMfmStyle: true,
+	},
+	x2: 'font-size: 200px',
+	x3: 'font-size: 400px',
+	x4: 'font-size: 600px',
+	blur: {
+		class: '_mfm_blur_',
 	},
 };

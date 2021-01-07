@@ -49,6 +49,11 @@ export default defineComponent({
 
 		const ast = (this.plain ? parsePlain : parse)(this.text);
 
+		const validTime = (t: string | null | undefined) => {
+			if (t == null) return null;
+			return t.match(/^[0-9.]+s$/) ? t : null;
+		};
+
 		const genEl = (ast: MfmForest) => concat(ast.map((token): VNode[] => {
 			switch (token.node.type) {
 				case 'text': {
@@ -81,6 +86,11 @@ export default defineComponent({
 				case 'fn': {
 					const { name, args } = token.node.props as { name: string, args: MfmFunctionStyleProp };
 					const fn = mfmFunctions[name];
+					if (typeof fn === 'object' && fn.class) { 
+						return [h('span', {
+							class: fn.class,
+						}, genEl(token.children))];
+					}
 					const noAnimatedMfm = !this.$store.state.animatedMfm;
 					const noAnimatedStyle = !fn ? '' : typeof fn === 'string' ? '' : fn.noAnimatedMfmStyle ? (typeof fn.noAnimatedMfmStyle === 'boolean' ? fn.style(args) : fn.noAnimatedMfmStyle(args)) : '';
 					const style = noAnimatedMfm ? noAnimatedStyle : !fn ? '' : typeof fn === 'string' ? fn : fn.style(args);

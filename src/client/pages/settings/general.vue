@@ -231,6 +231,10 @@ export default defineComponent({
 		titlebar() {
 			this.reloadAsk();
 		},
+
+		instanceTicker() {
+			this.reloadAsk();
+		},
 	},
 
 	mounted() {

@@ -8,7 +8,6 @@
 	v-hotkey="keymap"
 	v-size="{ max: [500, 450, 350, 300] }"
 >
-	<XSub v-for="note in conversation" class="reply-to-more" :key="note.id" :note="note"/>
 	<XSub :note="appearNote.reply" class="reply-to" v-if="appearNote.reply"/>
 	<div class="info" v-if="pinned"><Fa :icon="faThumbtack"/> {{ $ts.pinnedNote }}</div>
 	<div class="info" v-if="appearNote._prId_"><Fa :icon="faBullhorn"/> {{ $ts.promotion }}<button class="_textButton hide" @click="readPromo()">{{ $ts.hideThisNote }} <Fa :icon="faTimes"/></button></div>
@@ -38,7 +37,7 @@
 			<span class="localOnly" v-if="note.remoteFollowersOnly"><Fa :icon="faHeartbeat"/></span>
 		</div>
 	</div>
-	<article class="article" @contextmenu.prevent.stop="onContextmenu">
+	<article class="article" @contextmenu.stop="onContextmenu">
 		<MkAvatar class="avatar" :user="appearNote.user"/>
 		<div class="main">
 			<XNoteHeader class="header" :note="appearNote" :mini="true" :detail="detail"/>
@@ -68,8 +67,11 @@
 						<XMediaList :media-list="appearNote.files"/>
 					</div>
 					<XPoll v-if="appearNote.poll" :note="appearNote" ref="pollViewer" class="poll"/>
-					<MkUrlPreview v-for="url in urls" :url="url" :key="url" :compact="true" :detail="detail" class="url-preview"/>
+					<MkUrlPreview v-for="url in urls" :url="url" :key="url" :compact="true" :detail="false" class="url-preview"/>
 					<div class="renote" v-if="appearNote.renote"><XNotePreview :note="appearNote.renote"/></div>
+					<button v-if="collapsed" class="fade _button" @click="collapsed = false">
+						<span>{{ $ts.showMore }}</span>
+					</button>
 				</div>
 				<MkA v-if="appearNote.channel && !inChannel" class="channel" :to="`/channels/${appearNote.channel.id}`"><Fa :icon="faSatelliteDish"/> {{ appearNote.channel.name }}</MkA>
 				<div class="info" v-if="detail">
@@ -130,7 +132,6 @@
 			</footer>
 		</div>
 	</article>
-	<XSub v-for="note in replies" :key="note.id" :note="note" class="reply" :detail="true"/>
 </div>
 <div v-else class="_panel muted" @click="muted = false">
 	<I18n :src="$ts.userSaysSomething" tag="small">
@@ -203,11 +204,6 @@ export default defineComponent({
 			type: Object,
 			required: true
 		},
-		detail: {
-			type: Boolean,
-			required: false,
-			default: false
-		},
 		pinned: {
 			type: Boolean,
 			required: false,
@@ -225,9 +221,9 @@ export default defineComponent({
 	data() {
 		return {
 			connection: null,
-			conversation: [],
 			replies: [],
 			showContent: false,
+			collapsed: false,
 			isDeleted: false,
 			muted: false,
 			readMore: null as boolean | null,
@@ -355,6 +351,12 @@ export default defineComponent({
 			this.connection = os.stream;
 		}
 
+		this.collapsed = this.appearNote.cw == null && this.appearNote.text && (
+			(this.appearNote.text.split('\n').length > 9) ||
+			(this.appearNote.text.length > 500)
+		);
+		this.muted = await checkWordMute(this.appearNote, this.$i, this.$store.state.mutedWords);
+
 		// plugin
 		if (noteViewInterruptors.length > 0) {
 			let result = this.note;
@@ -362,40 +364,6 @@ export default defineComponent({
 				result = await interruptor.handler(JSON.parse(JSON.stringify(result)));
 			}
 			this.$emit('update:note', Object.freeze(result));
-		}
-
-		this.muted = await checkWordMute(this.appearNote, this.$i, this.$store.state.mutedWords);
-
-		if (this.detail) {
-			if (this.appearNote.renoteCount > 0) {
-				this.renoteState = await os.api('notes/is-renoted', {
-					noteId: this.appearNote.id,
-				});
-			}
-			
-			os.api('notes/children', {
-				noteId: this.appearNote.id,
-				limit: 30
-			}).then(replies => {
-				this.replies = replies;
-			});
-
-			if (this.appearNote.replyId) {
-				os.api('notes/conversation', {
-					noteId: this.appearNote.replyId
-				}).then(conversation => {
-					this.conversation = conversation.reverse();
-				});
-			}
-		} else if (this.$store.state.collapseLongNote) {
-			const textElement = this.$refs.text as HTMLElement | null;
-			if (textElement) {
-				const h = textElement.getBoundingClientRect().height;
-				if (h > 192) {
-					this.readMore = false;
-				}
-			}
-			
 		}
 	},
 
@@ -1127,10 +1095,6 @@ export default defineComponent({
 		padding-bottom: 0;
 	}
 
-	> .reply-to-more {
-		opacity: 0.7;
-	}
-
 	> .renote {
 		display: flex;
 		align-items: center;
@@ -1258,6 +1222,37 @@ export default defineComponent({
 				}
 
 				> .content {
+					&.collapsed {
+						position: relative;
+						max-height: 9em;
+						overflow: hidden;
+
+						> .fade {
+							display: block;
+							position: absolute;
+							bottom: 0;
+							left: 0;
+							width: 100%;
+							height: 64px;
+							background: linear-gradient(0deg, var(--panel), var(--X15));
+
+							> span {
+								display: inline-block;
+								background: var(--panel);
+								padding: 6px 10px;
+								font-size: 0.8em;
+								border-radius: 999px;
+								box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
+							}
+
+							&:hover {
+								> span {
+									background: var(--panelHighlight);
+								}
+							}
+						}
+					}
+
 					> .text {
 						overflow-wrap: break-word;
 

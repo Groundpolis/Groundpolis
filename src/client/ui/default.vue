@@ -2,7 +2,7 @@
 <div class="mk-app" :class="{ wallpaper }">
 	<XSidebar ref="nav" class="sidebar"/>
 
-	<div class="contents" ref="contents" :class="{ withHeader: $store.state.titlebar }" @contextmenu.prevent.stop="onContextmenu">
+	<div class="contents" ref="contents" :class="{ withHeader: $store.state.titlebar }" @contextmenu.stop="onContextmenu">
 		<header v-if="$store.state.titlebar" class="header" ref="header" @contextmenu.stop="onContextmenu" @click="onHeaderClick">
 			<XHeader main
 				:info="pageInfo"
@@ -75,6 +75,7 @@ import { defineComponent, defineAsyncComponent, markRaw } from 'vue';
 import { faLayerGroup, faBars, faHome, faCircle, faWindowMaximize, faColumns, faHashtag, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { faBell, faComments } from '@fortawesome/free-regular-svg-icons';
 import { host } from '@/config';
+import { instanceName } from '@/config';
 import { StickySidebar } from '@/scripts/sticky-sidebar';
 import XSidebar from '@/components/sidebar.vue';
 import XCommon from './_common_/common.vue';
@@ -104,8 +105,6 @@ export default defineComponent({
 
 	data() {
 		return {
-			host: host,
-			pageKey: 0,
 			pageInfo: null,
 			isDesktop: window.innerWidth >= DESKTOP_THRESHOLD,
 			menuDef: sidebarDef,
@@ -127,12 +126,6 @@ export default defineComponent({
 
 		fabIcon() {
 			return this.pageInfo && this.pageInfo.action ? this.pageInfo.action.icon : faPencilAlt;
-		},
-	},
-
-	watch: {
-		$route(to, from) {
-			this.pageKey++;
 		},
 	},
 
@@ -171,6 +164,7 @@ export default defineComponent({
 			if (page == null) return;
 			if (page.INFO) {
 				this.pageInfo = page.INFO;
+				document.title = `${this.pageInfo.title} | ${instanceName}`;
 			}
 		},
 
@@ -210,6 +204,7 @@ export default defineComponent({
 		},
 
 		onContextmenu(e) {
+			if (['INPUT', 'TEXTAREA'].includes(e.target.tagName) || e.target.attributes['contenteditable']) return;
 			const path = this.$route.path;
 			os.contextMenu([{
 				type: 'label',
@@ -365,15 +360,13 @@ export default defineComponent({
 		position: fixed;
 		z-index: 1000;
 		bottom: 0;
-		padding: 0 32px 32px 32px;
+		padding: 16px;
 		display: flex;
 		width: 100%;
 		box-sizing: border-box;
-		background: linear-gradient(0deg, var(--bg), var(--X1));
-
-		@media (max-width: 500px) {
-			padding: 0 16px 16px 16px;
-		}
+		-webkit-backdrop-filter: blur(32px);
+		backdrop-filter: blur(32px);
+		background-color: var(--header);
 
 		&:not(.navHidden) {
 			display: none;
@@ -381,14 +374,25 @@ export default defineComponent({
 
 		> .button {
 			position: relative;
+			flex: 1;
 			padding: 0;
 			margin: auto;
-			width: 64px;
 			height: 64px;
-			border-radius: 100%;
-			box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
+			border-radius: 8px;
 			background: var(--panel);
 			color: var(--fg);
+
+			&:not(:last-child) {
+				margin-right: 12px;
+			}
+
+			@media (max-width: 400px) {
+				height: 60px;
+
+				&:not(:last-child) {
+					margin-right: 8px;
+				}
+			}
 
 			&:hover {
 				background: var(--X2);

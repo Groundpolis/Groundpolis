@@ -87,7 +87,6 @@ export default defineComponent({
 			host: host,
 			isAccountMenuMode: false,
 			showing: false,
-			searching: false,
 			accounts: [],
 			menuDef: sidebarDef,
 			connection: null,
@@ -168,20 +167,7 @@ export default defineComponent({
 		},
 
 		search() {
-			if (this.searching) return;
-
-			os.dialog({
-				title: this.$ts.search,
-				input: true,
-				autoComplete: true
-			}).then(async ({ canceled, result: query }) => {
-				if (canceled || query == null || query === '') return;
-
-				this.searching = true;
-				search(this, query).finally(() => {
-					this.searching = false;
-				});
-			});
+			search();
 		},
 
 		async fetchAccounts() {
@@ -430,12 +416,6 @@ export default defineComponent({
 			top: 0;
 			left: 0;
 			z-index: 1001;
-
-			> div {
-				> .notifications {
-					display: none;
-				}
-			}
 		}
 
 		&:not(.hidden) {

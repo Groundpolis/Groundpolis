@@ -20,6 +20,9 @@
 			</FormLink>
 		</FormGroup>
 		<FormGroup>
+			<FormButton @click="clear">{{ $ts.clearCache }}</FormButton>
+		</FormGroup>
+		<FormGroup>
 			<FormButton @click="logout" danger>{{ $ts.logout }}</FormButton>
 			<FormButton @click="logoutAll" danger>{{ $ts.logoutAll }}</FormButton>
 		</FormGroup>
@@ -112,6 +115,11 @@ export default defineComponent({
 				signout();
 			},
 			logoutAll,
+			clear: () => {
+				localStorage.removeItem('locale');
+				localStorage.removeItem('theme');
+				location.reload();
+			},
 			faLaugh, faBell
 		};
 	},
