@@ -2,8 +2,8 @@
 <div class="mk-app" :class="{ wallpaper }">
 	<XSidebar ref="nav" class="sidebar"/>
 
-	<div class="contents" ref="contents">
-		<header class="header" ref="header" @contextmenu.stop="onContextmenu" @click="onHeaderClick">
+	<div class="contents" ref="contents" :class="{ withHeader: $store.state.titlebar }" @contextmenu.prevent.stop="onContextmenu">
+		<header v-if="$store.state.titlebar" class="header" ref="header" @contextmenu.stop="onContextmenu" @click="onHeaderClick">
 			<XHeader main
 				:info="pageInfo"
 				:withWidgetButton="!isDesktop"
@@ -179,7 +179,7 @@ export default defineComponent({
 			this.navHidden = navWidth === 0;
 			if (this.$refs.contents == null) return;
 			const width = this.$refs.contents.offsetWidth;
-			this.$refs.header.style.width = `${width}px`;
+			if (this.$refs.header) this.$refs.header.style.width = `${width}px`;
 		},
 
 		showNav() {
@@ -281,7 +281,10 @@ export default defineComponent({
 	> .contents {
 		width: 100%;
 		min-width: 0;
-		padding-top: $header-height;
+
+		&.withHeader {
+			padding-top: $header-height;
+		}
 
 		> .header {
 			position: fixed;

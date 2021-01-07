@@ -133,9 +133,20 @@ export default defineComponent({
 			this.connection.on('note', prepend);
 		} else if (this.src == 'mentions') {
 			endpoint = 'notes/mentions';
+			this.connection = os.stream.useSharedConnection('main');
+			this.connection.on('mention', prepend);
 		} else if (this.src == 'direct') {
 			endpoint = 'notes/mentions';
-			this.query = { visibility: 'specified' };
+			this.query = {
+				visibility: 'specified'
+			};
+			const onNote = note => {
+				if (note.visibility == 'specified') {
+					prepend(note);
+				}
+			};
+			this.connection = os.stream.useSharedConnection('main');
+			this.connection.on('mention', onNote);
 		} else if (this.src == 'list') {
 			endpoint = 'notes/user-list-timeline';
 			this.query = {

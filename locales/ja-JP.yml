@@ -821,6 +821,7 @@ center: "中央"
 wide: "広い"
 narrow: "狭い"
 reloadToApplySetting: "設定はページリロード後に反映されます。今すぐリロードしますか？"
+showTitlebar: "タイトルバーを表示する"
 
 _aboutMisskey:
   about: "Groundpolis は、Misskeyをベースに2019年から開発中のミニブログソフトウェアです。"

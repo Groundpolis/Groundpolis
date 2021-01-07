@@ -82,7 +82,7 @@
 import { defineComponent } from 'vue';
 import { faIdCardAlt, faPlus, faQuoteLeft, faQuoteRight, faRetweet, faReply, faAt, faCheck, faPollH, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
-import noteSummary from '../../misc/get-note-summary';
+import { getNoteSummary } from '../../misc/get-note-summary';
 import XReactionIcon from './reaction-icon.vue';
 import MkFollowButton from './follow-button.vue';
 import notePage from '../filters/note';
@@ -115,7 +115,7 @@ export default defineComponent({
 
 	data() {
 		return {
-			getNoteSummary: (text: string) => noteSummary(text, locale),
+			getNoteSummary: (text: string) => getNoteSummary(text, i18n.locale),
 			followRequestDone: false,
 			groupInviteDone: false,
 			connection: null,

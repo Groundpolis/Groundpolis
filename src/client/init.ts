@@ -31,6 +31,7 @@ if (localStorage['vuex'] !== undefined) {
 	localStorage.setItem('vuex-old', JSON.stringify(vuex));
 	localStorage.removeItem('vuex');
 	localStorage.removeItem('i');
+	localStorage.removeItem('locale');
 
 	location.reload();
 }
