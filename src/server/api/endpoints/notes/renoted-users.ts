@@ -79,5 +79,5 @@ export default define(meta, async (ps, user) => {
 
 	const renotes = await query.take(ps.limit!).getMany();
 
-	return await Users.packMany(renotes.map(n => n.userId), user);
+	return await Users.packMany(renotes.map(n => n.userId), user, { detail: true });
 });
