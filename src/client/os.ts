@@ -13,10 +13,7 @@ import * as Account from './account';
 import { defaultStore } from './store';
 
 const ua = navigator.userAgent.toLowerCase();
-const isMobileUA = /mobile|iphone|ipad|android/.test(ua);
-const pf = navigator.platform.toLowerCase();
-const isMobilePF = !pf ? null : /iphone|ipad|linux arm/.test(pf);
-export const isMobile = isMobilePF !== null ? isMobilePF : isMobileUA;
+export const isMobile = /mobile|iphone|ipad|android/.test(ua);
 
 export const stream = markRaw(new Stream());
 

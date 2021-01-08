@@ -29,8 +29,8 @@
 				<Fa v-if="note.visibility === 'home'" :icon="faHome"/>
 				<Fa v-if="note.visibility === 'followers'" :icon="faUnlock"/>
 				<Fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
+				<Fa v-if="note.visibility === 'users'" :icon="faUsers"/>
 			</span>
-			<span class="localOnly" v-if="note.localOnly"><Fa :icon="faBiohazard"/></span>
 		</div>
 	</div>
 	<article class="article" @contextmenu.stop="onContextmenu">
@@ -44,28 +44,32 @@
 					<span class="is-bot" v-if="note.user.isBot">bot</span>
 					<span class="admin" v-if="note.user.isAdmin"><Fa :icon="faBookmark"/></span>
 					<span class="moderator" v-if="!note.user.isAdmin && note.user.isModerator"><Fa :icon="farBookmark"/></span>
-					<span class="visibility" v-if="note.visibility !== 'public'">
-						<Fa v-if="note.visibility === 'home'" :icon="faHome"/>
-						<Fa v-if="note.visibility === 'followers'" :icon="faUnlock"/>
-						<Fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
-					</span>
-					<span class="localOnly" v-if="note.localOnly"><Fa :icon="faBiohazard"/></span>
+					<!-- <span class="localOnly" v-if="note.localOnly"><Fa :icon="faBiohazard"/></span> -->
 				</div>
 				<div class="username"><MkAcct :user="note.user"/></div>
 			</div>
 		</header>
 		<div class="main">
-			<MkInstanceTicker v-if="showTicker" class="ticker" :instance="appearNote.user.instance"/>
+			<div v-if="showTicker && !appearNote.user.host" class="instance-ticker groundpolis">
+				<img src="/favicon.ico" alt="favicon" class="favicon"/>
+				<span v-text="meta.name && meta.name !== host ? `${meta.name} (${host})` : host"/>
+			</div>
+			<div v-else-if="showTicker && instance" class="instance-ticker" :class="instance.softwareName">
+				<img :src="instance.iconUrl" alt="favicon" class="favicon"/>
+				<span v-text="instance.name && instance.name !== instance.host ? `${instance.name} (${instance.host})` : instance.host"/>
+			</div>
 			<div class="body">
 				<p v-if="appearNote.cw != null" class="cw">
-					<Mfm v-if="appearNote.cw != ''" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$i" :custom-emojis="appearNote.emojis"/>
+					<Mfm v-if="appearNote.cw != '' && !isPlainMode" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$i" :custom-emojis="appearNote.emojis"/>
+					<MkPlainText v-else-if="appearNote.cw != ''" class="text" :text="appearNote.cw"/>
 					<XCwButton v-model:value="showContent" :note="appearNote"/>
 				</p>
 				<div class="content" v-show="appearNote.cw == null || showContent">
 					<div class="text">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $ts.private }})</span>
 						<MkA class="reply" v-if="appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><Fa :icon="faReply"/></MkA>
-						<Mfm v-if="appearNote.text" :text="appearNote.text" :author="appearNote.user" :i="$i" :custom-emojis="appearNote.emojis"/>
+						<Mfm v-if="appearNote.text && !isPlainMode" :text="appearNote.text" :author="appearNote.user" :i="$i" :custom-emojis="appearNote.emojis"/>
+						<MkPlainText v-else-if="appearNote.text" :text="appearNote.text"/>
 						<a class="rp" v-if="appearNote.renote != null">RN:</a>
 					</div>
 					<div class="files" v-if="appearNote.files.length > 0">
@@ -79,27 +83,56 @@
 			</div>
 			<footer class="footer">
 				<div class="info">
-					<span class="mobile" v-if="note.viaMobile"><Fa :icon="faMobileAlt"/></span>
-					<MkTime class="created-at" :time="note.createdAt" mode="detail"/>
+					<div class="created-at">
+						<MkTime :time="note.createdAt" mode="detail"/>
+					</div>
+					<div>
+						<span class="visibility">
+							<Fa v-if="appearNote.visibility === 'public'" :icon="faGlobe"/>
+							<Fa v-else-if="appearNote.visibility === 'home'" :icon="faHome"/>
+							<Fa v-else-if="appearNote.visibility === 'followers'" :icon="faUnlock"/>
+							<Fa v-else-if="appearNote.visibility === 'specified'" :icon="faEnvelope"/>
+							<Fa v-else-if="note.visibility === 'users'" :icon="faUsers"/>
+						</span>
+						<span>{{$t('_visibility.' + note.visibility)}}</span>
+						<span v-if="note.localOnly">({{$ts._visibility.localOnly}})</span>
+						<span v-if="note.remoteFollowersOnly">({{$ts._visibility.remoteFollowersOnly}})</span>
+					</div>
 				</div>
-				<XReactionsViewer :note="appearNote" ref="reactionsViewer"/>
+				<div class="renotes" v-if="renoteState">
+					<MkA :to="`/notes/${appearNote.id}/renotes`">
+						<I18n :src="renoteState.isQuoted && renoteState.isRenoted ? $ts.renoteQuoteCount : renoteState.isQuoted ? $ts.quoteCount : $ts.renoteCount" tag="span">
+							<template #count><strong v-text="appearNote.renoteCount" /></template>
+						</I18n>
+					</MkA>
+				</div>
+				<XReactionsViewer v-if="!disableReactions" :note="appearNote" ref="reactionsViewer"/>
 				<button @click="reply()" class="button _button">
 					<template v-if="appearNote.reply"><Fa :icon="faReplyAll"/></template>
 					<template v-else><Fa :icon="faReply"/></template>
 					<p class="count" v-if="appearNote.repliesCount > 0">{{ appearNote.repliesCount }}</p>
 				</button>
 				<button v-if="canRenote" @click="renote()" class="button _button" ref="renoteButton">
-					<Fa :icon="faRetweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
+					<Fa :icon="faRetweet"/>
 				</button>
 				<button v-else class="button _button">
 					<Fa :icon="faBan"/>
 				</button>
-				<button v-if="appearNote.myReaction == null" class="button _button" @click="react()" ref="reactButton">
-					<Fa :icon="faPlus"/>
-				</button>
-				<button v-if="appearNote.myReaction != null" class="button _button reacted" @click="undoReact(appearNote)" ref="reactButton">
-					<Fa :icon="faMinus"/>
-				</button>
+				<template v-if="disableReactions">
+					<button class="button _button" @click="toggleLike()" :class="{ reacted: hasMyReaction }">
+						<Fa v-if="hasMyReaction" :icon="faHeartS"/>
+						<Fa v-else :icon="faHeartR"/>
+						<p class="count" v-if="reactionsCount > 0">{{ reactionsCount }}</p>
+					</button>
+				</template>
+				<template v-else>
+					<button v-if="appearNote.myReaction == null" class="button _button" @click="react()" ref="reactButton">
+						<Fa :icon="faPlus"/>
+					</button>
+					<button v-if="appearNote.myReaction != null" class="button _button reacted" @click="undoReact(appearNote)" ref="reactButton">
+						<Fa :icon="faMinus"/>
+					</button>
+				</template>
 				<button class="button _button" @click="menu()" ref="menuButton">
 					<Fa :icon="faEllipsisH"/>
 				</button>
@@ -121,8 +154,8 @@
 
 <script lang="ts">
 import { computed, defineAsyncComponent, defineComponent, markRaw, ref } from 'vue';
-import { faSatelliteDish, faBolt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteRight, faInfoCircle, faBiohazard, faPlug, faExclamationCircle, faPaperclip } from '@fortawesome/free-solid-svg-icons';
-import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import { faSatelliteDish, faBolt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteRight, faPlug, faExclamationCircle, faPaperclip, faUsers, faGlobe, faHeart as faHeartS, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faHeart as faHeartR, faMehRollingEyes } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
 import XSub from './note.sub.vue';
@@ -147,7 +180,7 @@ function markRawAll(...xs) {
 	}
 }
 
-markRawAll(faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faBiohazard, faPlug, faSatelliteDish);
+markRawAll(faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faPlug, faSatelliteDish, faGlobe, faHeartS, faHeartR);
 
 // TODO: note.vueとほぼ同じなので共通化したい
 export default defineComponent({
@@ -183,14 +216,22 @@ export default defineComponent({
 			connection: null,
 			conversation: [],
 			replies: [],
-			showContent: false,
 			isDeleted: false,
 			muted: false,
-			faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faBiohazard, faPlug, faSatelliteDish
+			instance: null as {} | null,
+			renoteState: null as {
+				isRenoted: boolean;
+				isQuoted: boolean;
+			} | null,
+			isPlainMode: false,
+			faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faPlug, faSatelliteDish, faUsers, faGlobe, faHeartS, faHeartR
 		};
 	},
 
 	computed: {
+		disableReactions() {
+			return this.$store.state.disableReactions;
+		},
 		rs() {
 			return this.$store.state.reactions;
 		},
@@ -271,11 +312,18 @@ export default defineComponent({
 			}
 		},
 
+		hasMyReaction() {
+			return this.appearNote.myReaction != null;
+		},
+
 		showTicker() {
-			if (this.$store.state.instanceTicker === 'always') return true;
-			if (this.$store.state.instanceTicker === 'remote' && this.appearNote.user.instance) return true;
-			return false;
-		}
+			const mode = this.$store.state.instanceTicker;
+			return mode === 'always' || (mode === 'remote' && this.appearNote.user.host);
+		},
+
+		meta() {
+			return this.$instance;
+		},
 	},
 
 	async created() {
@@ -284,6 +332,12 @@ export default defineComponent({
 		}
 
 		this.muted = await checkWordMute(this.appearNote, this.$i, this.$store.state.mutedWords);
+
+		if (this.appearNote.renoteCount > 0) {
+			this.renoteState = await os.api('notes/is-renoted', {
+				noteId: this.appearNote.id,
+			});
+		}
 
 		// plugin
 		if (noteViewInterruptors.length > 0) {
@@ -310,11 +364,15 @@ export default defineComponent({
 		}
 	},
 
-	mounted() {
+	async mounted() {
 		this.capture(true);
 
 		if (this.$i) {
 			this.connection.on('_connected_', this.onStreamConnected);
+		}
+
+		if (this.showTicker) {
+			this.instance = await os.getInstance(this.appearNote.user.host);
 		}
 	},
 
@@ -474,27 +532,49 @@ export default defineComponent({
 		},
 
 		renote(viaKeyboard = false) {
+			const renote = async () => {
+				const canceled = this.$store.state.showRenoteConfirm && (await os.dialog({
+					type: 'question',
+					text: this.$ts.renoteConfirm,
+					showCancelButton: true
+				})).canceled;
+				if (canceled) return;
+
+				await os.api('notes/create', {
+					renoteId: this.appearNote.id
+				});
+			};
+			const quote = () => {
+				os.post({
+					channel: this.appearNote.channel,
+					renote: this.appearNote,
+				});
+			};
+
+			const choose = () => {
+				os.modalMenu([{
+					text: this.$ts.renote,
+					icon: faRetweet,
+					action: renote,
+				}, {
+					text: this.$ts.quote,
+					icon: faQuoteRight,
+					action: quote,
+				}], this.$refs.renoteButton, {
+					viaKeyboard
+				});
+			};
+
+			if (this.preview) return;
 			pleaseLogin();
 			this.blur();
-			os.modalMenu([{
-				text: this.$ts.renote,
-				icon: faRetweet,
-				action: () => {
-					os.api('notes/create', {
-						renoteId: this.appearNote.id
-					});
-				}
-			}, {
-				text: this.$ts.quote,
-				icon: faQuoteRight,
-				action: () => {
-					os.post({
-						renote: this.appearNote,
-					});
-				}
-			}], this.$refs.renoteButton, {
-				viaKeyboard
-			});
+			switch (this.$store.state.renoteButtonMode) {
+				case 'choose': choose(); break;
+				case 'renote': renote(); break;
+				case 'quote': quote(); break;
+				case 'renoteQuote': renote(); quote(); break;
+			}
+			
 		},
 
 		renoteDirectly() {
@@ -520,23 +600,31 @@ export default defineComponent({
 			});
 		},
 
-		react(viaKeyboard = false) {
+		async react(viaKeyboard = false) {
 			pleaseLogin();
 			this.blur();
-			os.popup(import('@/components/emoji-picker.vue'), {
+			const { reaction } = await os.reactionPicker({
+				reactions: this.splited,
+				showFocus: viaKeyboard,
 				src: this.$refs.reactButton,
-				asReactionPicker: true
-			}, {
-				done: reaction => {
-					if (reaction) {
-						os.api('notes/reactions/create', {
-							noteId: this.appearNote.id,
-							reaction: reaction
-						});
-					}
-					this.focus();
-				},
-			}, 'closed');
+			});
+
+			if (reaction) {
+				os.api('notes/reactions/create', {
+					noteId: this.appearNote.id,
+					reaction
+				});
+			}
+			this.focus();
+		},
+
+		async toggleLike() {
+			if (this.preview) return;
+			pleaseLogin();
+
+			os.api('notes/reactions/' + (this.hasMyReaction ? 'delete' : 'create'), {
+				noteId: this.appearNote.id,
+			});
 		},
 
 		reactDirectly(reaction) {
@@ -684,6 +772,16 @@ export default defineComponent({
 					}]
 					: []
 				),
+				// 自分でない、パブリック, ホーム なノート 
+				...(!this.isMyNote && ['public', 'home'].includes(this.appearNote.visibility) ? [
+					null,
+					{
+						icon: faMehRollingEyes,
+						text: this.$ts.steal,
+						action: this.steal
+					}]
+					: []
+				),
 				...(this.appearNote.userId != this.$i.id ? [
 					null,
 					{
@@ -699,6 +797,11 @@ export default defineComponent({
 					}]
 					: []
 				),
+				{
+					icon: faAlignLeft,
+					text: this.$t(this.isPlainMode ? 'showAsMfm' : 'showAsPlainText'),
+					action: () => this.isPlainMode = !this.isPlainMode,
+				},
 				...(this.appearNote.userId == this.$i.id || this.$i.isModerator || this.$i.isAdmin ? [
 					null,
 					this.appearNote.userId == this.$i.id ? {
@@ -861,6 +964,29 @@ export default defineComponent({
 			});
 		},
 
+		async steal() {
+			if (!this.appearNote.text) return;
+
+			const canceled = this.$store.state.showStealConfirm && (await os.dialog({
+				type: 'question',
+				text: this.$ts.stealConfirm,
+				showCancelButton: true
+			})).canceled;
+			if (canceled) return;
+
+			const rule = this.$store.state.stealRule;
+
+			if (rule === 1) {
+				this.reactDirectly(this.$store.state.stealReaction);
+			}
+			if (rule === 2) {
+				this.renoteDirectly();
+			}
+			const u = this.appearNote.uri || this.appearNote.url || `${url}/notes/${this.appearNote.id}`;
+			const text = this.appearNote.text + (rule === 3 ? '\n\n' + u : '');
+			os.createNoteInstantly(text, this.appearNote.cw, this.appearNote.visibility);
+		},
+
 		focus() {
 			this.$el.focus();
 		},
@@ -883,6 +1009,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@mixin ticker($bg, $fg) {
+	background: linear-gradient(90deg, $bg, transparent);
+	// background: $bg;
+	color: $fg;
+}
+
 .note {
 	position: relative;
 	transition: box-shadow 0.1s ease;
@@ -960,21 +1092,23 @@ export default defineComponent({
 			margin-left: auto;
 			font-size: 0.9em;
 
-			> .time {
-				flex-shrink: 0;
-				color: inherit;
+			> div {
+				.time {
+					flex-shrink: 0;
+					color: inherit;
 
-				> .dropdownIcon {
-					margin-right: 4px;
+					> .dropdownIcon {
+						margin-right: 4px;
+					}
 				}
-			}
 
-			> .visibility {
-				margin-left: 8px;
-			}
+				.visibility {
+					margin-left: 8px;
+				}
 
-			> .localOnly {
-				margin-left: 8px;
+				.localOnly {
+					margin-left: 8px;
+				}
 			}
 		}
 	}
@@ -1031,6 +1165,39 @@ export default defineComponent({
 		}
 
 		> .main {
+			> .instance-ticker {
+				display: flex;
+				@include ticker(var(--bg), var(--fg));
+				width: 100%;
+				margin-bottom: 8px;
+				align-items: center;
+				padding: 1px 8px;
+				font-size: 0.8em;
+				font-weight: bold;
+				border-radius: 4px 0 0 4px;
+
+				&.misskey {
+					@include ticker(rgb(134, 179, 0), rgb(242, 242, 242));
+				}
+
+				&.groundpolis {
+					@include ticker(#251a10, rgb(110, 229, 0));
+				}
+
+				&.mastodon {
+					@include ticker(#2b90d9, #fff);
+				}
+
+				&.pleroma {
+					@include ticker(#10181e, #ffaf6d);
+				}
+
+				> .favicon {
+					display: inline-block;
+					height: 1em;
+					margin-right: 4px;
+				}
+			}
 			> .body {
 				> .cw {
 					cursor: default;
@@ -1090,6 +1257,14 @@ export default defineComponent({
 					margin: 16px 0;
 					opacity: 0.7;
 					font-size: 0.9em;
+				}
+
+				> .renotes {
+					opacity: 0.8;
+					margin: 8px 0;
+					> a {
+						text-decoration: underline;
+					}
 				}
 
 				> .button {

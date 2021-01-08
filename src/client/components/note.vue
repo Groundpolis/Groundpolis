@@ -41,7 +41,7 @@
 		<MkAvatar class="avatar" :user="appearNote.user"/>
 		<div class="main">
 			<XNoteHeader class="header" :note="appearNote" :mini="true" :detail="detail"/>
-			<div v-if="showTicker && !appearNote.user.host" class="instance-ticker misskey">
+			<div v-if="showTicker && !appearNote.user.host" class="instance-ticker groundpolis">
 				<img src="/favicon.ico" alt="favicon" class="favicon"/>
 				<span v-text="meta.name && meta.name !== host ? `${meta.name} (${host})` : host"/>
 			</div>
@@ -74,19 +74,6 @@
 					</button>
 				</div>
 				<MkA v-if="appearNote.channel && !inChannel" class="channel" :to="`/channels/${appearNote.channel.id}`"><Fa :icon="faSatelliteDish"/> {{ appearNote.channel.name }}</MkA>
-				<div class="info" v-if="detail">
-					<div class="time">
-						<Fa :icon="faClock" fixed-width />
-						<MkTime :time="note.createdAt" mode="detail"/>
-					</div>
-					<div class="renotes" v-if="renoteState">
-						<MkA :to="`/notes/${appearNote.id}/renotes`">
-							<i18n-t :keypath="renoteState.isQuoted && renoteState.isRenoted ? 'renoteQuoteCount' : renoteState.isQuoted ? 'quoteCount' : 'renoteCount'" tag="span">
-								<template #count><strong v-text="appearNote.renoteCount" /></template>
-							</i18n-t>
-						</MkA>
-					</div>
-				</div>
 			</div>
 			<footer class="footer">
 				<XReactionsViewer v-if="!disableReactions" :note="appearNote" ref="reactionsViewer"/>
@@ -382,8 +369,9 @@ export default defineComponent({
 			this.connection.on('_connected_', this.onStreamConnected);
 		}
 
-		if (this.showTicker)
+		if (this.showTicker) {
 			this.instance = await os.getInstance(this.appearNote.user.host);
+		}
 	},
 
 	beforeUnmount() {
