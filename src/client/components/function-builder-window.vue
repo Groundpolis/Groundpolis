@@ -16,7 +16,11 @@
 			</MkSelect>
 		</div>
 	</section>
+	<MkInfo warn v-if="isGroundpolisExtension">
+		{{ $ts._mfmpad._functions.warnGroundpolisExtension }}
+	</MkInfo>
 	<section class="_section" v-if="args.length > 0">
+		
 		<div class="_content">
 			<template v-for="arg in args" :key="arg.key">
 				<MkSwitch v-model:value="arg.enabled">
@@ -47,6 +51,7 @@ import XModalWindow from '@/components/ui/modal-window.vue';
 import MkSelect from './ui/select.vue';
 import MkSwitch from './ui/switch.vue';
 import MkInput from './ui/input.vue';
+import MkInfo from './ui/info.vue';
 import { MfmFunctionProps, mfmFunctions } from './mfm.functions';
 
 export default defineComponent({
@@ -55,12 +60,14 @@ export default defineComponent({
 		MkSelect,
 		MkSwitch,
 		MkInput,
+		MkInfo,
 	},
 
 	setup(props: {}, ctx: SetupContext) {
 		const funcName = ref<string>('');
 		const funcs  = markRaw(mfmFunctions);
 		const func = computed(() => funcs[funcName.value]);
+		const isGroundpolisExtension = computed(() => func.value && typeof func.value === 'object' && func.value.isGroundpolisExtension);
 		const args = ref<{ key: string, value?: string, enabled: boolean }[]>([]);
 		const body = ref<string>('');
 		const gpfm = computed(() => {
@@ -89,6 +96,7 @@ export default defineComponent({
 			args,
 			body,
 			gpfm,
+			isGroundpolisExtension,
 
 			getProp(name: string) {
 				if (func.value && typeof func.value !== 'string' && func.value.props && func.value.props[name]) {

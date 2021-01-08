@@ -878,6 +878,7 @@ _mfmpad:
     fantasy: "ファンタジー"
     emoji: "絵文字"
     math: "数学"
+    warnGroundpolisExtension: "Groundpolis 拡張です。他の Misskey インスタンスでは正常に表示されない可能性があります。"
 
 _renoteButtonMode:
   choose: "毎回選ぶ"
@@ -959,6 +960,14 @@ _mfm:
   rainbowDescription: "虹色のアニメーションを付えます。"
   rotate: "回転"
   rotateDescription: "指定した角度だけ回転します。"
+  x2: "大きく"
+  x2Description: "内容を大きく表示します。"
+  x3: "とても大きく"
+  x3Description: "内容をとても大きく表示します。"
+  x4: "究極に大きく"
+  x4Description: "内容を究極に大きく表示します。"
+  blur: "ぼかし"
+  blurDescription: "内容をぼかすことができます。ポインターを上に乗せるとはっきり見えるようになります。"
   font: "フォント設定"
   fontDescription: "文字フォントの色やサイズ、ファミリーの設定を行います。"
 

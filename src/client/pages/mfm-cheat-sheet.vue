@@ -6,8 +6,8 @@
 		</div>
 	</div>
 	<XSection v-for="s in sections" :key="s[0]"
-		:title="$ts[`_mfm.${s[0]}`]"
-		:description="$ts[`_mfm.${s[0]}Description`]"
+		:title="$t(`_mfm.${s[0]}`)"
+		:description="$t(`_mfm.${s[0]}Description`)"
 		:initialPreview="s[1]"/>
 </div>
 </template>
