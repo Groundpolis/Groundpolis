@@ -1,10 +1,7 @@
 <template>
 <div class="_section">
 	<XSearch v-model:value="query" @search="search"/>
-	<MkTab v-if="!meta.disableFeatured" v-model:value="tab" style="height: 100%">
-		<option value="explore"><Fa :icon="faHashtag"/> {{$ts.explore}}</option>
-		<option value="featured"><Fa :icon="faFireAlt"/> {{$ts.featured}}</option>
-	</MkTab>
+
 	<template v-if="tab === 'explore'">
 		<MkFolder :body-togglable="true" :expanded="false" ref="tags" class="_vMargin">
 			<template #header><Fa :icon="faHashtag" fixed-width style="margin-right: 0.5em;"/>{{ $ts.popularTags }}</template>
@@ -97,16 +94,13 @@ export default defineComponent({
 		},
 		mode: {
 			type: String as PropType<'featured' | 'explore'>,
-			required: false
+			required: false,
+			default: 'explore',
 		},
 	},
 
 	data() {
 		return {
-			INFO: {
-				title: this.$ts.explore,
-				icon: faHashtag
-			},
 			pinnedUsers: { endpoint: 'pinned-users' },
 			popularUsers: { endpoint: 'users', limit: 10, noPaging: true, params: {
 				state: 'alive',
@@ -144,7 +138,7 @@ export default defineComponent({
 			tagsRemote: [],
 			stats: null,
 			num: number,
-			tab: this.mode,
+			tab: 'explore'
 			query: '',
 			faBookmark, faChartLine, faCommentAlt, faPlus, faHashtag, faRocket, faFireAlt, faSearch,
 		};
@@ -165,6 +159,26 @@ export default defineComponent({
 				}
 			};
 		},
+		INFO() {
+			return this.meta.disableFeatured ? {
+				title: this.$ts.explore,
+				icon: faHashtag
+			} : {
+				tabs: [{
+					id: 'explore',
+					title: this.$ts.explore,
+					icon: faHashtag,
+					onClick: () => { this.tab = 'explore'; },
+					selected: this.tab === 'explore',
+				}, {
+					id: 'featured',
+					title: this.$ts.featured,
+					icon: faFireAlt,
+					onClick: () => { this.tab = 'featured'; },
+					selected: this.tab === 'featured',
+				}],
+			};
+		}
 	},
 
 	watch: {
@@ -191,6 +205,11 @@ export default defineComponent({
 		os.api('stats').then(stats => {
 			this.stats = stats;
 		});
+	},
+
+	mounted() {
+		console.log('mode is ' + this.mode);
+		this.tab = this.mode;
 	},
 
 	methods: {

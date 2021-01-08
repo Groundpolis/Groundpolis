@@ -1,5 +1,5 @@
 <template>
-	<MfmCore v-bind="$attrs" class="havbbuyv" :class="{ nowrap: $attrs['nowrap'], sticker: !$attrs['plain'] && !$attrs['no-sticker'] && $store.state.useSticker }"/>
+	<MfmCore v-bind="$attrs" :nowrap="nowrap" :plain="plain" class="havbbuyv" :class="{ nowrap: nowrap, sticker: !plain && !noSticker && $store.state.useSticker }"/>
 </template>
 
 <script lang="ts">
@@ -13,6 +13,18 @@ export default defineComponent({
 	props: {
 		once: {
 			default: true,
+		},
+		nowrap: {
+			type: Boolean,
+			default: false,
+		},
+		plain: {
+			type: Boolean,
+			default: false,
+		},
+		noSticker: {
+			type: Boolean,
+			default: false,
 		},
 	}
 });

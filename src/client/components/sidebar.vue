@@ -527,7 +527,7 @@ export default defineComponent({
 
 				&:first-child {
 					top: 0;
-					margin-bottom: 16px;
+					margin: 16px 0;
 				}
 
 				&:last-child {

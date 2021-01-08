@@ -110,6 +110,7 @@ export default defineComponent({
 						indicate: computed(() => this.hasUnreadAnnouncements)
 					});
 				};
+				console.log(tabs);
 				return {
 					tabs,
 					action: {

@@ -27,7 +27,7 @@ export const router = createRouter({
 		{ path: '/announcements', component: page('announcements') },
 		{ path: '/about', component: page('about') },
 		{ path: '/about-misskey', component: page('about-misskey') },
-		{ path: '/featured', component: page('explore'), props: () => ({ mode: 'explore' }) },
+		{ path: '/featured', component: page('explore'), props: () => ({ mode: 'featured' }) },
 		{ path: '/docs', component: page('docs') },
 		{ path: '/theme-editor', component: page('theme-editor') },
 		{ path: '/docs/:doc', component: page('doc'), props: route => ({ doc: route.params.doc }) },

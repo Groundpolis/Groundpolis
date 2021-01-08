@@ -2,7 +2,7 @@
 <div class="civpbkhh">
 	<div v-for="note in notes" class="note">
 		<div class="content _panel">
-			{{ note.text }}
+			<Mfm plain no-sticker :text="note.text" />
 		</div>
 		<XReactionsViewer :note="note" ref="reactionsViewer"/>
 	</div>
@@ -26,8 +26,13 @@ export default defineComponent({
 	},
 
 	created() {
-		os.api('notes/featured').then(notes => {
-			this.notes = notes;
+		const ep = 
+			!this.$instance.disableFeatured 
+				? 'notes/featured' :
+			!this.$instance.disableLocalTimeline
+				? 'notes/local-timeline' : 'notes/global-timeline';
+		os.api(ep).then(notes => {
+			this.notes = notes.filter(n => n.text);
 		});
 	}
 });
@@ -45,6 +50,7 @@ export default defineComponent({
 			margin: 0 0 0 auto;
 			max-width: max-content;
 			border-radius: 16px;
+			max-height: 10rem;
 		}
 	}
 }

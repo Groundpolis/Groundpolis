@@ -4,11 +4,11 @@
 		<template #label>{{ $ts._exportOrImport.allNotes }}</template>
 		<FormButton @click="doExport('notes')"><Fa :icon="faDownload"/> {{ $ts.export }}</FormButton>
 	</FormGroup>
-	<FormTuple>
+	<FormGroup>
 		<template #label>{{ $ts._exportOrImport.followingList }}</template>
 		<FormButton @click="doExport('following')"><Fa :icon="faDownload"/> {{ $ts.export }}</FormButton>
 		<FormButton @click="doImport('following', $event)"><Fa :icon="faUpload"/> {{ $ts.import }}</FormButton>
-	</FormTuple>
+	</FormGroup>
 	<FormGroup>
 		<template #label>{{ $ts._exportOrImport.userLists }}</template>
 		<FormButton @click="doExport('user-lists')"><Fa :icon="faDownload"/> {{ $ts.export }}</FormButton>
@@ -28,7 +28,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { faDownload, faUpload, faBoxes } from '@fortawesome/free-solid-svg-icons';
-import FormTuple from '@/components/form/tuple.vue';
 import FormButton from '@/components/form/button.vue';
 import FormBase from '@/components/form/base.vue';
 import FormGroup from '@/components/form/group.vue';
@@ -38,7 +37,6 @@ import { selectFile } from '@/scripts/select-file';
 export default defineComponent({
 	components: {
 		FormBase,
-		FormTuple,
 		FormGroup,
 		FormButton,
 	},

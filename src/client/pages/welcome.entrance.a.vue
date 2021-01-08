@@ -4,13 +4,15 @@
 		<MkFeaturedPhotos class="bg"/>
 		<XTimeline class="tl"/>
 		<div class="shape"></div>
-		<img src="/assets/misskey.svg" class="misskey"/>
+		<img src="/assets/icon_transparent.svg" class="misskey"/>
 		<div class="emojis">
-			<MkEmoji :normal="true" :no-style="true" emoji="👍"/>
-			<MkEmoji :normal="true" :no-style="true" emoji="❤"/>
-			<MkEmoji :normal="true" :no-style="true" emoji="😆"/>
 			<MkEmoji :normal="true" :no-style="true" emoji="🎉"/>
-			<MkEmoji :normal="true" :no-style="true" emoji="🍮"/>
+			<MkEmoji :normal="true" :no-style="true" emoji="🧡"/>
+			<MkEmoji :normal="true" :no-style="true" emoji="🐈"/>
+			<MkEmoji :normal="true" :no-style="true" emoji="🥬"/>
+			<MkEmoji :normal="true" :no-style="true" emoji="🌲"/>
+			<MkEmoji :normal="true" :no-style="true" emoji="🥤"/>
+			<MkEmoji :normal="true" :no-style="true" emoji="🍇"/>
 		</div>
 		<div class="main _panel">
 			<div class="bg">
@@ -188,12 +190,12 @@ export default defineComponent({
 
 		> .misskey {
 			position: absolute;
-			top: 42px;
-			left: 42px;
-			width: 160px;
+			top: 32px;
+			left: 32px;
+			width: 64px;
 
 			@media (max-width: 450px) {
-				width: 130px;
+				width: 64px;
 			}
 		}
 

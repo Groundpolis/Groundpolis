@@ -37,7 +37,7 @@ export class Storage<T extends StateDef> {
 				state[k] = deviceAccountState[k];
 			} else {
 				state[k] = v.default;
-				if (_DEV_) console.log('Use default value', k, v.default);
+				// if (_DEV_) console.log('Use default value', k, v.default);
 			}
 		}
 		for (const [k, v] of Object.entries(state)) {
