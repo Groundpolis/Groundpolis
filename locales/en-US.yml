@@ -784,6 +784,8 @@ clearCache: "Clear cache"
 onlineUsersCount: "{n} people are online"
 nUsers: "{n} Users"
 nNotes: "{n} Notes"
+noteCollapseThreshold: "Threshold to Collapse Note (in px Unit)"
+
 _aboutMisskey:
   about: "Groundpolis is open-source software being developed based on Misskey since 2019."
   contributors: "Main contributors"

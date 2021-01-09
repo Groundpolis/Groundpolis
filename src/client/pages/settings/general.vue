@@ -5,10 +5,13 @@
 		<FormSwitch v-model:value="showFixedPostForm">{{ $ts.showFixedPostForm }}</FormSwitch>
 	</FormGroup>
 
-	<FormSelect v-model:value="lang">
-		<template #label>{{ $ts.uiLanguage }}</template>
-		<option v-for="x in langs" :value="x[0]" :key="x[0]">{{ x[1] }}</option>
-	</FormSelect>
+	<FormGroup>
+		<FormSelect v-model:value="lang">
+			<template #label>{{ $ts.uiLanguage }}</template>
+			<option v-for="x in langs" :value="x[0]" :key="x[0]">{{ x[1] }}</option>
+		</FormSelect>
+		<FormButton primary @click="reloadLang">{{ $ts.reload }}</FormButton>
+	</FormGroup>
 
 	<FormGroup>
 		<template #label>{{ $ts.behavior }}</template>
@@ -106,6 +109,11 @@
 		<FormSwitch v-model:value="defaultSideView">{{ $ts.openInSideView }}</FormSwitch>
 	</FormGroup>
 
+	<FormGroup>
+		<template #label>{{ $ts.noteCollapseThreshold }}</template>
+		<FormInput type="number" v-model:value="noteCollapseThreshold"/>
+	</FormGroup>
+
 	<FormSelect v-model:value="chatOpenBehavior">
 		<template #label>{{ $ts.chatOpenBehavior }}</template>
 		<option value="page">{{ $ts.showInPage }}</option>
@@ -126,6 +134,7 @@ import FormRadios from '@/components/form/radios.vue';
 import FormBase from '@/components/form/base.vue';
 import FormGroup from '@/components/form/group.vue';
 import FormLink from '@/components/form/link.vue';
+import FormInput from '@/components/form/input.vue';
 import FormButton from '@/components/form/button.vue';
 import MkLink from '@/components/link.vue';
 import { langs } from '@/config';
@@ -143,6 +152,7 @@ export default defineComponent({
 		FormGroup,
 		FormLink,
 		FormButton,
+		FormInput,
 	},
 
 	emits: ['info'],
@@ -185,13 +195,13 @@ export default defineComponent({
 		noteNameDisplayMode: defaultStore.makeGetterSetter('noteNameDisplayMode'),
 		showFullAcct: defaultStore.makeGetterSetter('showFullAcct'),
 		iconShape: defaultStore.makeGetterSetter('iconShape'),
+		noteCollapseThreshold: defaultStore.makeGetterSetter('noteCollapseThreshold'),
 	},
 
 	watch: {
 		lang() {
 			localStorage.setItem('lang', this.lang);
-			localStorage.removeItem('locale');
-			this.reloadAsk();
+			this.reload();
 		},
 
 		fontSize() {
@@ -251,6 +261,10 @@ export default defineComponent({
 			if (canceled) return;
 
 			location.reload();
+		},
+		reloadLang() {
+			localStorage.removeItem('locale');
+			this.reloadAsk();
 		}
 	}
 });

@@ -828,6 +828,7 @@ clearCache: "キャッシュをクリア"
 onlineUsersCount: "{n}人がオンライン"
 nUsers: "{n}ユーザー"
 nNotes: "{n}ノート"
+noteCollapseThreshold: "ノート折りたたみのしきい値（単位: px）"
 
 _aboutMisskey:
   about: "Groundpolis は、Misskeyをベースに2019年から開発中のミニブログソフトウェアです。"
