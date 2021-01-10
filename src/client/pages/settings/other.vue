@@ -1,5 +1,7 @@
 <template>
 <FormBase>
+	<FormSwitch v-model:value="reportError">{{ $ts.sendErrorReports }}<template #desc>{{ $ts.sendErrorReportsDescription }}</template></FormSwitch>
+
 	<FormLink to="/settings/account-info">{{ $ts.accountInfo }}</FormLink>
 	<FormLink to="/settings/labs">Groundpolis {{ $ts._labs.title }}</FormLink>
 
@@ -66,6 +68,7 @@ export default defineComponent({
 	computed: {
 		stealRule: defaultStore.makeGetterSetter('stealRule'),
 		stealReaction: defaultStore.makeGetterSetter('stealReaction'),
+		reportError: defaultStore.makeGetterSetter('reportError'),
 	},
 
 	methods: {

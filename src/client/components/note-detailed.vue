@@ -38,15 +38,15 @@
 			<MkAvatar class="avatar" :user="appearNote.user"/>
 			<div class="body">
 				<div class="top">
-					<MkA class="name" :to="userPage(note.user)" v-user-preview="note.user.id">
-						<MkUserName :user="note.user"/>
+					<MkA class="name" :to="userPage(appearNote.user)" v-user-preview="appearNote.user.id">
+						<MkUserName :user="appearNote.user"/>
 					</MkA>
-					<span class="is-bot" v-if="note.user.isBot">bot</span>
-					<span class="admin" v-if="note.user.isAdmin"><Fa :icon="faBookmark"/></span>
-					<span class="moderator" v-if="!note.user.isAdmin && note.user.isModerator"><Fa :icon="farBookmark"/></span>
+					<span class="is-bot" v-if="appearNote.user.isBot">bot</span>
+					<span class="admin" v-if="appearNote.user.isAdmin"><Fa :icon="faBookmark"/></span>
+					<span class="moderator" v-if="!appearNote.user.isAdmin && note.user.isModerator"><Fa :icon="farBookmark"/></span>
 					<!-- <span class="localOnly" v-if="note.localOnly"><Fa :icon="faBiohazard"/></span> -->
 				</div>
-				<div class="username"><MkAcct :user="note.user"/></div>
+				<div class="username"><MkAcct :user="appearNote.user"/></div>
 			</div>
 		</header>
 		<div class="main">
@@ -154,8 +154,8 @@
 
 <script lang="ts">
 import { computed, defineAsyncComponent, defineComponent, markRaw, ref } from 'vue';
-import { faSatelliteDish, faBolt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteRight, faPlug, faExclamationCircle, faPaperclip, faUsers, faGlobe, faHeart as faHeartS, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
-import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faHeart as faHeartR, faMehRollingEyes } from '@fortawesome/free-regular-svg-icons';
+import { faSatelliteDish, faBolt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteRight, faPlug, faExclamationCircle, faPaperclip, faUsers, faGlobe, faHeart as faHeartS, faAlignLeft, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faHeart as faHeartR, faMehRollingEyes, faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import { parse } from '../../mfm/parse';
 import { sum, unique } from '../../prelude/array';
 import XSub from './note.sub.vue';
@@ -180,7 +180,9 @@ function markRawAll(...xs) {
 	}
 }
 
-markRawAll(faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faPlug, faSatelliteDish, faGlobe, faHeartS, faHeartR);
+markRawAll(
+	faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faPlug, faSatelliteDish, faUsers, faGlobe, faHeartS, faHeartR, faBookmark, farBookmark,
+);
 
 // TODO: note.vueとほぼ同じなので共通化したい
 export default defineComponent({
@@ -224,7 +226,7 @@ export default defineComponent({
 				isQuoted: boolean;
 			} | null,
 			isPlainMode: false,
-			faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faPlug, faSatelliteDish, faUsers, faGlobe, faHeartS, faHeartR
+			faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faPlug, faSatelliteDish, faUsers, faGlobe, faHeartS, faHeartR, faBookmark, farBookmark,			
 		};
 	},
 

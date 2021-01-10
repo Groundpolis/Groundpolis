@@ -36,13 +36,15 @@ if (localStorage['vuex'] !== undefined) {
 	location.reload();
 }
 
+import * as Sentry from '@sentry/browser';
+import { Integrations } from '@sentry/tracing';
 import { createApp, watch } from 'vue';
 import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome';
 
 import widgets from '@/widgets';
 import directives from '@/directives';
 import components from '@/components';
-import { version, ui, lang } from '@/config';
+import { version, ui, lang, host } from '@/config';
 import { router } from '@/router';
 import { applyTheme } from '@/scripts/theme';
 import { isDeviceDarkmode } from '@/scripts/is-device-darkmode';
@@ -86,6 +88,18 @@ if (_DEV_) {
 		});
 		*/
 	});
+}
+
+if (defaultStore.state.reportError && !_DEV_) {
+	Sentry.init({
+		dsn: 'https://6f81b7c836e840d1aee49be533b0f26a@o502733.ingest.sentry.io/5585379',
+		tracesSampleRate: 1.0,
+	});
+
+	Sentry.setTag('groundpolis_version', version);
+	Sentry.setTag('ui', ui);
+	Sentry.setTag('lang', lang);
+	Sentry.setTag('host', host);
 }
 
 // タッチデバイスでCSSの:hoverを機能させる

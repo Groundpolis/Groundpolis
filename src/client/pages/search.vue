@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { faSearch, faSpinner, faTimesCircle, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import Progress from '@/scripts/loading';
 import parseAcct from '../../misc/acct/parse';
@@ -67,7 +67,7 @@ export default defineComponent({
 			tab: this.$route.query.f || 'notes',
 			smartCard: null as SmartCard | null,
 			INFO: {
-				title: this.$t('searchWith', { q: this.$route.query.q }),
+				title: computed(() => this.$t('searchWith', { q: this.$route.query.q })),
 				icon: faSearch
 			},
 		};

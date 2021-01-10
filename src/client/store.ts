@@ -197,6 +197,10 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: true
 	},
+	reportError: {
+		where: 'device',
+		default: false
+	},
 
 	//#region Groundpolis
 
@@ -296,7 +300,6 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: ['home', 'local']
 	},
-
 	//#endregion
 }));
 
