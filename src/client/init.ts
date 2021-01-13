@@ -37,7 +37,6 @@ if (localStorage['vuex'] !== undefined) {
 }
 
 import * as Sentry from '@sentry/browser';
-import { Integrations } from '@sentry/tracing';
 import { createApp, watch } from 'vue';
 import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome';
 
@@ -67,6 +66,9 @@ if (_DEV_) {
 
 	(window as any).$i = $i;
 	(window as any).$store = defaultStore;
+	(window as any).$instance = instance;
+	(window as any).$t = i18n.t;
+	(window as any).$ts = i18n.locale;
 
 	window.addEventListener('error', event => {
 		console.error(event);
