@@ -300,6 +300,11 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: ['home', 'local']
 	},
+	noteCollapseThreshold: {
+		where: 'device',
+		default: 192,
+	},
+
 	//#endregion
 }));
 

@@ -56,22 +56,19 @@
 					<XCwButton v-model:value="showContent" :note="appearNote"/>
 				</p>
 				<div class="content" v-show="appearNote.cw == null || showContent">
-					<div class="text" ref="text" :class="{ collapse: readMore === false }">
+					<div class="text" ref="text" :class="{ collapse: readMore === false }" :style="readMore === false ? `height: ${$store.state.noteCollapseThreshold}px` : null">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ $ts.private }})</span>
 						<MkA class="reply" v-if="appearNote.replyId" :to="`/notes/${appearNote.replyId}`"><Fa :icon="faReply"/></MkA>
 						<Mfm v-if="appearNote.text && !isPlainMode" :text="appearNote.text" :author="appearNote.user" :i="$i" :custom-emojis="appearNote.emojis"/>
 						<MkPlainText v-else-if="appearNote.text" :text="appearNote.text"/>
 					</div>
-					<button v-if="readMore !== null" class="read-more-button _button _link" @click="readMore = !readMore" v-text="$t(readMore ? 'hide' : 'readMore')"/>
+					<button v-if="readMore !== null" class="read-more-button _button _link" @click="readMore = !readMore" v-text="readMore ? $ts.hide : $ts.readMore"/>
 					<div class="files" v-if="appearNote.files.length > 0">
 						<XMediaList :media-list="appearNote.files"/>
 					</div>
 					<XPoll v-if="appearNote.poll" :note="appearNote" ref="pollViewer" class="poll"/>
 					<MkUrlPreview v-for="url in urls" :url="url" :key="url" :compact="true" :detail="false" class="url-preview"/>
 					<div class="renote" v-if="appearNote.renote"><XNotePreview :note="appearNote.renote"/></div>
-					<button v-if="collapsed" class="fade _button" @click="collapsed = false">
-						<span>{{ $ts.showMore }}</span>
-					</button>
 				</div>
 				<MkA v-if="appearNote.channel && !inChannel" class="channel" :to="`/channels/${appearNote.channel.id}`"><Fa :icon="faSatelliteDish"/> {{ appearNote.channel.name }}</MkA>
 			</div>
@@ -84,7 +81,7 @@
 						<p class="count" v-if="appearNote.repliesCount > 0">{{ appearNote.repliesCount }}</p>
 					</button>
 					<button v-if="canRenote" @click="renote()" class="button _button" ref="renoteButton">
-						<Fa :icon="faRetweet"/><p class="count" v-if="!detail && appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
+						<Fa :icon="faRetweet"/><p class="count" v-if="appearNote.renoteCount > 0">{{ appearNote.renoteCount }}</p>
 					</button>
 					<button v-else class="button _button">
 						<Fa :icon="faBan"/>
@@ -210,7 +207,6 @@ export default defineComponent({
 			connection: null,
 			replies: [],
 			showContent: false,
-			collapsed: false,
 			isDeleted: false,
 			muted: false,
 			readMore: null as boolean | null,
@@ -338,10 +334,6 @@ export default defineComponent({
 			this.connection = os.stream;
 		}
 
-		this.collapsed = this.appearNote.cw == null && this.appearNote.text && (
-			(this.appearNote.text.split('\n').length > 9) ||
-			(this.appearNote.text.length > 500)
-		);
 		this.muted = await checkWordMute(this.appearNote, this.$i, this.$store.state.mutedWords);
 
 		// plugin
@@ -356,7 +348,7 @@ export default defineComponent({
 		const textElement = this.$refs.text as HTMLElement | null;
 		if (textElement) {
 			const h = textElement.getBoundingClientRect().height;
-			if (h > 192) {
+			if (h > this.$store.state.noteCollapseThreshold) {
 				this.readMore = false;
 			}
 		}
@@ -1255,7 +1247,6 @@ export default defineComponent({
 						&.collapse {
 							display: block;
 							overflow: hidden;
-							height: 192px;
 							position: relative;
 							&::after {
 								content: '';
