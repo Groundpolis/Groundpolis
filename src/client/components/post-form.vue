@@ -426,10 +426,6 @@ export default defineComponent({
 			}
 		},
 
-		trimmedLength(text: string) {
-			return length(text.trim());
-		},
-
 		addTag(tag: string) {
 			this.insert(` #${tag} `);
 		},
