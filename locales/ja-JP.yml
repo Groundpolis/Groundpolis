@@ -836,15 +836,20 @@ accentColor: "アクセント"
 textColor: "文字"
 saveAs: "名前を付けて保存"
 advanced: "高度"
-registry: "レジストリ"
 value: "値"
-scope: "スコープ"
-key: "キー"
-domain: "ドメイン"
 updatedAt: "更新日時"
 saveConfirm: "保存しますか？"
 deleteConfirm: "削除しますか？"
 invalidValue: "有効な値ではありません。"
+registry: "レジストリ"
+closeAccount: "アカウントを閉鎖する"
+
+_registry:
+  scope: "スコープ"
+  key: "キー"
+  keys: "キー"
+  domain: "ドメイン"
+  createKey: "キーを作成"
 
 _aboutMisskey:
   about: "Groundpolis は、Misskeyをベースに2019年から開発中のミニブログソフトウェアです。"
@@ -1857,6 +1862,7 @@ _deck:
   swapDown: "下に移動"
   stackLeft: "左に重ねる"
   popRight: "右に出す"
+  profile: "プロファイル"
 
   _columns:
     main: "メイン"

@@ -196,12 +196,13 @@ export const pages: PageDefinition[] = [
 		icon: faColumns,
 		component: () => defineAsyncComponent(() => import('./deck.vue')),
 	},
-	// {
-	// 	name: 'regedit',
-	// 	type: 'hidden',
-	// 	title: 'Registry Editor',
-	// 	component: () => defineAsyncComponent(() => import('../regedit.vue')),
-	// },
+	{
+		name: 'registry',
+		type: 'hidden',
+		title: ts.registry,
+		icon: faCogs,
+		component: () => defineAsyncComponent(() => import('./registry.vue')),
+	},
 	{
 		name: 'apps',
 		type: 'hidden',
@@ -217,12 +218,12 @@ export const pages: PageDefinition[] = [
 		component: () => defineAsyncComponent(() => import('./labs.custom-css.vue')),
 	},
 	{
-		pattern: /^registry\/keys\/system\//g,
+		pattern: /^registry\/keys\/system\//,
 		type: 'hidden',
 		component: () => defineAsyncComponent(() => import('./registry.keys.vue'))
 	},
 	{
-		pattern: /^registry\/value\/system\//g,
+		pattern: /^registry\/value\/system\//,
 		type: 'hidden',
 		component: () => defineAsyncComponent(() => import('./registry.values.vue'))
 	}

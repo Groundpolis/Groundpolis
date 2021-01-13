@@ -63,7 +63,15 @@ export default defineComponent({
 	},
 
 	setup(props, context) {
-		const page = computed(() => pages.find(p => p.name === props.page));
+		const page = computed(
+			() => pages.find(
+				p => (props.page) && (
+					(p as any).name
+						? p.name === props.page
+						: (p.pattern as RegExp).test(props.page)
+				)
+			)
+		);
 
 		const INFO = computed(() => page.value ? {
 			title: page.value.title,
@@ -88,13 +96,16 @@ export default defineComponent({
 
 		watch(component, () => {
 			pageProps.value = {};
-			if (props.page.startsWith('registry/keys/system/')) {
-				pageProps.value.scope = props.page.replace('registry/keys/system/', '').split('/');
-			}
-			if (props.page.startsWith('registry/value/system/')) {
-				const path = props.page.replace('registry/value/system/', '').split('/');
-				pageProps.value.xKey = path.pop();
-				pageProps.value.scope = path;
+
+			if (props.page) {
+				if (props.page.startsWith('registry/keys/system/')) {
+					pageProps.value.scope = props.page.replace('registry/keys/system/', '').split('/');
+				}
+				if (props.page.startsWith('registry/value/system/')) {
+					const path = props.page.replace('registry/value/system/', '').split('/');
+					pageProps.value.xKey = path.pop();
+					pageProps.value.scope = path;
+				}
 			}
 
 			nextTick(() => {

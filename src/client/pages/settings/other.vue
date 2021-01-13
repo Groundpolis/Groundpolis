@@ -33,13 +33,14 @@
 		<template #caption>{{ $ts.discardPostFormDraftDescription }}</template>
 	</FormGroup>
 
-	<FormLink to="/settings/registry">{{ $ts.registry }}</FormLink>
+	<FormLink to="/settings/registry"><template #icon><Fa :icon="faCogs"/></template>{{ $ts.registry }}</FormLink>
+	<FormButton @click="closeAccount" danger>{{ $ts.closeAccount }}</FormButton>
 </FormBase>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faCogs } from '@fortawesome/free-solid-svg-icons';
 import FormSwitch from '@/components/form/switch.vue';
 import FormSelect from '@/components/form/select.vue';
 import FormLink from '@/components/form/link.vue';
@@ -49,6 +50,7 @@ import FormButton from '@/components/form/button.vue';
 import * as os from '@/os';
 import { debug } from '@/config';
 import { defaultStore } from '@/store';
+import { signout } from '@/account';
 
 export default defineComponent({
 	components: {
@@ -62,7 +64,7 @@ export default defineComponent({
 
 	data() {
 		return {
-			debug, faTrashAlt,
+			debug, faTrashAlt, faCogs
 		}
 	},
 
@@ -97,6 +99,22 @@ export default defineComponent({
 		discardPostFormDraft() {
 			localStorage.removeItem('drafts');
 		},
+
+		closeAccount() {
+			os.dialog({
+				title: this.$ts.password,
+				input: {
+					type: 'password'
+				}
+			}).then(({ canceled, result: password }) => {
+				if (canceled) return;
+				os.api('i/delete-account', {
+					password: password
+				}).then(() => {
+					signout();
+				});
+			});
+		}
 	}
 });
 </script>
