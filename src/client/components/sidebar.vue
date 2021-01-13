@@ -100,7 +100,7 @@ export default defineComponent({
 
 	computed: {
 		menu(): string[] {
-			return this.$store.state.menu;
+			return this.$store.reactiveState.menu.value;
 		},
 
 		otherNavItemIndicated(): boolean {

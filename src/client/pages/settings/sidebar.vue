@@ -105,25 +105,12 @@ export default defineComponent({
 
 		save() {
 			this.$store.set('menu', this.items.map(it => it.startsWith('-:') ? '-' : it));
-			this.reloadAsk();
 		},
 
 		reset() {
 			this.$store.reset('menu');
 			this.items = this.$store.state.menu.map(it => it === '-' ? '-:' + uuid() : it);
-			this.reloadAsk();
 		},
-
-		async reloadAsk() {
-			const { canceled } = await os.dialog({
-				type: 'info',
-				text: this.$ts.reloadToApplySetting,
-				showCancelButton: true
-			});
-			if (canceled) return;
-
-			location.reload();
-		}
 	},
 });
 </script>
