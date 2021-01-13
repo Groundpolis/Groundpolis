@@ -27,14 +27,15 @@
 		</FormButton>
 	</FormGroup>
 
+	<FormLink to="/settings/registry"><template #icon><Fa :icon="faCogs"/></template>{{ $ts.registry }}</FormLink>
+
 	<FormGroup>
 		<template #label>{{ $ts.dangerousSettings }}</template>
 		<FormButton danger @click="discardPostFormDraft"><Fa :icon="faTrashAlt"/> {{ $ts.discardPostFormDraft }}</FormButton>
 		<template #caption>{{ $ts.discardPostFormDraftDescription }}</template>
 	</FormGroup>
-
-	<FormLink to="/settings/registry"><template #icon><Fa :icon="faCogs"/></template>{{ $ts.registry }}</FormLink>
 	<FormButton @click="closeAccount" danger>{{ $ts.closeAccount }}</FormButton>
+
 </FormBase>
 </template>
 
@@ -97,12 +98,19 @@ export default defineComponent({
 		},
 		
 		discardPostFormDraft() {
-			localStorage.removeItem('drafts');
+			os.dialog({
+				text: this.$ts.discardPostFormDraftConfirm,
+				showCancelButton: true,
+			}).then(({ canceled }) => {
+				if (canceled) return;
+				localStorage.removeItem('drafts');
+			});
 		},
 
 		closeAccount() {
 			os.dialog({
-				title: this.$ts.password,
+				title: this.$ts.closeAccountConfirm,
+				text: this.$ts.closeAccountConfirmDesc,
 				input: {
 					type: 'password'
 				}

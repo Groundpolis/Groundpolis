@@ -784,6 +784,9 @@ onlineUsersCount: "{n} people are online"
 nUsers: "{n} Users"
 nNotes: "{n} Notes"
 noteCollapseThreshold: "Threshold to Collapse Note (in px Unit)"
+discardPostFormDraftConfirm: "Are you sure you want to delete the draft of the post form?"
+closeAccountConfirm: "Are you sure you want to delete your account?"
+closeAccountConfirmDesc: "Once you delete your account, you can't get it back. If you are really sure, please enter your password for confirmation."
 
 _aboutMisskey:
   about: "Groundpolis is open-source software being developed based on Misskey since 2019."
