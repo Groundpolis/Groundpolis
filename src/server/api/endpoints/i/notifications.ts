@@ -81,7 +81,7 @@ export default define(meta, async (ps, user) => {
 		.andWhere('muting.isRenoteOnly IS FALSE');
 
 	const suspendedQuery = Users.createQueryBuilder('users')
-		.select('id')
+		.select('users.id')
 		.where('users.isSuspended = TRUE');
 
 	const query = makePaginationQuery(Notifications.createQueryBuilder('notification'), ps.sinceId, ps.untilId)

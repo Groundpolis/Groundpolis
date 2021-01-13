@@ -9,11 +9,10 @@ import { i18n } from '@/i18n';
 
 export type PageDefinition = {
 	component: () => Component,
-	name: string,
 	type: 'basic' | 'client' | 'other' | 'hidden',
 	title?: string,
 	icon?: IconProp,
-};
+} & ({ name: string } | {pattern: RegExp});
 
 const ts = i18n.locale;
 export const pages: PageDefinition[] = [
@@ -217,4 +216,14 @@ export const pages: PageDefinition[] = [
 		icon: faCss3Alt,
 		component: () => defineAsyncComponent(() => import('./labs.custom-css.vue')),
 	},
+	{
+		pattern: /^registry\/keys\/system\//g,
+		type: 'hidden',
+		component: () => defineAsyncComponent(() => import('./registry.keys.vue'))
+	},
+	{
+		pattern: /^registry\/value\/system\//g,
+		type: 'hidden',
+		component: () => defineAsyncComponent(() => import('./registry.values.vue'))
+	}
 ];

@@ -10,7 +10,6 @@
 		<FormSwitch v-model:value="debug" @update:value="changeDebug">
 			DEBUG MODE
 		</FormSwitch>
-		<FormLink to="/settings/regedit">RegEdit</FormLink>
 		<FormButton @click="taskmanager">Task Manager</FormButton>
 	</FormGroup>
 
@@ -33,12 +32,14 @@
 		<FormButton danger @click="discardPostFormDraft"><Fa :icon="faTrashAlt"/> {{ $ts.discardPostFormDraft }}</FormButton>
 		<template #caption>{{ $ts.discardPostFormDraftDescription }}</template>
 	</FormGroup>
+
+	<FormLink to="/settings/registry">{{ $ts.registry }}</FormLink>
 </FormBase>
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, defineComponent } from 'vue';
-import { faEllipsisH, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { defineComponent } from 'vue';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import FormSwitch from '@/components/form/switch.vue';
 import FormSelect from '@/components/form/select.vue';
 import FormLink from '@/components/form/link.vue';
@@ -61,7 +62,7 @@ export default defineComponent({
 
 	data() {
 		return {
-			debug,
+			debug, faTrashAlt,
 		}
 	},
 
