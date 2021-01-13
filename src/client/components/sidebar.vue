@@ -31,7 +31,7 @@
 					<template v-for="(item, i) in (menu.filter(filterItem))">
 						<div :key="'divider-' + i" v-if="item === '-'" class="divider"></div>
 						<component :key="item" v-else-if="menuDef[item] && (menuDef[item].show !== false)" :is="menuDef[item].to ? 'MkA' : 'button'" class="item _button" :class="item" active-class="active" v-on="menuDef[item].action ? { click: menuDef[item].action } : {}" :to="menuDef[item].to">
-							<Fa :icon="menuDef[item].icon" fixed-width/><span class="text">{{ $t[menuDef[item].title] }}</span>
+							<Fa :icon="menuDef[item].icon" fixed-width/><span class="text">{{ $ts[menuDef[item].title] }}</span>
 							<i v-if="menuDef[item].indicated"><Fa :icon="faCircle"/></i>
 						</component>
 					</template>

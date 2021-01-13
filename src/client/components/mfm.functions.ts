@@ -1,9 +1,11 @@
 import { i18n } from "@/i18n";
 
+const ts = i18n.locale;
+
 export type MfmFunctionProp = {
 	label?: string,
 	description?: string,
-	hasValue: boolean,
+	hasValue?: boolean,
 };
 
 export type MfmFunctionProps = Record<string, MfmFunctionProp>;
@@ -12,17 +14,15 @@ export type MfmFunctionStyleProp = Record<string, string | undefined>;
 
 function genProp(label?: string, description?: string): MfmFunctionProp {
 	return {
+		label, description,
 		hasValue: true,
-		label: label ? i18n.locale[label] : undefined,
-		description: description ? i18n.locale[description] : undefined,
 	};
 }
 
 function genFlagProp(label?: string, description?: string): MfmFunctionProp {
 	return {
+		label, description,
 		hasValue: false,
-		label: label ? i18n.locale[label] : undefined,
-		description: description ? i18n.t(description) : undefined,
 	};
 }
 
@@ -42,32 +42,33 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 	wobble: {
 		style: _ => 'font-size: 300%; animation: mfm-wobble 1s ease-out infinite both;',
 		noAnimatedMfmStyle: _ => 'font-size: 300%',
+		isGroundpolisExtension: true,
 	},
 	jelly: {
 		props: {
-			speed: genProp('_mfmpad._functions.speed'),
+			speed: genProp(ts._mfmpad._functions.speed),
 		},
 		style: args => `animation: mfm-rubberBand ${args.speed || '1s'} linear infinite both;`
 	},
 	twitch: {
 		props: {
-			speed: genProp('_mfmpad._functions.speed'),
+			speed: genProp(ts._mfmpad._functions.speed),
 		},
 		style: args => `animation: mfm-twitch ${args.speed || '0.5s'} ease infinite;`
 	},
 	shake: {
 		props: {
-			speed: genProp('_mfmpad._functions.speed'),
+			speed: genProp(ts._mfmpad._functions.speed),
 		},
 		style: args => `animation: mfm-shake ${args.speed || '0.5s'} ease infinite;`
 	},
 	spin: {
 		props: {
-			left: genFlagProp('_mfmpad._functions.spinLeft'),
-			alternate: genFlagProp('_mfmpad._functions.spinAlternate'),
-			x: genFlagProp('_mfmpad._functions.xspin'),
-			y: genFlagProp('_mfmpad._functions.yspin'),
-			speed: genProp('_mfmpad._functions.speed', '_mfmpad._functions.spinSpeedDescription'),
+			left: genFlagProp(ts._mfmpad._functions.spinLeft),
+			alternate: genFlagProp(ts._mfmpad._functions.spinAlternate),
+			x: genFlagProp(ts._mfmpad._functions.xspin),
+			y: genFlagProp(ts._mfmpad._functions.yspin),
+			speed: genProp(ts._mfmpad._functions.speed, ts._mfmpad._functions.spinSpeedDescription),
 		},
 		style: args => {
 			const direction = args.left ? 'reverse' : args.alternate ? 'alternate' :
@@ -80,7 +81,7 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 	jump: 'animation: mfm-jump 0.75s linear infinite',
 	blink: {
 		props: {
-			speed: genProp('_mfmpad._functions.speed'),
+			speed: genProp(ts._mfmpad._functions.speed),
 		},
 		style: args => `animation: mfm-blink ${args.speed || '1s'} step-end infinite`,
 		isGroundpolisExtension: true,
@@ -88,7 +89,6 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 	bounce: {
 		style: _ => 'animation: mfm-bounce 0.75s linear infinite; transform-origin: center bottom',
 		noAnimatedMfmStyle: true,
-		isGroundpolisExtension: true,
 	},
 	rainbow: {
 		style: _ => 'color: var(--accent); animation: mfm-rainbow 1s linear infinite both',
@@ -97,17 +97,17 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 	},
 	flip: {
 		props: {
-			h: genFlagProp('_mfmpad._functions.hflip'),
-			v: genFlagProp('_mfmpad._functions.vflip'),
+			h: genFlagProp(ts._mfmpad._functions.hflip),
+			v: genFlagProp(ts._mfmpad._functions.vflip),
 		},
 		style: args => 'transform:' + (args.h && args.v ? 'scale(-1, -1)' : args.v ? 'scaleY(-1)' : 'scaleX(-1)'),
 		noAnimatedMfmStyle: true,
 	},
 	rotate: {
 		props: {
-			angle: genProp('_mfmpad._functions.angle', '_mfmpad._functions.rotateAngleDescription'),
-			x: genFlagProp('_mfmpad._functions.xspin'),
-			y: genFlagProp('_mfmpad._functions.yspin'),
+			angle: genProp(ts._mfmpad._functions.angle, ts._mfmpad._functions.rotateAngleDescription),
+			x: genFlagProp(ts._mfmpad._functions.xspin),
+			y: genFlagProp(ts._mfmpad._functions.yspin),
 		},
 		style: args => {
 			const f = args.x ? 'perspective(128px) rotateX' : args.y ? 'perspective(128px) rotateY' : 'rotate';
@@ -118,14 +118,14 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 	},
 	font: {
 		props: {
-			size: genProp('_mfmpad._functions.size', '_mfmpad._functions.fontSizeDescription'),
-			color: genProp('_mfmpad._functions.color', '_mfmpad._functions.fontColorDescription'),
-			serif: genFlagProp('_mfmpad._functions.serif'),
-			monospace: genFlagProp('_mfmpad._functions.monospace'),
-			cursive: genFlagProp('_mfmpad._functions.cursive'),
-			fantasy: genFlagProp('_mfmpad._functions.fantasy'),
-			emoji: genFlagProp('_mfmpad._functions.emoji'),
-			math: genFlagProp('_mfmpad._functions.math'),
+			size: genProp(ts._mfmpad._functions.size, ts._mfmpad._functions.fontSizeDescription),
+			color: genProp(ts._mfmpad._functions.color, ts._mfmpad._functions.fontColorDescription),
+			serif: genFlagProp(ts._mfmpad._functions.serif),
+			monospace: genFlagProp(ts._mfmpad._functions.monospace),
+			cursive: genFlagProp(ts._mfmpad._functions.cursive),
+			fantasy: genFlagProp(ts._mfmpad._functions.fantasy),
+			emoji: genFlagProp(ts._mfmpad._functions.emoji),
+			math: genFlagProp(ts._mfmpad._functions.math),
 		},
 		style: prop => {
 			const family =
@@ -148,3 +148,5 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 		class: '_mfm_blur_',
 	},
 };
+
+console.log(mfmFunctions);

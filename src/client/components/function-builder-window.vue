@@ -12,7 +12,7 @@
 		<div class="_content">
 			<MkSelect v-model:value="funcName">
 				<template #label>{{ $ts._mfmpad._functions.kind }}</template>
-				<option v-for="(fn, name) in funcs" :value="name" :key="name" v-text="$ts[`_mfm.${name}`]"/>
+				<option v-for="(fn, name) in funcs" :value="name" :key="name" v-text="$ts._mfm[`${name}`]"/>
 			</MkSelect>
 		</div>
 	</section>
@@ -52,7 +52,7 @@ import MkSelect from './ui/select.vue';
 import MkSwitch from './ui/switch.vue';
 import MkInput from './ui/input.vue';
 import MkInfo from './ui/info.vue';
-import { MfmFunctionProps, mfmFunctions } from './mfm.functions';
+import { mfmFunctions } from './mfm.functions';
 
 export default defineComponent({
 	components: {
