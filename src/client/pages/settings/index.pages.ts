@@ -230,5 +230,12 @@ export const pages: PageDefinition[] = [
 		title: ts.registry,
 		icon: faCogs,
 		component: () => defineAsyncComponent(() => import('./registry.value.vue'))
+	},
+	{
+		name: 'experimental-features',
+		type: 'hidden',
+		title: ts.experimentalFeatures,
+		icon: faFlask,
+		component: () => defineAsyncComponent(() => import('./experimental-features.vue'))
 	}
 ];

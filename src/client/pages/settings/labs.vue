@@ -15,6 +15,9 @@
 	<FormLink to="labs/custom-css">
 		{{ $ts._labs.customCss }}
 	</FormLink>
+	<FormLink to="experimental-features">
+		{{ $ts.experimentalFeatures }} (Misskey)
+	</FormLink>
 </FormBase>
 </template>
 
