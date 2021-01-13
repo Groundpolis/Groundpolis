@@ -14,7 +14,6 @@
 			<button class="_button function" @click="insertFunction" v-tooltip="$ts._mfmpad.functions"><code style="font-weight: bold">[]</code></button>
 			<button class="_button" @click="insertMention" v-tooltip="$ts.mention"><Fa :icon="faAt"/></button>
 			<button class="_button" @click="insertEmoji" v-tooltip="$ts.emoji"><Fa :icon="faLaughSquint"/></button>
-			<!-- <button class="_button" @click="mfmPadMenu" v-tooltip="$ts._mfmPad.more"><Fa :icon="faEllipsisV"/></button> -->
 			<div class="divider"></div>
 			<button class="_button help" v-tooltip="$ts.help" @click="help">
 				<Fa :icon="faQuestionCircle" />
@@ -51,14 +50,14 @@
 		<XPostFormAttaches class="attaches" :files="files" @updated="updateFiles" @detach="detachFile" @changeSensitive="updateFileSensitive" @changeName="updateFileName"/>
 		<XPollEditor v-if="poll" :poll="poll" @destroyed="poll = null" @updated="onPollUpdate"/>
 		<footer>
-			<button v-if="currentAccount" class="_button switch-user" @click="switchUser" v-tooltip="$ts.switchUser">
-				<MkAvatar class="avatar" :user="currentAccount" disable-link disable-preview />
-			</button>
-			<button v-if="currentAccountIsMyself" class="_button" @click="chooseFileFrom" v-tooltip="$ts.attachFile"><Fa :icon="faPhotoVideo"/></button>
+			<button :disabled="!currentAccountIsMyself" class="_button" @click="chooseFileFrom" v-tooltip="$ts.attachFile"><Fa :icon="faPhotoVideo"/></button>
 			<button class="_button" @click="togglePoll" :class="{ active: poll }" v-tooltip="$ts.poll"><Fa :icon="faPollH"/></button>
 			<button class="_button" @click="useCw = !useCw" :class="{ active: useCw }" v-tooltip="$ts.useCw"><Fa :icon="faEyeSlash"/></button>
 			<button class="_button" @click="useBroadcast = !useBroadcast" :class="{ active: useBroadcast }" v-tooltip="$ts.broadcastMode"><Fa :icon="faBullhorn"/></button>
 			<button class="_button" @click="insertFace" v-tooltip="$ts.gacha"><Fa :icon="faFish"/></button>
+			<button v-if="currentAccount && accounts.length > 1" class="_button switch-user" @click="switchUser" v-tooltip="$ts.switchUser">
+				<MkAvatar class="avatar" :user="currentAccount" disable-link disable-preview />
+			</button>
 			<button class="_button" @click="showActions" v-tooltip="$ts.plugin" v-if="postFormActions.length > 0"><Fa :icon="faPlug"/></button>
 			<span class="text-count" :class="{ over: trimmedLength(text) > max }">{{ max - trimmedLength(text) }}</span>
 			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">
