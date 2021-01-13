@@ -21,7 +21,7 @@ export function generateMutedUserQuery(q: SelectQueryBuilder<any>, me: User, exc
 	// 投稿の作者をミュートしていない かつ
 	// 投稿の返信先の作者をミュートしていない かつ
 	// 投稿の引用元の作者をミュートしていない かつ
-	// 投稿がリノートであり、リノートをミュートしていない
+	// 投稿がリノートであり、引用でなく、リノートをミュートしていない
 	q
 			.andWhere(`note.userId NOT IN (${ mutingQuery.getQuery() })`)
 			.andWhere(new Brackets(qb => { qb
@@ -34,6 +34,9 @@ export function generateMutedUserQuery(q: SelectQueryBuilder<any>, me: User, exc
 			}))
 			.andWhere(new Brackets(qb => { qb
 				.where(`note.renoteUserId IS NULL`)
+				.orWhere(`note.text IS NOT NULL`)
+				.orWhere(`note.fileIds != '{}'`)
+				.orWhere(`note.hasPoll = TRUE`)
 				.orWhere(`note.userId NOT IN (${ renoteMutingQuery.getQuery() })`);
 			}));
 
