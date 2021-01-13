@@ -46,6 +46,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import MkPagination from '@/components/ui/pagination.vue';
 import MkTab from '@/components/tab.vue';
 import MkInfo from '@/components/ui/info.vue';
 import FormLink from '@/components/form/link.vue';
@@ -55,6 +56,7 @@ import { userPage } from '@/filters/user';
 
 export default defineComponent({
 	components: {
+		MkPagination,
 		MkTab,
 		MkInfo,
 		FormBase,
