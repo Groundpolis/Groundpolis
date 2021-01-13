@@ -225,6 +225,6 @@ export const pages: PageDefinition[] = [
 	{
 		pattern: /^registry\/value\/system\//,
 		type: 'hidden',
-		component: () => defineAsyncComponent(() => import('./registry.values.vue'))
+		component: () => defineAsyncComponent(() => import('./registry.value.vue'))
 	}
 ];
