@@ -220,7 +220,7 @@ export default defineComponent({
 
 	computed: {
 		disableReactions() {
-			return this.$store.state.disableReactions;
+			return this.$store.reactiveState.disableReactions.value;
 		},
 		rs(): string[] {
 			return this.$store.state.reactions;

@@ -3,7 +3,7 @@
 	<div class="head">
 		<MkAvatar v-if="notification.user" class="icon" :user="notification.user"/>
 		<img v-else-if="notification.icon" class="icon" :src="notification.icon" alt=""/>
-		<div class="sub-icon" :class="notification.type !== 'reaction' || !$store.state.disableReactions ? notification.type : 'like'">
+		<div class="sub-icon" :class="notification.type !== 'reaction' || !$store.reactiveState.disableReactions.value ? notification.type : 'like'">
 			<Fa :icon="faPlus" v-if="notification.type === 'follow'"/>
 			<Fa :icon="faClock" v-else-if="notification.type === 'receiveFollowRequest'"/>
 			<Fa :icon="faCheck" v-else-if="notification.type === 'followRequestAccepted'"/>
@@ -14,7 +14,7 @@
 			<Fa :icon="faQuoteLeft" v-else-if="notification.type === 'quote'"/>
 			<Fa :icon="faPollH" v-else-if="notification.type === 'pollVote'"/>
 			<template v-else-if="notification.type === 'reaction'">
-				<XReactionIcon v-if="!$store.state.disableReactions" :reaction="notification.reaction" :custom-emojis="notification.note.emojis" :no-style="true"/>
+				<XReactionIcon v-if="!$store.reactiveState.disableReactions.value" :reaction="notification.reaction" :custom-emojis="notification.note.emojis" :no-style="true"/>
 				<Fa v-else :icon="faHeart"/>
 			</template>
 		</div>

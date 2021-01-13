@@ -232,7 +232,7 @@ export default defineComponent({
 
 	computed: {
 		disableReactions() {
-			return this.$store.state.disableReactions;
+			return this.$store.reactiveState.disableReactions.value;
 		},
 		rs() {
 			return this.$store.state.reactions;
