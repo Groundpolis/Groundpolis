@@ -45,7 +45,7 @@
 			</div>
 		</div>
 		<input v-show="useCw" ref="cw" class="cw" v-model="cw" :placeholder="$ts.annotation" @keydown="onKeydown">
-		<textarea v-model="text" class="text" :class="{ withCw: useCw }" ref="text" :disabled="posting" :placeholder="placeholder" @keydown="onKeydown" @paste="onPaste"></textarea>
+		<textarea v-model="text" class="text" :class="{ withCw: useCw }" ref="text" :disabled="posting" :placeholder="placeholder" @keydown="onKeydown" @paste="onPaste" @compositionupdate="onCompositionUpdate" />
 		<input v-show="useBroadcast" ref="broadcastText" class="broadcastText" v-model="broadcastText" :placeholder="$ts.broadcastTextDescription" @keydown="onKeydown">
 		<XPostFormAttaches class="attaches" :files="files" @updated="updateFiles" @detach="detachFile" @changeSensitive="updateFileSensitive" @changeName="updateFileName"/>
 		<XPollEditor v-if="poll" :poll="poll" @destroyed="poll = null" @updated="onPollUpdate"/>
@@ -59,7 +59,7 @@
 				<MkAvatar class="avatar" :user="currentAccount" disable-link disable-preview />
 			</button>
 			<button class="_button" @click="showActions" v-tooltip="$ts.plugin" v-if="postFormActions.length > 0"><Fa :icon="faPlug"/></button>
-			<span class="text-count" :class="{ over: trimmedLength(text) > max }">{{ max - trimmedLength(text) }}</span>
+			<span class="text-count" :class="{ over: textLength > max }">{{ max - textLength }}</span>
 			<button class="submit _buttonPrimary" :disabled="!canPost" @click="post">
 				<Fa :icon="faPaperPlane" />
 			</button>
@@ -169,6 +169,7 @@ export default defineComponent({
 			draghover: false,
 			quote: null as Record<string, unknown> | null,
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
+			imeText: '',
 			postFormActions,
 			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown, faEllipsisV
 		};
@@ -217,10 +218,14 @@ export default defineComponent({
 					: this.$ts.note;
 		},
 
+		textLength(): number {
+			return length((this.text + this.imeText).trim());
+		},
+
 		canPost(): boolean {
 			return !this.posting &&
-				(1 <= this.text.length || 1 <= this.files.length || !!this.poll || !!this.quote) &&
-				(length(this.text.trim()) <= this.max) &&
+				(1 <= this.textLength || 1 <= this.files.length || !!this.poll || !!this.quote) &&
+				(this.textLength <= this.max) &&
 				(!this.poll || this.poll.choices.length >= 2);
 		},
 
@@ -525,9 +530,17 @@ export default defineComponent({
 			this.$router.push('/docs/post')
 		},
 
-		onKeydown(e) {
+		onKeydown(e: KeyboardEvent) {
 			if ((e.which === 10 || e.which === 13) && (e.ctrlKey || e.metaKey) && this.canPost) this.post();
 			if (e.which === 27) this.$emit('esc');
+		},
+
+		onCompositionUpdate(e: CompositionEvent) {
+			this.imeText = e.data;
+		},
+
+		onCompositionEnd(e: CompositionEvent) {
+			this.imeText = '';
 		},
 
 		async onPaste(e: ClipboardEvent) {
