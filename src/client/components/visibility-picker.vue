@@ -32,8 +32,8 @@
 		<button :disabled="localOnly || remoteFollowersOnly" class="_button" @click="choose('users')" :class="{ active: v == 'users' }" data-index="5" key="users">
 			<div><Fa :icon="faUsers"/></div>
 			<div>
-				<span>{{ $t('_visibility.users') }}</span>
-				<span>{{ $t('_visibility.usersDescription') }}</span>
+				<span>{{ $ts._visibility.users }}</span>
+				<span>{{ $ts._visibility.usersDescription }}</span>
 			</div>
 		</button>
 		<div class="divider"></div>
@@ -48,8 +48,8 @@
 		<button class="_button remoteFollowersOnly" @click="remoteFollowersOnly = !remoteFollowersOnly" :class="{ active: remoteFollowersOnly }" data-index="7" key="remoteFollowersOnly">
 			<div><Fa :icon="faHeartbeat"/></div>
 			<div>
-				<span>{{ $t('_visibility.remoteFollowersOnly') }}</span>
-				<span>{{ $t('_visibility.remoteFollowersOnlyDescription') }}</span>
+				<span>{{ $ts._visibility.remoteFollowersOnly }}</span>
+				<span>{{ $ts._visibility.remoteFollowersOnlyDescription }}</span>
 			</div>
 			<div><Fa :icon="remoteFollowersOnly ? faToggleOn : faToggleOff" :key="remoteFollowersOnly"/></div>
 		</button>

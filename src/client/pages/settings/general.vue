@@ -39,19 +39,19 @@
 		<FormSwitch v-model:value="useOsNativeEmojis">{{ $ts.useOsNativeEmojis }}
 			<div><Mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪" :key="useOsNativeEmojis"/></div>
 		</FormSwitch>
-		<FormSwitch v-model:value="collapseLongNote">{{ $t('collapseLongNote') }}</FormSwitch>
-		<FormSwitch v-model:value="useSticker">{{ $t('useSticker') }}
-			<template #desc>{{$t('useStickerDesc')}}</template>
+		<FormSwitch v-model:value="collapseLongNote">{{ $ts.collapseLongNote }}</FormSwitch>
+		<FormSwitch v-model:value="useSticker">{{ $ts.useSticker }}
+			<template #desc>{{$ts.useStickerDesc}}</template>
 		</FormSwitch>
 	</FormGroup>
 
-	<FormSwitch v-model:value="showFullAcct">{{ $t('showFullAcct') }}
+	<FormSwitch v-model:value="showFullAcct">{{ $ts.showFullAcct }}
 		<template #desc><MkAcct :user="$i"/></template>
 	</FormSwitch>
 
 	<FormSwitch v-model:value="makeCustomEmojisBigger">
-		{{ $t('makeCustomEmojisBigger') }}
-		<template #desc>{{$t('makeCustomEmojisBiggerDesc')}}</template>
+		{{ $ts.makeCustomEmojisBigger }}
+		<template #desc>{{$ts.makeCustomEmojisBiggerDesc}}</template>
 	</FormSwitch>
 
 	<FormRadios v-model="fontSize">
@@ -77,8 +77,8 @@
 	</FormSelect>
 	
 	<FormSelect v-model:value="noteNameDisplayMode">
-		<template #label>{{ $t('noteNameDisplayMode') }}</template>
-		<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $t(x) }}</option>
+		<template #label>{{ $ts.noteNameDisplayMode }}</template>
+		<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $ts[x] }}</option>
 		<template #caption>
 			<span v-if="noteNameDisplayMode === 0">
 				<b style="margin-right: 1em">{{ $i.name || $i.username }}</b>
@@ -93,11 +93,11 @@
 
 	<FormGroup>
 		<FormRadios v-model="iconShape">
-			<template #desc>{{ $t('iconShape') }}</template>
-			<option value="circle">{{ $t('_iconShape.circle') }}</option>
-			<option value="square">{{ $t('_iconShape.square') }}</option>
-			<option value="rounded">{{ $t('_iconShape.rounded') }}</option>
-			<option value="droplet">{{ $t('_iconShape.droplet') }}</option>
+			<template #desc>{{ $ts.iconShape }}</template>
+			<option value="circle">{{ $ts._iconShape.circle }}</option>
+			<option value="square">{{ $ts._iconShape.square }}</option>
+			<option value="rounded">{{ $ts._iconShape.rounded }}</option>
+			<option value="droplet">{{ $ts._iconShape.droplet }}</option>
 		</FormRadios>
 		<div class="_formItem _formPanel" style="padding: 16px;">
 			<MkAvatar disable-link disable-preview :user="$i" class="avatar"/>

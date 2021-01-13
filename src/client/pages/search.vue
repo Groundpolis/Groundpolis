@@ -4,8 +4,8 @@
 		<XSearch v-model:value="query" @search="search"/>
 		<div class="tab _section _noPad" style="padding: 0">
 			<MkTab v-model:value="tab">
-				<option value="notes">{{$t('notes')}}</option>
-				<option value="users">{{$t('users')}}</option>
+				<option value="notes">{{$ts.notes}}</option>
+				<option value="users">{{$ts.users}}</option>
 			</MkTab>
 		</div>
 		<template v-if="smartCard">
@@ -154,7 +154,7 @@ export default defineComponent({
 			if (q.startsWith('https://')) {
 				this.smartCard = {
 					type: 'custom',
-					body: this.$t('fetchingAsApObject'),
+					body: this.$ts.fetchingAsApObject,
 					icon: faSpinner,
 				};
 				try {

@@ -38,12 +38,12 @@ export default defineComponent({
 			} else if (this.renoteState.isRenoted && this.renoteState.isQuoted) {
 				return {
 					tabs: [{
-						title: this.$t('renote'),
+						title: this.$ts.renote,
 						icon: faRetweet,
 						selected: this.tab === 'renotes',
 						onClick: () => this.tab = 'renotes',
 					}, {
-						title: this.$t('quotes'),
+						title: this.$ts.quotes,
 						icon: faQuoteRight,
 						selected: this.tab === 'quotes',
 						onClick: () => this.tab = 'quotes',

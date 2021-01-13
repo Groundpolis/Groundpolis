@@ -7,12 +7,12 @@
 	@close="$refs.dialog.close()"
 	@closed="$emit('closed')"
 >
-	<template #header>{{ $t('_mfmpad.functionsBuilder') }}</template>
+	<template #header>{{ $ts._mfmpad.functionsBuilder }}</template>
 	<section class="_section">
 		<div class="_content">
 			<MkSelect v-model:value="funcName">
-				<template #label>{{ $t('_mfmpad._functions.kind') }}</template>
-				<option v-for="(fn, name) in funcs" :value="name" :key="name" v-text="$t(`_mfm.${name}`)"/>
+				<template #label>{{ $ts._mfmpad._functions.kind }}</template>
+				<option v-for="(fn, name) in funcs" :value="name" :key="name" v-text="$ts[`_mfm.${name}`]"/>
 			</MkSelect>
 		</div>
 	</section>
@@ -27,18 +27,18 @@
 					{{ getProp(arg.key).label || arg.key }}
 					<template #desc>{{ getProp(arg.key).description }}</template>
 				</MkSwitch>
-				<MkInput v-model:value="arg.value" v-if="getProp(arg.key).hasValue && arg.enabled"><span v-text="$t('input')"/></MkInput>				
+				<MkInput v-model:value="arg.value" v-if="getProp(arg.key).hasValue && arg.enabled"><span v-text="$ts.input"/></MkInput>				
 			</template>
 		</div>
 	</section>
 	<section class="_section" v-if="funcName">
 		<div class="_content">
-			<MkInput v-model:value="body"><span v-text="$t('_mfmpad._functions.text')"/></MkInput>
+			<MkInput v-model:value="body"><span v-text="$ts._mfmpad._functions.text"/></MkInput>
 		</div>
 	</section>
 	<section class="_section" v-if="gpfm">
 		<div class="_content">
-			<div v-text="$t('preview')" />
+			<div v-text="$ts.preview" />
 			<Mfm :text="gpfm" />
 		</div>
 	</section>

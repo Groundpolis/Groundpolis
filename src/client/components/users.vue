@@ -1,6 +1,6 @@
 <template>
 <MkPagination :pagination="pagination" class="users" ref="list">
-	<template #empty><span>{{ $t('noUsers') }}</span></template>
+	<template #empty><span>{{ $ts.noUsers }}</span></template>
 	<template #default="{items}">
 		<XUser v-for="user in items" :user="user" :key="user.id" />
 	</template>

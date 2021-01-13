@@ -35,9 +35,9 @@
 
 	<transition name="tray">
 		<div v-if="showMenu" class="menu">
-			<MkA to="/" class="link" active-class="active"><Fa :icon="faHome" class="icon"/>{{ $t('home') }}</MkA>
-			<MkA to="/explore" class="link" active-class="active"><Fa :icon="faHashtag" class="icon"/>{{ $t('explore') }}</MkA>
-			<MkA to="/channels" class="link" active-class="active"><Fa :icon="faSatelliteDish" class="icon"/>{{ $t('channel') }}</MkA>
+			<MkA to="/" class="link" active-class="active"><Fa :icon="faHome" class="icon"/>{{ $ts.home }}</MkA>
+			<MkA to="/explore" class="link" active-class="active"><Fa :icon="faHashtag" class="icon"/>{{ $ts.explore }}</MkA>
+			<MkA to="/channels" class="link" active-class="active"><Fa :icon="faSatelliteDish" class="icon"/>{{ $ts.channel }}</MkA>
 			<div class="action">
 				<button class="_buttonPrimary" @click="signup()">{{ $ts.signup }}</button>
 				<button class="_button" @click="signin()">{{ $ts.login }}</button>

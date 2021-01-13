@@ -2,17 +2,17 @@
 <FormBase>
 	<FormGroup>
 		<FormSwitch v-model:value="$i.injectFeaturedNote" @update:value="onChangeInjectFeaturedNote">
-			{{ $t('showFeaturedNotesInTimeline') }}
+			{{ $ts.showFeaturedNotesInTimeline }}
 		</FormSwitch>
 		<FormSwitch v-model:value="injectUnlistedNoteInLTL">
-			{{ $t('showUnlistedNotesInLTL') }}
-			<template #desc>{{ $t('showUnlistedNotesInLTLDesc') }}</template>
+			{{ $ts.showUnlistedNotesInLTL }}
+			<template #desc>{{ $ts.showUnlistedNotesInLTLDesc }}</template>
 		</FormSwitch>
 	</FormGroup>
 	<FormGroup>
 		<div class="_formItem _formPanel" style="padding: 16px;">
-			<h2>{{ $t('pinnedTimeline') }}</h2>
-			<div class="_caption" v-if="items.length > 0" style="padding-bottom: 8px;">{{ $t('pinnedTimelineDescription') }}</div>
+			<h2>{{ $ts.pinnedTimeline }}</h2>
+			<div class="_caption" v-if="items.length > 0" style="padding-bottom: 8px;">{{ $ts.pinnedTimelineDescription }}</div>
 			<XDraggable class="vmievna2" v-model="items" :item-key="item => item" animation="150" delay="100" delay-on-touch-only="true">
 				<template #item="{element: item}">
 					<div class="item">
@@ -29,7 +29,7 @@
 			</div>
 		</div>
 	</FormGroup>
-	<FormButton @click="reset" danger><Fa :icon="faRedo"/> {{ $t('default') }}</FormButton>
+	<FormButton @click="reset" danger><Fa :icon="faRedo"/> {{ $ts.default }}</FormButton>
 </FormBase>
 </template>
 

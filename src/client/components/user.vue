@@ -8,7 +8,7 @@
 				</div>
 				<div class="description">
 					<Mfm v-if="user.description" :text="user.description" :is-note="false" :author="user" :i="$i" :custom-emojis="user.emojis"/>
-					<span v-else class="empty">{{ $t('noAccountDescription') }}</span>
+					<span v-else class="empty">{{ $ts.noAccountDescription }}</span>
 				</div>
 			</div>
 			<MkFollowButton class="koudoku-button" v-if="$i && user.id != $i.id" :user="user" mini/>

@@ -6,8 +6,8 @@
 		</div>
 		<footer>
 			<button class="_button command" style="vertical-align: middle;" @click="openPicker" :tabindex="rs.length + 1"><fa :icon="faLaughSquint"/></button>
-			<input class="text" ref="text" v-model.trim="text" :class="{ showDislike }" :placeholder="$t('input')" @keyup.enter="reactText" @input="tryReactText">
-			<button v-if="showDislike" class="_button command dislike" :class="{ active: dislike }" style="vertical-align: middle;" @click="dislike = !dislike" :tabindex="rs.length + 2" v-tooltip="$t('dislike')">
+			<input class="text" ref="text" v-model.trim="text" :class="{ showDislike }" :placeholder="$ts.input" @keyup.enter="reactText" @input="tryReactText">
+			<button v-if="showDislike" class="_button command dislike" :class="{ active: dislike }" style="vertical-align: middle;" @click="dislike = !dislike" :tabindex="rs.length + 2" v-tooltip="$ts.dislike">
 				<Fa :icon="faThumbsUp" :class="{ active: dislike }"/>
 			</button>
 			<button class="_button command" style="vertical-align: middle; overflow-wrap: normal" v-if="latest" @click="react(latest)" :tabindex="rs.length + 3" :title="latest" v-particle>

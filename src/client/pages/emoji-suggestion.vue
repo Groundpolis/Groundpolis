@@ -3,33 +3,33 @@
 		<section class="_section">
 			<div class="_content">
 				<div class="preview">
-					<MkButton inline @click="selectFile">{{ $t('selectFile') }}</MkButton>
+					<MkButton inline @click="selectFile">{{ $ts.selectFile }}</MkButton>
 					<img v-if="file" :src="file.url" :alt="file.name" />
 				</div>
-				<MkInput v-model:value="name"><span>{{ $t('name') }}</span></MkInput>
+				<MkInput v-model:value="name"><span>{{ $ts.name }}</span></MkInput>
 				<MkInput v-model:value="aliases">
-					<span>{{ $t('tags') }}</span>
-					<template #desc>{{ $t('tagsDescription') }}</template>
+					<span>{{ $ts.tags }}</span>
+					<template #desc>{{ $ts.tagsDescription }}</template>
 				</MkInput>
 				<MkTextarea v-model:value="description" :use-autocomplete="true" :max="500">
-					<span>{{ $t('emojiSuggestionMessage') }}</span>
-					<template #desc>{{ $t('emojiSuggestionMessageDescription') }}</template>
+					<span>{{ $ts.emojiSuggestionMessage }}</span>
+					<template #desc>{{ $ts.emojiSuggestionMessageDescription }}</template>
 				</MkTextarea>
 			</div>
 			<div class="_footer">
-				<MkButton inline primary :disabled="!canSend" @click="send"><fa :icon="faPaperPlane" fixed-width />{{ $t('sendSuggestion') }}</MkButton>
+				<MkButton inline primary :disabled="!canSend" @click="send"><fa :icon="faPaperPlane" fixed-width />{{ $ts.sendSuggestion }}</MkButton>
 			</div>
 		</section>
 		<section class="_section _vMargin">
-			<div class="_title"><fa :icon="faHistory"/> {{ $t('history') }}</div>
+			<div class="_title"><fa :icon="faHistory"/> {{ $ts.history }}</div>
 			<div class="_content filter">
-				<MkSwitch v-model:value="includesPending"><fa :icon="faClock" fixed-width />{{ $t('pending') }}</MkSwitch>
-				<MkSwitch v-model:value="includesRejected"><fa :icon="faTimesCircle" fixed-width />{{ $t('rejected') }}</MkSwitch>
-				<MkSwitch v-model:value="includesAccepted"><fa :icon="faCheckCircle" fixed-width />{{ $t('accepted') }}</MkSwitch>
+				<MkSwitch v-model:value="includesPending"><fa :icon="faClock" fixed-width />{{ $ts.pending }}</MkSwitch>
+				<MkSwitch v-model:value="includesRejected"><fa :icon="faTimesCircle" fixed-width />{{ $ts.rejected }}</MkSwitch>
+				<MkSwitch v-model:value="includesAccepted"><fa :icon="faCheckCircle" fixed-width />{{ $ts.accepted }}</MkSwitch>
 			</div>
 			<div class="_content">
 				<MkPagination :pagination="pagination" class="suggestions" ref="pagination">
-					<template #empty><span>{{ $t('noSuggestions') }}</span></template>
+					<template #empty><span>{{ $ts.noSuggestions }}</span></template>
 					<template #default="{items}">
 						<div class="item" v-for="item in items" :key="item.id">
 							<img :src="item.file.url" class="img" :alt="item.name"/>
@@ -43,7 +43,7 @@
 								</div>
 								<Mfm class="description" :text="item.description"/>
 								<div class="moderator-comment" v-if="item.moderatorComment">
-									<h1 v-text="$t('commentFromModerators')" />
+									<h1 v-text="$ts.commentFromModerators" />
 									<Mfm class="description" :text="item.moderatorComment"/>
 								</div>
 							</div>
@@ -82,7 +82,7 @@ export default defineComponent({
 	data() {
 			return {
 				INFO: {
-					title: this.$t('emojiSuggestion'),
+					title: this.$ts.emojiSuggestion,
 					icon: faLaugh,
 				},
 				name: '',
@@ -138,7 +138,7 @@ export default defineComponent({
 				this.file = null;
 				os.dialog({
 					type: 'error',
-					text: this.$t('theFileIsNotImage'),
+					text: this.$ts.theFileIsNotImage,
 				});
 			}
 		},
@@ -152,7 +152,7 @@ export default defineComponent({
 			}).then(() => {
 				os.dialog({
 					type: 'success',
-					text: this.$t('emojiSuggestionSent')
+					text: this.$ts.emojiSuggestionSent
 				});
 				this.name = this.aliases = this.description = '';
 				this.file = null;
@@ -168,7 +168,7 @@ export default defineComponent({
 			const { canceled } = await os.dialog({
 				type: 'warning',
 				showCancelButton: true,
-				text: this.$t('emojiSuggestionDeleteConfirm'),
+				text: this.$ts.emojiSuggestionDeleteConfirm,
 			});
 			if (canceled) return;
 

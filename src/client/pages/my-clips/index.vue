@@ -2,7 +2,7 @@
 <div class="_section qtcaoidl">
 	<div class="_content">
 		<MkPagination :pagination="pagination" ref="list" class="list">
-			<template #empty><div class="_emptyinfo">{{ $t('noClips') }}</div></template>
+			<template #empty><div class="_emptyinfo">{{ $ts.noClips }}</div></template>
 			<template #default="{items}">
 				<MkA v-for="item in items" :key="item.id" :to="`/clips/${item.id}`" class="item _panel _vMargin">
 					<b>{{ item.name }}</b>

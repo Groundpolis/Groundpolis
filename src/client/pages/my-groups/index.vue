@@ -65,7 +65,7 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				title: this.$t('groups'),
+				title: this.$ts.groups,
 				icon: faUsers,
 				action: {
 					icon: faPlus,

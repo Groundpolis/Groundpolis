@@ -1,12 +1,12 @@
 <template>
 <FormBase>
 	<FormTextarea v-model:value="faces" :max="500">
-		<span>{{ $t('gachaFaces') }}</span>
-		<template #desc>{{ $t('gachaSettingDescription') }}</template>
+		<span>{{ $ts.gachaFaces }}</span>
+		<template #desc>{{ $ts.gachaSettingDescription }}</template>
 	</FormTextarea>
 	<FormTuple>
-		<FormButton @click="reset()"><fa :icon="faUndo"/> {{ $t('default') }}</FormButton>
-		<FormButton @click="save()" primary :disabled="!changed"><fa :icon="faSave"/> {{ $t('save') }}</FormButton>
+		<FormButton @click="reset()"><fa :icon="faUndo"/> {{ $ts.default }}</FormButton>
+		<FormButton @click="save()" primary :disabled="!changed"><fa :icon="faSave"/> {{ $ts.save }}</FormButton>
 	</FormTuple>
 </FormBase>
 </template>

@@ -95,7 +95,7 @@ export default defineComponent({
 				icon: faLink,
 				action: this.copyUrl
 			}, {
-				text: this.$t('preview'),
+				text: this.$ts.preview,
 				icon: faEye,
 				action: this.preview
 			}, {

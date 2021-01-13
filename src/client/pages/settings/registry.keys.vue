@@ -56,10 +56,6 @@ export default defineComponent({
 	
 	data() {
 		return {
-			INFO: {
-				title: this.$ts.registry,
-				icon: faCogs
-			},
 			keys: null,
 		}
 	},
@@ -71,7 +67,6 @@ export default defineComponent({
 	},
 
 	mounted() {
-		this.$emit('info', this.INFO);
 		this.fetch();
 	},
 

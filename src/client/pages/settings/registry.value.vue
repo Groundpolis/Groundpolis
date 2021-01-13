@@ -74,10 +74,6 @@ export default defineComponent({
 	
 	data() {
 		return {
-			INFO: {
-				title: this.$ts.registry,
-				icon: faCogs
-			},
 			value: null,
 			valueForEditor: null,
 			faSave, faTrash,
@@ -91,7 +87,6 @@ export default defineComponent({
 	},
 
 	mounted() {
-		this.$emit('info', this.INFO);
 		this.fetch();
 	},
 

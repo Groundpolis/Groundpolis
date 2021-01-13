@@ -3,7 +3,7 @@
 	<div v-if="hideFF === null" />
 	<section v-else-if="hideFF" class="_section">
 		<div class="_content">
-			{{ $t('thisInformationIsNotAvailable') }}
+			{{ $ts.thisInformationIsNotAvailable }}
 		</div>
 	</section>
 	<MkPagination v-else :pagination="pagination" #default="{items}" class="mk-following-or-followers _content" ref="list">

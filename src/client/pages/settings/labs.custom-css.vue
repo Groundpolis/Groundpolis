@@ -2,8 +2,8 @@
 <FormBase>
 	<div class="_formItem">
 		<div class="_formLabel" style="font-size: 100%">
-			{{ $t('_labs.customCssDesc') }}
-			<strong style="color: var(--error)">{{$t('_labs.customCssWarn')}}</strong>
+			{{ $ts._labs.customCssDesc }}
+			<strong style="color: var(--error)">{{$ts._labs.customCssWarn}}</strong>
 		</div>
 	</div>
 	<div class="_formItem">
@@ -11,7 +11,7 @@
 			<PrismEditor class="_cvode code" v-model="css" :highlight="highlighter" line-numbers/>
 		</div>
 	</div>
-	<FormButton primary @click="save">{{$t('save')}}</FormButton>
+	<FormButton primary @click="save">{{$ts.save}}</FormButton>
 </FormBase>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
 <span v-if="disableIfFollowing && isFollowing">
-	{{ $t('following2') }}
+	{{ $ts.following2 }}
 </span>
 <button class="kpoogebi _button"
 	:class="{ wait, active: isFollowing || hasPendingFollowRequestFromYou, full, large }"

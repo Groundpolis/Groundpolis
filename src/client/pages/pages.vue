@@ -15,14 +15,14 @@
 
 		<div class="rknalgpo _content my" v-if="tab === 'my'">
 			<MkPagination :pagination="myPagesPagination">
-				<template #empty><div class="_emptyinfo">{{ $t('noPages') }}</div></template>
+				<template #empty><div class="_emptyinfo">{{ $ts.noPages }}</div></template>
 				<template #default="{items}"><MkPagePreview v-for="page in items" class="ckltabjg" :page="page" :key="page.id"/></template>
 			</MkPagination>
 		</div>
 
 		<div class="rknalgpo _content" v-if="tab === 'liked'">
 			<MkPagination :pagination="likedPagesPagination">
-				<template #empty><div class="_emptyinfo">{{ $t('noPagesLike') }}</div></template>
+				<template #empty><div class="_emptyinfo">{{ $ts.noPagesLike }}</div></template>
 				<MkPagePreview #default="{items}" v-for="like in items" class="ckltabjg" :page="like.page" :key="like.page.id"/>
 			</MkPagination>
 		</div>

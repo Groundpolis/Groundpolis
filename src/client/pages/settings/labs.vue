@@ -1,19 +1,19 @@
 <template>
 <FormBase>
 	<div class="_formItem">
-		<div class="_formLabel" style="font-size: 100%">{{ $t('_labs.description') }}</div>
+		<div class="_formLabel" style="font-size: 100%">{{ $ts._labs.description }}</div>
 	</div>
 
 	<!-- <div class="_formItem _formPanel" style="padding: 16px;">
-		{{ $t('_labs.notAvailable') }}
+		{{ $ts._labs.notAvailable }}
 	</div> -->
 
 	<FormSwitch v-model:value="disableReactions">
-		{{ $t('_labs.useLike') }}
-		<template #desc>{{ $t('_labs.useLikeDesc') }}</template>
+		{{ $ts._labs.useLike }}
+		<template #desc>{{ $ts._labs.useLikeDesc }}</template>
 	</FormSwitch>
 	<FormLink to="labs/custom-css">
-		{{ $t('_labs.customCss') }}
+		{{ $ts._labs.customCss }}
 	</FormLink>
 </FormBase>
 </template>

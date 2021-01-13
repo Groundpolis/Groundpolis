@@ -108,7 +108,7 @@ export default defineComponent({
 				icon: faTimesCircle,
 				action: () => { this.detachMedia(file.id) }
 			}, {
-				text: this.$t('preview'),
+				text: this.$ts.preview,
 				icon: faEye,
 				action: () => {
 					os.popup(ImageViewer, {

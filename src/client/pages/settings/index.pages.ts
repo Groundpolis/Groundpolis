@@ -197,13 +197,6 @@ export const pages: PageDefinition[] = [
 		component: () => defineAsyncComponent(() => import('./deck.vue')),
 	},
 	{
-		name: 'registry',
-		type: 'hidden',
-		title: ts.registry,
-		icon: faCogs,
-		component: () => defineAsyncComponent(() => import('./registry.vue')),
-	},
-	{
 		name: 'apps',
 		type: 'hidden',
 		title: ts.installedApps,
@@ -218,13 +211,24 @@ export const pages: PageDefinition[] = [
 		component: () => defineAsyncComponent(() => import('./labs.custom-css.vue')),
 	},
 	{
+		name: 'registry',
+		type: 'hidden',
+		title: ts.registry,
+		icon: faCogs,
+		component: () => defineAsyncComponent(() => import('./registry.vue')),
+	},
+	{
 		pattern: /^registry\/keys\/system\//,
 		type: 'hidden',
+		title: ts.registry,
+		icon: faCogs,
 		component: () => defineAsyncComponent(() => import('./registry.keys.vue'))
 	},
 	{
 		pattern: /^registry\/value\/system\//,
 		type: 'hidden',
+		title: ts.registry,
+		icon: faCogs,
 		component: () => defineAsyncComponent(() => import('./registry.value.vue'))
 	}
 ];

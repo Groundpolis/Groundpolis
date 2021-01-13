@@ -33,7 +33,7 @@
 				<MkButton ref="loadMoreFiles" @click="fetchMoreFiles" v-show="moreFiles">{{ $ts.loadMore }}</MkButton>
 			</div>
 			<div class="empty" v-if="files.length == 0 && folders.length == 0 && !fetching">
-				<p v-if="draghover">{{ $t('empty-draghover') }}</p>
+				<p v-if="draghover">{{ $ts.empty-draghover }}</p>
 				<p v-if="!draghover && folder == null"><strong>{{ $ts.emptyDrive }}</strong></p>
 				<p v-if="!draghover && folder != null">{{ $ts.emptyFolder }}</p>
 			</div>
