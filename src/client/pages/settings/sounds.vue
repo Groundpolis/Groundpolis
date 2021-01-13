@@ -53,6 +53,11 @@ const soundsTypes = [
 	'aisha/3',
 	'noizenecio/kick_gaba',
 	'noizenecio/kick_gaba2',
+	'xeltica/alert',
+	'xeltica/marimba_1',
+	'xeltica/marimba_2',
+	'xeltica/marimba_3',
+	'xeltica/marimba_4',
 ];
 
 export default defineComponent({
