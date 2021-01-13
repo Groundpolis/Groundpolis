@@ -176,13 +176,13 @@ export default defineComponent({
 				},
 				baz: {
 					type: 'string',
-					default: 'Misskey makes you happy.',
+					default: 'Groundpolis makes you happy.',
 					label: 'This is a string property'
 				},
 				qux: {
 					type: 'string',
 					multiline: true,
-					default: 'Misskey makes\nyou happy.',
+					default: 'Groundpolis makes\nyou happy.',
 					label: 'Multiline string'
 				},
 			}, null, '\t'),
