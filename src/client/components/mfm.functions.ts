@@ -148,5 +148,3 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 		class: '_mfm_blur_',
 	},
 };
-
-console.log(mfmFunctions);

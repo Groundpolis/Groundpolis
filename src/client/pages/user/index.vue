@@ -287,6 +287,7 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: computed(() => this.user ? {
+				title: this.user.name ? `${this.user.name} (@${getAcct(this.user)})` : '@' + getAcct(this.user),
 				userName: this.user,
 				avatar: this.user,
 				action: {

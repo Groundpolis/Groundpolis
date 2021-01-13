@@ -164,7 +164,10 @@ export default defineComponent({
 			if (page == null) return;
 			if (page.INFO) {
 				this.pageInfo = page.INFO;
-				document.title = `${this.pageInfo.title} | ${instanceName}`;
+				document.title =
+					this.pageInfo.title
+						? `${this.pageInfo.title} | ${instanceName}`
+						: instanceName;
 			}
 		},
 

@@ -110,12 +110,12 @@ export default defineComponent({
 						indicate: computed(() => this.hasUnreadAnnouncements)
 					});
 				};
-				console.log(tabs);
 				return {
+					title: this.$ts.timeline,
 					tabs,
 					action: {
 						icon: faPencilAlt,
-						handler: () => os.post()
+						handler: () => os.post(),
 					}
 				};
 			}),
