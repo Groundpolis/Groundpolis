@@ -201,7 +201,7 @@ export default defineComponent({
 	watch: {
 		lang() {
 			localStorage.setItem('lang', this.lang);
-			this.reload();
+			this.reloadLang();
 		},
 
 		fontSize() {
@@ -243,6 +243,10 @@ export default defineComponent({
 		},
 
 		instanceTicker() {
+			this.reloadAsk();
+		},
+
+		showFullAcct() {
 			this.reloadAsk();
 		},
 	},
