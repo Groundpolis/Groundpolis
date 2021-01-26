@@ -59,7 +59,7 @@ export default defineComponent({
 	data() {
 		return {
 			INFO: {
-				title: 'Misskey Update',
+				title: 'Groundpolis Update',
 				icon: faSyncAlt
 			},
 			version,
@@ -79,7 +79,7 @@ export default defineComponent({
 			localStorage.setItem('v', meta.version);
 		});
 
-		fetch('https://api.github.com/repos/syuilo/misskey/releases', {
+		fetch('https://api.github.com/repos/groundpolis/groundpolis/releases', {
 			method: 'GET',
 		})
 		.then(res => res.json())

@@ -63,10 +63,11 @@
 
 		if (meta.version != v) {
 			localStorage.setItem('v', meta.version);
+			localStorage.removeItem('locale');
 			alert(
-				'Misskeyの新しいバージョンがあります。ページを再度読み込みします。' +
+				'Groundpolisの新しいバージョンがあります。ページを再度読み込みします。' +
 				'\n\n' +
-				'New version of Misskey available. The page will be reloaded.');
+				'New version of Groundpolis available. The page will be reloaded.');
 			refresh();
 		}
 	});

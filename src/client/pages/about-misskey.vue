@@ -228,7 +228,7 @@ export default defineComponent({
 				width: 100px;
 				margin: 0 auto;
 				border-radius: 16px;
-				background: #251a10;
+				background: #5B4841;
 				transform-style: preserve-3d;
 				
 

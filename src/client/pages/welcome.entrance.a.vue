@@ -3,7 +3,6 @@
 	<div class="top">
 		<MkFeaturedPhotos class="bg"/>
 		<XTimeline class="tl"/>
-		<div class="shape"></div>
 		<img src="/assets/icon_transparent.svg" class="misskey"/>
 		<div class="emojis">
 			<MkEmoji :normal="true" :no-style="true" emoji="🎉"/>

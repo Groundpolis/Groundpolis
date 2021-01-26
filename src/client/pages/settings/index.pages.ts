@@ -1,7 +1,7 @@
 import { Component, defineAsyncComponent } from 'vue';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-import { faPalette, faPlug, faUser, faListUl, faLock, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish, faCommentSlash, faMagic, faColumns, faStream, faDownload, faFolderOpen, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPalette, faPlug, faUser, faListUl, faLock, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish, faCommentSlash, faMagic, faColumns, faStream, faDownload, faFolderOpen, faInfoCircle, faCloud, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell } from '@fortawesome/free-regular-svg-icons';
 import { faCss3Alt } from '@fortawesome/free-brands-svg-icons';
 
@@ -36,6 +36,13 @@ export const pages: PageDefinition[] = [
 		title: ts.reaction,
 		type: 'basic',
 		component: () => defineAsyncComponent(() => import('./reaction.vue')),
+	},
+	{
+		name: 'drive',
+		icon: faCloud,
+		title: ts.drive,
+		type: 'basic',
+		component: () => defineAsyncComponent(() => import('./drive.vue')),
 	},
 	{
 		name: 'notifications',
@@ -237,5 +244,12 @@ export const pages: PageDefinition[] = [
 		title: ts.experimentalFeatures,
 		icon: faFlask,
 		component: () => defineAsyncComponent(() => import('./experimental-features.vue'))
+	},
+	{
+		name: 'update',
+		type: 'hidden',
+		title: 'Groundpolis Update',
+		icon: faSyncAlt,
+		component: () => defineAsyncComponent(() => import('./update.vue'))
 	}
 ];
