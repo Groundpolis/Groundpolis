@@ -47,6 +47,7 @@
 					<!-- <span class="localOnly" v-if="note.localOnly"><Fa :icon="faBiohazard"/></span> -->
 				</div>
 				<div class="username"><MkAcct :user="appearNote.user"/></div>
+				<MkInstanceTicker class="ticker" :instance="appearNote.user.instance"/>
 			</div>
 		</header>
 		<div class="main">
@@ -1141,6 +1142,7 @@ export default defineComponent({
 				flex-direction: column;
 				justify-content: center;
 				padding-left: 16px;
+				font-size: 0.95em;
 
 				> .top {
 					> .name {
