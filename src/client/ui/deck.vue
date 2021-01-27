@@ -23,7 +23,7 @@
 	</template>
 
 	<button v-if="$i" class="nav _button" @click="showNav()"><Fa :icon="faBars"/><i v-if="navIndicated"><Fa :icon="faCircle"/></i></button>
-	<button v-if="$i" class="post _buttonPrimary" @click="post()"><Fa :icon="faPencilAlt"/></button>
+	<button v-if="$i" class="add _buttonPrimary" @click="addColumn"><Fa :icon="faPlus"/></button>
 
 	<XCommon/>
 </div>
@@ -190,7 +190,7 @@ export default defineComponent({
 		}
 	}
 
-	> .post,
+	> .add,
 	> .nav {
 		position: fixed;
 		z-index: 1000;
@@ -200,13 +200,9 @@ export default defineComponent({
 		border-radius: 100%;
 		box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
 		font-size: 22px;
-
-		@media (min-width: ($nav-hide-threshold + 1px)) {
-			display: none;
-		}
 	}
 
-	> .post {
+	> .add {
 		right: 32px;
 	}
 
@@ -226,6 +222,9 @@ export default defineComponent({
 			color: var(--indicator);
 			font-size: 16px;
 			animation: blink 1s infinite;
+		}
+		@media (min-width: ($nav-hide-threshold + 1px)) {
+			display: none;
 		}
 	}
 }
