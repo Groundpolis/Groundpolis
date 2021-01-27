@@ -2,7 +2,7 @@ import { Component, defineAsyncComponent } from 'vue';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { faPalette, faPlug, faUser, faListUl, faLock, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish, faCommentSlash, faMagic, faColumns, faStream, faDownload, faFolderOpen, faInfoCircle, faCloud, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { faLaugh, faBell } from '@fortawesome/free-regular-svg-icons';
+import { faLaugh, faBell, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faCss3Alt } from '@fortawesome/free-brands-svg-icons';
 
 import { i18n } from '@/i18n';
@@ -53,7 +53,7 @@ export const pages: PageDefinition[] = [
 	},
 	{
 		name: 'email',
-		icon: faUser,
+		icon: faEnvelope,
 		title: ts.email,
 		type: 'basic',
 		component: () => defineAsyncComponent(() => import('./email.vue')),
