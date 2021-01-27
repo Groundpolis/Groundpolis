@@ -8,10 +8,12 @@ import '@/style.scss';
 if (localStorage['vuex'] !== undefined) {
 	const vuex = JSON.parse(localStorage['vuex']);
 
-	localStorage.setItem('account', JSON.stringify({
-		...vuex.i,
-		token: localStorage.getItem('i')
-	}));
+	if (localStorage.getItem('i') !== null) {
+		localStorage.setItem('account', JSON.stringify({
+			...vuex.i,
+			token: localStorage.getItem('i')
+		}));
+	}
 	localStorage.setItem('accounts', JSON.stringify(vuex.device.accounts));
 	localStorage.setItem('miux:themes', JSON.stringify(vuex.device.themes));
 

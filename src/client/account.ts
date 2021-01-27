@@ -11,8 +11,15 @@ type Account = {
 
 const data = localStorage.getItem('account');
 
+const i = data !== null ? JSON.parse(data) as Account : null;
+
+// https://github.com/syuilo/misskey/issues/7107 を発症してしまった場合への対策
+if (i && i.token === null) { 
+	localStorage.removeItem('account');
+}
+
 // TODO: 外部からはreadonlyに
-export const $i = data ? reactive(JSON.parse(data) as Account) : null;
+export const $i = i && i.token ? reactive(i) : null;
 
 export function signout() {
 	if ($i === null) return;
