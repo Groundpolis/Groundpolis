@@ -217,7 +217,7 @@ export default defineComponent({
 			if (this.useSystemFont) {
 				localStorage.setItem('useSystemFont', 't');
 			} else {
-				localStorage.removeItem('useSystemFont');
+				localStorage.setItem('useSystemFont', 'f');
 			}
 			this.reloadAsk();
 		},

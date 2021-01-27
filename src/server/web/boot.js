@@ -15,6 +15,39 @@
 (async () => {
 	const v = localStorage.getItem('v') || VERSION;
 
+	const splashText = document.getElementById('splash');
+
+	function printSplash(data) {
+		splashText.innerText = String(data);
+	}
+
+	printSplash('Booting');
+
+	const res = await fetch('/api/meta', {
+		method: 'POST',
+		cache: 'no-cache'
+	}).catch(e => {
+		printSplash(e);
+	});
+
+	if (res.status !== 200) {
+		printSplash(res.statusText);
+		return;
+	}
+
+	const meta = await res.json().catch(e => {
+		printSplash(e);
+	});
+
+	let version = meta.version;
+	
+	const updateRequired = v !== version;
+
+	if (updateRequired) {
+		localStorage.removeItem('locale');
+		printSplash('Updating Groundpolis');
+	}
+
 	//#region Detect language & fetch translations
 	if (localStorage.hasOwnProperty('locale')) {
 		// TODO: 非同期でlocaleの更新処理をする
@@ -32,7 +65,7 @@
 			}
 		}
 
-		const res = await fetch(`/assets/locales/${lang}.${v}.json`);
+		const res = await fetch(`/assets/locales/${lang}.${version}.json`);
 		const json = await res.json();
 		localStorage.setItem('lang', lang);
 		localStorage.setItem('locale', JSON.stringify(json));
@@ -47,29 +80,11 @@
 	const head = document.getElementsByTagName('head')[0];
 
 	const script = document.createElement('script');
-	script.setAttribute('src', `/assets/app.${v}.js${salt}`);
+	script.setAttribute('src', `/assets/app.${version}.js${salt}`);
 	script.setAttribute('async', 'true');
 	script.setAttribute('defer', 'true');
-	script.addEventListener('error', async () => {
-		document.documentElement.innerHTML = '読み込みに失敗しました。';
-
-		// TODO: サーバーが落ちている場合などのエラーハンドリング
-		const res = await fetch('/api/meta', {
-			method: 'POST',
-			cache: 'no-cache'
-		});
-
-		const meta = await res.json();
-
-		if (meta.version != v) {
-			localStorage.setItem('v', meta.version);
-			localStorage.removeItem('locale');
-			alert(
-				'Groundpolisの新しいバージョンがあります。ページを再度読み込みします。' +
-				'\n\n' +
-				'New version of Groundpolis available. The page will be reloaded.');
-			refresh();
-		}
+	script.addEventListener('error', async (e) => {
+		printSplash('Error: ' + e.message);
 	});
 	head.appendChild(script);
 	//#endregion
@@ -99,8 +114,11 @@
 	}
 
 	const useSystemFont = localStorage.getItem('useSystemFont');
-	if (useSystemFont) {
+	if (useSystemFont !== 'f') {
 		document.documentElement.classList.add('useSystemFont');
+	}
+	if (useSystemFont === null) {
+		localStorage.setItem('useSystemFont', 't');
 	}
 
 	const wallpaper = localStorage.getItem('wallpaper');
@@ -126,3 +144,4 @@
 		location.reload();
 	}
 })();
+
