@@ -62,7 +62,7 @@ export function applyTheme(theme: Theme, persist = true) {
 	}
 }
 
-function compile(theme: Theme): Record<string, string> {
+export function compile(theme: Theme): Record<string, string> {
 	function getColor(val: string): tinycolor.Instance {
 		// ref (prop)
 		if (val[0] === '@') {

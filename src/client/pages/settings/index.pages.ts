@@ -1,7 +1,7 @@
 import { Component, defineAsyncComponent } from 'vue';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-import { faPalette, faPlug, faUser, faListUl, faLock, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish, faCommentSlash, faMagic, faColumns, faStream, faDownload, faFolderOpen, faInfoCircle, faCloud, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPalette, faPlug, faUser, faListUl, faLock, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish, faCommentSlash, faMagic, faColumns, faStream, faDownload, faFolderOpen, faInfoCircle, faCloud, faSyncAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faCss3Alt } from '@fortawesome/free-brands-svg-icons';
 
@@ -188,6 +188,13 @@ export const pages: PageDefinition[] = [
 		title: ts._theme.manage,
 		icon: faFolderOpen,
 		component: () => defineAsyncComponent(() => import('./theme.manage.vue')),
+	},
+	{
+		name: 'theme/store',
+		type: 'hidden',
+		title: ts._theme.explore,
+		icon: faGlobe,
+		component: () => defineAsyncComponent(() => import('./theme.store.vue')),
 	},
 	{
 		name: 'account-info',
