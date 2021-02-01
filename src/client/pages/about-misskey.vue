@@ -157,7 +157,8 @@ export default defineComponent({
 		VanillaTilt.init(this.$refs.icon, {
 			max: 30,
 			perspective: 500,
-			scale: 1.125,
+			reverse: true,
+			scale: 1.5,
 			speed: 1000,
 		});
 	},
@@ -224,18 +225,20 @@ export default defineComponent({
 			}
 
 			> .icon {
-				display: block;
+				display: flex;
+				justify-content: center;
+				align-items: center;
 				width: 100px;
 				margin: 0 auto;
 				border-radius: 16px;
-				background: #5B4841;
+				background: var(--bg);
+				box-shadow: 0 0 16px rgba(0, 0, 0, 0.3);
 				transform-style: preserve-3d;
-				
 
 				> img {
 					width: 100%;
 					height: 100%;
-					transform: translate3d(0, 4px, 32px) scale(0.9);
+					transform: translate3d(0, 0, 32px) scale(0.9);
 				}
 			}
 
