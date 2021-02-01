@@ -189,13 +189,13 @@ export const pages: PageDefinition[] = [
 		icon: faFolderOpen,
 		component: () => defineAsyncComponent(() => import('./theme.manage.vue')),
 	},
-	{
-		name: 'theme/store',
-		type: 'hidden',
-		title: ts._theme.explore,
-		icon: faGlobe,
-		component: () => defineAsyncComponent(() => import('./theme.store.vue')),
-	},
+	// {
+	// 	name: 'theme/store',
+	// 	type: 'hidden',
+	// 	title: ts._theme.explore,
+	// 	icon: faGlobe,
+	// 	component: () => defineAsyncComponent(() => import('./theme.store.vue')),
+	// },
 	{
 		name: 'account-info',
 		type: 'hidden',
