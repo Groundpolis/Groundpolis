@@ -72,6 +72,8 @@ export default defineComponent({
 	border-radius: var(--radius);
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 	overflow: hidden;
+	max-width: 640px;
+	margin: 64px auto;
 
 	> h1 {
 		margin: 0;
