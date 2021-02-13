@@ -857,6 +857,7 @@ inUse: "使用中"
 editCode: "コードを編集"
 apply: "適用"
 receiveAnnouncementFromInstance: "インスタンスからのお知らせを受け取る"
+preset: "プリセット"
 
 _plugin:
   install: "プラグインのインストール"
@@ -1117,6 +1118,7 @@ _paint:
     circle: "円"
     circleFill: "円塗りつぶし"
     pixel: "ドットペン"
+    spoit: "スポイト"
 
 _theme:
   explore: "テーマを探す"

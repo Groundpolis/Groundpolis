@@ -23,7 +23,7 @@
 			</template>
 		</section>
 		<section>
-			<h1>Preset</h1>
+			<h1 v-text="$ts.preset"/>
 			<div class="items">
 				<div class="item" @click="add"><Fa :icon="faPlus" /></div>
 				<div class="item" :class="{active: isDeleteMode}" @click="del"><Fa :icon="faMinus" /></div>
