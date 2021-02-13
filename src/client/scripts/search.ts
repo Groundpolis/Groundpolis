@@ -61,5 +61,5 @@ export async function search() {
 		return;
 	}
 
-	router.push(`/search?q=${encodeURIComponent(q)}`);
+	router.push(`/search/notes/${encodeURIComponent(q)}`);
 }

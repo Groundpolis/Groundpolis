@@ -87,6 +87,15 @@ export default defineComponent({
 		MkFolder,
 	},
 
+	inject: {
+		navHook: {
+			default: null
+		},
+		sideViewHook: {
+			default: null
+		}
+	},
+
 	props: {
 		tag: {
 			type: String,
@@ -222,11 +231,24 @@ export default defineComponent({
 		},
 
 		search() {
-			this.$router.push({
-				path: '/search',
-				query: { q: this.query },
-			});
+			this.push(`/search/notes/${encodeURIComponent(this.query)}`);
 		},
+
+		push(path: string) {
+			if (this.navHook) {
+				this.navHook(path);
+			} else {
+				if (this.$store.state.defaultSideView && this.sideViewHook && path !== '/') {
+					return this.sideViewHook(path);
+				}
+
+				if (this.$router.currentRoute.value.path === path) {
+					window.scroll({ top: 0, behavior: 'smooth' });
+				} else {
+					this.$router.push(path);
+				}
+			}
+		}
 	}
 });
 </script>

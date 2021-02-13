@@ -159,7 +159,7 @@ export default defineComponent({
 				case 'hashtag': {
 					return [h(MkA, {
 						key: Math.random(),
-						to: `/search?q=%23${encodeURIComponent(token.node.props.hashtag)}&f=${this.isNote ? 'notes' : 'users'}`,
+						to: `/search/${this.isNote ? 'notes' : 'users'}/${encodeURIComponent(token.node.props.hashtag)}`,
 						style: 'color:var(--hashtag);'
 					}, `#${token.node.props.hashtag}`)];
 				}

@@ -1,7 +1,7 @@
 <template>
 <div class="_section">
 	<div class="_content">
-		<XSearch v-model:value="query" @search="search"/>
+		<XSearch v-model:value="inputQuery" @search="search"/>
 		<div class="tab _section _noPad" style="padding: 0">
 			<MkTab v-model:value="tab">
 				<option value="notes">{{$ts.notes}}</option>
@@ -61,13 +61,34 @@ export default defineComponent({
 		MkTab,
 	},
 
+	inject: {
+		navHook: {
+			default: null
+		},
+		sideViewHook: {
+			default: null
+		}
+	},
+
+	props: {
+		q: {
+			type: String,
+			required: true,
+		},
+		f: {
+			type: String,
+			required: true,
+		},
+	},
+
 	data() {
 		return {
-			query: this.$route.query.q as string,
-			tab: this.$route.query.f || 'notes',
+			query: this.q,
+			inputQuery: this.q,
+			tab: this.f || 'notes',
 			smartCard: null as SmartCard | null,
 			INFO: {
-				title: computed(() => this.$t('searchWith', { q: this.$route.query.q })),
+				title: computed(() => this.$t('searchWith', { q: this.query })),
 				icon: faSearch
 			},
 		};
@@ -75,7 +96,7 @@ export default defineComponent({
 
 	computed: {
 		notesPagination() {
-			const query: string = typeof this.$route.query.q === 'string' ? this.$route.query.q.trim() : '';
+			const query: string = typeof this.query === 'string' ? this.query.trim() : '';
 			const isTag = query.startsWith('#') && !/\s/.test(query);
 			return isTag ? {
 				endpoint: 'notes/search-by-tag',
@@ -90,7 +111,7 @@ export default defineComponent({
 			};
 		},
 		usersPagination () {
-			const query: string = typeof this.$route.query.q === 'string' ? this.$route.query.q.trim() : '';
+			const query: string = typeof this.query === 'string' ? this.query.trim() : '';
 			const isTag = query.startsWith('#') && !/\s/.test(query);
 			return isTag ? {
 				endpoint: 'hashtags/users',
@@ -111,14 +132,10 @@ export default defineComponent({
 	watch: {
 		$route: 'fetch',
 		tab() {
-			this.$router.push({
-				path: this.$route.path,
-				query: {
-					q: this.query,
-					f: this.tab,
-				}
-			});
-		}
+			this.inputQuery = this.query;
+			if (this.navHook) return;
+			this.$router.push(`/search/${encodeURIComponent(this.tab)}/${encodeURIComponent(this.inputQuery)}`);
+		},
 	},
 
 	mounted() {
@@ -135,20 +152,23 @@ export default defineComponent({
 		},
 
 		search() {
-			if (this.$route.query.q === this.query) return;
-
-			this.$router.push(`${this.$route.path}?q=${encodeURIComponent(this.query)}&f=${encodeURIComponent(this.tab)}`);
+			if (this.inputQuery === this.query) return;
+			if (this.navHook) {
+				this.fetch();
+			} else {
+				this.$router.push(`/search/${encodeURIComponent(this.tab)}/${encodeURIComponent(this.inputQuery)}`);
+			}
 		},
 
 		fetch() {
-			this.query = this.$route.query.q;
+			this.query = this.inputQuery;
 			this.generateSmartCard();
 		},
 
 		async generateSmartCard() {
 			this.smartCard = null;
 
-			const q = (this.$route.query.q as string || '').trim();
+			const q = (this.query as string || '').trim();
 
 			// ActivityPub Object
 			if (q.startsWith('https://')) {
@@ -184,7 +204,7 @@ export default defineComponent({
 				const user = await os.api('users/show', parseAcct(q));
 				this.smartCard = {
 					type: 'user',
-					user
+					user,
 				};
 			}
 			
