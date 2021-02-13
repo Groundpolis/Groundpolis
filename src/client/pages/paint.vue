@@ -41,7 +41,7 @@
 			</canvas>
 		</div>
 		<div class="tools">
-			<button class="_button" v-for="tool in [ 'hand', 'pen', 'eraser' ]" v-tooltip="$ts._paint.tools[tool]" :key="tool" @click="currentTool = tool" :class="{ active: currentTool === tool }">
+			<button class="_button" v-for="tool in [ 'hand', 'pen', 'eraser', 'spoit' ]" v-tooltip="$ts._paint.tools[tool]" :key="tool" @click="currentTool = tool" :class="{ active: currentTool === tool }">
 				<fa :icon="getToolIconOf(tool)" />
 			</button>
 			<button class="_button" v-tooltip="$ts._paint.tools.pixel" @click="currentTool = 'pixel'" :class="{ active: currentTool === 'pixel' }">
@@ -92,7 +92,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faPaintBrush, faPaw, faPen, faEraser, faSlash, faSquare, faCircle, faSearchMinus, faSearchPlus, faUndo, faRedo, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faPaintBrush, faPaw, faPen, faEraser, faSlash, faSquare, faCircle, faSearchMinus, faSearchPlus, faUndo, faRedo, faEdit, faEyeDropper } from '@fortawesome/free-solid-svg-icons';
 import { faSquare as farSquare, faCircle as farCircle, faSave as farSave, faFolderOpen as farFolderOpen, faFileAlt as farFileAlt, faQuestionCircle as farQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 
 import MkSwitch from '../components/ui/switch.vue';
@@ -109,7 +109,7 @@ export const shapes = [ 'line', 'rect', 'circle', 'rectFill', 'circleFill' ] as 
 
 export type ShapeType = typeof shapes[number];
 
-export type ToolType = 'hand'| 'pen' | 'eraser' | 'pixel' | ShapeType;
+export type ToolType = 'hand'| 'pen' | 'eraser' | 'pixel' | 'spoit' | ShapeType;
 
 export type InitialColor = 'white' | 'black' | 'transparent';
 
@@ -123,6 +123,7 @@ export const getToolIconOf = (type: ToolType) => {
 		case 'circle': return farCircle;
 		case 'rectFill': return faSquare;
 		case 'circleFill': return faCircle;
+		case 'spoit': return faEyeDropper;
 		default: return null;
 	}
 };
@@ -624,6 +625,14 @@ export default defineComponent({
 				case 'pixel': {
 					// https://ja.wikipedia.org/wiki/%E3%83%96%E3%83%AC%E3%82%BC%E3%83%B3%E3%83%8F%E3%83%A0%E3%81%AE%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0#%E5%8D%98%E7%B4%94%E5%8C%96
 					drawPixel(px, x, py, y, c);
+					break;
+				}
+
+				case 'spoit': {
+					const [r, g, b, a] = c.getImageData(x, y, 1, 1).data;
+					this.currentColor = [
+						r, g, b, a / 255,
+					];
 					break;
 				}
 			}
