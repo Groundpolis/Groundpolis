@@ -83,6 +83,7 @@ export default defineComponent({
 		display: inline-block;
 		width: 24px;
 		text-align: center;
+		&:empty { width: 0 }
 	}
 
 	> .title {

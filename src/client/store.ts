@@ -2,6 +2,7 @@ import { markRaw, ref } from 'vue';
 import { Storage } from './pizzax';
 import defaultFaces from './scripts/default-faces';
 import { Theme } from './scripts/theme';
+import { Rgba } from './scripts/rgba';
 
 export const postFormActions = [];
 export const userActions = [];
@@ -303,6 +304,27 @@ export const defaultStore = markRaw(new Storage('base', {
 	noteCollapseThreshold: {
 		where: 'device',
 		default: 192,
+	},
+	colorPickerPresets: {
+		where: 'device',
+		default: [
+			[0, 0, 0, 255],
+			[64, 64, 64, 255],
+			[128, 128, 128, 255],
+			[255, 255, 255, 255],
+			[255, 0, 0, 255],
+			[255, 128, 0, 255],
+			[255, 255, 0, 255],
+			[128, 255, 0, 255],
+			[0, 255, 0, 255],
+			[0, 255, 128, 255],
+			[0, 255, 255, 255],
+			[0, 128, 255, 255],
+			[0, 0, 255, 255],
+			[128, 0, 255, 255],
+			[255, 0, 255, 255],
+			[255, 0, 128, 255],
+		] as Rgba[],
 	},
 
 	//#endregion
