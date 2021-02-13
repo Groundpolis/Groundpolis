@@ -431,4 +431,9 @@ export class Meta {
 		default: false,
 	})
 	public objectStorageSetPublicRead: boolean;
+
+	@Column('boolean', {
+		default: true,
+	})
+	public objectStorageS3ForcePathStyle: boolean;
 }

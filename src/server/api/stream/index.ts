@@ -19,10 +19,10 @@ import { UserProfile } from '../../../models/entities/user-profile';
 export default class Connection {
 	public user?: User;
 	public userProfile?: UserProfile;
-	public following: User['id'][] = [];
-	public muting: User['id'][] = [];
-	public renoteMuting: User['id'][] = [];
-	public followingChannels: ChannelModel['id'][] = [];
+	public following: Set<User['id']> = new Set();
+	public muting: Set<User['id']> = new Set();
+	public renoteMuting: Set<User['id']> = new Set();
+	public followingChannels: Set<ChannelModel['id']> = new Set();
 	public token?: AccessToken;
 	private wsConnection: websocket.connection;
 	public subscriber: EventEmitter;
@@ -272,7 +272,7 @@ export default class Connection {
 			select: ['followeeId']
 		});
 
-		this.following = followings.map(x => x.followeeId);
+		this.following = new Set<string>(followings.map(x => x.followeeId));
 	}
 
 	@autobind
@@ -285,7 +285,7 @@ export default class Connection {
 			select: ['muteeId']
 		});
 
-		this.muting = mutings.map(x => x.muteeId);
+		this.muting = new Set<string>(mutings.map(x => x.muteeId));
 	}
 
 	@autobind
@@ -310,7 +310,7 @@ export default class Connection {
 			select: ['followeeId']
 		});
 
-		this.followingChannels = followings.map(x => x.followeeId);
+		this.followingChannels = new Set<string>(followings.map(x => x.followeeId));
 	}
 
 	@autobind

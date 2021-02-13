@@ -1,5 +1,7 @@
-![Groundpolis](/assets/title.svg)
-================================================================
+<img src="assets/icon_transparent.svg" width="160" />
+
+Groundpolis
+======================================================
 
 - [日本語](README-ja.md)
 - English
@@ -9,7 +11,7 @@
 Groundpolis is a [Misskey](https://github.com/syuilo/misskey) based microblogging platform.
 
 
-## 機能
+## Features
 
 Groundpolis also has almost all features in the latest version of Misskey.
 
@@ -27,15 +29,15 @@ You can also open your image from drive and edit it.
 
 ## Emoji Suggestion Form
 
-サーバー管理者にカスタム絵文字を提案しよう。
+Suggest a custom emoji to the server administrator.
 
-フォームに従って絵文字をアップロードし、詳細情報を入力するだけで、サーバー管理者に絵文字を提案できる。
+Using the form, simply upload your emoji and enter detailed information to propose it to the server administrator.
 
-管理者は、受け取った提案を受理するだけで自動的に絵文字を追加し、却下する場合は理由を添えることができる。
+The administrator can easily add emojis by simply accepting the received suggestion, or reject it with a reason.
 
 ## Optimized and improved Mobile UI
 
-Groundpolis has a mobile UI that is easier to operate than the original home.
+Groundpolis has a mobile UI that is easier to operate than the original one.
 
 News
 --------

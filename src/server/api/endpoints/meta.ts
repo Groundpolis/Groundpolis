@@ -212,6 +212,7 @@ export default define(meta, async (ps, me) => {
 			response.objectStorageUseSSL = instance.objectStorageUseSSL;
 			response.objectStorageUseProxy = instance.objectStorageUseProxy;
 			response.objectStorageSetPublicRead = instance.objectStorageSetPublicRead;
+			response.objectStorageS3ForcePathStyle = instance.objectStorageS3ForcePathStyle;
 		}
 	}
 

@@ -1,5 +1,7 @@
-![Groundpolis](/assets/title.svg)
-================================================================
+<img src="assets/icon_transparent.svg" width="160" />
+
+Groundpolis
+======================================================
 
 - 日本語
 - English (README.md)

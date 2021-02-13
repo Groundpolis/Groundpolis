@@ -108,11 +108,11 @@ export const pages: PageDefinition[] = [
 		component: () => defineAsyncComponent(() => import('./sounds.vue')),
 	},
 	{
-		name: 'plugins',
+		name: 'plugin',
 		icon: faPlug,
 		title: ts.plugins,
 		type: 'client',
-		component: () => defineAsyncComponent(() => import('./plugins.vue')),
+		component: () => defineAsyncComponent(() => import('./plugin.vue')),
 	},
 	{
 		name: 'gacha',

@@ -47,7 +47,7 @@
 					<!-- <span class="localOnly" v-if="note.localOnly"><Fa :icon="faBiohazard"/></span> -->
 				</div>
 				<div class="username"><MkAcct :user="appearNote.user"/></div>
-				<MkInstanceTicker class="ticker" :instance="appearNote.user.instance"/>
+				<MkInstanceTicker v-if="showTicker" class="ticker" :instance="appearNote.user.instance"/>
 			</div>
 		</header>
 		<div class="main">

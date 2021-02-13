@@ -19,7 +19,7 @@
 	</div>
 	<div class="_section links">
 		<div class="_content">
-			<MkA :to="`./${page.name}/view-source`" class="link">{{ $ts._pages.viewSource }}</MkA>
+			<MkA :to="`/@${username}/pages/${pageName}/view-source`" class="link">{{ $ts._pages.viewSource }}</MkA>
 			<template v-if="$i && $i.id === page.userId">
 				<MkA :to="`/pages/edit/${page.id}`" class="link">{{ $ts._pages.editThisPage }}</MkA>
 			</template>
