@@ -41,7 +41,7 @@
 			</canvas>
 		</div>
 		<div class="tools">
-			<button class="_button" v-for="tool in [ 'hand', 'pen', 'eraser' ]" v-tooltip="$t('_paint.tools.' + tool)" :key="tool" @click="currentTool = tool" :class="{ active: currentTool === tool }">
+			<button class="_button" v-for="tool in [ 'hand', 'pen', 'eraser' ]" v-tooltip="$ts._paint.tools[tool]" :key="tool" @click="currentTool = tool" :class="{ active: currentTool === tool }">
 				<fa :icon="getToolIconOf(tool)" />
 			</button>
 			<button class="_button" v-tooltip="$ts._paint.tools.pixel" @click="currentTool = 'pixel'" :class="{ active: currentTool === 'pixel' }">
@@ -106,7 +106,7 @@ export const shapes = [ 'line', 'rect', 'circle', 'rectFill', 'circleFill' ] as 
 
 export type ShapeType = typeof shapes[number];
 
-export type ToolType = 'hand'| 'pen' | 'eraser' | ShapeType;
+export type ToolType = 'hand'| 'pen' | 'eraser' | 'pixel' | ShapeType;
 
 export type InitialColor = 'white' | 'black' | 'transparent';
 
@@ -120,6 +120,7 @@ export const getToolIconOf = (type: ToolType) => {
 		case 'circle': return farCircle;
 		case 'rectFill': return faSquare;
 		case 'circleFill': return faCircle;
+		default: return null;
 	}
 };
 
@@ -269,7 +270,7 @@ export default defineComponent({
 		getToolIconOf,
 		genToolMenuItem(type: ToolType)  {
 			return {
-				text: this.$t('_paint.tools.' + type),
+				text: this.$ts._paint.tools[type],
 				icon: getToolIconOf(type),
 				action: () => { this.currentTool = type; },
 			}
@@ -314,7 +315,11 @@ export default defineComponent({
 					type: 'enum',
 					label: this.$ts._paint.canvasColor,
 					default: 'white',
-					enum: [ 'white', 'black', 'transparent' ],
+					enum: [ 'white', 'black', 'transparent' ].map(c => ({
+						label: c,
+						value: c,
+					})),
+					
 				},
 			};
 			const { canceled, result } = await os.form(this.$ts._paint.new, form);

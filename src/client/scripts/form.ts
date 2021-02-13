@@ -16,7 +16,7 @@ export type FormItem = {
 } | {
 	type: 'enum';
 	default: string | null;
-	enum: string[];
+	enum: Array<{ label: string, value: string }>;
 } | {
 	type: 'array';
 	default: unknown[] | null;
