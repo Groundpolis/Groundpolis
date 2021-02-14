@@ -512,9 +512,8 @@ export async function getAccounts() {
 	const tokens = Account.getAccounts();
 	const cacheMismatch = accounts.length !== tokens.length;
 	if (cacheMismatch || expired) {
-		console.log($i);
 		accounts = (await api('users/show', { userIds: tokens.map(x => x.id) }) as Record<string, any>[])
-			.map((x, i) => ({ id: x.id, token: tokens[i].token  }))
+			.map((x, i) => ({ ...x, token: tokens[i].token  }))
 			.filter(x => !$i || x.id !== $i.id);
 	}
 	

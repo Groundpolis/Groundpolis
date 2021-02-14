@@ -87,7 +87,7 @@ export default defineComponent({
 			host: host,
 			isAccountMenuMode: false,
 			showing: false,
-			accounts: [],
+			accounts: [] as readonly Record<string, unknown>[],
 			menuDef: sidebarDef,
 			connection: null,
 			iconOnly: false,
