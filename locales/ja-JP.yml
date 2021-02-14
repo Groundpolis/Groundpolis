@@ -858,6 +858,8 @@ editCode: "コードを編集"
 apply: "適用"
 receiveAnnouncementFromInstance: "インスタンスからのお知らせを受け取る"
 preset: "プリセット"
+themeStoreError: "Theme Storeに接続できませんでした。"
+themeStoreError2: "代わりに、{link}をお使いください。"
 
 _plugin:
   install: "プラグインのインストール"

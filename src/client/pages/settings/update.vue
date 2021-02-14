@@ -17,7 +17,7 @@
 		</FormKeyValueView>
 	</FormGroup>
 	<FormGroup>
-		<template #label>Misskey</template>
+		<template #label>Groundpolis</template>
 		<FormKeyValueView>
 			<template #key>{{ $ts.latestVersion }}</template>
 			<template #value v-if="releases">{{ releases[0].tag_name }}</template>

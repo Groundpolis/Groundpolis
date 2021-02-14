@@ -1,28 +1,38 @@
 <template>
 	<section class="_section gts30kac">
 		<div class="_content" style="text-align: center; margin-bottom: var(--margin)">
-			<h1 style="text-align: center">Groundpolis Theme Store</h1>
-			<small>Powered by <MkLink url="https://assets.msky.cafe">Misskey Assets Store</MkLink></small>
-
-			<MkLoading v-if="list === null"/>
-			<div class="themes" v-else>
-				<div v-for="item in list" class="theme _card" :key="item.id" :style="genStyleFrom(item.theme)">
-					<div class="_content content">
-						<div><b v-text="item.theme.name"></b></div>
-						<div><small>{{item.theme.author}}</small></div>
-						<div v-text="item.theme.desc"/>
-						<div>
-							<span style="color: var(--accent)">Accent</span>&nbsp;
-							<span style="color: var(--hashtag)">#Hashtag</span>&nbsp;
-							<span style="color: var(--link)">Link</span>&nbsp;
-						</div>
-						<div class="commands">
-							<button class="_buttonPrimary button" style="margin-right: 8px" v-text="$ts.preview" @click="preview(item.theme)"/>
-							<button class="_buttonPrimary button" v-text="$ts.install" @click="install(item.theme)"/>
+			<div v-if="error" class="_fullinfo error">
+				<Fa class="icon" :icon="faDizzy" />
+				<p v-text="$ts.themeStoreError"/>
+				<I18n :src="$ts.themeStoreError2" tag="p">
+					<template #link>
+						<MkLink url="https://assets.msky.cafe">Misskey Assets Store</MkLink>
+					</template>
+				</I18n>
+			</div>
+			<MkLoading v-else-if="list === null"/>
+			<template v-else>
+				<h1 style="text-align: center">Groundpolis Theme Store</h1>
+				<small>Powered by <MkLink url="https://assets.msky.cafe">Misskey Assets Store</MkLink></small>
+				<div class="themes">
+					<div v-for="item in list" class="theme _card" :key="item.id" :style="genStyleFrom(item.theme)">
+						<div class="_content content">
+							<div><b v-text="item.theme.name"></b></div>
+							<div><small>{{item.theme.author}}</small></div>
+							<div v-text="item.theme.desc"/>
+							<div>
+								<span style="color: var(--accent)">Accent</span>&nbsp;
+								<span style="color: var(--hashtag)">#Hashtag</span>&nbsp;
+								<span style="color: var(--link)">Link</span>&nbsp;
+							</div>
+							<div class="commands">
+								<button class="_buttonPrimary button" style="margin-right: 8px" v-text="$ts.preview" @click="preview(item.theme)"/>
+								<button class="_buttonPrimary button" v-text="$ts.install" @click="install(item.theme)"/>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			</template>
 		</div>
 	</section>
 </template>
@@ -30,6 +40,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import * as JSON5 from 'json5';
+import { faDizzy } from '@fortawesome/free-solid-svg-icons';
 import MkButton from '@/components/ui/button.vue';
 import { Theme as MiTheme, compile, lightTheme, darkTheme, applyTheme } from '@/scripts/theme';
 import MkLink from '@/components/link.vue';
@@ -64,6 +75,8 @@ export default defineComponent({
 	data() {
 		return {
 			list: null as MiAS.Theme[] | null,
+			error: null as null | Error,
+			faDizzy,
 		}
 	},
 
@@ -71,7 +84,7 @@ export default defineComponent({
 	},
 
 	async mounted() {
-		this.list = await MiAS.list();
+		this.fetch();
 	},
 
 	methods: {
@@ -105,12 +118,29 @@ export default defineComponent({
 		reset() {
 			applyTheme(JSON.parse(localStorage['theme']));
 		},
+
+		async fetch() {
+			try {
+				this.error = null;
+				this.list = await MiAS.list();
+			} catch (e) {
+				console.error(e);
+				this.error = e;
+			}
+		},
 	}
 });
 </script>
 
 <style lang="scss" scoped>
 .gts30kac {
+	.error {
+		opacity: 0.7;
+		.icon {
+			font-size: 3rem;
+		}
+	}
+
 	.themes {
 		display: grid;
 		margin-top: var(--margin);

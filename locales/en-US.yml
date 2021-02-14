@@ -824,6 +824,8 @@ editCode: "Edit code"
 apply: "Apply"
 receiveAnnouncementFromInstance: "Receive notifications from the instance"
 preset: "Preset"
+themeStoreError: "Could not connect to Theme Store."
+themeStoreError2: "Please use {link} instead."
 _plugin:
   install: "Install plugins"
   installWarn: "Please do not install untrustworthy plugins."
