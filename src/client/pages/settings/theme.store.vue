@@ -105,7 +105,7 @@ export default defineComponent({
 		},
 
 		preview(theme: MiTheme) {
-			applyTheme(theme);
+			applyTheme(theme, false);
 		},
 
 		async install(theme: MiTheme) {
