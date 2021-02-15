@@ -47,18 +47,17 @@
 					<!-- <span class="localOnly" v-if="note.localOnly"><Fa :icon="faBiohazard"/></span> -->
 				</div>
 				<div class="username"><MkAcct :user="appearNote.user"/></div>
-				<MkInstanceTicker v-if="showTicker" class="ticker" :instance="appearNote.user.instance"/>
+				<div v-if="showTicker && !appearNote.user.host" class="instance-ticker groundpolis">
+					<img src="/favicon.ico" alt="favicon" class="favicon"/>
+					<span v-text="meta.name && meta.name !== host ? `${meta.name} (${host})` : host"/>
+				</div>
+				<div v-else-if="showTicker && instance" class="instance-ticker" :class="instance.softwareName">
+					<img :src="instance.iconUrl" alt="favicon" class="favicon"/>
+					<span v-text="instance.name && instance.name !== instance.host ? `${instance.name} (${instance.host})` : instance.host"/>
+				</div>
 			</div>
 		</header>
 		<div class="main">
-			<div v-if="showTicker && !appearNote.user.host" class="instance-ticker groundpolis">
-				<img src="/favicon.ico" alt="favicon" class="favicon"/>
-				<span v-text="meta.name && meta.name !== host ? `${meta.name} (${host})` : host"/>
-			</div>
-			<div v-else-if="showTicker && instance" class="instance-ticker" :class="instance.softwareName">
-				<img :src="instance.iconUrl" alt="favicon" class="favicon"/>
-				<span v-text="instance.name && instance.name !== instance.host ? `${instance.name} (${instance.host})` : instance.host"/>
-			</div>
 			<div class="body">
 				<p v-if="appearNote.cw != null" class="cw">
 					<Mfm v-if="appearNote.cw != '' && !isPlainMode" class="text" :text="appearNote.cw" :author="appearNote.user" :i="$i" :custom-emojis="appearNote.emojis"/>
@@ -168,7 +167,7 @@ import XCwButton from './cw-button.vue';
 import XPoll from './poll.vue';
 import { pleaseLogin } from '@/scripts/please-login';
 import { focusPrev, focusNext } from '@/scripts/focus';
-import { url } from '@/config';
+import { url, host } from '@/config';
 import copyToClipboard from '@/scripts/copy-to-clipboard';
 import { checkWordMute } from '@/scripts/check-word-mute';
 import { userPage } from '@/filters/user';
@@ -196,7 +195,6 @@ export default defineComponent({
 		XCwButton,
 		XPoll,
 		MkUrlPreview: defineAsyncComponent(() => import('@/components/url-preview.vue')),
-		MkInstanceTicker: defineAsyncComponent(() => import('@/components/instance-ticker.vue')),
 	},
 
 	inject: {
@@ -227,6 +225,7 @@ export default defineComponent({
 				isQuoted: boolean;
 			} | null,
 			isPlainMode: false,
+			host,
 			faEdit, faBolt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faPlug, faSatelliteDish, faUsers, faGlobe, faHeartS, faHeartR, faBookmark, farBookmark,			
 		};
 	},
@@ -1165,43 +1164,44 @@ export default defineComponent({
 						color: var(--badge);
 					}
 				}
+
+				> .instance-ticker {
+					display: flex;
+					@include ticker(var(--bg), var(--fg));
+					width: 100%;
+					margin-bottom: 8px;
+					align-items: center;
+					padding: 1px 8px;
+					font-size: 0.8em;
+					font-weight: bold;
+					border-radius: 4px 0 0 4px;
+
+					&.misskey {
+						@include ticker(rgb(134, 179, 0), rgb(242, 242, 242));
+					}
+
+					&.groundpolis {
+						@include ticker(#251a10, rgb(110, 229, 0));
+					}
+
+					&.mastodon {
+						@include ticker(#2b90d9, #fff);
+					}
+
+					&.pleroma {
+						@include ticker(#10181e, #ffaf6d);
+					}
+
+					> .favicon {
+						display: inline-block;
+						height: 1em;
+						margin-right: 4px;
+					}
+				}
 			}
 		}
 
 		> .main {
-			> .instance-ticker {
-				display: flex;
-				@include ticker(var(--bg), var(--fg));
-				width: 100%;
-				margin-bottom: 8px;
-				align-items: center;
-				padding: 1px 8px;
-				font-size: 0.8em;
-				font-weight: bold;
-				border-radius: 4px 0 0 4px;
-
-				&.misskey {
-					@include ticker(rgb(134, 179, 0), rgb(242, 242, 242));
-				}
-
-				&.groundpolis {
-					@include ticker(#251a10, rgb(110, 229, 0));
-				}
-
-				&.mastodon {
-					@include ticker(#2b90d9, #fff);
-				}
-
-				&.pleroma {
-					@include ticker(#10181e, #ffaf6d);
-				}
-
-				> .favicon {
-					display: inline-block;
-					height: 1em;
-					margin-right: 4px;
-				}
-			}
 			> .body {
 				> .cw {
 					cursor: default;
