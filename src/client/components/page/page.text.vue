@@ -1,8 +1,8 @@
 <template>
 <div class="mrdgzndn">
-	<MkPlainText v-if="value.format === 'plainText'" :text="text"/>
-	<MkMarkdown v-else-if="value.format === 'markdown'" :text="text"/>
-	<span v-else-if="value.format === 'html'" v-html="text"/>
+	<MkPlainText v-if="block.format === 'plainText'" :text="text"/>
+	<MkMarkdown v-else-if="block.format === 'markdown'" :text="text"/>
+	<span v-else-if="block.format === 'html'" v-html="text"/>
 	<Mfm v-else :text="text" :is-note="false" :i="$i" :key="text"/>
 	<MkUrlPreview v-for="url in urls" :url="url" :key="url" class="url"/>
 </div>
