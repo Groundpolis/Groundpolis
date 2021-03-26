@@ -258,5 +258,19 @@ export const pages: PageDefinition[] = [
 		title: 'Groundpolis Update',
 		icon: faSyncAlt,
 		component: () => defineAsyncComponent(() => import('./update.vue'))
-	}
+	},
+	{
+		name: 'plugin/install',
+		title: ts._plugin.install,
+		icon: faDownload,
+		type: 'hidden',
+		component: () => defineAsyncComponent(() => import('./plugin.install.vue')),
+	},
+	{
+		name: 'plugin/manage',
+		title: ts._plugin.manage,
+		icon: faPlug,
+		type: 'hidden',
+		component: () => defineAsyncComponent(() => import('./plugin.manage.vue')),
+	},
 ];
