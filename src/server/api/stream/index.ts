@@ -298,7 +298,7 @@ export default class Connection {
 			select: ['muteeId']
 		});
 
-		this.renoteMuting = renoteMutings.map(x => x.muteeId);
+		this.renoteMuting = new Set<string>(renoteMutings.map(x => x.muteeId));
 	}
 
 	@autobind
