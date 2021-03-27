@@ -146,6 +146,9 @@ export default define(meta, async (ps, me) => {
 
 		enableServiceWorker: instance.enableServiceWorker,
 
+		emojiSuggestionLimitation: instance.emojiSuggestionLimitation,
+		emojiSuggestionLimitationPremium: instance.emojiSuggestionLimitationPremium,
+
 		...(ps.detail ? {
 			pinnedPages: instance.pinnedPages,
 			pinnedClipId: instance.pinnedClipId,

@@ -4,8 +4,7 @@ import { ID } from '../../../../../misc/cafy-id';
 import { DriveFiles, Emojis, EmojiRequests } from '../../../../../models';
 import { ApiError } from '../../../error';
 import { genId } from '../../../../../misc/gen-id';
-
-const MAXIMUM_SUGGESTION_COUNT = 10;
+import { fetchMeta } from '../../../../../misc/fetch-meta';
 
 export const meta = {
 	desc: {
@@ -64,10 +63,12 @@ export default define(meta, async (ps, user) => {
 	// 既に存在している名前であればエラー
 	if (await Emojis.findOne({ name: ps.name, host: null })) throw new ApiError(meta.errors.alreadyExists);
 
+	const instance = await fetchMeta();
+
 	// 上限に達していればエラー
-	// プレミアム会員およびモデレーター以上は例外
-	const count = await EmojiRequests.count({ where: { proposerId: user.id, state: 'pending' } });
-	if (!user.isPremium && !user.isAdmin && !user.isModerator && count >= MAXIMUM_SUGGESTION_COUNT) throw new ApiError(meta.errors.tooManySuggestions);
+	const count = await EmojiRequests.count({ where: { proposerId: user.id, state: 'pending' } }) + 1;
+	const max = user.isAdmin || user.isModerator ? -1 : user.isPremium ? instance.emojiSuggestionLimitationPremium : instance.emojiSuggestionLimitation;
+	if (max >= 0 && count > max) throw new ApiError(meta.errors.tooManySuggestions);
 
 	await EmojiRequests.insert({
 		id: genId(),

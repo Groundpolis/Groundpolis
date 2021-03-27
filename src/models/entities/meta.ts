@@ -436,4 +436,14 @@ export class Meta {
 		default: true,
 	})
 	public objectStorageS3ForcePathStyle: boolean;
+
+	@Column('integer', {
+		default: 10,
+	})
+	public emojiSuggestionLimitation: number;
+
+	@Column('integer', {
+		default: -1,
+	})
+	public emojiSuggestionLimitationPremium: number;
 }

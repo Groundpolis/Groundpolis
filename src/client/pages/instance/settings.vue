@@ -37,6 +37,23 @@
 	</section>
 
 	<section class="_card _vMargin">
+		<div class="_title">{{ $ts.emojiSuggestionLimitation }}</div>
+		<div class="_content">
+			<MkSwitch v-model:value="emojiLimit">{{ $ts.limit }}</MkSwitch>
+			<MkInput v-if="emojiLimit" v-model:value="emojiLimitValue" type="number">
+				{{ $ts.value }}
+			</MkInput>
+			<MkSwitch v-model:value="emojiLimitPremium">{{ $ts.limitPremium }}</MkSwitch>
+			<MkInput v-if="emojiLimitPremium" v-model:value="emojiLimitValuePremium" type="number">
+				{{ $ts.value }}
+			</MkInput>
+		</div>
+		<div class="_footer">
+			<MkButton primary @click="save(true)"><Fa :icon="faSave"/> {{ $ts.save }}</MkButton>
+		</div>
+	</section>
+
+	<section class="_card _vMargin">
 		<div class="_title"><Fa :icon="faUser"/> {{ $ts.registration }}</div>
 		<div class="_content">
 			<MkSwitch v-model:value="enableRegistration" @update:value="save()">{{ $ts.enableRegistration }}</MkSwitch>
@@ -362,6 +379,10 @@ export default defineComponent({
 			smtpUser: '',
 			smtpPass: '',
 			summalyProxy: '',
+			emojiLimit: true,
+			emojiLimitPremium: false,
+			emojiLimitValue: 10,
+			emojiLimitValuePremium: 10,
 			faPencilAlt, faTwitter, faDiscord, faGithub, faShareAlt, faTrashAlt, faGhost, faCog, faPlus, faCloud, faBan, faSave, faServer, faLink, faEnvelope, faThumbtack, faUser, faShieldAlt, faKey, faBolt, faArchway
 		}
 	},
@@ -438,6 +459,10 @@ export default defineComponent({
 		this.smtpUser = this.meta.smtpUser;
 		this.smtpPass = this.meta.smtpPass;
 		this.summalyProxy = this.meta.summalyProxy;
+		this.emojiLimit = this.meta.emojiSuggestionLimitation >= 0;
+		this.emojiLimitPremium = this.meta.emojiSuggestionLimitationPremium >= 0;
+		if (this.emojiLimit) this.emojiLimitValue = this.meta.emojiSuggestionLimitation;
+		if (this.emojiLimitPremium) this.emojiLimitValuePremium = this.meta.emojiSuggestionLimitationPremium;
 
 		if (this.proxyAccountId) {
 			os.api('users/show', { userId: this.proxyAccountId }).then(proxyAccount => {
@@ -602,6 +627,8 @@ export default defineComponent({
 				smtpPass: this.smtpPass,
 				summalyProxy: this.summalyProxy,
 				useStarForReactionFallback: this.useStarForReactionFallback,
+				emojiSuggestionLimitation: this.emojiLimit ? this.emojiLimitValue : -1,
+				emojiSuggestionLimitationPremium: this.emojiLimitPremium ? this.emojiLimitValuePremium : -1,
 			}).then(() => {
 				fetchInstance();
 				if (withDialog) {

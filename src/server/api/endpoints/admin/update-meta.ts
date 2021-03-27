@@ -486,6 +486,20 @@ export const meta = {
 		objectStorageS3ForcePathStyle: {
 			validator: $.optional.bool
 		},
+
+		emojiSuggestionLimitation: {
+			validator: $.optional.num,
+			desc: {
+				'ja-JP': '普通ユーザー1人あたりの絵文字の提案の最大値'
+			}
+		},
+
+		emojiSuggestionLimitationPremium: {
+			validator: $.optional.num,
+			desc: {
+				'ja-JP': 'プレミアムユーザー1人あたりの絵文字の提案の最大値'
+			}
+		},
 	}
 };
 
@@ -786,6 +800,14 @@ export default define(meta, async (ps, me) => {
 
 	if (ps.objectStorageS3ForcePathStyle !== undefined) {
 		set.objectStorageS3ForcePathStyle = ps.objectStorageS3ForcePathStyle;
+	}
+
+	if (ps.emojiSuggestionLimitation !== undefined) {
+		set.emojiSuggestionLimitation = ps.emojiSuggestionLimitation;
+	}
+
+	if (ps.emojiSuggestionLimitationPremium !== undefined) {
+		set.emojiSuggestionLimitationPremium = ps.emojiSuggestionLimitationPremium;
 	}
 
 	await getConnection().transaction(async transactionalEntityManager => {

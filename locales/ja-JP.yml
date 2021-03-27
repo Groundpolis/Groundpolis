@@ -860,6 +860,13 @@ receiveAnnouncementFromInstance: "インスタンスからのお知らせを受�
 preset: "プリセット"
 themeStoreError: "Theme Storeに接続できませんでした。"
 themeStoreError2: "代わりに、{link}をお使いください。"
+emojiSuggestionLimitation: "「絵文字の提案」の制限値"
+limit: "制限"
+limitPremium: "制限(プレミアム)"
+suggestionRemaining: "残り申請可能数: "
+suggestionEmojiWarnNameMalform: "絵文字の名前は通常、英小文字、数字、アンダースコア(_)の組み合わせである必要があります。この提案は名前を理由に拒否されるおそれがあります。"
+suggestionEmojiWarnFileSize: "50KBを超える画像は、環境によっては非対応とされます。この提案は画像サイズを理由に却下されるおそれがあります。"
+suggestionEmojiWarnFileType: "PNG形式、GIF形式以外の画像フォーマットは、環境によっては非対応のため、この提案はフォーマットを理由に却下されるおそれがあります。"
 
 _plugin:
   install: "プラグインのインストール"
