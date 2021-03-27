@@ -1,61 +1,67 @@
 <template>
-	<div class="v93n3na0">
-		<section class="_section">
-			<div class="_content">
-				<div class="preview">
-					<MkButton inline @click="selectFile">{{ $ts.selectFile }}</MkButton>
-					<img v-if="file" :src="file.url" :alt="file.name" />
-				</div>
-				<MkInput v-model:value="name"><span>{{ $ts.name }}</span></MkInput>
-				<MkInput v-model:value="aliases">
-					<span>{{ $ts.tags }}</span>
-					<template #desc>{{ $ts.tagsDescription }}</template>
-				</MkInput>
-				<MkTextarea v-model:value="description" :use-autocomplete="true" :max="500">
-					<span>{{ $ts.emojiSuggestionMessage }}</span>
-					<template #desc>{{ $ts.emojiSuggestionMessageDescription }}</template>
-				</MkTextarea>
-			</div>
-			<div class="_footer">
-				<MkButton inline primary :disabled="!canSend" @click="send"><fa :icon="faPaperPlane" fixed-width />{{ $ts.sendSuggestion }}</MkButton>
-			</div>
-		</section>
-		<section class="_section _vMargin">
-			<div class="_title"><fa :icon="faHistory"/> {{ $ts.history }}</div>
-			<div class="_content filter">
-				<MkSwitch v-model:value="includesPending"><fa :icon="faClock" fixed-width />{{ $ts.pending }}</MkSwitch>
-				<MkSwitch v-model:value="includesRejected"><fa :icon="faTimesCircle" fixed-width />{{ $ts.rejected }}</MkSwitch>
-				<MkSwitch v-model:value="includesAccepted"><fa :icon="faCheckCircle" fixed-width />{{ $ts.accepted }}</MkSwitch>
-			</div>
-			<div class="_content">
-				<MkPagination :pagination="pagination" class="suggestions" ref="pagination">
-					<template #empty><span>{{ $ts.noSuggestions }}</span></template>
-					<template #default="{items}">
-						<div class="item" v-for="item in items" :key="item.id">
-							<img :src="item.file.url" class="img" :alt="item.name"/>
-							<div class="body">
-								<div class="name">
-									<fa :icon="getIconOf(item.state)" :title="$t(item.state)" fixed-width/>
-									{{ item.name }}
-								</div>
-								<div class="aliases" v-if="item.aliases.length > 0">
-									<span class="alias" v-for="a in item.aliases" :key="a" v-text="a"/>
-								</div>
-								<Mfm class="description" :text="item.description"/>
-								<div class="moderator-comment" v-if="item.moderatorComment">
-									<h1 v-text="$ts.commentFromModerators" />
-									<Mfm class="description" :text="item.moderatorComment"/>
-								</div>
+	<MkTab v-model:value="tab" style="border-bottom: solid 1px var(--divider);">
+		<option value="form">
+			{{ $ts.emojiSuggestion }}
+		</option>
+		<option value="history">
+			{{ $ts.history }}
+		</option>
+	</MkTab>
+	<FormBase v-if="tab === 'form'">
+		<div v-if="file" class="_formItem preview">
+			<img class="preview" :src="file.url" :alt="file.name" />
+		</div>
+		<div v-else class="_formItem placeholder" />
+		<FormButton primary @click="selectFile">{{ $ts.selectFile }}</FormButton>
+		<template v-if="file">
+			<FormInput v-model:value="name"><span>{{ $ts.name }}</span></FormInput>
+			<FormInput v-model:value="aliases">
+				<span>{{ $ts.tags }}</span>
+				<template #desc>{{ $ts.tagsDescription }}</template>
+			</FormInput>
+			<FormTextarea v-model:value="description" :use-autocomplete="true" :max="500">
+				<span>{{ $ts.emojiSuggestionMessage }}</span>
+				<template #desc>{{ $ts.emojiSuggestionMessageDescription }}</template>
+			</FormTextarea>
+			<FormButton primary :disabled="!canSend" @click="send">
+				<fa :icon="faPaperPlane" fixed-width />{{ $ts.sendSuggestion }}
+			</FormButton>
+		</template>
+	</FormBase>
+	<section v-if="tab === 'history'">
+		<div class="_section _inputs filter">
+			<MkSwitch v-model:value="includesPending"><fa :icon="faClock" fixed-width />{{ $ts.pending }}</MkSwitch>
+			<MkSwitch v-model:value="includesRejected"><fa :icon="faTimesCircle" fixed-width />{{ $ts.rejected }}</MkSwitch>
+			<MkSwitch v-model:value="includesAccepted"><fa :icon="faCheckCircle" fixed-width />{{ $ts.accepted }}</MkSwitch>
+		</div>
+		<div class="_section">
+			<MkPagination :pagination="pagination" class="suggestions" ref="pagination">
+				<template #empty><span>{{ $ts.noSuggestions }}</span></template>
+				<template #default="{items}">
+					<div class="item" v-for="item in items" :key="item.id">
+						<img :src="item.file.url" class="img" :alt="item.name"/>
+						<div class="body">
+							<div class="name">
+								<fa :icon="getIconOf(item.state)" :title="$t(item.state)" fixed-width/>
+								{{ item.name }}
 							</div>
-							<button class="delete" @click.stop="del(item.id)">
-								<fa :icon="faTimes" />
-							</button>
+							<div class="aliases" v-if="item.aliases.length > 0">
+								<span class="alias" v-for="a in item.aliases" :key="a" v-text="a"/>
+							</div>
+							<Mfm class="description" :text="item.description"/>
+							<div class="moderator-comment" v-if="item.moderatorComment">
+								<h1 v-text="$ts.commentFromModerators" />
+								<Mfm class="description" :text="item.moderatorComment"/>
+							</div>
 						</div>
-					</template>
-				</MkPagination>
-			</div>
-		</section>
-	</div>
+						<button class="delete" @click.stop="del(item.id)">
+							<fa :icon="faTimes" />
+						</button>
+					</div>
+				</template>
+			</MkPagination>
+		</div>
+	</section>
 </template>
 
 <script lang="ts">
@@ -66,6 +72,11 @@ import MkInput from '../components/ui/input.vue';
 import MkTextarea from '../components/ui/textarea.vue';
 import MkSwitch from '../components/ui/switch.vue';
 import MkPagination from '../components/ui/pagination.vue';
+import MkTab from '../components/tab.vue';
+import FormBase from '../components/form/base.vue';
+import FormButton from '../components/form/button.vue';
+import FormInput from '../components/form/input.vue';
+import FormTextarea from '../components/form/textarea.vue';
 import { PackedDriveFile } from '../../models/repositories/drive-file';
 import { selectFile } from '../scripts/select-file';
 import { PackedEmojiRequest } from '../../models/repositories/emoji-request';
@@ -77,7 +88,12 @@ export default defineComponent({
 		MkInput,
 		MkTextarea,
 		MkSwitch,
-		MkPagination
+		MkPagination,
+		MkTab,
+		FormBase,
+		FormButton,
+		FormInput,
+		FormTextarea,
 	},
 	data() {
 			return {
@@ -91,6 +107,7 @@ export default defineComponent({
 				includesPending: true,
 				includesRejected: true,
 				includesAccepted: true,
+				tab: 'form',
 				file: null as PackedDriveFile | null,
 				pagination: {
 					endpoint: 'suggestions/emojis/list',
@@ -187,6 +204,15 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.preview, .placeholder {
+	display: block;
+	margin: 0 auto;
+	height: 64px;
+}
+.placeholder {
+	width: 64px;
+	border: 1px solid var(--divider);
+}
 .v93n3na0 {
 	.preview {
 		display: flex;
