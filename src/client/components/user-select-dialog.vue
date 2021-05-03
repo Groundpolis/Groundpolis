@@ -14,8 +14,11 @@
 			<MkInput v-model:value="host" class="input" @update:value="search"><span>{{ $ts.host }}</span><template #prefix>@</template></MkInput>
 		</div>
 	</div>
-	<div class="tbhwbxda _section result" v-if="username != '' || host != ''" :class="{ hit: users.length > 0 }">
-		<div class="users" v-if="users.length > 0">
+	<div class="tbhwbxda _section result" v-if="username != '' || host != ''">
+		<div class="searching" v-if="isSearching">
+			<MkLoading />
+		</div>
+		<div class="users" v-else-if="users.length > 0">
 			<div class="user" v-for="user in users" :key="user.id" :class="{ selected: selected && selected.id === user.id }" @click="selected = user" @dblclick="ok()">
 				<MkAvatar :user="user" class="avatar"/>
 				<div class="body">
@@ -25,8 +28,9 @@
 			</div>
 		</div>
 		<div v-else class="empty">
-			<span>{{ $ts.noUsers }}</span>
+			<div>{{ $ts.noUsers }}</div>
 		</div>
+		<MkButton v-if="showQueryButton" @click="queryAndSelect">{{$ts.searchUserAndSelect}}</MkButton>
 	</div>
 	<div class="tbhwbxda _section recent" v-if="username == '' && host == ''">
 		<div class="users">
@@ -46,12 +50,14 @@
 import { defineComponent } from 'vue';
 import { faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
 import MkInput from './ui/input.vue';
+import MkButton from './ui/button.vue';
 import XModalWindow from '@/components/ui/modal-window.vue';
 import * as os from '@/os';
 
 export default defineComponent({
 	components: {
 		MkInput,
+		MkButton,
 		XModalWindow,
 	},
 
@@ -67,6 +73,7 @@ export default defineComponent({
 			recentUsers: [],
 			users: [],
 			selected: null,
+			isSearching: false,
 			faTimes, faCheck
 		};
 	},
@@ -83,12 +90,19 @@ export default defineComponent({
 		});
 	},
 
+	computed: {
+		showQueryButton() {
+			return this.username && !this.users.some(u => (u.username ?? '') == this.username && (u.host ?? '') === this.host);
+		}
+	},
+
 	methods: {
 		search() {
 			if (this.username == '' && this.host == '') {
 				this.users = [];
 				return;
 			}
+			this.isSearching = true;
 			os.api('users/search-by-username-and-host', {
 				username: this.username,
 				host: this.host,
@@ -96,6 +110,7 @@ export default defineComponent({
 				detail: false
 			}).then(users => {
 				this.users = users;
+				this.isSearching = false;
 			});
 		},
 
@@ -118,6 +133,16 @@ export default defineComponent({
 			this.$emit('cancel');
 			this.$refs.dialog.close();
 		},
+
+		queryAndSelect() {
+			os.apiWithDialog('users/show', {
+				username: this.username,
+				host: this.host,
+			}).then((u) => {
+				this.selected = u;
+				this.ok();
+			});
+		}
 	}
 });
 </script>
@@ -129,7 +154,7 @@ export default defineComponent({
 	overflow: auto;
 	height: 100%;
 
-	&.result.hit {
+	&.result {
 		padding: 0;
 	}
 
@@ -192,8 +217,15 @@ export default defineComponent({
 	}
 
 	> .empty {
-		opacity: 0.7;
 		text-align: center;
+		> div {
+			padding: 2rem 0;
+		}
+		> button {
+			width: 100%;
+			margin-top: var(--margin);
+			border-radius: 0;
+		}
 	}
 }
 </style>

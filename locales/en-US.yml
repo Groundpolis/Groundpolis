@@ -833,6 +833,7 @@ suggestionRemaining: "Remaining suggestion slot: "
 suggestionEmojiWarnNameMalform: "Emoji names usually need to be a combination of lowercase letters, numbers, and underscores (_). This suggestion may be rejected because of the name."
 suggestionEmojiWarnFileSize: "Images larger than 50KB are not supported in some environments. This suggestion may be rejected because of the size."
 suggestionEmojiWarnFileType: "Image formats other than PNG and GIF formats are not supported in some environments. This suggestion may be rejected because of the format."
+searchUserAndSelect: "Search by your input and select"
 _plugin:
   install: "Install plugins"
   installWarn: "Please do not install untrustworthy plugins."
