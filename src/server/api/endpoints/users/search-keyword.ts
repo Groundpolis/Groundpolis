@@ -76,8 +76,7 @@ export default define(meta, async (ps, me) => {
 		}));
 	}
 
-	query.andWhere('user.updatedAt IS NOT NULL')
-		.orderBy('user.updatedAt', 'DESC');
+	query.orderBy('user.updatedAt', 'DESC', 'NULLS LAST');
 
 	if (me) generateMutedUserQueryForUsers(query, me);
 
