@@ -219,6 +219,7 @@ export default defineComponent({
 			replies: [],
 			isDeleted: false,
 			muted: false,
+			showContent: false,
 			instance: null as {} | null,
 			renoteState: null as {
 				isRenoted: boolean;
