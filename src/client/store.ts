@@ -326,6 +326,10 @@ export const defaultStore = markRaw(new Storage('base', {
 			[255, 0, 128, 255],
 		] as Rgba[],
 	},
+	confirmBeforePost: {
+		where: 'account',
+		default: false
+	},
 
 	//#endregion
 }));

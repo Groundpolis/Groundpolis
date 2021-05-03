@@ -64,6 +64,9 @@
 				<Fa :icon="faPaperPlane" />
 			</button>
 		</footer>
+		<MkSwitch v-if="requiredConfirmation" v-model:value="confirmed" class="confirm-switch">
+			{{ $ts.confirmBeforePostLabel }}
+		</MkSwitch>
 		<details v-if="text" class="preview" :open="isPreviewOpened" @toggle="isPreviewOpened = $event.target.open">
 			<summary>{{ $ts.preview }}</summary>
 			<XNotePreview :note="previewNote"/>
@@ -91,10 +94,12 @@ import * as os from '@/os';
 import { selectFile } from '@/scripts/select-file';
 import { FormItem } from '../scripts/form';
 import { defaultStore, notePostInterruptors, postFormActions } from '@/store';
+import MkSwitch from './ui/switch.vue';
 
 export default defineComponent({
 	components: {
 		XNotePreview,
+		MkSwitch,
 		XPostFormAttaches: defineAsyncComponent(() => import('./post-form-attaches.vue')),
 		XPollEditor: defineAsyncComponent(() => import('./poll-editor.vue'))
 	},
@@ -161,7 +166,9 @@ export default defineComponent({
 			remoteFollowersOnly: this.$store.state.rememberNoteVisibility ? this.$store.state.remoteFollowersOnly : this.$store.state.defaultNoteRemoteFollowersOnly,
 			visibility: this.$store.state.rememberNoteVisibility ? this.$store.state.visibility : this.$store.state.defaultNoteVisibility,
 			currentAccount: {} as Record<string, unknown>,
+			currentAccountRegistry: {} as Record<string, unknown>,
 			accounts: [] as Record<string, unknown>[],
+			accountRegistries: [] as Record<string, unknown>[],
 			useBroadcast: false,
 			broadcastText: '',
 			visibleUsers: [],
@@ -171,6 +178,8 @@ export default defineComponent({
 			recentHashtags: JSON.parse(localStorage.getItem('hashtags') || '[]'),
 			imeText: '',
 			postFormActions,
+			confirmed: false,
+			requiredConfirmation: this.$store.state.confirmBeforePost,
 			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown, faEllipsisV
 		};
 	},
@@ -224,6 +233,7 @@ export default defineComponent({
 
 		canPost(): boolean {
 			return !this.posting &&
+				(!this.requiredConfirmation || this.confirmed) &&
 				(1 <= this.textLength || 1 <= this.files.length || !!this.poll || !!this.quote) &&
 				(this.textLength <= this.max) &&
 				(!this.poll || this.poll.choices.length >= 2);
@@ -519,6 +529,7 @@ export default defineComponent({
 			this.files = [];
 			this.poll = null;
 			this.quote = null;
+			this.confirmed = false;
 		},
 
 		help() {
@@ -778,7 +789,18 @@ export default defineComponent({
 			const accountItems = this.accounts.map(account => ({
 				type: 'user',
 				user: account,
-				action: () => this.currentAccount = account,
+				action: () => {
+					this.currentAccount = account;
+					if (this.currentAccountIsMyself) {
+						this.requiredConfirmation = this.$store.state.confirmBeforePost;
+					} else {
+						os.api('i/registry/get-all', {
+							scope: ['client', 'base'],
+						}, this.currentAccount.token)
+							.then((dat) => this.requiredConfirmation = dat.confirmBeforePost);
+					}
+
+				},
 			}));
 
 			os.modalMenu(accountItems, ev.currentTarget || ev.target, { align: 'left' });
@@ -1050,6 +1072,10 @@ export default defineComponent({
 					background: var(--accentLighten);
 				}
 			}
+		}
+		> .confirm-switch {
+			margin: 0 1rem;
+			margin-bottom: 1rem;
 		}
 	}
 

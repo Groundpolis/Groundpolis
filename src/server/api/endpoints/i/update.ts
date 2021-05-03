@@ -175,13 +175,6 @@ export const meta = {
 		mutingNotificationTypes: {
 			validator: $.optional.arr($.str.or(notificationTypes as unknown as string[]))
 		},
-
-		noindex: {
-			validator: $.optional.bool,
-			desc: {
-				'ja-JP': 'ユーザーページおよび自分のノートページにて、クローラーを拒否するかどうか'
-			}
-		},
 	},
 
 	errors: {

@@ -18,6 +18,10 @@
 		<FormSwitch v-model:value="imageNewTab">{{ $ts.openImageInNewTab }}</FormSwitch>
 		<FormSwitch v-model:value="enableInfiniteScroll">{{ $ts.enableInfiniteScroll }}</FormSwitch>
 		<FormSwitch v-model:value="disablePagesScript">{{ $ts.disablePagesScript }}</FormSwitch>
+		<FormSwitch v-model:value="confirmBeforePost">
+			{{ $ts.confirmBeforePost }}
+			<template #desc>{{$ts.confirmBeforePostDesc}}</template>
+		</FormSwitch>
 	</FormGroup>
 
 	<FormSelect v-model:value="serverDisconnectedBehavior">
@@ -196,6 +200,7 @@ export default defineComponent({
 		showFullAcct: defaultStore.makeGetterSetter('showFullAcct'),
 		iconShape: defaultStore.makeGetterSetter('iconShape'),
 		noteCollapseThreshold: defaultStore.makeGetterSetter('noteCollapseThreshold'),
+		confirmBeforePost: defaultStore.makeGetterSetter('confirmBeforePost'),
 	},
 
 	watch: {

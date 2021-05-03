@@ -834,6 +834,9 @@ suggestionEmojiWarnNameMalform: "Emoji names usually need to be a combination of
 suggestionEmojiWarnFileSize: "Images larger than 50KB are not supported in some environments. This suggestion may be rejected because of the size."
 suggestionEmojiWarnFileType: "Image formats other than PNG and GIF formats are not supported in some environments. This suggestion may be rejected because of the format."
 searchUserAndSelect: "Search by your input and select"
+confirmBeforePost: "Add a confirmation step to the post form"
+confirmBeforePostDesc: "Add a button for confirmation at the post form. To prevent mistake, we recommended to turn it on if you are an official account."
+confirmBeforePostLabel: "Ready to note?"
 _plugin:
   install: "Install plugins"
   installWarn: "Please do not install untrustworthy plugins."

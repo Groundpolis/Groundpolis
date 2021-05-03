@@ -868,6 +868,9 @@ suggestionEmojiWarnNameMalform: "絵文字の名前は通常、英小文字、�
 suggestionEmojiWarnFileSize: "50KBを超える画像は、環境によっては非対応とされます。この提案は画像サイズを理由に却下されるおそれがあります。"
 suggestionEmojiWarnFileType: "PNG形式、GIF形式以外の画像フォーマットは、環境によっては非対応のため、この提案はフォーマットを理由に却下されるおそれがあります。"
 searchUserAndSelect: "入力した値で検索して確定する"
+confirmBeforePost: "投稿フォームに確認ステップを追加する"
+confirmBeforePostDesc: "オンにすると投稿フォームにスイッチが追加され、オンにするまで投稿ボタンが無効化されます。アカウント間違い防止のために、公式アカウントではオンにすることをオススメします。"
+confirmBeforePostLabel: "投稿内容に間違いはありませんか？"
 
 _plugin:
   install: "プラグインのインストール"
