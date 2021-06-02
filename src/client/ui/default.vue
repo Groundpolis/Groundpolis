@@ -362,6 +362,14 @@ export default defineComponent({
 			bottom: 64px;
 		}
 
+		@supports (bottom: env(safe-area-inset-bottom)) {
+			bottom: calc(32px + env(safe-area-inset-bottom));
+
+			&.navHidden {
+				bottom: calc(64px + env(safe-area-inset-bottom));
+			}
+		}
+
 		@media (max-width: $widgets-hide-threshold) {
 			right: 32px;
 		}
@@ -449,6 +457,7 @@ export default defineComponent({
 		width: 100%;
 		box-sizing: border-box;
 		background: var(--panel);
+		padding-bottom: env(safe-area-inset-bottom);
 		box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
 		&:not(.navHidden) {
 			display: none;
