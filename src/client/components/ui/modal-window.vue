@@ -2,12 +2,7 @@
 <MkModal ref="modal" @click="$emit('click')" @closed="$emit('closed')">
 	<div class="ebkgoccj _popup _narrow_" @keydown="onKeydown" :style="{ width: `${width}px`, height: height ? `${height}px` : null }">
 		<div class="header">
-			<button class="_button" v-if="withOkButton" @click="$emit('close')"><Fa :icon="faTimes"/></button>
-			<span class="title">
-				<slot name="header"></slot>
-			</span>
-			<button class="_button" v-if="!withOkButton" @click="$emit('close')"><Fa :icon="faTimes"/></button>
-			<button class="_button" v-if="withOkButton" @click="$emit('ok')" :disabled="okButtonDisabled"><Fa :icon="faCheck"/></button>
+			<slot name="header"></slot>
 		</div>
 		<div class="body" v-if="padding">
 			<div class="_section">
@@ -16,6 +11,14 @@
 		</div>
 		<div class="body" v-else>
 			<slot></slot>
+		</div>
+		<div class="footer">
+			<button class="_button" v-if="withOkButton" @click="$emit('close')"><Fa :icon="faTimes"/></button>
+			<div class="content">
+				<slot name="footer"></slot>
+			</div>
+			<button class="_button" v-if="!withOkButton" @click="$emit('close')"><Fa :icon="faTimes"/></button>
+			<button class="_button" v-if="withOkButton" @click="$emit('ok')" :disabled="okButtonDisabled"><Fa :icon="faCheck"/></button>
 		</div>
 	</div>
 </MkModal>
@@ -99,17 +102,37 @@ export default defineComponent({
 	@media (max-width: 500px) {
 		--section-padding: 16px;
 	}
+	$height: 58px;
+	$height-narrow: 42px;
 
 	> .header {
-		$height: 58px;
-		$height-narrow: 42px;
 		display: flex;
 		flex-shrink: 0;
 		box-shadow: 0px 1px var(--divider);
+		line-height: $height;
+		align-items: center;
+		justify-content: center;
+		font-weight: bold;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		pointer-events: none;
+
+		@media (max-width: 500px) {
+			line-height: $height-narrow;
+			padding-left: 16px;
+		}
+	}
+
+	> .footer {
+		display: flex;
+		flex-shrink: 0;
+		box-shadow: 0px -1px var(--divider);
 
 		> button {
 			height: $height;
 			width: $height;
+			font-size: $height / 3;
 
 			@media (max-width: 500px) {
 				height: $height-narrow;
@@ -117,10 +140,9 @@ export default defineComponent({
 			}
 		}
 
-		> .title {
+		> .content {
 			flex: 1;
 			line-height: $height;
-			padding-left: 32px;
 			font-weight: bold;
 			white-space: nowrap;
 			overflow: hidden;
