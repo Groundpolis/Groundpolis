@@ -1,15 +1,9 @@
 <template>
-<div>
-	<main class="_section">
-		<div class="_content">
-			<ul>
-				<li class="_card doc _vMargin" v-for="doc in docs" :key="doc.path">
-					<MkA :to="`/docs/${doc.path}`">{{ doc.title }}</MkA>
-				</li>
-			</ul>
-		</div>
-	</main>
-</div>
+<FormBase>
+	<FormGroup>
+		<FormLink v-for="doc in docs" :key="doc.path" :to="`/docs/${doc.path}`">{{ doc.title }}</FormLink>
+	</FormGroup>
+</FormBase>
 </template>
 
 <script lang="ts">
@@ -17,14 +11,23 @@ import { defineComponent } from 'vue';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { url, lang } from '@/config';
 
+import FormBase from '@/components/form/base.vue';
+import FormLink from '@/components/form/link.vue';
+import FormGroup from '@/components/form/group.vue';
+
 export default defineComponent({
+	components: {
+		FormBase,
+		FormLink,
+		FormGroup
+	},
 	data() {
 		return {
 			INFO: {
 				title: this.$ts.help,
 				icon: faQuestionCircle
 			},
-			docs: [],
+			docs: [] as any[],
 			faQuestionCircle
 		}
 	},
@@ -36,10 +39,3 @@ export default defineComponent({
 	},
 });
 </script>
-
-<style lang="scss" scoped>
-	.doc > a {
-		display: block;
-		padding: 16px;
-	}
-</style>
