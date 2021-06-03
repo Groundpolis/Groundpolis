@@ -147,7 +147,6 @@ export default defineComponent({
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
-			pointer-events: none;
 
 			@media (max-width: 500px) {
 				line-height: $height-narrow;

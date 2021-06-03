@@ -13,6 +13,8 @@
 			<mfm :text="currentAnnouncement.text" :once="false"/>
 			<img v-if="currentAnnouncement.imageUrl" :src="currentAnnouncement.imageUrl"/>
 		</div>
+	</div>
+	<template #footer>
 		<div class="navigation">
 			<button class="_button arrow" @click="currentAnnouncementIndex--" :disabled="currentAnnouncementIndex == 0">
 				<Fa :icon="faChevronLeft"/>
@@ -22,7 +24,7 @@
 				<Fa :icon="faChevronRight"/>
 			</button>
 		</div>
-	</div>
+	</template>
 </XModalWindow>
 </template>
 
@@ -108,14 +110,14 @@ export default defineComponent({
 				border-radius: var(--radius);
 			}
 		}
-		> .navigation {
-			margin-top: auto;
-			padding-top: 16px;
-			border-top: 1px solid var(--divider);
-			font-size: 24px;
-			> * {
-				margin-right: 16px;
-			}
-		}
+}
+.navigation {
+	> button.arrow {
+		width: 58px;
+		margin: 0;
+	}
+	> span {
+		margin: 0 8px;
+	}
 }
 </style>
