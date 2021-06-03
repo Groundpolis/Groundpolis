@@ -272,7 +272,7 @@ export default defineComponent({
 .mk-app {
 	$header-height: 58px; // TODO: どこかに集約したい
 	$ui-font-size: 1em; // TODO: どこかに集約したい
-	$widgets-hide-threshold: 1090px;
+	$widgets-hide-threshold: 1100px;
 
 	// ほんとは単に 100vh と書きたいところだが... https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
 	min-height: calc(var(--vh, 1vh) * 100);

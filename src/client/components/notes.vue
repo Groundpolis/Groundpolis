@@ -1,6 +1,6 @@
 <template>
 <div class="_list_">
-	<div class="_fullinfo" v-if="empty">
+	<div class="_fullinfo _emptyinfo" v-if="empty">
 		<div>{{ $ts.noNotes }}</div>
 	</div>
 

@@ -28,8 +28,7 @@
 				</div>
 			</MkA>
 		</div>
-		<div class="_fullinfo" v-if="!fetching && messages.length == 0">
-			<img src="https://xn--931a.moe/assets/info.jpg" class="_ghost"/>
+		<div class="_fullinfo _emptyinfo" v-if="!fetching && messages.length == 0">
 			<div>{{ $ts.noHistory }}</div>
 		</div>
 		<MkLoading v-if="fetching"/>

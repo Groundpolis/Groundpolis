@@ -10,7 +10,7 @@
 		<template v-if="moreFetching"><MkLoading inline/></template>
 	</button>
 
-	<p class="empty" v-if="empty">{{ $ts.noNotifications }}</p>
+	<p class="empty _emptyinfo" v-if="empty">{{ $ts.noNotifications }}</p>
 
 	<MkError v-if="error" @retry="init()"/>
 </div>
