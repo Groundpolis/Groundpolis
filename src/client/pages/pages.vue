@@ -8,8 +8,11 @@
 
 	<div class="_section">
 		<div class="rknalgpo _content" v-if="tab === 'featured'">
-			<MkPagination :pagination="featuredPagesPagination" #default="{items}">
-				<MkPagePreview v-for="page in items" class="ckltabjg" :page="page" :key="page.id"/>
+			<MkPagination :pagination="featuredPagesPagination">
+				<template #empty><div class="_emptyinfo">{{ $ts.noFeaturedPages }}</div></template>
+				<template #default="{items}">
+					<MkPagePreview v-for="page in items" class="ckltabjg" :page="page" :key="page.id"/>
+				</template>
 			</MkPagination>
 		</div>
 
