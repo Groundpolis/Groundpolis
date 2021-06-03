@@ -1,6 +1,7 @@
 <template>
 <div class="_panel vjnjpkug">
 	<div class="banner" :style="user.bannerUrl ? `background-image: url(${user.bannerUrl})` : ''"></div>
+	<div v-if="showFollowed && user.isFollowed" class="followed" v-text="$ts.followsYou" />
 	<MkAvatar class="avatar" :user="user" :disable-preview="true"/>
 	<div class="title">
 		<MkA class="name" :to="userPage(user)"><MkUserName :user="user" :nowrap="false"/></MkA>
@@ -42,6 +43,10 @@ export default defineComponent({
 		user: {
 			type: Object,
 			required: true
+		},
+		showFollowed: {
+			type: Boolean,
+			default: true,
 		},
 	},
 
@@ -139,6 +144,17 @@ export default defineComponent({
 		position: absolute;
 		top: 8px;
 		right: 8px;
+	}
+
+	> .followed {
+		position: absolute;
+		top: 16px;
+		left: 16px;
+		padding: 4px 8px;
+		color: #fff;
+		background: rgba(0, 0, 0, 0.7);
+		font-size: 0.7em;
+		border-radius: 6px;
 	}
 }
 </style>

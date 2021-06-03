@@ -6,7 +6,7 @@
 		<p>{{ $ts.noUsers }}</p>
 	</div>
 	<div class="users">
-		<MkUserInfo class="user" v-for="user in users" :user="user" :key="user.id"/>
+		<MkUserInfo class="user" :showFollowed="showFollowed" v-for="user in users" :user="user" :key="user.id"/>
 	</div>
 	<button class="more" v-appear="$store.state.enableInfiniteScroll ? fetchMore : null" @click="fetchMore" :class="{ fetching: moreFetching }" v-show="more" :disabled="moreFetching">
 		<template v-if="moreFetching"><Fa icon="spinner" pulse fixed-width/></template>{{ moreFetching ? $ts.loading : $ts.loadMore }}
@@ -39,6 +39,10 @@ export default defineComponent({
 		expanded: {
 			type: Boolean,
 			default: true
+		},
+		showFollowed: {
+			type: Boolean,
+			default: true,
 		},
 	},
 
