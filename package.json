@@ -266,7 +266,7 @@
 		"webpack": "5.21.1",
 		"webpack-cli": "4.5.0",
 		"websocket": "1.0.33",
-		"ws": "7.4.3",
+		"ws": "7.4.6",
 		"xev": "2.0.1"
 	},
 	"devDependencies": {
