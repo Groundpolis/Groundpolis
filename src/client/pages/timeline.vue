@@ -136,6 +136,7 @@ export default defineComponent({
 		src() {
 			this.queue = 0;
 			this.showNav = false;
+			this.top();
 		},
 		list(x) {
 			this.showNav = false;
