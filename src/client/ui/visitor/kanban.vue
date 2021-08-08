@@ -16,7 +16,7 @@
 					</div>
 				</div>
 				<div class="action">
-					<button v-if="meta && !(meta.disableRegistration && meta.disableInvitation)" class="_buttonPrimary" @click="signup()">{{ $t.signup }}</button>
+					<button v-if="meta && !(meta.disableRegistration && meta.disableInvitation)" class="_buttonPrimary" @click="signup()">{{ $ts.signup }}</button>
 					<button class="_button" @click="signin()">{{ $ts.login }}</button>
 				</div>
 				<div class="announcements panel">
