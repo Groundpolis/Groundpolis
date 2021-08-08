@@ -40,7 +40,7 @@
 			<input type="checkbox" v-model="ToSAgreement">
 			<I18n :src="$ts.agreeTo">
 				<template #0>
-					<a :href="meta.tosUrl" class="_link" target="_blank">{{ $ts.tos }}</a>
+					<a :href="meta.tosUrl" class="_link" :target="tosIsExternal ? '_blank' : undefined" :rel="tosIsExternal ? 'noopener noreferrer' : undefined">{{ $ts.tos }}</a>
 				</template>
 			</I18n>
 		</label>
@@ -118,6 +118,11 @@ export default defineComponent({
 				this.usernameState != 'invalid-format' &&
 				this.usernameState != 'min-range' &&
 				this.usernameState != 'max-range');
+		},
+
+		tosIsExternal() {
+			if (!this.meta || !this.meta.tosUrl) return;
+			return new URL(this.meta.tosUrl).host !== host;
 		}
 	},
 
