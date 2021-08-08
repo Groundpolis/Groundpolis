@@ -134,6 +134,7 @@ export default defineComponent({
 	},
 	watch: {
 		src() {
+			this.queue = 0;
 			this.showNav = false;
 		},
 		list(x) {
