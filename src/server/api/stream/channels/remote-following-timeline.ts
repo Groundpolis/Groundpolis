@@ -19,7 +19,7 @@ export default class extends Channel {
 	@autobind
 	private async onNote(note: PackedNote) {
 		// その投稿のユーザーをフォローしていなかったら弾く
-		if (this.user!.id !== note.userId && !this.following.includes(note.userId)) return;
+		if (this.user!.id !== note.userId && !this.following.has(note.userId)) return;
 		// ローカルなら弾く
 		if (note.user.host == null) return;
 

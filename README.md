@@ -8,36 +8,7 @@ Groundpolis
 
 **A forever evolving, interplanetary microblogging platform.**
 
-Groundpolis is a [Misskey](https://github.com/syuilo/misskey) based microblogging platform.
-
-
-## Features
-
-Groundpolis also has almost all features in the latest version of Misskey.
-
-In addition, Groundpolis has more attractive new features, improvements.
-
-It's difficult to list all of them, so I will introduce some of them.
-
-### Paint
-
-Draw your original art with built-in painting tool!
-
-You can share your own painting as a note instantly.
-
-You can also open your image from drive and edit it.
-
-## Emoji Suggestion Form
-
-Suggest a custom emoji to the server administrator.
-
-Using the form, simply upload your emoji and enter detailed information to propose it to the server administrator.
-
-The administrator can easily add emojis by simply accepting the received suggestion, or reject it with a reason.
-
-## Optimized and improved Mobile UI
-
-Groundpolis has a mobile UI that is easier to operate than the original one.
+Groundpolis is a [Misskey](https://github.com/syuilo/misskey) 12.69.0 based microblogging platform.
 
 News
 --------
