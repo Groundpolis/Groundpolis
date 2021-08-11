@@ -12,6 +12,11 @@
 		{{ $ts._labs.useLike }}
 		<template #desc>{{ $ts._labs.useLikeDesc }}</template>
 	</FormSwitch>
+
+	<FormSwitch v-model:value="tryNewPostForm">
+		{{ $ts._labs.tryNewPostForm }}
+		<template #desc>{{ $ts._labs.tryNewPostFormDesc }}</template>
+	</FormSwitch>
 	<FormLink to="labs/custom-css">
 		{{ $ts._labs.customCss }}
 	</FormLink>
@@ -38,6 +43,7 @@ export default defineComponent({
 
 	computed: {
 		disableReactions: defaultStore.makeGetterSetter('disableReactions'),
+		tryNewPostForm: defaultStore.makeGetterSetter('tryNewPostForm'),
 	},
 
 	watch: {

@@ -4,7 +4,10 @@
 
 	<div class="_section">
 		<XTutorial v-if="$store.reactiveState.tutorial.value != -1" class="tutorial _content _vMargin"/>
-		<XPostForm v-if="$store.reactiveState.showFixedPostForm.value" class="post-form _panel _content _vMargin" fixed/>
+		<template v-if="$store.reactiveState.showFixedPostForm.value">
+			<XPostFormV2 v-if="$store.reactiveState.tryNewPostForm" class="post-form _content _vMargin" fixed />
+			<XPostForm v-else class="post-form _panel _content _vMargin" fixed/>
+		</template>
 		<XTimeline ref="tl"
 			class="_content _vMargin"
 			:key="src === 'list' ? `list:${list.id}` : src === 'antenna' ? `antenna:${antenna.id}` : src === 'channel' ? `channel:${channel.id}` : src"
@@ -28,6 +31,7 @@ import { faComments } from '@fortawesome/free-regular-svg-icons';
 import Progress from '@/scripts/loading';
 import XTimeline from '@/components/timeline.vue';
 import XPostForm from '@/components/post-form.vue';
+import XPostFormV2 from '@/components/post-form-v2.vue';
 import { scroll } from '@/scripts/scroll';
 import * as os from '@/os';
 import { timelineMenuItems, timelineMenuMap } from '../menus/timeline';
@@ -37,6 +41,7 @@ export default defineComponent({
 		XTimeline,
 		XTutorial: defineAsyncComponent(() => import('./timeline.tutorial.vue')),
 		XPostForm,
+		XPostFormV2,
 	},
 	data() {
 		return {

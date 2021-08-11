@@ -50,12 +50,15 @@ export class Autocomplete {
 
 		this.suggestion = null;
 		this.textarea = textarea;
-		if (textarea instanceof HTMLElement && (!(textarea instanceof HTMLInputElement) || !(textarea instanceof HTMLTextAreaElement))) {
-			const input = findChildByTag(textarea, 'input') as HTMLInputElement
+		if (this.textarea.value instanceof HTMLElement) {
+			this.textarea = this.textarea.value;
+		}
+		if (this.textarea instanceof HTMLElement && (!(this.textarea instanceof HTMLInputElement) || !(this.textarea instanceof HTMLTextAreaElement))) {
+			const input = findChildByTag(this.textarea, 'input') as HTMLInputElement
 			if (input != null) {
 				this.textarea = input;
 			} else {
-				const ta = findChildByTag(textarea, 'textarea') as HTMLTextAreaElement
+				const ta = findChildByTag(this.textarea, 'textarea') as HTMLTextAreaElement
 				if (ta != null) {
 					this.textarea = ta;
 				} else {
@@ -63,6 +66,7 @@ export class Autocomplete {
 				}
 			}
 		}
+		console.log(this.textarea);
 		this.vm = vm;
 		this.opts = opts;
 		this.opening = false;

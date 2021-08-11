@@ -202,6 +202,10 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: false
 	},
+	aiChanMode: {
+		where: 'device',
+		default: false
+	},
 
 	//#region Groundpolis
 
@@ -330,7 +334,8 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'account',
 		default: false
 	},
-	aiChanMode: {
+
+	tryNewPostForm: {
 		where: 'device',
 		default: false
 	},

@@ -1,8 +1,9 @@
 @charset "utf-8";
+@use "./v2ui.scss";
 
 :root {
 	--baseContentWidth: 760px;
-	--radius: 4px;
+	--radius: 6px;
 	--marginFull: 16px;
 	--marginHalf: 10px;
 
@@ -146,7 +147,7 @@ hr {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: var(--modalBg);
+	background: rgba(0, 0, 0, 0.7);
 	backdrop-filter: var(--modalBgFilter);
 }
 

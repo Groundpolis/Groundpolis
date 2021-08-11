@@ -1,0 +1,307 @@
+@use 'sass:math';
+@use 'sass:map';
+
+$breakpoints: (
+  phone: 600px,
+  tablet: 800px,
+  pc: 1000px,
+);
+
+@mixin le($breakpoint) {
+  @media (max-width: #{map-get($breakpoints, $breakpoint)}) {
+    @content;
+  }
+}
+@mixin ge($breakpoint) {
+  @media (min-width: #{map-get($breakpoints, $breakpoint)}) {
+    @content;
+  }
+}
+
+@each $key, $val in $breakpoints {
+  .ge-#{$key} {
+    @include le($key) {
+      display: none !important;
+    }
+  }
+  .le-#{$key} {
+    @include ge($key) {
+      display: none !important;
+    }
+  }
+}
+
+$shadow-level-unit: 4px;
+
+@for $i from 1 through 8 {
+  ._shadow-#{$i} {
+    box-shadow: 0 2px #{$i * $shadow-level-unit} rgba(0, 0, 0, 0.4);
+    &-t {
+      text-shadow: 0 2px #{$i * $shadow-level-unit} rgba(0, 0, 0, 0.4);
+    }
+    &-f {
+      filter: drop-shadow(0 2px #{$i * 0.2 * $shadow-level-unit} rgba(0, 0, 0, 0.4));
+    }
+  }
+}
+
+._row {
+  display: flex;
+  flex-wrap: wrap;
+  > * {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+  @for $i from 1 through 12 {
+    > .col-#{$i} {
+      width: math.div(100%, 12) * $i;
+      @include ge(tablet) {
+        @for $i from 1 through 12 {
+          &.tab-#{$i} {
+            width: math.div(100%, 12) * $i;
+          }
+        }
+      }
+      @include ge(pc) {
+        @for $i from 1 through 12 {
+          &.pc-#{$i} {
+            width: math.div(100%, 12) * $i;
+          }
+        }
+      }
+    }
+  }
+}
+._hgroup {
+  display: flex;
+  flex-direction: row;
+  // 最左要素は右側の角丸・ボーダーを削ぐ
+  > *:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+  }
+  // 途中要素は角丸・右ボーダーを削ぐ
+  > *:not(:first-child):not(:last-child) {
+    border-radius: 0;
+    border-right: none;
+  }
+  // 最右要素は左側の角丸を削ぐ
+  > *:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+
+._vgroup {
+  display: flex;
+  flex-direction: column;
+  // 最上要素は下側の角丸・ボーダーを削ぐ
+  > *:first-child {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+  }
+  // 途中要素は角丸・下ボーダーを削ぐ
+  > *:not(:first-child):not(:last-child) {
+    border-radius: 0;
+    border-bottom: none;
+  }
+  // 最下要素は上側の角丸を削ぐ
+  > *:last-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
+
+$stack-margin: 16px;
+
+._vstack {
+  display: flex;
+  flex-direction: column;
+  &:not(.dense) > * + * {
+    margin-top: $stack-margin;
+  }
+}
+
+._hstack {
+  display: flex;
+  flex-direction: row;
+  &.wrap {
+    flex-wrap: wrap;
+  }
+  &.fill > *:not(.fw) {
+    min-width: 0;
+    flex: 1;
+  }
+  &:not(.dense) > * + * {
+    margin-left: $stack-margin;
+  }
+}
+
+ul._hstack,
+ol._hstack {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+._cardx {
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: var(--panelShadow);
+  overflow: hidden;
+  > figure {
+    margin: 0;
+    &.bottom-shadow {
+      position: relative;
+      &::before {
+        display: block;
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.4));
+      }
+    }
+  }
+  > header,
+  > footer {
+    padding: math.div(var(--margin), 2) var(--margin);
+    // background: var(--tone-1);
+  }
+  > header {
+    border-bottom: 1px solid var(--tone-1);
+  }
+  > footer {
+    border-top: 1px solid var(--tone-1);
+  }
+  > .body {
+    padding: var(--margin);
+    > h1 {
+      font-weight: normal;
+      font-size: 1.5rem;
+      margin-bottom: 0;
+    }
+    > h2 {
+      font-weight: normal;
+      font-size: 1rem;
+      color: var(--tone-8);
+      margin-bottom: 0;
+    }
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &.ghost {
+    background: transparent;
+  }
+}
+
+@mixin clickable($isText: false) {
+  transition: transform 0.2s ease;
+  transform-origin: center;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.95) translateY(2px);
+  }
+  &:hover,
+  &:active {
+    z-index: 9999;
+  }
+}
+
+._clickable {
+  @include clickable();
+
+  &.text {
+    @include clickable(true);
+  }
+}
+
+button._btn,
+a._btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--primary);
+  background: transparent;
+  text-decoration: none;
+  color: var(--primary);
+  // font-weight: bold;
+  cursor: pointer;
+  outline: none;
+  font-size: 1rem;
+  position: relative;
+
+  // 光彩エフェクトのアニメーションが、clickableと衝突するので
+  // beforeをオーバーレイとして使う
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    transition: box-shadow 0.2s ease;
+  }
+
+  &:not(:disabled):not(.link) {
+    @include clickable;
+  }
+
+  &:focus::before {
+    box-shadow: 0 0 1rem 0px var(--primary);
+  }
+
+  &:active {
+    filter: brightness(0.8);
+  }
+
+  @each $var in primary, success, info, warn, danger {
+    &.#{$var} {
+      background: var(--#{$var});
+      color: var(--#{$var}-fg);
+      border: none;
+      &:focus::before {
+        // border: 2px solid var(--tone-12);
+        box-shadow: 0 0 1rem 0px var(--#{$var});
+      }
+    }
+  }
+
+  &.flat {
+    border: none;
+    background: none;
+    color: var(--fg);
+    &:focus::before {
+      box-shadow: none;
+    }
+    &:focus,
+    &:hover {
+      background: var(--hover);
+    }
+  }
+
+  &.link {
+    border: none;
+    background: none;
+    color: var(--link);
+    &:focus::before {
+      box-shadow: none;
+    }
+    &:focus,
+    &:hover {
+      text-decoration: underline;
+    }
+    &:active {
+      filter: brightness(0.8);
+    }
+  }
+
+  &:disabled {
+    background: transparent;
+    border-color: var(--tone-4);
+    color: var(--tone-4);
+    font-weight: normal;
+    cursor: default;
+  }
+}
