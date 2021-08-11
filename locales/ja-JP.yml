@@ -951,6 +951,8 @@ _labs:
   customCss: "カスタム CSS"
   customCssDesc: "直接CSSを編集し、思い通りの見た目を作り上げましょう。"
   customCssWarn: "CSSに詳しくない場合は、むやみに触らないでください。"
+  tryNewPostForm: "新たな投稿フォームを試す"
+  tryNewPostFormDesc: "Groundpolisのために新しく設計された次世代の投稿フォームを試してみましょう。機能の関連性を論理的に整理し、より柔軟に再配置するよう設計した新たな投稿フォームは、より手に馴染むはずです。" 
 
 _mfm:
   cheatSheet: "GPFMチートシート"
@@ -1416,9 +1418,13 @@ _visibility:
   remoteFollowersOnlyDescription: "リモートでの二次拡散を防ぐ"
 
 _postForm:
-  replyPlaceholder: "このノートに返信..."
-  quotePlaceholder: "このノートを引用..."
-  channelPlaceholder: "チャンネルに投稿..."
+  attachMedia: メディア添付
+  cwOn: 投稿内容を隠す
+  cwOff: 投稿内容を隠さない
+  poll: アンケート
+  broadcast: 実況モード
+  switchUser: ユーザー切り替え
+  cwPlaceholder: 注釈文(省略可能)
   _placeholders:
     a: "いまどうしてる？"
     b: "何かありましたか？"
@@ -1426,6 +1432,19 @@ _postForm:
     d: "言いたいことは？"
     e: "ここに書いてください"
     f: "あなたが書くのを待っています..."
+  replyPlaceholder: "このノートへの返信内容を書いてください"
+  quotePlaceholder: "この引用ノートに添える文章を書いてください"
+  channelPlaceholder: "チャンネルに投稿..."
+  insertQuote: 引用を挿入
+  insertLink: リンクを挿入
+  insertFunction: 関数を挿入
+  insertMention: メンションを挿入
+  openEmojiPalette: 絵文字パレットを開く
+  kaoGacha: 顔文字ガチャ
+  broadcastPlaceholder: ノートの末尾に加えるテキスト
+  createNote: 投稿
+  reply: リプライ
+  quoteNote: 引用
 
 _profile:
   name: "名前"

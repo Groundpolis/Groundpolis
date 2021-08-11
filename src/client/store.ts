@@ -330,6 +330,10 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'account',
 		default: false
 	},
+	tryNewPostForm: {
+		where: 'device',
+		default: false
+	},
 
 	//#endregion
 }));
