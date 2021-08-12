@@ -1,27 +1,27 @@
 <template>
-<div class="gp-com-postformv2 _vstack" :class="{modal}">
-	<div class="_hstack dense">
-		<button v-if="!fixed" class="_btn flat" v-tooltip="$ts.close" style="font-size: 24px" @click="$emit('cancel')">
+<div class="gp-com-postformv2" :class="{modal}">
+	<div class="_hstack dense _mb-1" :class="{'_shadow-1-f': modal}">
+		<button v-if="!fixed" class="_btn flat icon" v-tooltip="$ts.close" @click="$emit('cancel')">
 			<BIconX />
 		</button>
-		<button class="_btn flat" v-tooltip="$ts._postForm.attachMedia">
+		<button class="_btn flat icon" v-tooltip="$ts._postForm.attachMedia" @click="chooseFileFrom">
 			<BIconPaperclip />
 		</button>
-		<button class="_btn flat" v-tooltip="$ts._postForm.cwOn" :class="{active: draftNote.useCw, '_shadow-1-f': modal}" @click="draftNote.useCw = !draftNote.useCw">
+		<button class="_btn flat icon" v-tooltip="$ts._postForm.cwOn" :class="{active: draftNote.useCw}" @click="draftNote.useCw = !draftNote.useCw">
 			<BIconEyeSlash v-if="!draftNote.useCw" />
 			<BIconEye v-else />
 		</button>
-		<button class="_btn flat" v-tooltip="$ts._postForm.poll" :class="{ '_shadow-1-f': modal }">
+		<button class="_btn flat icon" v-tooltip="$ts._postForm.poll">
 			<BIconPieChart />
 		</button>
-		<button class="_btn flat" v-tooltip="$ts._postForm.broadcast" :class="{active: draftNote.useBroadcast, '_shadow-1-f': modal}" @click="draftNote.useBroadcast = !draftNote.useBroadcast">
+		<button class="_btn flat icon" v-tooltip="$ts._postForm.broadcast" :class="{active: draftNote.useBroadcast}" @click="draftNote.useBroadcast = !draftNote.useBroadcast">
 			<BIconMegaphone />
 		</button>
 	</div>
-	<div v-show="draftNote.useCw" class="_cardx textarea-card">
+	<div v-show="draftNote.useCw" class="_cardx textarea-card _mb-1">
 		<input :placeholder="$ts._postForm.cwPlaceholder" ref="cwRef" v-model="draftNote.cw" />
 	</div>
-	<div class="_cardx textarea-card has-tab" style="height: 10rem">
+	<div class="_cardx textarea-card has-tab">
 		<ul class="tab">
 			<li :class="{active: mode === 'edit'}" @click="mode = 'edit'">
 				<button>編集</button>
@@ -34,15 +34,51 @@
 		<div v-show="mode === 'preview'" class="preview">
 			<Mfm :text="draftNote.text" />
 		</div>
+		<XPostFormAttaches class="attaches" :files="draftNote.files" @updated="updateFiles" @detach="detachFile" @changeSensitive="updateFileSensitive" @changeName="updateFileName"/>
 	</div>
-	<div v-show="draftNote.useBroadcast" class="_cardx textarea-card _shadow-3">
+	<div v-show="draftNote.useBroadcast" class="_cardx textarea-card _shadow-3 _mb-1">
 		<input :placeholder="$ts._postForm.broadcastPlaceholder" ref="broadcastRef" v-model="draftNote.broadcastText" />
+	</div>
+	<div class="gpfmpad _mb-1 _hstack dense" :class="{'_shadow-1-f': modal}">
+		<button class="_btn flat icon" v-tooltip="$ts.insertQuote">
+			<BIconBlockquoteLeft />
+		</button>
+		<button class="_btn flat icon" v-tooltip="$ts.insertLink">
+			<BIconLink45deg />
+		</button>
+		<button class="_btn flat icon" v-tooltip="$ts.insertFunction" style="font-weight: normal; font-size: 18px">
+			[ ]
+		</button>
+		<button class="_btn flat icon" v-tooltip="$ts.insertMention">
+			<BIconAt />
+		</button>
+		<button class="_btn flat icon" v-tooltip="$ts.openEmojiPalette" style="font-size: 20px">
+			<BIconEmojiSmile />
+		</button>
+		<button class="_btn flat icon" v-tooltip="$ts.openEmojiPalette" style="font-size: 20px">
+			<Fa :icon="faFish" />
+		</button>
+	</div>
+	<div class="footer _hstack">
+		<div class="_hgroup _ml-auto">
+			<button class="_btn primary">
+				<VisibilityIcon
+					:visibility="draftNote.visibility"
+					:localOnly="draftNote.localOnly"
+					:remoteFollowersOnly="draftNote.remoteFollowersOnly"
+					/>
+				<span class="_ml-1" v-text="$ts._postForm.createNote" />
+			</button>
+			<button class="_btn primary" style="padding: .5rem; margin-left: 1px" @click="setVisibility">
+				<BIconChevronDown />
+			</button>
+		</div>
 	</div>
 </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue';
+import { defineComponent, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 
 import {
 	BIconX,
@@ -51,18 +87,39 @@ import {
 	BIconEyeSlash,
 	BIconPieChart,
 	BIconMegaphone,
+  BIconBlockquoteLeft,
 	BIconLink45deg,
 	BIconAt,
 	BIconEmojiSmile,
+	BIconChevronDown,
 } from 'bootstrap-icons-vue';
+
+import {
+	faFish,
+} from '@fortawesome/free-solid-svg-icons';
+
 import { NoteVisibility } from '@/../types';
 import { Autocomplete } from '@/scripts/autocomplete';
+import objectAssignDeep from 'object-assign-deep';
+import { selectFile } from '@/scripts/select-file';
+import { i18n } from '@/i18n';
+import { popup } from '@/os';
+import { defaultStore } from '@/store';
+import { markRawAll } from '@/scripts/mark-raw-all';
+
+import VisibilityIcon from './visibility-icon.vue';
+
+markRawAll(
+	faFish,
+);
 
 const noteTemplate = {
 	useCw: false,
 	useBroadcast: false,
 
 	visibility: 'public' as NoteVisibility,
+	localOnly: false,
+	remoteFollowersOnly: false,
 	text: '',
 	cw: '',
 	broadcastText: '',
@@ -77,9 +134,13 @@ export default defineComponent({
 		BIconEyeSlash,
 		BIconMegaphone,
 		BIconPieChart,
+		BIconBlockquoteLeft,
 		BIconLink45deg,
 		BIconAt,
 		BIconEmojiSmile,
+		BIconChevronDown,
+		VisibilityIcon,
+		XPostFormAttaches: defineAsyncComponent(() => import('./post-form-attaches.vue')),
 	},
 
 	inject: ['modal'],
@@ -133,7 +194,7 @@ export default defineComponent({
 	emits: ['posted', 'cancel', 'esc'],
 	
 	setup(props, ctx) {
-		const draftNote = reactive(noteTemplate);
+		const draftNote = reactive(objectAssignDeep({}, noteTemplate));
 		const mode = ref<'edit' | 'preview'>('edit');
 
 		const textRef = ref();
@@ -147,13 +208,72 @@ export default defineComponent({
 			new Autocomplete(broadcastRef, { draftNote }, { model: 'draftNote.broadcastText' });
 		});
 
-return {
+		return {
 			draftNote,
 			mode,
 
 			textRef,
 			cwRef,
 			broadcastRef,
+
+			faFish,
+
+			chooseFileFrom(ev) {
+				selectFile(ev.currentTarget || ev.target, i18n.locale.attachFile, true).then(files => {
+					for (const file of files) {
+						draftNote.files.push(file);
+					}
+				});
+			},
+
+			setVisibility(ev) {
+				if (props.channel) {
+					// TODO: information dialog
+					return;
+				}
+
+				popup(import('./visibility-picker.vue'), {
+					currentVisibility: draftNote.visibility,
+					currentLocalOnly: draftNote.localOnly,
+					currentRemoteFollowersOnly: draftNote.remoteFollowersOnly,
+					src: ev.currentTarget || ev.target,
+				}, {
+					changeVisibility: visibility => {
+						draftNote.visibility = visibility;
+						if (defaultStore.state.rememberNoteVisibility) {
+							defaultStore.set('visibility', visibility);
+						}
+					},
+					changeLocalOnly: localOnly => {
+						draftNote.localOnly = localOnly;
+						if (defaultStore.state.rememberNoteVisibility) {
+							defaultStore.set('localOnly', localOnly);
+						}
+					},
+					changeRemoteFollowersOnly: remoteFollowersOnly => {
+						draftNote.remoteFollowersOnly = remoteFollowersOnly;
+						if (defaultStore.state.rememberNoteVisibility) {
+							defaultStore.set('remoteFollowersOnly', remoteFollowersOnly);
+						}
+					}
+				}, 'closed');
+			},
+
+			updateFiles(files) {
+				draftNote.files = files;
+			},
+
+			updateFileSensitive(file, sensitive) {
+				draftNote.files[draftNote.files.findIndex(x => x.id === file.id)].isSensitive = sensitive;
+			},
+
+			detachFile(id) {
+				draftNote.files = draftNote.files.filter(x => x.id != id);
+			},
+
+			updateFileName(file, name) {
+				this.files[this.files.findIndex(x => x.id === file.id)].name = name;
+			},
 		};
 	}
 });
@@ -169,12 +289,17 @@ return {
 		}
 	}
 	._btn {
-		font-size: 24px;
-		padding: 0;
-		width: 50px;
-		height: 50px;
-		&.active {
-			color: var(--accent);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		&.icon {
+			font-size: 24px;
+			padding: 0;
+			width: 50px;
+			height: 50px;
+			&.active {
+				color: var(--accent);
+			}
 		}
 	}
 	.textarea-card {
@@ -189,11 +314,9 @@ return {
 			display: flex;
 			flex-direction: column;
 			height: 100%;
-			> input,
-			> textarea,
-			> .preview {
-				flex: 1;
-			}
+		}
+		textarea {
+			height: 10rem;
 		}
 		> input,
 		> textarea {
@@ -244,6 +367,10 @@ return {
 				}
 			}
 		}
+	}
+	.gpfmpad {
+		width: 100%;
+		justify-content: flex-end;
 	}
 }
 </style>

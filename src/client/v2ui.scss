@@ -1,3 +1,10 @@
+/*!
+ * Groundpolis UI System 2
+ * Based on XelticaUI 1.0.0-alpha.6
+ * (C)2021 Xeltica
+ * Licensed under MIT (https://github.com/xeltica/ui/tree/master/LICENSE)
+ */
+
 @use 'sass:math';
 @use 'sass:map';
 
@@ -224,10 +231,10 @@ a._btn {
   display: inline-block;
   padding: 0.5rem 1rem;
   border-radius: var(--radius);
-  border: 1px solid var(--primary);
+  border: 1px solid var(--accent);
   background: transparent;
   text-decoration: none;
-  color: var(--primary);
+  color: var(--accent);
   // font-weight: bold;
   cursor: pointer;
   outline: none;
@@ -249,24 +256,22 @@ a._btn {
   }
 
   &:focus::before {
-    box-shadow: 0 0 1rem 0px var(--primary);
+    box-shadow: 0 0 1rem 0px var(--accent);
   }
 
   &:active {
     filter: brightness(0.8);
   }
 
-  @each $var in primary, success, info, warn, danger {
-    &.#{$var} {
-      background: var(--#{$var});
-      color: var(--#{$var}-fg);
-      border: none;
-      &:focus::before {
-        // border: 2px solid var(--tone-12);
-        box-shadow: 0 0 1rem 0px var(--#{$var});
-      }
-    }
-  }
+	&.primary {
+		background: var(--accent);
+		color: white;
+		border: none;
+		&:focus::before {
+			// border: 2px solid var(--tone-12);
+			box-shadow: 0 0 1rem 0px var(--accent);
+		}
+	}
 
   &.flat {
     border: none;
@@ -303,5 +308,106 @@ a._btn {
     color: var(--tone-4);
     font-weight: normal;
     cursor: default;
+  }
+}
+
+$margin-level-unit: 8px;
+
+._ma-auto {
+  margin: auto !important;
+}
+._ml-auto {
+  margin-left: auto !important;
+}
+._mr-auto {
+  margin-right: auto !important;
+}
+._mt-auto {
+  margin-top: auto !important;
+}
+._mb-auto {
+  margin-bottom: auto !important;
+}
+._mx-auto {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+._my-auto {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+
+._pa-auto {
+  padding: auto !important;
+}
+._pl-auto {
+  padding-left: auto !important;
+}
+._pr-auto {
+  padding-right: auto !important;
+}
+._pt-auto {
+  padding-top: auto !important;
+}
+._pb-auto {
+  padding-bottom: auto !important;
+}
+._px-auto {
+  padding-left: auto !important;
+  padding-right: auto !important;
+}
+._py-auto {
+  padding-top: auto !important;
+  padding-bottom: auto !important;
+}
+
+@for $v from 0 through 5 {
+  $size: $v * $margin-level-unit;
+  ._ma-#{$v} {
+    margin: $size !important;
+  }
+  ._ml-#{$v} {
+    margin-left: $size !important;
+  }
+  ._mr-#{$v} {
+    margin-right: $size !important;
+  }
+  ._mt-#{$v} {
+    margin-top: $size !important;
+  }
+  ._mb-#{$v} {
+    margin-bottom: $size !important;
+  }
+  ._mx-#{$v} {
+    margin-left: $size !important;
+    margin-right: $size !important;
+  }
+  ._my-#{$v} {
+    margin-top: $size;
+    margin-bottom: $size !important;
+  }
+
+  ._pa-#{$v} {
+    padding: $size !important;
+  }
+  ._pl-#{$v} {
+    padding-left: $size !important;
+  }
+  ._pr-#{$v} {
+    padding-right: $size !important;
+  }
+  ._pt-#{$v} {
+    padding-top: $size !important;
+  }
+  ._pb-#{$v} {
+    padding-bottom: $size !important;
+  }
+  ._px-#{$v} {
+    padding-left: $size !important;
+    padding-right: $size !important;
+  }
+  ._py-#{$v} {
+    padding-top: $size !important;
+    padding-bottom: $size !important;
   }
 }

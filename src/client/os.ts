@@ -366,9 +366,17 @@ export function post(props: Record<string, any>) {
 	});
 }
 
+type UploadType = {
+	id: number,
+	name: string,
+	progressMax?: number,
+	progressValue?: number,
+	img: string,
+};
+
 export const deckGlobalEvents = new EventEmitter();
 
-export const uploads = ref([]);
+export const uploads = ref<UploadType[]>([]);
 
 export function upload(file: File, folder?: any, name?: string) {
 	if (folder && typeof folder == 'object') folder = folder.id;
@@ -378,7 +386,7 @@ export function upload(file: File, folder?: any, name?: string) {
 
 		const reader = new FileReader();
 		reader.onload = (e) => {
-			const ctx = reactive({
+			const ctx = reactive<UploadType>({
 				id: id,
 				name: name || file.name || 'untitled',
 				progressMax: undefined,
@@ -389,7 +397,7 @@ export function upload(file: File, folder?: any, name?: string) {
 			uploads.value.push(ctx);
 
 			const data = new FormData();
-			data.append('i', $i.token);
+			if ($i) data.append('i', $i.token);
 			data.append('force', 'true');
 			data.append('file', file);
 

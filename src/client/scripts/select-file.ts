@@ -4,11 +4,12 @@ import { i18n } from '@/i18n';
 
 export function selectFile(src: any, label: string | null, multiple = false) {
 	return new Promise((res, rej) => {
-		const chooseFileFromPc = () => {
+		const chooseFileFromDevice = () => {
 			const input = document.createElement('input');
 			input.type = 'file';
 			input.multiple = multiple;
 			input.onchange = () => {
+				if (!input.files) return;
 				const promises = Array.from(input.files).map(file => os.upload(file));
 
 				Promise.all(promises).then(driveFiles => {
@@ -32,7 +33,7 @@ export function selectFile(src: any, label: string | null, multiple = false) {
 		};
 
 		const chooseFileFromDrive = () => {
-			os.selectDriveFile(multiple).then(files => {
+			os.selectDriveFile(multiple).then((files) => {
 				res(files);
 			});
 		};
@@ -74,7 +75,7 @@ export function selectFile(src: any, label: string | null, multiple = false) {
 		} : undefined, {
 			text: i18n.locale.upload,
 			icon: faUpload,
-			action: chooseFileFromPc
+			action: chooseFileFromDevice
 		}, {
 			text: i18n.locale.fromDrive,
 			icon: faCloud,
