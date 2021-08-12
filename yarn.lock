@@ -809,6 +809,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/object-assign-deep@0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@types/object-assign-deep/-/object-assign-deep-0.4.0.tgz#23c66300f2d04676b927ee700308d0d1b5f8df89"
+  integrity sha512-3D0F3rHRNDc8cQSXNzwF1jBrJi28Mdrhc10ZLlqbJWDPYRWTTWB9Tc8JoKrgBvLKioXoPoHT6Uzf3s2F7akCUg==
+
 "@types/parse-json@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
