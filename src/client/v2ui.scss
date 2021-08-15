@@ -304,10 +304,15 @@ a._btn {
 
   &:disabled {
     background: transparent;
-    border-color: var(--tone-4);
-    color: var(--tone-4);
+    color: var(--accentDarken);
+    border: 1px solid var(--accentDarken);
     font-weight: normal;
     cursor: default;
+		&.primary {
+			background: var(--accentDarken);
+			color: rgba(255, 255, 255, 0.5);
+			border: none;
+		}
   }
 }
 

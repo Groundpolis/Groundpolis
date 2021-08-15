@@ -2,6 +2,9 @@
 <FormBase>
 	<div class="_formItem">
 		<div class="_formLabel" style="font-size: 100%">{{ $ts._labs.description }}</div>
+		<div class="_formLabel" style="font-size: 100%">
+			<a href="https://forms.gle/uHZihgYbyH5tGfJV9" target="_blank" rel="norefferer noopener" v-text="$ts._labs.review" />
+		</div>
 	</div>
 
 	<!-- <div class="_formItem _formPanel" style="padding: 16px;">

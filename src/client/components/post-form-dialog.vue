@@ -1,6 +1,6 @@
 <template>
 <MkModal ref="modal" @click="$refs.modal.close()" @closed="$emit('closed')" :position="'top'">
-	<MkPostFormV2 v-if="$store.reactiveState.tryNewPostForm" @posted="$refs.modal.close()" @cancel="$refs.modal.close()" @esc="$refs.modal.close()" v-bind="$attrs"/>
+	<MkPostFormV2 v-if="$store.reactiveState.tryNewPostForm.value" @posted="$refs.modal.close()" @cancel="$refs.modal.close()" @esc="$refs.modal.close()" v-bind="$attrs"/>
 	<MkPostForm v-else @posted="$refs.modal.close()" @cancel="$refs.modal.close()" @esc="$refs.modal.close()" v-bind="$attrs"/>
 </MkModal>
 </template>

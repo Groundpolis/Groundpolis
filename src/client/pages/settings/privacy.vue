@@ -30,6 +30,7 @@
 			<option value="users">{{ $ts._visibility.users }}</option>
 		</FormSelect>
 		<FormSwitch v-model:value="defaultNoteLocalOnly">{{ $ts._visibility.localOnly }}</FormSwitch>
+		<FormSwitch v-model:value="defaultNoteRemoteFollowersOnly">{{ $ts._visibility.remoteFollowersOnly }}</FormSwitch>
 	</FormGroup>
 </FormBase>
 </template>
@@ -66,6 +67,7 @@ export default defineComponent({
 	computed: {
 		defaultNoteVisibility: defaultStore.makeGetterSetter('defaultNoteVisibility'),
 		defaultNoteLocalOnly: defaultStore.makeGetterSetter('defaultNoteLocalOnly'),
+		defaultNoteRemoteFollowersOnly: defaultStore.makeGetterSetter('defaultNoteRemoteFollowersOnly'),
 		rememberNoteVisibility: defaultStore.makeGetterSetter('rememberNoteVisibility'),
 	},
 

@@ -5,7 +5,7 @@
 	<div class="_section">
 		<XTutorial v-if="$store.reactiveState.tutorial.value != -1" class="tutorial _content _vMargin"/>
 		<template v-if="$store.reactiveState.showFixedPostForm.value">
-			<XPostFormV2 v-if="$store.reactiveState.tryNewPostForm" class="post-form _content _vMargin" fixed />
+			<XPostFormV2 v-if="$store.reactiveState.tryNewPostForm.value" class="post-form _content _vMargin" fixed />
 			<XPostForm v-else class="post-form _panel _content _vMargin" fixed/>
 		</template>
 		<XTimeline ref="tl"
