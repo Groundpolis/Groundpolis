@@ -3,6 +3,7 @@ import { Storage } from './pizzax';
 import defaultFaces from './scripts/default-faces';
 import { Theme } from './scripts/theme';
 import { Rgba } from './scripts/rgba';
+import { NoteVisibility } from '../types';
 
 export const postFormActions = [];
 export const userActions = [];
@@ -31,7 +32,7 @@ export const defaultStore = markRaw(new Storage('base', {
 	},
 	defaultNoteVisibility: {
 		where: 'account',
-		default: 'public'
+		default: 'public' as NoteVisibility
 	},
 	defaultNoteLocalOnly: {
 		where: 'account',
@@ -88,7 +89,7 @@ export const defaultStore = markRaw(new Storage('base', {
 	},
 	visibility: {
 		where: 'deviceAccount',
-		default: 'public' as 'public' | 'home' | 'followers' | 'specified'
+		default: 'public' as NoteVisibility
 	},
 	localOnly: {
 		where: 'deviceAccount',
