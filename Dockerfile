@@ -23,7 +23,7 @@ RUN apk add --no-cache \
 
 COPY package.json yarn.lock ./
 RUN yarn install
-RUN npm i npm-run-all
+RUN yarn add npm-run-all --dev
 COPY . ./
 RUN yarn build
 
