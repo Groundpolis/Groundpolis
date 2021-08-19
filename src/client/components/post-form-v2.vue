@@ -11,7 +11,7 @@
 			<BIconEyeSlash v-if="!useCw" />
 			<BIconEye v-else />
 		</button>
-		<button class="_btn flat icon" v-tooltip="$ts._postForm.poll" :class="{active: draftNote.poll}" @click="togglePoll">
+		<button class="_btn flat icon" v-tooltip="$ts._postForm.poll" :class="{active: draft.poll}" @click="togglePoll">
 			<BIconPieChart />
 		</button>
 		<button class="_btn flat icon" v-tooltip="$ts._postForm.broadcast" :class="{active: useBroadcast}" @click="useBroadcast = !useBroadcast">
@@ -19,10 +19,10 @@
 		</button>
 	</div>
 	<div class="_cardx _mb-1 _pa-2" style="opacity: 0.5" v-if="reply">
-		<XNotePreview class="preview" :note="reply"/>
+		<XNotePreview v-if="reply" class="preview" :note="reply"/>
 	</div>
 	<div class="_cardx _mb-1 _pa-2" style="opacity: 0.5" v-if="quote">
-		<XNotePreview class="preview" :note="quote"/>
+		<XNotePreview v-if="quote" class="preview" :note="quote"/>
 	</div>
 	<div v-show="useCw" class="_cardx textarea-card _mb-1">
 		<input :placeholder="$ts._postForm.cwPlaceholder" ref="cwRef" v-model="cw" />
@@ -37,14 +37,24 @@
 			</li>
 		</ul>
 		<div class="textarea-wrapper">
-			<textarea v-show="mode === 'edit'" :placeholder="placeholder" ref="textRef" v-model="draftNote.text" />
+			<textarea 
+				v-show="mode === 'edit'" 
+				:placeholder="placeholder"
+				ref="textRef"
+				v-model="draft.text"
+				@keydown="onKeydown"
+				@paste="onPaste"
+				@compositionupdate="onCompositionUpdate"
+				@compositionend="onCompositionEnd"
+				/>
 			<div class="count" v-text="max - textLength" :class="{error: max < textLength}" />
 		</div>
 		<div v-show="mode === 'preview'" class="preview">
-			<Mfm :text="draftNote.text" />
+			<Mfm :text="draft.text" />
 		</div>
-		<XPostFormAttaches class="attaches" :files="draftNote.files" @updated="updateFiles" @detach="detachFile" @changeSensitive="updateFileSensitive" @changeName="updateFileName"/>
-		<MkSwitch v-if="requiredConfirmation" v-model:value="draftNote.confirmed" class="confirm-switch">
+		<XPostFormAttaches class="attaches" :files="draft.files" @updated="updateFiles" @detach="detachFile" @changeSensitive="updateFileSensitive" @changeName="updateFileName"/>
+		<XPollEditor class="_mb-3" v-if="draft.poll" :poll="draft.poll" @destroyed="draft.poll = null" @updated="onPollUpdate"/>
+		<MkSwitch v-if="requiredConfirmation" v-model:value="draft.confirmed" class="confirm-switch _ma-2">
 			{{ $ts.confirmBeforePostLabel }}
 		</MkSwitch>
 	</div>
@@ -90,7 +100,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, defineAsyncComponent, onMounted, reactive, ref, nextTick, computed, watch, Ref } from 'vue';
+import { defineComponent, defineAsyncComponent, onMounted, reactive, ref, nextTick, computed, watch, Ref, toRef } from 'vue';
 
 import {
 	BIconX,
@@ -130,6 +140,8 @@ import extractMentions from '@/../misc/extract-mentions';
 import { parse } from '@/../mfm/parse';
 import { $i } from '@/account';
 import { unique } from '@/../prelude/array';
+import { formatTimeString } from '@/../misc/format-time-string';
+import { host, url } from '@/config';
 
 markRawAll(
 	faFish,
@@ -137,7 +149,7 @@ markRawAll(
 
 const noteTemplate = {
 	text: '',
-	files: [],
+	files: [] as any[],
 	poll: null as unknown | null,
 	confirmed: false,
 };
@@ -159,6 +171,7 @@ export default defineComponent({
 		VisibilityIcon,
 		XNotePreview,
 		XPostFormAttaches: defineAsyncComponent(() => import('./post-form-attaches.vue')),
+		XPollEditor: defineAsyncComponent(() => import('./poll-editor.vue'))
 	},
 
 	inject: ['modal'],
@@ -212,32 +225,37 @@ export default defineComponent({
 	emits: ['posted', 'cancel', 'esc'],
 	
 	setup(props, ctx) {
-		const draftNote = reactive(objectAssignDeep({}, noteTemplate));
+		const draft = reactive(objectAssignDeep({}, noteTemplate));
 		const mode = ref<'edit' | 'preview'>('edit');
 		const posting = ref(false);
 		const quote: Ref<any> = ref(null as any);
 		const imeText = ref('');
+		const draghover = ref(false);
 
-		const visibility = ref<NoteVisibility>(
-			defaultStore.reactiveState.rememberNoteVisibility
+		const state = reactive({
+			useCw: false,
+			useBroadcast: false,
+			cw: '',
+			broadcastText: '',
+			visibility: defaultStore.reactiveState.rememberNoteVisibility
 				? defaultStore.state.visibility
-				: defaultStore.state.defaultNoteVisibility 
-		);
-		const visibleUsers = reactive([]);
-		const useCw = ref(false);
-		const useBroadcast = ref(false);
-		const cw = ref('');
-		const broadcastText = ref('');
-		const localOnly = ref(
-			defaultStore.reactiveState.rememberNoteVisibility
+				: defaultStore.state.defaultNoteVisibility,
+			localOnly: defaultStore.reactiveState.rememberNoteVisibility
 				? defaultStore.state.localOnly
-				: defaultStore.state.defaultNoteLocalOnly 
-		);
-		const remoteFollowersOnly = ref(
-			defaultStore.reactiveState.rememberNoteVisibility
+				: defaultStore.state.defaultNoteLocalOnly ,
+			remoteFollowersOnly: defaultStore.reactiveState.rememberNoteVisibility
 				? defaultStore.state.remoteFollowersOnly
-				: defaultStore.state.defaultNoteRemoteFollowersOnly 
-		);
+				: defaultStore.state.defaultNoteRemoteFollowersOnly,
+		});
+
+		const visibility = toRef(state, 'visibility');
+		const visibleUsers = reactive<any[]>([]);
+		const useCw = toRef(state, 'useCw');
+		const useBroadcast = toRef(state, 'useBroadcast');
+		const cw = toRef(state, 'cw');
+		const broadcastText = toRef(state, 'broadcastText');
+		const localOnly = toRef(state, 'localOnly');
+		const remoteFollowersOnly = toRef(state, 'remoteFollowersOnly');
 
 		const textRef = ref();
 		const cwRef = ref();
@@ -277,21 +295,25 @@ export default defineComponent({
 			}
 		});
 
-		const textLength = computed(() => length((draftNote.text + imeText.value).trim()));
+		const textLength = computed(() => length((draft.text + imeText.value).trim()));
 		
 		const max = computed(() => instance ? instance.maxNoteTextLength as number : 1000);
 
 		const requiredConfirmation = computed(() => defaultStore.reactiveState.confirmBeforePost);
 
+		// TODO
+		const currentAccountIsMyself = computed(() => true);
+
 		const canPost = computed(() => (
 			!posting.value &&
-			(!requiredConfirmation.value || draftNote.confirmed) &&
-			(1 <= textLength.value || 1 <= draftNote.files.length || !!draftNote.poll || !!quote) &&
+			(!requiredConfirmation.value || draft.confirmed) &&
+			(1 <= textLength.value || 1 <= draft.files.length || !!draft.poll || !!quote) &&
 			(textLength.value <= max.value) &&
-			(!draftNote.poll || draftNote.poll.choices.length >= 2)
+			(!draft.poll || draft.poll.choices.length >= 2)
 		));
 
 		const saveDraft = () => {
+			console.log('a');
 			if (props.instant) return;
 
 			const data = JSON.parse(localStorage.getItem('drafts') || '{}');
@@ -299,7 +321,7 @@ export default defineComponent({
 			data[draftKey.value] = {
 				updatedAt: new Date(),
 				data: {
-					text: draftNote.text,
+					text: draft.text,
 					useCw: useCw.value,
 					cw: cw.value,
 					useBroadcast: useBroadcast.value,
@@ -308,14 +330,14 @@ export default defineComponent({
 					localOnly: localOnly.value,
 					remoteFollowersOnly: remoteFollowersOnly.value,
 					visibleUsers: [ ...visibleUsers ],
-					files: draftNote.files,
-					quote,
-					poll: draftNote.poll
+					files: draft.files,
+					quote: quote.value,
+					poll: draft.poll
 				}
 			};
 
 			localStorage.setItem('drafts', JSON.stringify(data));
-		},
+		};
 
 		const deleteDraft = () => {
 			const data = JSON.parse(localStorage.getItem('drafts') || '{}');
@@ -323,26 +345,102 @@ export default defineComponent({
 			delete data[draftKey.value];
 
 			localStorage.setItem('drafts', JSON.stringify(data));
-		}
+		};
 
 		const watchData = () => {
-			watch(draftNote, saveDraft);
+			watch(() => draft, saveDraft, { deep: true });
+			watch(visibility, saveDraft);
+			watch(visibleUsers, saveDraft);
+			watch(useCw, saveDraft);
+			watch(useBroadcast, saveDraft);
+			watch(cw, saveDraft);
+			watch(broadcastText, saveDraft);
+			watch(localOnly, saveDraft);
+			watch(remoteFollowersOnly, saveDraft);
 			watch(quote, saveDraft);
-		}
+		};
+
+		const fileUpload = (file: File, name?: string) => {
+			upload(file, defaultStore.state.uploadFolder, name).then(res => {
+				draft.files.push(res);
+			});
+		};
+
+		const insert = (text: string) => {
+			insertTextAtCursor(textRef, text);
+		};
+
+		const post = async () => {
+			if (props.reply && props.reply.user.host !== null && localOnly.value) {
+				await dialog({
+					type: 'error',
+					text: i18n.locale.errorLocalOnlyToRemote,
+				});
+				return;
+			}
+
+			let data = {
+				text: draft.text == '' ? undefined : draft.text + (useBroadcast.value ? ' ' + broadcastText.value : ''),
+				fileIds: draft.files.length > 0 ? draft.files.map(f => f.id) : undefined,
+				replyId: props.reply ? props.reply.id : undefined,
+				renoteId: quote.value ? quote.value.id : props.renote ? props.renote.id : undefined,
+				channelId: props.channel ? props.channel.id : undefined,
+				poll: draft.poll,
+				cw: useCw.value ? cw.value || '' : undefined,
+				localOnly: localOnly.value,
+				remoteFollowersOnly: remoteFollowersOnly.value,
+				visibility: visibility.value,
+				// TODO
+				// visibleUserIds: draft.visibility == 'specified' ? draft.visibleUsers.map(u => u.id) : undefined,
+				viaMobile: isMobile
+			};
+
+			// plugin
+			if (notePostInterruptors.length > 0) {
+				for (const interruptor of notePostInterruptors as any[]) {
+					data = await interruptor.handler(JSON.parse(JSON.stringify(data)));
+				}
+			}
+			// get token
+
+			// const token = currentAccountIsMyself ? undefined : currentAccount.token;
+
+			posting.value = true;
+			
+			api('notes/create', data).then(() => {
+				objectAssignDeep(draft, noteTemplate);
+				nextTick(() => {
+					deleteDraft();
+					ctx.emit('posted');
+					if (draft.text && draft.text != '') {
+						const hashtags = parse(draft.text)!.filter(x => x.node.type === 'hashtag').map(x => x.node.props.hashtag);
+						const history = JSON.parse(localStorage.getItem('hashtags') || '[]') as string[];
+						localStorage.setItem('hashtags', JSON.stringify(unique(hashtags.concat(history))));
+					}
+					posting.value = false;
+				});
+			}).catch(err => {
+				posting.value = false;
+				dialog({
+					type: 'error',
+					text: err.message + '\n' + (err as any).id,
+				});
+			});
+		};
 
 		// TODO: detach when unmount
 		onMounted(() => {
-			new Autocomplete(textRef, { draftNote }, { model: 'draftNote.text' });
-			new Autocomplete(cwRef, { draftNote }, { model: 'draftNote.cw' });
-			new Autocomplete(broadcastRef, { draftNote }, { model: 'draftNote.broadcastText' });
+			new Autocomplete(textRef, draft, { model: 'text' });
+			new Autocomplete(cwRef, state, { model: 'cw' });
+			new Autocomplete(broadcastRef, state, { model: 'broadcastText' });
 
 			if (props.initialText) {
-				draftNote.text = props.initialText;
+				draft.text = props.initialText;
 			}
 
 			if (props.mention) {
-				draftNote.text = props.mention.host ? `@${props.mention.username}@${toASCII(props.mention.host)}` : `@${props.mention.username}`;
-				draftNote.text += ' ';
+				draft.text = props.mention.host ? `@${props.mention.username}@${toASCII(props.mention.host)}` : `@${props.mention.username}`;
+				draft.text += ' ';
 			}
 
 			if (props.renote) {
@@ -350,23 +448,23 @@ export default defineComponent({
 			}
 
 			if (props.reply && props.reply.user.host != null) {
-				draftNote.text = `@${props.reply.user.username}@${toASCII(props.reply.user.host)} `;
+				draft.text = `@${props.reply.user.username}@${toASCII(props.reply.user.host)} `;
 			}
 
 			if (props.reply && props.reply.text != null) {
 				const ast = parse(props.reply.text);
 
-				for (const x of extractMentions(ast)) {
+				for (const x of extractMentions(ast!)) {
 					const mention = x.host ? `@${x.username}@${toASCII(x.host)}` : `@${x.username}`;
 
 					// 自分は除外
-					if ($i.username == x.username && x.host == null) continue;
-					if ($i.username == x.username && x.host == host) continue;
+					if ($i!.username == x.username && x.host == null) continue;
+					if ($i!.username == x.username && x.host == host) continue;
 
 					// 重複は除外
-					if (draftNote.text.indexOf(`${mention} `) != -1) continue;
+					if (draft.text.indexOf(`${mention} `) != -1) continue;
 
-					draftNote.text += `${mention} `;
+					draft.text += `${mention} `;
 				}
 			}
 
@@ -382,13 +480,13 @@ export default defineComponent({
 				visibility.value = props.reply.visibility;
 				if (props.reply.visibility === 'specified') {
 					api('users/show', {
-						userIds: props.reply.visibleUserIds.filter(uid => uid !== $i.id && uid !== props.reply.userId)
+						userIds: props.reply.visibleUserIds.filter(uid => uid !== $i!.id && uid !== props.reply!.userId)
 					}).then(users => {
 						visibleUsers.push(...users);
 					});
 
-					if (props.reply.userId !== this.$i.id) {
-						api('users/show', { userId: this.reply.userId }).then(user => {
+					if (props.reply.userId !== $i.id) {
+						api('users/show', { userId: props.reply.userId }).then(user => {
 							visibleUsers.push(user);
 						});
 					}
@@ -417,21 +515,21 @@ export default defineComponent({
 			nextTick(() => {
 				// 書きかけの投稿を復元
 				if (!props.instant && !props.mention && !props.specified) {
-					const savedDraftNote = JSON.parse(localStorage.getItem('drafts') || '{}')[props.draftKey];
-					if (savedDraftNote) {
-						draftNote.text = savedDraftNote.data.text;
-						useCw.value = savedDraftNote.data.useCw;
-						cw.value = savedDraftNote.data.cw;
-						useBroadcast.value = savedDraftNote.data.useBroadcast;
-						broadcastText.value = savedDraftNote.data.broadcastText;
-						visibility.value = savedDraftNote.data.visibility;
-						localOnly.value = savedDraftNote.data.localOnly;
-						remoteFollowersOnly.value = savedDraftNote.data.remoteFollowersOnly;
-						quote.value = savedDraftNote.data.quote;
-						visibleUsers.push(...(savedDraftNote.data.visibleUsers as []));
-						draftNote.files = (savedDraftNote.data.files || []).filter(e => e);
-						if (savedDraftNote.data.poll) {
-							draftNote.poll = savedDraftNote.data.poll;
+					const saveddraft = JSON.parse(localStorage.getItem('drafts') || '{}')[draftKey.value];
+					if (saveddraft) {
+						draft.text = saveddraft.data.text;
+						useCw.value = saveddraft.data.useCw;
+						cw.value = saveddraft.data.cw;
+						useBroadcast.value = saveddraft.data.useBroadcast;
+						broadcastText.value = saveddraft.data.broadcastText;
+						visibility.value = saveddraft.data.visibility;
+						localOnly.value = saveddraft.data.localOnly;
+						remoteFollowersOnly.value = saveddraft.data.remoteFollowersOnly;
+						quote.value = saveddraft.data.quote;
+						visibleUsers.push(...(saveddraft.data.visibleUsers as []));
+						draft.files = (saveddraft.data.files || []).filter(e => e);
+						if (saveddraft.data.poll) {
+							draft.poll = saveddraft.data.poll;
 						}
 					}
 				}
@@ -440,12 +538,12 @@ export default defineComponent({
 			// 削除して編集
 			if (props.initialNote) {
 				const init = props.initialNote;
-				draftNote.text = init.text ? init.text : '';
-				draftNote.files = init.files;
+				draft.text = init.text ? init.text : '';
+				draft.files = init.files;
 				cw.value = init.cw;
 				useCw.value = init.cw != null;
 				if (init.poll) {
-					draftNote.poll = init.poll;
+					draft.poll = init.poll;
 				}
 				visibility.value = init.visibility;
 				localOnly.value = init.localOnly;
@@ -454,20 +552,20 @@ export default defineComponent({
 				if (init.visibleUserIds && init.visibleUserIds.length > 0) {
 					api('users/show', {
 						userIds: init.visibleUserIds
-					}).then((users: []) => {
-						visibleUsers.push(...users);
+					}).then((users) => {
+						visibleUsers.push(...(users as any[]));
 						saveDraft();
 					});
 				} else {
 					saveDraft();
 				}
-
-				nextTick(() => watchData());
 			}
+
+			nextTick(() => watchData());
 		});
 
 		return {
-			draftNote,
+			draft,
 			mode,
 			posting,
 			quote,
@@ -494,10 +592,10 @@ export default defineComponent({
 			remoteFollowersOnly,
 
 			togglePoll() {
-				if (draftNote.poll) {
-					draftNote.poll = null;
+				if (draft.poll) {
+					draft.poll = null;
 				} else {
-					draftNote.poll = {
+					draft.poll = {
 						choices: ['', ''],
 						multiple: false,
 						expiresAt: null,
@@ -508,8 +606,8 @@ export default defineComponent({
 
 			chooseFileFrom(ev) {
 				selectFile(ev.currentTarget || ev.target, i18n.locale.attachFile, true).then(files => {
-					for (const file of files) {
-						draftNote.files.push(file);
+					for (const file of files as any[]) {
+						draft.files.push(file);
 					}
 				});
 			},
@@ -548,85 +646,132 @@ export default defineComponent({
 			},
 
 			updateFiles(files) {
-				draftNote.files = files;
+				draft.files = files;
 			},
 
 			updateFileSensitive(file, sensitive) {
-				draftNote.files[draftNote.files.findIndex(x => x.id === file.id)].isSensitive = sensitive;
+				draft.files[draft.files.findIndex(x => x.id === file.id)].isSensitive = sensitive;
 			},
 
 			detachFile(id) {
-				draftNote.files = draftNote.files.filter(x => x.id != id);
+				draft.files = draft.files.filter(x => x.id != id);
 			},
 
 			updateFileName(file, name) {
-				draftNote.files[draftNote.files.findIndex(x => x.id === file.id)].name = name;
+				draft.files[draft.files.findIndex(x => x.id === file.id)].name = name;
 			},
 
-			upload(file: File, name?: string) {
-				upload(file, defaultStore.state.uploadFolder, name).then(res => {
-					draftNote.files.push(res);
-				});
+			onPollUpdate(poll) {
+				draft.poll = poll;
+				saveDraft();
 			},
 
-			async post() {
-				if (props.reply && props.reply.user.host !== null && localOnly.value) {
-					await dialog({
-						type: 'error',
-						text: i18n.locale.errorLocalOnlyToRemote,
+			onKeydown(e: KeyboardEvent) {
+				if ((e.which === 10 || e.which === 13) && (e.ctrlKey || e.metaKey) && canPost.value) post();
+				if (e.which === 27) ctx.emit('esc');
+			},
+
+			onCompositionUpdate(e: CompositionEvent) {
+				imeText.value = e.data;
+			},
+
+			onCompositionEnd(e: CompositionEvent) {
+				imeText.value = '';
+			},
+
+			async onPaste(e: ClipboardEvent) {
+				if (!e.clipboardData) return;
+				if (!currentAccountIsMyself.value) return;
+				for (const { item, i } of Array.from(e.clipboardData.items).map((item, i) => ({item, i}))) {
+					if (item.kind == 'file') {
+						const file = item.getAsFile();
+						if (file !== null) {
+							const lio = file.name.lastIndexOf('.');
+							const ext = lio >= 0 ? file.name.slice(lio) : '';
+							const formatted = `${formatTimeString(new Date(file.lastModified), defaultStore.state.pastedFileName).replace(/{{number}}/g, `${i + 1}`)}${ext}`;
+							fileUpload(file, formatted);
+						}
+					}
+				}
+
+				const paste = e.clipboardData.getData('text');
+
+				if (!quote.value && paste.startsWith(url + '/notes/')) {
+					e.preventDefault();
+
+					dialog({
+						type: 'info',
+						text: i18n.locale.quoteQuestion,
+						showCancelButton: true
+					}).then(({ canceled }) => {
+						if (canceled) {
+							insert(paste);
+							return;
+						}
+
+						const quoteId = paste.substr(url.length).match(/^\/notes\/(.+?)\/?$/)![1];
+						api('notes/show', {
+							noteId: quoteId,
+						}).then(note => {
+							quote.value = note;
+						}).catch(e => {
+							dialog({
+								type: 'error',
+								text: e.message,
+							});
+						});
 					});
+				}
+			},
+
+			onDragover(e) {
+				if (!currentAccountIsMyself.value) {
+					e.preventDefault();
+					draghover.value = true;
+					e.dataTransfer.dropEffect = 'none';
+					return;
+				};
+				if (!e.dataTransfer.items[0]) return;
+				const isFile = e.dataTransfer.items[0].kind == 'file';
+				const isDriveFile = e.dataTransfer.types[0] == _DATA_TRANSFER_DRIVE_FILE_;
+				if (isFile || isDriveFile) {
+					e.preventDefault();
+					draghover.value = true;
+					e.dataTransfer.dropEffect = e.dataTransfer.effectAllowed == 'all' ? 'copy' : 'move';
+				}
+			},
+
+			onDragenter(e) {
+				draghover.value = true;
+			},
+
+			onDragleave(e) {
+				draghover.value = false;
+			},
+
+			onDrop(e): void {
+				if (!currentAccountIsMyself.value) return;
+				draghover.value = false;
+
+				// ファイルだったら
+				if (e.dataTransfer.files.length > 0) {
+					e.preventDefault();
+					for (const x of Array.from(e.dataTransfer.files)) fileUpload(x);
 					return;
 				}
 
-				let data = {
-					text: draftNote.text == '' ? undefined : draftNote.text + (useBroadcast.value ? ' ' + broadcastText.value : ''),
-					fileIds: draftNote.files.length > 0 ? draftNote.files.map(f => f.id) : undefined,
-					replyId: props.reply ? props.reply.id : undefined,
-					renoteId: quote.value ? quote.value.id : props.renote ? props.renote.id : undefined,
-					channelId: props.channel ? props.channel.id : undefined,
-					poll: draftNote.poll,
-					cw: useCw.value ? cw.value || '' : undefined,
-					localOnly: localOnly.value,
-					remoteFollowersOnly: remoteFollowersOnly.value,
-					visibility: visibility.value,
-					// TODO
-					// visibleUserIds: draftNote.visibility == 'specified' ? draftNote.visibleUsers.map(u => u.id) : undefined,
-					viaMobile: isMobile
-				};
-
-				// plugin
-				if (notePostInterruptors.length > 0) {
-					for (const interruptor of notePostInterruptors) {
-						data = await interruptor.handler(JSON.parse(JSON.stringify(data)));
-					}
+				//#region ドライブのファイル
+				const driveFile = e.dataTransfer.getData(_DATA_TRANSFER_DRIVE_FILE_);
+				if (driveFile != null && driveFile != '') {
+					const file = JSON.parse(driveFile);
+					draft.files.push(file);
+					e.preventDefault();
 				}
-				// get token
-
-				// TODO
-				// const token = currentAccountIsMyself ? undefined : currentAccount.token;
-
-				posting.value = true;
-				
-				api('notes/create', data).then(() => {
-					objectAssignDeep(draftNote, noteTemplate);
-					nextTick(() => {
-						deleteDraft();
-						ctx.emit('posted');
-						if (draftNote.text && draftNote.text != '') {
-							const hashtags = parse(draftNote.text)!.filter(x => x.node.type === 'hashtag').map(x => x.node.props.hashtag);
-							const history = JSON.parse(localStorage.getItem('hashtags') || '[]') as string[];
-							localStorage.setItem('hashtags', JSON.stringify(unique(hashtags.concat(history))));
-						}
-						posting.value = false;
-					});
-				}).catch(err => {
-					posting.value = false;
-					dialog({
-						type: 'error',
-						text: err.message + '\n' + (err as any).id,
-					});
-				});
+				//#endregion
 			},
+
+			post,
+			insert,
 		};
 	}
 });
