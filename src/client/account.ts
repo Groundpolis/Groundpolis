@@ -7,6 +7,9 @@ import { waiting } from '@/os';
 type Account = {
 	id: string;
 	token: string;
+	isModerator: boolean;
+	isAdmin: boolean;
+	isDeleted: boolean;
 };
 
 const data = localStorage.getItem('account');
