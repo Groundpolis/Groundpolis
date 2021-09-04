@@ -66,6 +66,8 @@
 		<XWidgets v-if="widgetsShowing" class="tray"/>
 	</transition>
 
+	<iframe v-if="$store.state.aiChanMode" class="ivnzpscs" ref="live2d" src="https://misskey-dev.github.io/mascot-web/?scale=2&y=1.4"></iframe>
+
 	<XCommon/>
 </div>
 </template>
@@ -156,7 +158,23 @@ export default defineComponent({
 
 		ro.observe(this.$refs.contents);
 
-		window.addEventListener('resize', this.adjustUI, { passive: true });
+		window.addEventListener('resize', () => {
+			this.isMobile = (window.innerWidth <= MOBILE_THRESHOLD);
+			this.isDesktop = (window.innerWidth >= DESKTOP_THRESHOLD);
+		}, { passive: true });
+
+		if (this.$store.state.aiChanMode) {
+			let iframeRect = this.$refs.live2d.getBoundingClientRect();
+			window.addEventListener('mousemove', ev => {
+				this.$refs.live2d.contentWindow.postMessage({
+					type: 'moveCursor',
+					body: {
+						x: ev.clientX - iframeRect.left,
+						y: ev.clientY - iframeRect.top,
+					}
+				}, '*');
+			}, { passive: true });
+		}
 	},
 
 	methods: {
@@ -242,6 +260,10 @@ export default defineComponent({
 				os.post();
 			}
 		},
+
+		onAiClick(ev) {
+			//if (this.live2d) this.live2d.click(ev);
+		}
 	}
 });
 </script>
@@ -513,6 +535,16 @@ export default defineComponent({
 		box-sizing: border-box;
 		overflow: auto;
 		background: var(--bg);
+	}
+
+	> .ivnzpscs {
+		position: fixed;
+		bottom: 0;
+		right: 0;
+		width: 300px;
+		height: 600px;
+		border: none;
+		pointer-events: none;
 	}
 }
 </style>

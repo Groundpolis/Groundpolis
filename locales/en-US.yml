@@ -837,6 +837,7 @@ searchUserAndSelect: "Search by your input and select"
 confirmBeforePost: "Add a confirmation step to the post form"
 confirmBeforePostDesc: "Add a button for confirmation at the post form. To prevent mistake, we recommended to turn it on if you are an official account."
 confirmBeforePostLabel: "Ready to note?"
+aiChanMode: "Ai-chan mode"
 _plugin:
   install: "Install plugins"
   installWarn: "Please do not install untrustworthy plugins."
@@ -1287,6 +1288,7 @@ _widgets:
   jobQueue: "Job Queue"
   serverMetric: "Server metrics"
   aiscript: "AiScript console"
+  aichan: "Ai-chan"
 _cw:
   hide: "Hide"
   show: "Load more"

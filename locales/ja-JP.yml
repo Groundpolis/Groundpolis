@@ -872,6 +872,7 @@ confirmBeforePost: "投稿フォームに確認ステップを追加する"
 confirmBeforePostDesc: "オンにすると投稿フォームにスイッチが追加され、オンにするまで投稿ボタンが無効化されます。アカウント間違い防止のために、公式アカウントではオンにすることをオススメします。"
 confirmBeforePostLabel: "投稿内容に間違いはありませんか？"
 noFeaturedPages: "人気のページはまだ無いようです。右下のボタンを押して、今すぐページを作りましょう。"
+aiChanMode: "藍モード"
 
 _plugin:
   install: "プラグインのインストール"
@@ -1369,6 +1370,7 @@ _widgets:
   jobQueue: "ジョブキュー"
   serverMetric: "サーバーメトリクス"
   aiscript: "AiScriptコンソール"
+  aichan: "藍"
 
 _cw:
   hide: "隠す"
