@@ -91,7 +91,9 @@ export function deliver(user: ILocalUser, content: any, to: any) {
 	if (content == null) return null;
 
 	const data = {
-		user,
+		user: {
+			id: user.id
+		},
 		content,
 		to
 	};
