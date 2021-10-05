@@ -158,10 +158,7 @@ export default defineComponent({
 
 		ro.observe(this.$refs.contents);
 
-		window.addEventListener('resize', () => {
-			this.isMobile = (window.innerWidth <= MOBILE_THRESHOLD);
-			this.isDesktop = (window.innerWidth >= DESKTOP_THRESHOLD);
-		}, { passive: true });
+		window.addEventListener('resize', this.adjustUI, { passive: true });
 
 		if (this.$store.state.aiChanMode) {
 			let iframeRect = this.$refs.live2d.getBoundingClientRect();
