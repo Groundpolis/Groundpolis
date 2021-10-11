@@ -330,6 +330,10 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'account',
 		default: false
 	},
+	aiChanMode: {
+		where: 'device',
+		default: false
+	},
 
 	//#endregion
 }));

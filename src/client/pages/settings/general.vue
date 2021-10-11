@@ -58,6 +58,10 @@
 		<template #desc>{{$ts.makeCustomEmojisBiggerDesc}}</template>
 	</FormSwitch>
 
+	<FormGroup>
+		<FormSwitch v-model:value="aiChanMode">{{ $ts.aiChanMode }}</FormSwitch>
+	</FormGroup>
+
 	<FormRadios v-model="fontSize">
 		<template #desc>{{ $ts.fontSize }}</template>
 		<option value="small"><span style="font-size: 14px;">Aa</span></option>
@@ -79,7 +83,7 @@
 		<option value="ignore">{{ $ts._nsfw.ignore }}</option>
 		<option value="force">{{ $ts._nsfw.force }}</option>
 	</FormSelect>
-	
+
 	<FormSelect v-model:value="noteNameDisplayMode">
 		<template #label>{{ $ts.noteNameDisplayMode }}</template>
 		<option v-for="(x, i) in [ 'displayNameAndUserName', 'userNameAndDisplayName', 'displayNameOnly', 'userNameOnly' ]" :value="i" :key="x">{{ $ts[x] }}</option>
@@ -201,6 +205,7 @@ export default defineComponent({
 		iconShape: defaultStore.makeGetterSetter('iconShape'),
 		noteCollapseThreshold: defaultStore.makeGetterSetter('noteCollapseThreshold'),
 		confirmBeforePost: defaultStore.makeGetterSetter('confirmBeforePost'),
+		aiChanMode: defaultStore.makeGetterSetter('aiChanMode'),
 	},
 
 	watch: {
@@ -240,6 +245,10 @@ export default defineComponent({
 		},
 
 		useSticker() {
+			this.reloadAsk();
+		},
+
+		aiChanMode() {
 			this.reloadAsk();
 		},
 

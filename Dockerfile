@@ -21,8 +21,10 @@ RUN apk add --no-cache \
     python \
     zlib-dev
 
+RUN git submodule update --init
 COPY package.json yarn.lock ./
 RUN yarn install
+RUN yarn add npm-run-all --dev
 COPY . ./
 RUN yarn build
 
