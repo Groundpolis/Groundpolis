@@ -1,5 +1,12 @@
 <template>
-<div class="gp-com-postformv2" :class="{modal}">
+<div
+	class="gp-com-postformv2"
+	:class="{modal}"
+	@dragover.stop="onDragover"
+	@dragenter="onDragenter"
+	@dragleave="onDragleave"
+	@drop.stop="onDrop"
+>
 	<div class="_hstack dense _mb-1" :class="{'_shadow-1-f': modal}">
 		<button v-if="!fixed" class="_btn flat icon" v-tooltip="$ts.close" @click="$emit('cancel')" style="font-size: 24px">
 			<BIconX />
@@ -30,10 +37,10 @@
 	<div class="_cardx textarea-card has-tab">
 		<ul class="tab">
 			<li :class="{active: mode === 'edit'}" @click="mode = 'edit'">
-				<button>編集</button>
+				<button>{{$ts.edit}}</button>
 			</li>
 			<li :class="{active: mode === 'preview'}" @click="mode = 'preview'">
-				<button>プレビュー</button>
+				<button>{{$ts.preview}}</button>
 			</li>
 		</ul>
 		<div class="textarea-wrapper">
@@ -47,7 +54,7 @@
 				@compositionupdate="onCompositionUpdate"
 				@compositionend="onCompositionEnd"
 				/>
-			<div class="count" v-text="max - textLength" :class="{error: max < textLength}" />
+			<div class="count" v-if="mode === 'edit'" v-text="max - textLength" :class="{error: max < textLength}" />
 		</div>
 		<div v-show="mode === 'preview'" class="preview">
 			<Mfm :text="draft.text" />
@@ -59,30 +66,33 @@
 		</MkSwitch>
 	</div>
 	<div class="gpfmpad _hstack dense" :class="{'_shadow-1-f': modal}">
-		<button class="_btn flat icon" v-tooltip="$ts.insertQuote" style="font-size: 24px">
+		<button class="_btn flat icon" v-tooltip="$ts.insertQuote" style="font-size: 24px" @click="insert('> ')">
 			<BIconBlockquoteLeft />
 		</button>
-		<button class="_btn flat icon" v-tooltip="$ts.insertLink" style="font-size: 24px">
+		<button class="_btn flat icon" v-tooltip="$ts.insertLink" style="font-size: 24px" @click="link">
 			<BIconLink45deg />
 		</button>
-		<button class="_btn flat icon" v-tooltip="$ts.insertFunction" style="font-weight: normal; font-size: 18px">
+		<button class="_btn flat icon" v-tooltip="$ts.insertFunction" style="font-weight: normal; font-size: 18px" @click="insertFunction">
 			[ ]
 		</button>
-		<button class="_btn flat icon" v-tooltip="$ts.insertMention" style="font-size: 24px">
+		<button class="_btn flat icon" v-tooltip="$ts.insertMention" style="font-size: 24px" @click="insertMention">
 			<BIconAt />
 		</button>
-		<button class="_btn flat icon" v-tooltip="$ts.openEmojiPalette">
+		<button class="_btn flat icon" v-tooltip="$ts.openEmojiPalette" @click="insertEmoji">
 			<BIconEmojiSmile />
 		</button>
-		<button class="_btn flat icon" v-tooltip="$ts.openEmojiPalette">
+		<button class="_btn flat icon" v-tooltip="$ts.openEmojiPalette" @click="insertFace">
 			<Fa :icon="faFish" />
 		</button>
 	</div>
 	<div v-show="useBroadcast" class="_cardx textarea-card _shadow-3 _mb-2">
 		<input :placeholder="$ts._postForm.broadcastPlaceholder" ref="broadcastRef" v-model="broadcastText" />
 	</div>
-	<div class="footer _hstack">
-		<div class="_hgroup _ml-auto">
+	<div class="footer _hstack dense">
+		<a class="_btn active primary flat icon _ml-auto" style="height: 40px" v-tooltip="'Send Feedback'" href="https://forms.gle/uHZihgYbyH5tGfJV9" target="_blank" rel="noopener noreferrer">
+			<BIconExclamationCircle />
+		</a>
+		<div class="_hgroup">
 			<button class="_btn primary" @click="post" :disabled="!canPost">
 				<VisibilityIcon
 					:visibility="visibility"
@@ -114,13 +124,13 @@ import {
 	BIconAt,
 	BIconEmojiSmile,
 	BIconChevronDown,
+	BIconExclamationCircle,
 } from 'bootstrap-icons-vue';
 
 import {
 	faFish,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { NoteVisibility } from '@/../types';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import XNotePreview from './note-preview.vue';
 import { length } from 'stringz';
@@ -128,12 +138,13 @@ import { Autocomplete } from '@/scripts/autocomplete';
 import objectAssignDeep from 'object-assign-deep';
 import { selectFile } from '@/scripts/select-file';
 import { i18n } from '@/i18n';
-import { api, dialog, isMobile, popup, upload } from '@/os';
+import { api, dialog, isMobile, popup, upload, form, selectUser, pickEmoji } from '@/os';
 import { defaultStore, notePostInterruptors } from '@/store';
 import { toASCII } from 'punycode';
 import { markRawAll } from '@/scripts/mark-raw-all';
 
 import VisibilityIcon from './visibility-icon.vue';
+import getAcct from '../../misc/acct/render';
 import MkSwitch from './ui/switch.vue';
 import { instance } from '@/instance';
 import extractMentions from '@/../misc/extract-mentions';
@@ -142,6 +153,7 @@ import { $i } from '@/account';
 import { unique } from '@/../prelude/array';
 import { formatTimeString } from '@/../misc/format-time-string';
 import { host, url } from '@/config';
+import { FormItem } from '@/scripts/form';
 
 markRawAll(
 	faFish,
@@ -168,6 +180,7 @@ export default defineComponent({
 		BIconAt,
 		BIconEmojiSmile,
 		BIconChevronDown,
+		BIconExclamationCircle,
 		VisibilityIcon,
 		XNotePreview,
 		XPostFormAttaches: defineAsyncComponent(() => import('./post-form-attaches.vue')),
@@ -299,7 +312,7 @@ export default defineComponent({
 		
 		const max = computed(() => instance ? instance.maxNoteTextLength as number : 1000);
 
-		const requiredConfirmation = computed(() => defaultStore.reactiveState.confirmBeforePost);
+		const requiredConfirmation = computed(() => defaultStore.reactiveState.confirmBeforePost.value);
 
 		// TODO
 		const currentAccountIsMyself = computed(() => true);
@@ -307,7 +320,7 @@ export default defineComponent({
 		const canPost = computed(() => (
 			!posting.value &&
 			(!requiredConfirmation.value || draft.confirmed) &&
-			(1 <= textLength.value || 1 <= draft.files.length || !!draft.poll || !!quote) &&
+			(1 <= textLength.value || 1 <= draft.files.length || !!draft.poll || !!quote.value) &&
 			(textLength.value <= max.value) &&
 			(!draft.poll || draft.poll.choices.length >= 2)
 		));
@@ -367,7 +380,7 @@ export default defineComponent({
 		};
 
 		const insert = (text: string) => {
-			insertTextAtCursor(textRef, text);
+			insertTextAtCursor(textRef.value, text);
 		};
 
 		const post = async () => {
@@ -768,6 +781,52 @@ export default defineComponent({
 					e.preventDefault();
 				}
 				//#endregion
+			},
+
+			insertFunction() {
+				popup(import('./function-builder-window.vue'), {
+				}, { done: insert }, 'closed');
+			},
+
+			async link() {
+				const formItems: Record<string, FormItem> = {
+					url: {
+						type: 'string',
+						default: 'https://',
+						label: 'URL',
+					},
+					desc: {
+						type: 'string',
+						default: '',
+						label: i18n.locale.description,
+					},
+					noUrlPreview: {
+						type: 'boolean',
+						default: false,
+						label: i18n.locale._mfmpad.noUrlPreview,
+						description: i18n.locale._mfmpad.noUrlPreviewDesc,
+					},
+				};
+				const { canceled, result } = await form('挿入するリンクの設定', formItems);
+				if (canceled) return;
+				insert(`${result.noUrlPreview ? '?' : ''}[${result.desc}](${result.url})`);
+			},
+
+			insertFace() {
+				const faces = defaultStore.reactiveState.faces.value;
+				insert(faces.length > 0 ? faces[Math.floor(Math.random() * faces.length)] : '');
+			},
+
+			insertMention() {
+				selectUser().then(user => {
+					insert('@' + getAcct(user) + ' ');
+				});
+			},
+
+			async insertEmoji(ev) {
+				pickEmoji(ev.currentTarget || ev.target).then(emoji => {
+					insert(emoji);
+				});
 			},
 
 			post,
