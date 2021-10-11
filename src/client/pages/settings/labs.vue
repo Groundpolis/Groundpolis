@@ -3,7 +3,7 @@
 	<div class="_formItem">
 		<div class="_formLabel" style="font-size: 100%">{{ $ts._labs.description }}</div>
 		<div class="_formLabel" style="font-size: 100%">
-			<a href="https://forms.gle/uHZihgYbyH5tGfJV9" target="_blank" rel="norefferer noopener" v-text="$ts._labs.review" />
+			<MkLink url="https://forms.gle/uHZihgYbyH5tGfJV9" class="at">{{ $ts._labs.review }}</MkLink>
 		</div>
 	</div>
 
@@ -35,6 +35,7 @@ import { defineComponent } from 'vue';
 import FormBase from '@/components/form/base.vue';
 import FormLink from '@/components/form/link.vue';
 import FormSwitch from '@/components/form/switch.vue';
+import MkLink from '@/components/link.vue';
 import { defaultStore } from '@/store';
 
 export default defineComponent({
@@ -42,6 +43,7 @@ export default defineComponent({
 		FormBase,
 		FormLink,
 		FormSwitch,
+		MkLink,
 	},
 
 	computed: {
