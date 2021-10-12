@@ -22,7 +22,7 @@
 		</FormKeyValueView>
 	</FormGroup>
 
-	<FormLink v-if="meta.tosUrl" :to="meta.tosUrl" external>{{ $ts.tos }}</FormLink>
+	<FormLink v-if="meta.tosUrl" :to="meta.tosUrl" :external="!isInternalUrl(meta.tosUrl)">{{ $ts.tos }}</FormLink>
 
 	<FormGroup v-if="stats">
 		<template #label>{{ $ts.statistics }}</template>
@@ -48,6 +48,7 @@ import FormGroup from '@/components/form/group.vue';
 import FormKeyValueView from '@/components/form/key-value-view.vue';
 import * as os from '@/os';
 import number from '@/filters/number';
+import { url } from '@/config';
 
 export default defineComponent({
 	components: {
@@ -83,6 +84,9 @@ export default defineComponent({
 	},
 
 	methods: {
+		isInternalUrl(link: string) {
+			return link.startsWith(url);
+		},
 		number
 	}
 });

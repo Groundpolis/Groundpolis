@@ -22,6 +22,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { faChevronRight, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+
 import './form.scss';
 
 export default defineComponent({
