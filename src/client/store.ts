@@ -62,29 +62,11 @@ export const defaultStore = markRaw(new Storage('base', {
 	menu: {
 		where: 'deviceAccount',
 		default: [
-			//#region Misskey Original
-			// 'notifications',
-			// 'messaging',
-			// 'drive',
-			// '-',
-			// 'followRequests',
-			// 'featured',
-			// 'explore',
-			// 'announcements',
-			// 'search',
-			// '-',
-			// 'ui',
-			//#endregion
-
-			//#region Groundpolis
 			'notifications',
 			'explore',
 			'messaging',
 			'drive',
 			'followRequests',
-			'-',
-			'ui',
-			//#endregion
 		]
 	},
 	visibility: {
