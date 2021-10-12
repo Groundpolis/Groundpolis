@@ -227,6 +227,7 @@ export default defineComponent({
 			}))]);
 			const timelines = timelineMenuItems
 				.filter(it => !(this.$store.state.timelineTabItems as string[]).includes(it.src))
+				.filter(it => !it.show || it.show())
 				.map(it => ({
 					text: it.name,
 					icon: it.icon,
