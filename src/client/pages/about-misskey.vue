@@ -53,25 +53,8 @@
 			<template #label>{{ $ts._aboutMisskey.contributors }}</template>
 			<FormLink to="https://github.com/Xeltica" external>@Xeltica</FormLink>
 			<FormLink to="https://github.com/m-hayabusa" external>@m-hayabusa</FormLink>
+			<FormLink to="https://github.com/remitocat" external>@remitocat</FormLink>
 			<template #caption><MkLink url="https://github.com/Groundpolis/Groundpolis/graphs/contributors">{{ $ts._aboutMisskey.allContributors }}</MkLink></template>
-		</FormGroup>
-		<FormGroup>
-			<template #label>{{ $ts._aboutMisskey.contributorsMisskey }}</template>
-			<FormLink to="https://github.com/syuilo" external>@syuilo</FormLink>
-			<FormLink to="https://github.com/AyaMorisawa" external>@AyaMorisawa</FormLink>
-			<FormLink to="https://github.com/mei23" external>@mei23</FormLink>
-			<FormLink to="https://github.com/acid-chicken" external>@acid-chicken</FormLink>
-			<FormLink to="https://github.com/tamaina" external>@tamaina</FormLink>
-			<FormLink to="https://github.com/rinsuki" external>@rinsuki</FormLink>
-			<FormLink to="https://github.com/Xeltica" external>@Xeltica</FormLink>
-			<FormLink to="https://github.com/u1-liquid" external>@u1-liquid</FormLink>
-			<FormLink to="https://github.com/marihachi" external>@marihachi</FormLink>
-			<template #caption><MkLink url="https://github.com/syuilo/misskey/graphs/contributors">{{ $ts._aboutMisskey.allContributors }}</MkLink></template>
-		</FormGroup>
-		<FormGroup>
-			<template #label><Mfm text="[jelly ❤]"/> {{ $ts._aboutMisskey.patrons }}</template>
-			<FormKeyValueView v-for="patron in patrons" :key="patron"><template #key>{{ patron }}</template></FormKeyValueView>
-			<template #caption>{{ $ts._aboutMisskey.morePatrons }}</template>
 		</FormGroup>
 	</FormBase>
 </div>
@@ -90,45 +73,6 @@ import MkLink from '@/components/link.vue';
 import { physics } from '@/scripts/physics.ts';
 import * as os from '@/os';
 
-const patrons = [
-	'Satsuki Yanagi',
-	'noellabo',
-	'Gargron',
-	'Atsuko Tominaga',
-	'AureoleArk',
-	'naga_rus',
-	'Melilot',
-	'Hekovic',
-	'Nokotaro Takeda',
-	'dansup',
-	'nenohi',
-	'motcha',
-	'nanami kan',
-	'Eduardo Quiros',
-	'Peter G.',
-	'YUKIMOCHI',
-	'Efertone',
-	'makokunsan',
-	'mewl hayabusa',
-	'見当かなみ',
-	'natalie',
-	'takimura',
-	'sikyosyounin',
-	'weepjp',
-	'mydarkstar',
-	'Nesakko',
-	'sheeta.s',
-	'osapon',
-	'YuzuRyo61',
-	'wara',
-	'mkatze',
-	'kiritan',
-	'CG',
-	'Denshi',
-	'Osushimaru',
-	'Liaizon Wakest',
-];
-
 export default defineComponent({
 	components: {
 		FormBase,
@@ -145,7 +89,6 @@ export default defineComponent({
 				icon: null
 			},
 			version,
-			patrons,
 			easterEggReady: false,
 			easterEggEmojis: [],
 			easterEggEngine: null,
