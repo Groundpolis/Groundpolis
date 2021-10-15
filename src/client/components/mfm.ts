@@ -1,6 +1,5 @@
 import { VNode, defineComponent, h } from 'vue';
-import { MfmForest } from '@/../mfm/prelude';
-import { parse, parsePlain } from '@/../mfm/parse';
+import * as mfm from 'mfm-js';
 import MkUrl from '@/components/global/url.vue';
 import MkLink from '@/components/link.vue';
 import MkMention from '@/components/mention.vue';
@@ -47,23 +46,18 @@ export default defineComponent({
 	render() {
 		if (this.text == null || this.text == '') return;
 
-		const ast = (this.plain ? parsePlain : parse)(this.text);
+		const ast = (this.plain ? mfm.parsePlain : mfm.parse)(this.text);
 
-		const validTime = (t: string | null | undefined) => {
-			if (t == null) return null;
-			return t.match(/^[0-9.]+s$/) ? t : null;
-		};
-
-		const genEl = (ast: MfmForest) => concat(ast.map((token): VNode[] => {
-			switch (token.node.type) {
+		const genEl = (ast: mfm.MfmNode[]) => concat(ast.map((token): VNode[] => {
+			switch (token.type) {
 				case 'text': {
-					const text = token.node.props.text.replace(/(\r\n|\n|\r)/g, '\n');
+					const text = token.props.text.replace(/(\r\n|\n|\r)/g, '\n');
 
 					if (!this.plain) {
 						const x = text.split('\n')
 							.map(t => t == '' ? [h('br')] : [h('span', t), h('br')]);
 						x[x.length - 1].pop();
-						return x;
+						return x.flatMap(_ => _);
 					} else {
 						return [h('span', text.replace(/\n/g, ' '))];
 					}
@@ -84,7 +78,7 @@ export default defineComponent({
 				}
 
 				case 'fn': {
-					const { name, args } = token.node.props as { name: string, args: MfmFunctionStyleProp };
+					const { name, args } = token.props as { name: string, args: MfmFunctionStyleProp };
 					const fn = mfmFunctions[name];
 					if (typeof fn === 'object' && fn.class) { 
 						return [h('span', {
@@ -92,8 +86,9 @@ export default defineComponent({
 						}, genEl(token.children))];
 					}
 					const noAnimatedMfm = !this.$store.state.animatedMfm;
-					const noAnimatedStyle = !fn ? '' : typeof fn === 'string' ? '' : fn.noAnimatedMfmStyle ? (typeof fn.noAnimatedMfmStyle === 'boolean' ? fn.style(args) : fn.noAnimatedMfmStyle(args)) : '';
-					const style = noAnimatedMfm ? noAnimatedStyle : !fn ? '' : typeof fn === 'string' ? fn : fn.style(args);
+					const fnStyle = typeof fn === 'object' && fn.style ? fn.style(args) : null;
+					const noAnimatedStyle = !fn ? '' : typeof fn === 'string' ? '' : fn.noAnimatedMfmStyle ? (typeof fn.noAnimatedMfmStyle === 'boolean' ? fnStyle : fn.noAnimatedMfmStyle(args)) : '';
+					const style = noAnimatedMfm ? noAnimatedStyle : !fn ? '' : typeof fn === 'string' ? fn : fnStyle;
 
 					return [h('span', { style: 'display: inline-block;' + style, }, genEl(token.children))];
 				}
@@ -135,7 +130,7 @@ export default defineComponent({
 				case 'url': {
 					return [h(MkUrl, {
 						key: Math.random(),
-						url: token.node.props.url,
+						url: token.props.url,
 						rel: 'nofollow noopener',
 					})];
 				}
@@ -143,7 +138,7 @@ export default defineComponent({
 				case 'link': {
 					return [h(MkLink, {
 						key: Math.random(),
-						url: token.node.props.url,
+						url: token.props.url,
 						rel: 'nofollow noopener',
 					}, genEl(token.children))];
 				}
@@ -151,32 +146,31 @@ export default defineComponent({
 				case 'mention': {
 					return [h(MkMention, {
 						key: Math.random(),
-						host: (token.node.props.host == null && this.author && this.author.host != null ? this.author.host : token.node.props.host) || host,
-						username: token.node.props.username
+						host: (token.props.host == null && this.author && this.author.host != null ? this.author.host : token.props.host) || host,
+						username: token.props.username
 					})];
 				}
 
 				case 'hashtag': {
 					return [h(MkA, {
 						key: Math.random(),
-						to: `/search/${this.isNote ? 'notes' : 'users'}/${encodeURIComponent(token.node.props.hashtag)}`,
+						to: `/search/${this.isNote ? 'notes' : 'users'}/${encodeURIComponent(token.props.hashtag)}`,
 						style: 'color:var(--hashtag);'
-					}, `#${token.node.props.hashtag}`)];
+					}, `#${token.props.hashtag}`)];
 				}
 
 				case 'blockCode': {
 					return [h(MkCode, {
 						key: Math.random(),
-						code: token.node.props.code,
-						lang: token.node.props.lang,
+						code: token.props.code,
+						lang: token.props.lang,
 					})];
 				}
 
 				case 'inlineCode': {
 					return [h(MkCode, {
 						key: Math.random(),
-						code: token.node.props.code,
-						lang: token.node.props.lang,
+						code: token.props.code,
 						inline: true
 					})];
 				}
@@ -192,11 +186,19 @@ export default defineComponent({
 						}, genEl(token.children))];
 					}
 				}
-
-				case 'emoji': {
+				case 'emojiCode': {
 					return [h(MkEmoji, {
 						key: Math.random(),
-						emoji: token.node.props.name ? `:${token.node.props.name}:` : token.node.props.emoji,
+						emoji: `:${token.props.name}:`,
+						customEmojis: this.customEmojis,
+						normal: this.plain
+					})];
+				}
+
+				case 'unicodeEmoji': {
+					return [h(MkEmoji, {
+						key: Math.random(),
+						emoji: token.props.emoji,
 						customEmojis: this.customEmojis,
 						normal: this.plain
 					})];
@@ -205,7 +207,7 @@ export default defineComponent({
 				case 'mathInline': {
 					return [h(MkFormula, {
 						key: Math.random(),
-						formula: token.node.props.formula,
+						formula: token.props.formula,
 						block: false
 					})];
 				}
@@ -213,7 +215,7 @@ export default defineComponent({
 				case 'mathBlock': {
 					return [h(MkFormula, {
 						key: Math.random(),
-						formula: token.node.props.formula,
+						formula: token.props.formula,
 						block: true
 					})];
 				}
@@ -221,12 +223,12 @@ export default defineComponent({
 				case 'search': {
 					return [h(MkGoogle, {
 						key: Math.random(),
-						q: token.node.props.query
+						q: token.props.query
 					})];
 				}
 
 				default: {
-					console.error('unrecognized ast type:', token.node.type);
+					console.error('unrecognized ast type:', (token as any).type);
 
 					return [];
 				}

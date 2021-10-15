@@ -96,14 +96,22 @@ export class Autocomplete {
 		const caretPos = this.textarea.selectionStart;
 		const text = this.text.substr(0, caretPos).split('\n').pop();
 
+		if (!text) {
+			this.close();
+			return;
+		}
+
 		const mentionIndex = text.lastIndexOf('@');
 		const hashtagIndex = text.lastIndexOf('#');
 		const emojiIndex = text.lastIndexOf(':');
+		const fnIndex = text.lastIndexOf('$');
 
 		const max = Math.max(
 			mentionIndex,
 			hashtagIndex,
-			emojiIndex);
+			emojiIndex,
+			fnIndex
+		);
 
 		if (max == -1) {
 			this.close();
@@ -113,6 +121,7 @@ export class Autocomplete {
 		const isMention = mentionIndex != -1;
 		const isHashtag = hashtagIndex != -1;
 		const isEmoji = emojiIndex != -1;
+		const isFn = fnIndex != -1;
 
 		let opened = false;
 
@@ -139,6 +148,14 @@ export class Autocomplete {
 			const emoji = text.substr(emojiIndex + 1);
 			if (!emoji.includes(' ')) {
 				this.open('emoji', emoji);
+				opened = true;
+			}
+		}
+
+		if (isFn && !opened) {
+			const fn = text.substr(fnIndex + 1);
+			if (!fn.includes(' ')) {
+				this.open('fn', fn.replace('[', ''));
 				opened = true;
 			}
 		}
@@ -271,6 +288,22 @@ export class Autocomplete {
 			this.vm.$nextTick(() => {
 				this.textarea.focus();
 				const pos = trimmedBefore.length + value.length;
+				this.textarea.setSelectionRange(pos, pos);
+			});
+		} else if (type == 'fn') {
+			const source = this.text;
+
+			const before = source.substr(0, caret);
+			const trimmedBefore = before.substring(0, before.lastIndexOf('$'));
+			const after = source.substr(caret);
+
+			// 挿入
+			this.text = `${trimmedBefore}$[${value} ]${after}`;
+
+			// キャレットを戻す
+			this.vm.$nextTick(() => {
+				this.textarea.focus();
+				const pos = trimmedBefore.length + (value.length + 3);
 				this.textarea.setSelectionRange(pos, pos);
 			});
 		}

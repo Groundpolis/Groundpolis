@@ -9,11 +9,11 @@
 </template>
 
 <script lang="ts">
+import { extractUrlFromMfm } from '@/../misc/extract-url-from-mfm';
 import { TextBlock } from '@/scripts/hpml/block';
 import { Hpml } from '@/scripts/hpml/evaluator';
 import { defineAsyncComponent, defineComponent, PropType } from 'vue';
-import { parse } from '../../../mfm/parse';
-import { unique } from '../../../prelude/array';
+import * as mfm from 'mfm-js';
 
 export default defineComponent({
 	components: {
@@ -38,11 +38,7 @@ export default defineComponent({
 	computed: {
 		urls(): string[] {
 			if (this.text) {
-				const ast = parse(this.text);
-				// TODO: 再帰的にURL要素がないか調べる
-				return unique(ast
-					.filter(t => ((t.node.type == 'url' || t.node.type == 'link') && t.node.props.url && !t.node.props.silent))
-					.map(t => t.node.props.url));
+				return extractUrlFromMfm(mfm.parse(this.text));
 			} else {
 				return [];
 			}

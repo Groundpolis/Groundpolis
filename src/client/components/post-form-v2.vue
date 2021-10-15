@@ -148,12 +148,13 @@ import getAcct from '../../misc/acct/render';
 import MkSwitch from './ui/switch.vue';
 import { instance } from '@/instance';
 import extractMentions from '@/../misc/extract-mentions';
-import { parse } from '@/../mfm/parse';
+import { parse } from 'mfm-js';
 import { $i } from '@/account';
 import { unique } from '@/../prelude/array';
 import { formatTimeString } from '@/../misc/format-time-string';
 import { host, url } from '@/config';
 import { FormItem } from '@/scripts/form';
+import { HashtagNode } from '@/../mfm/prelude';
 
 markRawAll(
 	faFish,
@@ -326,7 +327,6 @@ export default defineComponent({
 		));
 
 		const saveDraft = () => {
-			console.log('a');
 			if (props.instant) return;
 
 			const data = JSON.parse(localStorage.getItem('drafts') || '{}');
@@ -426,7 +426,7 @@ export default defineComponent({
 					deleteDraft();
 					ctx.emit('posted');
 					if (draft.text && draft.text != '') {
-						const hashtags = parse(draft.text)!.filter(x => x.node.type === 'hashtag').map(x => x.node.props.hashtag);
+						const hashtags = parse(draft.text)!.filter(x => x.type === 'hashtag').map((x: HashtagNode) => x.props.hashtag);
 						const history = JSON.parse(localStorage.getItem('hashtags') || '[]') as string[];
 						localStorage.setItem('hashtags', JSON.stringify(unique(hashtags.concat(history))));
 					}
@@ -467,7 +467,7 @@ export default defineComponent({
 			if (props.reply && props.reply.text != null) {
 				const ast = parse(props.reply.text);
 
-				for (const x of extractMentions(ast!)) {
+				for (const x of extractMentions(ast)) {
 					const mention = x.host ? `@${x.username}@${toASCII(x.host)}` : `@${x.username}`;
 
 					// 自分は除外

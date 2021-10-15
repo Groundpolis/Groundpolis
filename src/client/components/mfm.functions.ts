@@ -26,6 +26,11 @@ function genFlagProp(label?: string, description?: string): MfmFunctionProp {
 	};
 }
 
+const validate = (t: string | null | undefined) => {
+	if (t == null) return null;
+	return t.includes(';') ? t : null;
+};
+
 export type MfmFunctionDefinition = string | {
 	props?: MfmFunctionProps,
 	style?: (props: MfmFunctionStyleProp) => string,

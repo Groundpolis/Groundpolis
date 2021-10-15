@@ -77,7 +77,7 @@ export default defineComponent({
 					.map(a => a.value ? `${a.key}=${a.value}` : a.key)
 					.join(',');
 
-			return `[${funcName.value}${args.value.length > 0 ? '.' : ''}${arg} ${body.value}]`
+			return `$[${funcName.value}${arg.length > 0 ? '.' : ''}${arg} ${body.value}]`
 		});
 
 		watchEffect(() => {

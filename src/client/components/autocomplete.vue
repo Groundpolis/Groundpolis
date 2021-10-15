@@ -24,6 +24,12 @@
 			<span class="alias" v-if="emoji.aliasOf">({{ emoji.aliasOf }})</span>
 		</li>
 	</ol>
+	<ol class="functions" ref="suggests" v-if="functions.length > 0">
+		<li class="functionItem" style="line-height: 2" v-for="fn in functions" @click="complete(type, '$[' + fn + ' ')" @keydown="onKeydown" tabindex="-1" :key="fn">
+			<span class="name">{{$ts._mfm[fn]}}</span>
+			<div class="internal-id _ml-1">$[{{fn}}]</div>
+		</li>
+	</ol>
 </div>
 </template>
 
@@ -35,6 +41,7 @@ import { twemojiSvgBase } from '../../misc/twemoji-base';
 import { getStaticImageUrl } from '@/scripts/get-static-image-url';
 import { acct } from '@/filters/user';
 import * as os from '@/os';
+import { mfmFunctions } from './mfm.functions';
 
 type EmojiDef = {
 	emoji: string;
@@ -124,7 +131,8 @@ export default defineComponent({
 			emojis: [],
 			items: [],
 			select: -1,
-			emojiDb: [] as EmojiDef[]
+			emojiDb: [] as EmojiDef[],
+			functions: [] as string[],
 		}
 	},
 
@@ -310,6 +318,9 @@ export default defineComponent({
 				}
 
 				this.emojis = matched;
+			} else if (this.type === 'fn') {
+				this.functions = Object.keys(mfmFunctions).filter(f => !this.q || f.startsWith(this.q));
+				console.log(this.functions);
 			}
 		},
 
@@ -484,6 +495,15 @@ export default defineComponent({
 
 		.alias {
 			margin: 0 0 0 8px;
+		}
+	}
+
+	.functionItem {
+		> .name {
+			font-weight: bold;
+		}
+		> .internal-id {
+			opacity: 0.5;
 		}
 	}
 }
