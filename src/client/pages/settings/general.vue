@@ -39,7 +39,6 @@
 		<FormSwitch v-model:value="showGapBetweenNotesInTimeline">{{ $ts.showGapBetweenNotesInTimeline }}</FormSwitch>
 		<FormSwitch v-model:value="loadRawImages">{{ $ts.loadRawImages }}</FormSwitch>
 		<FormSwitch v-model:value="disableShowingAnimatedImages">{{ $ts.disableShowingAnimatedImages }}</FormSwitch>
-		<FormSwitch v-model:value="useSystemFont">{{ $ts.useSystemFont }}</FormSwitch>
 		<FormSwitch v-model:value="useOsNativeEmojis">{{ $ts.useOsNativeEmojis }}
 			<div><Mfm text="🍮🍦🍭🍩🍰🍫🍬🥞🍪" :key="useOsNativeEmojis"/></div>
 		</FormSwitch>
@@ -174,7 +173,6 @@ export default defineComponent({
 			langs,
 			lang: localStorage.getItem('lang'),
 			fontSize: localStorage.getItem('fontSize'),
-			useSystemFont: localStorage.getItem('useSystemFont') != null,
 			faImage, faCog, faColumns
 		}
 	},
@@ -219,15 +217,6 @@ export default defineComponent({
 				localStorage.removeItem('fontSize');
 			} else {
 				localStorage.setItem('fontSize', this.fontSize);
-			}
-			this.reloadAsk();
-		},
-
-		useSystemFont() {
-			if (this.useSystemFont) {
-				localStorage.setItem('useSystemFont', 't');
-			} else {
-				localStorage.setItem('useSystemFont', 'f');
 			}
 			this.reloadAsk();
 		},

@@ -27,8 +27,8 @@ html {
 	background-position: center;
 	color: var(--fg);
 	overflow: auto;
-	font-family: "BIZ UDGothic", Roboto, HelveticaNeue, Arial, sans-serif;
-	line-height: 1.35;
+	font-family: "Yu Gothic Medium", "游ゴシック Medium", YuGothic, "游ゴシック体", "ヒラギノ角ゴ Pro W3", "メイリオ", sans-serif;
+	line-height: 1.5;
 	text-size-adjust: 100%;
 	tab-size: 2;
 
@@ -76,10 +76,6 @@ html {
 
 	&.f-veryLarge {
 		font-size: 1.2em;
-	}
-
-	&.useSystemFont {
-		font-family: sans-serif;
 	}
 }
 

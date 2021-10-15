@@ -112,14 +112,6 @@
 		document.documentElement.classList.add('f-' + fontSize);
 	}
 
-	const useSystemFont = localStorage.getItem('useSystemFont');
-	if (useSystemFont !== 'f') {
-		document.documentElement.classList.add('useSystemFont');
-	}
-	if (useSystemFont === null) {
-		localStorage.setItem('useSystemFont', 't');
-	}
-
 	const wallpaper = localStorage.getItem('wallpaper');
 	if (wallpaper) {
 		document.documentElement.style.backgroundImage = `url(${wallpaper})`;
