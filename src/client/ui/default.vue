@@ -52,7 +52,7 @@
 		</button>
 	</div>
 
-	<button class="fab _button" :class="{ navHidden }" @click="onFabClicked"><Fa :key="fabIcon" :icon="fabIcon"/></button>
+	<button class="fab _button" :class="{ navHidden }" v-if="fabIcon" @click="onFabClicked"><Fa :key="fabIcon" :icon="fabIcon"/></button>
 
 	<transition name="tray-back">
 		<div class="tray-back _modalBg"
@@ -127,7 +127,7 @@ export default defineComponent({
 		},
 
 		fabIcon() {
-			return this.pageInfo && this.pageInfo.action ? this.pageInfo.action.icon : faPencilAlt;
+			return this.pageInfo && this.pageInfo.action ? this.pageInfo.action.icon : null;
 		},
 	},
 
@@ -324,7 +324,7 @@ export default defineComponent({
 			-webkit-backdrop-filter: blur(32px);
 			backdrop-filter: blur(32px);
 			background-color: var(--header);
-			//border-bottom: solid 1px var(--divider);
+			border-bottom: solid 1px var(--divider);
 			user-select: none;
 		}
 

@@ -106,6 +106,7 @@ export default defineComponent({
 			appearance: none;
 			-webkit-appearance: none;
 			color: var(--fg);
+			cursor: pointer;
 
 			option,
 			optgroup {
