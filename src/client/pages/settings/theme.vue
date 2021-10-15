@@ -49,7 +49,7 @@
 	<FormButton primary v-else @click="wallpaper = null">{{ $ts.removeWallpaper }}</FormButton>
 
 	<FormGroup>
-		<FormLink to="/settings/theme/store"><template #icon><Fa :icon="faGlobe"/></template>{{ $ts._theme.explore }}</FormLink>
+		<FormLink to="https://assets.misskey.io/theme/list" external><template #icon><Fa :icon="faGlobe"/></template>{{ $ts._theme.explore }}</FormLink>
 		<FormLink to="/settings/theme/install"><template #icon><Fa :icon="faDownload"/></template>{{ $ts._theme.install }}</FormLink>
 	</FormGroup>
 
