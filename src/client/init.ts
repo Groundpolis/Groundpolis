@@ -195,7 +195,6 @@ const app = createApp(await (
 	window.location.search === '?zen' ? import('@/ui/zen.vue') :
 	!$i                               ? import('@/ui/visitor.vue') :
 	ui === 'deck'                     ? import('@/ui/deck.vue') :
-	ui === 'desktop'                  ? import('@/ui/desktop.vue') :
 	import('@/ui/default.vue')
 ).then(x => x.default));
 

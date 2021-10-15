@@ -111,12 +111,6 @@ export const sidebarDef = {
 					localStorage.setItem('ui', 'deck');
 					location.reload();
 				}
-			}, {
-				text: i18n.locale.desktop + ' (β)',
-				action: () => {
-					localStorage.setItem('ui', 'desktop');
-					location.reload();
-				}
 			}], ev.currentTarget || ev.target);
 		},
 	},
