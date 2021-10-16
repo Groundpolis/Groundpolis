@@ -162,7 +162,7 @@
 			<MkSwitch v-model:value="proxyRemoteFiles">{{ $ts.proxyRemoteFiles }}<template #desc>{{ $ts.proxyRemoteFilesDescription }}</template></MkSwitch>
 			<MkInput v-model:value="localDriveCapacityMb" type="number">{{ $ts.driveCapacityPerLocalAccount }}<template #suffix>MB</template><template #desc>{{ $ts.inMb }}</template></MkInput>
 			<MkInput v-model:value="remoteDriveCapacityMb" type="number" :disabled="!cacheRemoteFiles">{{ $ts.driveCapacityPerRemoteAccount }}<template #suffix>MB</template><template #desc>{{ $ts.inMb }}</template></MkInput>
-			<MkInput v-model:value="premiumDriveCapacityMb" type="number">{{ $ts.driveCapacityPerRemoteAccount }}<template #suffix>MB</template><template #desc>{{ $ts.inMb }}</template></MkInput>
+			<MkInput v-model:value="premiumDriveCapacityMb" type="number">{{ $ts.driveCapacityPerPremiumAccount }}<template #suffix>MB</template><template #desc>{{ $ts.inMb }}</template></MkInput>
 		</div>
 		<div class="_footer">
 			<MkButton primary @click="save(true)"><Fa :icon="faSave"/> {{ $ts.save }}</MkButton>
