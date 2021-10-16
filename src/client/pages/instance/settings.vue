@@ -18,8 +18,6 @@
 		</div>
 	</section>
 
-	<MkInput v-model:value="pinnedClipId">{{ $ts.pinnedClipId }}</MkInput>
-
 	<section class="_card _vMargin">
 		<div class="_content">
 			<MkInput v-model:value="maxNoteTextLength" type="number" :save="() => save()"><template #icon><Fa :icon="faPencilAlt"/></template>{{ $ts.maxNoteTextLength }}</MkInput>
@@ -150,18 +148,6 @@
 		<div class="_content">
 			<MkTextarea v-model:value="pinnedUsers">
 				<template #desc>{{ $ts.pinnedUsersDescription }} <button class="_textButton" @click="addPinUser">{{ $ts.addUser }}</button></template>
-			</MkTextarea>
-		</div>
-		<div class="_footer">
-			<MkButton primary @click="save(true)"><Fa :icon="faSave"/> {{ $ts.save }}</MkButton>
-		</div>
-	</section>
-
-	<section class="_card _vMargin">
-		<div class="_title"><Fa :icon="faThumbtack"/> {{ $ts.pinnedPages }}</div>
-		<div class="_content">
-			<MkTextarea v-model:value="pinnedPages">
-				<template #desc>{{ $ts.pinnedPagesDescription }}</template>
 			</MkTextarea>
 		</div>
 		<div class="_footer">
@@ -318,8 +304,6 @@ export default defineComponent({
 			premiumDriveCapacityMb: 0,
 			blockedHosts: '',
 			pinnedUsers: '',
-			pinnedPages: '',
-			pinnedClipId: null,
 			maintainerName: null,
 			maintainerEmail: null,
 			name: null,
@@ -425,8 +409,6 @@ export default defineComponent({
 		this.premiumDriveCapacityMb = this.meta.driveCapacityPerPremiumUserMb;
 		this.blockedHosts = this.meta.blockedHosts.join('\n');
 		this.pinnedUsers = this.meta.pinnedUsers.join('\n');
-		this.pinnedPages = this.meta.pinnedPages.join('\n');
-		this.pinnedClipId = this.meta.pinnedClipId;
 		this.enableServiceWorker = this.meta.enableServiceWorker;
 		this.swPublicKey = this.meta.swPublickey;
 		this.swPrivateKey = this.meta.swPrivateKey;
@@ -591,8 +573,6 @@ export default defineComponent({
 				premiumDriveCapacityMb: parseInt(this.premiumDriveCapacityMb, 10),
 				blockedHosts: this.blockedHosts.split('\n') || [],
 				pinnedUsers: this.pinnedUsers ? this.pinnedUsers.split('\n') : [],
-				pinnedPages: this.pinnedPages ? this.pinnedPages.split('\n') : [],
-				pinnedClipId: (this.pinnedClipId && this.pinnedClipId) != '' ? this.pinnedClipId : null,
 				enableServiceWorker: this.enableServiceWorker,
 				swPublicKey: this.swPublicKey,
 				swPrivateKey: this.swPrivateKey,
