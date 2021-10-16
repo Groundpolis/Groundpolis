@@ -1,4 +1,4 @@
-import { Ref, ref } from 'vue';
+import { nextTick, Ref, ref } from 'vue';
 import * as getCaretCoordinates from 'textarea-caret';
 import { toASCII } from 'punycode';
 import { popup } from '@/os';
@@ -301,9 +301,10 @@ export class Autocomplete {
 			this.text = `${trimmedBefore}$[${value} ]${after}`;
 
 			// キャレットを戻す
-			this.vm.$nextTick(() => {
+			nextTick(() => {
 				this.textarea.focus();
-				const pos = trimmedBefore.length + (value.length + 3);
+				const pos = trimmedBefore.length + (2 + value.length + 1);
+				console.log(pos);
 				this.textarea.setSelectionRange(pos, pos);
 			});
 		}

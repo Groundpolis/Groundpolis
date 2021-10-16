@@ -25,7 +25,7 @@
 		</li>
 	</ol>
 	<ol class="functions" ref="suggests" v-if="functions.length > 0">
-		<li class="functionItem" style="line-height: 2" v-for="fn in functions" @click="complete(type, '$[' + fn + ' ')" @keydown="onKeydown" tabindex="-1" :key="fn">
+		<li class="functionItem" style="line-height: 2" v-for="fn in functions" @click="complete(type, fn)" @keydown="onKeydown" tabindex="-1" :key="fn">
 			<span class="name">{{$ts._mfm[fn]}}</span>
 			<div class="internal-id _ml-1">$[{{fn}}]</div>
 		</li>
