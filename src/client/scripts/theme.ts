@@ -21,8 +21,6 @@ export const builtinThemes = [
 	require('../themes/d-dark.json5'),
 	require('../themes/d-persimmon.json5'),
 	require('../themes/d-groundpolis.json5'),
-
-	require('../themes/d-black.json5'),
 ] as Theme[];
 
 let timeout = null;

@@ -46,7 +46,7 @@
 						<Fa :icon="faEllipsisH" fixed-width/><span class="text">{{ $ts.more }}</span>
 						<i v-if="otherNavItemIndicated"><Fa :icon="faCircle"/></i>
 					</button>
-					<button class="item _button" v-if="!isTablet && !hidden" @click="collapsed = !collapsed">
+					<button class="item _button _mt-2" v-if="!isTablet && !hidden" @click="collapsed = !collapsed">
 						<Fa :icon="collapsed ? faArrowRight : faArrowLeft" :key="collapsed ? faArrowRight : faArrowLeft" fixed-width/><span class="text">{{ $ts.collapse }}</span>
 					</button>
 					<MkA to="/about" class="instance-icon">
@@ -378,6 +378,7 @@ export default defineComponent({
 					> .divider {
 						margin: 8px auto;
 						width: calc(100% - 32px);
+						border: 1px solid var(--divider);
 					}
 
 					> .item {
@@ -454,7 +455,8 @@ export default defineComponent({
 			background: var(--bg);
 
 			> .divider {
-				margin: 16px 0;
+				margin: var(--margin);
+				border: 1px solid var(--divider);
 			}
 
 			> .item {

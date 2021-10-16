@@ -1,7 +1,13 @@
 <template>
 <div class="ngbfujlo">
+	<h1>{{$ts.share}}</h1>
 	<MkTextarea :value="text" readonly style="margin: 0;"></MkTextarea>
-	<MkButton class="button" primary @click="post()" :disabled="posting || posted"><Fa v-if="posted" :icon="faCheck"/><Fa v-else :icon="faPaperPlane"/></MkButton>
+	<div class="_hstack commands">
+		<MkButton class="button" primary @click="post()" :disabled="posting || posted"><Fa v-if="posted" :icon="faCheck"/>
+			<Fa v-else :icon="faPaperPlane"/>
+			{{$ts.post}}
+		</MkButton>
+	</div>
 </div>
 </template>
 
@@ -76,6 +82,7 @@ export default defineComponent({
 			const file = this.block.attachCanvasImage ? await this.upload() : null;
 			os.apiWithDialog('notes/create', {
 				text: this.text === '' ? null : this.text,
+				viaMobile: os.isMobile,
 				fileIds: file ? [file.id] : undefined,
 			}).then(() => {
 				this.posted = true;
@@ -88,19 +95,25 @@ export default defineComponent({
 <style lang="scss" scoped>
 .ngbfujlo {
 	position: relative;
-	padding: 32px;
-	border-radius: 6px;
+	padding: 16px;
+	border-radius: var(--margin);
 	box-shadow: 0 2px 8px var(--shadow);
 	z-index: 1;
 
-	> .button {
+	h1 {
+		font-size: 1.5rem;
+		margin: 0;
+	}
+
+	> .commands {
+		justify-content: flex-end;
 		margin-top: 32px;
 	}
 
 	@media (max-width: 600px) {
 		padding: 16px;
 
-		> .button {
+		> .commands {
 			margin-top: 16px;
 		}
 	}

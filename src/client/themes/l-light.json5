@@ -1,15 +1,13 @@
 {
 	id: '4eea646f-7afa-4645-83e9-83af0333cd37',
 
-	name: 'Mi Light',
-	author: 'syuilo',
+	name: 'Xeltica Light',
+	author: 'xeltica',
 	desc: 'Default light theme',
 
 	base: 'light',
 
 	props: {
-		bg: '#f9f9f9',
-		fg: '#636b71',
 		divider: 'rgb(223, 223, 223)',
 		header: ':alpha<0.7<@bg',
 		navBg: '#fff',

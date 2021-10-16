@@ -46,6 +46,8 @@
 	if (updateRequired) {
 		localStorage.removeItem('locale');
 		printSplash('Updating Groundpolis');
+
+		localStorage.removeItem('theme');
 	}
 
 	//#region Detect language & fetch translations

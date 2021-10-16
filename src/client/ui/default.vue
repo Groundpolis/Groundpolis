@@ -188,7 +188,7 @@ export default defineComponent({
 
 		adjustUI() {
 			const navWidth = this.$refs.nav.$el.offsetWidth;
-			this.navHidden = navWidth === 0;
+			this.navHidden = navWidth <= 1;
 			if (this.$refs.contents == null) return;
 			const width = this.$refs.contents.offsetWidth;
 			if (this.$refs.header) this.$refs.header.style.width = `${width}px`;

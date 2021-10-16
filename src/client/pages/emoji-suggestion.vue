@@ -1,82 +1,84 @@
 <template>
-	<div>
-		<MkTab v-model:value="tab" style="border-bottom: solid 1px var(--divider);">
-			<option value="form">
-				{{ $ts.emojiSuggestion }}
-			</option>
-			<option value="history">
-				{{ $ts.history }}
-			</option>
-		</MkTab>
-		<div class="remaining">
-			<b v-text="$ts.suggestionRemaining"/>:
-			<MkEllipsis v-if="remaining === undefined" />
-			<span v-else v-text="remaining === null ? '∞' : remaining"/>
-		</div>
-		<FormBase v-if="tab === 'form'">
-			<div v-if="file" class="_formItem preview">
-				<img class="preview" :src="file.url" :alt="file.name" />
+	<div class="_section">
+		<div class="_content">
+			<MkTab v-model:value="tab" style="border-bottom: solid 1px var(--divider);">
+				<option value="form">
+					{{ $ts.emojiSuggestion }}
+				</option>
+				<option value="history">
+					{{ $ts.history }}
+				</option>
+			</MkTab>
+			<div class="remaining">
+				<b v-text="$ts.suggestionRemaining"/>:
+				<MkEllipsis v-if="remaining === undefined" />
+				<span v-else v-text="remaining === null ? '∞' : remaining"/>
 			</div>
-			<div v-else class="_formItem placeholder" />
-			<FormButton primary @click="selectFile">{{ $ts.selectFile }}</FormButton>
-			<MkInfo warn v-if="isWrongName">
-				{{$ts.suggestionEmojiWarnNameMalform}}
-			</MkInfo>
-			<MkInfo warn v-if="isWrongFileSize">
-				{{$ts.suggestionEmojiWarnFileSize}}
-			</MkInfo>
-			<MkInfo warn v-if="isWrongFileFormat">
-				{{$ts.suggestionEmojiWarnFileType}}
-			</MkInfo>
-			<template v-if="file">
-				<FormInput v-model:value="name"><span>{{ $ts.name }}</span></FormInput>
-				<FormInput v-model:value="aliases">
-					<span>{{ $ts.tags }}</span>
-					<template #desc>{{ $ts.tagsDescription }}</template>
-				</FormInput>
-				<FormTextarea v-model:value="description" :use-autocomplete="true" :max="500">
-					<span>{{ $ts.emojiSuggestionMessage }}</span>
-					<template #desc>{{ $ts.emojiSuggestionMessageDescription }}</template>
-				</FormTextarea>
-				<FormButton primary :disabled="!canSend" @click="send">
-					<fa :icon="faPaperPlane" fixed-width />{{ $ts.sendSuggestion }}
-				</FormButton>
-			</template>
-		</FormBase>
-		<section v-if="tab === 'history'">
-			<div class="_section _inputs filter">
-				<MkSwitch v-model:value="includesPending"><fa :icon="faClock" fixed-width />{{ $ts.pending }}</MkSwitch>
-				<MkSwitch v-model:value="includesRejected"><fa :icon="faTimesCircle" fixed-width />{{ $ts.rejected }}</MkSwitch>
-				<MkSwitch v-model:value="includesAccepted"><fa :icon="faCheckCircle" fixed-width />{{ $ts.accepted }}</MkSwitch>
-			</div>
-			<div class="_section">
-				<MkPagination :pagination="pagination" class="suggestions" ref="pagination">
-					<template #empty><span>{{ $ts.noSuggestions }}</span></template>
-					<template #default="{items}">
-						<div class="item" v-for="item in items" :key="item.id">
-							<img :src="item.file.url" class="img" :alt="item.name"/>
-							<div class="body">
-								<div class="name">
-									<fa :icon="getIconOf(item.state)" :title="$t(item.state)" fixed-width/>
-									{{ item.name }}
+			<FormBase v-if="tab === 'form'">
+				<div v-if="file" class="_formItem preview">
+					<img class="preview" :src="file.url" :alt="file.name" />
+				</div>
+				<div v-else class="_formItem placeholder" />
+				<FormButton primary @click="selectFile">{{ $ts.selectFile }}</FormButton>
+				<MkInfo warn v-if="isWrongName">
+					{{$ts.suggestionEmojiWarnNameMalform}}
+				</MkInfo>
+				<MkInfo warn v-if="isWrongFileSize">
+					{{$ts.suggestionEmojiWarnFileSize}}
+				</MkInfo>
+				<MkInfo warn v-if="isWrongFileFormat">
+					{{$ts.suggestionEmojiWarnFileType}}
+				</MkInfo>
+				<template v-if="file">
+					<FormInput v-model:value="name"><span>{{ $ts.name }}</span></FormInput>
+					<FormInput v-model:value="aliases">
+						<span>{{ $ts.tags }}</span>
+						<template #desc>{{ $ts.tagsDescription }}</template>
+					</FormInput>
+					<FormTextarea v-model:value="description" :use-autocomplete="true" :max="500">
+						<span>{{ $ts.emojiSuggestionMessage }}</span>
+						<template #desc>{{ $ts.emojiSuggestionMessageDescription }}</template>
+					</FormTextarea>
+					<FormButton primary :disabled="!canSend" @click="send">
+						<fa :icon="faPaperPlane" fixed-width />{{ $ts.sendSuggestion }}
+					</FormButton>
+				</template>
+			</FormBase>
+			<section v-if="tab === 'history'">
+				<div class="_section _inputs filter">
+					<MkSwitch v-model:value="includesPending"><fa :icon="faClock" fixed-width />{{ $ts.pending }}</MkSwitch>
+					<MkSwitch v-model:value="includesRejected"><fa :icon="faTimesCircle" fixed-width />{{ $ts.rejected }}</MkSwitch>
+					<MkSwitch v-model:value="includesAccepted"><fa :icon="faCheckCircle" fixed-width />{{ $ts.accepted }}</MkSwitch>
+				</div>
+				<div class="_section">
+					<MkPagination :pagination="pagination" class="suggestions" ref="pagination">
+						<template #empty><span>{{ $ts.noSuggestions }}</span></template>
+						<template #default="{items}">
+							<div class="item" v-for="item in items" :key="item.id">
+								<img :src="item.file.url" class="img" :alt="item.name"/>
+								<div class="body">
+									<div class="name">
+										<fa :icon="getIconOf(item.state)" :title="$t(item.state)" fixed-width/>
+										{{ item.name }}
+									</div>
+									<div class="aliases" v-if="item.aliases.length > 0">
+										<span class="alias" v-for="a in item.aliases" :key="a" v-text="a"/>
+									</div>
+									<Mfm class="description" :text="item.description"/>
+									<div class="moderator-comment" v-if="item.moderatorComment">
+										<h1 v-text="$ts.commentFromModerators" />
+										<Mfm class="description" :text="item.moderatorComment"/>
+									</div>
 								</div>
-								<div class="aliases" v-if="item.aliases.length > 0">
-									<span class="alias" v-for="a in item.aliases" :key="a" v-text="a"/>
-								</div>
-								<Mfm class="description" :text="item.description"/>
-								<div class="moderator-comment" v-if="item.moderatorComment">
-									<h1 v-text="$ts.commentFromModerators" />
-									<Mfm class="description" :text="item.moderatorComment"/>
-								</div>
+								<button class="delete" @click.stop="del(item.id)">
+									<fa :icon="faTimes" />
+								</button>
 							</div>
-							<button class="delete" @click.stop="del(item.id)">
-								<fa :icon="faTimes" />
-							</button>
-						</div>
-					</template>
-				</MkPagination>
-			</div>
-		</section>
+						</template>
+					</MkPagination>
+				</div>
+			</section>
+		</div>
 	</div>
 </template>
 
