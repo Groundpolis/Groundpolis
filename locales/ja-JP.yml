@@ -876,6 +876,7 @@ confirmBeforePostLabel: "投稿内容に間違いはありませんか？"
 noFeaturedPages: "人気のページはまだ無いようです。右下のボタンを押して、今すぐページを作りましょう。"
 aiChanMode: "藍モード"
 customize: "カスタマイズ"
+enterInstanceUrlToShare: "共有先のインスタンスURLを入力してください"
 
 _plugin:
   install: "プラグインのインストール"
