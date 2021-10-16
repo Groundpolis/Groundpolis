@@ -148,13 +148,13 @@ import getAcct from '../../misc/acct/render';
 import MkSwitch from './ui/switch.vue';
 import { instance } from '@/instance';
 import extractMentions from '@/../misc/extract-mentions';
-import { parse } from 'mfm-js';
+import { MfmNode, parse } from 'mfm-js';
 import { $i } from '@/account';
 import { unique } from '@/../prelude/array';
 import { formatTimeString } from '@/../misc/format-time-string';
 import { host, url } from '@/config';
 import { FormItem } from '@/scripts/form';
-import { HashtagNode } from '@/../mfm/prelude';
+import { MfmHashtag } from 'mfm-js';
 
 markRawAll(
 	faFish,
@@ -426,7 +426,7 @@ export default defineComponent({
 					deleteDraft();
 					ctx.emit('posted');
 					if (draft.text && draft.text != '') {
-						const hashtags = parse(draft.text)!.filter(x => x.type === 'hashtag').map((x: HashtagNode) => x.props.hashtag);
+						const hashtags = parse(draft.text)!.filter(x => x.type === 'hashtag').map((x: MfmNode) => (x as MfmHashtag).props.hashtag);
 						const history = JSON.parse(localStorage.getItem('hashtags') || '[]') as string[];
 						localStorage.setItem('hashtags', JSON.stringify(unique(hashtags.concat(history))));
 					}

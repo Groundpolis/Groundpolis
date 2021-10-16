@@ -27,14 +27,11 @@
 				<Fa class="dropdownIcon" v-if="isMyRenote" :icon="faEllipsisV"/>
 				<MkTime :time="note.createdAt"/>
 			</button>
-			<span class="visibility" v-if="note.visibility !== 'public'">
-				<Fa v-if="note.visibility === 'home'" :icon="faHome"/>
-				<Fa v-if="note.visibility === 'followers'" :icon="faLock"/>
-				<Fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
-				<Fa v-if="note.visibility === 'users'" :icon="faUsers"/>
-			</span>
-			<span class="localOnly" v-if="note.localOnly"><Fa :icon="faHeartS"/></span>
-			<span class="localOnly" v-if="note.remoteFollowersOnly"><Fa :icon="faHeartbeat"/></span>
+			<VisibilityIcon class="visibility" v-if="note.visibility !== 'public' || note.localOnly || note.remoteFollowersOnly"
+				:visibility="note.visibility"
+				:localOnly="note.localOnly"
+				:remoteFollowersOnly="note.remoteFollowersOnly"
+				/>
 		</div>
 	</div>
 	<article class="article" @contextmenu.stop="onContextmenu">
@@ -150,6 +147,7 @@ import { userPage } from '@/filters/user';
 import * as os from '@/os';
 import { noteActions, noteViewInterruptors } from '@/store';
 import { extractUrlFromMfm } from '@/../misc/extract-url-from-mfm';
+import VisibilityIcon from './visibility-icon.vue';
 
 function markRawAll(...xs: any[]) {
 	for (const x of xs) {
@@ -172,6 +170,7 @@ export default defineComponent({
 		XCwButton,
 		XPoll,
 		MkUrlPreview: defineAsyncComponent(() => import('@/components/url-preview.vue')),
+		VisibilityIcon,
 	},
 
 	inject: {

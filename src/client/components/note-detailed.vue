@@ -26,10 +26,11 @@
 				<MkTime :time="note.createdAt"/>
 			</button>
 			<span class="visibility" v-if="note.visibility !== 'public'">
-				<Fa v-if="note.visibility === 'home'" :icon="faHome"/>
-				<Fa v-if="note.visibility === 'followers'" :icon="faUnlock"/>
-				<Fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
-				<Fa v-if="note.visibility === 'users'" :icon="faUsers"/>
+				<VisibilityIcon
+					:visibility="note.visibility"
+					:localOnly="note.localOnly"
+					:remoteFollowersOnly="note.remoteFollowersOnly"
+					/>
 			</span>
 		</div>
 	</div>
@@ -87,16 +88,12 @@
 						<MkTime :time="note.createdAt" mode="detail"/>
 					</div>
 					<div>
-						<span class="visibility">
-							<Fa v-if="appearNote.visibility === 'public'" :icon="faGlobe"/>
-							<Fa v-else-if="appearNote.visibility === 'home'" :icon="faHome"/>
-							<Fa v-else-if="appearNote.visibility === 'followers'" :icon="faUnlock"/>
-							<Fa v-else-if="appearNote.visibility === 'specified'" :icon="faEnvelope"/>
-							<Fa v-else-if="note.visibility === 'users'" :icon="faUsers"/>
-						</span>
+						<VisibilityIcon class="visibility _mr-1"
+							:visibility="appearNote.visibility"
+							:localOnly="appearNote.localOnly"
+							:remoteFollowersOnly="appearNote.remoteFollowersOnly"
+							/>
 						<span>{{$t('_visibility.' + note.visibility)}}</span>
-						<span v-if="note.localOnly">({{$ts._visibility.localOnly}})</span>
-						<span v-if="note.remoteFollowersOnly">({{$ts._visibility.remoteFollowersOnly}})</span>
 					</div>
 				</div>
 				<div class="renotes" v-if="renoteState">
@@ -164,6 +161,7 @@ import XNotePreview from './note-preview.vue';
 import XReactionsViewer from './reactions-viewer.vue';
 import XMediaList from './media-list.vue';
 import XCwButton from './cw-button.vue';
+import VisibilityIcon from './visibility-icon.vue';
 import XPoll from './poll.vue';
 import { pleaseLogin } from '@/scripts/please-login';
 import { focusPrev, focusNext } from '@/scripts/focus';
@@ -196,6 +194,7 @@ export default defineComponent({
 		XCwButton,
 		XPoll,
 		MkUrlPreview: defineAsyncComponent(() => import('@/components/url-preview.vue')),
+		VisibilityIcon,
 	},
 
 	inject: {

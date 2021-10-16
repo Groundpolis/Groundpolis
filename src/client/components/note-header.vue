@@ -19,14 +19,11 @@
 		<MkA class="created-at" :to="notePage(note)">
 			<MkTime :time="note.createdAt"/>
 		</MkA>
-		<span class="visibility" v-if="note.visibility !== 'public'">
-			<Fa v-if="note.visibility === 'home'" :icon="faHome"/>
-			<Fa v-if="note.visibility === 'followers'" :icon="faUnlock"/>
-			<Fa v-if="note.visibility === 'specified'" :icon="faEnvelope"/>
-			<Fa v-if="note.visibility === 'users'" :icon="faUsers"/>
-		</span>
-		<span class="localOnly" v-if="note.localOnly"><Fa :icon="faHeart"/></span>
-		<span class="remoteFollowersOnly" v-if="note.remoteFollowersOnly"><Fa :icon="faHeartbeat"/></span>
+		<VisibilityIcon class="visibility" v-if="note.visibility !== 'public' || note.localOnly || note.remoteFollowersOnly"
+			:visibility="note.visibility"
+			:localOnly="note.localOnly"
+			:remoteFollowersOnly="note.remoteFollowersOnly"
+			/>
 	</div>
 </header>
 </template>
@@ -38,10 +35,12 @@ import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import notePage from '../filters/note';
 import { userPage } from '../filters/user';
 import GpVerified from './verified.vue';
+import VisibilityIcon from './visibility-icon.vue';
 
 export default defineComponent({
 	components: {
 		GpVerified,
+		VisibilityIcon,
 	},
 	props: {
 		note: {

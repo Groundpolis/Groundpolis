@@ -19,13 +19,11 @@
 				<Fa :icon="faQuestionCircle" />
 			</button>
 			<button class="_button visibility" @click="setVisibility" ref="visibilityButton" v-tooltip="$ts.visibility" v-if="channel == null">
-					<Fa v-if="visibility === 'public'" :icon="faGlobe" />
-					<Fa v-if="visibility === 'home'" :icon="faHome" />
-					<Fa v-if="visibility === 'followers'" :icon="faUnlock" />
-					<Fa v-if="visibility === 'specified'" :icon="faEnvelope" />
-					<Fa v-if="visibility === 'users'" :icon="faUsers" />
-					<Fa class="localOnly" v-if="localOnly" :icon="faHeart" />
-					<Fa class="localOnly" v-if="remoteFollowersOnly" :icon="faHeartbeat" />
+				<VisibilityIcon
+					:visibility="visibility"
+					:localOnly="localOnly"
+					:remoteFollowersOnly="remoteFollowersOnly"
+					/>
 			</button>
 			<!-- <div class="spacer"></div> -->
 		</div>
@@ -94,6 +92,7 @@ import * as os from '@/os';
 import { selectFile } from '@/scripts/select-file';
 import { FormItem } from '../scripts/form';
 import { defaultStore, notePostInterruptors, postFormActions } from '@/store';
+import VisibilityIcon from './visibility-icon.vue';
 import MkSwitch from './ui/switch.vue';
 
 export default defineComponent({
@@ -101,7 +100,8 @@ export default defineComponent({
 		XNotePreview,
 		MkSwitch,
 		XPostFormAttaches: defineAsyncComponent(() => import('./post-form-attaches.vue')),
-		XPollEditor: defineAsyncComponent(() => import('./poll-editor.vue'))
+		XPollEditor: defineAsyncComponent(() => import('./poll-editor.vue')),
+		VisibilityIcon,
 	},
 
 	inject: ['modal'],
