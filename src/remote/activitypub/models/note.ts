@@ -27,8 +27,8 @@ import { createMessage } from '../../../services/messages/create';
 import { parseAudience } from '../audience';
 import { extractApMentions } from './mention';
 import DbResolver from '../db-resolver';
-import extractEmojisFromMfm from '../../../misc/extract-emojis';
-import { parse } from '../../../mfm/parse';
+import { extractCustomEmojisFromMfm } from '../../../misc/extract-custom-emojis-from-mfm';
+import { parse } from 'mfm-js';
 
 const logger = apLogger;
 
@@ -242,7 +242,7 @@ export async function createNote(value: string | IObject, resolver?: Resolver, s
 	const f = parse(text);
 
 	if (f) {
-		const avatarEmojis = extractEmojisFromMfm(f).filter(e => e.startsWith('@'));
+		const avatarEmojis = extractCustomEmojisFromMfm(f).filter(e => e.startsWith('@'));
 		apEmojis.push(...avatarEmojis);
 	}
 
