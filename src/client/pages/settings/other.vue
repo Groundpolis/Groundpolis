@@ -35,7 +35,11 @@
 		<FormButton danger @click="discardPostFormDraft"><Fa :icon="faTrashAlt"/> {{ $ts.discardPostFormDraft }}</FormButton>
 		<template #caption>{{ $ts.discardPostFormDraftDescription }}</template>
 	</FormGroup>
-	<FormButton @click="closeAccount" danger>{{ $ts.closeAccount }}</FormButton>
+
+	<FormGroup>
+		<FormButton @click="closeAccount" danger disabled>{{ $ts.closeAccount }}</FormButton>
+		<template #caption>{{ $ts.closeAccountDisabledReason }}</template>
+	</FormGroup>
 
 </FormBase>
 </template>

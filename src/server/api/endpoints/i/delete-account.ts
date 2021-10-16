@@ -18,6 +18,7 @@ export const meta = {
 };
 
 export default define(meta, async (ps, user) => {
+	throw new Error('We are sorry but deleting account is temporarily disabled because of serious bugs.');
 	const profile = await UserProfiles.findOne(user.id).then(ensure);
 
 	// Compare password
