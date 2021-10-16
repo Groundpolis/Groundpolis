@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { defineComponent, defineAsyncComponent, computed, ComputedRef } from 'vue';
-import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faSatelliteDish, faCircle, faEllipsisH, faPencilAlt, faBullhorn } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faHome, faShareAlt, faGlobe, faListUl, faSatellite, faSatelliteDish, faCircle, faEllipsisH, faPencilAlt, faBullhorn, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { faComments } from '@fortawesome/free-regular-svg-icons';
 import Progress from '@/scripts/loading';
 import XTimeline from '@/components/timeline.vue';
@@ -232,7 +232,14 @@ export default defineComponent({
 					text: it.name,
 					icon: it.icon,
 					action: () => { this.src = it.src; this.saveSrc(); },
-				}));
+				})) as any[];
+			timelines.push(null);
+			timelines.push({
+				type: 'link',
+				text: this.$ts.customize,
+				icon: faWrench,
+				to: '/settings/timeline',
+			});
 			os.modalMenu([
 				timelines,
 				antennaPromise,

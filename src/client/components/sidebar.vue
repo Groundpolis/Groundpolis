@@ -49,6 +49,9 @@
 					<button class="item _button" v-if="!isTablet && !hidden" @click="collapsed = !collapsed">
 						<Fa :icon="collapsed ? faArrowRight : faArrowLeft" :key="collapsed ? faArrowRight : faArrowLeft" fixed-width/><span class="text">{{ $ts.collapse }}</span>
 					</button>
+					<MkA to="/about" class="instance-icon">
+					<img :src="meta.iconUrl || '/assets/icon_transparent.svg'"/>
+					</MkA>
 				</template>
 				<template v-else>
 					<button v-for="acct in accounts" :key="acct.id" @click="switchAccount(acct)" class="item account _button">
@@ -307,6 +310,20 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@mixin clickable($isText: false) {
+  transition: transform 0.2s ease;
+  transform-origin: center;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.95) translateY(2px);
+  }
+  &:hover,
+  &:active {
+    z-index: 9999;
+  }
+}
+
 .nav-enter-active,
 .nav-leave-active {
 	opacity: 1;
@@ -336,6 +353,7 @@ export default defineComponent({
 	$nav-icon-only-width: 86px;
 	$right-widgets-hide-threshold: 1090px;
 	position: relative;
+	border-right: 1px solid var(--divider);
 
 	> .nav-back {
 		z-index: 1001;
@@ -368,6 +386,7 @@ export default defineComponent({
 						text-align: center;
 						font-size: $ui-font-size * 1.1;
 						line-height: 3.7rem;
+						@include clickable();
 
 						&.account {
 							flex-direction: column;
@@ -432,11 +451,10 @@ export default defineComponent({
 			height: calc(var(--vh, 1vh) * 100);
 			box-sizing: border-box;
 			overflow: auto;
-			background: var(--navBg);
+			background: var(--bg);
 
 			> .divider {
 				margin: 16px 0;
-				border-top: solid 1px var(--divider);
 			}
 
 			> .item {
@@ -444,7 +462,7 @@ export default defineComponent({
 				display: block;
 				padding-left: 24px;
 				font-size: $ui-font-size;
-				line-height: 3rem;
+				line-height: 2.5rem;
 				text-overflow: ellipsis;
 				overflow: hidden;
 				white-space: nowrap;
@@ -453,9 +471,11 @@ export default defineComponent({
 				box-sizing: border-box;
 				border-radius: var(--radius);
 				color: var(--navFg);
+				@include clickable();
 
 				> [data-icon] {
 					width: ($header-height - ($avatar-margin * 2));
+					margin-right: 8px;
 				}
 
 				&.account {
@@ -521,27 +541,35 @@ export default defineComponent({
 
 				&:first-child, &:last-child {
 					position: sticky;
-					background: var(--navBg);
+					background: var(--bg);
 					z-index: 1;					
 				}
 
 				&:first-child {
 					top: 0;
-					margin: 16px 0;
+					margin: 32px 0;
 				}
 
 				&:last-child {
 					bottom: 0;
-					margin-top: 16px;
+					margin-top: 32px;
 				}
+			}
+
+			.instance-icon > img {
+				display: block;
+				height: 48px;
+				margin: 48px auto;
+				border-radius: 10px;
+				@include clickable;
 			}
 
 			.toggler {
 				position: absolute;
-				right: 24px;
-				top: 20px;
-				width: 24px;
-				height: 24px;
+				right: 0px;
+				top: 16px;
+				width: 64px;
+				height: 64px;
 				z-index: 400;
 			}
 		}

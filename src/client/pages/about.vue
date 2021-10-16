@@ -1,9 +1,17 @@
 <template>
 <FormBase class="mmnnbwxb" v-if="meta">
-	<div class="_formItem logo">
-		<img v-if="meta.logoImageUrl" :src="meta.logoImageUrl">
-		<span v-else class="text">{{ instanceName }}</span>
-	</div>
+	<section class="_formItem about">
+		<div class="_formPanel panel" ref="about">
+			<div class="icon" ref="icon" draggable="false">
+				<img class="_shadow-2" v-if="meta.iconUrl" :src="meta.iconUrl" alt="" draggable="false"/>
+			</div>
+			<div class="name">{{ instanceName }}</div>
+		</div>
+	</section>
+	<section class="_formItem">
+		{{ meta.description || $ts.introMisskey }}
+	</section>
+
 	<FormGroup>
 		<FormKeyValueView>
 			<template #key>Groundpolis</template>
@@ -104,6 +112,35 @@ export default defineComponent({
 		> img {
 			vertical-align: bottom;
 			max-height: 100px;
+		}
+	}
+
+	.panel {
+		position: relative;
+		text-align: center;
+		padding: 16px;
+		background: var(--bg);
+
+		> .icon {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100px;
+			margin: 0 auto;
+			background: var(--bg);
+
+			> img {
+				width: 100%;
+				height: 100%;
+				border-radius: 16px;
+			}
+		}
+
+		> .name {
+			margin: 0.75em auto 0.3em auto;
+			width: max-content;
+			font-size: 24px;
+			font-weight: bold;
 		}
 	}
 }

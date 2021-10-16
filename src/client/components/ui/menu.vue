@@ -1,5 +1,5 @@
 <template>
-<div class="rrevdjwt" :class="{ left: align === 'left' }"
+<div class="rrevdjwt"
 	ref="items"
 	@contextmenu.self="e => e.preventDefault()"
 	v-hotkey="keymap"
@@ -56,10 +56,6 @@ export default defineComponent({
 			type: Boolean,
 			required: false
 		},
-		align: {
-			type: String,
-			requried: false
-		}
 	},
 	emits: ['close'],
 	data() {
@@ -155,12 +151,6 @@ export default defineComponent({
 .rrevdjwt {
 	padding: 8px 0;
 
-	&.left {
-		> .item {
-			text-align: left;
-		}
-	}
-
 	> .item {
 		display: block;
 		position: relative;
@@ -170,7 +160,7 @@ export default defineComponent({
 		white-space: nowrap;
 		font-size: 0.9em;
 		line-height: 20px;
-		text-align: center;
+		text-align: left;
 		overflow: hidden;
 		text-overflow: ellipsis;
 
@@ -224,7 +214,7 @@ export default defineComponent({
 		}
 
 		> [data-icon] {
-			margin-right: 4px;
+			margin-right: 12px;
 			width: 20px;
 		}
 

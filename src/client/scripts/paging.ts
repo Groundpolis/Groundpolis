@@ -34,7 +34,7 @@ export default (opts) => ({
 	watch: {
 		pagination: {
 			handler() {
-				this.init();
+				this.reload();
 			},
 			deep: true
 		},
