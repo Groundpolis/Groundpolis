@@ -104,6 +104,10 @@ export const meta = {
 			validator: $.optional.bool,
 		},
 
+		publicReactions: {
+			validator: $.optional.bool,
+		},
+
 		carefulBot: {
 			validator: $.optional.bool,
 			desc: {
@@ -234,6 +238,7 @@ export default define(meta, async (ps, user, token) => {
 	if (typeof ps.isLocked === 'boolean') updates.isLocked = ps.isLocked;
 	if (typeof ps.hideFF === 'boolean') updates.hideFF = ps.hideFF;
 	if (typeof ps.isExplorable === 'boolean') updates.isExplorable = ps.isExplorable;
+	if (typeof ps.publicReactions === 'boolean') profileUpdates.publicReactions = ps.publicReactions;
 	if (typeof ps.isBot === 'boolean') updates.isBot = ps.isBot;
 	if (typeof ps.carefulBot === 'boolean') profileUpdates.carefulBot = ps.carefulBot;
 	if (typeof ps.autoAcceptFollowed === 'boolean') profileUpdates.autoAcceptFollowed = ps.autoAcceptFollowed;

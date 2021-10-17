@@ -63,6 +63,12 @@ export class UserProfile {
 	})
 	public emailVerified: boolean;
 
+
+	@Column('boolean', {
+		default: false,
+	})
+	public publicReactions: boolean;
+
 	@Column('varchar', {
 		length: 128, nullable: true,
 	})
