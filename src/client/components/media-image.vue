@@ -13,7 +13,6 @@
 	<a
 		:href="image.url"
 		:title="image.name"
-		@click.prevent="onClick"
 	>
 		<ImgWithBlurhash :hash="image.blurhash" :src="url" :alt="image.name" :title="image.name" :cover="false"/>
 		<div class="gif" v-if="image.type === 'image/gif'">GIF</div>
