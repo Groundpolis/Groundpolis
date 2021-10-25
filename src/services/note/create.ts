@@ -174,6 +174,11 @@ export default async (user: User, data: Option, silent = false) => new Promise<N
 		data.visibility = 'home';
 	}
 
+	// 返信対象がusersならusersにする
+	if (data.reply && data.reply.visibility === 'users') {
+		data.visibility = 'users';
+	}
+
 	// ローカルのみをRenoteしたらローカルのみにする
 	if (data.renote && data.renote.localOnly && data.channel == null) {
 		data.localOnly = true;
