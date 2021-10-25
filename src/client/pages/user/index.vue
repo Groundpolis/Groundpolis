@@ -1,6 +1,6 @@
 <template>
 <div>
-	<div class="ftskorzw narrow _section" v-if="user">
+	<div class="ftskorzw narrow _section" v-if="user" v-size="{ max: [500] }">
 		<!-- TODO -->
 		<!-- <div class="punished" v-if="user.isSuspended"><Fa :icon="faExclamationTriangle" style="margin-right: 8px;"/> {{ $ts.userSuspended }}</div> -->
 		<!-- <div class="punished" v-if="user.isSilenced"><Fa :icon="faExclamationTriangle" style="margin-right: 8px;"/> {{ $ts.userSilenced }}</div> -->
