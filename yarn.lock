@@ -6524,9 +6524,9 @@ methods@^1.1.2:
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
   integrity sha1-VSmk1nZUE07cxSZmVoNbD4Ua/O4=
 
-"mfm-js@https://github.com/Groundpolis/gpfm.js":
-  version "0.20.0-gp-1.0.1"
-  resolved "https://github.com/Groundpolis/gpfm.js#61cd4ccd49032b876f2cf3bc58543c208e6431bf"
+mfm-js@Groundpolis/gpfm.js#1.0.3:
+  version "0.20.0-gp-1.0.3"
+  resolved "https://codeload.github.com/Groundpolis/gpfm.js/tar.gz/b0524e02107e6dd87175c3f87f2adcd3dd1c7968"
   dependencies:
     twemoji-parser "13.1.x"
 

@@ -190,7 +190,7 @@
 		"markdown-it": "12.0.4",
 		"markdown-it-anchor": "7.0.1",
 		"matter-js": "0.16.1",
-		"mfm-js": "https://github.com/Groundpolis/gpfm.js",
+		"mfm-js": "Groundpolis/gpfm.js#1.0.3",
 		"mocha": "8.2.1",
 		"moji": "0.5.1",
 		"ms": "2.1.3",
