@@ -383,6 +383,12 @@ export default defineComponent({
 			insertTextAtCursor(textRef.value, text);
 		};
 
+
+		const focus = () => {
+			if (!textRef.value) return;
+			textRef.value.focus();
+		};
+
 		const post = async () => {
 			if (props.reply && props.reply.user.host !== null && localOnly.value) {
 				await dialog({
