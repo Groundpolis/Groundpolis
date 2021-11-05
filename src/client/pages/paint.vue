@@ -41,7 +41,7 @@
 			</canvas>
 		</div>
 		<div class="tools">
-			<button class="_button" v-for="tool in [ 'hand', 'pen', 'eraser', 'spoit' ]" v-tooltip="$ts._paint.tools[tool]" :key="tool" @click="currentTool = tool" :class="{ active: currentTool === tool }">
+			<button class="_button" v-for="tool in tools" v-tooltip="$ts._paint.tools[tool] || tool" :key="tool" @click="currentTool = tool" :class="{ active: currentTool === tool }">
 				<fa :icon="getToolIconOf(tool)" />
 			</button>
 			<button class="_button" v-tooltip="$ts._paint.tools.pixel" @click="currentTool = 'pixel'" :class="{ active: currentTool === 'pixel' }">
@@ -92,7 +92,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faPaintBrush, faPaw, faPen, faEraser, faSlash, faSquare, faCircle, faSearchMinus, faSearchPlus, faUndo, faRedo, faEdit, faEyeDropper } from '@fortawesome/free-solid-svg-icons';
+import { faPaintBrush, faPaw, faPen, faEraser, faSlash, faSquare, faCircle, faSearchMinus, faSearchPlus, faUndo, faRedo, faEdit, faEyeDropper, faFillDrip } from '@fortawesome/free-solid-svg-icons';
 import { faSquare as farSquare, faCircle as farCircle, faSave as farSave, faFolderOpen as farFolderOpen, faFileAlt as farFileAlt, faQuestionCircle as farQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 
 import MkSwitch from '../components/ui/switch.vue';
@@ -107,16 +107,25 @@ import { Rgba, toHtmlColor } from '@/scripts/rgba';
 
 export const shapes = [ 'line', 'rect', 'circle', 'rectFill', 'circleFill' ] as const;
 
+export const tools = [ 'hand', 'pen', 'eraser', 'fill', 'pixel', 'spoit' ] as const;
+
 export type ShapeType = typeof shapes[number];
 
-export type ToolType = 'hand'| 'pen' | 'eraser' | 'pixel' | 'spoit' | ShapeType;
+export type ToolType = typeof tools[number];
+
+export type ToolAndShapeType = ToolType | ShapeType;
 
 export type InitialColor = 'white' | 'black' | 'transparent';
 
-export const getToolIconOf = (type: ToolType) => {
+export type RgbaArray = [r: number, g: number, b: number, a: number];
+
+export type Point = {x: number, y: number};
+
+export const getToolIconOf = (type: ToolAndShapeType) => {
 	switch (type) {
 		case 'hand': return faPaw;
 		case 'pen': return faPen;
+		case 'fill': return faFillDrip;
 		case 'eraser': return faEraser;
 		case 'line': return faSlash;
 		case 'rect': return farSquare;
@@ -128,7 +137,7 @@ export const getToolIconOf = (type: ToolType) => {
 	}
 };
 
-function drawPixel(px: number, x: number, py: number, y: number, c: CanvasRenderingContext2D) {
+function drawPixelatedLine(px: number, x: number, py: number, y: number, c: CanvasRenderingContext2D) {
 	let [x0, y0, x1, y1] = [px, py, x, y].map(Math.floor);
 
 	const [dx, dy] = [
@@ -160,6 +169,82 @@ function drawPixel(px: number, x: number, py: number, y: number, c: CanvasRender
   }
 }
 
+function spoit(x: number, y: number, ctx: CanvasRenderingContext2D): RgbaArray {
+	return ctx.getImageData(x, y, 1, 1).data as unknown as RgbaArray;
+}
+
+function equalsColor([r1, g1, b1, a1]: RgbaArray, [r2, g2, b2, a2]: RgbaArray, threshold = 1): boolean {
+	// TODO: しきい値に対応する
+	return r1 === r2 && g1 === g2 && b1 === b2 && a1 === a2;
+}
+
+// https://fussy.web.fc2.com/algo/algo3-1.htm
+async function paintFill(x: number, y: number, ctx: CanvasRenderingContext2D) {
+	const baseColor = spoit(x, y, ctx);
+	const queue: Array<Point> = [];
+
+
+	queue.push({x, y});
+	
+	while (queue.length > 0) {
+		const c = queue.shift()!;
+
+		// 左に走査して壁を探す
+		let lp: Point = { x: c.x - 1, y: c.y };
+
+		while (0 <= lp.x && equalsColor(baseColor, spoit(lp.x, lp.y, ctx))) {
+			lp.x--;
+		}
+		lp.x++;
+		
+		// 右に走査して壁を探す
+		let rp: Point = { x: c.x + 1, y: c.y };
+
+		while (rp.x <= ctx.canvas.width && equalsColor(baseColor, spoit(rp.x, rp.y, ctx))) {
+			rp.x++;
+		}
+		rp.x--;
+
+		// 壁から壁を塗る
+		console.log(lp);
+		console.log(rp);
+		// ctx.fillStyle = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
+		ctx.fillRect(lp.x, lp.y, rp.x - lp.x + 1, 1);
+		// await sleep(50);
+
+
+		// 下側のキューイングすべき場所を走査する
+		let isInside = false;
+		for (let bx = rp.x; bx >= lp.x; bx--) {
+			if (equalsColor(baseColor, spoit(bx, c.y + 1, ctx))) {
+				if (!isInside) {
+					queue.push({ x: bx, y: c.y + 1 });
+					isInside = true;
+				}
+			} else {
+				isInside = false;
+			}
+		}
+		console.log(queue.length);
+
+
+		// 上側のキューイングすべき場所を走査する
+		isInside = false;
+		for (let tx = rp.x; tx >= lp.x; tx--) {
+			if (equalsColor(baseColor, spoit(tx, c.y - 1, ctx))) {
+				if (!isInside) {
+					queue.push({ x: tx, y: c.y - 1 });
+					isInside = true;
+				}
+			} else {
+				isInside = false;
+			}
+		}
+		
+
+	}
+}
+
 export default defineComponent({
 	components: {
 		MkSwitch,
@@ -189,7 +274,7 @@ export default defineComponent({
 				title: this.$ts.paint,
 				icon: faPaintBrush
 			},
-			currentTool: 'hand' as ToolType,
+			currentTool: 'hand' as ToolAndShapeType,
 			currentColor: [0, 0, 0, 255] as Rgba,
 			zoom: 100,
 			canvasX: 0,
@@ -204,8 +289,10 @@ export default defineComponent({
 			redoStack: [] as ImageData[],
 			changed: false,
 			fileName: '',
-			recentFile: null as PackedDriveFile,
+			recentFile: null as PackedDriveFile | null,
 			uploadingProgress: null as number | null,
+			// Note: ドットペンは別途タグを使っているので表示しない
+			tools: tools.filter(t => t !== 'pixel'),
 			faPaintBrush, faPen, faEraser, faSearchMinus, faSearchPlus, faUndo, faRedo, faEdit,
 			farSquare, farCircle, farSave, farFolderOpen, farFileAlt, farQuestionCircle
 		}
@@ -275,7 +362,7 @@ export default defineComponent({
 	},
 	methods: {
 		getToolIconOf,
-		genToolMenuItem(type: ToolType)  {
+		genToolMenuItem(type: ToolAndShapeType)  {
 			return {
 				text: this.$ts._paint.tools[type],
 				icon: getToolIconOf(type),
@@ -288,7 +375,7 @@ export default defineComponent({
 				action: () => { this.zoom = num; },
 			}
 		},
-		isShape(type: ToolType) {
+		isShape(type: ToolAndShapeType) {
 			return (shapes as readonly string[]).includes(type);
 		},
 		changeShape(ev: MouseEvent) {
@@ -460,7 +547,7 @@ export default defineComponent({
 			}
 			os.post({
 				initialNote: {
-					text: '#GroundpolisPaint',
+					text: '#GroundpolisPaint ',
 					files: [ this.recentFile ],
 					cw: null,
 					visibility: 'public',
@@ -482,11 +569,14 @@ export default defineComponent({
 			const x = (pointerX - bb.x) / scale;
 			const y = (pointerY - bb.y) / scale;
 
-
 			if (this.currentTool !== 'hand') {
 				this.undoStack.push(this.ctx!.getImageData(0, 0, this.canvas.width, this.canvas.height));
 				this.redoStack = [];
 				this.changed = true;
+			}
+			if (this.currentTool === 'fill') {
+				paintFill(x, y, this.ctx as CanvasRenderingContext2D);
+				return;
 			}
 
 			this.downPointerPos = { x, y };
@@ -600,7 +690,7 @@ export default defineComponent({
 					}
 					case 'pixel': {
 						cp.clearRect(0, 0, this.previewCanvas.width, this.previewCanvas.height);
-						drawPixel(x, x, y, y, cp);
+						drawPixelatedLine(x, x, y, y, cp);
 						break;
 					}
 				}
@@ -624,12 +714,12 @@ export default defineComponent({
 
 				case 'pixel': {
 					// https://ja.wikipedia.org/wiki/%E3%83%96%E3%83%AC%E3%82%BC%E3%83%B3%E3%83%8F%E3%83%A0%E3%81%AE%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0#%E5%8D%98%E7%B4%94%E5%8C%96
-					drawPixel(px, x, py, y, c);
+					drawPixelatedLine(px, x, py, y, c);
 					break;
 				}
 
 				case 'spoit': {
-					const [r, g, b, a] = c.getImageData(x, y, 1, 1).data;
+					const [r, g, b, a] = spoit(x, y, c);
 					this.currentColor = [
 						r, g, b, a / 255,
 					];
@@ -809,16 +899,9 @@ export default defineComponent({
 	}
 }
 
-$bg1: #222;
-$bg2: #555;
-
 .canvas-wrapper {
-	background: $bg1;
-	background-image:
-		linear-gradient(45deg, $bg2 25%, transparent 0),
-		linear-gradient(45deg, transparent 75%, $bg2 0),
-		linear-gradient(45deg, $bg2 25%, transparent 0),
-		linear-gradient(45deg, transparent 75%, $bg2 0);
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAAAAABX3VL4AAAADklEQVR4AWPo2sywuQsAB3QCe21geuUAAAAASUVORK5CYII=');
+	image-rendering: pixelated;
 	background-size: 16px 16px;
 	background-position: 0 0, 8px 8px, 8px 8px, 16px 16px;
 	max-width: 100%;
@@ -827,7 +910,7 @@ $bg2: #555;
 	height: 256px;
 	box-shadow: 0 0 4px black inset;
 	&.animation {
-		animation: canvasWrapperAnimation 0.5s linear infinite;
+		animation: canvasWrapperAnimation 8s linear infinite;
 	}
 
 	position: relative;
@@ -836,7 +919,7 @@ $bg2: #555;
 	> canvas {
 		position: absolute;
 		transform-origin: 0 0;
-		box-shadow: 0 0 4px black;
+		box-shadow: 0 0 16px var(--shadow);
 		image-rendering: pixelated;
 
 		&.animation {
@@ -850,7 +933,7 @@ $bg2: #555;
 		background-position: 0 0, 8px 8px, 8px 8px, 16px 16px;
 	}
 	to {
-		background-position: -16px -16px, -8px -8px, -8px -8px, 0px 0px;
+		background-position: -256px -256px, -264px -264px, -264px -264px, -272px -272px;
 	}
 }
 </style>
