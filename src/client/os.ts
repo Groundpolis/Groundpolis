@@ -307,7 +307,7 @@ export async function pickEmoji(src?: HTMLElement, opts) {
 	});
 }
 
-export function modalMenu(items: any[], src?: HTMLElement, options?: { align?: string; viaKeyboard?: boolean }) {
+export function modalMenu(items: any[], src?: EventTarget | null, options?: { align?: string; viaKeyboard?: boolean }) {
 	return new Promise((resolve, reject) => {
 		let dispose;
 		popup(import('@/components/ui/modal-menu.vue'), {
@@ -348,7 +348,7 @@ export function contextMenu(items: any[], ev: MouseEvent) {
 }
 
 export function post(props: Record<string, any>) {
-	return new Promise((resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		// NOTE: MkPostFormDialogをdynamic importするとiOSでテキストエリアに自動フォーカスできない
 		// NOTE: ただ、dynamic importしない場合、MkPostFormDialogインスタンスが使いまわされ、
 		//       Vueが渡されたコンポーネントに内部的に__propsというプロパティを生やす影響で、
