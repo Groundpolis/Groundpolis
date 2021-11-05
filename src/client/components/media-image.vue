@@ -78,18 +78,6 @@ export default defineComponent({
 			immediate: true,
 		});
 	},
-	methods: {
-		onClick() {
-			if (this.$store.state.imageNewTab) {
-				window.open(this.image.url, '_blank');
-			} else {
-				os.popup(ImageViewer, {
-					image: this.image,
-					other: this.other,
-				}, {}, 'closed');
-			}
-		}
-	}
 });
 </script>
 
