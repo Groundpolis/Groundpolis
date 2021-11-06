@@ -1,8 +1,8 @@
 <template>
-<span class="eiwwqkts" :class="[$store.reactiveState.iconShape.value, { cat } ]" :title="acct(user)" v-if="disableLink" v-user-preview="disablePreview ? undefined : user.id" @click="onClick">
+<span class="eiwwqkts" :class="[$store.reactiveState.iconShape.value, { cat, animated } ]" :title="acct(user)" v-if="disableLink" v-user-preview="disablePreview ? undefined : user.id" @click="onClick">
 	<img class="inner" :class="$store.reactiveState.iconShape.value" :src="url"/>
 </span>
-<MkA class="eiwwqkts" :class="[$store.reactiveState.iconShape.value, { cat } ]" :to="userPage(user)" :title="acct(user)" :target="target" v-else v-user-preview="disablePreview ? undefined : user.id">
+<MkA class="eiwwqkts" :class="[$store.reactiveState.iconShape.value, { cat, animated } ]" :to="userPage(user)" :title="acct(user)" :target="target" v-else v-user-preview="disablePreview ? undefined : user.id">
 	<img class="inner" :class="$store.reactiveState.iconShape.value" :src="url"/>
 </MkA>
 </template>
@@ -43,6 +43,9 @@ export default defineComponent({
 			return this.$store.state.disableShowingAnimatedImages
 				? getStaticImageUrl(this.user.avatarUrl)
 				: this.user.avatarUrl;
+		},
+		animated(): boolean {
+			return this.$store.reactiveState.animation.value;
 		},
 	},
 	watch: {
@@ -109,7 +112,7 @@ export default defineComponent({
 			transform: rotate(-37.5deg) skew(-30deg);
 		}
 
-		&:hover {
+		&.animated:hover {
 			&:before {
 				animation: earwiggleleft 1s infinite;
 			}
