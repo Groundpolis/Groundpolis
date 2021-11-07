@@ -31,6 +31,13 @@
 	<FormLink to="/settings/registry"><template #icon><Fa :icon="faCogs"/></template>{{ $ts.registry }}</FormLink>
 
 	<FormGroup>
+		<FormSwitch v-model:value="legacyWebkitCompatibleMode" @update:value="changeLegacyWebkitCompatibleMode">
+			{{ $ts.legacyWebkitCompatibleMode }}
+		</FormSwitch>
+		<template #caption>{{ $ts.legacyWebkitCompatibleModeDesc }}</template>
+	</FormGroup>
+
+	<FormGroup>
 		<template #label>{{ $ts.dangerousSettings }}</template>
 		<FormButton danger @click="discardPostFormDraft"><Fa :icon="faTrashAlt"/> {{ $ts.discardPostFormDraft }}</FormButton>
 		<template #caption>{{ $ts.discardPostFormDraftDescription }}</template>
@@ -54,7 +61,7 @@ import FormBase from '@/components/form/base.vue';
 import FormGroup from '@/components/form/group.vue';
 import FormButton from '@/components/form/button.vue';
 import * as os from '@/os';
-import { debug } from '@/config';
+import { debug, legacyWebkitCompatibleMode } from '@/config';
 import { defaultStore } from '@/store';
 import { signout } from '@/account';
 
@@ -70,7 +77,7 @@ export default defineComponent({
 
 	data() {
 		return {
-			debug, faTrashAlt, faCogs
+			debug, faTrashAlt, faCogs, legacyWebkitCompatibleMode,
 		}
 	},
 
@@ -88,6 +95,7 @@ export default defineComponent({
 				showDislike: false,
 			})).reaction;
 		},
+
 		changeDebug(v) {
 			localStorage.setItem('debug', v.toString());
 			location.reload();
@@ -110,6 +118,11 @@ export default defineComponent({
 				if (canceled) return;
 				localStorage.removeItem('drafts');
 			});
+		},
+		
+		changeLegacyWebkitCompatibleMode(v) {
+			localStorage.setItem('legacyWebkitCompatibleMode', v.toString());
+			location.reload();
 		},
 
 		closeAccount() {

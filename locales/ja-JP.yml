@@ -877,6 +877,8 @@ noFeaturedPages: "人気のページはまだ無いようです。右下のボ�
 aiChanMode: "藍モード"
 customize: "カスタマイズ"
 enterInstanceUrlToShare: "共有先のインスタンスURLを入力してください"
+legacyWebkitCompatibleMode: "互換モード (iOS 14)"
+legacyWebkitCompatibleModeDesc: "iOS 14以前の環境で正しく動作しない場合は、このモードを有効化してください。"
 
 _plugin:
   install: "プラグインのインストール"

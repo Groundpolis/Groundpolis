@@ -1,8 +1,8 @@
 <template>
 <div class="hoawjimk">
 	<XBanner v-for="media in mediaList.filter(media => !previewable(media))" :media="media" :key="media.id"/>
-	<div v-if="mediaList.filter(media => previewable(media)).length > 0" class="gird-container">
-		<div :data-count="mediaList.filter(media => previewable(media)).length" ref="gallery">
+	<div v-if="mediaList.filter(media => previewable(media)).length > 0" class="gird-container" ref="gridOuter">
+		<div :data-count="mediaList.filter(media => previewable(media)).length" ref="gallery" :style="gridInnerStyle">
 			<template v-for="media in mediaList">
 				<XVideo :video="media" :key="media.id" v-if="media.type.startsWith('video')"/>
 				<XImage class="image" :data-id="media.id" :image="media" :key="media.id" v-else-if="media.type.startsWith('image')" :raw="raw"/>
@@ -13,15 +13,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref } from 'vue';
+import { defineComponent, nextTick, onMounted, onUnmounted, PropType, ref } from 'vue';
 import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js';
 import PhotoSwipe from 'photoswipe/dist/photoswipe.esm.js';
 import 'photoswipe/dist/photoswipe.css';
 import XBanner from './media-banner.vue';
 import XImage from './media-image.vue';
 import XVideo from './media-video.vue';
-import * as os from '@/os';
-import { defaultStore } from '@/store';
+import { PackedDriveFile } from '@/../models/repositories/drive-file';
+import { legacyWebkitCompatibleMode } from '@/config';
 
 export default defineComponent({
 	components: {
@@ -31,17 +31,49 @@ export default defineComponent({
 	},
 	props: {
 		mediaList: {
-			type: Array as PropType<misskey.entities.DriveFile[]>,
+			type: Array as PropType<PackedDriveFile[]>,
 			required: true,
 		},
 		raw: {
 			default: false
 		},
 	},
-	setup(props) {
+	setup(props, ctx) {
 		const gallery = ref(null);
 
+		const gridInnerStyle = ref<any>({});
+		const sizeWaiting = ref(false);
+		const gridOuter = ref<HTMLElement | null>(null);
+
+		const size = () => {
+			if (sizeWaiting.value) return;
+			sizeWaiting.value = true;
+			window.requestAnimationFrame(() => {
+				sizeWaiting.value = false;
+				console.log(gridOuter.value);
+				if (gridOuter.value) {
+					let height = 287;
+					if (gridOuter.value.clientHeight) {
+						height = gridOuter.value.clientHeight;
+					}
+					gridInnerStyle.value = { height: `${height}px` };
+				} else {
+					gridInnerStyle.value = {};
+				}
+			});
+		};
+
+		onUnmounted(() => {
+			if (legacyWebkitCompatibleMode) {
+				window.removeEventListener('resize', size);
+			}
+		});
+
 		onMounted(() => {
+			if (legacyWebkitCompatibleMode) {
+				nextTick(size);
+				window.addEventListener('resize', size);
+			}
 			const lightbox = new PhotoSwipeLightbox({
 				dataSource: props.mediaList.filter(media => media.type.startsWith('image')).map(media => ({
 					src: media.url,
@@ -62,7 +94,7 @@ export default defineComponent({
 				const { element } = itemData;
 
 				const id = element.dataset.id;
-				const file = props.mediaList.find(media => media.id === id);
+				const file = props.mediaList.find(media => media.id === id)!;
 
 				itemData.src = file.url;
 				itemData.w = Number(file.properties.width);
@@ -74,13 +106,15 @@ export default defineComponent({
 			lightbox.init();
 		});
 
-		const previewable = (file: misskey.entities.DriveFile): boolean => {
+		const previewable = (file: PackedDriveFile): boolean => {
 			return file.type.startsWith('video') || file.type.startsWith('image');
 		};
 
 		return {
 			previewable,
 			gallery,
+			gridOuter,
+			gridInnerStyle,
 		};
 	},
 });

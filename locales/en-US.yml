@@ -842,6 +842,8 @@ confirmBeforePostLabel: "Ready to note?"
 aiChanMode: "Ai-chan mode"
 customize: "Customize"
 enterInstanceUrlToShare: "Enter your instance URL to share"
+legacyWebkitCompatibleMode: "Compatible Mode (for iOS 14)"
+legacyWebkitCompatibleModeDesc: "If it doesn't work properly in iOS 14 or earlier, please enable this mode."
 _plugin:
   install: "Install plugins"
   installWarn: "Please do not install untrustworthy plugins."

@@ -2,7 +2,7 @@ import { Component, markRaw, reactive, Ref, ref } from 'vue';
 import { EventEmitter } from 'eventemitter3';
 import * as Sentry from '@sentry/browser';
 import Stream from '@/scripts/stream';
-import { apiUrl, debug } from '@/config';
+import { apiUrl, debug, url } from '@/config';
 import MkPostFormDialog from '@/components/post-form-dialog.vue';
 import MkWaitingDialog from '@/components/waiting-dialog.vue';
 import { resolve } from '@/router';
@@ -458,23 +458,8 @@ export async function getInstance(host?: string): Promise<Instance['instance'] |
 	return instances[host].instance;
 }
 
-type Avatar = {
-	fetchedAt: number,
-	avatarUrl: string,
-};
-
-const avatars: Record<string, Avatar> = {};
-
 export async function getAvatar(acct: string): Promise<string> { 
-	const now = Date.now();
-	// キャッシュが無いか、前回取得時から5分以上たっていれば取得してくる
-	if (!avatars[acct] || now - avatars[acct].fetchedAt > 1000 * 60 * 5) {
-		avatars[acct] = {
-			avatarUrl: (await api('users/show', parseAcct(acct), undefined, true).catch(e => ({ avatarUrl: '' })) as any).avatarUrl,
-			fetchedAt: now
-		};
-	}
-	return avatars[acct].avatarUrl;
+	return `${url}/avatar/${acct}`;
 }
 
 export function reactionPicker(opts: Record<string, unknown>) { 

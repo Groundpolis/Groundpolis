@@ -80,7 +80,7 @@ router.get('/avatar/@:acct', async ctx => {
 	if (user) {
 		ctx.redirect(Users.getAvatarUrl(user));
 	} else {
-		ctx.redirect('/static-assets/user-unknown.png');
+		ctx.redirect('/assets/user-unknown.png');
 	}
 });
 

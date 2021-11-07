@@ -13,3 +13,4 @@ export const version = _VERSION_;
 export const instanceName = siteName === 'Groundpolis' ? host : siteName;
 export const ui = localStorage.getItem('ui');
 export const debug = localStorage.getItem('debug') === 'true';
+export const legacyWebkitCompatibleMode = localStorage.getItem('legacyWebkitCompatibleMode') === 'true';
