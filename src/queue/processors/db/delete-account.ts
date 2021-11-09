@@ -1,11 +1,11 @@
 import * as Bull from 'bull';
 import { queueLogger } from '../../logger';
-import { DriveFiles, Notes, Users } from '@/models/index';
-import { DbUserJobData } from '@/queue/types';
-import { Note } from '@/models/entities/note';
-import { DriveFile } from '@/models/entities/drive-file';
+import { DriveFiles, Notes, Users } from '../../../models/index';
+import { DbUserJobData } from '../../../queue/types';
+import { Note } from '../../../models/entities/note';
+import { DriveFile } from '../../../models/entities/drive-file';
 import { MoreThan } from 'typeorm';
-import { deleteFileSync } from '@/services/drive/delete-file';
+import { deleteFileSync } from '../../../services/drive/delete-file';
 
 const logger = queueLogger.createSubLogger('delete-account');
 
