@@ -846,6 +846,7 @@ legacyWebkitCompatibleMode: "Compatible Mode (for iOS 14)"
 legacyWebkitCompatibleModeDesc: "If it doesn't work properly in iOS 14 or earlier, please enable this mode."
 legacyWebkitCompatibleModeDialogTitle: "Outdated version of iOS!"
 legacyWebkitCompatibleModeDialogText: "Groundpolis does not work properly on iOS 14 and earlier. Please update to iOS 15. \n It will work temporarily by enabling compatibility mode. \n\nDo you want to enable compatibility mode?"
+accountDeletionInProgress: "Account deletion is currently in progress"
 _plugin:
   install: "Install plugins"
   installWarn: "Please do not install untrustworthy plugins."
