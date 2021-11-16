@@ -60,7 +60,8 @@ export const meta = {
 export default define(meta, async (ps, me) => {
 	const profile = await UserProfiles.findOneOrFail(ps.userId);
 
-	if (me == null || (me.id !== ps.userId && !profile.publicReactions)) {
+	// リアクションが公開されていない & ( meがnull | meのIDが当該ユーザーのIDと異なる)
+	if (!profile.publicReactions && (me == null || me.id !== ps.userId)) {
 		throw new ApiError(meta.errors.reactionsNotPublic);
 	}
 
