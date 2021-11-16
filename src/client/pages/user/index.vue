@@ -101,7 +101,7 @@
 				<Fa :icon="faPaperclip" class="icon"/>
 				<span>{{ $ts.clips }}</span>
 			</MkA>
-			<MkA :to="userPage(user, 'reactions')" :class="{ active: page === 'reactions' }" class="link">
+			<MkA v-if="showReactionPage" :to="userPage(user, 'reactions')" :class="{ active: page === 'reactions' }" class="link">
 				<Fa :icon="faSmile" class="icon"/>
 				<span>{{ $ts.reaction }}</span>
 			</MkA>
@@ -216,7 +216,11 @@ export default defineComponent({
 
 		age(): number {
 			return age(this.user.birthday);
-		}
+		},
+
+		showReactionPage(): boolean {
+			return (this.$i && this.user.id === this.$i.id) || this.user.publicReactions;
+		},
 	},
 
 	watch: {

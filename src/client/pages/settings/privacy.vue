@@ -6,7 +6,7 @@
 		<FormSwitch v-model:value="autoAcceptFollowed" :disabled="!isLocked && !carefulBot" @update:value="save()">{{ $ts.autoAcceptFollowed }}</FormSwitch>
 		<template #caption>{{ $ts.lockedAccountInfo }}</template>
 	</FormGroup>
-	<FormSwitch v-model="publicReactions" @update:modelValue="save()">
+	<FormSwitch v-model:value="publicReactions" @update:value="save()">
 		{{ $ts.makeReactionsPublic }}
 		<template #desc>{{ $ts.makeReactionsPublicDescription }}</template>
 	</FormSwitch>
