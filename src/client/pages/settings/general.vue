@@ -1,7 +1,6 @@
 <template>
 <FormBase>
 	<FormGroup>
-		<FormSwitch v-model:value="titlebar">{{ $ts.showTitlebar }}</FormSwitch>
 		<FormSwitch v-model:value="showFixedPostForm">{{ $ts.showFixedPostForm }}</FormSwitch>
 	</FormGroup>
 

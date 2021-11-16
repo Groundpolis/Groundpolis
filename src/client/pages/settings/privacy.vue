@@ -6,6 +6,10 @@
 		<FormSwitch v-model:value="autoAcceptFollowed" :disabled="!isLocked && !carefulBot" @update:value="save()">{{ $ts.autoAcceptFollowed }}</FormSwitch>
 		<template #caption>{{ $ts.lockedAccountInfo }}</template>
 	</FormGroup>
+	<FormSwitch v-model:value="publicReactions" @update:value="save()">
+		{{ $ts.makeReactionsPublic }}
+		<template #desc>{{ $ts.makeReactionsPublicDescription }}</template>
+	</FormSwitch>
 	<FormGroup>
 		<FormSwitch v-model:value="hideFF" @update:value="save()">
 			{{ $ts.hideFF }}
@@ -61,7 +65,8 @@ export default defineComponent({
 			hideFF: false,
 			noCrawle: false,
 			isExplorable: false,
-		}
+			publicReactions: false,
+		};
 	},
 
 	computed: {
@@ -78,6 +83,7 @@ export default defineComponent({
 		this.autoAcceptFollowed = this.$i.autoAcceptFollowed;
 		this.noCrawle = this.$i.noCrawle;
 		this.isExplorable = this.$i.isExplorable;
+		this.publicReactions = this.$i.publicReactions;
 	},
 
 	mounted() {
@@ -93,6 +99,7 @@ export default defineComponent({
 				autoAcceptFollowed: !!this.autoAcceptFollowed,
 				noCrawle: !!this.noCrawle,
 				isExplorable: !!this.isExplorable,
+				publicReactions: !!this.publicReactions,
 			});
 		}
 	}

@@ -39,13 +39,13 @@ if (localStorage['vuex'] !== undefined) {
 }
 
 import * as Sentry from '@sentry/browser';
-import { createApp, watch } from 'vue';
+import { createApp, nextTick, watch } from 'vue';
 import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome';
 
 import widgets from '@/widgets';
 import directives from '@/directives';
 import components from '@/components';
-import { version, ui, lang, host } from '@/config';
+import { version, ui, lang, host, legacyWebkitCompatibleMode } from '@/config';
 import { router } from '@/router';
 import { applyTheme } from '@/scripts/theme';
 import { isDeviceDarkmode } from '@/scripts/is-device-darkmode';
@@ -91,6 +91,34 @@ if (_DEV_) {
 			text: event.reason
 		});
 		*/
+	});
+}
+
+const pattern = /iPhone OS (\d+)/;
+
+const matched = navigator.userAgent.match(pattern);
+
+const iOSVersion = !matched ? null : parseInt(matched[1]);
+
+console.log(`UA: ${navigator.userAgent}`);
+console.log(`iOS Version ${iOSVersion}`);
+
+if (iOSVersion && iOSVersion < 15 && !legacyWebkitCompatibleMode) {
+	dialog({
+		type: 'warning',
+		title: i18n.locale.legacyWebkitCompatibleModeDialogTitle,
+		text: i18n.locale.legacyWebkitCompatibleModeDialogText,
+		actions: [{
+			text: i18n.locale.yes,
+			primary: true,
+			callback: () => {
+				localStorage.setItem('legacyWebkitCompatibleMode', 'true');
+				location.reload();
+			},
+		}, {
+			text: i18n.locale.no,
+			callback: () => { },
+		}],
 	});
 }
 
@@ -224,6 +252,8 @@ await router.isReady();
 //document.body.innerHTML = '<div id="app"></div>';
 
 app.mount('body');
+
+
 
 watch(defaultStore.reactiveState.darkMode, (darkMode) => {
 	import('@/scripts/theme').then(({ builtinThemes }) => {

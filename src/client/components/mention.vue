@@ -1,14 +1,14 @@
 <template>
 <MkA class="ldlomzub" :class="{ isMe }" :to="url" v-user-preview="canonical" v-if="url.startsWith('/')">
-	<span class="me" v-if="isMe">{{ $ts.you }}</span>
+	<img class="icon" :src="`/avatar/@${username}@${host}`" alt="">
 	<span class="main">
-		<span class="username">@{{ username }}</span>
+		<span class="username">{{ username }}</span>
 		<span class="host" v-if="(host != localHost) || $store.state.showFullAcct">@{{ toUnicode(host) }}</span>
 	</span>
 </MkA>
 <a class="ldlomzub" :href="url" target="_blank" rel="noopener" v-else>
 	<span class="main">
-		<span class="username">@{{ username }}</span>
+		<span class="username">{{ username }}</span>
 		<span class="host">@{{ toUnicode(host) }}</span>
 	</span>
 </a>
@@ -64,6 +64,8 @@ export default defineComponent({
 <style lang="scss" scoped>
 .ldlomzub {
 	color: var(--mention);
+	display: inline-flex;
+	align-items: baseline;
 
 	&.isMe {
 		color: var(--mentionMe);
@@ -74,6 +76,19 @@ export default defineComponent({
 		user-select: none;
 		font-size: 70%;
 		vertical-align: top;
+	}
+
+	> .icon {
+		width: 1em;
+		margin-right: 4px;
+		border-radius: 100%;
+		transform-origin: center;
+		transition: transform 0.2s ease;
+		align-self: center;
+
+		&:hover {
+			transform: scale(2);
+		}
 	}
 
 	> .main {

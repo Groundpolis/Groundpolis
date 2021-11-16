@@ -17,10 +17,12 @@
 	<FormGroup>
 		<template #label>{{ $ts._exportOrImport.muteList }}</template>
 		<FormButton @click="doExport('mute')"><Fa :icon="faDownload"/> {{ $ts.export }}</FormButton>
+		<FormButton @click="doImport('mute', $event)"><Fa :icon="faUpload"/> {{ $ts.import }}</FormButton>
 	</FormGroup>
 	<FormGroup>
 		<template #label>{{ $ts._exportOrImport.blockingList }}</template>
 		<FormButton @click="doExport('blocking')"><Fa :icon="faDownload"/> {{ $ts.export }}</FormButton>
+		<FormButton @click="doImport('blocking', $event)"><Fa :icon="faUpload"/> {{ $ts.import }}</FormButton>
 	</FormGroup>
 </FormBase>
 </template>
@@ -60,11 +62,11 @@ export default defineComponent({
 	methods: {
 		doExport(target) {
 			os.api(
-				target == 'notes' ? 'i/export-notes' :
-				target == 'following' ? 'i/export-following' :
-				target == 'blocking' ? 'i/export-blocking' :
-				target == 'user-lists' ? 'i/export-user-lists' :
-				target == 'mute' ? 'i/export-mute' :
+				target === 'notes' ? 'i/export-notes' :
+				target === 'following' ? 'i/export-following' :
+				target === 'blocking' ? 'i/export-blocking' :
+				target === 'user-lists' ? 'i/export-user-lists' :
+				target === 'mute' ? 'i/export-mute' :
 				null, {})
 			.then(() => {
 				os.dialog({
@@ -83,8 +85,10 @@ export default defineComponent({
 			const file = await selectFile(e.currentTarget || e.target);
 			
 			os.api(
-				target == 'following' ? 'i/import-following' :
-				target == 'user-lists' ? 'i/import-user-lists' :
+				target === 'following' ? 'i/import-following' :
+				target === 'user-lists' ? 'i/import-user-lists' :
+				target === 'mute' ? 'i/import-muting' :
+				target === 'blocking' ? 'i/import-blocking' :
 				null, {
 					fileId: file.id
 			}).then(() => {

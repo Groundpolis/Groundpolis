@@ -30,7 +30,7 @@
 			<MkButton inline @click="cancel" v-if="showCancelButton || input || select">{{ $ts.cancel }}</MkButton>
 		</div>
 		<div class="buttons" v-if="actions">
-			<MkButton v-for="action in actions" inline @click="() => { action.callback(); close(); }" :primary="action.primary" :key="action.text">{{ action.text }}</MkButton>
+			<MkButton v-for="action in actions" inline @click="() => { action.callback(); done(true); }" :primary="action.primary" :key="action.text">{{ action.text }}</MkButton>
 		</div>
 	</div>
 </MkModal>

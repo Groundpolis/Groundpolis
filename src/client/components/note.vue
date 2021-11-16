@@ -60,7 +60,7 @@
 						<MkPlainText v-else-if="appearNote.text" :text="appearNote.text"/>
 					</div>
 					<button v-if="readMore !== null" class="read-more-button _button _link" @click="readMore = !readMore" v-text="readMore ? $ts.hide : $ts.readMore"/>
-					<div class="files" v-if="appearNote.files.length > 0">
+					<div class="files" v-if="appearNote.files.length > 0 && (!legacyWebkitCompatibleMode || appearNote.cw == null || showContent)">
 						<XMediaList :media-list="appearNote.files"/>
 					</div>
 					<XPoll v-if="appearNote.poll" :note="appearNote" ref="pollViewer" class="poll"/>
@@ -140,7 +140,7 @@ import XCwButton from './cw-button.vue';
 import XPoll from './poll.vue';
 import { pleaseLogin } from '@/scripts/please-login';
 import { focusPrev, focusNext } from '@/scripts/focus';
-import { url, host } from '@/config';
+import { url, host, legacyWebkitCompatibleMode } from '@/config';
 import copyToClipboard from '@/scripts/copy-to-clipboard';
 import { checkWordMute } from '@/scripts/check-word-mute';
 import { userPage } from '@/filters/user';
@@ -215,6 +215,7 @@ export default defineComponent({
 			isPlainMode: false,
 			faEdit, faFireAlt, faTimes, faBullhorn, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisV, faHome, faLock, faEnvelope, faThumbtack, faBan, faCopy, faLink, faUsers, faHeartS, faHeartR, faQuoteLeft, faQuoteRight, faHeartbeat, faPlug, faSatelliteDish, faClock, faAlignLeft,
 			host,
+			legacyWebkitCompatibleMode,
 		};
 	},
 

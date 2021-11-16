@@ -13,7 +13,6 @@
 	<a
 		:href="image.url"
 		:title="image.name"
-		@click.prevent="onClick"
 	>
 		<ImgWithBlurhash :hash="image.blurhash" :src="url" :alt="image.name" :title="image.name" :cover="false"/>
 		<div class="gif" v-if="image.type === 'image/gif'">GIF</div>
@@ -79,18 +78,6 @@ export default defineComponent({
 			immediate: true,
 		});
 	},
-	methods: {
-		onClick() {
-			if (this.$store.state.imageNewTab) {
-				window.open(this.image.url, '_blank');
-			} else {
-				os.popup(ImageViewer, {
-					image: this.image,
-					other: this.other,
-				}, {}, 'closed');
-			}
-		}
-	}
 });
 </script>
 

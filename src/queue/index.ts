@@ -13,6 +13,7 @@ import { queueLogger } from './logger';
 import { DriveFile } from '../models/entities/drive-file';
 import { getJobInfo } from './get-job-info';
 import { IActivity } from '../remote/activitypub/type';
+import { ThinUser } from './types';
 
 function initializeQueue(name: string, limitPerSec = -1) {
 	return new Queue(name, {
@@ -187,7 +188,27 @@ export function createImportFollowingJob(user: ILocalUser, fileId: DriveFile['id
 	});
 }
 
-export function createImportUserListsJob(user: ILocalUser, fileId: DriveFile['id']) {
+export function createImportMutingJob(user: ThinUser, fileId: DriveFile['id']) {
+	return dbQueue.add('importMuting', {
+		user: user,
+		fileId: fileId
+	}, {
+		removeOnComplete: true,
+		removeOnFail: true
+	});
+}
+
+export function createImportBlockingJob(user: ThinUser, fileId: DriveFile['id']) {
+	return dbQueue.add('importBlocking', {
+		user: user,
+		fileId: fileId
+	}, {
+		removeOnComplete: true,
+		removeOnFail: true
+	});
+}
+
+export function createImportUserListsJob(user: ThinUser, fileId: DriveFile['id']) {
 	return dbQueue.add('importUserLists', {
 		user: user,
 		fileId: fileId

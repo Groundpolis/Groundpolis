@@ -1,8 +1,8 @@
 <template>
-<span class="eiwwqkts" :class="[$store.reactiveState.iconShape.value, { cat } ]" :title="acct(user)" v-if="disableLink" v-user-preview="disablePreview ? undefined : user.id" @click="onClick">
+<span class="eiwwqkts" :class="[$store.reactiveState.iconShape.value, { cat, animated } ]" :title="acct(user)" v-if="disableLink" v-user-preview="disablePreview ? undefined : user.id" @click="onClick">
 	<img class="inner" :class="$store.reactiveState.iconShape.value" :src="url"/>
 </span>
-<MkA class="eiwwqkts" :class="[$store.reactiveState.iconShape.value, { cat } ]" :to="userPage(user)" :title="acct(user)" :target="target" v-else v-user-preview="disablePreview ? undefined : user.id">
+<MkA class="eiwwqkts" :class="[$store.reactiveState.iconShape.value, { cat, animated } ]" :to="userPage(user)" :title="acct(user)" :target="target" v-else v-user-preview="disablePreview ? undefined : user.id">
 	<img class="inner" :class="$store.reactiveState.iconShape.value" :src="url"/>
 </MkA>
 </template>
@@ -44,6 +44,9 @@ export default defineComponent({
 				? getStaticImageUrl(this.user.avatarUrl)
 				: this.user.avatarUrl;
 		},
+		animated(): boolean {
+			return this.$store.reactiveState.animation.value;
+		},
 	},
 	watch: {
 		'user.avatarBlurhash'() {
@@ -65,6 +68,21 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@keyframes earwiggleleft {
+	from { transform: rotate(37.6deg) skew(30deg); }
+	25% { transform: rotate(10deg) skew(30deg); }
+	50% { transform: rotate(20deg) skew(30deg); }
+	75% { transform: rotate(0deg) skew(30deg); }
+	to { transform: rotate(37.6deg) skew(30deg); }
+}
+@keyframes earwiggleright {
+	from { transform: rotate(-37.6deg) skew(-30deg); }
+	30% { transform: rotate(-10deg) skew(-30deg); }
+	55% { transform: rotate(-20deg) skew(-30deg); }
+	75% { transform: rotate(0deg) skew(-30deg); }
+	to { transform: rotate(-37.6deg) skew(-30deg); }
+}
+
 .eiwwqkts {
 	position: relative;
 	display: inline-block;
@@ -92,6 +110,15 @@ export default defineComponent({
 		&:after {
 			border-radius: 75% 0 75% 75%;
 			transform: rotate(-37.5deg) skew(-30deg);
+		}
+
+		&.animated:hover {
+			&:before {
+				animation: earwiggleleft 1s infinite;
+			}
+			&:after {
+				animation: earwiggleright 1s infinite;
+			}
 		}
 	}
 
