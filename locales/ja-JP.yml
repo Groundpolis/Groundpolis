@@ -882,7 +882,7 @@ legacyWebkitCompatibleModeDesc: "iOS 14以前の環境で正しく動作しな�
 legacyWebkitCompatibleModeDialogTitle: "古いバージョンのiOSを使用しています"
 legacyWebkitCompatibleModeDialogText: "GroundpolisはiOS 14以前では正常に動作しません。iOS 15へのアップデートをお願いします。\nなお、互換モードを有効化することで一時的に動作するようになります。\n\n互換モードを有効化しますか？"
 makeReactionsPublic: "リアクション一覧を公開する"
-makeReactionsPublicDescription: "あなたがしたリアクション一覧を誰でも見れるようにします。
+makeReactionsPublicDescription: "あなたがしたリアクション一覧を誰でも見れるようにします。"
 
 _plugin:
   install: "プラグインのインストール"
