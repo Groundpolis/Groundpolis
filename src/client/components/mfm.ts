@@ -154,7 +154,7 @@ export default defineComponent({
 				case 'hashtag': {
 					return [h(MkA, {
 						key: Math.random(),
-						to: `/search/${this.isNote ? 'notes' : 'users'}/${encodeURIComponent(token.props.hashtag)}`,
+						to: `/search/${this.isNote ? 'notes' : 'users'}/${encodeURIComponent('#' + token.props.hashtag)}`,
 						style: 'color:var(--hashtag);'
 					}, `#${token.props.hashtag}`)];
 				}

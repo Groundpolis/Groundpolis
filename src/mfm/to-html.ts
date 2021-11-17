@@ -98,7 +98,7 @@ export function toHtml(nodes: mfm.MfmNode[], mentionedRemoteUsers: IMentionedRem
 
 		hashtag(node) {
 			const a = doc.createElement('a');
-			a.href = `${config.url}/search/notes/${node.props.hashtag}`;
+			a.href = `${config.url}/search/notes/${'#' + node.props.hashtag}`;
 			a.textContent = `#${node.props.hashtag}`;
 			a.setAttribute('rel', 'tag');
 			return a;
