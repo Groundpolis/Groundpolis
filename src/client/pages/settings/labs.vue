@@ -3,7 +3,7 @@
 	<div class="_formItem">
 		<div class="_formLabel" style="font-size: 100%">{{ $ts._labs.description }}</div>
 		<div class="_formLabel" style="font-size: 100%">
-			<MkLink url="https://forms.gle/uHZihgYbyH5tGfJV9" class="at">{{ $ts._labs.review }}</MkLink>
+			<MkLink url="https://discord.gg/z2C7uG62fC" class="at">{{ $ts._labs.review }}</MkLink>
 		</div>
 	</div>
 
