@@ -110,13 +110,13 @@ export const mfmFunctions: Record<string, MfmFunctionDefinition> = {
 	},
 	rotate: {
 		props: {
-			angle: genProp(ts._mfmpad._functions.angle, ts._mfmpad._functions.rotateAngleDescription),
+			deg: genProp(ts._mfmpad._functions.angle, ts._mfmpad._functions.rotateAngleDescription),
 			x: genFlagProp(ts._mfmpad._functions.xspin),
 			y: genFlagProp(ts._mfmpad._functions.yspin),
 		},
 		style: args => {
 			const f = args.x ? 'perspective(128px) rotateX' : args.y ? 'perspective(128px) rotateY' : 'rotate';
-			return `transform: ${f}(${args.angle || '90'}deg); transform-origin: center center`;
+			return `transform: ${f}(${args.deg || args.angle || '90'}deg); transform-origin: center center`;
 		},
 		noAnimatedMfmStyle: true,
 		isGroundpolisExtension: true,
