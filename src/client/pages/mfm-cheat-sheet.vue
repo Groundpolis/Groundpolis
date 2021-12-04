@@ -60,9 +60,9 @@ export default defineComponent({
 				[ 'bounce', `$[bounce 🍮]` ],
 				[ 'shake', `$[shake 🍮]` ],
 				[ 'twitch', `$[twitch 🍮]` ],
-				[ 'spin', `$[spin 🍮] [spin.left 🍮] [spin.alternate 🍮]\n[spin.x 🍮] [spin.x,left 🍮] [spin.x,alternate 🍮]\n[spin.y 🍮] [spin.y,left 🍮] [spin.y,alternate 🍮]` ],
-				[ 'flip', `$[flip ${this.$ts._mfm.dummy}]\n[flip.v ${this.$ts._mfm.dummy}]\n[flip.h,v ${this.$ts._mfm.dummy}]` ],
-				[ 'rotate', `$[rotate.y,angle=-20 ${this.$ts._mfm.dummy}]` ],
+				[ 'spin', `$[spin 🍮] $[spin.left 🍮] $[spin.alternate 🍮]\n$[spin.x 🍮] $[spin.x,left 🍮] $[spin.x,alternate 🍮]\n$[spin.y 🍮] $[spin.y,left 🍮] $[spin.y,alternate 🍮]` ],
+				[ 'flip', `$[flip ${this.$ts._mfm.dummy}]\n$[flip.v ${this.$ts._mfm.dummy}]\n$[flip.h,v ${this.$ts._mfm.dummy}]` ],
+				[ 'rotate', `$[rotate.y,deg=340 ${this.$ts._mfm.dummy}]` ],
 				[ 'font', `$[font.size=48px,color=red ${this.$ts._mfm.dummy}]` ],
 			]),
 		}
