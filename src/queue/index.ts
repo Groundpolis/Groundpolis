@@ -91,7 +91,9 @@ export function deliver(user: ILocalUser, content: any, to: any) {
 	if (content == null) return null;
 
 	const data = {
-		user,
+		user: {
+			id: user.id
+		},
 		content,
 		to
 	};
@@ -212,6 +214,15 @@ export function createImportUserListsJob(user: ThinUser, fileId: DriveFile['id']
 	return dbQueue.add('importUserLists', {
 		user: user,
 		fileId: fileId
+	}, {
+		removeOnComplete: true,
+		removeOnFail: true
+	});
+}
+
+export function createDeleteAccountJob(user: ThinUser) {
+	return dbQueue.add('deleteAccount', {
+		user: user
 	}, {
 		removeOnComplete: true,
 		removeOnFail: true

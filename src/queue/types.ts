@@ -1,6 +1,6 @@
-import { DriveFile } from '@/models/entities/drive-file';
-import { User } from '@/models/entities/user';
-import { IActivity } from '@/remote/activitypub/type';
+import { DriveFile } from '../models/entities/drive-file';
+import { User } from '../models/entities/user';
+import { IActivity } from '../remote/activitypub/type';
 import * as httpSignature from 'http-signature';
 
 export type DeliverJobData = {

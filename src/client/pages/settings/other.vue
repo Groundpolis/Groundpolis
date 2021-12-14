@@ -44,10 +44,8 @@
 	</FormGroup>
 
 	<FormGroup>
-		<FormButton @click="closeAccount" danger disabled>{{ $ts.closeAccount }}</FormButton>
-		<template #caption>{{ $ts.closeAccountDisabledReason }}</template>
+		<FormButton @click="closeAccount" danger>{{ $ts.closeAccount }}</FormButton>
 	</FormGroup>
-
 </FormBase>
 </template>
 
