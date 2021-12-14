@@ -1,6 +1,6 @@
 
 <template>
-<div v-if="block" v-html="compiledFormula"></div>
+<div v-if="block" v-html="compiledFormula" class="parent"></div>
 <span v-else v-html="compiledFormula"></span>
 </template>
 
@@ -31,4 +31,8 @@ export default defineComponent({
 
 <style>
 @import "../../../node_modules/katex/dist/katex.min.css";
+
+.parent {
+	overflow: auto;
+}
 </style>
