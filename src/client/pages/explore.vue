@@ -6,8 +6,8 @@
 		<MkFolder :body-togglable="true" :expanded="false" ref="tags" class="_vMargin">
 			<template #header><Fa :icon="faHashtag" fixed-width style="margin-right: 0.5em;"/>{{ $ts.popularTags }}</template>
 			<div class="vxjfqztj">
-				<MkA v-for="tag in tagsLocal" :to="`/search?q=${encodeURIComponent('#' + tag.tag)}`" :key="'local:' + tag.tag" class="local">{{ tag.tag }}</MkA>
-				<MkA v-for="tag in tagsRemote" :to="`/search?q=${encodeURIComponent('#' + tag.tag)}`" :key="'remote:' + tag.tag">{{ tag.tag }}</MkA>
+				<MkA v-for="tag in tagsLocal" :to="`/search/users/${encodeURIComponent('#' + tag.tag)}`" :key="'local:' + tag.tag" class="local">{{ tag.tag }}</MkA>
+				<MkA v-for="tag in tagsRemote" :to="`/search/users/${encodeURIComponent('#' + tag.tag)}`" :key="'remote:' + tag.tag">{{ tag.tag }}</MkA>
 			</div>
 		</MkFolder>
 

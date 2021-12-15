@@ -119,7 +119,7 @@ export default defineComponent({
 				if (this.$router.currentRoute.value.path === this.to) {
 					window.scroll({ top: 0, behavior: 'smooth' });
 				} else {
-					this.$router.push(this.to);
+					this.$router.push(this.to.startsWith(url) ? this.to.substr(url.length) : this.to);
 				}
 			}
 		}
