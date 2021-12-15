@@ -8,8 +8,8 @@
 			<div class="name">{{ instanceName }}</div>
 		</div>
 	</section>
-	<section class="_formItem">
-		{{ meta.description || $ts.introMisskey }}
+	<section class="_formItem _panel _pa-2">
+		<Mfm :text="meta.description || $ts.introMisskey" />
 	</section>
 
 	<FormGroup>

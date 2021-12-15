@@ -22,7 +22,9 @@
 					<img class="logo" v-if="meta.logoImageUrl" :src="meta.logoImageUrl"><span v-else class="text">{{ instanceName }}</span>
 				</h1>
 				<div class="about">
-					<div class="desc" v-html="meta.description || $ts.headlineMisskey"></div>
+					<div class="desc">
+						<Mfm :text="meta.description || $ts.headlineMisskey" />
+					</div>
 				</div>
 				<div class="action">
 					<MkButton @click="signup()" inline primary>{{ $ts.signup }}</MkButton>
