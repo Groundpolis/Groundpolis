@@ -3,7 +3,7 @@
 	<div class="title">{{ title }}</div>
 	<div class="body" v-html="body"></div>
 	<div class="footer">
-		<MkLink :url="`https://github.com/groundpolis/groundpolis/blob/master/src/docs/${lang}/${doc}.md`" class="at">{{ $ts.docSource }}</MkLink>
+		<MkLink :url="`https://github.com/${repositoryName}/blob/master/src/docs/${lang}/${doc}.md`" class="at">{{ $ts.docSource }}</MkLink>
 	</div>
 </div>
 </template>
@@ -13,7 +13,7 @@ import { computed, defineComponent } from 'vue';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import MarkdownIt from 'markdown-it';
 import MarkdownItAnchor from 'markdown-it-anchor';
-import { url, lang } from '@/config';
+import { url, lang, repositoryName } from '@/config';
 import MkLink from '@/components/link.vue';
 
 const markdown = MarkdownIt({
@@ -45,7 +45,7 @@ export default defineComponent({
 			title: null,
 			body: null,
 			markdown: null,
-			lang,
+			lang, repositoryName,
 		}
 	},
 

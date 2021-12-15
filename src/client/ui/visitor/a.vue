@@ -32,7 +32,7 @@
 			</main>
 			<div class="powered-by">
 				<b><MkA to="/">{{ host }}</MkA></b>
-				<small>Powered by <a href="https://github.com/groundpolis/groundpolis" target="_blank">Groundpolis</a></small>
+				<small>Powered by <a :href="`https://github.com/${repositoryName}`" target="_blank">Groundpolis</a></small>
 			</div>
 		</div>
 	</div>
@@ -42,7 +42,7 @@
 <script lang="ts">
 import { defineComponent, defineAsyncComponent } from 'vue';
 import { } from '@fortawesome/free-solid-svg-icons';
-import { host, instanceName } from '@/config';
+import { host, instanceName, repositoryName } from '@/config';
 import { search } from '@/scripts/search';
 import * as os from '@/os';
 import MkPagination from '@/components/ui/pagination.vue';
@@ -71,6 +71,7 @@ export default defineComponent({
 				limit: 10,
 			},
 			isDesktop: window.innerWidth >= DESKTOP_THRESHOLD,
+			repositoryName,
 		};
 	},
 

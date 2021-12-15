@@ -40,7 +40,7 @@ import FormButton from '@/components/form/button.vue';
 import FormKeyValueView from '@/components/form/key-value-view.vue';
 import MkInfo from '@/components/ui/info.vue';
 import * as os from '@/os';
-import { version, instanceName } from '@/config';
+import { version, instanceName, repositoryName } from '@/config';
 
 export default defineComponent({
 	components: {
@@ -79,7 +79,7 @@ export default defineComponent({
 			localStorage.setItem('v', meta.version);
 		});
 
-		fetch('https://api.github.com/repos/groundpolis/groundpolis/releases', {
+		fetch(`https://api.github.com/repos/${repositoryName}/releases`, {
 			method: 'GET',
 		})
 		.then(res => res.json())

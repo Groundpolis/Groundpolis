@@ -8,7 +8,7 @@ Groundpolis
 
 **進化し続ける、洗練された、ミニブログプラットフォーム。**
 
-Groundpolis (通称グランポリス)は、 [Misskey](https://github.com/syuilo/misskey)に多くの改善や機能拡張を施したミニブログソフトウェアです。
+Groundpolis (通称グランポリス)は、 [Misskey](https://github.com/misskey-dev/misskey)12.69.0 をベースに多くの改善や機能拡張を施したミニブログソフトウェアです。
 
 最新情報
 --------

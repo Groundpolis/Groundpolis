@@ -28,7 +28,7 @@
 					</span>
 				</div>
 			</section>
-			<FormLink :to="`https://github.com/Groundpolis/Groundpolis/releases/tag/${version}`" external>
+			<FormLink :to="`https://github.com/${repositoryName}/releases/tag/${version}`" external>
 				{{ $ts._aboutMisskey.releaseNote }}
 			</FormLink>
 		</FormGroup>
@@ -36,7 +36,7 @@
 			{{ $ts._aboutMisskey.about }}
 		</section>
 		<FormGroup>
-			<FormLink to="https://github.com/Groundpolis/Groundpolis" external>
+			<FormLink :to="`https://github.com/${repositoryName}`" external>
 				<template #icon><Fa :icon="faCode"/></template>
 				{{ $ts._aboutMisskey.source }}
 			</FormLink>
@@ -54,7 +54,7 @@
 			<FormLink to="https://github.com/Xeltica" external>@Xeltica</FormLink>
 			<FormLink to="https://github.com/m-hayabusa" external>@m-hayabusa</FormLink>
 			<FormLink to="https://github.com/remitocat" external>@remitocat</FormLink>
-			<template #caption><MkLink url="https://github.com/Groundpolis/Groundpolis/graphs/contributors">{{ $ts._aboutMisskey.allContributors }}</MkLink></template>
+			<template #caption><MkLink :url="`https://github.com/${repositoryName}/graphs/contributors`">{{ $ts._aboutMisskey.allContributors }}</MkLink></template>
 		</FormGroup>
 	</FormBase>
 </div>
@@ -64,7 +64,7 @@
 import { defineComponent } from 'vue';
 import { faInfoCircle, faCode, faLanguage, faHandHoldingMedical, } from '@fortawesome/free-solid-svg-icons';
 import VanillaTilt from 'vanilla-tilt';
-import { version } from '@/config';
+import { version, repositoryName } from '@/config';
 import FormLink from '@/components/form/link.vue';
 import FormBase from '@/components/form/base.vue';
 import FormGroup from '@/components/form/group.vue';
@@ -93,6 +93,7 @@ export default defineComponent({
 			easterEggEmojis: [],
 			easterEggEngine: null,
 			awesome: false,
+			repositoryName,
 			faInfoCircle, faCode, faLanguage, faHandHoldingMedical,
 		}
 	},
