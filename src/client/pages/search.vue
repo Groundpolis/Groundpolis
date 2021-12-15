@@ -136,6 +136,9 @@ export default defineComponent({
 			if (this.navHook) return;
 			this.$router.push(`/search/${encodeURIComponent(this.tab)}/${encodeURIComponent(this.inputQuery)}`);
 		},
+		q() {
+			this.query = this.inputQuery = this.q;
+		},
 	},
 
 	mounted() {
