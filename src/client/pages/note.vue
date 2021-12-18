@@ -6,6 +6,7 @@
 		</div>
 
 		<div class="_section main">
+			<MkLoading v-if="checkingHasNext"/>
 			<MkButton v-if="!showNext && hasNext" class="load next _content" @click="showNext = true"><Fa :icon="faChevronUp"/></MkButton>
 			<div class="_content _vMargin">
 				<MkRemoteCaution v-if="note.user.host != null" :href="note.url || note.uri" class="_vMargin"/>
@@ -21,6 +22,7 @@
 					</div>
 				</MkA>
 			</div>
+			<MkLoading v-if="checkingHasPrev"/>
 			<MkButton v-if="!showPrev && hasPrev" class="load prev _content" @click="showPrev = true"><Fa :icon="faChevronDown"/></MkButton>
 		</div>
 
@@ -71,6 +73,8 @@ export default defineComponent({
 			hasNext: false,
 			showPrev: false,
 			showNext: false,
+			checkingHasPrev: true,
+			checkingHasNext: true,
 			error: null,
 			prev: {
 				endpoint: 'users/notes',
@@ -102,6 +106,7 @@ export default defineComponent({
 		fetch() {
 			this.showPrev = this.showNext = false;
 			this.hasPrev = this.hasNext = false;
+			this.checkingHasPrev = this.checkingHasNext = true;
 			os.api('notes/show', {
 				noteId: this.noteId
 			}).then(note => {
@@ -124,6 +129,8 @@ export default defineComponent({
 					this.clips = clips;
 					this.hasPrev = prev.length !== 0;
 					this.hasNext = next.length !== 0;
+					this.checkingHasPrev = false;
+					this.checkingHasNext = false;
 				});
 			}).catch(e => {
 				this.error = e;
