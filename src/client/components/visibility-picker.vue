@@ -2,42 +2,42 @@
 <MkModal ref="modal" :src="src" @click="$refs.modal.close()" @closed="$emit('closed')">
 	<div class="gqyayizv _popup">
 		<button class="_button" @click="choose('public')" :class="{ active: v == 'public' }" data-index="1" key="public">
-			<div><Fa :icon="faGlobe"/></div>
+			<div><VisibilityIcon visibility="public" :localOnly="localOnly" :remoteFollowersOnly="remoteFollowersOnly" /></div>
 			<div>
 				<span>{{ $ts._visibility.public }}</span>
 				<span>{{ $ts._visibility.publicDescription }}</span>
 			</div>
 		</button>
 		<button class="_button" @click="choose('home')" :class="{ active: v == 'home' }" data-index="2" key="home">
-			<div><Fa :icon="faHome"/></div>
+			<div><VisibilityIcon visibility="home" :localOnly="localOnly" :remoteFollowersOnly="remoteFollowersOnly" /></div>
 			<div>
 				<span>{{ $ts._visibility.home }}</span>
 				<span>{{ $ts._visibility.homeDescription }}</span>
 			</div>
 		</button>
 		<button :disabled="remoteFollowersOnly" class="_button" @click="choose('followers')" :class="{ active: v == 'followers' }" data-index="3" key="followers">
-			<div><Fa :icon="faUnlock"/></div>
+			<div><VisibilityIcon visibility="followers" :localOnly="localOnly" /></div>
 			<div>
 				<span>{{ $ts._visibility.followers }}</span>
 				<span>{{ $ts._visibility.followersDescription }}</span>
 			</div>
 		</button>
 		<button :disabled="localOnly || remoteFollowersOnly" class="_button" @click="choose('specified')" :class="{ active: v == 'specified' }" data-index="4" key="specified">
-			<div><Fa :icon="faEnvelope"/></div>
+			<div><VisibilityIcon visibility="specified" /></div>
 			<div>
 				<span>{{ $ts._visibility.specified }}</span>
 				<span>{{ $ts._visibility.specifiedDescription }}</span>
 			</div>
 		</button>
 		<button :disabled="localOnly || remoteFollowersOnly" class="_button" @click="choose('users')" :class="{ active: v == 'users' }" data-index="5" key="users">
-			<div><Fa :icon="faUsers"/></div>
+			<div><VisibilityIcon visibility="users" /></div>
 			<div>
 				<span>{{ $ts._visibility.users }}</span>
 				<span>{{ $ts._visibility.usersDescription }}</span>
 			</div>
 		</button>
 		<div class="divider"></div>
-		<button class="_button localOnly" @click="localOnly = !localOnly" :class="{ active: localOnly }" data-index="5" key="localOnly">
+		<button class="_button localOnly" @click="localOnly = !localOnly" :class="{ active: localOnly }" :disabled="isDisabledLocalOnly" data-index="5" key="localOnly">
 			<div><Fa :icon="faHeart"/></div>
 			<div>
 				<span>{{ $ts._visibility.localOnly }}</span>
@@ -45,7 +45,7 @@
 			</div>
 			<div><Fa :icon="localOnly ? faToggleOn : faToggleOff" :key="localOnly"/></div>
 		</button>
-		<button class="_button remoteFollowersOnly" @click="remoteFollowersOnly = !remoteFollowersOnly" :class="{ active: remoteFollowersOnly }" data-index="7" key="remoteFollowersOnly">
+		<button class="_button remoteFollowersOnly" @click="remoteFollowersOnly = !remoteFollowersOnly" :class="{ active: remoteFollowersOnly }" :disabled="isDisabledRemoteFollowersOnly" data-index="7" key="remoteFollowersOnly">
 			<div><Fa :icon="faHeartbeat"/></div>
 			<div>
 				<span>{{ $ts._visibility.remoteFollowersOnly }}</span>
@@ -59,13 +59,26 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faGlobe, faUnlock, faHome, faUsers, faHeart, faHeartbeat, faToggleOn, faToggleOff } from '@fortawesome/free-solid-svg-icons';
-import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { faHeart, faHeartbeat, faToggleOn, faToggleOff } from '@fortawesome/free-solid-svg-icons';
 import MkModal from '@/components/ui/modal.vue';
+import VisibilityIcon from './visibility-icon.vue';
+import { NoteVisibility } from '@/../types';
+
+const localOnlyBlacklist: NoteVisibility[] = [
+	'specified',
+	'users'
+];
+
+const remoteFollowersOnlyBlacklist: NoteVisibility[] = [
+	'followers',
+	'specified',
+	'users'
+];
 
 export default defineComponent({
 	components: {
 		MkModal,
+		VisibilityIcon,
 	},
 	props: {
 		currentVisibility: {
@@ -90,7 +103,15 @@ export default defineComponent({
 			v: this.currentVisibility,
 			localOnly: this.currentLocalOnly,
 			remoteFollowersOnly: this.currentRemoteFollowersOnly,
-			faGlobe, faUnlock, faEnvelope, faHome, faUsers, faHeart, faHeartbeat, faToggleOn, faToggleOff
+			faHeart, faHeartbeat, faToggleOn, faToggleOff
+		}
+	},
+	computed: {
+		isDisabledLocalOnly() {
+			return localOnlyBlacklist.includes(this.v);
+		},
+		isDisabledRemoteFollowersOnly() {
+			return remoteFollowersOnlyBlacklist.includes(this.v);
 		}
 	},
 	watch: {
