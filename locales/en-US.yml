@@ -1805,3 +1805,6 @@ _deck:
     list: "Lists"
     mentions: "Mentions"
     direct: "Direct"
+_ui:
+  basic: "Basic UI"
+  deck: "Deck UI"

@@ -2,13 +2,13 @@
 <MkA class="ldlomzub" :class="{ isMe }" :to="url" v-user-preview="canonical" v-if="url.startsWith('/')">
 	<img class="icon" :src="`/avatar/@${username}@${host}`" alt="">
 	<span class="main">
-		<span class="username">{{ username }}</span>
+		<span class="username">@{{ username }}</span>
 		<span class="host" v-if="(host != localHost) || $store.state.showFullAcct">@{{ toUnicode(host) }}</span>
 	</span>
 </MkA>
 <a class="ldlomzub" :href="url" target="_blank" rel="noopener" v-else>
 	<span class="main">
-		<span class="username">{{ username }}</span>
+		<span class="username">@{{ username }}</span>
 		<span class="host">@{{ toUnicode(host) }}</span>
 	</span>
 </a>
@@ -63,12 +63,15 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .ldlomzub {
-	color: var(--mention);
+	background-color: var(--mention);
+	color: white;
+	border-radius: 999px;
+	padding: 2px 4px;
 	display: inline-flex;
 	align-items: baseline;
 
 	&.isMe {
-		color: var(--mentionMe);
+		background-color: var(--mentionMe);
 	}
 	
 	> .me {
@@ -83,18 +86,18 @@ export default defineComponent({
 		margin-right: 4px;
 		border-radius: 100%;
 		transform-origin: center;
-		transition: transform 0.2s ease;
+		transition: transform 0.5s ease;
 		align-self: center;
-
-		&:hover {
-			transform: scale(2);
-		}
 	}
 
 	> .main {
 		> .host {
 			opacity: 0.5;
 		}
+	}
+
+	&:hover > .icon {
+		transform: scale(2);
 	}
 }
 </style>

@@ -1942,3 +1942,7 @@ _deck:
     list: "リスト"
     mentions: "あなた宛て"
     direct: "ダイレクト"
+
+_ui:
+  basic: "ベーシック UI"
+  deck: "デッキ UI"
