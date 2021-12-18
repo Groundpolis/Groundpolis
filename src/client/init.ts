@@ -168,8 +168,13 @@ if (isMobile || window.innerWidth <= 1024) {
 }
 
 //#region Set lang attr
+const [l] = lang.split('-');
 const html = document.documentElement;
-html.setAttribute('lang', lang);
+html.setAttribute('lang', l);
+const metaLang = document.createElement('meta');
+metaLang.httpEquiv = 'content-language';
+metaLang.content = l;
+html.querySelector('head')?.appendChild(metaLang);
 //#endregion
 
 //#region Fetch user
