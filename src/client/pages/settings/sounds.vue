@@ -6,11 +6,21 @@
 
 	<FormGroup>
 		<template #label>{{ $ts.sounds }}</template>
-		<FormButton v-for="type in Object.keys(sounds)" :key="type" :center="false" @click="edit(type)">
-			{{ $t('_sfx.' + type) }}
-			<template #suffix>{{ sounds[type].type || $ts.none }}</template>
-			<template #suffixIcon><Fa :icon="faChevronDown"/></template>
-		</FormButton>
+		<MkFolder v-for="type in Object.keys(sounds)" :key="type" class="_vMargin" :expanded="false">
+			<template #header>{{ $t('_sfx.' + type) }}</template>
+			<div class="_px-2 _py-2 _card _mb-2">
+				<MkSelect :value="sounds[type].type" @change="setType(type, $event.target.value)">
+					<template #label>{{ $ts.sounds }}</template>
+					<option v-for="item in soundsTypes" :value="item" :key="item">{{ item === null ? $ts.none : item }}</option>
+				</MkSelect>
+				<div class="_hstack dense">
+					<MkRange :value="sounds[type].volume" @change="setVolume(type, $event.target.value)" :min="0" :max="1" :step="0.05">
+						<template #label>{{ $ts.volume }}</template>
+					</MkRange>
+					<button class="_btn" @click="play(type)"><Fa :icon="faPlay"/></button>
+				</div>
+			</div>
+		</MkFolder>
 	</FormGroup>
 
 	<FormButton @click="reset()" danger><Fa :icon="faRedo"/> {{ $ts.default }}</FormButton>
@@ -25,6 +35,9 @@ import FormSelect from '@/components/form/select.vue';
 import FormBase from '@/components/form/base.vue';
 import FormButton from '@/components/form/button.vue';
 import FormGroup from '@/components/form/group.vue';
+import MkFolder from '@/components/ui/folder.vue';
+import MkSelect from '@/components/ui/select.vue';
+import MkRange from '@/components/ui/range.vue';
 import * as os from '@/os';
 import { ColdDeviceStorage } from '@/store';
 import { playFile } from '@/scripts/sound';
@@ -67,6 +80,9 @@ export default defineComponent({
 		FormBase,
 		FormRange,
 		FormGroup,
+		MkFolder,
+		MkSelect,
+		MkRange,
 	},
 
 	emits: ['info'],
@@ -77,7 +93,8 @@ export default defineComponent({
 				title: this.$ts.sounds,
 				icon: faMusic
 			},
-			sounds: {},
+			sounds: {} as Record<string, {type: string, volume: number}>,
+			soundsTypes,
 			faMusic, faPlay, faVolumeUp, faVolumeMute, faChevronDown, faRedo,
 		}
 	},
@@ -153,6 +170,31 @@ export default defineComponent({
 				ColdDeviceStorage.set('sound_' + sound, v);
 				this.sounds[sound] = v;
 			}
+		},
+
+		setType(key: string, type: string) {
+			const v = {
+				type: type,
+				volume: this.sounds[key].volume,
+			};
+
+			ColdDeviceStorage.set('sound_' + key, v);
+			this.sounds[key] = v;
+		},
+
+		setVolume(key: string, value: number) {
+			const v = {
+				type: this.sounds[key].type,
+				volume: value,
+			};
+
+			ColdDeviceStorage.set('sound_' + key, v);
+			this.sounds[key] = v;
+		},
+
+		play(key: string) {
+			const {type, volume} = this.sounds[key];
+			playFile(type, volume);
 		}
 	}
 });
