@@ -252,15 +252,15 @@ export default defineComponent({
 			useBroadcast: false,
 			cw: '',
 			broadcastText: '',
-			visibility: defaultStore.reactiveState.rememberNoteVisibility
-				? defaultStore.state.visibility
-				: defaultStore.state.defaultNoteVisibility,
-			localOnly: defaultStore.reactiveState.rememberNoteVisibility
-				? defaultStore.state.localOnly
-				: defaultStore.state.defaultNoteLocalOnly ,
-			remoteFollowersOnly: defaultStore.reactiveState.rememberNoteVisibility
-				? defaultStore.state.remoteFollowersOnly
-				: defaultStore.state.defaultNoteRemoteFollowersOnly,
+			visibility: defaultStore.reactiveState.rememberNoteVisibility.value
+				? defaultStore.reactiveState.visibility.value
+				: defaultStore.reactiveState.defaultNoteVisibility.value,
+			localOnly: defaultStore.reactiveState.rememberNoteVisibility.value
+				? defaultStore.reactiveState.localOnly.value
+				: defaultStore.reactiveState.defaultNoteLocalOnly.value,
+			remoteFollowersOnly: defaultStore.reactiveState.rememberNoteVisibility.value
+				? defaultStore.reactiveState.remoteFollowersOnly.value
+				: defaultStore.reactiveState.defaultNoteRemoteFollowersOnly.value,
 		});
 
 		const visibility = toRef(state, 'visibility');
