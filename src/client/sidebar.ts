@@ -1,10 +1,10 @@
 import { faBell, faComments, faLaugh } from '@fortawesome/free-regular-svg-icons';
 import { faCloud, faColumns, faDoorClosed, faFileAlt, faGamepad, faHashtag, faListUl, faPaperclip, faPaintBrush, faSatellite, faSatelliteDish, faSearch, faStar, faTerminal, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { computed } from 'vue';
-import { search } from '@/scripts/search';
 import * as os from '@/os';
 import { i18n } from '@/i18n';
 import { $i } from './account';
+import { defaultStore } from './store';
 
 export const sidebarDef = {
 	notifications: {
@@ -102,13 +102,13 @@ export const sidebarDef = {
 			os.modalMenu([{
 				text: i18n.locale._ui.basic,
 				action: () => {
-					localStorage.setItem('ui', 'default');
+					defaultStore.set('uiMode', 'basic');
 					location.reload();
 				}
 			}, {
 				text: i18n.locale._ui.deck,
 				action: () => {
-					localStorage.setItem('ui', 'deck');
+					defaultStore.set('uiMode', 'deck');
 					location.reload();
 				}
 			}], ev.currentTarget || ev.target);

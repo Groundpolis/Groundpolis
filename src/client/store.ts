@@ -323,6 +323,11 @@ export const defaultStore = markRaw(new Storage('base', {
 		default: false
 	},
 
+	uiMode: {
+		where: 'deviceAccount',
+		default: 'basic' as 'basic' | 'deck',
+	},
+
 	//#endregion
 }));
 

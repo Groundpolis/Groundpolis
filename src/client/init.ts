@@ -225,9 +225,9 @@ stream.init($i);
 await getAccounts();
 
 const app = createApp(await (
-	window.location.search === '?zen' ? import('@/ui/zen.vue') :
-	!$i                               ? import('@/ui/visitor.vue') :
-	ui === 'deck'                     ? import('@/ui/deck.vue') :
+	window.location.search === '?zen'     ? import('@/ui/zen.vue') :
+	!$i                                   ? import('@/ui/visitor.vue') :
+	defaultStore.state.uiMode === 'deck'  ? import('@/ui/deck.vue') :
 	import('@/ui/default.vue')
 ).then(x => x.default));
 
