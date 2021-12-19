@@ -128,12 +128,24 @@
 	</FormSelect>
 
 	<FormLink to="/settings/deck">{{ $ts.deck }}</FormLink>
+
+	<FormSelect v-model:value="renoteButtonMode">
+		<template #label>
+			<I18n :src="$ts.renoteButtonMode" tag="span">
+				<template #renote><Fa :icon="faRetweet"/></template>
+			</I18n>
+		</template>
+		<option value="choose">{{ $ts._renoteButtonMode.choose }}</option>
+		<option value="renote">{{ $ts._renoteButtonMode.renote }}</option>
+		<option value="quote">{{ $ts._renoteButtonMode.quote }}</option>
+		<option value="renoteQuote">{{ $ts._renoteButtonMode.renoteQuote }}</option>
+	</FormSelect>
 </FormBase>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faImage, faCog, faColumns, faCogs } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faCog, faColumns, faCogs, faRetweet } from '@fortawesome/free-solid-svg-icons';
 import FormSwitch from '@/components/form/switch.vue';
 import FormSelect from '@/components/form/select.vue';
 import FormRadios from '@/components/form/radios.vue';
@@ -172,7 +184,7 @@ export default defineComponent({
 			langs,
 			lang: localStorage.getItem('lang'),
 			fontSize: localStorage.getItem('fontSize'),
-			faImage, faCog, faColumns
+			faImage, faCog, faColumns, faRetweet
 		}
 	},
 
@@ -203,6 +215,7 @@ export default defineComponent({
 		noteCollapseThreshold: defaultStore.makeGetterSetter('noteCollapseThreshold'),
 		confirmBeforePost: defaultStore.makeGetterSetter('confirmBeforePost'),
 		aiChanMode: defaultStore.makeGetterSetter('aiChanMode'),
+		renoteButtonMode: defaultStore.makeGetterSetter('renoteButtonMode'),
 	},
 
 	watch: {
