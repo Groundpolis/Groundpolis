@@ -346,7 +346,7 @@ export default defineComponent({
 			this.$refs.modal.close();
 
 			// 最近使った絵文字更新
-			if (!this.pinned.includes(key)) {
+			if (!this.pinned.includes(key) || this.$store.reactiveState.emojiPickerHidePinnedEmojis.value) {
 				let recents = this.$store.state.recentlyUsedEmojis;
 				recents = recents.filter((e: any) => e !== key);
 				recents.unshift(key);
