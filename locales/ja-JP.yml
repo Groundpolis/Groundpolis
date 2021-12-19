@@ -291,7 +291,7 @@ circularReferenceFolder: "移動先のフォルダーは、移動するフォル
 hasChildFilesOrFolders: "このフォルダは空でないため、削除できません。"
 copyUrl: "URLをコピー"
 rename: "名前を変更"
-avatar: "アイコン"
+avatar: "アバター"
 banner: "バナー"
 nsfw: "閲覧注意"
 whenServerDisconnected: "サーバーとの接続が失われたとき"
