@@ -143,8 +143,6 @@ hr {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: rgba(0, 0, 0, 0.7);
-	backdrop-filter: var(--modalBgFilter);
 }
 
 ._shadow {
@@ -332,6 +330,7 @@ hr {
 	background: var(--panel);
 	border-radius: var(--radius);
 	contain: content;
+	@extend ._shadow-5;
 }
 
 ._section {

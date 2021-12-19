@@ -52,11 +52,11 @@ export default defineComponent({
 		box-sizing: border-box;
 		padding: 14px 16px;
 		text-align: left;
-		align-items: center;
+		align-items: left;
 
 		&.center {
 			display: block;
-			text-align: center;
+			text-align: left;
 		}
 
 		&.primary {
@@ -74,6 +74,9 @@ export default defineComponent({
 
 			> .icon {
 				margin-left: 1em;
+				&:empty {
+					margin-left: 0;
+				}
 			}
 		}
 	}

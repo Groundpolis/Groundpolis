@@ -39,7 +39,7 @@
 
 	<FormGroup>
 		<template #label>{{ $ts.dangerousSettings }}</template>
-		<FormButton danger @click="discardPostFormDraft"><Fa :icon="faTrashAlt"/> {{ $ts.discardPostFormDraft }}</FormButton>
+		<FormButton danger @click="discardPostFormDraft"><Fa :icon="faTrashAlt" class="_mr-1"/> {{ $ts.discardPostFormDraft }}</FormButton>
 		<template #caption>{{ $ts.discardPostFormDraftDescription }}</template>
 	</FormGroup>
 

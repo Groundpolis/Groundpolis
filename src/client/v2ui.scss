@@ -42,12 +42,12 @@ $shadow-level-unit: 4px;
 
 @for $i from 1 through 8 {
   ._shadow-#{$i} {
-    box-shadow: 0 2px #{$i * $shadow-level-unit} rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px #{$i * $shadow-level-unit} rgba(0, 0, 0, 0.2);
     &-t {
-      text-shadow: 0 2px #{$i * $shadow-level-unit} rgba(0, 0, 0, 0.4);
+      text-shadow: 0 2px #{$i * $shadow-level-unit} rgba(0, 0, 0, 0.2);
     }
     &-f {
-      filter: drop-shadow(0 2px #{$i * 0.2 * $shadow-level-unit} rgba(0, 0, 0, 0.4));
+      filter: drop-shadow(0 2px #{$i * 0.2 * $shadow-level-unit} rgba(0, 0, 0, 0.2));
     }
   }
 }
