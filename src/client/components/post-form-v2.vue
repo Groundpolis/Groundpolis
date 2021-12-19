@@ -155,6 +155,7 @@ import { formatTimeString } from '@/../misc/format-time-string';
 import { host, url } from '@/config';
 import { FormItem } from '@/scripts/form';
 import { MfmHashtag } from 'mfm-js';
+import renderAcct from '@/../misc/acct/render';
 
 markRawAll(
 	faFish,
@@ -466,8 +467,9 @@ export default defineComponent({
 				quote.value = props.renote;
 			}
 
-			if (props.reply && props.reply.user.host != null) {
-				draft.text = `@${props.reply.user.username}@${toASCII(props.reply.user.host)} `;
+			// リプライであればメンションを添える
+			if (props.reply) {
+				draft.text = `@${renderAcct(props.reply.user)} `;
 			}
 
 			if (props.reply && props.reply.text != null) {

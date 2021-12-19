@@ -94,6 +94,7 @@ import { FormItem } from '../scripts/form';
 import { defaultStore, notePostInterruptors, postFormActions } from '@/store';
 import VisibilityIcon from './visibility-icon.vue';
 import MkSwitch from './ui/switch.vue';
+import renderAcct from '@/../misc/acct/render';
 
 export default defineComponent({
 	components: {
@@ -286,9 +287,10 @@ export default defineComponent({
 			this.quote = this.renote;
 		}
 
-		if (this.reply && this.reply.user.host != null) {
-			this.text = `@${this.reply.user.username}@${toASCII(this.reply.user.host)} `;
-		}
+			// リプライであればメンションを添える
+			if (this.reply) {
+				this.text = `@${renderAcct(this.reply.user)} `;
+			}
 
 		if (this.reply && this.reply.text != null) {
 			const ast = mfm.parse(this.reply.text);
