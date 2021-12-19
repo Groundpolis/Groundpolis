@@ -2,7 +2,6 @@
 <div class="ssazuxis" v-size="{ max: [500] }">
 	<header @click="showBody = !showBody" class="_button">
 		<div class="title"><slot name="header"></slot></div>
-		<div class="divider"></div>
 		<button class="_button">
 			<template v-if="showBody"><Fa :icon="faAngleUp"/></template>
 			<template v-else><Fa :icon="faAngleDown"/></template>
@@ -14,7 +13,7 @@
 		@leave="leave"
 		@after-leave="afterLeave"
 	>
-		<div v-show="showBody">
+		<div v-show="showBody" class="content">
 			<slot></slot>
 		</div>
 	</transition>
@@ -98,14 +97,24 @@ export default defineComponent({
 	> header {
 		display: flex;
 		position: relative;
+		padding: 0 12px;
 		z-index: 2;
+		background: var(--panel);
+		border-radius: var(--radius);
+		margin-bottom: 8px;
 		// TODO
-		// position: sticky;
-		// top: var(--stickyTopOffset);
-		// backdrop-filter: blur(20px);
+		position: sticky;
+		top: var(--stickyTop);
+
+		&:hover {
+			background: var(--panelHighlight);
+		}
 
 		> .title {
 			margin: 0;
+			display: flex;
+			align-items: center;
+			margin-right: auto;
 			padding: 12px 16px 12px 0;
 
 			> [data-icon] {
