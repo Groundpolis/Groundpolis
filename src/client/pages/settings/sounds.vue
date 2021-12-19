@@ -9,15 +9,15 @@
 		<MkFolder v-for="type in Object.keys(sounds)" :key="type" class="_vMargin" :expanded="false">
 			<template #header>{{ $t('_sfx.' + type) }}</template>
 			<div class="_px-2 _py-2 _card _mb-2">
-				<MkSelect :value="sounds[type].type" @change="setType(type, $event.target.value)">
+				<MkSelect class="_mb-2" :value="sounds[type].type" @change="setType(type, $event.target.value)">
 					<template #label>{{ $ts.sounds }}</template>
 					<option v-for="item in soundsTypes" :value="item" :key="item">{{ item === null ? $ts.none : item }}</option>
 				</MkSelect>
 				<div class="_hstack dense">
-					<MkRange :value="sounds[type].volume" @change="setVolume(type, $event.target.value)" :min="0" :max="1" :step="0.05">
+					<MkRange class="_ma-0 range" :value="sounds[type].volume" @change="setVolume(type, $event.target.value)" :min="0" :max="1" :step="0.05">
 						<template #label>{{ $ts.volume }}</template>
 					</MkRange>
-					<button class="_btn" @click="play(type)"><Fa :icon="faPlay"/></button>
+					<button class="_btn _pa-0" @click="play(type)" style="width: 36px; height: 36px"><Fa :icon="faPlay"/></button>
 				</div>
 			</div>
 		</MkFolder>
@@ -199,3 +199,10 @@ export default defineComponent({
 	}
 });
 </script>
+
+<style lang="scss" scoped>
+.range {
+	display: flex;
+	align-items: center;
+}
+</style>
