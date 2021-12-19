@@ -350,7 +350,7 @@ export default defineComponent({
 				let recents = this.$store.state.recentlyUsedEmojis;
 				recents = recents.filter((e: any) => e !== key);
 				recents.unshift(key);
-				this.$store.set('recentlyUsedEmojis', recents.splice(0, 16));
+				this.$store.set('recentlyUsedEmojis', recents.splice(0, 35));
 			}
 		},
 
