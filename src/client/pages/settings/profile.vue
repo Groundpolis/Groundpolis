@@ -1,12 +1,14 @@
 <template>
 <FormBase>
-	<FormGroup>
-		<div class="_formItem _formPanel llvierxe" :style="{ backgroundImage: $i.bannerUrl ? `url(${ $i.bannerUrl })` : null }">
-			<MkAvatar class="avatar" :user="$i"/>
+	<div class="_formItem _formPanel llvierxe" :style="{ backgroundImage: $i.bannerUrl ? `url(${ $i.bannerUrl })` : null }">
+		<div class="avatar-wrapper _pa-3">
+			<MkAvatar class="avatar _mb-2" :user="$i" disable-link disable-preview/>
+			<button class="_btn primary _shadow" @click="changeAvatar">{{ $ts._profile.changeAvatar }}</button>
 		</div>
-		<FormButton @click="changeAvatar" primary>{{ $ts._profile.changeAvatar }}</FormButton>
-		<FormButton @click="changeBanner" primary>{{ $ts._profile.changeBanner }}</FormButton>
-	</FormGroup>
+			<button class="_btn primary _shadow change-banner" @click="changeBanner">{{ $ts._profile.changeBanner }}</button>
+	</div>
+	<!-- <FormButton @click="changeAvatar" primary>{{ $ts._profile.changeAvatar }}</FormButton>
+	<FormButton @click="changeBanner" primary>{{ $ts._profile.changeBanner }}</FormButton> -->
 
 	<FormInput v-model:value="name" :max="30">
 		<span>{{ $ts._profile.name }}</span>
@@ -67,14 +69,12 @@
 	<FormSwitch v-model:value="isBot">{{ $ts.flagAsBot }}<template #desc>{{ $ts.flagAsBotDescription }}</template></FormSwitch>
 
 	<FormSwitch v-model:value="alwaysMarkNsfw">{{ $ts.alwaysMarkSensitive }}</FormSwitch>
-
-	<FormButton @click="save(true)" primary><Fa :icon="faSave"/> {{ $ts.save }}</FormButton>
 </FormBase>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faUnlockAlt, faCogs, faUser, faMapMarkerAlt, faBirthdayCake } from '@fortawesome/free-solid-svg-icons';
+import { faUnlockAlt, faCogs, faUser, faMapMarkerAlt, faBirthdayCake, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
 import FormButton from '@/components/form/button.vue';
 import FormInput from '@/components/form/input.vue';
@@ -106,7 +106,7 @@ export default defineComponent({
 		return {
 			INFO: {
 				title: this.$ts.profile,
-				icon: faUser
+				icon: faUser,
 			},
 			host,
 			name: null,
@@ -293,25 +293,29 @@ export default defineComponent({
 <style lang="scss" scoped>
 .llvierxe {
 	position: relative;
-	height: 150px;
 	background-size: cover;
 	background-position: center;
+	overflow: hidden;
 
-	> * {
-		pointer-events: none;
+	> .avatar-wrapper {
+		margin-right: auto;
+		width: fit-content;
+		text-align: center;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.6);
+		box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+
+		> .avatar {
+			display: block;
+			margin: 0 auto;
+			width: 72px;
+			height: 72px;
+		}
 	}
-
-	> .avatar {
+	> .change-banner {
 		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		display: block;
-		width: 72px;
-		height: 72px;
-		margin: auto;
-		box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.5);
+		right: 1em;
+		top: 1em;
 	}
 }
 </style>
