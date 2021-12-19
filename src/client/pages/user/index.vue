@@ -144,7 +144,6 @@ import XUserTimeline from './index.timeline.vue';
 import XNote from '@/components/note.vue';
 import MkFollowButton from '@/components/follow-button.vue';
 import MkContainer from '@/components/ui/container.vue';
-import MkFolder from '@/components/ui/folder.vue';
 import MkRemoteCaution from '@/components/remote-caution.vue';
 import MkTab from '@/components/tab.vue';
 import Progress from '@/scripts/loading';
@@ -163,7 +162,6 @@ export default defineComponent({
 		MkFollowButton,
 		MkContainer,
 		MkRemoteCaution,
-		MkFolder,
 		MkTab,
 		XFollowList: defineAsyncComponent(() => import('./follow-list.vue')),
 		XReactions: defineAsyncComponent(() => import('./reactions.vue')),
