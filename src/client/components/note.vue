@@ -519,8 +519,23 @@ export default defineComponent({
 				})).canceled;
 				if (canceled) return;
 
+				const visibility = this.$store.state.useDefaultNoteVisibilityOnRenote ? (
+					this.$store.state.rememberNoteVisibility ? this.$store.state.visibility : this.$store.state.defaultNoteVisibility
+				) : this.$store.state.defaultRenoteVisibility;
+
+				const localOnly = this.$store.state.useDefaultNoteVisibilityOnRenote ? (
+					this.$store.state.rememberNoteVisibility ? this.$store.state.localOnly : this.$store.state.defaultNoteLocalOnly
+				) : this.$store.state.defaultRenoteLocalOnly;
+
+				const remoteFollowersOnly = this.$store.state.useDefaultNoteVisibilityOnRenote ? (
+					this.$store.state.rememberNoteVisibility ? this.$store.state.remoteFollowersOnly : this.$store.state.defaultNoteRemoteFollowersOnly
+				) : this.$store.state.defaultRenoteRemoteFollowersOnly;
+
 				await os.api('notes/create', {
-					renoteId: this.appearNote.id
+					renoteId: this.appearNote.id,
+					visibility,
+					localOnly,
+					remoteFollowersOnly,
 				});
 			};
 			const quote = () => {

@@ -36,6 +36,19 @@
 		<FormSwitch v-model:value="defaultNoteLocalOnly">{{ $ts._visibility.localOnly }}</FormSwitch>
 		<FormSwitch v-model:value="defaultNoteRemoteFollowersOnly">{{ $ts._visibility.remoteFollowersOnly }}</FormSwitch>
 	</FormGroup>
+	<FormSwitch v-model:value="useDefaultNoteVisibilityOnRenote" @update:value="save()">{{ $ts.useDefaultNoteVisibilityOnRenote }}</FormSwitch>
+	<FormGroup v-if="!useDefaultNoteVisibilityOnRenote">
+		<template #label>{{ $ts.defaultRenoteVisibility }}</template>
+		<FormSelect v-model:value="defaultRenoteVisibility">
+			<option value="public">{{ $ts._visibility.public }}</option>
+			<option value="home">{{ $ts._visibility.home }}</option>
+			<option value="followers">{{ $ts._visibility.followers }}</option>
+			<option value="specified">{{ $ts._visibility.specified }}</option>
+			<option value="users">{{ $ts._visibility.users }}</option>
+		</FormSelect>
+		<FormSwitch v-model:value="defaultRenoteLocalOnly">{{ $ts.defaultRenoteLocalOnly }}</FormSwitch>
+		<FormSwitch v-model:value="defaultRenoteRemoteFollowersOnly">{{ $ts.defaultRenoteRemoteFollowersOnly }}</FormSwitch>
+	</FormGroup>
 </FormBase>
 </template>
 
@@ -74,6 +87,25 @@ export default defineComponent({
 		defaultNoteLocalOnly: defaultStore.makeGetterSetter('defaultNoteLocalOnly'),
 		defaultNoteRemoteFollowersOnly: defaultStore.makeGetterSetter('defaultNoteRemoteFollowersOnly'),
 		rememberNoteVisibility: defaultStore.makeGetterSetter('rememberNoteVisibility'),
+		useDefaultNoteVisibilityOnRenote: defaultStore.makeGetterSetter('useDefaultNoteVisibilityOnRenote'),
+		defaultRenoteVisibility: defaultStore.makeGetterSetter('defaultRenoteVisibility'),
+		defaultRenoteLocalOnly: defaultStore.makeGetterSetter('defaultRenoteLocalOnly'),
+		defaultRenoteRemoteFollowersOnly: defaultStore.makeGetterSetter('defaultRenoteRemoteFollowersOnly'),
+	},
+
+	watch: {
+		defaultNoteLocalOnly() {
+			if (this.defaultNoteLocalOnly) this.defaultNoteRemoteFollowersOnly = false;
+		},
+		defaultNoteRemoteFollowersOnly() {
+			if (this.defaultNoteRemoteFollowersOnly) this.defaultNoteLocalOnly = false;
+		},
+		defaultRenoteLocalOnly() {
+			if (this.defaultRenoteLocalOnly) this.defaultRenoteRemoteFollowersOnly = false;
+		},
+		defaultRenoteRemoteFollowersOnly() {
+			if (this.defaultRenoteRemoteFollowersOnly) this.defaultRenoteLocalOnly = false;
+		},
 	},
 
 	created() {

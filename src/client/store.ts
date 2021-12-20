@@ -338,6 +338,26 @@ export const defaultStore = markRaw(new Storage('base', {
 		default: [] as Template[],
 	},
 
+	useDefaultNoteVisibilityOnRenote: {
+		where: 'account',
+		default: false
+	},
+
+	defaultRenoteVisibility: {
+		where: 'account',
+		default: 'public' as NoteVisibility
+	},
+
+	defaultRenoteLocalOnly: {
+		where: 'account',
+		default: false
+	},
+
+	defaultRenoteRemoteFollowersOnly: {
+		where: 'account',
+		default: false
+	},
+
 	//#endregion
 }));
 

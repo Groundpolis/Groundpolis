@@ -850,6 +850,10 @@ accountDeletionInProgress: "Account deletion is currently in progress"
 template: "Template"
 deleteMode: "Delete Mode"
 added: "Added."
+useDefaultNoteVisibilityOnRenote: "Apply default visibility for Renote"
+defaultRenoteVisibility: "Default visibility (Renote)"
+defaultRenoteLocalOnly: "Local Only (Renote)"
+defaultRenoteRemoteFollowersOnly: "Remote Followers and Local (Renote)"
 
 _template:
   edit: "Edit Template..."
@@ -862,6 +866,10 @@ _template:
   info: "You can insert your template immediately by entering \".\" In the post form."
   registerAs: "Register as a template"
   inputLabel: "Input label..."
+  data: "Template Data"
+  overwriteMode: "Overwrite Mode"
+  overwriteModeDesc: "When turned on, all existing templates will be deleted before importing."
+  exportDesc: "Paste this data when importing."
 _plugin:
   install: "Install plugins"
   installWarn: "Please do not install untrustworthy plugins."
