@@ -1,7 +1,7 @@
 <template>
 <div class="mk-modal" v-hotkey.global="keymap" :style="{ pointerEvents: showing ? 'auto' : 'none', '--transformOrigin': transformOrigin }">
 	<transition :name="$store.state.animation ? 'modal-bg' : ''" appear>
-		<div class="bg _modalBg" v-if="showing" @click="onBgClick"></div>
+		<div class="bg _modalBg" :class="{_transparent: transparent}" v-if="showing" @click="onBgClick"></div>
 	</transition>
 	<div class="content" :class="{ popup, fixed, top: position === 'top' }" @click.self="onBgClick" ref="content">
 		<transition :name="$store.state.animation ? popup ? 'modal-popup-content' : 'modal-content' : ''" appear @after-leave="$emit('closed')" @after-enter="childRendered">
@@ -38,6 +38,10 @@ export default defineComponent({
 		},
 		position: {
 			required: false
+		},
+		transparent: {
+			type: Boolean,
+			required: false
 		}
 	},
 	emits: ['click', 'esc', 'closed'],
@@ -56,6 +60,7 @@ export default defineComponent({
 			};
 		},
 		popup(): boolean {
+			console.log(this.src);
 			return this.src != null;
 		}
 	},

@@ -9,6 +9,7 @@
 	<header>
 		<button v-if="!fixed" class="cancel _button" @click="cancel"><Fa :icon="faTimes"/></button>
 		<div>
+			<button class="_button" @click="openTemplateMenu" v-tooltip="$ts._template.insert"><Fa :icon="faClipboardList"/></button>
 			<button class="_button" @click="insert('> ')" v-tooltip="$ts._mfmpad.quote"><Fa :icon="faQuoteRight"/></button>
 			<button class="_button" @click="link" v-tooltip="$ts._mfmpad.link"><Fa :icon="faLink"/></button>
 			<button class="_button function" @click="insertFunction" v-tooltip="$ts._mfmpad.functions"><code style="font-weight: bold">[]</code></button>
@@ -75,7 +76,7 @@
 
 <script lang="ts">
 import { defineComponent, defineAsyncComponent } from 'vue';
-import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown, faEllipsisV, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash, faLaughSquint } from '@fortawesome/free-regular-svg-icons';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
@@ -91,7 +92,7 @@ import { Autocomplete } from '@/scripts/autocomplete';
 import * as os from '@/os';
 import { selectFile } from '@/scripts/select-file';
 import { FormItem } from '../scripts/form';
-import { defaultStore, notePostInterruptors, postFormActions } from '@/store';
+import { defaultStore, notePostInterruptors, postFormActions, Template } from '@/store';
 import VisibilityIcon from './visibility-icon.vue';
 import MkSwitch from './ui/switch.vue';
 import renderAcct from '@/../misc/acct/render';
@@ -181,7 +182,7 @@ export default defineComponent({
 			postFormActions,
 			confirmed: false,
 			requiredConfirmation: this.$store.state.confirmBeforePost,
-			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown, faEllipsisV
+			faReply, faQuoteRight, faPaperPlane, faTimes, faUpload, faPollH, faGlobe, faHome, faUnlock, faEnvelope, faEyeSlash, faLaughSquint, faPlus, faPhotoVideo, faCloud, faLink, faAt, faHeart, faUsers, faFish, faHeartbeat, faQuestionCircle, faBullhorn, faPlug, faChevronDown, faEllipsisV, faClipboardList,
 		};
 	},
 
@@ -829,6 +830,16 @@ export default defineComponent({
 		insertFunction() {
 			os.popup(import('./function-builder-window.vue'), {
 			}, { done: this.insert }, 'closed');
+		},
+
+		openTemplateMenu(ev) {
+			os.popup(import('./template-picker.vue'), {
+				src: ev.currentTarget || ev.target,
+			}, {
+				chosen: (template: Template) => {
+					this.insert(template.body);
+				},
+ 			}, 'closed');
 		},
 	}
 });

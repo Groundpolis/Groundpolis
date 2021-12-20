@@ -1,6 +1,6 @@
 <template>
 <MkModal ref="modal" @click="done(true)" @closed="$emit('closed')">
-	<div class="mk-dialog">
+	<div class="mk-dialog _popup">
 		<div class="icon" v-if="icon">
 			<Fa :icon="icon"/>
 		</div>

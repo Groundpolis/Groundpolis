@@ -30,6 +30,12 @@
 			<div class="internal-id _ml-1">$[{{fn}}]</div>
 		</li>
 	</ol>
+	<ol class="templates" ref="suggests" v-if="templates.length > 0">
+		<li class="functionItem" style="line-height: 2" v-for="t in templates" @click="complete(type, t.body)" @keydown="onKeydown" tabindex="-1" :key="t.label">
+			<span class="name">{{t.body.substring(0, 8)}}{{t.body.length <= 8 ? '' : '…'}}</span>
+			<div class="internal-id _ml-1">.{{t.label}}</div>
+		</li>
+	</ol>
 </div>
 </template>
 
@@ -42,6 +48,7 @@ import { getStaticImageUrl } from '@/scripts/get-static-image-url';
 import { acct } from '@/filters/user';
 import * as os from '@/os';
 import { mfmFunctions } from './mfm.functions';
+import { Template } from '@/store';
 
 type EmojiDef = {
 	emoji: string;
@@ -133,6 +140,7 @@ export default defineComponent({
 			select: -1,
 			emojiDb: [] as EmojiDef[],
 			functions: [] as string[],
+			templates: [] as Template[],
 		}
 	},
 
@@ -320,7 +328,8 @@ export default defineComponent({
 				this.emojis = matched;
 			} else if (this.type === 'fn') {
 				this.functions = Object.keys(mfmFunctions).filter(f => !this.q || f.startsWith(this.q));
-				console.log(this.functions);
+			} else if (this.type === 'template') {
+				this.templates = this.$store.state.templates.filter(f => !this.q || f.label.startsWith(this.q));
 			}
 		},
 

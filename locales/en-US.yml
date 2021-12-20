@@ -847,6 +847,21 @@ legacyWebkitCompatibleModeDesc: "If it doesn't work properly in iOS 14 or earlie
 legacyWebkitCompatibleModeDialogTitle: "Outdated version of iOS!"
 legacyWebkitCompatibleModeDialogText: "Groundpolis does not work properly on iOS 14 and earlier. Please update to iOS 15. \n It will work temporarily by enabling compatibility mode. \n\nDo you want to enable compatibility mode?"
 accountDeletionInProgress: "Account deletion is currently in progress"
+template: "Template"
+deleteMode: "Delete Mode"
+added: "Added."
+
+_template:
+  edit: "Edit Template..."
+  insert: "Insert template"
+  desc: "Create your note quickly with templates. It is recommenddd to register frequently used sentences."
+  nothing: "It is no template here yet."
+  label: "Label"
+  labelDesc: "Label is a short name for the template. It's recommended to use only small letters because it will be used for auto-completion."
+  body: "Body"
+  info: "You can insert your template immediately by entering \".\" In the post form."
+  registerAs: "Register as a template"
+  inputLabel: "Input label..."
 _plugin:
   install: "Install plugins"
   installWarn: "Please do not install untrustworthy plugins."

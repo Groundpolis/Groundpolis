@@ -1,5 +1,5 @@
 <template>
-<MkModal ref="modal" :src="src" @click="$refs.modal.close()" @closed="$emit('closed')">
+<MkModal ref="modal" :src="src" @click="$refs.modal.close()" @closed="$emit('closed')" transparent>
 	<div class="gqyayizv _popup">
 		<button class="_button" @click="choose('public')" :class="{ active: v == 'public' }" data-index="1" key="public">
 			<div><VisibilityIcon visibility="public" :localOnly="localOnly" :remoteFollowersOnly="remoteFollowersOnly" /></div>

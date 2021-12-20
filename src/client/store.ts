@@ -5,6 +5,11 @@ import { Theme } from './scripts/theme';
 import { Rgba } from './scripts/rgba';
 import { NoteVisibility } from '../types';
 
+export type Template = {
+	label: string;
+	body: string;
+};
+
 export const postFormActions = [];
 export const userActions = [];
 export const noteActions = [];
@@ -326,6 +331,11 @@ export const defaultStore = markRaw(new Storage('base', {
 	uiMode: {
 		where: 'deviceAccount',
 		default: 'basic' as 'basic' | 'deck',
+	},
+
+	templates: {
+		where: 'deviceAccount',
+		default: [] as Template[],
 	},
 
 	//#endregion

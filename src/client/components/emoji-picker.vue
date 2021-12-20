@@ -1,5 +1,5 @@
 <template>
-<MkModal ref="modal" :src="src" @click="$refs.modal.close()" @closed="$emit('closed')">
+<MkModal ref="modal" :src="src" @click="$refs.modal.close()" @closed="$emit('closed')" transparent>
 	<div class="omfetrab _popup" :class="['w' + width, 'h' + height, { big }]">
 		<input ref="search" class="search" :class="{ filled: q != null && q != '' }" v-model.trim="q" :placeholder="$ts.search" @paste.stop="paste" @keyup.enter="done()">
 		<div class="emojis" ref="emojis">

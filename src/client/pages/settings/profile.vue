@@ -69,13 +69,14 @@
 	<FormSwitch v-model:value="isBot">{{ $ts.flagAsBot }}<template #desc>{{ $ts.flagAsBotDescription }}</template></FormSwitch>
 
 	<FormSwitch v-model:value="alwaysMarkNsfw">{{ $ts.alwaysMarkSensitive }}</FormSwitch>
+
+	<FormButton @click="save(true)" primary><Fa :icon="faSave" class="_mr-1"/>{{ $ts.save }}</FormButton>
 </FormBase>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { faUnlockAlt, faCogs, faUser, faMapMarkerAlt, faBirthdayCake, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { faSave } from '@fortawesome/free-regular-svg-icons';
+import { faSave, faUnlockAlt, faCogs, faUser, faMapMarkerAlt, faBirthdayCake, faCheck } from '@fortawesome/free-solid-svg-icons';
 import FormButton from '@/components/form/button.vue';
 import FormInput from '@/components/form/input.vue';
 import FormTextarea from '@/components/form/textarea.vue';

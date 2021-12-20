@@ -143,6 +143,15 @@ hr {
 	left: 0;
 	width: 100%;
 	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	backdrop-filter: var(--modalBgFilter);
+	-webkit-backdrop-filter: var(--modalBgFilter);
+
+	&._transparent {
+		background-color: transparent;
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
+	}
 }
 
 ._shadow {

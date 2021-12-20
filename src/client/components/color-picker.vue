@@ -1,5 +1,5 @@
 <template>
-<MkModal ref="modal" :src="src" @click="$refs.modal.close()" @closed="$emit('closed')">
+<MkModal ref="modal" :src="src" @click="$refs.modal.close()" @closed="$emit('closed')" transparent>
 	<div class="col39a0m _popup">
 		<!-- <MkTab v-model:value="mode">
 			<option value="rgba">RGBA</option>

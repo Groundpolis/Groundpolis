@@ -151,7 +151,7 @@
 
 <script lang="ts">
 import { defineAsyncComponent, defineComponent, markRaw } from 'vue';
-import { faSatelliteDish, faBolt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteRight, faPlug, faExclamationCircle, faPaperclip, faUsers, faGlobe, faHeart as faHeartS, faAlignLeft, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { faSatelliteDish, faBolt, faTimes, faBullhorn, faStar, faLink, faExternalLinkSquareAlt, faPlus, faMinus, faRetweet, faReply, faReplyAll, faEllipsisH, faHome, faUnlock, faEnvelope, faThumbtack, faBan, faQuoteRight, faPlug, faExclamationCircle, faPaperclip, faUsers, faGlobe, faHeart as faHeartS, faAlignLeft, faBookmark, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { faCopy, faTrashAlt, faEdit, faEye, faEyeSlash, faHeart as faHeartR, faMehRollingEyes, faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import { sum } from '../../prelude/array';
 import * as mfm from 'mfm-js';
@@ -771,6 +771,12 @@ export default defineComponent({
 					}]
 					: []
 				),
+				...(this.appearNote.text ? [{
+						icon: faClipboardList,
+						text: this.$ts._template.registerAs,
+						action: this.registerAsTemplate,
+					}] : []
+				),
 				...(this.appearNote.userId != this.$i.id ? [
 					null,
 					{
@@ -974,6 +980,32 @@ export default defineComponent({
 			const u = this.appearNote.uri || this.appearNote.url || `${url}/notes/${this.appearNote.id}`;
 			const text = this.appearNote.text + (rule === 3 ? '\n\n' + u : '');
 			os.createNoteInstantly(text, this.appearNote.cw, this.appearNote.visibility);
+		},
+
+		async registerAsTemplate() {
+			if (!this.appearNote.text) return;
+
+			os.dialog({
+				title: this.$ts._template.inputLabel,
+				text: this.$ts._template.labelDesc,
+				input:  {
+					default: '',
+				},
+				autoComplete: true
+			}).then(({ canceled, result }) => {
+				if (canceled) return;
+				this.$store.set('templates', [
+					...this.$store.state.templates,
+					{
+						label: result,
+						body: this.appearNote.text,
+					}
+				]);
+				os.dialog({
+					type: 'success',
+					body: this.$ts.added,
+				});
+			});
 		},
 
 		focus() {

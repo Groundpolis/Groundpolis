@@ -105,12 +105,14 @@ export class Autocomplete {
 		const hashtagIndex = text.lastIndexOf('#');
 		const emojiIndex = text.lastIndexOf(':');
 		const fnIndex = text.lastIndexOf('$');
+		const templateIndex = text.lastIndexOf('.');
 
 		const max = Math.max(
 			mentionIndex,
 			hashtagIndex,
 			emojiIndex,
-			fnIndex
+			fnIndex,
+			templateIndex
 		);
 
 		if (max == -1) {
@@ -122,6 +124,7 @@ export class Autocomplete {
 		const isHashtag = hashtagIndex != -1;
 		const isEmoji = emojiIndex != -1;
 		const isFn = fnIndex != -1;
+		const isTemplate = templateIndex != -1;
 
 		let opened = false;
 
@@ -156,6 +159,14 @@ export class Autocomplete {
 			const fn = text.substr(fnIndex + 1);
 			if (!fn.includes(' ')) {
 				this.open('fn', fn.replace('[', ''));
+				opened = true;
+			}
+		}
+
+		if (isTemplate && !opened) {
+			const template = text.substr(templateIndex + 1);
+			if (!template.includes(' ')) {
+				this.open('template', template);
 				opened = true;
 			}
 		}
@@ -305,6 +316,22 @@ export class Autocomplete {
 				this.textarea.focus();
 				const pos = trimmedBefore.length + (2 + value.length + 1);
 				console.log(pos);
+				this.textarea.setSelectionRange(pos, pos);
+			});
+		} else if (type == 'template') {
+			const source = this.text;
+
+			const before = source.substr(0, caret);
+			const trimmedBefore = before.substring(0, before.lastIndexOf('.'));
+			const after = source.substr(caret);
+
+			// 挿入
+			this.text = trimmedBefore + value + after;
+
+			// キャレットを戻す
+			this.vm.$nextTick(() => {
+				this.textarea.focus();
+				const pos = trimmedBefore.length + value.length;
 				this.textarea.setSelectionRange(pos, pos);
 			});
 		}

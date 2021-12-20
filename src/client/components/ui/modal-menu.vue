@@ -1,5 +1,5 @@
 <template>
-<MkModal ref="modal" :src="src" @click="$refs.modal.close()" @closed="$emit('closed')">
+<MkModal ref="modal" :src="src" @click="$refs.modal.close()" @closed="$emit('closed')" transparent>
 	<MkMenu :items="items" :align="align" @close="$refs.modal.close()" class="_popup"/>
 </MkModal>
 </template>

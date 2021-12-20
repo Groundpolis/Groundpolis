@@ -1,7 +1,7 @@
 import { Component, defineAsyncComponent } from 'vue';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-import { faPalette, faPlug, faUser, faListUl, faLock, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish, faCommentSlash, faMagic, faColumns, faStream, faDownload, faFolderOpen, faInfoCircle, faCloud, faSyncAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { faPalette, faPlug, faUser, faListUl, faLock, faMusic, faCogs, faEllipsisH, faBan, faShareAlt, faLockOpen, faKey, faBoxes, faFlask, faFish, faCommentSlash, faMagic, faColumns, faStream, faDownload, faFolderOpen, faInfoCircle, faCloud, faSyncAlt, faGlobe, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { faLaugh, faBell, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faCss3Alt } from '@fortawesome/free-brands-svg-icons';
 
@@ -120,6 +120,13 @@ export const pages: PageDefinition[] = [
 		title: ts.gacha,
 		type: 'client',
 		component: () => defineAsyncComponent(() => import('./gacha.vue')),
+	},
+	{
+		name: 'template',
+		icon: faClipboardList,
+		title: ts.template,
+		type: 'client',
+		component: () => defineAsyncComponent(() => import('./template.vue')),
 	},
 	{
 		name: 'import-export',

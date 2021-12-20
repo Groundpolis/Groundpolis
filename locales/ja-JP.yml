@@ -884,6 +884,21 @@ legacyWebkitCompatibleModeDialogText: "GroundpolisはiOS 14以前では正常に
 makeReactionsPublic: "リアクション一覧を公開する"
 makeReactionsPublicDescription: "あなたがしたリアクション一覧を誰でも見れるようにします。"
 accountDeletionInProgress: "アカウントの削除が進行中です"
+template: "定型文"
+deleteMode: "削除モード"
+added: "追加しました。"
+
+_template:
+  edit: "定型文を編集…"
+  insert: "定型文を挿入"
+  desc: "定型文を使うと、素早くノートを作成できます。よく使う言葉を登録しておきましょう。"
+  nothing: "まだ定型文はありません。"
+  label: "ラベル"
+  labelDesc: "ラベルは定型文に付ける短い名前です。このラベルは入力補完機能に使われるので、半角英数字のみを使うことをおすすめします。"
+  body: "本文"
+  info: "投稿フォームなどで「.」と入力すると、作成した定型文をすぐに挿入できます。"
+  registerAs: "定型文として登録"
+  inputLabel: "ラベルを入力してください"
 
 _plugin:
   install: "プラグインのインストール"
