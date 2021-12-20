@@ -113,15 +113,18 @@ export default defineComponent({
 					label: this.$ts._template.label,
 					description: this.$ts._template.labelDesc,
 					default: '',
+					required: true,
 				},
 				body: {
 					type: 'string',
 					label: this.$ts._template.body,
 					default: '',
 					multiline: true,
+					required: true,
 				},
 			});
 			if (canceled) return;
+			if (!result.label || !result.body) return;
 
 			const newData: Template = {
 				label: result.label,
@@ -140,15 +143,18 @@ export default defineComponent({
 					label: this.$ts._template.label,
 					description: this.$ts._template.labelDesc,
 					default: template.label,
+					required: true,
 				},
 				body: {
 					type: 'string',
 					label: this.$ts._template.body,
 					default: template.body,
 					multiline: true,
+					required: true,
 				},
 			});
 			if (canceled) return;
+			if (!result.label || !result.body) return;
 
 			const newData: Template = {
 				label: result.label,
