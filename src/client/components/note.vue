@@ -992,6 +992,7 @@ export default defineComponent({
 				autoComplete: true
 			}).then(({ canceled, result }) => {
 				if (canceled) return;
+				if (!result) return;
 				this.$store.set('templates', [
 					...this.$store.state.templates,
 					{
@@ -1001,7 +1002,7 @@ export default defineComponent({
 				]);
 				os.dialog({
 					type: 'success',
-					body: this.$ts.added,
+					text: this.$ts.added,
 				});
 			});
 		},
