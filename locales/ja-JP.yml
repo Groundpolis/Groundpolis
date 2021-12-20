@@ -899,6 +899,10 @@ _template:
   info: "投稿フォームなどで「.」と入力すると、作成した定型文をすぐに挿入できます。"
   registerAs: "定型文として登録"
   inputLabel: "ラベルを入力してください"
+  data: "定型文データ"
+  overwriteMode: "上書きモード"
+  overwriteModeDesc: "オンにすると、既存の定型文を全て削除した上で読み込みます。"
+  exportDesc: "このデータをインポート時に貼り付けます。"
 
 _plugin:
   install: "プラグインのインストール"
