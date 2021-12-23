@@ -6,7 +6,7 @@
 			<section class="result">
 				<div v-if="searchResultCustom.length > 0">
 					<button v-for="emoji in searchResultCustom"
-						class="_button"
+						class="_button emojiButton"
 						:title="emoji.name"
 						@click="chosen(emoji, $event)"
 						:key="emoji"
@@ -18,7 +18,7 @@
 				</div>
 				<div v-if="searchResultUnicode.length > 0">
 					<button v-for="emoji in searchResultUnicode"
-						class="_button"
+						class="_button emojiButton"
 						:title="emoji.name"
 						@click="chosen(emoji, $event)"
 						:key="emoji.name"
@@ -33,7 +33,7 @@
 				<section v-if="showPinned && !$store.state.emojiPickerHidePinnedEmojis">
 					<div>
 						<button v-for="emoji in pinned"
-							class="_button"
+							class="_button emojiButton"
 							@click="chosen(emoji, $event)"
 							tabindex="0"
 						>
@@ -46,7 +46,7 @@
 					<header class="_acrylic"><Fa :icon="faClock" fixed-width/> {{ $ts.recentUsed }}</header>
 					<div>
 						<button v-for="emoji in $store.state.recentlyUsedEmojis"
-							class="_button"
+							class="_button emojiButton"
 							@click="chosen(emoji, $event)"
 							:key="emoji"
 						>
@@ -60,7 +60,7 @@
 				<header class="_acrylic" v-appear="() => visibleCategories[category] = true">{{ category || $ts.other }}</header>
 				<div v-if="visibleCategories[category]">
 					<button v-for="emoji in customEmojis.filter(e => e.category === category)"
-						class="_button"
+						class="_button emojiButton"
 						:title="emoji.name"
 						@click="chosen(emoji, $event)"
 						:key="emoji.name"
@@ -74,7 +74,7 @@
 				<header class="_acrylic" v-appear="() => category.isActive = true"><Fa :icon="category.icon" fixed-width/> {{ category.name }}</header>
 				<div v-if="category.isActive">
 					<button v-for="emoji in emojilist.filter(e => e.category === category.name)"
-						class="_button"
+						class="_button emojiButton"
 						:title="emoji.name"
 						@click="chosen(emoji, $event)"
 						:key="emoji.name"
@@ -527,6 +527,10 @@ export default defineComponent({
 
 			&.custom {
 				min-height: 64px;
+			}
+
+			.emojiButton {
+				overflow: hidden;
 			}
 		}
 	}
