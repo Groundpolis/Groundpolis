@@ -30,7 +30,7 @@ export default defineComponent({
 	emits: ['closed', 'chosen'],
 	data() {
 		return {
-			templates: this.$store.state.templates,
+			templates: this.$store.state.templateList,
 		}
 	},
 	computed: {

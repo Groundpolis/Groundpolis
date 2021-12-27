@@ -1008,8 +1008,8 @@ export default defineComponent({
 			}).then(({ canceled, result }) => {
 				if (canceled) return;
 				if (!result) return;
-				this.$store.set('templates', [
-					...this.$store.state.templates,
+				this.$store.set('templateList', [
+					...this.$store.state.templateList,
 					{
 						label: result,
 						body: this.appearNote.text,

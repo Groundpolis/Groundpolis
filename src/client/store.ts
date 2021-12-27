@@ -338,6 +338,11 @@ export const defaultStore = markRaw(new Storage('base', {
 		default: [] as Template[],
 	},
 
+	templateList: {
+		where: 'account',
+		default: [] as Template[],
+	},
+
 	useDefaultNoteVisibilityOnRenote: {
 		where: 'account',
 		default: false

@@ -329,7 +329,7 @@ export default defineComponent({
 			} else if (this.type === 'fn') {
 				this.functions = Object.keys(mfmFunctions).filter(f => !this.q || f.startsWith(this.q));
 			} else if (this.type === 'template') {
-				this.templates = this.$store.state.templates.filter(f => !this.q || f.label.startsWith(this.q));
+				this.templates = this.$store.state.templateList.filter(f => !this.q || f.label.startsWith(this.q));
 			}
 		},
 

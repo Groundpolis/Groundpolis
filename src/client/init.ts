@@ -94,14 +94,21 @@ if (_DEV_) {
 	});
 }
 
+// マイグレーション（templates→templateList）
+// templatesを間違えてdeviceAccountでもってしまったので
+const { templates: oldList, templateList: newList } = defaultStore.state;
+if (oldList.length > 0) { 
+	const newListLabels = new Set(newList.map(t => t.label));
+	const toAdd = oldList.filter(t => !newListLabels.has(t.label));
+	defaultStore.set('templateList', [...newList, ...toAdd]);
+	defaultStore.set('templates', []);
+}
+
 const pattern = /iPhone OS (\d+)/;
 
 const matched = navigator.userAgent.match(pattern);
 
 const iOSVersion = !matched ? null : parseInt(matched[1]);
-
-console.log(`UA: ${navigator.userAgent}`);
-console.log(`iOS Version ${iOSVersion}`);
 
 if (iOSVersion && iOSVersion < 15 && !legacyWebkitCompatibleMode) {
 	dialog({

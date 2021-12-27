@@ -85,7 +85,7 @@ export default defineComponent({
 	data() {
 		return {
 			isDesktop: window.innerWidth >= 1100,
-			templates: this.$store.reactiveState.templates.value.map(v => ({ ...v })),
+			templates: this.$store.state.templateList.map(v => ({ ...v })),
 			isDeleteMode: false,
 			tab: 'manage',
 			importText: '',
@@ -132,7 +132,7 @@ export default defineComponent({
 			};
 
 			this.templates.push(newData);
-			this.$store.set('templates', [...this.templates]);
+			this.$store.set('templateList', [...this.templates]);
 
 		},
 		async edit(template: Template) {
@@ -162,7 +162,7 @@ export default defineComponent({
 			};
 
 			this.templates[templateIndex] = newData;
-			this.$store.set('templates', [...this.templates]);
+			this.$store.set('templateList', [...this.templates]);
 		},
 		async del(template: Template) {
 			const { canceled } = await os.dialog({
@@ -175,7 +175,7 @@ export default defineComponent({
 			if (this.templates.length === 0) {
 				this.isDeleteMode = false;
 			}
-			this.$store.set('templates', [...this.templates]);
+			this.$store.set('templateList', [...this.templates]);
 		},
 		async importData() {
 			try {
@@ -202,7 +202,7 @@ export default defineComponent({
 				}));
 
 				this.templates = tmp;
-				this.$store.set('templates', [...tmp]);
+				this.$store.set('templateList', [...tmp]);
 				await os.dialog({
 					type: 'success',
 					text: this.$ts.added,
