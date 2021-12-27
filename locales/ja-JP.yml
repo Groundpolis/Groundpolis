@@ -891,6 +891,7 @@ useDefaultNoteVisibilityOnRenote: "リノートにデフォルトの公開範囲
 defaultRenoteVisibility: "デフォルトの公開範囲 (リノート)"
 defaultRenoteLocalOnly: "ローカルのみ (リノート)"
 defaultRenoteRemoteFollowersOnly: "リモートフォロワーとローカル (リノート)"
+welcomeBack: "おかえりなさい、{x}さん。"
 
 _template:
   edit: "定型文を編集…"

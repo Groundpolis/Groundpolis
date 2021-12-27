@@ -50,7 +50,7 @@ import { router } from '@/router';
 import { applyTheme } from '@/scripts/theme';
 import { isDeviceDarkmode } from '@/scripts/is-device-darkmode';
 import { i18n } from '@/i18n';
-import { stream, isMobile, dialog, post, getAccounts } from '@/os';
+import { stream, isMobile, dialog, post, getAccounts, notify } from '@/os';
 import * as sound from '@/scripts/sound';
 import { $i, refreshAccount, login, updateAccount, signout } from '@/account';
 import { defaultStore, ColdDeviceStorage } from '@/store';
@@ -419,3 +419,7 @@ if ($i) {
 		signout();
 	});
 }
+
+notify({
+	body: `**${i18n.t('welcomeBack', { x: `:@${$i.username}:  ${$i.name || $i.username}`})}**`,
+});

@@ -1,6 +1,6 @@
 <template>
 <div class="qglefbjs" :class="[ notification.type, { compact: isCompactMode } ]" v-size="{ max: [500, 600] }">
-	<div class="head">
+	<div class="head" v-if="notification.type !== 'system'">
 		<MkAvatar v-if="notification.user" class="icon" :user="notification.user"/>
 		<img v-else-if="notification.icon" class="icon" :src="notification.icon" alt=""/>
 		<div class="sub-icon" :class="notification.type !== 'reaction' || !$store.reactiveState.disableReactions.value ? notification.type : 'like'">
@@ -22,7 +22,7 @@
 	<div class="tail">
 		<header>
 			<MkA v-if="notification.user" class="name" :to="userPage(notification.user)" v-user-preview="notification.user.id"><MkUserName :user="notification.user"/></MkA>
-			<span v-else>{{ notification.header }}</span>
+			<span v-else style="font-weight: bold">{{ notification.header }}</span>
 			<MkTime :time="notification.createdAt" v-if="withTime" class="time"/>
 		</header>
 		<MkA v-if="notification.type === 'reaction'" class="text" :to="notePage(notification.note)" :title="getNoteSummary(notification.note)">
@@ -71,7 +71,7 @@
 				<button class="_textButton" @click="rejectGroupInvitation()">{{ $ts.reject }}</button>
 			</div>
 		</span>
-		<span v-if="notification.type === 'app'" class="text">
+		<span v-if="notification.type === 'app' || notification.type === 'system'" class="text">
 			<Mfm :text="notification.body" :nowrap="!full"/>
 		</span>
 	</div>
@@ -131,27 +131,29 @@ export default defineComponent({
 	},
 
 	mounted() {
-		if (!this.notification.isRead) {
-			this.readObserver = new IntersectionObserver((entries, observer) => {
-				if (!entries.some(entry => entry.isIntersecting)) return;
-				os.stream.send('readNotification', {
-					id: this.notification.id
-				});
-				entries.map(({ target }) => observer.unobserve(target));
+		if (this.notification.isRead) return;
+		if (this.notification.type === 'system') return;
+
+		this.readObserver = new IntersectionObserver((entries, observer) => {
+			if (!entries.some(entry => entry.isIntersecting)) return;
+			os.stream.send('readNotification', {
+				id: this.notification.id
 			});
+			entries.map(({ target }) => observer.unobserve(target));
+		});
 
-			this.readObserver.observe(this.$el);
+		this.readObserver.observe(this.$el);
 
-			this.connection = os.stream.useSharedConnection('main');
-			this.connection.on('readAllNotifications', () => this.readObserver.unobserve(this.$el));
-		}
+		this.connection = os.stream.useSharedConnection('main');
+		this.connection.on('readAllNotifications', () => this.readObserver.unobserve(this.$el));
 	},
 
 	beforeUnmount() {
-		if (!this.notification.isRead) {
-			this.readObserver.unobserve(this.$el);
-			this.connection.dispose();
-		}
+		if (this.notification.isRead) return;
+		if (this.notification.type === 'system') return;
+
+		this.readObserver.unobserve(this.$el);
+		this.connection.dispose();
 	},
 
 	methods: {

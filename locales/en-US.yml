@@ -854,6 +854,7 @@ useDefaultNoteVisibilityOnRenote: "Apply default visibility for Renote"
 defaultRenoteVisibility: "Default visibility (Renote)"
 defaultRenoteLocalOnly: "Local Only (Renote)"
 defaultRenoteRemoteFollowersOnly: "Remote Followers and Local (Renote)"
+welcomeBack: "Welome back, {x}."
 
 _template:
   edit: "Edit Template..."

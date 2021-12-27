@@ -12,6 +12,8 @@ import parseAcct from '../misc/acct/parse';
 import { $i } from './account';
 import * as Account from './account';
 import { defaultStore } from './store';
+import { genAid } from '../misc/id/aid';
+import * as sound from '@/scripts/sound';
 
 const ua = navigator.userAgent.toLowerCase();
 export const isMobile = /mobile|iphone|ipad|android/.test(ua);
@@ -511,6 +513,29 @@ export async function getAccounts() {
 	}
 	
 	return Object.freeze([...accounts]);
+}
+
+export async function notify(opts: SystemNotificationsOptions) { 
+	const now = new Date();
+	popup(import('@/components/toast.vue'), {
+		notification: {
+			id: 'system',
+			isRead: true,
+			createdAt: now,
+			type: 'system',
+			header: opts.title,
+			body: opts.body,
+		},
+	}, {}, 'closed');
+	if (opts.withSound) { 
+		sound.play('notification');
+	}
+}
+
+export interface SystemNotificationsOptions { 
+	title?: string;
+	body: string;
+	withSound?: boolean;
 }
 
 /*

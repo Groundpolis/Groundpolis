@@ -40,14 +40,15 @@ export default defineComponent({
 }
 .notification-slide-enter-from, .notification-slide-leave-to {
 	opacity: 0;
-	transform: translateX(-250px);
+	transform: translateX(250px);
 }
 
 .mk-toast {
 	position: fixed;
 	z-index: 10000;
-	left: 0;
-	width: 250px;
+	right: 0;
+	min-width: 250px;
+	width: fit-content;
 	top: 32px;
 	padding: 0 32px;
 	pointer-events: none;

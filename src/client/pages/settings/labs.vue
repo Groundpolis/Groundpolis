@@ -26,6 +26,7 @@
 	<FormLink to="experimental-features">
 		{{ $ts.experimentalFeatures }} (Misskey)
 	</FormLink>
+	<FormButton @click="sendSystemNotification">Send System Notification</FormButton>
 </FormBase>
 </template>
 
@@ -35,14 +36,17 @@ import { defineComponent } from 'vue';
 import FormBase from '@/components/form/base.vue';
 import FormLink from '@/components/form/link.vue';
 import FormSwitch from '@/components/form/switch.vue';
+import FormButton from '@/components/form/button.vue';
 import MkLink from '@/components/link.vue';
 import { defaultStore } from '@/store';
+import { notify } from '@/os';
 
 export default defineComponent({
 	components: {
 		FormBase,
 		FormLink,
 		FormSwitch,
+		FormButton,
 		MkLink,
 	},
 
@@ -55,6 +59,12 @@ export default defineComponent({
 	},
 
 	methods: {
+		sendSystemNotification() {
+			notify({
+				// title: '',
+				body: `**おかえりなさい、:@${this.$i.username}:  ${this.$i.name || this.$i.username}さん**`
+			});
+		},
 	},
 });
 </script>
