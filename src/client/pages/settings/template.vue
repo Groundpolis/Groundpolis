@@ -137,7 +137,7 @@ export default defineComponent({
 		},
 		async edit(template: Template) {
 			const templateIndex = this.templates.findIndex(t => t.label === template.label);
-			const { canceled, result } = await os.form(this.$ts.createNew, {
+			const { canceled, result } = await os.form(this.$ts.edit, {
 				label: {
 					type: 'string',
 					label: this.$ts._template.label,
