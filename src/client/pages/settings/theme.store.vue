@@ -96,7 +96,6 @@ export default defineComponent({
 			_theme.props = Object.assign({}, base.props, _theme.props);
 			try {
 				const compiled = compile(_theme);
-				console.log(compiled);
 				return Object.entries(compiled).map(([key, value]) => `--${key}: ${value};`).join('');
 			} catch (err) {
 				console.error(err);

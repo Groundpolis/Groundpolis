@@ -66,7 +66,6 @@ export class Autocomplete {
 				}
 			}
 		}
-		console.log(this.textarea);
 		this.vm = vm;
 		this.opts = opts;
 		this.opening = false;
@@ -315,7 +314,6 @@ export class Autocomplete {
 			nextTick(() => {
 				this.textarea.focus();
 				const pos = trimmedBefore.length + (2 + value.length + 1);
-				console.log(pos);
 				this.textarea.setSelectionRange(pos, pos);
 			});
 		} else if (type == 'template') {

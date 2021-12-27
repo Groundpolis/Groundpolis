@@ -60,7 +60,6 @@ export default defineComponent({
 			};
 		},
 		popup(): boolean {
-			console.log(this.src);
 			return this.src != null;
 		}
 	},

@@ -105,7 +105,6 @@ export default defineComponent({
 		const connections = shallowRef([]);
 		const pools = shallowRef([]);
 		const refreshStreamInfo = () => {
-			console.log(os.stream.sharedConnectionPools, os.stream.sharedConnections, os.stream.nonSharedConnections);
 			const conn = os.stream.sharedConnections.map(c => ({
 				id: c.id, name: c.name, channel: c.channel, users: c.pool.users, in: c.inCount, out: c.outCount,
 			})).concat(os.stream.nonSharedConnections.map(c => ({

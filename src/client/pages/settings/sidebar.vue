@@ -73,7 +73,6 @@ export default defineComponent({
 	watch: {
 		items: {
 			handler() {
-				console.log('save');
 				this.save();
 			},
 			deep: true,

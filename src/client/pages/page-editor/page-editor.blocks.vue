@@ -66,7 +66,6 @@ export default defineComponent({
 		},
 
 		removeItem(el) {
-			console.log(el);
 			const i = this.blocks.findIndex(x => x.id === el.id);
 			const newValue = [
 				...this.blocks.slice(0, i),

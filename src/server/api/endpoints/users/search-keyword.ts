@@ -55,8 +55,6 @@ export default define(meta, async (ps, me) => {
 	const query = makePaginationQuery(Users.createQueryBuilder('user'), ps.sinceId, ps.untilId)
 		.andWhere('user.isSuspended = FALSE');
 	
-	console.log(`trimmed: ${trimmed}`);
-
 	for (const word of trimmed.split(/\s+/)) {
 		query.andWhere(new Brackets(qb => {
 			const q = `%${word}%`;

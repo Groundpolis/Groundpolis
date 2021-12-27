@@ -50,7 +50,6 @@ export default defineComponent({
 			sizeWaiting.value = true;
 			window.requestAnimationFrame(() => {
 				sizeWaiting.value = false;
-				console.log(gridOuter.value);
 				if (gridOuter.value) {
 					let height = 287;
 					if (gridOuter.value.clientHeight) {

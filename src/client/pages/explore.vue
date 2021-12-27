@@ -217,7 +217,6 @@ export default defineComponent({
 	},
 
 	mounted() {
-		console.log('mode is ' + this.mode);
 		this.tab = this.mode;
 	},
 
