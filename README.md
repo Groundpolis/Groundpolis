@@ -17,7 +17,7 @@ Check the latest information on the official account (sorry but only Japanese).
 
 Documentation
 ---------
-Documents for developers and server owners are at the Wiki.
+Documents for developers and server owners are at the [Wiki](https://github.com/Groundpolis/Groundpolis/wiki).
 
 License
 --------

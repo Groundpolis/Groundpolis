@@ -17,7 +17,7 @@ Groundpolis (通称グランポリス)は、 [Misskey](https://github.com/misske
 
 文書
 --------
-開発者、サーバー運用者向けドキュメントはWikiにあります。
+開発者、サーバー運用者向けドキュメントは[Wiki](https://github.com/Groundpolis/Groundpolis/wiki)にあります。
 
 ライセンス
 --------
