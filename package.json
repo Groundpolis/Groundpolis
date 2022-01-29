@@ -206,7 +206,7 @@
 		"pg": "8.7.1",
 		"photoswipe": "git://github.com/dimsemenov/photoswipe#v5-beta",
 		"portscanner": "2.2.0",
-		"postcss": "8.2.10",
+		"postcss": "8.2.13",
 		"postcss-loader": "5.0.0",
 		"prismjs": "1.25.0",
 		"private-ip": "2.2.1",
