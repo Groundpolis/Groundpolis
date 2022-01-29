@@ -15,6 +15,10 @@ Groundpolis (通称グランポリス)は、 [Misskey](https://github.com/misske
 最新情報を Groundpolis 公式アカウントで呟いています。
 - [@dev@groundpolis.app](https://groundpolis.app/@dev)
 
+文書
+--------
+開発者、サーバー運用者向けドキュメントはWikiにあります。
+
 ライセンス
 --------
 

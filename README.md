@@ -12,8 +12,12 @@ Groundpolis is a [Misskey](https://github.com/syuilo/misskey) 12.69.0 based micr
 
 News
 --------
-Check the latest information on the official account.
+Check the latest information on the official account (sorry but only Japanese).
 - [@dev@groundpolis.app](https://groundpolis.app/@dev)
+
+Documentation
+---------
+Documents for developers and server owners are at the Wiki.
 
 License
 --------
