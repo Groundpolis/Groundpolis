@@ -188,7 +188,7 @@
 		"langmap": "0.0.16",
 		"lookup-dns-cache": "2.1.0",
 		"markdown-it": "12.3.2",
-		"markdown-it-anchor": "7.0.1",
+		"markdown-it-anchor": "8.4.1",
 		"matter-js": "0.16.1",
 		"mfm-js": "Groundpolis/gpfm.js#1.0.3",
 		"mocha": "9.2.1",
