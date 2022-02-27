@@ -635,10 +635,10 @@
   resolved "https://registry.yarnpkg.com/@types/jsonld/-/jsonld-1.5.2.tgz#6de5589f72a73be07f2d0a99a39337f4c4518a78"
   integrity sha512-e6mgulD3RB3lrjGN6Vvu3ixpRSZ2Qwvsm0oSQIuHsAQUvRklrqnmvKNNyXcQTh/PbB+TrHVVmdLHeYFCH52QnA==
 
-"@types/katex@0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@types/katex/-/katex-0.11.0.tgz#b16c54ee670925ffef0616beae9e90c557e17334"
-  integrity sha512-27BfE8zASRLYfSBNMk5/+KIjr2CBBrH0i5lhsO04fca4TGirIIMay73v3zNkzqmsaeIa/Mi5kejWDcxPLAmkvA==
+"@types/katex@0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@types/katex/-/katex-0.11.1.tgz#34de04477dcf79e2ef6c8d23b41a3d81f9ebeaf5"
+  integrity sha512-DUlIj2nk0YnJdlWgsFuVKcX27MLW0KbKmGVoUHmFr+74FYYNUDAaj9ZqTADvsbE8rfxuVmSFc7KczYn5Y09ozg==
 
 "@types/keygrip@*":
   version "1.0.2"
