@@ -1,15 +1,16 @@
 {
-	"name": "groundpolis",
+	"name": "meipolis",
 	"version": "2021.12.2",
 	"private": true,
-	"author": "Xeltica <xeltica@gmail.com>",
+	"author": "MeiMei <m@m544.net>",
 	"contributors": [
+		"Xeltica <xeltica@gmail.com>",
 		"syuilo <syuilotan@yahoo.co.jp>"
 	],
 	"codename": "sonic",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/groundpolis/groundpolis.git"
+		"url": "https://github.com/mei23/groundpolis.git"
 	},
 	"scripts": {
 		"bs": "npm run build && npm run start",
