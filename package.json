@@ -268,7 +268,7 @@
 		"vue-router": "4.0.12",
 		"vue-style-loader": "4.1.2",
 		"vuedraggable": "4.0.1",
-		"web-push": "3.4.4",
+		"web-push": "3.4.5",
 		"webpack": "5.21.1",
 		"webpack-cli": "4.5.0",
 		"websocket": "1.0.33",
