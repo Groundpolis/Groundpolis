@@ -271,7 +271,7 @@
 		"web-push": "3.4.5",
 		"webpack": "5.21.1",
 		"webpack-cli": "4.5.0",
-		"websocket": "1.0.33",
+		"websocket": "1.0.34",
 		"ws": "7.4.6",
 		"xev": "2.0.1"
 	},
