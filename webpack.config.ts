@@ -71,7 +71,7 @@ module.exports = {
 					options: {
 						implementation: require('sass'),
 						sassOptions: {
-							fiber: require('fibers')
+							fiber: false
 						}
 					}
 				}]
@@ -89,7 +89,7 @@ module.exports = {
 					options: {
 						implementation: require('sass'),
 						sassOptions: {
-							fiber: require('fibers')
+							fiber: false
 						}
 					}
 				}]
