@@ -7,7 +7,7 @@ import * as gulp from 'gulp';
 import * as ts from 'gulp-typescript';
 import * as rimraf from 'rimraf';
 import * as rename from 'gulp-rename';
-import * as replace from 'gulp-replace';
+import replace = require('gulp-replace');
 const terser = require('gulp-terser');
 const cssnano = require('gulp-cssnano');
 
