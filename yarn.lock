@@ -1990,10 +1990,10 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
-bootstrap-icons-vue@0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-icons-vue/-/bootstrap-icons-vue-0.7.0.tgz#c09e811f47944449435bcfacb252d27ce95cbe0f"
-  integrity sha512-bxdJB3GKJ1MaJxbMbK8xkM+EADELF1XYx9KLNFZD/k0Rt7Zp+h8h+zKe31npqHPr1UllRThiGxESs3e/EORiRg==
+bootstrap-icons-vue@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-icons-vue/-/bootstrap-icons-vue-0.8.0.tgz#922dfc368e62c85fe9cadad4f3568ce4c2b7bdba"
+  integrity sha512-bFBpTGNN5RtUpSH7zTz3WkZs2UZA7WXSmkwAKsrA7qddjbIQrvoGsu/yNJiAl14eJgZ+rTqmjqSB+0gRlNZEfA==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
