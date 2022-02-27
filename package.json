@@ -128,7 +128,7 @@
 		"bcryptjs": "2.4.3",
 		"blurhash": "1.1.3",
 		"bootstrap-icons-vue": "0.7.0",
-		"bull": "3.20.1",
+		"bull": "4.6.2",
 		"cafy": "15.2.1",
 		"cbor": "6.0.1",
 		"chalk": "4.1.0",
