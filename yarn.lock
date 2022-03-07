@@ -553,10 +553,10 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/gulp-rename@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/gulp-rename/-/gulp-rename-2.0.0.tgz#462ab808c6ebb977b7a9770e0f5cb6cea481a7d9"
-  integrity sha512-bgpP2SYp66vH71kRZWv6+0JgBrET8bXNhKMknPsJH0mS3yHyt7wgvISltmV1b8JaaWMjE76oAMquW1h60De5vw==
+"@types/gulp-rename@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@types/gulp-rename/-/gulp-rename-2.0.1.tgz#c8228fc2c5c4a7500346ea9ce18f27fa988caef5"
+  integrity sha512-9ZjeS2RHEnmBmTcyi2+oeye3BgCsWhvi4uv3qCnAg8i6plOuRdaeNxjOves0ELysEXYLBl7bCl5fbVs7AZtgTA==
   dependencies:
     "@types/node" "*"
     "@types/vinyl" "*"
@@ -1040,15 +1040,7 @@
     "@types/node" "*"
     "@types/vinyl" "*"
 
-"@types/vinyl@*":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@types/vinyl/-/vinyl-2.0.4.tgz#9a7a8071c8d14d3a95d41ebe7135babe4ad5995a"
-  integrity sha512-2o6a2ixaVI2EbwBPg1QYLGQoHK56p/8X/sGfKbFC8N6sY9lfjsMf/GprtkQkSya0D4uRiutRZ2BWj7k3JvLsAQ==
-  dependencies:
-    "@types/expect" "^1.20.4"
-    "@types/node" "*"
-
-"@types/vinyl@^2.0.4":
+"@types/vinyl@*", "@types/vinyl@^2.0.4":
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/@types/vinyl/-/vinyl-2.0.6.tgz#b2d134603557a7c3d2b5d3dc23863ea2b5eb29b0"
   integrity sha512-ayJ0iOCDNHnKpKTgBG6Q6JOnHTj9zFta+3j2b8Ejza0e4cvRyMn0ZoLEmbPrTHe5YYRlDYPvPWVdV4cTaRyH7g==
