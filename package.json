@@ -150,7 +150,7 @@
 		"feed": "4.2.2",
 		"file-type": "16.5.3",
 		"fluent-ffmpeg": "2.1.2",
-		"glob": "7.1.6",
+		"glob": "7.2.0",
 		"got": "11.8.2",
 		"gulp": "4.0.2",
 		"gulp-cssnano": "2.1.3",
