@@ -1,6 +1,6 @@
 import * as cluster from 'cluster';
 import * as chalk from 'chalk';
-import * as dateformat from 'dateformat';
+import { format as dateFormat } from 'date-fns';
 import { program } from '../argv';
 import config from '../config';
 
@@ -57,7 +57,7 @@ export default class Logger {
 			return;
 		}
 
-		const time = dateformat(new Date(), 'HH:MM:ss');
+		const time = dateFormat(new Date(), 'HH:mm:ss');
 		const worker = cluster.isMaster ? '*' : cluster.worker.id;
 		const l =
 			level === 'error' ? important ? chalk.bgRed.white('ERR ') : chalk.red('ERR ') :

@@ -4,7 +4,7 @@ import * as fs from 'fs';
 
 import { queueLogger } from '../../logger';
 import addFile from '../../../services/drive/add-file';
-import dateFormat = require('dateformat');
+import { format as dateFormat } from 'date-fns';
 import { getFullApAccount } from '../../../misc/convert-host';
 import { Users, Blockings } from '../../../models';
 import { MoreThan } from 'typeorm';
@@ -84,7 +84,7 @@ export async function exportBlocking(job: Bull.Job, done: any): Promise<void> {
 	stream.end();
 	logger.succ(`Exported to: ${path}`);
 
-	const fileName = 'blocking-' + dateFormat(new Date(), 'yyyy-mm-dd-HH-MM-ss') + '.csv';
+	const fileName = 'blocking-' + dateFormat(new Date(), 'yyyy-MM-dd-HH-mm-ss') + '.csv';
 	const driveFile = await addFile(user, path, fileName, null, null, true);
 
 	logger.succ(`Exported to: ${driveFile.id}`);
