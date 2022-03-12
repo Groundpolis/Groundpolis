@@ -755,10 +755,10 @@
   dependencies:
     "@types/koa" "*"
 
-"@types/koa__router@8.0.4":
-  version "8.0.4"
-  resolved "https://registry.yarnpkg.com/@types/koa__router/-/koa__router-8.0.4.tgz#0b754a5e5be3262fc649afc7e93800f30cfc5fe0"
-  integrity sha512-SXpZy6ICU/bsTZbNhg7QMNUQuNE7ka94zeLPHXhej2QZ09u2tz5S3WlBRB85HLSUosUZFbIRgfrFtu+PSIAUVA==
+"@types/koa__router@8.0.11":
+  version "8.0.11"
+  resolved "https://registry.yarnpkg.com/@types/koa__router/-/koa__router-8.0.11.tgz#d7b37e6db934fc072ea1baa2ab92bc8ac4564f3e"
+  integrity sha512-WXgKWpBsbS14kzmzD9LeFapOIa678h7zvUHxDwXwSx4ETKXhXLVUAToX6jZ/U7EihM7qwyD9W/BZvB0MRu7MTQ==
   dependencies:
     "@types/koa" "*"
 
