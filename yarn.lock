@@ -8206,16 +8206,6 @@ prismjs@1.27.0:
   resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.27.0.tgz#bb6ee3138a0b438a3653dd4d6ce0cc6510a45057"
   integrity sha512-t13BGPUlFDR7wRB5kQDG4jjl7XeuH6jbJGt11JHPL96qwsEHNX2+68tFXqc1/k+/jALsbSWJKUOT/hcYAZ5LkA==
 
-private-ip@2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/private-ip/-/private-ip-2.3.0.tgz#aa07bf623c60ea75ee5d140814f492648c001717"
-  integrity sha512-3lTFzg+Z1Q2VNQChw8AW2c5LM7getyUJ67SqeWtvnkUO4gihjbf5oIEK4+jAQ4v1sCqOVV7r+GzKrgowW/W3tw==
-  dependencies:
-    ip-regex "^4.3.0"
-    ipaddr.js "^2.0.1"
-    is-ip "^3.1.0"
-    netmask "^2.0.2"
-
 private-ip@2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/private-ip/-/private-ip-2.3.3.tgz#1e80ff8443e5ac78f555631aec3ea6ff027fa6aa"
