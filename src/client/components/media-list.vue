@@ -14,9 +14,9 @@
 
 <script lang="ts">
 import { defineComponent, nextTick, onMounted, onUnmounted, PropType, ref } from 'vue';
-import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js';
-import PhotoSwipe from 'photoswipe/dist/photoswipe.esm.js';
-import 'photoswipe/dist/photoswipe.css';
+import PhotoSwipeLightbox from 'photoswipe/lightbox';
+import PhotoSwipe from 'photoswipe';
+import 'photoswipe/style.css';
 import XBanner from './media-banner.vue';
 import XImage from './media-image.vue';
 import XVideo from './media-video.vue';

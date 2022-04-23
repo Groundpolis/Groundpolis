@@ -203,7 +203,7 @@
 		"parse5": "6.0.1",
 		"parsimmon": "1.18.1",
 		"pg": "8.7.3",
-		"photoswipe": "git://github.com/dimsemenov/photoswipe#v5-beta",
+		"photoswipe": "5.2.4",
 		"portscanner": "2.2.0",
 		"postcss": "8.4.8",
 		"postcss-loader": "5.0.0",

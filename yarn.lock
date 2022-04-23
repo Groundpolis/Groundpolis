@@ -7515,9 +7515,10 @@ pgpass@1.x:
   dependencies:
     split "^1.0.0"
 
-"photoswipe@git://github.com/dimsemenov/photoswipe#v5-beta":
-  version "5.1.7"
-  resolved "git://github.com/dimsemenov/photoswipe#60040164333bd257409669e715e4327afdb3aec7"
+photoswipe@5.2.4:
+  version "5.2.4"
+  resolved "https://registry.yarnpkg.com/photoswipe/-/photoswipe-5.2.4.tgz#918fd64c6b41b6a693743e5d70ee1a59747f491d"
+  integrity sha512-7p+VH7ELUnW9/3rCULCmyXcUCEuZwcsxvxPQYzR4wk3EaXcLCiINMCspc9Qq9AJYNsqYo1qGVL1y1Tch8uKAjw==
 
 picocolors@^1.0.0:
   version "1.0.0"
