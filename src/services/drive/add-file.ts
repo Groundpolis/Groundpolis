@@ -329,7 +329,19 @@ export default async function(
 
 		if (much) {
 			logger.info(`file with same hash is found: ${much.id}`);
-			return much;
+
+			// ファイルに後からsensitiveが付けられたらフラグを上書き
+			if (sensitive && !much.isSensitive) {
+				await DriveFiles.update({
+					id: much.id
+				}, {
+					isSensitive: sensitive
+				});
+
+				return await DriveFiles.findOneOrFail({ id: much.id });
+			} else {
+				return much;
+			}
 		}
 	}
 
