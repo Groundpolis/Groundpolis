@@ -3,7 +3,6 @@ import { DriveFile } from '../entities/drive-file';
 import { Users, DriveFolders } from '..';
 import { User } from '../entities/user';
 import { toPuny } from '../../misc/convert-host';
-import { ensure } from '../../prelude/ensure';
 import { awaitAll } from '../../prelude/await-all';
 import { SchemaType } from '../../misc/schema';
 import config from '../../config';
@@ -12,6 +11,12 @@ import { Meta } from '../entities/meta';
 import { fetchMeta } from '../../misc/fetch-meta';
 
 export type PackedDriveFile = SchemaType<typeof packedDriveFileSchema>;
+
+type PackOptions = {
+	detail?: boolean,
+	self?: boolean,
+	withUser?: boolean,
+};
 
 @EntityRepository(DriveFile)
 export class DriveFileRepository extends Repository<DriveFile> {
@@ -90,20 +95,19 @@ export class DriveFileRepository extends Repository<DriveFile> {
 		return parseInt(sum, 10) || 0;
 	}
 
+	public async pack(src: DriveFile['id'], options?: PackOptions): Promise<PackedDriveFile | null>;
+	public async pack(src: DriveFile, options?: PackOptions): Promise<PackedDriveFile>;
 	public async pack(
 		src: DriveFile['id'] | DriveFile,
-		options?: {
-			detail?: boolean,
-			self?: boolean,
-			withUser?: boolean,
-		}
-	): Promise<PackedDriveFile> {
+		options?: PackOptions
+	): Promise<PackedDriveFile | null> {
 		const opts = Object.assign({
 			detail: false,
 			self: false
 		}, options);
 
-		const file = typeof src === 'object' ? src : await this.findOne(src).then(ensure);
+		const file = typeof src === 'object' ? src : await this.findOne(src);
+		if (file == null) return null;
 
 		const meta = await fetchMeta();
 
@@ -129,15 +133,12 @@ export class DriveFileRepository extends Repository<DriveFile> {
 		});
 	}
 
-	public packMany(
-		files: (DriveFile['id'] | DriveFile)[],
-		options?: {
-			detail?: boolean
-			self?: boolean,
-			withUser?: boolean,
-		}
-	): Promise<PackedDriveFile[]> {
-		return Promise.all(files.map(f => this.pack(f, options)));
+	public async packMany(
+		files: any[],
+		options?: PackOptions
+	) {
+		const items = await Promise.all(files.map(f => this.pack(f, options)));
+		return items.filter(x => x != null);
 	}
 }
 

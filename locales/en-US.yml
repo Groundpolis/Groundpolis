@@ -62,7 +62,7 @@ import: "Import"
 export: "Export"
 files: "Files"
 download: "Download"
-driveFileDeleteConfirm: 'If you delete this file, the related notes, pages, clips, and other content will also be deleted. Do you still want to delete the file "{name}"?'
+driveFileDeleteConfirm: 'If you delete this file, the related pages, clips, and other content will also be deleted. Do you still want to delete the file "{name}"?'
 unfollowConfirm: "Are you sure that you want to unfollow {name}?"
 exportRequested: "You have requested an export. This may take a while. After the export is complete, the resulting file will be added to the drive."
 importRequested: "You requested an import. This may take a while."
