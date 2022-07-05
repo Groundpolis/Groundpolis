@@ -274,7 +274,7 @@
 		"xev": "2.0.1"
 	},
 	"devDependencies": {
-		"@types/chai": "4.3.0",
+		"@types/chai": "4.3.1",
 		"@types/fluent-ffmpeg": "2.1.20",
 		"chai": "4.3.6",
 		"cross-env": "7.0.3",
