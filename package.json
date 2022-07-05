@@ -260,7 +260,7 @@
 		"vanilla-tilt": "1.7.0",
 		"vue": "3.2.31",
 		"vue-color": "2.8.1",
-		"vue-json-pretty": "1.7.1",
+		"vue-json-pretty": "2.1.1",
 		"vue-loader": "17.0.0",
 		"vue-prism-editor": "2.0.0-alpha.2",
 		"vue-router": "4.0.12",

@@ -10436,10 +10436,10 @@ vue-eslint-parser@^8.0.1:
     lodash "^4.17.21"
     semver "^7.3.5"
 
-vue-json-pretty@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/vue-json-pretty/-/vue-json-pretty-1.7.1.tgz#c7cd0ef9e85d89025a8bf87a0da14b0fc7d19913"
-  integrity sha512-D7aHQ5XPooSAEndTkb/RvXXJdmuCjaj14IMRdJwO4q+yJMpzPv87FT2gz4Dt2mCr1EzFyat7z7Qv9R+l/1as+w==
+vue-json-pretty@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/vue-json-pretty/-/vue-json-pretty-2.1.1.tgz#f03202b76141930ab27fdbcb56b242b4d6478079"
+  integrity sha512-zl/gWr/zeQU4mUozlBxGu/9ebR/tYywty5VGu8FcHTJwOu9se4OwlPZELruwnzvHODfUOh8rUirSgNTHmLZXVw==
 
 vue-loader@17.0.0:
   version "17.0.0"
