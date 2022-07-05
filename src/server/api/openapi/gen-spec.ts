@@ -18,7 +18,7 @@ export function genOpenapiSpec(lang = 'ja-JP') {
 
 		externalDocs: {
 			description: 'Repository',
-			url: 'https://github.com/xeltica/groundpolis'
+			url: 'https://github.com/groundpolis/groundpolis'
 		},
 
 		servers: [{
@@ -120,7 +120,7 @@ export function genOpenapiSpec(lang = 'ja-JP') {
 			description: desc,
 			externalDocs: {
 				description: 'Source code',
-				url: `https://github.com/xeltica/groundpolis/blob/develop/src/server/api/endpoints/${endpoint.name}.ts`
+				url: `https://github.com/groundpolis/groundpolis/blob/develop/src/server/api/endpoints/${endpoint.name}.ts`
 			},
 			...(endpoint.meta.tags ? {
 				tags: [endpoint.meta.tags[0]]
