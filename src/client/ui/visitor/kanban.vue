@@ -33,7 +33,7 @@
 				</div>
 				<div class="powered-by" v-if="poweredBy">
 					<b><MkA to="/">{{ host }}</MkA></b>
-					<small>Powered by <a href="https://github.com/mei23/groundpolis" target="_blank">Meipolis</a></small>
+					<small>Powered by <a href="https://github.com/groundpolis/groundpolis" target="_blank">Groundpolis</a></small>
 				</div>
 			</template>
 		</div>
