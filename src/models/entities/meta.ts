@@ -353,14 +353,14 @@ export class Meta {
 
 	@Column('varchar', {
 		length: 512,
-		default: 'https://github.com/xeltica/groundpolis',
+		default: 'https://github.com/groundpolis/groundpolis',
 		nullable: false
 	})
 	public repositoryUrl: string;
 
 	@Column('varchar', {
 		length: 512,
-		default: 'https://github.com/xeltica/groundpolispolis/issues/new',
+		default: 'https://github.com/groundpolis/groundpolis/issues/new',
 		nullable: true
 	})
 	public feedbackUrl: string | null;

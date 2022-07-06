@@ -3,7 +3,7 @@
 
 ## Issues
 Feature suggestions and bug reports are filed in https://github.com/groundpolis/groundpolis/issues .
-機能の要望やバグ報告は https://github.com/xeltica/groundpolis/issues でお願いします
+機能の要望やバグ報告は https://github.com/groundpolis/groundpolis/issues でお願いします
 
 * 重複を防ぐため、なるべく存在するissueがないか検索してください。もし既に同様の issue があれば、リアクションやコメントを追加して upvote してください。
 * もし複数の独立した issue があるならば、それぞれの issue は別々に作成してください。

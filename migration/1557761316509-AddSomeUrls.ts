@@ -4,8 +4,8 @@ export class AddSomeUrls1557761316509 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(`ALTER TABLE "meta" ADD "ToSUrl" character varying(512)`);
-        await queryRunner.query(`ALTER TABLE "meta" ADD "repositoryUrl" character varying(512) NOT NULL DEFAULT 'https://github.com/xeltica/groundpolis'`);
-        await queryRunner.query(`ALTER TABLE "meta" ADD "feedbackUrl" character varying(512) DEFAULT 'https://github.com/xeltica/groundpolis/issues/new'`);
+        await queryRunner.query(`ALTER TABLE "meta" ADD "repositoryUrl" character varying(512) NOT NULL DEFAULT 'https://github.com/groundpolis/groundpolis'`);
+        await queryRunner.query(`ALTER TABLE "meta" ADD "feedbackUrl" character varying(512) DEFAULT 'https://github.com/groundpolis/groundpolis/issues/new'`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
