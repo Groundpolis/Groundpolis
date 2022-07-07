@@ -9504,16 +9504,17 @@ stylehacks@^5.1.0:
     browserslist "^4.16.6"
     postcss-selector-parser "^6.0.4"
 
-summaly@2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/summaly/-/summaly-2.5.0.tgz#ec5af6e84857efcb6c844d896e83569e64a923ea"
-  integrity sha512-IzvO2s7yj/PUyH42qWjVjSPpIiPlgTRWGh33t4cIZKOqPQJ2INo7e83hXhHFr4hXTb3JRcIdCuM1ELjlrujiUQ==
+summaly@2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/summaly/-/summaly-2.6.0.tgz#aaac80eb8ae88b130318f44d9b98da9c2ccb328c"
+  integrity sha512-wIv6fL3aeFfXcQoZISzeUfNUgD3u8Hwx8Rg0awZliQhans62w23K3nDezwfvmYAQCgXs6e0EF7jtGmJv/qeVTA==
   dependencies:
     cheerio "0.22.0"
     debug "4.3.3"
     escape-regexp "0.0.1"
     got "11.5.1"
     html-entities "2.3.2"
+    iconv-lite "0.6.3"
     jschardet "3.0.0"
     koa "2.13.4"
     private-ip "2.3.3"
