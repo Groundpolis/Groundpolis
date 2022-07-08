@@ -1,5 +1,4 @@
 import * as tinycolor from 'tinycolor2';
-import Chart from 'chart.js';
 import { Hpml } from './evaluator';
 import { values, utils } from '@syuilo/aiscript';
 import { Fn, HpmlScope } from '.';
@@ -27,6 +26,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 
+/* TODO: https://www.chartjs.org/docs/latest/configuration/canvas-background.html#color
 // https://stackoverflow.com/questions/38493564/chart-area-background-color-chartjs
 Chart.pluginService.register({
 	beforeDraw: (chart, easing) => {
@@ -39,6 +39,7 @@ Chart.pluginService.register({
 		}
 	}
 });
+*/
 
 export function initAiLib(hpml: Hpml) {
 	return {
@@ -70,79 +71,79 @@ export function initAiLib(hpml: Hpml) {
 			]));
 		}),
 		'MkPages:chart': values.FN_NATIVE(([id, opts]) => {
-			utils.assertString(id);
-			utils.assertObject(opts);
-			const canvas = hpml.canvases[id.value];
-			const color = getComputedStyle(document.documentElement).getPropertyValue('--accent');
-			Chart.defaults.global.defaultFontColor = '#555';
-			const chart = new Chart(canvas, {
-				type: opts.value.get('type').value,
-				data: {
-					labels: opts.value.get('labels').value.map(x => x.value),
-					datasets: opts.value.get('datasets').value.map(x => ({
-						label: x.value.has('label') ? x.value.get('label').value : '',
-						data: x.value.get('data').value.map(x => x.value),
-						pointRadius: 0,
-						lineTension: 0,
-						borderWidth: 2,
-						borderColor: x.value.has('color') ? x.value.get('color') : color,
-						backgroundColor: tinycolor(x.value.has('color') ? x.value.get('color') : color).setAlpha(0.1).toRgbString(),
-					}))
-				},
-				options: {
-					responsive: false,
-					devicePixelRatio: 1.5,
-					title: {
-						display: opts.value.has('title'),
-						text: opts.value.has('title') ? opts.value.get('title').value : '',
-						fontSize: 14,
-					},
-					layout: {
-						padding: {
-							left: 32,
-							right: 32,
-							top: opts.value.has('title') ? 16 : 32,
-							bottom: 16
-						}
-					},
-					legend: {
-						display: opts.value.get('datasets').value.filter(x => x.value.has('label') && x.value.get('label').value).length === 0 ? false : true,
-						position: 'bottom',
-						labels: {
-							boxWidth: 16,
-						}
-					},
-					tooltips: {
-						enabled: false,
-					},
-					chartArea: {
-						backgroundColor: '#fff'
-					},
-					...(opts.value.get('type').value === 'radar' ? {
-						scale: {
-							ticks: {
-								display: opts.value.has('show_tick_label') ? opts.value.get('show_tick_label').value : false,
-								min: opts.value.has('min') ? opts.value.get('min').value : undefined,
-								max: opts.value.has('max') ? opts.value.get('max').value : undefined,
-								maxTicksLimit: 8,
-							},
-							pointLabels: {
-								fontSize: 12
-							}
-						}
-					} : {
-						scales: {
-							yAxes: [{
-								ticks: {
-									display: opts.value.has('show_tick_label') ? opts.value.get('show_tick_label').value : true,
-									min: opts.value.has('min') ? opts.value.get('min').value : undefined,
-									max: opts.value.has('max') ? opts.value.get('max').value : undefined,
-								}
-							}]
-						}
-					})
-				}
-			});
+			// utils.assertString(id);
+			// utils.assertObject(opts);
+			// const canvas = hpml.canvases[id.value];
+			// const color = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+			// Chart.defaults.global.defaultFontColor = '#555';
+			// const chart = new Chart(canvas, {
+			// 	type: opts.value.get('type').value,
+			// 	data: {
+			// 		labels: opts.value.get('labels').value.map(x => x.value),
+			// 		datasets: opts.value.get('datasets').value.map(x => ({
+			// 			label: x.value.has('label') ? x.value.get('label').value : '',
+			// 			data: x.value.get('data').value.map(x => x.value),
+			// 			pointRadius: 0,
+			// 			lineTension: 0,
+			// 			borderWidth: 2,
+			// 			borderColor: x.value.has('color') ? x.value.get('color') : color,
+			// 			backgroundColor: tinycolor(x.value.has('color') ? x.value.get('color') : color).setAlpha(0.1).toRgbString(),
+			// 		}))
+			// 	},
+			// 	options: {
+			// 		responsive: false,
+			// 		devicePixelRatio: 1.5,
+			// 		title: {
+			// 			display: opts.value.has('title'),
+			// 			text: opts.value.has('title') ? opts.value.get('title').value : '',
+			// 			fontSize: 14,
+			// 		},
+			// 		layout: {
+			// 			padding: {
+			// 				left: 32,
+			// 				right: 32,
+			// 				top: opts.value.has('title') ? 16 : 32,
+			// 				bottom: 16
+			// 			}
+			// 		},
+			// 		legend: {
+			// 			display: opts.value.get('datasets').value.filter(x => x.value.has('label') && x.value.get('label').value).length === 0 ? false : true,
+			// 			position: 'bottom',
+			// 			labels: {
+			// 				boxWidth: 16,
+			// 			}
+			// 		},
+			// 		tooltips: {
+			// 			enabled: false,
+			// 		},
+			// 		chartArea: {
+			// 			backgroundColor: '#fff'
+			// 		},
+			// 		...(opts.value.get('type').value === 'radar' ? {
+			// 			scale: {
+			// 				ticks: {
+			// 					display: opts.value.has('show_tick_label') ? opts.value.get('show_tick_label').value : false,
+			// 					min: opts.value.has('min') ? opts.value.get('min').value : undefined,
+			// 					max: opts.value.has('max') ? opts.value.get('max').value : undefined,
+			// 					maxTicksLimit: 8,
+			// 				},
+			// 				pointLabels: {
+			// 					fontSize: 12
+			// 				}
+			// 			}
+			// 		} : {
+			// 			scales: {
+			// 				yAxes: [{
+			// 					ticks: {
+			// 						display: opts.value.has('show_tick_label') ? opts.value.get('show_tick_label').value : true,
+			// 						min: opts.value.has('min') ? opts.value.get('min').value : undefined,
+			// 						max: opts.value.has('max') ? opts.value.get('max').value : undefined,
+			// 					}
+			// 				}]
+			// 			}
+			// 		})
+			// 	}
+			// });
 		})
 	};
 }
