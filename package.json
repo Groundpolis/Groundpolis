@@ -1,11 +1,10 @@
 {
 	"name": "groundpolis",
-	"version": "2022.07.01",
+	"version": "2022.07.02",
 	"private": true,
 	"author": "Xeltica <xeltica@gmail.com>",
 	"contributors": [
 		"MeiMei <m@m544.net>",
-		"Xeltica <xeltica@gmail.com>",
 		"syuilo <syuilotan@yahoo.co.jp>"
 	],
 	"codename": "sonic",
