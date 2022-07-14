@@ -892,10 +892,10 @@
   resolved "https://registry.yarnpkg.com/@types/portscanner/-/portscanner-2.1.1.tgz#89d5094e16f3d941f20f3889dfa5d3a164b3dd3b"
   integrity sha512-1NsVIbgBKvrqxwtMN0V6CLji1ERwKSI/RWz0J3y++CzSwYNGBStCfpIFgxV3ZwxsDR5PoZqoUWhwraDm+Ztn0Q==
 
-"@types/pug@2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@types/pug/-/pug-2.0.4.tgz#8772fcd0418e3cd2cc171555d73007415051f4b2"
-  integrity sha1-h3L80EGOPNLMFxVV1zAHQVBR9LI=
+"@types/pug@2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@types/pug/-/pug-2.0.6.tgz#f830323c88172e66826d0bde413498b61054b5a6"
+  integrity sha512-SnHmG9wN1UVmagJOnyo/qkk0Z7gejYxOYYmaAwr5u2yFYfsupN3sg10kyzN8Hep/2zbHxCnsumxOoRIRMBwKCg==
 
 "@types/qrcode@1.4.2":
   version "1.4.2"
