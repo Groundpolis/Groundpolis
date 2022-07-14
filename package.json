@@ -94,7 +94,7 @@
 		"@types/parse5": "6.0.0",
 		"@types/parsimmon": "1.10.6",
 		"@types/portscanner": "2.1.1",
-		"@types/pug": "2.0.4",
+		"@types/pug": "2.0.6",
 		"@types/qrcode": "1.4.2",
 		"@types/random-seed": "0.3.3",
 		"@types/ratelimiter": "3.4.3",
