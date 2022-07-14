@@ -353,7 +353,7 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-3.1.2.tgz#548650de521b344e3781fbdb0ece4aa6f729afb8"
   integrity sha512-JiX9vxoKMmu8Y3Zr2RVathBL1Cdu4Nt4MuNWemt1Nc06A0RAin9c5FArkhGsyMBWfCu4zj+9b+GxtjAnE4qqLQ==
 
-"@sindresorhus/is@^4.6.0":
+"@sindresorhus/is@^4.0.0":
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-4.6.0.tgz#3c7c9c46e678feefe7a2e5bb609d3dbd665ffb3f"
   integrity sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==
@@ -394,13 +394,6 @@
   integrity sha512-PyRA9sm1Yayuj5OIoJ1hGt2YISX45w9WcFbh6ddT0Z/0yaFxOtGLInr4jUfU1EAFVs0Yfyfev4RNwBlUaHdlDQ==
   dependencies:
     defer-to-connect "^2.0.0"
-
-"@szmarczak/http-timer@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@szmarczak/http-timer/-/http-timer-5.0.1.tgz#c7c1bf1141cdd4751b0399c8fc7b8b664cd5be3a"
-  integrity sha512-+PmQX0PiAYPMeVYe237LJAYvOMYW1j2rH5YROyS3b4CTVJum34HfRvKvAzozHAQG0TnHNdUfY9nCeUyRAs//cw==
-  dependencies:
-    defer-to-connect "^2.0.1"
 
 "@tokenizer/token@^0.3.0":
   version "0.3.0"
@@ -470,7 +463,7 @@
     "@types/ioredis" "*"
     "@types/redis" "^2.8.0"
 
-"@types/cacheable-request@^6.0.1", "@types/cacheable-request@^6.0.2":
+"@types/cacheable-request@^6.0.1":
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/@types/cacheable-request/-/cacheable-request-6.0.2.tgz#c324da0197de0a98a2312156536ae262429ff6b9"
   integrity sha512-B3xVo+dlKM6nnKTcmm5ZtY/OL8bOAOd2Olee9M1zft65ox50OzjEHW91sDiU9j6cvW8Ejg1/Qkf4xd2kugApUA==
@@ -2287,11 +2280,6 @@ cacheable-lookup@^5.0.3:
   resolved "https://registry.yarnpkg.com/cacheable-lookup/-/cacheable-lookup-5.0.3.tgz#049fdc59dffdd4fc285e8f4f82936591bd59fec3"
   integrity sha512-W+JBqF9SWe18A72XFzN/V/CULFzPm7sBXzzR6ekkE+3tLG72wFZrBiBZhrZuDoYexop4PHJVdFAKb/Nj9+tm9w==
 
-cacheable-lookup@^6.0.4:
-  version "6.0.4"
-  resolved "https://registry.yarnpkg.com/cacheable-lookup/-/cacheable-lookup-6.0.4.tgz#65c0e51721bb7f9f2cb513aed6da4a1b93ad7dc8"
-  integrity sha512-mbcDEZCkv2CZF4G01kr8eBd/5agkt9oCqz75tJMSIsquvRZ2sL6Hi5zGVKi/0OSC9oO1GHfJ2AV0ZIOY9vye0A==
-
 cacheable-request@^7.0.1, cacheable-request@^7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/cacheable-request/-/cacheable-request-7.0.2.tgz#ea0d0b889364a25854757301ca12b2da77f91d27"
@@ -3301,11 +3289,6 @@ defer-to-connect@^2.0.0:
   resolved "https://registry.yarnpkg.com/defer-to-connect/-/defer-to-connect-2.0.0.tgz#83d6b199db041593ac84d781b5222308ccf4c2c1"
   integrity sha512-bYL2d05vOSf1JEZNx5vSAtPuBMkX8K9EUutg7zlKvTqKXHt7RhWJFbmd7qakVuf13i+IkGmp6FwSsONOf6VYIg==
 
-defer-to-connect@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/defer-to-connect/-/defer-to-connect-2.0.1.tgz#8016bdb4143e4632b77a3449c6236277de520587"
-  integrity sha512-4tvttepXG1VaYGrRibk5EwJd1t4udunSOVMdLSAL6mId1ix438oPwPZMALY41FCijukO1L0twNcGsdzS7dHgDg==
-
 define-properties@^1.1.2, define-properties@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/define-properties/-/define-properties-1.1.3.tgz#cf88da6cbee26fe6db7094f61d870cbd84cee9f1"
@@ -4300,11 +4283,6 @@ for-own@^1.0.0:
   dependencies:
     for-in "^1.0.1"
 
-form-data-encoder@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/form-data-encoder/-/form-data-encoder-1.7.1.tgz#ac80660e4f87ee0d3d3c3638b7da8278ddb8ec96"
-  integrity sha512-EFRDrsMm/kyqbTQocNvRXMLjc7Es2Vk+IQFx/YW7hkUH1eBl4J1fqiP34l74Yt0pFLCNpc06fkbVk00008mzjg==
-
 form-data@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-3.0.0.tgz#31b7e39c85f1355b7139ee0c647cf0de7f83c682"
@@ -4424,7 +4402,7 @@ get-stream@^5.1.0:
   dependencies:
     pump "^3.0.0"
 
-get-stream@^6.0.0, get-stream@^6.0.1:
+get-stream@^6.0.0:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-6.0.1.tgz#a262d8eef67aced57c2852ad6167526a43cbf7b7"
   integrity sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==
@@ -4569,23 +4547,21 @@ got@11.5.1:
     p-cancelable "^2.0.0"
     responselike "^2.0.0"
 
-got@12.1.0:
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/got/-/got-12.1.0.tgz#099f3815305c682be4fd6b0ee0726d8e4c6b0af4"
-  integrity sha512-hBv2ty9QN2RdbJJMK3hesmSkFTjVIHyIDDbssCKnSmq62edGgImJWD10Eb1k77TiV1bxloxqcFAVK8+9pkhOig==
+got@11.8.5:
+  version "11.8.5"
+  resolved "https://registry.yarnpkg.com/got/-/got-11.8.5.tgz#ce77d045136de56e8f024bebb82ea349bc730046"
+  integrity sha512-o0Je4NvQObAuZPHLFoRSkdG2lTgtcynqymzg2Vupdx6PorhaT5MCbIyXG6d4D94kk8ZG57QeosgdiqfJWhEhlQ==
   dependencies:
-    "@sindresorhus/is" "^4.6.0"
-    "@szmarczak/http-timer" "^5.0.1"
-    "@types/cacheable-request" "^6.0.2"
+    "@sindresorhus/is" "^4.0.0"
+    "@szmarczak/http-timer" "^4.0.5"
+    "@types/cacheable-request" "^6.0.1"
     "@types/responselike" "^1.0.0"
-    cacheable-lookup "^6.0.4"
+    cacheable-lookup "^5.0.3"
     cacheable-request "^7.0.2"
     decompress-response "^6.0.0"
-    form-data-encoder "1.7.1"
-    get-stream "^6.0.1"
-    http2-wrapper "^2.1.10"
-    lowercase-keys "^3.0.0"
-    p-cancelable "^3.0.0"
+    http2-wrapper "^1.0.0-beta.5.2"
+    lowercase-keys "^2.0.0"
+    p-cancelable "^2.0.0"
     responselike "^2.0.0"
 
 graceful-fs@^4.0.0, graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.4:
@@ -4941,21 +4917,13 @@ http-signature@1.3.6:
     jsprim "^2.0.2"
     sshpk "^1.14.1"
 
-http2-wrapper@^1.0.0-beta.5.0:
+http2-wrapper@^1.0.0-beta.5.0, http2-wrapper@^1.0.0-beta.5.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/http2-wrapper/-/http2-wrapper-1.0.3.tgz#b8f55e0c1f25d4ebd08b3b0c2c079f9590800b3d"
   integrity sha512-V+23sDMr12Wnz7iTcDeJr3O6AIxlnvT/bmaAAAP/Xda35C90p9599p0F1eHR/N1KILWSoWVAiOMFjBBXaXSMxg==
   dependencies:
     quick-lru "^5.1.1"
     resolve-alpn "^1.0.0"
-
-http2-wrapper@^2.1.10:
-  version "2.1.11"
-  resolved "https://registry.yarnpkg.com/http2-wrapper/-/http2-wrapper-2.1.11.tgz#d7c980c7ffb85be3859b6a96c800b2951ae257ef"
-  integrity sha512-aNAk5JzLturWEUiuhAN73Jcbq96R7rTitAoXV54FYMatvihnpD2+6PUgU4ce3D/m5VDbw+F5CsyKSF176ptitQ==
-  dependencies:
-    quick-lru "^5.1.1"
-    resolve-alpn "^1.2.0"
 
 http_ece@1.1.0:
   version "1.1.0"
@@ -6236,11 +6204,6 @@ lowercase-keys@^2.0.0:
   resolved "https://registry.yarnpkg.com/lowercase-keys/-/lowercase-keys-2.0.0.tgz#2603e78b7b4b0006cbca2fbcc8a3202558ac9479"
   integrity sha512-tqNXrS78oMOE73NMxK4EMLQsQowWf8jKooH9g7xPavRT706R6bkQJ6DY2Te7QukaZsulxa30wQ7bk0pm4XiHmA==
 
-lowercase-keys@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/lowercase-keys/-/lowercase-keys-3.0.0.tgz#c5e7d442e37ead247ae9db117a9d0a467c89d4f2"
-  integrity sha512-ozCC6gdQ+glXOQsveKD0YsDy8DSQFjDTz4zyzEHNV5+JP5D62LmfDZ6o1cycFx9ouG940M5dE8C8CTewdj2YWQ==
-
 lru-cache@^4.1.5:
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.1.5.tgz#8bbe50ea85bed59bc9e33dcab8235ee9bcf443cd"
@@ -6417,11 +6380,11 @@ methods@^1.1.2:
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
   integrity sha1-VSmk1nZUE07cxSZmVoNbD4Ua/O4=
 
-mfm-js@Groundpolis/gpfm.js#1.0.3:
-  version "0.20.0-gp-1.0.3"
-  resolved "https://codeload.github.com/Groundpolis/gpfm.js/tar.gz/b0524e02107e6dd87175c3f87f2adcd3dd1c7968"
+mfm-js@groundpolis/gpfm.js:
+  version "0.20.1-gp-1.0.3"
+  resolved "https://codeload.github.com/groundpolis/gpfm.js/tar.gz/c9feabf35841b0dc33161653e12f9494f71979d6"
   dependencies:
-    twemoji-parser "13.1.x"
+    twemoji-parser "14.0.x"
 
 micromatch@^3.0.4, micromatch@^3.1.4:
   version "3.1.10"
@@ -7149,11 +7112,6 @@ p-cancelable@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/p-cancelable/-/p-cancelable-2.0.0.tgz#4a3740f5bdaf5ed5d7c3e34882c6fb5d6b266a6e"
   integrity sha512-wvPXDmbMmu2ksjkB4Z3nZWTSkJEb9lqVdMaCKpZUGJG9TMiNp9XcbG3fn9fPKjem04fJMJnXoyFPk2FmgiaiNg==
-
-p-cancelable@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/p-cancelable/-/p-cancelable-3.0.0.tgz#63826694b54d61ca1c20ebcb6d3ecf5e14cd8050"
-  integrity sha512-mlVgR3PGuzlo0MmTdk4cXqXWlwQDLnONTAg6sm62XkMJEiRxN3GL3SffkYvqwonbkJBcrI7Uvv5Zh9yjvn2iUw==
 
 p-finally@^1.0.0:
   version "1.0.0"
@@ -8729,11 +8687,6 @@ resolve-alpn@^1.0.0:
   resolved "https://registry.yarnpkg.com/resolve-alpn/-/resolve-alpn-1.0.0.tgz#745ad60b3d6aff4b4a48e01b8c0bdc70959e0e8c"
   integrity sha512-rTuiIEqFmGxne4IovivKSDzld2lWW9QCjqv80SYjPgf+gS35eaCAjaP54CCwGAwBtnCsvNLYtqxe1Nw+i6JEmA==
 
-resolve-alpn@^1.2.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/resolve-alpn/-/resolve-alpn-1.2.1.tgz#b7adbdac3546aaaec20b45e7d8265927072726f9"
-  integrity sha512-0a1F4l73/ZFZOakJnQ3FvkJ2+gSTQWz/r2KE5OdDY0TxPm5h4GkqkWWfM47T7HsbnOtcJVEF4epCVy6u7Q3K+g==
-
 resolve-cwd@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/resolve-cwd/-/resolve-cwd-3.0.0.tgz#0f0075f1bb2544766cf73ba6a6e2adfebcb13f2d"
@@ -10059,10 +10012,10 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
   integrity sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q=
 
-twemoji-parser@13.1.0, twemoji-parser@13.1.x:
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/twemoji-parser/-/twemoji-parser-13.1.0.tgz#65e7e449c59258791b22ac0b37077349127e3ea4"
-  integrity sha512-AQOzLJpYlpWMy8n+0ATyKKZzWlZBJN+G0C+5lhX7Ftc2PeEVdUU/7ns2Pn2vVje26AIZ/OHwFoUbdv6YYD/wGg==
+twemoji-parser@14.0.0, twemoji-parser@14.0.x:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/twemoji-parser/-/twemoji-parser-14.0.0.tgz#13dabcb6d3a261d9efbf58a1666b182033bf2b62"
+  integrity sha512-9DUOTGLOWs0pFWnh1p6NF+C3CkQ96PWmEFwhOVmT3WbecRC+68AIqpsnJXygfkFcp4aXbOp8Dwbhh/HQgvoRxA==
 
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"
