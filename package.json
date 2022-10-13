@@ -222,7 +222,7 @@
 		"redis": "3.1.2",
 		"redis-lock": "0.1.4",
 		"reflect-metadata": "0.1.13",
-		"regenerator-runtime": "0.13.7",
+		"regenerator-runtime": "0.13.10",
 		"rename": "1.0.4",
 		"request-stats": "3.0.0",
 		"require-all": "3.0.0",
