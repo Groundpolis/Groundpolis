@@ -268,7 +268,7 @@
 		"vuedraggable": "4.0.1",
 		"web-push": "3.4.5",
 		"webpack": "5.69.1",
-		"webpack-cli": "4.9.2",
+		"webpack-cli": "5.0.0",
 		"websocket": "1.0.34",
 		"ws": "8.8.0",
 		"xev": "2.0.1"
