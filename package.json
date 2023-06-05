@@ -206,7 +206,7 @@
 		"portscanner": "2.2.0",
 		"postcss": "8.4.8",
 		"postcss-loader": "5.0.0",
-		"prismjs": "1.28.0",
+		"prismjs": "1.29.0",
 		"private-ip": "2.3.3",
 		"probe-image-size": "7.2.3",
 		"promise-limit": "2.7.0",
