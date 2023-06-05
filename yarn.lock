@@ -614,12 +614,12 @@
   dependencies:
     gulp-replace "*"
 
-"@types/gulp@4.0.9":
-  version "4.0.9"
-  resolved "https://registry.yarnpkg.com/@types/gulp/-/gulp-4.0.9.tgz#a2f9667bcc26bc72b4899dd16216d6584a12346c"
-  integrity sha512-zzT+wfQ8uwoXjDhRK9Zkmmk09/fbLLmN/yDHFizJiEKIve85qutOnXcP/TM2sKPBTU+Jc16vfPbOMkORMUBN7Q==
+"@types/gulp@4.0.11":
+  version "4.0.11"
+  resolved "https://registry.yarnpkg.com/@types/gulp/-/gulp-4.0.11.tgz#6a49e16a58f6d35d51153ffbed8db06f49ede54d"
+  integrity sha512-jy0nfcsjiGqO1prNsYMK/bHkTblIBgG04sL2nxPpnP9MyNicHp1SUblomjOla6JoW1qkR67HjFHqIibpPoShNQ==
   dependencies:
-    "@types/undertaker" "*"
+    "@types/undertaker" ">=1.2.6"
     "@types/vinyl-fs" "*"
     chokidar "^3.3.1"
 
@@ -1042,12 +1042,14 @@
   resolved "https://registry.yarnpkg.com/@types/undertaker-registry/-/undertaker-registry-1.0.1.tgz#4306d4a03d7acedb974b66530832b90729e1d1da"
   integrity sha512-Z4TYuEKn9+RbNVk1Ll2SS4x1JeLHecolIbM/a8gveaHsW0Hr+RQMraZACwTO2VD7JvepgA6UO1A1VrbktQrIbQ==
 
-"@types/undertaker@*":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@types/undertaker/-/undertaker-1.2.2.tgz#927da24d0d3279830af96386862b035e040ead74"
-  integrity sha512-j4iepCSuY2JGW/hShVtUBagic0klYNFIXP7VweavnYnNC2EjiKxJFeaS9uaJmAT0ty9sQSqTS1aagWMZMV0HyA==
+"@types/undertaker@>=1.2.6":
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@types/undertaker/-/undertaker-1.2.8.tgz#6124a5d78eb6fca84689185229654a6235c601d7"
+  integrity sha512-gW3PRqCHYpo45XFQHJBhch7L6hytPsIe0QeLujlnFsjHPnXLhJcPdN6a9368d7aIQgH2I/dUTPFBlGeSNA3qOg==
   dependencies:
+    "@types/node" "*"
     "@types/undertaker-registry" "*"
+    async-done "~1.3.2"
 
 "@types/uuid@8.3.4":
   version "8.3.4"
@@ -1863,7 +1865,7 @@ astral-regex@^2.0.0:
   resolved "https://registry.yarnpkg.com/astral-regex/-/astral-regex-2.0.0.tgz#483143c567aeed4785759c0865786dc77d7d2e31"
   integrity sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==
 
-async-done@^1.2.0, async-done@^1.2.2:
+async-done@^1.2.0, async-done@^1.2.2, async-done@~1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/async-done/-/async-done-1.3.2.tgz#5e15aa729962a4b07414f528a88cdf18e0b290a2"
   integrity sha512-uYkTP8dw2og1tu1nmza1n1CMW0qb8gWWlwqMmLb7MhBVs4BXrFziT6HXUd+/RlRA/i4H9AkofYloUbs1fwMqlw==
