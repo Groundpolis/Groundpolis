@@ -54,7 +54,7 @@
 		"@koa/router": "9.0.1",
 		"@sentry/browser": "7.5.1",
 		"@sentry/tracing": "5.29.2",
-		"@sinonjs/fake-timers": "6.0.1",
+		"@sinonjs/fake-timers": "10.2.0",
 		"@syuilo/aiscript": "0.11.1",
 		"@types/bcryptjs": "2.4.2",
 		"@types/bull": "3.15.8",
