@@ -256,7 +256,7 @@
 		"ulid": "2.3.0",
 		"url-loader": "4.1.1",
 		"uuid": "8.3.2",
-		"v-debounce": "0.1.2",
+		"v-debounce": "0.2.0",
 		"vanilla-tilt": "1.7.2",
 		"vue": "3.2.37",
 		"vue-color": "2.8.1",
